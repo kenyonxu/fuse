@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvxqj8k9mn7yr"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/events/test_on_area_3d_exited.gd" id="1"]
+
+[node name="TestOnArea3DExited" type="Node3D"]
+script = ExtResource("1")

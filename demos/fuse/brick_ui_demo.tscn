@@ -1,0 +1,267 @@
+[gd_scene format=3 uid="uid://baa8ysgdforj5"]
+
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="1_2b47t"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_wbnan"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="4_wloi2"]
+[ext_resource type="Script" uid="uid://cf17qhsehqosi" path="res://addons/fuse/events/node/on_target_signal_emit.gd" id="5_430f2"]
+[ext_resource type="Script" uid="uid://btqvw0a03xqcx" path="res://addons/fuse/instructions/ui/show_hide_ui.gd" id="6_asaui"]
+[ext_resource type="Script" uid="uid://cx6ba54wjdawh" path="res://addons/fuse/instructions/tween/tween_fade_in.gd" id="7_asaui"]
+[ext_resource type="Script" uid="uid://im3nor20tka0" path="res://addons/fuse/instructions/tween/tween_fade_out.gd" id="8_2b47t"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_a7pdx"]
+[ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="9_qha6h"]
+[ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="9_unseh"]
+[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/btn_title_option.tscn" id="9_wbnan"]
+[ext_resource type="Script" uid="uid://cqhqfchyyqctl" path="res://addons/fuse/conditions/input/check_any_input.gd" id="10_d62fi"]
+[ext_resource type="Resource" uid="uid://da0754pwaa2kr" path="res://demos/fuse/brick_demo_basic.tres" id="10_fknqa"]
+[ext_resource type="Material" uid="uid://uyj8uartsnj0" path="res://addons/fuse/texture/text_burn_material.tres" id="13_unseh"]
+[ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="15_d62fi"]
+
+[sub_resource type="Resource" id="Resource_fknqa"]
+script = ExtResource("10_d62fi")
+
+[sub_resource type="Resource" id="Resource_pxax8"]
+resource_name = "间隔执行: 1.3s - 自动开始 无限重复"
+script = ExtResource("9_unseh")
+interval_seconds = 1.3
+stop_condition = SubResource("Resource_fknqa")
+
+[sub_resource type="Resource" id="Resource_wbnan"]
+resource_name = "淡入 [..] alpha: 0.0→1.0 (0.50s)"
+script = ExtResource("7_asaui")
+target_node = NodePath("..")
+duration = 0.5
+from_alpha = 0.0
+to_alpha = 1.0
+easing_type = 1
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_unseh"]
+resource_name = "淡出 [..] (0.50s)"
+script = ExtResource("8_2b47t")
+target_node = NodePath("..")
+duration = 0.5
+auto_free = false
+easing_type = 1
+trans_type = 3
+
+[sub_resource type="Resource" id="Resource_d62fi"]
+script = ExtResource("8_a7pdx")
+instructions = Array[ExtResource("3_wbnan")]([SubResource("Resource_wbnan"), SubResource("Resource_unseh")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_qha6h"]
+resource_name = "信号监听 → HintBreath :: event_stopped"
+script = ExtResource("5_430f2")
+target_node = NodePath("../../TitleHint/HintBreath")
+target_signal = "event_stopped"
+trigger_once = false
+filter_signal_args = false
+
+[sub_resource type="Resource" id="Resource_uejfd"]
+resource_name = "显示 UI → .."
+script = ExtResource("6_asaui")
+target_node = NodePath("..")
+action = 0
+
+[sub_resource type="Resource" id="Resource_tfsa4"]
+resource_name = "淡入 [..] alpha: 0.0→1.0 (0.50s)"
+script = ExtResource("7_asaui")
+target_node = NodePath("..")
+duration = 0.5
+from_alpha = 0.0
+to_alpha = 1.0
+easing_type = 1
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_a7pdx"]
+script = ExtResource("8_a7pdx")
+instructions = Array[ExtResource("3_wbnan")]([SubResource("Resource_uejfd"), SubResource("Resource_tfsa4")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="LabelSettings" id="LabelSettings_jlq5n"]
+font_size = 45
+font_color = Color(0.17768212, 0.808988, 0.960966, 1)
+
+[sub_resource type="Resource" id="Resource_n8k4c"]
+resource_name = "On Ready With Delay: 0.5"
+script = ExtResource("4_wloi2")
+delay_seconds = 0.5
+
+[sub_resource type="Resource" id="Resource_2b47t"]
+resource_name = "显示 UI → .."
+script = ExtResource("6_asaui")
+target_node = NodePath("..")
+action = 0
+
+[sub_resource type="Resource" id="Resource_rjoul"]
+resource_name = "属性动画 [..] [Material] .shader_parameter/burn_progress = 0.0 (1.00s)"
+script = ExtResource("15_d62fi")
+target_node = NodePath("..")
+property_source = 1
+property_path = "shader_parameter/burn_progress"
+to_value = 0.0
+duration = 1.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_scv04"]
+script = ExtResource("8_a7pdx")
+instructions = Array[ExtResource("3_wbnan")]([SubResource("Resource_2b47t"), SubResource("Resource_rjoul")])
+log_level = 4
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=503723083]
+
+[node name="GameManager" type="Node" parent="." unique_id=1957567900]
+
+[node name="GlobalVariableAssistant" type="Node" parent="GameManager" unique_id=1873685317]
+script = ExtResource("9_qha6h")
+current_resource = ExtResource("10_fknqa")
+log_level = 0
+metadata/_custom_type_script = "uid://banshq4o4dxat"
+
+[node name="SceneLogics" type="Node" parent="." unique_id=1770029596]
+
+[node name="Camera" type="Node" parent="." unique_id=1700243516]
+
+[node name="Camera2D" type="Camera2D" parent="Camera" unique_id=2030475508]
+
+[node name="Control" type="Control" parent="." unique_id=1642093990]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control" unique_id=1262310325]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -151.0
+offset_top = -101.0
+offset_right = 152.0
+offset_bottom = 237.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="TitleHint" type="Label" parent="Control" unique_id=1305982906]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -11.0
+offset_right = 150.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "Press Any Key To Start"
+horizontal_alignment = 1
+
+[node name="HintBreath" type="Node" parent="Control/TitleHint" unique_id=1858111271]
+script = ExtResource("1_2b47t")
+event_definition = SubResource("Resource_pxax8")
+action_runner = SubResource("Resource_d62fi")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Panel" type="Panel" parent="Control" unique_id=815578377]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -261.0
+offset_top = -209.0
+offset_right = 262.0
+offset_bottom = 289.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PanelIn" type="Node" parent="Control/Panel" unique_id=510865287]
+script = ExtResource("1_2b47t")
+event_definition = SubResource("Resource_qha6h")
+action_runner = SubResource("Resource_a7pdx")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Panel" unique_id=495860868]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 130
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 130
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel/MarginContainer" unique_id=1770749967]
+layout_mode = 2
+theme_override_constants/separation = 31
+alignment = 1
+
+[node name="StartGame" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=1680328388 instance=ExtResource("9_wbnan")]
+layout_mode = 2
+text = "Start Game"
+
+[node name="Continue" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=1416434004 instance=ExtResource("9_wbnan")]
+layout_mode = 2
+text = "Continue"
+
+[node name="Settings" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=897214948 instance=ExtResource("9_wbnan")]
+layout_mode = 2
+text = "Settings"
+
+[node name="Quit" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=548003561 instance=ExtResource("9_wbnan")]
+layout_mode = 2
+text = "Quit"
+
+[node name="Title" type="Label" parent="Control" unique_id=326494521]
+material = ExtResource("13_unseh")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -186.0
+offset_right = 300.0
+offset_bottom = -86.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "A BRICK UI DEMO"
+label_settings = SubResource("LabelSettings_jlq5n")
+horizontal_alignment = 1
+vertical_alignment = 1
+visible_characters_behavior = 3
+
+[node name="TitleIn" type="Node" parent="Control/Title" unique_id=1135997522]
+script = ExtResource("1_2b47t")
+event_definition = SubResource("Resource_n8k4c")
+action_runner = SubResource("Resource_scv04")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://t16442luxqei"]
+
+[ext_resource type="Script" uid="uid://ctujbrwplvlk3" path="res://test_random_sequence_real_pipeline.gd" id="1_tse1o"]
+
+[node name="Test" type="Node2D"]
+script = ExtResource("1_tse1o")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

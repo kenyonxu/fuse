@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_random_number"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_random_number.gd" id="1_test_random_number"]
+
+[node name="TestRandomNumber" type="Node"]
+script = ExtResource("1_test_random_number")

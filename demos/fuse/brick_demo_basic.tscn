@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://dc20u5mk1dlln"]
+
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="1_a3cye"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_6gxre"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="3_nppmb"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="4_qebjf"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="5_cm8dd"]
+[ext_resource type="Script" uid="uid://b152yfncggvas" path="res://addons/fuse/instructions/variables/set_variable.gd" id="7_bdcon"]
+[ext_resource type="Script" uid="uid://mh76nrrf2u5" path="res://addons/fuse/instructions/variables/create_variable.gd" id="7_fph2t"]
+[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="7_q5ss5"]
+[ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="8_b3ivw"]
+[ext_resource type="Resource" uid="uid://da0754pwaa2kr" path="res://demos/fuse/brick_demo_basic.tres" id="10_cm8dd"]
+[ext_resource type="Script" uid="uid://j1t15og6khun" path="res://addons/fuse/events/input/on_input_key.gd" id="12_fph2t"]
+[ext_resource type="Texture2D" uid="uid://1m0j5giawk4f" path="res://icon.svg" id="15_pkdtu"]
+
+[sub_resource type="Resource" id="Resource_5yhpf"]
+resource_name = "按键按键按下 [A] []"
+script = ExtResource("12_fph2t")
+key_code = 65
+key_event_type = 0
+log_level = 4
+
+[sub_resource type="Resource" id="Resource_nqejl"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("3_nppmb")
+log_level = 4
+metadata/_custom_type_script = "uid://spkts3pa4cdm"
+
+[sub_resource type="Resource" id="Resource_q5ss5"]
+resource_name = "打印: Hello, World!"
+script = ExtResource("5_cm8dd")
+log_level = 4
+metadata/_custom_type_script = "uid://befh0sce33ljb"
+
+[sub_resource type="Resource" id="Resource_bdcon"]
+resource_name = "创建变量 [GLOBAL] Test = 100 自动检测"
+script = ExtResource("7_fph2t")
+variable_name = "Test"
+value = 100
+variable_scope = 1
+log_level = 4
+
+[sub_resource type="Resource" id="Resource_urltl"]
+resource_name = "创建变量 [LOCAL] Test2 = 120"
+script = ExtResource("7_fph2t")
+variable_name = "Test2"
+value = 120
+
+[sub_resource type="Resource" id="Resource_pkdtu"]
+resource_name = "设置变量 [GLOBAL] 'Test' 从'Test2'复制"
+script = ExtResource("7_bdcon")
+target_variable = "Test"
+scope = 1
+set_with_another_variable = true
+from_variable = "Test2"
+
+[sub_resource type="Resource" id="Resource_g5ukp"]
+resource_name = "设置变量 [LOCAL] 'Test2' = 200"
+script = ExtResource("7_bdcon")
+target_variable = "Test2"
+new_value = 200
+
+[sub_resource type="Resource" id="Resource_fph2t"]
+resource_name = "打印变量 'Test' [GLOBAL]"
+script = ExtResource("7_q5ss5")
+variable_name = "Test"
+variable_scope = "GLOBAL"
+
+[sub_resource type="Resource" id="Resource_wxbey"]
+resource_name = "打印变量 'Test2' [LOCAL]"
+script = ExtResource("7_q5ss5")
+variable_name = "Test2"
+
+[sub_resource type="Resource" id="Resource_scv04"]
+script = ExtResource("4_qebjf")
+instructions = Array[ExtResource("3_6gxre")]([SubResource("Resource_nqejl"), SubResource("Resource_q5ss5"), SubResource("Resource_bdcon"), SubResource("Resource_urltl"), SubResource("Resource_pkdtu"), SubResource("Resource_g5ukp"), SubResource("Resource_fph2t"), SubResource("Resource_wxbey")])
+log_level = 4
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=1298825826]
+
+[node name="Trigger" type="Node" parent="." unique_id=330596358]
+script = ExtResource("1_a3cye")
+event_definition = SubResource("Resource_5yhpf")
+action_runner = SubResource("Resource_scv04")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="GlobalVariableAssistant" type="Node" parent="." unique_id=613365449]
+script = ExtResource("8_b3ivw")
+current_resource = ExtResource("10_cm8dd")
+log_level = 0
+metadata/_custom_type_script = "uid://banshq4o4dxat"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=235070665]
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D" unique_id=1043631655]
+texture = ExtResource("15_pkdtu")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=771159479]

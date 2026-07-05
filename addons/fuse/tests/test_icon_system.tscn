@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://icon_system_test"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_icon_system.gd" id="1"]
+
+[node name="TestIconSystem" type="Node"]
+script = ExtResource("1")

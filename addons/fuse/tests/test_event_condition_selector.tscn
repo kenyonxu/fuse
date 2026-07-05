@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b8xqvn3kxqm2"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_event_condition_selector.gd" id="1"]
+
+[node name="TestEventConditionSelector" type="Node"]
+script = ExtResource("1")

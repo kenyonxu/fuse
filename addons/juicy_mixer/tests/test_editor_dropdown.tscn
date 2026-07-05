@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8k5v3q2w4x1n"]
+
+[ext_resource type="Script" uid="uid://cdiffiu8yay8q" path="res://addons/juicy_mixer/core/juicy_mixer_manager.gd" id="1_manager"]
+
+[node name="TestEditorDropdown" type="Node"]
+script = ExtResource("1_manager")

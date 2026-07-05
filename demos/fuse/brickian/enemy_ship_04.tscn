@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dwbo65dx33d8d"]
+
+[ext_resource type="PackedScene" uid="uid://c3b28ywrqiogw" path="res://demos/fuse/brickian/enemy_ship_01.tscn" id="1_ipsr7"]
+[ext_resource type="Texture2D" uid="uid://hfcmor6c141o" path="res://third_party_resources/sprites/SpaceShooterAssetPack_Ships.png" id="2_srwp8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vyl6a"]
+size = Vector2(12.800003, 12.8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ipsr7"]
+atlas = ExtResource("2_srwp8")
+region = Rect2(56, 24, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_srwp8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ipsr7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="EnemyShip04" unique_id=18055107 instance=ExtResource("1_ipsr7")]
+
+[node name="CollisionShape2D" parent="Area2D" parent_id_path=PackedInt32Array(1649041682) index="0" unique_id=2060259997]
+position = Vector2(0, 3.8146956e-07)
+scale = Vector2(0.99999976, 0.99999976)
+shape = SubResource("RectangleShape2D_vyl6a")
+
+[node name="AnimatedSprite2D" parent="." index="1" unique_id=687519124]
+sprite_frames = SubResource("SpriteFrames_srwp8")

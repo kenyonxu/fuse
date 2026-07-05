@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_on_focus"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/events/test_on_focus.gd" id="1"]
+
+[node name="TestOnFocus" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Button1" type="Button" parent="."]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+text = "Button 1"
+
+[node name="Button2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 220.0
+offset_right = 420.0
+offset_bottom = 40.0
+text = "Button 2"

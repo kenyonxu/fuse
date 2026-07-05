@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_localization_test"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/run_localization_tests.gd" id="1_0nxvy"]
+
+[node name="TestLocalization" type="Node"]
+script = ExtResource("1_0nxvy")

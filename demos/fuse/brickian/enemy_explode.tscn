@@ -1,0 +1,416 @@
+[gd_scene format=3 uid="uid://ctimwhiu78cr8"]
+
+[ext_resource type="PackedScene" uid="uid://cq7h6ykrfu4kv" path="res://demos/fuse/brickian/bullet_explode.tscn" id="1_qtsmr"]
+[ext_resource type="Texture2D" uid="uid://bwxph7v3t46fb" path="res://third_party_resources/sprites/80.png" id="2_leqyw"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="3_murvx"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_l3fru"]
+[ext_resource type="Script" uid="uid://kqfm5jk6nukr" path="res://addons/fuse/instructions/node_operations/run_target_node_function.gd" id="5_xil1x"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_43vns"]
+[ext_resource type="Script" uid="uid://cf17qhsehqosi" path="res://addons/fuse/events/node/on_target_signal_emit.gd" id="7_y7ray"]
+[ext_resource type="Script" uid="uid://c0lvnqfcoe2br" path="res://addons/fuse/instructions/node_operations/recycle_pooled_scene.gd" id="9_mddxk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xey8m"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfr4r"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ya7q"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sr7sv"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ggwum"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(256, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c2txt"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(320, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_murvx"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(384, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l3fru"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(448, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xil1x"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(512, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_43vns"]
+atlas = ExtResource("2_leqyw")
+region = Rect2(576, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y7ray"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xey8m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xfr4r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ya7q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sr7sv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ggwum")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c2txt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_murvx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l3fru")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xil1x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_43vns")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="Resource" id="Resource_0j78i"]
+resource_name = "On Ready With Delay: 0.0"
+script = ExtResource("3_murvx")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_4e16g"]
+resource_name = "运行节点函数 → EnemyExplode 调用: play 参数: 3 个"
+script = ExtResource("5_xil1x")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+serialized_method_cache = Array[Dictionary]([{
+"args": Array[Dictionary]([]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "pause",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 21,
+"usage": 6
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "custom_speed",
+"type": 3,
+"usage": 6
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "from_end",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "play",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 21,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "play_backwards",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 21,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_animation",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 4,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_autoplay",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "centered",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_centered",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "flip_h",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_flip_h",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "flip_v",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_flip_v",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "frame",
+"type": 2,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_frame",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "frame",
+"type": 2,
+"usage": 6
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "progress",
+"type": 3,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_frame_and_progress",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "progress",
+"type": 3,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_frame_progress",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "offset",
+"type": 5,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_offset",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "speed_scale",
+"type": 3,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_speed_scale",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"SpriteFrames",
+"hint": 17,
+"hint_string": "SpriteFrames",
+"name": "sprite_frames",
+"type": 24,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_sprite_frames",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "stop",
+"return_val": 0
+}])
+serialized_parameter_metadata = Array[Dictionary]([{
+"current_value": null,
+"custom_scope_id": "",
+"default_value": null,
+"hint": 0,
+"hint_string": "",
+"index": 0,
+"name": "name",
+"scope_source": 0,
+"scope_target_path": NodePath(""),
+"type": 21,
+"use_variable": false,
+"variable_name": "",
+"variable_scope": 0
+}, {
+"current_value": null,
+"custom_scope_id": "",
+"default_value": null,
+"hint": 0,
+"hint_string": "",
+"index": 1,
+"name": "custom_speed",
+"scope_source": 0,
+"scope_target_path": NodePath(""),
+"type": 3,
+"use_variable": false,
+"variable_name": "",
+"variable_scope": 0
+}, {
+"current_value": null,
+"custom_scope_id": "",
+"default_value": null,
+"hint": 0,
+"hint_string": "",
+"index": 2,
+"name": "from_end",
+"scope_source": 0,
+"scope_target_path": NodePath(""),
+"type": 1,
+"use_variable": false,
+"variable_name": "",
+"variable_scope": 0
+}])
+target_node = NodePath("..")
+target_function = "play"
+method_inheritance_levels = 1
+exclude_getter_methods = true
+debug_filtering = false
+param_0___name = &"default"
+param_1___custom_speed = 2.0
+param_2___from_end = null
+store_result = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_55fqj"]
+script = ExtResource("6_43vns")
+instructions = Array[ExtResource("4_l3fru")]([SubResource("Resource_4e16g")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_pfdl6"]
+resource_name = "信号监听 → .. :: animation_finished"
+script = ExtResource("7_y7ray")
+target_node = NodePath("..")
+target_signal = "animation_finished"
+trigger_once = false
+filter_signal_args = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_7f26w"]
+resource_name = "回收池化场景 [Node] EnemyExplode"
+script = ExtResource("9_mddxk")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node = NodePath("")
+recycle_mode = 1
+target_node = NodePath("..")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_sxgsi"]
+script = ExtResource("6_43vns")
+instructions = Array[ExtResource("4_l3fru")]([SubResource("Resource_7f26w")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="EnemyExplode" unique_id=1109308380 instance=ExtResource("1_qtsmr")]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_y7ray")
+frame = 9
+frame_progress = 0.0
+
+[node name="OnReady" parent="." index="0" unique_id=1490306748]
+event_definition = SubResource("Resource_0j78i")
+action_runner = SubResource("Resource_55fqj")
+
+[node name="OnAnimationFinish" parent="." index="1" unique_id=720232994]
+event_definition = SubResource("Resource_pfdl6")
+action_runner = SubResource("Resource_sxgsi")

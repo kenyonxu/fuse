@@ -1,0 +1,446 @@
+{
+	"category": "gamplay",
+	"description": "",
+	"display_name": "GameFlow",
+	"event_bindings": [
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"bus": "Music",
+						"continue_during_pause": true,
+						"crossfade_duration": 2.0,
+						"music_path": "uid://bi1lb4nvpv6gn",
+						"type": "CrossfadeToMusic",
+						"volume": 1.0
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"auto_start": true,
+				"emit_repeat_count": false,
+				"interval_seconds": 51.0,
+				"max_interval_seconds": 2.0,
+				"max_repeats": 0,
+				"min_interval_seconds": 0.5,
+				"stop_condition": null,
+				"trigger_on_start": true,
+				"type": "OnInterval",
+				"use_random_interval": false
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_path": "",
+						"load_source": 0,
+						"type": "LoadGlobalVariables"
+					},
+					{
+						"pause_menu_parent": "",
+						"pause_menu_scene": "",
+						"show_pause_menu": false,
+						"type": "PauseGame",
+						"ui_node_path": "../../GameSceneCanvas"
+					},
+					{
+						"custom_scope_id": "",
+						"save_to_scope": 1,
+						"save_to_variable": "start_pos",
+						"scope_source": 0,
+						"target": "../../Game_Layer/PlayerShip",
+						"target_custom_scope_id": "",
+						"target_scope": 0,
+						"target_scope_source": 0,
+						"target_target_node_path": "",
+						"target_variable": "",
+						"type": "GetPosition",
+						"use_global_position": true,
+						"use_variable": false
+					},
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "current_wave",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 0,
+						"save_to_scope": 1,
+						"save_to_variable": "current_wave",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"recursive": false,
+						"result_scope": 1,
+						"result_variable": "spawn_pos",
+						"scope_source": 0,
+						"target_custom_scope_id": "",
+						"target_node": "../../Game_Layer/Markers",
+						"target_scope": 0,
+						"target_scope_source": 0,
+						"target_target_node_path": "",
+						"target_variable": "",
+						"type": "GetAllChildrenPosition",
+						"use_global_position": true,
+						"use_variable": false
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://bmfgotihlmfkw",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://cq7h6ykrfu4kv",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://ctimwhiu78cr8",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 100,
+						"pool_initial_size": 300,
+						"pool_max_size": 500,
+						"scene_path": "uid://bd83gfasoidja",
+						"type": "WarmUpPool",
+						"warm_up_count": 300,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://b4e65c431qgjd",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://pvuvnyrhmc36",
+						"type": "WarmUpPool",
+						"warm_up_count": 10,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 10,
+						"pool_max_size": 10,
+						"scene_path": "uid://c3b28ywrqiogw",
+						"type": "WarmUpPool",
+						"warm_up_count": 3,
+						"warm_up_mode": 0
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 30,
+						"scene_path": "uid://dadlwb08j675g",
+						"type": "WarmUpPool",
+						"warm_up_count": 10,
+						"warm_up_mode": 0
+					},
+					{
+						"custom_scope_id": "",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "Wait",
+						"value_source": 0,
+						"wait_time": 0.1
+					},
+					{
+						"context_node_path": "",
+						"custom_scope_id": "",
+						"result_variable_name": "",
+						"result_variable_scope": 0,
+						"scope_source": 0,
+						"store_result": false,
+						"target_node_path": "",
+						"target_runner": "../SpawnEnemy",
+						"type": "RunRunner",
+						"wait_for_completion": true
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"delay_seconds": 0.0,
+				"type": "OnReady"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "enemy_count",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 1,
+						"save_to_scope": 1,
+						"save_to_variable": "enemy_count",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "current_score",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope": 0,
+						"operand_b_scope_source": 0,
+						"operand_b_source": 1,
+						"operand_b_target_node_path": "",
+						"operand_b_variable": "event_score",
+						"operation_type": 0,
+						"save_to_scope": 1,
+						"save_to_variable": "current_score",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"from_scope_source": 0,
+						"from_variable": "current_score",
+						"from_variable_scope": 1,
+						"scope_source": 0,
+						"set_with_another_variable": true,
+						"target_node_path": "",
+						"target_variable": "c_score",
+						"target_variable_scope": 0,
+						"type": "SetVariable"
+					},
+					{
+						"deferred": false,
+						"event_args": {
+							"score": "$c_score"
+						},
+						"event_name": "ScoreUpdate",
+						"type": "SendEvent"
+					},
+					{
+						"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_mcog3",
+						"instructions": [
+							"发送事件: AllEnemyDied (res://demos/fuse/brickian/game_scene.tscn::Resource_5y4ic):<Resource#-9223369357650733775>"
+						],
+						"sequence_mode": 1,
+						"type": "IfThen"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"event_name": "EnemyDie",
+				"local_var_prefix": "event_",
+				"store_args_to_local": true,
+				"trigger_once": false,
+				"type": "OnReceiveEvent"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "player_life",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 1,
+						"save_to_scope": 1,
+						"save_to_variable": "player_life",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "Wait",
+						"value_source": 0,
+						"wait_time": 0.5
+					},
+					{
+						"pause_menu_parent": "",
+						"pause_menu_scene": "",
+						"show_pause_menu": false,
+						"type": "PauseGame",
+						"ui_node_path": "../../GameSceneCanvas"
+					},
+					{
+						"custom_scope_id": "",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "Wait",
+						"value_source": 0,
+						"wait_time": 0.1
+					},
+					{
+						"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_pj6tb",
+						"false_instructions": [
+							"发送事件: StartCountDown (res://demos/fuse/brickian/game_scene.tscn::Resource_ejd0v):<Resource#-9223369357348743877>",
+							"等待 2.0 秒 (res://demos/fuse/brickian/game_scene.tscn::Resource_2y4y2):<Resource#-9223369357298412228>",
+							"实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos (res://demos/fuse/brickian/game_scene.tscn::Resource_ull3x):<Resource#-9223369357281635011>",
+							"等待 1.0 秒 (res://demos/fuse/brickian/game_scene.tscn::Resource_onugj):<Resource#-9223369357231303362>",
+							"恢复游戏 (res://demos/fuse/brickian/game_scene.tscn::Resource_j327c):<Resource#-9223369357214526145>"
+						],
+						"sequence_mode": 1,
+						"true_instructions": [
+							"If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [FUSE_INSTRUCTION_IF_ELSE_MODE_ASYNC] (res://demos/fuse/brickian/game_scene.tscn::Resource_52e3n):<Resource#-9223369357097085630>",
+							"发送事件: GameEnd (res://demos/fuse/brickian/game_scene.tscn::Resource_kpi76):<Resource#-9223369357046753981>"
+						],
+						"type": "IfElse"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"event_name": "PlayerDie",
+				"local_var_prefix": "event_",
+				"store_args_to_local": true,
+				"trigger_once": false,
+				"type": "OnReceiveEvent"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "current_wave",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 0,
+						"save_to_scope": 1,
+						"save_to_variable": "current_wave",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_8v20a",
+						"false_instructions": [
+							"发送事件: GameEnd (res://demos/fuse/brickian/game_scene.tscn::Resource_rimn6):<Resource#-9223369356828650166>"
+						],
+						"sequence_mode": 1,
+						"true_instructions": [
+							"暂停游戏 (仅暂停) (res://demos/fuse/brickian/game_scene.tscn::Resource_s2i3n):<Resource#-9223369356778318517>",
+							"运行 Runner '../SpawnEnemy' 立即返回 (res://demos/fuse/brickian/game_scene.tscn::Resource_7e0w5):<Resource#-9223369356727986868>"
+						],
+						"type": "IfElse"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"event_name": "AllEnemyDied",
+				"local_var_prefix": "event_",
+				"store_args_to_local": false,
+				"trigger_once": false,
+				"type": "OnReceiveEvent"
+			}
+		}
+	],
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L4",
+	"trigger_config": {
+		"use_parallel_condition_evaluation": true
+	},
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}

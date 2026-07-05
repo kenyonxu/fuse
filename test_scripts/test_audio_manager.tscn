@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5kdbg4gfu2ck"]
+
+[ext_resource type="Script" path="res://test_scripts/verify_audio_manager.gd" id="1"]
+
+[node name="TestAudioManager" type="Node"]
+script = ExtResource("1")

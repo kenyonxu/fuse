@@ -1,0 +1,431 @@
+@tool
+@icon("res://addons/fuse/icons/builtin/ToolMove.png")
+extends BaseInstruction
+class_name MoveBy
+
+## 相对移动节点
+##
+## 相对于当前位置移动节点（支持 2D/3D）。
+##
+## 重构变量系统: 2026-02-09 - 使用 VariableOperations 统一变量访问
+## 添加 ScopeSource 支持: 2026-02-10 - 支持多种作用域来源
+## 添加 Vector2/Vector2i 支持: 2026-02-14 - 变量模式支持 2D/3D 向量类型
+
+# 目标节点路径
+var target_node: NodePath = NodePath(""):
+	set(path):
+		target_node = path
+		_update_resource_name()
+
+# 移动偏移量
+var offset: Vector3 = Vector3.ZERO
+
+# 坐标空间（Global/Local）
+enum CoordinateSpace {
+	GLOBAL,
+	LOCAL
+}
+var space: CoordinateSpace = CoordinateSpace.GLOBAL:
+	set(target_space):
+		space = target_space
+		_update_resource_name()
+
+# 是否使用变量
+var use_variable: bool = false:
+	set(value):
+		use_variable = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+# 偏移变量名
+var offset_variable: String = "":
+	set(value):
+		offset_variable = value
+		_update_resource_name()
+
+## 偏移变量作用域
+var offset_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+	set(value):
+		offset_scope = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+## 作用域来源（仅当 offset_scope == SCOPE 时使用）
+var scope_source: VariableScopeUtils.ScopeSource = VariableScopeUtils.ScopeSource.NEAREST:
+	set(value):
+		scope_source = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+## 自定义作用域 ID（CUSTOM_ID 模式使用）
+var custom_scope_id: String = "":
+	set(value):
+		custom_scope_id = value
+		_update_resource_name()
+
+## 目标节点路径（TARGET_NODE 模式使用）
+var target_node_path: NodePath = NodePath(""):
+	set(value):
+		target_node_path = value
+		_update_resource_name()
+
+## 获取指令元数据（用于指令选择器）
+static func _get_instruction_metadata() -> InstructionMetadata:
+	var metadata = InstructionMetadata.new()
+	metadata.name_key = "FUSE_INSTRUCTION_MOVE_BY_NAME"
+	metadata.category_key = "FUSE_CATEGORY_TRANSFORM"
+	metadata.description_key = "FUSE_INSTRUCTION_MOVE_BY_DESC"
+	metadata.keywords = ["move", "offset", "translate", "relative", "移动", "偏移"]
+	metadata.builtin_icon = "ToolMove"
+	return metadata
+
+## 设置指令元数据
+func _setup_metadata():
+	pass
+
+## 获取属性列表
+func _get_property_list() -> Array[Dictionary]:
+	var properties := []
+
+	# Transform 分类
+	properties.append({
+		name = "Transform",
+		type = TYPE_NIL,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_CATEGORY
+	})
+
+	# 目标节点
+	properties.append({
+		name = "target_node",
+		type = TYPE_NODE_PATH,
+		hint = PROPERTY_HINT_NODE_PATH_VALID_TYPES,
+		hint_string = "Node2D,Node3D",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+
+	# 坐标空间
+	properties.append({
+		name = "space",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Global,Local",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+
+	# 是否使用变量
+	properties.append({
+		name = "use_variable",
+		type = TYPE_BOOL,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+
+	if use_variable == false:
+		# 偏移值（当不使用变量时显示）
+		properties.append({
+			name = "offset",
+			type = TYPE_VECTOR3,
+			hint = PROPERTY_HINT_NONE,
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+	else:
+		# Variable 分类
+		properties.append({
+			name = "Variable",
+			type = TYPE_NIL,
+			hint = PROPERTY_HINT_NONE,
+			usage = PROPERTY_USAGE_CATEGORY
+		})
+
+		# 偏移变量名（当使用变量时显示）
+		properties.append({
+			name = "offset_variable",
+			type = TYPE_STRING,
+			hint = PROPERTY_HINT_NONE,
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+
+		# 偏移变量作用域（当使用变量时显示）
+		properties.append({
+			name = "offset_scope",
+			type = TYPE_INT,
+			hint = PROPERTY_HINT_ENUM,
+			hint_string = "Local,Scope,Global",
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+
+	return properties
+
+## 更新资源名称
+func _update_resource_name():
+	var parts = []
+
+	parts.append(FuseLocalization.translate("FUSE_INSTRUCTION_MOVE_BY_BASE"))
+
+	if not target_node.is_empty():
+		parts.append("'%s'" % target_node)
+	else:
+		parts.append(FuseLocalization.translate("FUSE_INSTRUCTION_MOVE_BY_NO_NODE"))
+
+	parts.append("[%s]" % _get_space_string())
+
+	if use_variable:
+		if offset_variable.is_empty():
+			parts.append(FuseLocalization.translate("FUSE_INSTRUCTION_MOVE_BY_NO_VARIABLE"))
+		else:
+			var scope_str = VariableScopeUtils.enum_to_string(offset_scope).to_upper()
+			if offset_scope == BaseVariable.VariableScope.SCOPE:
+				# SCOPE 作用域显示额外的来源信息
+				var scope_source_str = VariableScopeUtils.get_scope_source_string(
+					scope_source,
+					custom_scope_id,
+					target_node_path
+				)
+				parts.append(FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_FROM_SCOPE_VARIABLE", {
+					"name": offset_variable,
+					"source": scope_source_str
+				}))
+			else:
+				parts.append(FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_FROM_VARIABLE", {"name": "%s [%s]" % [offset_variable, scope_str]}))
+	else:
+		parts.append(FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_OFFSET", {"x": offset.x, "y": offset.y, "z": offset.z}))
+
+	resource_name = " ".join(parts)
+
+## 执行指令
+func execute(context: ExecutionContext):
+	_start_execution(context)
+
+	# 验证目标节点
+	if target_node.is_empty():
+		_log_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", {})
+		set_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
+		finished.emit()
+		return
+
+	# 获取目标节点
+	var node := context.get_node(target_node)
+	if not node:
+		_log_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": str(target_node)})
+		set_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"node": str(target_node)})
+		finished.emit()
+		return
+
+	# 获取目标偏移（支持 Vector2/Vector3）
+	var target_offset: Variant
+
+	if use_variable:
+		if offset_variable.is_empty():
+			_log_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", {})
+			set_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
+			finished.emit()
+			return
+
+		# 根据作用域来源获取变量值
+		var var_value: Variant
+		if offset_scope == BaseVariable.VariableScope.SCOPE:
+			match scope_source:
+				VariableScopeUtils.ScopeSource.NEAREST:
+					var_value = VariableOperations.get_variable(context, offset_variable, BaseVariable.VariableScope.SCOPE, null)
+				_:
+					var utils_scope_source = scope_source as VariableScopeUtils.ScopeSource
+					var scope_container = VariableScopeUtils.get_scope_container_by_source(
+						context,
+						utils_scope_source,
+						custom_scope_id,
+						target_node_path
+					)
+
+					if scope_container == null:
+						_log_error_localized("FUSE_ERROR_SCOPE_CONTAINER_NOT_FOUND", {})
+						set_error_localized("FUSE_ERROR_SCOPE_CONTAINER_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {})
+						finished.emit()
+						return
+
+					var_value = scope_container.get_variable(offset_variable, null)
+		else:
+			var_value = VariableOperations.get_variable(context, offset_variable, offset_scope, null)
+
+		if var_value == null and not VariableOperations.has_variable(context, offset_variable, offset_scope):
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": offset_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": offset_variable})
+			finished.emit()
+			return
+
+		# 支持更多向量类型
+		if var_value is Vector2 or var_value is Vector2i or var_value is Vector3 or var_value is Vector3i:
+			target_offset = var_value
+		else:
+			var type_str = type_string(typeof(var_value))
+			_log_error_localized("FUSE_ERROR_VAR_TYPE_INVALID", {"variable": offset_variable, "actual_type": type_str})
+			set_error_localized("FUSE_ERROR_VAR_TYPE_INVALID", FuseError.ErrorType.VALIDATION_ERROR, {"variable": offset_variable, "actual_type": type_str})
+			finished.emit()
+			return
+	else:
+		target_offset = offset
+
+	# 验证偏移值有效性
+	if not _is_valid_offset(target_offset):
+			_log_error_localized("FUSE_ERROR_INVALID_OFFSET", {})
+			set_error_localized("FUSE_ERROR_INVALID_OFFSET", FuseError.ErrorType.VALIDATION_ERROR, {})
+			finished.emit()
+			return
+
+	# 应用移动变换（自动检测 2D/3D）
+	if node is Node2D:
+		# 根据偏移量类型提取 2D 偏移
+		var offset_2d: Vector2
+		if target_offset is Vector2 or target_offset is Vector2i:
+			offset_2d = target_offset
+		else:  # Vector3/Vector3i -> 取 xy 分量
+			offset_2d = Vector2(target_offset.x, target_offset.y)
+
+		var current_pos: Vector2
+
+		if space == CoordinateSpace.GLOBAL:
+			current_pos = node.global_position
+			node.global_position = current_pos + offset_2d
+			_log_info_localized("FUSE_LOG_NODE2D_MOVE_GLOBAL", {
+				"node": node.name, "ox": offset_2d.x, "oy": offset_2d.y,
+				"fx": current_pos.x, "fy": current_pos.y,
+				"tx": node.global_position.x, "ty": node.global_position.y
+			})
+		else:
+			current_pos = node.position
+			var target_pos = current_pos + offset_2d
+			node.position = target_pos
+			_log_info_localized("FUSE_LOG_NODE2D_MOVE_LOCAL", {
+				"node": node.name, "ox": offset_2d.x, "oy": offset_2d.y,
+				"fx": current_pos.x, "fy": current_pos.y,
+				"tx": target_pos.x, "ty": target_pos.y
+			})
+
+	elif node is Node3D:
+		# 根据偏移量类型提取 3D 偏移
+		var offset_3d: Vector3
+		if target_offset is Vector3 or target_offset is Vector3i:
+			offset_3d = target_offset
+		else:  # Vector2/Vector2i -> 扩展为 Vector3(z=0)
+			offset_3d = Vector3(target_offset.x, target_offset.y, 0.0)
+
+		var current_pos: Vector3
+
+		if space == CoordinateSpace.GLOBAL:
+			current_pos = node.global_position
+			node.global_position = current_pos + offset_3d
+			_log_info_localized("FUSE_LOG_NODE3D_MOVE_GLOBAL", {
+				"node": node.name, "ox": offset_3d.x, "oy": offset_3d.y, "oz": offset_3d.z,
+				"fx": current_pos.x, "fy": current_pos.y, "fz": current_pos.z,
+				"tx": node.global_position.x, "ty": node.global_position.y, "tz": node.global_position.z
+			})
+		else:
+			current_pos = node.position
+			node.position = current_pos + offset_3d
+			_log_info_localized("FUSE_LOG_NODE3D_MOVE_LOCAL", {
+				"node": node.name, "ox": offset_3d.x, "oy": offset_3d.y, "oz": offset_3d.z,
+				"fx": current_pos.x, "fy": current_pos.y, "fz": current_pos.z,
+				"tx": node.position.x, "ty": node.position.y, "tz": node.position.z
+			})
+
+	else:
+		var type_str = node.get_class()
+		_log_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", {"node": node.name, "actual_type": type_str})
+		set_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "actual_type": type_str})
+		finished.emit()
+		return
+
+	_on_execution_completed()
+
+## 验证指令参数
+func validate() -> Array[String]:
+	var errors = super.validate()
+
+	if target_node.is_empty():
+		errors.append(FuseLocalization.translate("FUSE_ERROR_TARGET_NODE_EMPTY"))
+
+	if use_variable and offset_variable.is_empty():
+		errors.append(FuseLocalization.translate("FUSE_ERROR_OFFSET_VARIABLE_EMPTY"))
+
+	# 验证 SCOPE 作用域需要 ScopeVariableManager
+	if use_variable and offset_scope == BaseVariable.VariableScope.SCOPE:
+		var manager = ScopeVariableManager.get_instance()
+		if manager == null:
+			errors.append(FuseLocalization.translate("FUSE_ERROR_SCOPE_MANAGER_NOT_FOUND"))
+
+	# 只在 SCOPE 作用域时验证 ScopeSource 相关参数
+	if use_variable and offset_scope == BaseVariable.VariableScope.SCOPE:
+		errors.append_array(VariableScopeUtils.validate_scope_source_params(
+			scope_source,
+			custom_scope_id,
+			target_node_path
+		))
+
+	return errors
+
+## 验证偏移值是否有效（检查 NaN 和 Infinity）
+## 支持 Vector2/Vector2i/Vector3/Vector3i
+func _is_valid_offset(off: Variant) -> bool:
+	if off is Vector2 or off is Vector2i:
+		return not (is_nan(off.x) or is_inf(off.x) or
+					is_nan(off.y) or is_inf(off.y))
+	elif off is Vector3 or off is Vector3i:
+		return not (is_nan(off.x) or is_inf(off.x) or
+					is_nan(off.y) or is_inf(off.y) or
+					is_nan(off.z) or is_inf(off.z))
+	return false
+
+## 获取坐标空间的本地化字符串
+func _get_space_string() -> String:
+	return "全局" if space == CoordinateSpace.GLOBAL else "局部"
+
+## 动态属性设置（支持属性刷新）
+func _set(property: StringName, value: Variant) -> bool:
+	if property == "use_variable":
+		use_variable = value
+		notify_property_list_changed()
+	return true
+	return false
+
+## 属性验证
+func _validate_property(property: Dictionary) -> void:
+	if property.name == "offset" and use_variable:
+		property.usage = PROPERTY_USAGE_NO_EDITOR
+
+	if property.name == "offset_variable" and not use_variable:
+		property.usage = PROPERTY_USAGE_NO_EDITOR
+
+	# 只在 SCOPE 作用域时验证 ScopeSource 相关属性
+	if use_variable and offset_scope == BaseVariable.VariableScope.SCOPE:
+		VariableScopeUtils.validate_scope_source_property(property, scope_source)
+	else:
+		# 非 SCOPE 作用域时隐藏 ScopeSource 相关属性
+		if property.name in ["scope_source", "custom_scope_id", "target_node_path"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+
+## 获取指令描述
+func get_description() -> String:
+	var space_str = _get_space_string()
+	var offset_desc = ""
+
+	if use_variable:
+		if offset_variable.is_empty():
+			offset_desc = FuseLocalization.translate("FUSE_INSTRUCTION_MOVE_BY_DESC_NO_VARIABLE")
+		else:
+			var scope_str = VariableScopeUtils.enum_to_string(offset_scope).to_upper()
+			if offset_scope == BaseVariable.VariableScope.SCOPE:
+				# SCOPE 作用域显示额外的来源信息
+				var scope_source_str = VariableScopeUtils.get_scope_source_string(
+					scope_source,
+					custom_scope_id,
+					target_node_path
+				)
+				offset_desc = FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_DESC_SCOPE_VARIABLE", {
+					"name": offset_variable,
+					"source": scope_source_str
+				})
+			else:
+				offset_desc = FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_DESC_VARIABLE", {"name": "%s [%s]" % [offset_variable, scope_str]})
+	else:
+		offset_desc = FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_DESC_OFFSET", {"x": offset.x, "y": offset.y, "z": offset.z})
+
+	return FuseLocalization.translate_format("FUSE_INSTRUCTION_MOVE_BY_DESC_FORMAT", {"node": _get_node_display_name(target_node), "offset": offset_desc, "space": space_str})

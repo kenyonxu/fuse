@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_play_sound"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_play_sound.gd" id="1"]
+
+[node name="TestPlaySound" type="Node"]
+script = ExtResource("1")

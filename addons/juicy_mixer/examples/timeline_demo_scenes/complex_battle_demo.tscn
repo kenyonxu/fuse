@@ -1,0 +1,141 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvxnxkx8x1r2"]
+
+[sub_resource type="JuicyTimelineResource" id="JuicyTimelineResource_1"]
+timeline_name = "ComplexBattleDemo"
+duration = 3.0
+loop = false
+tracks = Array[JuicyTrack]([SubResource("JuicyPropertyTrack_1"), SubResource("JuicyFeedbackTrack_1"), SubResource("JuicyMethodTrack_1"), SubResource("JuicyEventTrack_1")])
+
+[sub_resource type="JuicyPropertyTrack" id="JuicyPropertyTrack_1"]
+track_name = "PlayerHitReaction"
+target_node_path = NodePath("Player")
+property_path = "modulate"
+duration = 1.5
+enabled = true
+keyframes = Array[JuicyKeyframe]([SubResource("JuicyKeyframe_1"), SubResource("JuicyKeyframe_2")])
+
+[sub_resource type="JuicyKeyframe" id="JuicyKeyframe_1"]
+time = 0.0
+value = Color(1, 1, 1, 1)
+interpolation = 0
+
+[sub_resource type="JuicyKeyframe" id="JuicyKeyframe_2"]
+time = 0.2
+value = Color(2, 0.5, 0.5, 1)
+interpolation = 2
+
+[sub_resource type="JuicyShakeResource" id="JuicyShakeResource_1"]
+resource_name = "BattleShake"
+shake_data = Array[ShakeData]([SubResource("ShakeData_1")])
+
+[sub_resource type="ShakeData" id="ShakeData_1"]
+property = "offset"
+amplitude = 15.0
+frequency = 20.0
+duration = 0.8
+falloff = 0
+noise_seed = 0
+octaves = 1
+persistence = 0.5
+lacunarity = 2.0
+
+[sub_resource type="JuicyFeedbackTrack" id="JuicyFeedbackTrack_1"]
+track_name = "ScreenShake"
+duration = 0.8
+enabled = true
+resource = SubResource("JuicyShakeResource_1")
+keyframes = Array[JuicyKeyframe]([SubResource("JuicyKeyframe_3")])
+
+[sub_resource type="JuicyKeyframe" id="JuicyKeyframe_3"]
+time = 0.1
+value = true
+interpolation = 5
+
+[sub_resource type="JuicyMethodTrack" id="JuicyMethodTrack_1"]
+track_name = "BattleSounds"
+target_node_path = NodePath("AudioManager")
+method_name = "play_sound"
+duration = 3.0
+enabled = true
+keyframes = Array[JuicyKeyframe]([SubResource("JuicyKeyframe_4"), SubResource("JuicyKeyframe_5")])
+
+[sub_resource type="JuicyKeyframe" id="JuicyKeyframe_4"]
+time = 0.0
+value = Array[String](["hit_sound", 1.0])
+interpolation = 5
+
+[sub_resource type="JuicyKeyframe" id="JuicyKeyframe_5"]
+time = 0.5
+value = Array[String](["impact_sound", 0.8])
+interpolation = 5
+
+[sub_resource type="JuicyAnimationPlayResource" id="JuicyAnimationPlayResource_1"]
+resource_name = "HitParticles"
+animation_data = Array[AnimationPlayData]([SubResource("AnimationPlayData_1")])
+
+[sub_resource type="AnimationPlayData" id="AnimationPlayData_1"]
+target = NodePath("Player")
+target_animation = "hit_effect"
+play_mode = 0
+end_at = 1.0
+blend_in_time = 0.1
+on_complete_action = 0
+
+[sub_resource type="JuicyEventTrack" id="JuicyEventTrack_1"]
+track_name = "ParticleEffects"
+duration = 2.0
+enabled = true
+juicy_event = SubResource("JuicyEvent_1")
+keyframes = Array[JuicyKeyframe]([SubResource("JuicyKeyframe_6")])
+
+[sub_resource type="JuicyEvent" id="JuicyEvent_1"]
+event_id = ""
+event_name = ""
+event_type = 2
+context_id = ""
+target = null
+event_data = {
+"particle_scene": "res://effects/hit_particles.tscn",
+"amount": 20,
+"spread": 45.0
+"color": Color(1, 0.2, 0.2, 1)
+}
+priority = 0
+timestamp = 0.0
+delay = 0.0
+is_processed = false
+is_persistent = false
+
+[sub_resource type="JuicyKeyframe" id="JuicyKeyframe_6"]
+time = 0.1
+value = {
+"count": 15,
+"color": Color(1, 0, 0, 1),
+"direction": Vector2(0, -1)
+}
+interpolation = 5
+
+[node name="BattleScene" type="Node2D"]
+position = Vector2(0, 0)
+
+[node name="Player" type="Node2D" parent="BattleScene"]
+position = Vector2(0, 0)
+modulate = Color(1, 1, 1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+position = Vector2(0, 0)
+scale = Vector2(1, 1)
+
+[node name="AudioManager" type="Node" parent="BattleScene"]
+position = Vector2(0, -50)
+
+[node name="UI" type="Control" parent="BattleScene"]
+position = Vector2(0, 100)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+
+[node name="PlayButton" type="Button" parent="VBoxContainer"]
+text = "播放战斗效果"
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+text = "准备播放战斗效果"

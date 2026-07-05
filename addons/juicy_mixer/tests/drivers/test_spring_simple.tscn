@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ba1bu5kyx2n8s"]
+
+[ext_resource type="Script" uid="uid://b516v1luyxpft" path="res://addons/juicy_mixer/tests/drivers/test_spring_simple.gd" id="1_test"]
+
+[node name="SpringTest" type="Node"]
+script = ExtResource("1_test")

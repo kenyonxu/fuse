@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://v4cartralcce"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_registry_dedup.gd" id="1"]
+
+[node name="TestRegistryDedup" type="Node"]
+script = ExtResource("1")

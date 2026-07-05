@@ -1,0 +1,464 @@
+[gd_scene format=3 uid="uid://cq7h6ykrfu4kv"]
+
+[ext_resource type="Texture2D" uid="uid://bhuikuarlmipr" path="res://third_party_resources/sprites/28.png" id="1_dus4x"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_k5ylq"]
+[ext_resource type="Script" uid="uid://cf17qhsehqosi" path="res://addons/fuse/events/node/on_target_signal_emit.gd" id="3_tr3av"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_pfao4"]
+[ext_resource type="Script" uid="uid://c0lvnqfcoe2br" path="res://addons/fuse/instructions/node_operations/recycle_pooled_scene.gd" id="5_tr3av"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_fofir"]
+[ext_resource type="Script" uid="uid://t4gmw2xe0e2j" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="6_iss06"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="6_pfao4"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="8_fofir"]
+[ext_resource type="Script" uid="uid://kqfm5jk6nukr" path="res://addons/fuse/instructions/node_operations/run_target_node_function.gd" id="9_iss06"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fofir"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iss06"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nuo10"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3uhwh"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3ih5"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(256, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rrur6"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(320, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mvye7"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(384, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_etxyu"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(448, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l1wvk"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(512, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b358l"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(576, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hybl6"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(640, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_46pkq"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(704, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_67h2u"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(768, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dc00k"]
+atlas = ExtResource("1_dus4x")
+region = Rect2(832, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_etxyu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fofir")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iss06")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nuo10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3uhwh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3ih5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rrur6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mvye7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_etxyu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l1wvk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b358l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hybl6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_46pkq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_67h2u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dc00k")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="Resource" id="Resource_nuo10"]
+resource_name = "On Ready With Delay: 0.0"
+script = ExtResource("8_fofir")
+
+[sub_resource type="Resource" id="Resource_d3ih5"]
+resource_name = "运行节点函数 → BulletExplode 调用: play 参数: 3 个"
+script = ExtResource("9_iss06")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+serialized_method_cache = Array[Dictionary]([{
+"args": Array[Dictionary]([]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "pause",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 21,
+"usage": 6
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "custom_speed",
+"type": 3,
+"usage": 6
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "from_end",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "play",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 21,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "play_backwards",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 21,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_animation",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "name",
+"type": 4,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_autoplay",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "centered",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_centered",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "flip_h",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_flip_h",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "flip_v",
+"type": 1,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_flip_v",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "frame",
+"type": 2,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_frame",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "frame",
+"type": 2,
+"usage": 6
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "progress",
+"type": 3,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_frame_and_progress",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "progress",
+"type": 3,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_frame_progress",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "offset",
+"type": 5,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_offset",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "speed_scale",
+"type": 3,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_speed_scale",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"SpriteFrames",
+"hint": 17,
+"hint_string": "SpriteFrames",
+"name": "sprite_frames",
+"type": 24,
+"usage": 6
+}]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "set_sprite_frames",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "AnimatedSprite2D",
+"flags": 1,
+"inheritance_level": 0,
+"name": "stop",
+"return_val": 0
+}])
+serialized_parameter_metadata = Array[Dictionary]([{
+"current_value": null,
+"custom_scope_id": "",
+"default_value": null,
+"hint": 0,
+"hint_string": "",
+"index": 0,
+"name": "name",
+"scope_source": 0,
+"scope_target_path": NodePath(""),
+"type": 21,
+"use_variable": false,
+"variable_name": "",
+"variable_scope": 0
+}, {
+"current_value": null,
+"custom_scope_id": "",
+"default_value": null,
+"hint": 0,
+"hint_string": "",
+"index": 1,
+"name": "custom_speed",
+"scope_source": 0,
+"scope_target_path": NodePath(""),
+"type": 3,
+"use_variable": false,
+"variable_name": "",
+"variable_scope": 0
+}, {
+"current_value": null,
+"custom_scope_id": "",
+"default_value": null,
+"hint": 0,
+"hint_string": "",
+"index": 2,
+"name": "from_end",
+"scope_source": 0,
+"scope_target_path": NodePath(""),
+"type": 1,
+"use_variable": false,
+"variable_name": "",
+"variable_scope": 0
+}])
+target_node = NodePath("..")
+target_function = "play"
+method_inheritance_levels = 1
+exclude_getter_methods = true
+debug_filtering = false
+param_0___name = &"default"
+param_1___custom_speed = 2.0
+param_2___from_end = null
+store_result = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_mvye7"]
+resource_name = "随机播放音效 (3 个音效) (随机音高 ±0.2)"
+script = ExtResource("6_iss06")
+sound_paths = Array[String](["uid://bws8o7kjplan1", "uid://duejvyqtdt3cx", "uid://bk7luej8apn05"])
+volume = 1.0
+pitch_scale = 1.0
+pitch_random_range = 0.2
+bus = "SFX"
+
+[sub_resource type="Resource" id="Resource_rrur6"]
+script = ExtResource("6_fofir")
+instructions = Array[ExtResource("4_pfao4")]([SubResource("Resource_d3ih5"), SubResource("Resource_mvye7")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_iss06"]
+resource_name = "信号监听 → .. :: animation_finished"
+script = ExtResource("3_tr3av")
+target_node = NodePath("..")
+target_signal = "animation_finished"
+trigger_once = false
+filter_signal_args = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_xpamv"]
+resource_name = "打印: 动画结束，回收爆炸"
+script = ExtResource("6_pfao4")
+message = "动画结束，回收爆炸"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_pfao4"]
+resource_name = "回收池化场景 [Node] BulletExplode"
+script = ExtResource("5_tr3av")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node = NodePath("")
+recycle_mode = 1
+target_node = NodePath("..")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_3uhwh"]
+script = ExtResource("6_fofir")
+instructions = Array[ExtResource("4_pfao4")]([SubResource("Resource_xpamv"), SubResource("Resource_pfao4")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="BulletExplode" type="AnimatedSprite2D" unique_id=1109308380]
+sprite_frames = SubResource("SpriteFrames_etxyu")
+frame_progress = 1.0
+
+[node name="OnReady" type="Node" parent="." unique_id=1490306748]
+script = ExtResource("2_k5ylq")
+event_definition = SubResource("Resource_nuo10")
+action_runner = SubResource("Resource_rrur6")
+pool_mode = true
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnAnimationFinish" type="Node" parent="." unique_id=720232994]
+script = ExtResource("2_k5ylq")
+event_definition = SubResource("Resource_iss06")
+action_runner = SubResource("Resource_3uhwh")
+pool_mode = true
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

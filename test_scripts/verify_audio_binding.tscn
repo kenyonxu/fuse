@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://verify_audio_binding"]
+
+[ext_resource type="Script" path="res://test_scripts/verify_audio_binding.gd" id="1"]
+
+[node name="VerifyAudioBinding" type="Node"]
+script = ExtResource("1")

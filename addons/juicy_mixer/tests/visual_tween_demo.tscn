@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://visual_tween_demo"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/visual_tween_demo.gd" id="1_visual_tween_demo"]
+
+[sub_resource type="Gradient" id="Gradient_1"]
+colors = PackedColorArray(1, 0, 0, 1, 0, 0, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1"]
+gradient = SubResource("Gradient_1")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="VisualTweenDemo" type="Node2D"]
+script = ExtResource("1_visual_tween_demo")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(400, 300)
+scale = Vector2(2, 2)
+texture = SubResource("GradientTexture2D_1")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 600.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 16
+text = "当前：基础位置Tween - 缓动对比
+数字键1-5：选择演示，空格键：重置，R键：重新开始"
+autowrap_mode = 2
+
+[node name="PathIndicator" type="Line2D" parent="."]
+width = 3.0
+default_color = Color(1, 1, 1, 0.8)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="DemoObjects" type="Node2D" parent="."]
+visible = false
+
+[node name="ComparisonSprite1" type="Sprite2D" parent="DemoObjects"]
+position = Vector2(200, 200)
+scale = Vector2(1.5, 1.5)
+texture = SubResource("GradientTexture2D_1")
+modulate = Color(0.5, 1, 0.5, 1)
+
+[node name="ComparisonSprite2" type="Sprite2D" parent="DemoObjects"]
+position = Vector2(600, 200)
+scale = Vector2(1.5, 1.5)
+texture = SubResource("GradientTexture2D_1")
+modulate = Color(1, 0.5, 0.5, 1)
+
+[node name="ComparisonSprite3" type="Sprite2D" parent="DemoObjects"]
+position = Vector2(400, 150)
+scale = Vector2(1.5, 1.5)
+texture = SubResource("GradientTexture2D_1")
+modulate = Color(0.5, 0.5, 1, 1)
+
+[node name="ComparisonSprite4" type="Sprite2D" parent="DemoObjects"]
+position = Vector2(300, 450)
+scale = Vector2(1.5, 1.5)
+texture = SubResource("GradientTexture2D_1")
+modulate = Color(1, 1, 0.5, 1)
+
+[node name="ComparisonSprite5" type="Sprite2D" parent="DemoObjects"]
+position = Vector2(500, 450)
+scale = Vector2(1.5, 1.5)
+texture = SubResource("GradientTexture2D_1")
+modulate = Color(1, 0.5, 1, 1)

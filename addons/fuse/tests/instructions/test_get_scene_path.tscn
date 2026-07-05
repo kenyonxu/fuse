@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ehsnoptysd5s"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_get_scene_path.gd" id="1"]
+
+[node name="TestGetScenePath" type="Node"]
+script = ExtResource("1")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_audio_category"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_audio_category.gd" id="1"]
+
+[node name="TestAudioCategory" type="Node"]
+script = ExtResource("1")

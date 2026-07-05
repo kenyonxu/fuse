@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_move_by"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_move_by.gd" id="1"]
+
+[node name="TestMoveBy" type="Node3D"]
+script = ExtResource("1")

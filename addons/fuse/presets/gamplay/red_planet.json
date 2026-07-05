@@ -1,0 +1,43 @@
+{
+	"action_runner": {
+		"instructions": [
+			{
+				"duration": 50.0,
+				"easing_type": 2,
+				"space_mode": 1,
+				"target_node": "..",
+				"target_position": "(0.0, 900.0)",
+				"trans_type": 0,
+				"type": "TweenMoveTo"
+			}
+		]
+	},
+	"category": "gamplay",
+	"description": "",
+	"display_name": "red_planet",
+	"event": {
+		"auto_start": true,
+		"emit_repeat_count": true,
+		"interval_seconds": 50.0,
+		"max_interval_seconds": 2.0,
+		"max_repeats": 0,
+		"min_interval_seconds": 0.5,
+		"stop_condition": null,
+		"trigger_on_start": true,
+		"type": "OnInterval",
+		"use_random_interval": false
+	},
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L2",
+	"trigger_config": {
+		"cooldown_mode": 0,
+		"cooldown_time": 1.0,
+		"trigger_once": false
+	},
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}

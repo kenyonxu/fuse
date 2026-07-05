@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://run_batch3_tests"]
+
+[ext_resource type="Script" path="res://test_scripts/verify_phase2_batch3.gd" id="1"]
+
+[node name="RunBatch3Tests" type="Node"]
+script = ExtResource("1")

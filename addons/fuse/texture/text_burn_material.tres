@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://uyj8uartsnj0"]
+
+[ext_resource type="Shader" uid="uid://j27qcous0ghx" path="res://addons/fuse/texture/text_burn.gdshader" id="1"]
+[ext_resource type="Texture2D" uid="uid://c3tg2w412cgw" path="res://addons/fuse/texture/noise_texture_2d.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://cepa5oc0dn46y" path="res://addons/fuse/texture/burn_color.tres" id="2_7da6i"]
+
+[resource]
+shader = ExtResource("1")
+shader_parameter/burn_progress = 1.0
+shader_parameter/burn_noise = ExtResource("2")
+shader_parameter/edge_softness = 0.0
+shader_parameter/edge_width = 0.0630000029925
+shader_parameter/burn_gradient = ExtResource("2_7da6i")
+shader_parameter/use_gradient = true
+shader_parameter/burn_color = Color(0.8344224, 0.24593726, 2.8878452e-07, 1)
+shader_parameter/noise_strength = 0.1530000072675
+shader_parameter/direction_angle = 0.0
+shader_parameter/blend_mode = 0

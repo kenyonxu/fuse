@@ -1,0 +1,205 @@
+[gd_resource type="AudioBusLayout" format=3 uid="uid://cd3b3hij8oxct"]
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_vfh3k"]
+pan = -1.0
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_h4b2v"]
+pan = -1.0
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_yf08b"]
+pan = -1.0
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_q82ah"]
+pan = -1.0
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_6jdjp"]
+pan = 1.0
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_aw008"]
+pan = 0.007874016
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_b5aql"]
+pan = 1.0
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_x123a"]
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_y1not"]
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_tuf52"]
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_o4qmf"]
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_cveit"]
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_ukip6"]
+pan = -0.007874016
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_rkp28"]
+pan = 0.007874016
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_c2jlx"]
+pan = -0.21259843
+
+[sub_resource type="AudioEffectPanner" id="AudioEffectPanner_pfdku"]
+pan = -0.18110237
+
+[resource]
+bus/0/volume_db = -4.0056863
+bus/1/name = &"SFX"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.0
+bus/1/send = &"Master"
+bus/2/name = &"Music"
+bus/2/solo = false
+bus/2/mute = false
+bus/2/bypass_fx = false
+bus/2/volume_db = 0.0
+bus/2/send = &"Master"
+bus/3/name = &"Voice"
+bus/3/solo = false
+bus/3/mute = false
+bus/3/bypass_fx = false
+bus/3/volume_db = 0.0
+bus/3/send = &"Master"
+bus/4/name = &"Ambient"
+bus/4/solo = false
+bus/4/mute = false
+bus/4/bypass_fx = false
+bus/4/volume_db = 0.0
+bus/4/send = &"Master"
+bus/5/name = &"ClefMaster"
+bus/5/solo = false
+bus/5/mute = false
+bus/5/bypass_fx = false
+bus/5/volume_db = 0.0
+bus/5/send = &"Master"
+bus/6/name = &"clef_ch_0"
+bus/6/solo = false
+bus/6/mute = false
+bus/6/bypass_fx = false
+bus/6/volume_db = -2.0760744
+bus/6/send = &"ClefMaster"
+bus/6/effect/0/effect = SubResource("AudioEffectPanner_ukip6")
+bus/6/effect/0/enabled = true
+bus/7/name = &"clef_ch_1"
+bus/7/solo = false
+bus/7/mute = false
+bus/7/bypass_fx = false
+bus/7/volume_db = -2.0760744
+bus/7/send = &"ClefMaster"
+bus/7/effect/0/effect = SubResource("AudioEffectPanner_rkp28")
+bus/7/effect/0/enabled = true
+bus/8/name = &"clef_ch_2"
+bus/8/solo = false
+bus/8/mute = false
+bus/8/bypass_fx = false
+bus/8/volume_db = -2.0760744
+bus/8/send = &"ClefMaster"
+bus/8/effect/0/effect = SubResource("AudioEffectPanner_c2jlx")
+bus/8/effect/0/enabled = true
+bus/9/name = &"clef_ch_3"
+bus/9/solo = false
+bus/9/mute = false
+bus/9/bypass_fx = false
+bus/9/volume_db = -2.0760744
+bus/9/send = &"ClefMaster"
+bus/9/effect/0/effect = SubResource("AudioEffectPanner_pfdku")
+bus/9/effect/0/enabled = true
+bus/10/name = &"clef_ch_4"
+bus/10/solo = false
+bus/10/mute = false
+bus/10/bypass_fx = false
+bus/10/volume_db = -2.0760744
+bus/10/send = &"ClefMaster"
+bus/10/effect/0/effect = SubResource("AudioEffectPanner_vfh3k")
+bus/10/effect/0/enabled = true
+bus/11/name = &"clef_ch_5"
+bus/11/solo = false
+bus/11/mute = false
+bus/11/bypass_fx = false
+bus/11/volume_db = -2.0760744
+bus/11/send = &"ClefMaster"
+bus/11/effect/0/effect = SubResource("AudioEffectPanner_h4b2v")
+bus/11/effect/0/enabled = true
+bus/12/name = &"clef_ch_6"
+bus/12/solo = false
+bus/12/mute = false
+bus/12/bypass_fx = false
+bus/12/volume_db = -2.0760744
+bus/12/send = &"ClefMaster"
+bus/12/effect/0/effect = SubResource("AudioEffectPanner_yf08b")
+bus/12/effect/0/enabled = true
+bus/13/name = &"clef_ch_7"
+bus/13/solo = false
+bus/13/mute = false
+bus/13/bypass_fx = false
+bus/13/volume_db = -2.0760744
+bus/13/send = &"ClefMaster"
+bus/13/effect/0/effect = SubResource("AudioEffectPanner_q82ah")
+bus/13/effect/0/enabled = true
+bus/14/name = &"clef_ch_8"
+bus/14/solo = false
+bus/14/mute = false
+bus/14/bypass_fx = false
+bus/14/volume_db = -2.0760744
+bus/14/send = &"ClefMaster"
+bus/14/effect/0/effect = SubResource("AudioEffectPanner_6jdjp")
+bus/14/effect/0/enabled = true
+bus/15/name = &"clef_ch_9"
+bus/15/solo = false
+bus/15/mute = false
+bus/15/bypass_fx = false
+bus/15/volume_db = -2.0760744
+bus/15/send = &"ClefMaster"
+bus/15/effect/0/effect = SubResource("AudioEffectPanner_aw008")
+bus/15/effect/0/enabled = true
+bus/16/name = &"clef_ch_10"
+bus/16/solo = false
+bus/16/mute = false
+bus/16/bypass_fx = false
+bus/16/volume_db = -2.0760744
+bus/16/send = &"ClefMaster"
+bus/16/effect/0/effect = SubResource("AudioEffectPanner_b5aql")
+bus/16/effect/0/enabled = true
+bus/17/name = &"clef_ch_11"
+bus/17/solo = false
+bus/17/mute = false
+bus/17/bypass_fx = false
+bus/17/volume_db = -2.0760744
+bus/17/send = &"ClefMaster"
+bus/17/effect/0/effect = SubResource("AudioEffectPanner_x123a")
+bus/17/effect/0/enabled = true
+bus/18/name = &"clef_ch_12"
+bus/18/solo = false
+bus/18/mute = false
+bus/18/bypass_fx = false
+bus/18/volume_db = -2.0760744
+bus/18/send = &"ClefMaster"
+bus/18/effect/0/effect = SubResource("AudioEffectPanner_y1not")
+bus/18/effect/0/enabled = true
+bus/19/name = &"clef_ch_13"
+bus/19/solo = false
+bus/19/mute = false
+bus/19/bypass_fx = false
+bus/19/volume_db = -2.0760744
+bus/19/send = &"ClefMaster"
+bus/19/effect/0/effect = SubResource("AudioEffectPanner_tuf52")
+bus/19/effect/0/enabled = true
+bus/20/name = &"clef_ch_14"
+bus/20/solo = false
+bus/20/mute = false
+bus/20/bypass_fx = false
+bus/20/volume_db = -2.0760744
+bus/20/send = &"ClefMaster"
+bus/20/effect/0/effect = SubResource("AudioEffectPanner_o4qmf")
+bus/20/effect/0/enabled = true
+bus/21/name = &"clef_ch_15"
+bus/21/solo = false
+bus/21/mute = false
+bus/21/bypass_fx = false
+bus/21/volume_db = -2.0760744
+bus/21/send = &"ClefMaster"
+bus/21/effect/0/effect = SubResource("AudioEffectPanner_cveit")
+bus/21/effect/0/enabled = true

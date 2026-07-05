@@ -1,0 +1,81 @@
+# Godot 4+ specific ignores
+.godot/
+.nomedia
+
+# Godot-specific ignores
+# .import/ 文件必须提交到 git，包含资源导入配置
+export.cfg
+export_credentials.cfg
+*.remap
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# AI-coding ignores
+tmp*.*
+.claude/*
+!/.claude/skills/
+!/.claude/skills/**
+!/.claude/agents/
+!/.claude/agents/**
+.kilocode/
+.mcp.json
+QWEN.md
+.clef-work/
+
+# Backup and temporary directories
+backups/
+recordings/
+*.backup
+*.bak
+*.old
+
+# Third party resources
+third_party_resources/
+
+# Test output files
+test_*.log
+test_*.txt
+
+# Graphify - local state (machine-specific, not meaningful to share)
+graphify-out/cache/
+graphify-out/.graphify_python
+graphify-out/cost.json
+graphify-out/manifest.json
+
+# Python cache and tool output
+__pycache__/
+*.pyc
+*.pyo
+tools/check_results.txt
+
+# Brainstorm session artifacts
+.superpowers/brainstorm/
+
+# Test tooling caches
+.playwright/
+.pytest_cache/
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor workspace (machine-specific paths)
+.vscode/
+
+# Auto-generated evaluation reports
+docs/reports/event_migration_evaluation_*.md
+music21/
+
+# Local-only dev plugins (本地开发依赖，不提交远程)
+# 方案 Y 约束：Fuse 发布零 ast-flow 痕迹。gdscript_ast 仅开发期 codegen 用。
+addons/gdscript_ast/
+
+# 本地图标素材（仅开发期用，不提交）
+addons/at-icons/

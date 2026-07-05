@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://caw3dj6cqc40s"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_array_find.gd" id="1_test"]
+
+[node name="TestArrayFind" type="Node"]
+script = ExtResource("1_test")

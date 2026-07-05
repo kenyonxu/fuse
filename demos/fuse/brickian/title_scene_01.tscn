@@ -1,0 +1,369 @@
+[gd_scene format=3 uid="uid://dg2k5ogbfi71i"]
+
+[ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="1_7afn3"]
+[ext_resource type="Resource" uid="uid://hinb6brbt80c" path="res://demos/fuse/brick_demo_basic.tres" id="2_3c3pk"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_xe4r6"]
+[ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="4_sswtr"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_fh5xj"]
+[ext_resource type="Script" uid="uid://dgk6lyr4260ad" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="6_xrx2v"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_xdhsj"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="8_6boee"]
+[ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="9_8vsi4"]
+[ext_resource type="Script" uid="uid://cqhqfchyyqctl" path="res://addons/fuse/conditions/input/check_any_input.gd" id="10_qflcm"]
+[ext_resource type="Script" uid="uid://cx6ba54wjdawh" path="res://addons/fuse/instructions/tween/tween_fade_in.gd" id="11_0gkhj"]
+[ext_resource type="Script" uid="uid://im3nor20tka0" path="res://addons/fuse/instructions/tween/tween_fade_out.gd" id="12_7afn3"]
+[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/btn_title_option.tscn" id="13_mk2ch"]
+[ext_resource type="Script" uid="uid://bpgyrl1kelnm0" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="14_l7263"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="15_d0tt0"]
+[ext_resource type="Script" uid="uid://bhy8o7uexju0b" path="res://addons/fuse/instructions/flow_control/if_then.gd" id="16_lakt5"]
+[ext_resource type="Script" uid="uid://koqcwgwlg15a" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="17_3gids"]
+[ext_resource type="Script" uid="uid://btqvw0a03xqcx" path="res://addons/fuse/instructions/ui/show_hide_ui.gd" id="18_0kckf"]
+[ext_resource type="Material" uid="uid://uyj8uartsnj0" path="res://addons/fuse/texture/text_burn_material.tres" id="19_ma0qc"]
+[ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="20_wobfv"]
+
+[sub_resource type="Resource" id="Resource_0a2a6"]
+resource_name = "间隔执行: 98.0s - 自动开始 立即触发 无限重复"
+script = ExtResource("4_sswtr")
+trigger_on_start = true
+interval_seconds = 98.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_skq6f"]
+resource_name = "交叉淡入淡出 'SpaceBattle_8bit_final_edit.mp3' [37.84s] (交叉淡入淡出 2.0秒) (暂停时继续)"
+script = ExtResource("6_xrx2v")
+music_path = "uid://bb4pejebdfl4"
+volume = 1.0
+bus = "Music"
+continue_during_pause = true
+crossfade_duration = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_j1uya"]
+script = ExtResource("7_xdhsj")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_skq6f")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_ax8le"]
+resource_name = "预加载场景 'game_scene.tscn' (等待完成)"
+script = ExtResource("9_8vsi4")
+scene_path = "uid://ll1b03u7xdqo"
+preload_mode = 0
+timeout = 5.0
+status_variable = "preload_scene_status"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_lh002"]
+script = ExtResource("7_xdhsj")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_ax8le")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_fknqa"]
+script = ExtResource("10_qflcm")
+
+[sub_resource type="Resource" id="Resource_gubkn"]
+resource_name = "间隔执行: 1.3s - 自动开始 间隔后触发 无限重复"
+script = ExtResource("4_sswtr")
+stop_condition = SubResource("Resource_fknqa")
+interval_seconds = 1.3
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_4656v"]
+resource_name = "淡入 [TitleHint] alpha: 0.0→1.0 (0.50s)"
+script = ExtResource("11_0gkhj")
+target_node = NodePath("..")
+duration = 0.5
+from_alpha = 0.0
+to_alpha = 1.0
+easing_type = 1
+trans_type = 1
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_gs1l0"]
+resource_name = "淡出 [TitleHint] (0.50s)"
+script = ExtResource("12_7afn3")
+target_node = NodePath("..")
+duration = 0.5
+auto_free = false
+easing_type = 1
+trans_type = 3
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_0t5sn"]
+script = ExtResource("7_xdhsj")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_4656v"), SubResource("Resource_gs1l0")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_rt6no"]
+resource_name = "game_scene.tscn 预加载: LOADED"
+script = ExtResource("14_l7263")
+scene_path = "uid://ll1b03u7xdqo"
+expected_status = 0
+
+[sub_resource type="Resource" id="Resource_xa4at"]
+resource_name = "打印: loaded"
+script = ExtResource("15_d0tt0")
+message = "loaded"
+
+[sub_resource type="Resource" id="Resource_08rkf"]
+resource_name = "If/Then 检查场景 game_scene.tscn 的预加载状态是否为 LOADED [1 个指令] [FUSE_INSTRUCTION_IF_ELSE_MODE_ASYNC]"
+script = ExtResource("16_lakt5")
+condition = SubResource("Resource_rt6no")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_xa4at")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_vuhxv"]
+resource_name = "切换场景 'game_scene.tscn' (延迟 1.0 秒)"
+script = ExtResource("17_3gids")
+scene_path = "uid://ll1b03u7xdqo"
+delay = 1.0
+
+[sub_resource type="Resource" id="Resource_3nc64"]
+script = ExtResource("7_xdhsj")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_08rkf"), SubResource("Resource_vuhxv")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_r4ibc"]
+resource_name = "显示 UI → Panel"
+script = ExtResource("18_0kckf")
+target_node = NodePath("..")
+action = 0
+
+[sub_resource type="Resource" id="Resource_cm44k"]
+resource_name = "淡入 [Panel] alpha: 0.0→1.0 (0.50s)"
+script = ExtResource("11_0gkhj")
+target_node = NodePath("..")
+duration = 0.5
+from_alpha = 0.0
+to_alpha = 1.0
+easing_type = 1
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_2f70v"]
+script = ExtResource("7_xdhsj")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_r4ibc"), SubResource("Resource_cm44k")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="LabelSettings" id="LabelSettings_jlq5n"]
+font_size = 45
+font_color = Color(0.17768212, 0.808988, 0.960966, 1)
+
+[sub_resource type="Resource" id="Resource_tb65y"]
+resource_name = "显示 UI → Title"
+script = ExtResource("18_0kckf")
+target_node = NodePath("..")
+action = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_tqj2j"]
+resource_name = "属性动画 [Title] [Material] .shader_parameter/burn_progress = 0.0 (1.00s)"
+script = ExtResource("20_wobfv")
+target_node = NodePath("..")
+property_source = 1
+property_path = "shader_parameter/burn_progress"
+to_value = 0.0
+duration = 1.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_rxicv"]
+script = ExtResource("7_xdhsj")
+instructions = Array[ExtResource("5_fh5xj")]([SubResource("Resource_tb65y"), SubResource("Resource_tqj2j")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="TitleScene" type="Node2D" unique_id=503723083]
+
+[node name="GameManager" type="Node" parent="." unique_id=1957567900]
+
+[node name="GlobalVariableAssistant" type="Node" parent="GameManager" unique_id=1873685317]
+script = ExtResource("1_7afn3")
+current_resource = ExtResource("2_3c3pk")
+resource_path = "res://demos/fuse/brick_demo_basic.tres"
+log_level = 0
+metadata/_custom_type_script = "uid://banshq4o4dxat"
+
+[node name="SceneLogics" type="Node" parent="." unique_id=1770029596]
+
+[node name="PlayBGM" type="Node" parent="SceneLogics" unique_id=1794120458]
+script = ExtResource("3_xe4r6")
+event_definition = SubResource("Resource_0a2a6")
+action_runner = SubResource("Resource_j1uya")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnSceneReady" type="Node" parent="SceneLogics" unique_id=1681016446]
+script = ExtResource("8_6boee")
+action_runner = SubResource("Resource_lh002")
+target_node = NodePath("../..")
+signal_name = "ready"
+action_runner = SubResource("Resource_lh002")
+target_node = NodePath("../..")
+signal_name = "ready"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="Camera" type="Node" parent="." unique_id=1700243516]
+
+[node name="Camera2D" type="Camera2D" parent="Camera" unique_id=2030475508]
+
+[node name="Control" type="Control" parent="." unique_id=1642093990]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control" unique_id=1262310325]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -151.0
+offset_top = -101.0
+offset_right = 152.0
+offset_bottom = 237.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="TitleHint" type="Label" parent="Control" unique_id=1305982906]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -11.0
+offset_right = 150.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "Press Any Key To Start"
+horizontal_alignment = 1
+
+[node name="HintBreath" type="Node" parent="Control/TitleHint" unique_id=1858111271]
+script = ExtResource("3_xe4r6")
+event_definition = SubResource("Resource_gubkn")
+action_runner = SubResource("Resource_0t5sn")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Panel" type="Panel" parent="Control" unique_id=815578377]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -261.0
+offset_top = -209.0
+offset_right = 262.0
+offset_bottom = 289.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Panel" unique_id=495860868]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 130
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 130
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel/MarginContainer" unique_id=1770749967]
+layout_mode = 2
+theme_override_constants/separation = 31
+alignment = 1
+
+[node name="StartGame" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=1680328388 instance=ExtResource("13_mk2ch")]
+layout_mode = 2
+text = "Start Game"
+
+[node name="Runner" type="Node" parent="Control/Panel/MarginContainer/VBoxContainer/StartGame" unique_id=1142362523]
+script = ExtResource("8_6boee")
+action_runner = SubResource("Resource_3nc64")
+target_node = NodePath("..")
+signal_name = "pressed"
+action_runner = SubResource("Resource_3nc64")
+target_node = NodePath("..")
+signal_name = "pressed"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="Continue" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=1416434004 instance=ExtResource("13_mk2ch")]
+layout_mode = 2
+text = "Continue"
+
+[node name="Settings" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=897214948 instance=ExtResource("13_mk2ch")]
+layout_mode = 2
+text = "Settings"
+
+[node name="Quit" parent="Control/Panel/MarginContainer/VBoxContainer" unique_id=548003561 instance=ExtResource("13_mk2ch")]
+layout_mode = 2
+text = "Quit"
+
+[node name="OnHintBreathStopped" type="Node" parent="Control/Panel" unique_id=728846473]
+script = ExtResource("8_6boee")
+action_runner = SubResource("Resource_2f70v")
+target_node = NodePath("../../TitleHint/HintBreath")
+signal_name = "event_stopped"
+action_runner = SubResource("Resource_2f70v")
+target_node = NodePath("../../TitleHint/HintBreath")
+signal_name = "event_stopped"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="Title" type="Label" parent="Control" unique_id=326494521]
+material = ExtResource("19_ma0qc")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -186.0
+offset_right = 300.0
+offset_bottom = -86.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "A FUSE GAME DEMO"
+label_settings = SubResource("LabelSettings_jlq5n")
+horizontal_alignment = 1
+vertical_alignment = 1
+visible_characters_behavior = 3
+
+[node name="OnSceneReady" type="Node" parent="Control/Title" unique_id=1890171963]
+script = ExtResource("8_6boee")
+action_runner = SubResource("Resource_rxicv")
+target_node = NodePath("../../..")
+signal_name = "ready"
+action_runner = SubResource("Resource_rxicv")
+target_node = NodePath("../../..")
+signal_name = "ready"
+metadata/_custom_type_script = "uid://parouyd882ij"

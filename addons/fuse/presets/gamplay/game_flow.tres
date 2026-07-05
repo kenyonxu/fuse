@@ -1,0 +1,545 @@
+[gd_resource type="Resource" script_class="FusePreset" format=3 uid="uid://cnkoj2k6c1j5u"]
+
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="1_sgqhx"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="2_xw62m"]
+[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="3_8jeqc"]
+[ext_resource type="Script" uid="uid://bmy5yettfgcii" path="res://addons/fuse/instructions/arrays/array_add.gd" id="4_uv1kb"]
+[ext_resource type="Script" uid="uid://bhy8o7uexju0b" path="res://addons/fuse/instructions/flow_control/if_then.gd" id="5_3a64e"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_7n2jb"]
+[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="7_mo1gi"]
+[ext_resource type="Script" uid="uid://dq3x44e84gtf7" path="res://addons/fuse/instructions/flow_control/resume_game.gd" id="8_68tvk"]
+[ext_resource type="Script" uid="uid://bxjem41rq4evo" path="res://addons/fuse/instructions/flow_control/pause_game.gd" id="9_k1i4i"]
+[ext_resource type="Script" uid="uid://bng7t7ktatxjc" path="res://addons/fuse/instructions/flow_control/run_runner.gd" id="10_sxe4j"]
+[ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="11_8wic3"]
+
+[sub_resource type="Resource" id="Resource_5y4ic"]
+resource_name = "发送事件: AllEnemyDied"
+script = ExtResource("2_xw62m")
+event_name = "AllEnemyDied"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ejd0v"]
+resource_name = "发送事件: StartCountDown"
+script = ExtResource("2_xw62m")
+event_name = "StartCountDown"
+
+[sub_resource type="Resource" id="Resource_2y4y2"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("6_7n2jb")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+
+[sub_resource type="Resource" id="Resource_ull3x"]
+resource_name = "实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos"
+script = ExtResource("7_mo1gi")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+scene_path = "uid://c37gfmeoqbajm"
+parent_node = NodePath("")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "start_pos"
+position_scope = 1
+position_scope_source = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = false
+
+[sub_resource type="Resource" id="Resource_onugj"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("6_7n2jb")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.0
+
+[sub_resource type="Resource" id="Resource_j327c"]
+resource_name = "恢复游戏"
+script = ExtResource("8_68tvk")
+pause_menu_node = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+close_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_mbx8a"]
+resource_name = "检查变量 [最近作用域]: current_score GREATER_THAN 0"
+script = ExtResource("3_8jeqc")
+variable_name = "current_score"
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 1
+scope_source = 0
+comparison_operator = 2
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_20jyw"]
+resource_name = "Array Add 数组 score_list ← 变量 current_score"
+script = ExtResource("4_uv1kb")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+element_value = null
+element_custom_scope_id = ""
+element_target_node_path = NodePath("")
+source_type = 0
+array_variable = "score_list"
+array_scope = 2
+use_element_from_variable = true
+element_from_variable = "current_score"
+element_from_variable_scope = 1
+element_scope_source = 0
+element_target_node_path = NodePath("")
+log_level = 4
+
+[sub_resource type="Resource" id="Resource_52e3n"]
+resource_name = "If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [异步]"
+script = ExtResource("5_3a64e")
+condition = SubResource("Resource_mbx8a")
+instructions = Array[ExtResource("1_sgqhx")]([SubResource("Resource_20jyw")])
+
+[sub_resource type="Resource" id="Resource_kpi76"]
+resource_name = "发送事件: GameEnd"
+script = ExtResource("2_xw62m")
+event_name = "GameEnd"
+event_args = {
+"end": "loss"
+}
+
+[sub_resource type="Resource" id="Resource_rimn6"]
+resource_name = "发送事件: GameEnd"
+script = ExtResource("2_xw62m")
+event_name = "GameEnd"
+event_args = {
+"end": "win"
+}
+
+[sub_resource type="Resource" id="Resource_s2i3n"]
+resource_name = "暂停游戏 (仅暂停)"
+script = ExtResource("9_k1i4i")
+pause_menu_scene = ""
+pause_menu_parent = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+show_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_7e0w5"]
+resource_name = "运行 Runner '../SpawnEnemy' 立即返回"
+script = ExtResource("10_sxe4j")
+result_variable_name = ""
+result_variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_runner = NodePath("../SpawnEnemy")
+wait_for_completion = false
+context_node_path = NodePath("")
+store_result = false
+
+[resource]
+script = ExtResource("11_8wic3")
+display_name = "GameFlow"
+category = "gamplay"
+version = "2.0"
+variables = {
+"global": [],
+"local": [],
+"scope": []
+}
+level = "L4"
+trigger_config = {
+"use_parallel_condition_evaluation": true
+}
+event_bindings_json = [{
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"bus": "Music",
+"continue_during_pause": true,
+"crossfade_duration": 2.0,
+"music_path": "uid://bi1lb4nvpv6gn",
+"type": &"CrossfadeToMusic",
+"volume": 1.0
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 1.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"auto_start": true,
+"emit_repeat_count": false,
+"interval_seconds": 51.0,
+"max_interval_seconds": 2.0,
+"max_repeats": 0,
+"min_interval_seconds": 0.5,
+"stop_condition": null,
+"trigger_on_start": true,
+"type": &"OnInterval",
+"use_random_interval": false
+}
+}, {
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"custom_path": "",
+"load_source": 0,
+"type": &"LoadGlobalVariables"
+}, {
+"pause_menu_parent": "",
+"pause_menu_scene": "",
+"show_pause_menu": false,
+"type": &"PauseGame",
+"ui_node_path": "../../GameSceneCanvas"
+}, {
+"custom_scope_id": "",
+"save_to_scope": 1,
+"save_to_variable": "start_pos",
+"scope_source": 0,
+"target": "../../Game_Layer/PlayerShip",
+"target_custom_scope_id": "",
+"target_scope": 0,
+"target_scope_source": 0,
+"target_target_node_path": "",
+"target_variable": "",
+"type": &"GetPosition",
+"use_global_position": true,
+"use_variable": false
+}, {
+"custom_scope_id": "",
+"operand_a_custom_scope_id": "",
+"operand_a_scope": 1,
+"operand_a_scope_source": 0,
+"operand_a_source": 1,
+"operand_a_variable": "current_wave",
+"operand_b_custom_scope_id": "",
+"operand_b_scope_source": 0,
+"operand_b_source": 0,
+"operand_b_target_node_path": "",
+"operand_b_value": 1.0,
+"operation_type": 0,
+"save_to_scope": 1,
+"save_to_variable": "current_wave",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"MathOperation"
+}, {
+"custom_scope_id": "",
+"recursive": false,
+"result_scope": 1,
+"result_variable": "spawn_pos",
+"scope_source": 0,
+"target_custom_scope_id": "",
+"target_node": "../../Game_Layer/Markers",
+"target_scope": 0,
+"target_scope_source": 0,
+"target_target_node_path": "",
+"target_variable": "",
+"type": &"GetAllChildrenPosition",
+"use_global_position": true,
+"use_variable": false
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 20,
+"pool_max_size": 100,
+"scene_path": "uid://bmfgotihlmfkw",
+"type": &"WarmUpPool",
+"warm_up_count": 20,
+"warm_up_mode": 1
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 20,
+"pool_max_size": 100,
+"scene_path": "uid://cq7h6ykrfu4kv",
+"type": &"WarmUpPool",
+"warm_up_count": 20,
+"warm_up_mode": 1
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 20,
+"pool_max_size": 100,
+"scene_path": "uid://ctimwhiu78cr8",
+"type": &"WarmUpPool",
+"warm_up_count": 20,
+"warm_up_mode": 1
+}, {
+"batch_delay": 0.1,
+"batch_size": 100,
+"pool_initial_size": 300,
+"pool_max_size": 500,
+"scene_path": "uid://bd83gfasoidja",
+"type": &"WarmUpPool",
+"warm_up_count": 300,
+"warm_up_mode": 1
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 20,
+"pool_max_size": 100,
+"scene_path": "uid://b4e65c431qgjd",
+"type": &"WarmUpPool",
+"warm_up_count": 20,
+"warm_up_mode": 1
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 20,
+"pool_max_size": 100,
+"scene_path": "uid://pvuvnyrhmc36",
+"type": &"WarmUpPool",
+"warm_up_count": 10,
+"warm_up_mode": 1
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 10,
+"pool_max_size": 10,
+"scene_path": "uid://c3b28ywrqiogw",
+"type": &"WarmUpPool",
+"warm_up_count": 3,
+"warm_up_mode": 0
+}, {
+"batch_delay": 0.1,
+"batch_size": 5,
+"pool_initial_size": 20,
+"pool_max_size": 30,
+"scene_path": "uid://dadlwb08j675g",
+"type": &"WarmUpPool",
+"warm_up_count": 10,
+"warm_up_mode": 0
+}, {
+"custom_scope_id": "",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"Wait",
+"value_source": 0,
+"wait_time": 0.1
+}, {
+"context_node_path": "",
+"custom_scope_id": "",
+"result_variable_name": "",
+"result_variable_scope": 0,
+"scope_source": 0,
+"store_result": false,
+"target_node_path": "",
+"target_runner": "../SpawnEnemy",
+"type": &"RunRunner",
+"wait_for_completion": true
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 1.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"delay_seconds": 0.0,
+"type": &"OnReady"
+}
+}, {
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"custom_scope_id": "",
+"operand_a_custom_scope_id": "",
+"operand_a_scope": 1,
+"operand_a_scope_source": 0,
+"operand_a_source": 1,
+"operand_a_variable": "enemy_count",
+"operand_b_custom_scope_id": "",
+"operand_b_scope_source": 0,
+"operand_b_source": 0,
+"operand_b_target_node_path": "",
+"operand_b_value": 1.0,
+"operation_type": 1,
+"save_to_scope": 1,
+"save_to_variable": "enemy_count",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"MathOperation"
+}, {
+"custom_scope_id": "",
+"operand_a_custom_scope_id": "",
+"operand_a_scope": 1,
+"operand_a_scope_source": 0,
+"operand_a_source": 1,
+"operand_a_variable": "current_score",
+"operand_b_custom_scope_id": "",
+"operand_b_scope": 0,
+"operand_b_scope_source": 0,
+"operand_b_source": 1,
+"operand_b_target_node_path": "",
+"operand_b_variable": "event_score",
+"operation_type": 0,
+"save_to_scope": 1,
+"save_to_variable": "current_score",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"MathOperation"
+}, {
+"custom_scope_id": "",
+"from_scope_source": 0,
+"from_variable": "current_score",
+"from_variable_scope": 1,
+"scope_source": 0,
+"set_with_another_variable": true,
+"target_node_path": "",
+"target_variable": "c_score",
+"target_variable_scope": 0,
+"type": &"SetVariable"
+}, {
+"deferred": false,
+"event_args": {
+"score": "$c_score"
+},
+"event_name": "ScoreUpdate",
+"type": &"SendEvent"
+}, {
+"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_mcog3",
+"instructions": Array[ExtResource("1_sgqhx")]([SubResource("Resource_5y4ic")]),
+"sequence_mode": 1,
+"type": &"IfThen"
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 1.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"event_name": "EnemyDie",
+"local_var_prefix": "event_",
+"store_args_to_local": true,
+"trigger_once": false,
+"type": &"OnReceiveEvent"
+}
+}, {
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"custom_scope_id": "",
+"operand_a_custom_scope_id": "",
+"operand_a_scope": 1,
+"operand_a_scope_source": 0,
+"operand_a_source": 1,
+"operand_a_variable": "player_life",
+"operand_b_custom_scope_id": "",
+"operand_b_scope_source": 0,
+"operand_b_source": 0,
+"operand_b_target_node_path": "",
+"operand_b_value": 1.0,
+"operation_type": 1,
+"save_to_scope": 1,
+"save_to_variable": "player_life",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"MathOperation"
+}, {
+"custom_scope_id": "",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"Wait",
+"value_source": 0,
+"wait_time": 0.5
+}, {
+"pause_menu_parent": "",
+"pause_menu_scene": "",
+"show_pause_menu": false,
+"type": &"PauseGame",
+"ui_node_path": "../../GameSceneCanvas"
+}, {
+"custom_scope_id": "",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"Wait",
+"value_source": 0,
+"wait_time": 0.1
+}, {
+"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_pj6tb",
+"false_instructions": Array[ExtResource("1_sgqhx")]([SubResource("Resource_ejd0v"), SubResource("Resource_2y4y2"), SubResource("Resource_ull3x"), SubResource("Resource_onugj"), SubResource("Resource_j327c")]),
+"sequence_mode": 1,
+"true_instructions": Array[ExtResource("1_sgqhx")]([SubResource("Resource_52e3n"), SubResource("Resource_kpi76")]),
+"type": &"IfElse"
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 1.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"event_name": "PlayerDie",
+"local_var_prefix": "event_",
+"store_args_to_local": true,
+"trigger_once": false,
+"type": &"OnReceiveEvent"
+}
+}, {
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"custom_scope_id": "",
+"operand_a_custom_scope_id": "",
+"operand_a_scope": 1,
+"operand_a_scope_source": 0,
+"operand_a_source": 1,
+"operand_a_variable": "current_wave",
+"operand_b_custom_scope_id": "",
+"operand_b_scope_source": 0,
+"operand_b_source": 0,
+"operand_b_target_node_path": "",
+"operand_b_value": 1.0,
+"operation_type": 0,
+"save_to_scope": 1,
+"save_to_variable": "current_wave",
+"scope_source": 0,
+"target_node_path": "",
+"type": &"MathOperation"
+}, {
+"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_8v20a",
+"false_instructions": Array[ExtResource("1_sgqhx")]([SubResource("Resource_rimn6")]),
+"sequence_mode": 1,
+"true_instructions": Array[ExtResource("1_sgqhx")]([SubResource("Resource_s2i3n"), SubResource("Resource_7e0w5")]),
+"type": &"IfElse"
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 1.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"event_name": "AllEnemyDied",
+"local_var_prefix": "event_",
+"store_args_to_local": false,
+"trigger_once": false,
+"type": &"OnReceiveEvent"
+}
+}]

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cduqyj3hlrw4k"]
+
+[ext_resource type="Script" uid="uid://dl44n83241uno" path="res://addons/fuse/texture/test_text_burn.gd" id="1_test_text_burn.gd"]
+[ext_resource type="Material" uid="uid://uyj8uartsnj0" path="res://addons/fuse/texture/text_burn_material.tres" id="2_text_burn_material.tres"]
+
+[node name="TestTextBurn" type="Control" unique_id=1702223500]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_test_text_burn.gd")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1320989440]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=15523510]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=874037873]
+layout_mode = 2
+text = "文字烧蚀效果测试"
+horizontal_alignment = 1
+
+[node name="BurnLabel" type="Label" parent="VBoxContainer" unique_id=1817881156]
+material = ExtResource("2_text_burn_material.tres")
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.8, 1)
+theme_override_font_sizes/font_size = 48
+text = "BURNING TEXT"
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer" unique_id=774430705]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="ProgressLabel" type="Label" parent="VBoxContainer" unique_id=778654754]
+layout_mode = 2
+text = "烧蚀进度: 100%"
+horizontal_alignment = 1
+
+[node name="Instructions" type="Label" parent="VBoxContainer" unique_id=1829606380]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "拖动滑块控制烧蚀程度
+0 = 完全烧掉（左）
+1 = 完好无损（右）"
+horizontal_alignment = 1
+autowrap_mode = 3

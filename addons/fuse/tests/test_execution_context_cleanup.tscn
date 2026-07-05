@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_execution_context_cleanup"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_execution_context_cleanup.gd" id="1_test_execution_context_cleanup"]
+
+[node name="TestExecutionContextCleanup" type="Node"]
+script = ExtResource("1_test_execution_context_cleanup")

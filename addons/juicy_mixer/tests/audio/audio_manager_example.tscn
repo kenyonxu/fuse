@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://example AudioManager 使用场景"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/core/audio_manager.gd" id="AudioManager"]
+
+[sub_resource type="GlobalAudioLimitConfig" id="GlobalAudioLimitConfig_1"]
+max_total_voices = 64
+max_virtual_voices = 128
+virtual_voice_threshold = 0.3
+virtual_voice_enabled = true
+virtual_max_distance = 50.0
+virtual_min_importance = 30
+bus_limits = {
+"Master": 64,
+"Music": 2,
+"SFX": 40,
+"Voice": 4
+}
+enable_hardware_monitoring = true
+cpu_usage_threshold = 80.0
+memory_usage_threshold = 512.0
+
+[node name="Main" type="Node"]
+
+[node name="AudioManager" type="Node" parent="."]
+script = ExtResource("AudioManager")
+enable_inheritance = true
+global_limit_config = SubResource("GlobalAudioLimitConfig_1")
+enable_debug_view = true
+
+[node name="ExamplePlayer" type="Node" parent="."]

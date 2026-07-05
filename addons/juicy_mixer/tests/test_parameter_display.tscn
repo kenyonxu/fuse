@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkljq0xkq3hri"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/test_parameter_display.gd" id="1_abcde"]
+
+[node name="TestParameterDisplay" type="Node"]
+script = ExtResource("1_abcde")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvwqm2k8x4nqa"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_audio_component_inspector.gd" id="1"]
+
+[node name="TestAudioComponentInspector" type="Node"]
+script = ExtResource("1")

@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://bfx8uddagecfv"]
+
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="1_e5c86"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_f1qbe"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_4en5e"]
+[ext_resource type="Script" uid="uid://b152yfncggvas" path="res://addons/fuse/instructions/variables/set_variable.gd" id="4_x2ksd"]
+[ext_resource type="Script" uid="uid://tusa0uelp1px" path="res://addons/fuse/instructions/math/string_expression.gd" id="5_23xh2"]
+[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="6_y8iqf"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_ssd3r"]
+
+[sub_resource type="Resource" id="Resource_2kg3h"]
+script = ExtResource("2_f1qbe")
+
+[sub_resource type="Resource" id="Resource_pbjya"]
+resource_name = "设置变量 [[本地]] 'word01' = Hello"
+script = ExtResource("4_x2ksd")
+target_variable = "word01"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = "Hello"
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_uhddj"]
+resource_name = "设置变量 [[本地]] 'word02' = world"
+script = ExtResource("4_x2ksd")
+target_variable = "word02"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = "world"
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_abxqx"]
+resource_name = "'{local:word01} + \" \" + {loc...' → str_result [[本地]]"
+script = ExtResource("5_23xh2")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "{local:word01} + \" \" + {local:word02}"
+scope_source = 0
+save_to_variable = "str_result"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_bvtn6"]
+resource_name = "打印变量 'str_result' [[本地]]"
+script = ExtResource("6_y8iqf")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+variable_name = "str_result"
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_0lum7"]
+script = ExtResource("7_ssd3r")
+instructions = Array[ExtResource("3_4en5e")]([SubResource("Resource_pbjya"), SubResource("Resource_uhddj"), SubResource("Resource_abxqx"), SubResource("Resource_bvtn6")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=914787975]
+
+[node name="Trigger" type="Node" parent="." unique_id=147691367]
+script = ExtResource("1_e5c86")
+event_definition = SubResource("Resource_2kg3h")
+action_runner = SubResource("Resource_0lum7")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://btvnn8vljgqml"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/events/test_on_node_paused_resumed.gd" id="1"]
+
+[node name="TestOnNodePausedResumed" type="Node"]
+script = ExtResource("1")

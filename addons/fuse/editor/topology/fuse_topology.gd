@@ -1,0 +1,590 @@
+# addons/fuse/editor/topology/fuse_topology.gd
+@tool
+class_name FuseTopology
+extends VBoxContainer
+
+## 全场景拓扑面板 — 主屏幕 Tab
+##
+## 左侧 Trigger 树（嵌套指令 + 图标 + 分支标记）+ 右侧详情面板 + 全局关联扫描。
+## 选中 Trigger → 右侧 Trigger 概要；选中指令 → 右侧指令详情。
+## 依赖 InstructionAnalyzer 解析引擎。
+
+var _tree: Tree
+var _detail: RichTextLabel
+var _graph_edit: FuseGraphEdit  # 保留但降级（不默认显示）
+var _cross_ref_label: Label
+var _refresh_btn: Button
+
+
+func _init() -> void:
+	size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	size_flags_vertical = Control.SIZE_EXPAND_FILL
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	# ---- 顶部标题栏 ----
+	var banner := HBoxContainer.new()
+	add_child(banner)
+
+	var title := Label.new()
+	title.text = "Fuse 场景拓扑"
+	banner.add_child(title)
+	banner.add_spacer(true)
+
+	_refresh_btn = Button.new()
+	_refresh_btn.text = "刷新"
+	_refresh_btn.pressed.connect(refresh)
+	banner.add_child(_refresh_btn)
+
+	# ---- 左右分栏 ----
+	var hsplit := HSplitContainer.new()
+	hsplit.split_offset = 300
+	hsplit.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	add_child(hsplit)
+
+	# 左侧：Trigger 树
+	_tree = Tree.new()
+	_tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_tree.hide_root = true
+	_tree.columns = 2
+	_tree.set_column_title(0, "Trigger")
+	_tree.set_column_title(1, "事件")
+	_tree.set_column_expand(0, true)
+	_tree.set_column_expand(1, false)
+	_tree.allow_reselect = true
+	_tree.item_selected.connect(_on_item_selected)
+	hsplit.add_child(_tree)
+
+	# 右侧：详情面板
+	var right := VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	hsplit.add_child(right)
+
+	_detail = RichTextLabel.new()
+	_detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_detail.bbcode_enabled = true
+	_detail.fit_content = true
+	_detail.selection_enabled = true
+	_detail.context_menu_enabled = true
+	right.add_child(_detail)
+
+	# GraphEdit 保留但降级（不默认显示，代码不删）
+	_graph_edit = FuseGraphEdit.new()
+	_graph_edit.visible = false
+	_graph_edit.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_graph_edit.right_disconnects = false
+	right.add_child(_graph_edit)
+
+	_cross_ref_label = Label.new()
+	_cross_ref_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	right.add_child(_cross_ref_label)
+
+	refresh()
+
+
+# ============================================================
+# 刷新（Tree 构建）
+# ============================================================
+
+## 重新扫描当前场景，刷新树和详情
+func refresh() -> void:
+	_tree.clear()
+	_detail.clear()
+	_cross_ref_label.text = ""
+	_graph_edit.visible = false
+	_detail.visible = true
+
+	if not ClassDB.class_exists("EditorInterface"):
+		_detail.append_text("[color=gray](编辑器不可用)[/color]")
+		return
+
+	var scene_root: Node = EditorInterface.get_edited_scene_root()
+	if scene_root == null:
+		_detail.append_text("[color=gray](未打开场景)[/color]")
+		return
+
+	var topology: Dictionary = InstructionAnalyzer.build_topology(scene_root)
+	var root: TreeItem = _tree.create_item()
+
+	if topology.triggers.is_empty():
+		var note := _tree.create_item(root)
+		note.set_text(0, "(场景中无 Trigger)")
+		_cross_ref_label.text = "跨 Trigger 关联: (无)"
+		return
+
+	# 填充 Trigger 列表（主场景 + 嵌套场景分组）
+	var main_reports: Array = []
+	var nested_groups: Dictionary = {}  # scene_source → [reports]
+	for report in topology.triggers:
+		if report.get("is_nested", false):
+			var source: String = report.get("scene_source", "?")
+			if not nested_groups.has(source):
+				nested_groups[source] = []
+			nested_groups[source].append(report)
+		else:
+			main_reports.append(report)
+
+	# 主场景 Trigger
+	for report in main_reports:
+		_create_trigger_tree_item(root, report)
+
+	# 嵌套场景分组
+	for source in nested_groups:
+		var group_item: TreeItem = _tree.create_item(root)
+		group_item.set_text(0, "📦 %s (嵌套场景)" % source)
+		group_item.set_selectable(0, false)
+		group_item.set_custom_color(0, Color(0.5, 0.7, 1.0))
+		for report in nested_groups[source]:
+			_create_trigger_tree_item(group_item, report)
+
+	# 全局关联
+	_refresh_cross_references(topology)
+
+
+# ============================================================
+# Tree 构建（任务 A — 层级嵌套 + 指令可选）
+# ============================================================
+
+## 创建 Trigger Tree 项（含指令子树 / EventBinding 子项）
+func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> void:
+	var tname: String = report.get("trigger_name", "?")
+	var ttype: String = report.get("trigger_type", "?")
+	var event_info: Dictionary = report.get("event", {})
+
+	var t_item: TreeItem = _tree.create_item(parent_item)
+	t_item.set_text(0, "%s (%s)" % [tname, ttype])
+	t_item.set_text(1, event_info.get("resource_name", ""))
+	t_item.set_metadata(0, {"type": "trigger", "report": report})
+
+	# MultiEventTrigger：展开 event_bindings
+	var bindings: Array = report.get("event_bindings", [])
+	if not bindings.is_empty():
+		for binding in bindings:
+			var b_index: int = binding.get("index", 0)
+			var b_event: Dictionary = binding.get("event", {})
+			var b_enabled: bool = binding.get("enabled", true)
+
+			var b_item: TreeItem = _tree.create_item(t_item)
+			var b_label: String = "[%d] %s" % [b_index, b_event.get("resource_name", "?")]
+			if not b_enabled:
+				b_label += " (禁用)"
+			b_item.set_text(0, b_label)
+			b_item.set_metadata(0, {"type": "binding", "binding": binding, "report": report})
+			if not b_enabled:
+				b_item.set_custom_color(0, Color.GRAY)
+			else:
+				b_item.set_custom_color(0, Color(0.7, 0.85, 1.0))
+
+			# binding 的指令树
+			var b_tree: Array = binding.get("instructions_tree", [])
+			if not b_tree.is_empty():
+				_build_tree_items(b_item, b_tree, report)
+			else:
+				for inst_info in binding.get("instructions_flat", []):
+					_create_flat_item(b_item, inst_info, report)
+		return
+
+	# 普通 Trigger：指令树（优先 tree 嵌套，回退 flat 线性）
+	var tree_data: Array = report.get("instructions_tree", [])
+	if not tree_data.is_empty():
+		_build_tree_items(t_item, tree_data, report)
+	else:
+		for inst_info in report.get("instructions_flat", []):
+			_create_flat_item(t_item, inst_info, report)
+
+
+## 递归构建指令树（明确 parent + branch label）
+func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictionary) -> void:
+	for node_info in tree_data:
+		var inst = node_info.get("inst")
+		var children: Dictionary = node_info.get("children", {})
+		var is_branch: bool = not children.is_empty()
+
+		var item: TreeItem = _tree.create_item(parent_item)
+		var display_name: String = node_info.get("name", "?")
+
+		# resource_name 已含描述（_update_resource_name），不需额外摘要
+		item.set_text(0, display_name)
+
+		# 图标（任务 B）
+		_set_item_icon(item, inst)
+
+		# 可选 + metadata（任务 D 基础）
+		item.set_selectable(0, true)
+		item.set_metadata(0, {"type": "instruction", "inst": inst, "report": report})
+
+		# 分支颜色
+		if is_branch:
+			item.set_custom_color(0, Color(1.0, 0.65, 0.1))
+
+		# 递归子分支（then ✓ / else ✗ / loop ↻）
+		for branch_label in children:
+			var subtree: Array = children[branch_label]
+			if subtree.is_empty():
+				continue
+			var branch_item: TreeItem = _tree.create_item(item)
+			branch_item.set_text(0, _branch_label_display(branch_label))
+			branch_item.set_selectable(0, false)
+			branch_item.set_custom_color(0, _branch_color(branch_label))
+			_build_tree_items(branch_item, subtree, report)
+
+
+## 回退：flat 线性构建（无 instructions_tree 时）
+func _create_flat_item(parent_item: TreeItem, inst_info: Dictionary, report: Dictionary) -> void:
+	var item: TreeItem = _tree.create_item(parent_item)
+	var prefix: String = inst_info.get("prefix", "")
+	var inst_name: String = inst_info.get("name", "?")
+	item.set_text(0, "%s📦 %s" % [prefix, inst_name])
+	item.set_selectable(0, true)
+	item.set_metadata(0, {"type": "instruction", "inst": null, "report": report})
+
+
+func _branch_label_display(p_label: String) -> String:
+	match p_label:
+		"then": return "✓ then"
+		"else": return "✗ else"
+		"loop": return "↻ loop"
+		_: return p_label
+
+
+func _branch_color(p_label: String) -> Color:
+	match p_label:
+		"then": return Color(0.4, 0.9, 0.4)
+		"else": return Color(0.9, 0.5, 0.4)
+		"loop": return Color(0.4, 0.6, 1.0)
+		_: return Color.GRAY
+
+
+# ============================================================
+# 图标（任务 B — builtin icon 优先 + emoji 回退）
+# ============================================================
+
+func _set_item_icon(item: TreeItem, inst) -> void:
+	if inst == null:
+		return
+
+	# 优先 builtin_icon（metadata）
+	var icon_name := ""
+	var script = inst.get_script()
+	if script and script.has_method("_get_instruction_metadata"):
+		var metadata = script._get_instruction_metadata()
+		icon_name = metadata.builtin_icon
+
+	if not icon_name.is_empty():
+		var theme := EditorInterface.get_editor_theme()
+		if theme and theme.has_icon(icon_name, "EditorIcons"):
+			item.set_icon(0, theme.get_icon(icon_name, "EditorIcons"))
+			return
+
+	# 回退：分类 emoji 前缀
+	var emoji: String = _category_emoji(inst)
+	if not emoji.is_empty():
+		var current_text: String = item.get_text(0)
+		item.set_text(0, emoji + " " + current_text)
+
+
+func _category_emoji(inst) -> String:
+	var script = inst.get_script()
+	if script and script.has_method("_get_instruction_metadata"):
+		var category: String = script._get_instruction_metadata().category_key
+		if category.find("VARIABLE") >= 0: return "📊"
+		if category.find("NODE") >= 0: return "🔧"
+		if category.find("AUDIO") >= 0: return "🎵"
+		if category.find("UI") >= 0: return "🖼"
+		if category.find("ANIMATION") >= 0: return "🎬"
+		if category.find("PHYSICS") >= 0: return "⚙"
+		if category.find("TWEEN") >= 0: return "✨"
+		if category.find("CAMERA") >= 0: return "📷"
+	# 流控（指令名判断）
+	var name: String = inst.resource_name
+	if name.begins_with("If") or name.begins_with("While") or name.begins_with("For"):
+		return "🔀"
+	return "▶"
+
+
+# ============================================================
+# 参数摘要（任务 C）
+# ============================================================
+
+func _get_param_summary(inst) -> String:
+	if inst == null:
+		return ""
+	if inst.has_method("get_description"):
+		var desc: String = inst.get_description()
+		if not desc.is_empty():
+			if desc.length() > 50:
+				desc = desc.substr(0, 47) + "..."
+			return " — " + desc
+	return ""
+
+
+# ============================================================
+# 选中处理（任务 D + E）
+# ============================================================
+
+func _on_item_selected() -> void:
+	var item: TreeItem = _tree.get_selected()
+	if item == null:
+		return
+
+	var meta = item.get_metadata(0)
+	if meta == null:
+		return
+
+	# 统一 RichTextLabel（GraphEdit 不默认显示，任务 E）
+	_detail.visible = true
+	_graph_edit.visible = false
+	_detail.clear()
+
+	var meta_type: String = meta.get("type", "trigger")
+
+	if meta_type == "instruction":
+		_show_instruction_detail(meta)
+	elif meta_type == "binding":
+		_show_binding_detail(meta)
+	else:
+		_show_trigger_detail(meta.get("report", {}))
+
+
+## 选中 EventBinding → 右侧详情
+func _show_binding_detail(meta: Dictionary) -> void:
+	var binding: Dictionary = meta.get("binding", {})
+	var report: Dictionary = meta.get("report", {})
+
+	var b_event: Dictionary = binding.get("event", {})
+	var b_index: int = binding.get("index", 0)
+	var b_enabled: bool = binding.get("enabled", true)
+
+	_detail.append_text("[b]EventBinding [%d][/b]\n" % b_index)
+	_detail.append_text("[color=gray]所属: %s[/color]\n" % report.get("trigger_name", "?"))
+	if b_enabled:
+		_detail.append_text("[color=green]启用[/color]\n\n")
+	else:
+		_detail.append_text("[color=gray]禁用[/color]\n\n")
+
+	# 事件
+	if not b_event.is_empty():
+		_detail.append_text("[b]事件:[/b] %s [color=gray](%s)[/color]\n" % [b_event.get("resource_name", "?"), b_event.get("type", "?")])
+
+	# 节点引用
+	var b_nodes: Array = binding.get("nodes", [])
+	if not b_nodes.is_empty():
+		var node_displays := PackedStringArray()
+		for np in b_nodes:
+			node_displays.append(_display_node_path(np))
+		_detail.append_text("[b]操作节点:[/b] %s\n" % ", ".join(node_displays))
+
+	# 变量
+	var b_vars: Dictionary = binding.get("variables", {})
+	var var_parts := PackedStringArray()
+	var local_names: Array[String] = []
+	for v in b_vars.get("local", []):
+		local_names.append(v.get("name", "?"))
+	if not local_names.is_empty():
+		var_parts.append("[local] " + ", ".join(local_names))
+	var scope_names: Array[String] = []
+	for v in b_vars.get("scope", []):
+		scope_names.append(v.get("name", "?"))
+	if not scope_names.is_empty():
+		var_parts.append("[scope] " + ", ".join(scope_names))
+	var global_names: Array[String] = []
+	for v in b_vars.get("global", []):
+		global_names.append(v.get("name", "?"))
+	if not global_names.is_empty():
+		var_parts.append("[global] " + ", ".join(global_names))
+	if not var_parts.is_empty():
+		_detail.append_text("[b]变量:[/b] %s\n" % " | ".join(var_parts))
+
+	# 指令链
+	var flat: Array = binding.get("instructions_flat", [])
+	_detail.append_text("\n[b]指令链 (%d 条):[/b]\n" % flat.size())
+	if flat.is_empty():
+		_detail.append_text("  [color=gray](空)[/color]\n")
+	else:
+		for inst_info in flat:
+			var prefix: String = inst_info.get("prefix", "")
+			var inst_name: String = inst_info.get("name", "?")
+			_detail.append_text("  %s📦 %s\n" % [prefix, inst_name])
+
+
+## 选中指令 → 右侧详情
+func _show_instruction_detail(meta: Dictionary) -> void:
+	var inst = meta.get("inst")
+	var report: Dictionary = meta.get("report", {})
+
+	if inst == null:
+		# flat 回退（无 inst 引用）
+		_detail.append_text("[color=gray](指令详情需要 instructions_tree 支持)[/color]")
+		return
+
+	var iname: String = inst.resource_name
+	if iname.is_empty():
+		iname = inst.get_class()
+
+	_detail.append_text("[b]%s[/b]\n" % iname)
+
+	# 分类
+	var script = inst.get_script()
+	if script and script.has_method("_get_instruction_metadata"):
+		var metadata = script._get_instruction_metadata()
+		_detail.append_text("[color=gray]分类: %s[/color]\n\n" % metadata.category_key)
+
+	# 参数表（反射 @export 属性）
+	_detail.append_text("[b]参数:[/b]\n")
+	for prop in inst.get_property_list():
+		var pname: String = prop.get("name", "")
+		if pname.begins_with("_") or pname in ["script", "resource_name", "metadata"]:
+			continue
+		var usage: int = prop.get("usage", 0)
+		if not (usage & PROPERTY_USAGE_EDITOR):
+			continue
+		var value = inst.get(pname)
+		_detail.append_text("  %s: %s\n" % [pname, str(value)])
+
+	# 引用（单指令提取）
+	var inst_report := {"nodes": [], "variables": {"local": [], "scope": [], "global": []}}
+	InstructionAnalyzer._extract_nodepaths(inst, inst_report)
+	InstructionAnalyzer._extract_variables(inst, inst_report)
+
+	if not inst_report["nodes"].is_empty():
+		_detail.append_text("\n[b]节点引用:[/b] %s\n" % ", ".join(inst_report["nodes"]))
+
+	var var_names: Array = []
+	for v in inst_report["variables"]["local"]:
+		var_names.append(v.get("name", "?"))
+	for v in inst_report["variables"]["scope"]:
+		var_names.append(v.get("name", "?"))
+	for v in inst_report["variables"]["global"]:
+		var_names.append(v.get("name", "?"))
+	if not var_names.is_empty():
+		_detail.append_text("[b]变量引用:[/b] %s\n" % ", ".join(var_names))
+
+	# 上下文
+	_detail.append_text("\n[color=gray]所属 Trigger: %s[/color]\n" % report.get("trigger_name", "?"))
+
+
+## 选中 Trigger → 右侧概要（现有逻辑封装）
+func _show_trigger_detail(report: Dictionary) -> void:
+	if report.is_empty():
+		return
+
+	_detail.append_text("[b]%s[/b]\n" % report.get("trigger_name", "?"))
+	_detail.append_text("[color=gray]%s[/color]\n\n" % report.get("trigger_path", ""))
+
+	# 事件
+	var event_info: Dictionary = report.get("event", {})
+	if not event_info.is_empty():
+		_detail.append_text("[b]事件:[/b] %s [color=gray](%s)[/color]\n" % [event_info.get("resource_name", "?"), event_info.get("type", "?")])
+
+	# 节点引用
+	var report_nodes: Array = report.get("nodes", [])
+	if not report_nodes.is_empty():
+		var node_displays := PackedStringArray()
+		for np in report_nodes:
+			node_displays.append(_display_node_path(np))
+		_detail.append_text("[b]操作节点:[/b] %s\n" % ", ".join(node_displays))
+	else:
+		_detail.append_text("[b]操作节点:[/b] (无)\n")
+
+	# 变量
+	var var_parts := _build_variable_parts(report)
+	if not var_parts.is_empty():
+		_detail.append_text("[b]变量:[/b] %s\n" % " | ".join(var_parts))
+	else:
+		_detail.append_text("[b]变量:[/b] (无)\n")
+
+	# 信号
+	var report_signals: Array = report.get("signals", [])
+	if not report_signals.is_empty():
+		_detail.append_text("[b]信号:[/b]\n")
+		for sig in report_signals:
+			_detail.append_text("  • %s → %s\n" % [sig.get("signal", "?"), sig.get("target", "")])
+	else:
+		_detail.append_text("[b]信号:[/b] (无)\n")
+
+	# 指令链
+	var flat: Array = report.get("instructions_flat", [])
+	_detail.append_text("\n[b]指令链 (%d 条):[/b]\n" % flat.size())
+	if flat.is_empty():
+		_detail.append_text("  [color=gray](空)[/color]\n")
+	else:
+		for inst_info in flat:
+			var prefix: String = inst_info.get("prefix", "")
+			var inst_name: String = inst_info.get("name", "?")
+			_detail.append_text("  %s📦 %s\n" % [prefix, inst_name])
+
+
+# ============================================================
+# GraphEdit（保留，不默认显示）
+# ============================================================
+
+func _show_graph(report: Dictionary) -> void:
+	_detail.visible = false
+	_graph_edit.visible = true
+	var graph_data: Dictionary = FuseGraphBuilder.build(report)
+	_graph_edit.set_graph(graph_data["nodes"], graph_data["edges"])
+
+
+# ============================================================
+# 辅助方法
+# ============================================================
+
+## 节点路径可读化显示
+func _display_node_path(path_str: String) -> String:
+	if path_str.is_empty():
+		return ""
+	var file_name := path_str.get_file()
+	if not file_name.is_empty() and file_name != ".." and file_name != ".":
+		return file_name
+	return BaseInstruction._get_parent_level_display(path_str)
+
+
+## 从 report 构建变量标签列表（按作用域分组）
+static func _build_variable_parts(report: Dictionary) -> PackedStringArray:
+	var parts := PackedStringArray()
+	var local_names: Array[String] = []
+	for v in report.get("variables", {}).get("local", []):
+		local_names.append(v.get("name", "?"))
+	if not local_names.is_empty():
+		parts.append("[local] " + ", ".join(local_names))
+	var scope_names: Array[String] = []
+	for v in report.get("variables", {}).get("scope", []):
+		scope_names.append(v.get("name", "?"))
+	if not scope_names.is_empty():
+		parts.append("[scope] " + ", ".join(scope_names))
+	var global_names: Array[String] = []
+	for v in report.get("variables", {}).get("global", []):
+		global_names.append(v.get("name", "?"))
+	if not global_names.is_empty():
+		parts.append("[global] " + ", ".join(global_names))
+	return parts
+
+
+# ============================================================
+# 全局关联渲染
+# ============================================================
+
+func _refresh_cross_references(topology: Dictionary) -> void:
+	var ref_lines := PackedStringArray()
+	for ref in topology.get("cross_references", []):
+		var ref_type: String = ref.get("type", "?")
+		var type_label: String
+		match ref_type:
+			"signal":
+				type_label = "🔗 信号"
+			"shared_global_variable":
+				type_label = "🌐 全局变量"
+			_:
+				type_label = ref_type
+		var from_name: String = ref.get("from", "?")
+		var to_name: String = ref.get("to", "?")
+		var detail: String = ref.get("detail", "")
+		if not detail.is_empty():
+			ref_lines.append("%s  %s → %s  (%s)" % [type_label, from_name, to_name, detail])
+		else:
+			ref_lines.append("%s  %s → %s" % [type_label, from_name, to_name])
+	if not ref_lines.is_empty():
+		_cross_ref_label.text = "跨 Trigger 关联 (%d 条):\n" % ref_lines.size() + "\n".join(ref_lines)
+	else:
+		_cross_ref_label.text = "跨 Trigger 关联: (无)"

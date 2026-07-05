@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_tween_bounce_animation"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/tween/test_tween_bounce_animation_instruction.gd" id="1_0xync"]
+
+[node name="TestTweenBounceAnimation" type="Node2D"]
+script = ExtResource("1_0xync")
+
+[node name="TestSprite" type="ColorRect" parent="."]
+offset_left = 300.0
+offset_top = 300.0
+offset_right = 400.0
+offset_bottom = 400.0
+color = Color(0, 0.5, 1, 1)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 620.0
+offset_bottom = 100.0
+text = "Tween Bounce Animation Test
+
+按 SPACE 键开始测试弹跳动画
+Sprite 应该使用 TRANS_BOUNCE 效果向上弹跳"

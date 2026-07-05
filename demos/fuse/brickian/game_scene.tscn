@@ -1,0 +1,2345 @@
+[gd_scene format=3 uid="uid://ll1b03u7xdqo"]
+
+[ext_resource type="Texture2D" uid="uid://fq3knctt0cu0" path="res://demos/fuse/brickian/art/brickian_bg.tres" id="1_arlpr"]
+[ext_resource type="Texture2D" uid="uid://klbvojwh13yp" path="res://third_party_resources/sprites/blackhole.png" id="2_la12f"]
+[ext_resource type="Texture2D" uid="uid://ecw4gwn8dra0" path="res://third_party_resources/sprites/Impact39.png" id="2_s0hi0"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_k85lc"]
+[ext_resource type="Texture2D" uid="uid://dfdos7pw4wnxw" path="res://third_party_resources/sprites/planet_red.png" id="3_kxaj3"]
+[ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="4_k85lc"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_7v0hv"]
+[ext_resource type="Script" uid="uid://cmu6yuufyy78a" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="6_la12f"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_fteec"]
+[ext_resource type="Script" uid="uid://b152yfncggvas" path="res://addons/fuse/instructions/variables/set_variable.gd" id="11_ouq7j"]
+[ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="13_eqo6o"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="13_gg6w5"]
+[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="14_7khlk"]
+[ext_resource type="Resource" uid="uid://bhjs8wycs1uw3" path="res://demos/fuse/brickian/resources/brikian_variables.tres" id="14_ej378"]
+[ext_resource type="Script" uid="uid://bm18bxocu5c06" path="res://addons/fuse/instructions/transform/move_by.gd" id="15_klkoa"]
+[ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="16_iubae"]
+[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="17_1qeon"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="18_7khlk"]
+[ext_resource type="PackedScene" uid="uid://c37gfmeoqbajm" path="res://demos/fuse/brickian/player_ship.tscn" id="19_7khlk"]
+[ext_resource type="Script" uid="uid://dg156vx1vs4nn" path="res://addons/fuse/conditions/node/check_child_count.gd" id="20_4bfao"]
+[ext_resource type="Script" uid="uid://bjducirfbgpcq" path="res://addons/fuse/instructions/flow_control/run_condition_check.gd" id="20_cp73q"]
+[ext_resource type="Script" uid="uid://curjhtpsk638v" path="res://addons/fuse/core/base/base_condition.gd" id="20_i5psn"]
+[ext_resource type="Script" uid="uid://sk4phhra3w56" path="res://addons/fuse/events/lifecycle/on_interval_with_variable.gd" id="20_nkaxg"]
+[ext_resource type="Script" uid="uid://dxcku4ptyl7f0" path="res://addons/fuse/instructions/node_operations/get_random_child.gd" id="20_ois5b"]
+[ext_resource type="Script" uid="uid://dxu8332q71yx8" path="res://addons/fuse/instructions/node_operations/get_child_count.gd" id="21_2oc5f"]
+[ext_resource type="Script" uid="uid://pb1mf4eqr2kf" path="res://addons/fuse/conditions/node/check_group_count.gd" id="22_idrsk"]
+[ext_resource type="Script" uid="uid://cmhjxbefd75p3" path="res://addons/fuse/instructions/node_operations/warm_up_pool.gd" id="23_e40eq"]
+[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="23_eyvsy"]
+[ext_resource type="Script" uid="uid://b7dx6dbvksefq" path="res://addons/fuse/conditions/composite/check_any.gd" id="23_i5psn"]
+[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="23_qiof4"]
+[ext_resource type="Script" uid="uid://d3dy4d87y086v" path="res://addons/fuse/instructions/node_operations/get_group_count.gd" id="24_b6nhr"]
+[ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="25_cgmmy"]
+[ext_resource type="Script" uid="uid://duus2a1c3hfdu" path="res://addons/fuse/instructions/math/math_operation.gd" id="26_0etpb"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="26_j8ta5"]
+[ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="27_5ifuy"]
+[ext_resource type="Script" uid="uid://bgij18cf4pbix" path="res://addons/fuse/instructions/node_operations/find_node.gd" id="28_g31f4"]
+[ext_resource type="PackedScene" uid="uid://b70is3g7je68c" path="res://demos/fuse/brickian/game_scene_canvas.tscn" id="29_k17pf"]
+[ext_resource type="Script" uid="uid://brnx634ix03xu" path="res://addons/fuse/instructions/math/get_random_point_in_range.gd" id="31_taw6k"]
+[ext_resource type="Script" uid="uid://bxjem41rq4evo" path="res://addons/fuse/instructions/flow_control/pause_game.gd" id="35_23ga3"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="35_dcc30"]
+[ext_resource type="Script" uid="uid://3q8y3j8oyg8y" path="res://addons/fuse/instructions/variables/load_global_variables.gd" id="35_vwop4"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="36_36vvb"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="36_b8e03"]
+[ext_resource type="Script" uid="uid://c5wvplgorx6y0" path="res://addons/fuse/instructions/node_operations/get_all_children_position.gd" id="37_2oc5f"]
+[ext_resource type="Script" uid="uid://dq3x44e84gtf7" path="res://addons/fuse/instructions/flow_control/resume_game.gd" id="37_5lwuo"]
+[ext_resource type="Script" uid="uid://bmy5yettfgcii" path="res://addons/fuse/instructions/arrays/array_add.gd" id="41_idrsk"]
+[ext_resource type="Script" uid="uid://cwmvvpdnkmgka" path="res://addons/fuse/instructions/flow_control/for_each.gd" id="41_lr2u6"]
+[ext_resource type="Script" uid="uid://bhy8o7uexju0b" path="res://addons/fuse/instructions/flow_control/if_then.gd" id="42_oskx0"]
+[ext_resource type="Script" uid="uid://bng7t7ktatxjc" path="res://addons/fuse/instructions/flow_control/run_runner.gd" id="45_g31f4"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="46_i21if"]
+[ext_resource type="Script" uid="uid://cqemagr2app7s" path="res://demos/fuse/brickian/game_scene_performance.gd" id="47_perf"]
+[ext_resource type="Script" uid="uid://dgk6lyr4260ad" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="49_5ifuy"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kxaj3"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_vn0us"]
+_data = [Vector2(0, 0.007392764), 0.0, 5.141271, 0, 0, Vector2(0.504644, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.007392764), 0.59399104, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_greck"]
+curve = SubResource("Curve_vn0us")
+
+[sub_resource type="Gradient" id="Gradient_tujin"]
+colors = PackedColorArray(0, 0.83087146, 0.773151, 1, 0.971515, 0.7965508, 0.20188767, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pa7r8"]
+gradient = SubResource("Gradient_tujin")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_la12f"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(600, 350, 1)
+angular_velocity_min = -360.0
+angular_velocity_max = 359.99997
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+scale_min = 0.01
+scale_max = 0.02
+color_ramp = SubResource("GradientTexture1D_pa7r8")
+alpha_curve = SubResource("CurveTexture_greck")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y6eso"]
+atlas = ExtResource("2_la12f")
+region = Rect2(0, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d7s1n"]
+atlas = ExtResource("2_la12f")
+region = Rect2(200, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gfpm1"]
+atlas = ExtResource("2_la12f")
+region = Rect2(400, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awcrc"]
+atlas = ExtResource("2_la12f")
+region = Rect2(600, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g3u5d"]
+atlas = ExtResource("2_la12f")
+region = Rect2(800, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jsyvk"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1000, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w1wo7"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1200, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_up1yj"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1400, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_25i71"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1600, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgemg"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1800, 0, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8b0x"]
+atlas = ExtResource("2_la12f")
+region = Rect2(0, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3h4yv"]
+atlas = ExtResource("2_la12f")
+region = Rect2(200, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yn7bs"]
+atlas = ExtResource("2_la12f")
+region = Rect2(400, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pygwg"]
+atlas = ExtResource("2_la12f")
+region = Rect2(600, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_miti3"]
+atlas = ExtResource("2_la12f")
+region = Rect2(800, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svb4f"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1000, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_htjhu"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1200, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5b03e"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1400, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qyyq7"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1600, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pja4o"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1800, 200, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d8ryx"]
+atlas = ExtResource("2_la12f")
+region = Rect2(0, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2qo4f"]
+atlas = ExtResource("2_la12f")
+region = Rect2(200, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d48xe"]
+atlas = ExtResource("2_la12f")
+region = Rect2(400, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qytrw"]
+atlas = ExtResource("2_la12f")
+region = Rect2(600, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fuvva"]
+atlas = ExtResource("2_la12f")
+region = Rect2(800, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y28jr"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1000, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cywvb"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1200, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ye2qm"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1400, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lnhnt"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1600, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5bqf"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1800, 400, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1qhut"]
+atlas = ExtResource("2_la12f")
+region = Rect2(0, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_63xdi"]
+atlas = ExtResource("2_la12f")
+region = Rect2(200, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pu3n3"]
+atlas = ExtResource("2_la12f")
+region = Rect2(400, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3waro"]
+atlas = ExtResource("2_la12f")
+region = Rect2(600, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ibb0r"]
+atlas = ExtResource("2_la12f")
+region = Rect2(800, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u154e"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1000, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5eps8"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1200, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_015vh"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1400, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wx55a"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1600, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tddcg"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1800, 600, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pg5p5"]
+atlas = ExtResource("2_la12f")
+region = Rect2(0, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3otcd"]
+atlas = ExtResource("2_la12f")
+region = Rect2(200, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w8b4e"]
+atlas = ExtResource("2_la12f")
+region = Rect2(400, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ce155"]
+atlas = ExtResource("2_la12f")
+region = Rect2(600, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mnkrd"]
+atlas = ExtResource("2_la12f")
+region = Rect2(800, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_knqwb"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1000, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_738uk"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1200, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4dydw"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1400, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uheqg"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1600, 800, 200, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bdju4"]
+atlas = ExtResource("2_la12f")
+region = Rect2(1800, 800, 200, 200)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mtc2m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y6eso")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d7s1n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gfpm1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awcrc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g3u5d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jsyvk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w1wo7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_up1yj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_25i71")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pgemg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o8b0x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3h4yv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yn7bs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pygwg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_miti3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svb4f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_htjhu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5b03e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qyyq7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pja4o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d8ryx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2qo4f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d48xe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qytrw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fuvva")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y28jr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cywvb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ye2qm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lnhnt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5bqf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1qhut")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_63xdi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pu3n3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3waro")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ibb0r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u154e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5eps8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_015vh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wx55a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tddcg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pg5p5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3otcd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w8b4e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ce155")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mnkrd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_knqwb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_738uk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4dydw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uheqg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bdju4")
+}],
+"loop": 1,
+"name": &"BlackHole",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vn0us"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_greck"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tujin"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pa7r8"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k85lc"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_la12f"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7v0hv"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(600, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ucofn"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(700, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fteec"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(800, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eqo6o"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(900, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ej378"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(0, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gg6w5"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(100, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wkm78"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(200, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_klkoa"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(300, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iubae"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(400, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ouq7j"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(500, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1qeon"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(600, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7khlk"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(700, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i3dlo"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(800, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e40eq"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(900, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b6nhr"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(0, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cgmmy"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(100, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ogs0"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(200, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0etpb"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(300, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8ta5"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(400, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k17pf"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(500, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ois5b"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(600, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_78cr5"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(700, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eyvsy"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(800, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qiof4"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(900, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cp73q"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(0, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4bfao"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(100, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_23ga3"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(200, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhu8y"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(300, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b8e03"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(400, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5lwuo"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(500, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkw7e"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(600, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i5psn"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(700, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idrsk"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(800, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oskx0"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(900, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nkaxg"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(0, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2oc5f"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(100, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lr2u6"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(200, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i21if"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(300, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g31f4"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(400, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_taw6k"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(500, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ifuy"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(600, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwop4"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(700, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5oupa"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(800, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arlvk"]
+atlas = ExtResource("3_kxaj3")
+region = Rect2(900, 400, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y6eso"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vn0us")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_greck")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tujin")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pa7r8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k85lc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_la12f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7v0hv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ucofn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fteec")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eqo6o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ej378")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gg6w5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wkm78")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_klkoa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iubae")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ouq7j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1qeon")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7khlk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i3dlo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e40eq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b6nhr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cgmmy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ogs0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0etpb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8ta5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k17pf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ois5b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_78cr5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eyvsy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qiof4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cp73q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4bfao")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_23ga3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jhu8y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b8e03")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5lwuo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hkw7e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i5psn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idrsk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oskx0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nkaxg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2oc5f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lr2u6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i21if")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g31f4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_taw6k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ifuy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwop4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5oupa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arlvk")
+}],
+"loop": 1,
+"name": &"PlanetRotation",
+"speed": 1.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k85lc"]
+radius = 130.23056
+
+[sub_resource type="Resource" id="Resource_7v0hv"]
+resource_name = "间隔执行: 50.0s - 自动开始 立即触发 无限重复"
+script = ExtResource("4_k85lc")
+trigger_on_start = true
+interval_seconds = 50.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ucofn"]
+resource_name = "移动到 [RedPlanet] (0.0, 900.0) (本地) (50.00s)"
+script = ExtResource("6_la12f")
+target_node = NodePath("..")
+target_position = Vector2(0, 900)
+duration = 50.0
+space_mode = 1
+easing_type = 2
+trans_type = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_gg6w5"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_ucofn")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_arlpr"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(600, 350, 1)
+angular_velocity_min = -360.0
+angular_velocity_max = 359.99997
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 98, 0)
+scale_min = 0.01
+scale_max = 0.02
+color_ramp = SubResource("GradientTexture1D_pa7r8")
+alpha_curve = SubResource("CurveTexture_greck")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fteec"]
+size = Vector2(20, 750)
+
+[sub_resource type="Resource" id="Resource_i3dlo"]
+resource_name = "当 enemies 进入 .. 时触发"
+script = ExtResource("16_iubae")
+area_node_path = NodePath("..")
+target_group = "enemies"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_1ogs0"]
+resource_name = "设置变量 [ID:EnemyManager] 'MoveDirect' = false"
+script = ExtResource("11_ouq7j")
+target_variable = "MoveDirect"
+target_node_path = NodePath("")
+new_value = false
+target_variable_scope = 1
+scope_source = 1
+custom_scope_id = "EnemyManager"
+
+[sub_resource type="Resource" id="Resource_b6nhr"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_1ogs0")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_e40eq"]
+resource_name = "当 enemies 进入 .. 时触发"
+script = ExtResource("16_iubae")
+area_node_path = NodePath("..")
+target_group = "enemies"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_0etpb"]
+resource_name = "设置变量 [ID:EnemyManager] 'MoveDirect' = true"
+script = ExtResource("11_ouq7j")
+target_variable = "MoveDirect"
+target_node_path = NodePath("")
+new_value = true
+target_variable_scope = 1
+scope_source = 1
+custom_scope_id = "EnemyManager"
+
+[sub_resource type="Resource" id="Resource_cgmmy"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_0etpb")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7khlk"]
+size = Vector2(20, 656)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lr2u6"]
+size = Vector2(1400, 20)
+
+[sub_resource type="Resource" id="Resource_wkm78"]
+resource_name = "On Ready With Delay: 0.1"
+script = ExtResource("13_gg6w5")
+delay_seconds = 0.1
+
+[sub_resource type="Resource" id="Resource_iubae"]
+script = ExtResource("7_fteec")
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_ouq7j"]
+resource_name = "间隔执行: 1.0s - 自动开始 间隔后触发 无限重复"
+script = ExtResource("4_k85lc")
+interval_seconds = 1.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_j8ta5"]
+resource_name = "检查变量 [最近作用域]: MoveDirect EQUALS false"
+script = ExtResource("17_1qeon")
+variable_name = "MoveDirect"
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = false
+variable_scope = 1
+scope_source = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ois5b"]
+resource_name = "相对移动 '../..' [局部] 偏移 (0.0"
+script = ExtResource("15_klkoa")
+offset_variable = ""
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_node = NodePath("../..")
+space = 1
+use_variable = false
+offset = Vector3(-30, 0, 0)
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_78cr5"]
+resource_name = "相对移动 '../..' [局部] 偏移 (0.0"
+script = ExtResource("15_klkoa")
+offset_variable = ""
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_node = NodePath("../..")
+space = 1
+use_variable = false
+offset = Vector3(30, 0, 0)
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_k17pf"]
+resource_name = "If/Else MoveDirect [最近作用域] EQUALS false [真:1 [异步]"
+script = ExtResource("18_7khlk")
+condition = SubResource("Resource_j8ta5")
+true_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_78cr5")])
+false_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_ois5b")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_7khlk"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_k17pf")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_arlvk"]
+resource_name = "变量间隔: 变量: interval 默认: 默认: 1.5s - 自动初始化变量 自动开始 间隔后触发 无限重复"
+script = ExtResource("20_nkaxg")
+default_interval = 1.5
+variable_scope = 0
+interval_seconds = 1.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_3h4yv"]
+resource_name = "Enemies.child_count < 1"
+script = ExtResource("20_4bfao")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_path_source = 0
+target_node_path = NodePath("../../Enemies")
+recursive = false
+comparison_operator = 3
+compare_value = 1
+metadata/_custom_type_script = "uid://dg156vx1vs4nn"
+
+[sub_resource type="Resource" id="Resource_5b03e"]
+resource_name = "Group('player') = 0"
+script = ExtResource("22_idrsk")
+group_variable_name = ""
+group_variable_scope = 0
+group_scope_source = 0
+group_custom_scope_id = ""
+group_target_node_path = NodePath("")
+group_name_source = 0
+group_name = "player"
+comparison_operator = 0
+compare_value = 0
+metadata/_custom_type_script = "uid://pb1mf4eqr2kf"
+
+[sub_resource type="Resource" id="Resource_qyyq7"]
+resource_name = "ANY (2 个条件)"
+script = ExtResource("23_i5psn")
+conditions = Array[ExtResource("20_i5psn")]([SubResource("Resource_3h4yv"), SubResource("Resource_5b03e")])
+
+[sub_resource type="Resource" id="Resource_o8b0x"]
+resource_name = "条件检查: ANY (2 个条件) (真:停止执行"
+script = ExtResource("20_cp73q")
+condition = SubResource("Resource_qyyq7")
+on_condition_true = 3
+on_condition_false = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_knqwb"]
+resource_name = "检查变量 [ID:GameManager]: current_wave EQUALS 3"
+script = ExtResource("17_1qeon")
+variable_name = "current_wave"
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 3
+variable_scope = 1
+scope_source = 1
+custom_scope_id = "GameManager"
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_738uk"]
+resource_name = "设置变量 [[本地]] 'target_interval' = 0.5"
+script = ExtResource("11_ouq7j")
+target_variable = "target_interval"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 0.5
+target_variable_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_4dydw"]
+resource_name = "If/Then current_wave [ID:GameManager] EQUALS 3 [1 个指令] [异步]"
+script = ExtResource("42_oskx0")
+condition = SubResource("Resource_knqwb")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_738uk")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_pg5p5"]
+resource_name = "检查变量 [ID:GameManager]: current_wave EQUALS 2"
+script = ExtResource("17_1qeon")
+variable_name = "current_wave"
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 2
+variable_scope = 1
+scope_source = 1
+custom_scope_id = "GameManager"
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_3otcd"]
+resource_name = "设置变量 [[本地]] 'target_interval' = 1.0"
+script = ExtResource("11_ouq7j")
+target_variable = "target_interval"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 1.0
+target_variable_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_w8b4e"]
+resource_name = "If/Then current_wave [ID:GameManager] EQUALS 2 [1 个指令] [异步]"
+script = ExtResource("42_oskx0")
+condition = SubResource("Resource_pg5p5")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_3otcd")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_uheqg"]
+resource_name = "检查变量 [ID:GameManager]: current_wave EQUALS 1"
+script = ExtResource("17_1qeon")
+variable_name = "current_wave"
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 1
+variable_scope = 1
+scope_source = 1
+custom_scope_id = "GameManager"
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_bdju4"]
+resource_name = "设置变量 [[本地]] 'target_interval' = 1.5"
+script = ExtResource("11_ouq7j")
+target_variable = "target_interval"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 1.5
+target_variable_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_mtc2m"]
+resource_name = "If/Then current_wave [ID:GameManager] EQUALS 1 [1 个指令] [异步]"
+script = ExtResource("42_oskx0")
+condition = SubResource("Resource_uheqg")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_bdju4")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_3waro"]
+resource_name = "获取子节点数量 → Enemies → current_enemy [[本地]]"
+script = ExtResource("21_2oc5f")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../../Enemies")
+include_internal = false
+result_variable = "current_enemy"
+result_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_btn6e"]
+resource_name = "'{local:target_interval} - (...' → interval [Float]"
+script = ExtResource("27_5ifuy")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "{local:target_interval} - (10 - {local:current_enemy})*0.05)"
+output_type = 0
+scope_source = 0
+save_to_variable = "interval"
+save_to_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ltvij"]
+resource_name = "查找节点 [按组] 'player' 在场景中 -> [本地]变量'player'"
+script = ExtResource("28_g31f4")
+recursive = true
+scope_source = 1
+custom_scope_id = ""
+target_node_path = NodePath("")
+search_type = 2
+search_scope = 1
+search_value = "player"
+recursive = true
+first_match_only = true
+result_variable = "player"
+result_scope = 0
+error_handling = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_jvldi"]
+resource_name = "获取位置 player [LOCAL] → player_pos [LOCAL]"
+script = ExtResource("23_qiof4")
+target = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = true
+target_variable = "player"
+target_scope = 0
+save_to_variable = "player_pos"
+save_to_scope = 0
+use_global_position = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_cfscg"]
+resource_name = "随机点 [2D] @[player_pos] ±(100, 100) → player_pos [最近作用域]"
+script = ExtResource("31_taw6k")
+plane_3d = 0
+origin_direct_2d = Vector2(0, 0)
+origin_direct_3d = Vector3(0, 0, 0)
+origin_scope_source = 0
+origin_custom_scope_id = ""
+origin_target_node_path = NodePath("")
+range_direct_3d = Vector3(100, 100, 100)
+range_variable = ""
+range_scope = 0
+range_scope_source = 0
+range_custom_scope_id = ""
+range_target_node_path = NodePath("")
+dimension_mode = 0
+origin_mode = 1
+origin_variable = "player_pos"
+origin_scope = 0
+range_mode = 0
+range_direct_2d = Vector2(100, 100)
+save_to_variable = "player_pos"
+save_to_scope = 1
+save_scope_source = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_d7s1n"]
+resource_name = "获取随机子节点 → Enemies → child [[本地]]"
+script = ExtResource("20_ois5b")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../../Enemies")
+include_internal = true
+result_variable = "child"
+result_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_up1yj"]
+resource_name = "获取位置 child [LOCAL] → child_pos [LOCAL]"
+script = ExtResource("23_qiof4")
+target = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = true
+target_variable = "child"
+target_scope = 0
+save_to_variable = "child_pos"
+save_to_scope = 0
+use_global_position = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_w1wo7"]
+resource_name = "实例化 'enemy_bullet.tscn' 从变量 [[本地]] child_pos 偏移 (0.0 [池化]"
+script = ExtResource("23_eyvsy")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "uid://bd83gfasoidja"
+parent_node = NodePath("")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 20, 0)
+position_variable = "child_pos"
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = true
+pool_initial_size = 20
+pool_max_size = 100
+auto_recycle = true
+recycle_delay = 5.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_y6eso"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_o8b0x"), SubResource("Resource_4dydw"), SubResource("Resource_w8b4e"), SubResource("Resource_mtc2m"), SubResource("Resource_3waro"), SubResource("Resource_btn6e"), SubResource("Resource_ltvij"), SubResource("Resource_jvldi"), SubResource("Resource_cfscg"), SubResource("Resource_d7s1n"), SubResource("Resource_up1yj"), SubResource("Resource_w1wo7")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7v0hv"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(600, 350, 1)
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = 196.25
+initial_velocity_max = 424.24
+angular_velocity_min = -360.0
+angular_velocity_max = 359.99997
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 98, 0)
+scale_min = 0.01
+scale_max = 0.01
+scale_over_velocity_min = 1.0
+scale_over_velocity_max = 1.0
+color_ramp = SubResource("GradientTexture1D_pa7r8")
+alpha_curve = SubResource("CurveTexture_greck")
+
+[sub_resource type="Resource" id="Resource_b2sty"]
+resource_name = "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)"
+script = ExtResource("49_5ifuy")
+music_path = "uid://bi1lb4nvpv6gn"
+volume = 1.0
+bus = "Music"
+continue_during_pause = true
+crossfade_duration = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_usg4j"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_b2sty")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_s6tot"]
+resource_name = "间隔执行: 51.0s - 自动开始 立即触发 无限重复"
+script = ExtResource("4_k85lc")
+trigger_on_start = true
+emit_repeat_count = false
+interval_seconds = 51.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_h5334"]
+resource_name = "每 51.0 秒触发一次，无限重复，自动开始，{trigger}"
+script = ExtResource("36_36vvb")
+event = SubResource("Resource_s6tot")
+action_runner = SubResource("Resource_usg4j")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_ketc8"]
+resource_name = "加载全局变量 [助手资源]"
+script = ExtResource("35_vwop4")
+custom_path = ""
+load_source = 0
+
+[sub_resource type="Resource" id="Resource_tlpj2"]
+resource_name = "暂停游戏 (仅暂停)"
+script = ExtResource("35_23ga3")
+pause_menu_scene = ""
+pause_menu_parent = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+show_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_dt17i"]
+resource_name = "获取位置 PlayerShip → start_pos [SCOPE] [最近作用域]"
+script = ExtResource("23_qiof4")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+custom_scope_id = ""
+use_variable = false
+target = NodePath("../../Game_Layer/PlayerShip")
+save_to_variable = "start_pos"
+save_to_scope = 1
+scope_source = 0
+use_global_position = true
+
+[sub_resource type="Resource" id="Resource_17fg2"]
+resource_name = "current_wave [SCOPE] + 1.0"
+script = ExtResource("26_0etpb")
+operand_a_custom_scope_id = ""
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+custom_scope_id = ""
+target_node_path = NodePath("")
+operation_type = 0
+operand_a_source = 1
+operand_a_variable = "current_wave"
+operand_a_scope = 1
+operand_a_scope_source = 0
+operand_b_source = 0
+operand_b_value = 1.0
+save_to_variable = "current_wave"
+save_to_scope = 1
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_yicn7"]
+resource_name = "获取子节点位置 Markers [global] → spawn_pos [SCOPE] [最近作用域]"
+script = ExtResource("37_2oc5f")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+custom_scope_id = ""
+use_variable = false
+target_node = NodePath("../../Game_Layer/Markers")
+recursive = false
+use_global_position = true
+result_variable = "spawn_pos"
+result_scope = 1
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_u80h0"]
+resource_name = "预热 'player_ship_bullet.tscn' ×20 [分批: 5/批"
+script = ExtResource("23_e40eq")
+scene_path = "uid://bmfgotihlmfkw"
+warm_up_count = 20
+warm_up_mode = 1
+batch_size = 5
+batch_delay = 0.1
+pool_initial_size = 20
+pool_max_size = 100
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_t8cid"]
+resource_name = "预热 'bullet_explode.tscn' ×20 [分批: 5/批"
+script = ExtResource("23_e40eq")
+scene_path = "uid://cq7h6ykrfu4kv"
+warm_up_count = 20
+warm_up_mode = 1
+batch_size = 5
+batch_delay = 0.1
+pool_initial_size = 20
+pool_max_size = 100
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_srhrs"]
+resource_name = "预热 'enemy_explode.tscn' ×20 [分批: 5/批"
+script = ExtResource("23_e40eq")
+scene_path = "uid://ctimwhiu78cr8"
+warm_up_count = 20
+warm_up_mode = 1
+batch_size = 5
+batch_delay = 0.1
+pool_initial_size = 20
+pool_max_size = 100
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_loow2"]
+resource_name = "预热 'enemy_bullet.tscn' ×300 [分批: 100/批"
+script = ExtResource("23_e40eq")
+scene_path = "uid://bd83gfasoidja"
+warm_up_count = 300
+warm_up_mode = 1
+batch_size = 100
+batch_delay = 0.1
+pool_initial_size = 300
+pool_max_size = 500
+
+[sub_resource type="Resource" id="Resource_mfq27"]
+resource_name = "预热 'bullet_explode_enemy.tscn' ×20 [分批: 5/批"
+script = ExtResource("23_e40eq")
+scene_path = "uid://b4e65c431qgjd"
+warm_up_count = 20
+warm_up_mode = 1
+batch_size = 5
+batch_delay = 0.1
+pool_initial_size = 20
+pool_max_size = 100
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_qy5cw"]
+resource_name = "预热 'score_entry.tscn' ×10 [分批: 5/批"
+script = ExtResource("23_e40eq")
+scene_path = "uid://pvuvnyrhmc36"
+warm_up_count = 10
+warm_up_mode = 1
+batch_size = 5
+batch_delay = 0.1
+pool_initial_size = 20
+pool_max_size = 100
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_o5uuf"]
+resource_name = "预热 'enemy_ship_01.tscn' ×3"
+script = ExtResource("23_e40eq")
+batch_size = 5
+batch_delay = 0.1
+scene_path = "uid://c3b28ywrqiogw"
+warm_up_count = 3
+warm_up_mode = 0
+pool_initial_size = 10
+pool_max_size = 10
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_waks5"]
+resource_name = "预热 'enemy_ship_03.tscn' ×10"
+script = ExtResource("23_e40eq")
+batch_size = 5
+batch_delay = 0.1
+scene_path = "uid://dadlwb08j675g"
+warm_up_count = 10
+warm_up_mode = 0
+pool_initial_size = 20
+pool_max_size = 30
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_kacro"]
+resource_name = "等待 0.1 秒"
+script = ExtResource("36_b8e03")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.1
+
+[sub_resource type="Resource" id="Resource_n614w"]
+resource_name = "运行 Runner '../SpawnEnemy' 等待完成"
+script = ExtResource("45_g31f4")
+result_variable_name = ""
+result_variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_runner = NodePath("../SpawnEnemy")
+wait_for_completion = true
+context_node_path = NodePath("")
+store_result = false
+
+[sub_resource type="Resource" id="Resource_wh7s1"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_ketc8"), SubResource("Resource_tlpj2"), SubResource("Resource_dt17i"), SubResource("Resource_17fg2"), SubResource("Resource_yicn7"), SubResource("Resource_u80h0"), SubResource("Resource_t8cid"), SubResource("Resource_srhrs"), SubResource("Resource_loow2"), SubResource("Resource_mfq27"), SubResource("Resource_qy5cw"), SubResource("Resource_o5uuf"), SubResource("Resource_waks5"), SubResource("Resource_kacro"), SubResource("Resource_n614w")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_2sj8b"]
+resource_name = "On Ready With Delay: 0.0"
+script = ExtResource("13_gg6w5")
+
+[sub_resource type="Resource" id="Resource_wrbcl"]
+resource_name = "场景就绪时触发"
+script = ExtResource("36_36vvb")
+event = SubResource("Resource_2sj8b")
+action_runner = SubResource("Resource_wh7s1")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_r7u24"]
+resource_name = "enemy_count [SCOPE] - 1.0"
+script = ExtResource("26_0etpb")
+operand_a_custom_scope_id = ""
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+custom_scope_id = ""
+target_node_path = NodePath("")
+operation_type = 1
+operand_a_source = 1
+operand_a_variable = "enemy_count"
+operand_a_scope = 1
+operand_a_scope_source = 0
+operand_b_source = 0
+operand_b_value = 1.0
+save_to_variable = "enemy_count"
+save_to_scope = 1
+scope_source = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_b4578"]
+resource_name = "current_score [SCOPE] + event_score [LOCAL]"
+script = ExtResource("26_0etpb")
+operand_a_custom_scope_id = ""
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+custom_scope_id = ""
+target_node_path = NodePath("")
+operation_type = 0
+operand_a_source = 1
+operand_a_variable = "current_score"
+operand_a_scope = 1
+operand_a_scope_source = 0
+operand_b_source = 1
+operand_b_variable = "event_score"
+operand_b_scope = 0
+save_to_variable = "current_score"
+save_to_scope = 1
+scope_source = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_rdckx"]
+resource_name = "设置变量 [[本地]] 'c_score' 从'current_score [最近作用域]'复制"
+script = ExtResource("11_ouq7j")
+target_variable = "c_score"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+set_with_another_variable = true
+from_variable = "current_score"
+target_variable_scope = 0
+from_variable_scope = 1
+from_scope_source = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_0odsa"]
+resource_name = "发送事件: ScoreUpdate"
+script = ExtResource("26_j8ta5")
+event_name = "ScoreUpdate"
+event_args = {
+"score": "$c_score"
+}
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_mcog3"]
+resource_name = "检查变量 [最近作用域]: enemy_count LESS_THAN 1"
+script = ExtResource("17_1qeon")
+variable_name = "enemy_count"
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 1
+variable_scope = 1
+scope_source = 0
+comparison_operator = 3
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_5y4ic"]
+resource_name = "发送事件: AllEnemyDied"
+script = ExtResource("26_j8ta5")
+event_name = "AllEnemyDied"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_hrxn6"]
+resource_name = "If/Then enemy_count [最近作用域] LESS_THAN 1 [1 个指令] [异步]"
+script = ExtResource("42_oskx0")
+condition = SubResource("Resource_mcog3")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_5y4ic")])
+
+[sub_resource type="Resource" id="Resource_a4uun"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_r7u24"), SubResource("Resource_b4578"), SubResource("Resource_rdckx"), SubResource("Resource_0odsa"), SubResource("Resource_hrxn6")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_0oghq"]
+resource_name = "接收事件: EnemyDie"
+script = ExtResource("25_cgmmy")
+event_name = "EnemyDie"
+
+[sub_resource type="Resource" id="Resource_o1wkr"]
+resource_name = "接收事件: EnemyDie"
+script = ExtResource("36_36vvb")
+event = SubResource("Resource_0oghq")
+action_runner = SubResource("Resource_a4uun")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_ooxfk"]
+resource_name = "player_life [SCOPE] - 1.0"
+script = ExtResource("26_0etpb")
+operand_a_custom_scope_id = ""
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+custom_scope_id = ""
+target_node_path = NodePath("")
+operation_type = 1
+operand_a_source = 1
+operand_a_variable = "player_life"
+operand_a_scope = 1
+operand_a_scope_source = 0
+operand_b_source = 0
+operand_b_value = 1.0
+save_to_variable = "player_life"
+save_to_scope = 1
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_sqfkd"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("36_b8e03")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_6al6r"]
+resource_name = "暂停游戏 (仅暂停)"
+script = ExtResource("35_23ga3")
+pause_menu_scene = ""
+pause_menu_parent = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+show_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_qemwf"]
+resource_name = "等待 0.1 秒"
+script = ExtResource("36_b8e03")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.1
+
+[sub_resource type="Resource" id="Resource_pj6tb"]
+resource_name = "检查变量 [最近作用域]: player_life LESS_THAN 0"
+script = ExtResource("17_1qeon")
+variable_name = "player_life"
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 1
+scope_source = 0
+comparison_operator = 3
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_ejd0v"]
+resource_name = "发送事件: StartCountDown"
+script = ExtResource("26_j8ta5")
+event_name = "StartCountDown"
+
+[sub_resource type="Resource" id="Resource_2y4y2"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("36_b8e03")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+
+[sub_resource type="Resource" id="Resource_ull3x"]
+resource_name = "实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos"
+script = ExtResource("23_eyvsy")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+scene_path = "uid://c37gfmeoqbajm"
+parent_node = NodePath("")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "start_pos"
+position_scope = 1
+position_scope_source = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = false
+
+[sub_resource type="Resource" id="Resource_onugj"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("36_b8e03")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.0
+
+[sub_resource type="Resource" id="Resource_j327c"]
+resource_name = "恢复游戏"
+script = ExtResource("37_5lwuo")
+pause_menu_node = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+close_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_mbx8a"]
+resource_name = "检查变量 [最近作用域]: current_score GREATER_THAN 0"
+script = ExtResource("17_1qeon")
+variable_name = "current_score"
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 1
+scope_source = 0
+comparison_operator = 2
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_20jyw"]
+resource_name = "Array Add 数组 score_list ← 变量 current_score"
+script = ExtResource("41_idrsk")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+element_value = null
+element_custom_scope_id = ""
+element_target_node_path = NodePath("")
+source_type = 0
+array_variable = "score_list"
+array_scope = 2
+use_element_from_variable = true
+element_from_variable = "current_score"
+element_from_variable_scope = 1
+element_scope_source = 0
+element_target_node_path = NodePath("")
+log_level = 4
+
+[sub_resource type="Resource" id="Resource_52e3n"]
+resource_name = "If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [异步]"
+script = ExtResource("42_oskx0")
+condition = SubResource("Resource_mbx8a")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_20jyw")])
+
+[sub_resource type="Resource" id="Resource_kpi76"]
+resource_name = "发送事件: GameEnd"
+script = ExtResource("26_j8ta5")
+event_name = "GameEnd"
+event_args = {
+"end": "loss"
+}
+
+[sub_resource type="Resource" id="Resource_05d30"]
+resource_name = "If/Else player_life [最近作用域] LESS_THAN 0 [真:2 [异步]"
+script = ExtResource("18_7khlk")
+condition = SubResource("Resource_pj6tb")
+true_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_52e3n"), SubResource("Resource_kpi76")])
+false_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_ejd0v"), SubResource("Resource_2y4y2"), SubResource("Resource_ull3x"), SubResource("Resource_onugj"), SubResource("Resource_j327c")])
+
+[sub_resource type="Resource" id="Resource_51w1e"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_ooxfk"), SubResource("Resource_sqfkd"), SubResource("Resource_6al6r"), SubResource("Resource_qemwf"), SubResource("Resource_05d30")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_h4e67"]
+resource_name = "接收事件: PlayerDie"
+script = ExtResource("25_cgmmy")
+event_name = "PlayerDie"
+
+[sub_resource type="Resource" id="Resource_k7heh"]
+resource_name = "接收事件: PlayerDie"
+script = ExtResource("36_36vvb")
+event = SubResource("Resource_h4e67")
+action_runner = SubResource("Resource_51w1e")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_tebp0"]
+resource_name = "current_wave [SCOPE] + 1.0"
+script = ExtResource("26_0etpb")
+operand_a_custom_scope_id = ""
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+custom_scope_id = ""
+target_node_path = NodePath("")
+operation_type = 0
+operand_a_source = 1
+operand_a_variable = "current_wave"
+operand_a_scope = 1
+operand_a_scope_source = 0
+operand_b_source = 0
+operand_b_value = 1.0
+save_to_variable = "current_wave"
+save_to_scope = 1
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_8v20a"]
+resource_name = "检查变量 [最近作用域]: current_wave LESS_EQUAL 3"
+script = ExtResource("17_1qeon")
+variable_name = "current_wave"
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 3
+variable_scope = 1
+scope_source = 0
+comparison_operator = 5
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_rimn6"]
+resource_name = "发送事件: GameEnd"
+script = ExtResource("26_j8ta5")
+event_name = "GameEnd"
+event_args = {
+"end": "win"
+}
+
+[sub_resource type="Resource" id="Resource_s2i3n"]
+resource_name = "暂停游戏 (仅暂停)"
+script = ExtResource("35_23ga3")
+pause_menu_scene = ""
+pause_menu_parent = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+show_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_7e0w5"]
+resource_name = "运行 Runner '../SpawnEnemy' 立即返回"
+script = ExtResource("45_g31f4")
+result_variable_name = ""
+result_variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_runner = NodePath("../SpawnEnemy")
+wait_for_completion = false
+context_node_path = NodePath("")
+store_result = false
+
+[sub_resource type="Resource" id="Resource_aqkt2"]
+resource_name = "If/Else current_wave [最近作用域] LESS_EQUAL 3 [真:2 [异步]"
+script = ExtResource("18_7khlk")
+condition = SubResource("Resource_8v20a")
+true_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_s2i3n"), SubResource("Resource_7e0w5")])
+false_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_rimn6")])
+
+[sub_resource type="Resource" id="Resource_cta4t"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_tebp0"), SubResource("Resource_aqkt2")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_4b5y8"]
+resource_name = "接收事件: AllEnemyDied"
+script = ExtResource("25_cgmmy")
+event_name = "AllEnemyDied"
+store_args_to_local = false
+
+[sub_resource type="Resource" id="Resource_y5ua0"]
+resource_name = "接收事件: AllEnemyDied"
+script = ExtResource("36_36vvb")
+event = SubResource("Resource_4b5y8")
+action_runner = SubResource("Resource_cta4t")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_h46ax"]
+resource_name = "发送事件: ShowWave"
+script = ExtResource("26_j8ta5")
+event_name = "ShowWave"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_jkb4a"]
+resource_name = "检查变量 [[本地]]: index EQUALS 0"
+script = ExtResource("17_1qeon")
+variable_name = "index"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ellxk"]
+resource_name = "实例化 'enemy_ship_03.tscn' 到 Enemies 从变量 [[本地]] item [池化]"
+script = ExtResource("23_eyvsy")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "uid://dadlwb08j675g"
+parent_node = NodePath("../../Game_Layer/EnemyFormation/Enemies")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "item"
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = true
+pool_initial_size = 20
+pool_max_size = 100
+auto_recycle = false
+recycle_delay = 0.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_767d1"]
+resource_name = "实例化 'enemy_ship_01.tscn' 到 Enemies 从变量 [[本地]] item [池化]"
+script = ExtResource("23_eyvsy")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "uid://c3b28ywrqiogw"
+parent_node = NodePath("../../Game_Layer/EnemyFormation/Enemies")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "item"
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = true
+pool_initial_size = 20
+pool_max_size = 100
+auto_recycle = false
+recycle_delay = 0.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_w6cft"]
+resource_name = "If/Else index [[本地]] EQUALS 0 [真:1 [异步]"
+script = ExtResource("18_7khlk")
+condition = SubResource("Resource_jkb4a")
+true_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_767d1")])
+false_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_ellxk")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_up3tw"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("36_b8e03")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_eymgd"]
+resource_name = "For Each (spawn_pos) -> item 索引=index [2 个指令]"
+script = ExtResource("41_lr2u6")
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+index_scope_source = 0
+index_custom_scope_id = ""
+index_target_node_path = NodePath("")
+item_scope_source = 0
+item_custom_scope_id = ""
+item_target_node_path = NodePath("")
+source_type = 0
+array_variable = "spawn_pos"
+array_scope = 1
+array_scope_source = 0
+group_name = ""
+item_variable = "item"
+item_scope = 0
+index_variable = "index"
+index_scope = 0
+skip_null_items = true
+loop_instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_w6cft"), SubResource("Resource_up3tw")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_g3u5d"]
+resource_name = "获取组节点数量 'enemies' → enemy_count [最近作用域]"
+script = ExtResource("24_b6nhr")
+custom_scope_id = ""
+target_node_path = NodePath("")
+group_name = "enemies"
+result_variable = "enemy_count"
+result_scope = 1
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_av5rw"]
+resource_name = "发送事件: HideWave"
+script = ExtResource("26_j8ta5")
+event_name = "HideWave"
+
+[sub_resource type="Resource" id="Resource_eirh5"]
+resource_name = "恢复游戏 (UI节点: ../../GameSceneCanvas)"
+script = ExtResource("37_5lwuo")
+pause_menu_node = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+close_pause_menu = false
+
+[sub_resource type="Resource" id="Resource_sx1s8"]
+script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_h46ax"), SubResource("Resource_eymgd"), SubResource("Resource_g3u5d"), SubResource("Resource_av5rw"), SubResource("Resource_eirh5")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="GameScene" type="Node2D" unique_id=1385702034]
+script = ExtResource("47_perf")
+
+[node name="BG_Layer" type="Node" parent="." unique_id=1465442031]
+
+[node name="Static" type="Node" parent="BG_Layer" unique_id=1105642071]
+
+[node name="UnderColor" type="Sprite2D" parent="BG_Layer/Static" unique_id=251417839]
+z_index = -3
+position = Vector2(-1.9550323e-05, 9.059906e-06)
+scale = Vector2(11, 6)
+texture = ExtResource("1_arlpr")
+
+[node name="BackgroundStart" type="GPUParticles2D" parent="BG_Layer/Static" unique_id=640808357]
+z_index = -2
+material = SubResource("CanvasItemMaterial_kxaj3")
+amount = 80
+texture = ExtResource("2_s0hi0")
+lifetime = 2.0
+process_material = SubResource("ParticleProcessMaterial_la12f")
+
+[node name="BlackHole" type="AnimatedSprite2D" parent="BG_Layer/Static" unique_id=1833523697]
+z_index = -2
+position = Vector2(-344, -40)
+sprite_frames = SubResource("SpriteFrames_mtc2m")
+animation = &"BlackHole"
+autoplay = "BlackHole"
+frame_progress = 0.20787872
+
+[node name="Dynamic" type="Node" parent="BG_Layer" unique_id=1911584381]
+
+[node name="RedPlanet" type="Area2D" parent="BG_Layer/Dynamic" unique_id=1572355990]
+position = Vector2(400, -400)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="BG_Layer/Dynamic/RedPlanet" unique_id=1334458034]
+z_index = -1
+scale = Vector2(2.61, 2.61)
+sprite_frames = SubResource("SpriteFrames_y6eso")
+animation = &"PlanetRotation"
+autoplay = "PlanetRotation"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BG_Layer/Dynamic/RedPlanet" unique_id=385203815]
+shape = SubResource("CircleShape2D_k85lc")
+
+[node name="Trigger" type="Node" parent="BG_Layer/Dynamic/RedPlanet" unique_id=364821735]
+script = ExtResource("3_k85lc")
+event_definition = SubResource("Resource_7v0hv")
+action_runner = SubResource("Resource_gg6w5")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="StarDust" type="GPUParticles2D" parent="BG_Layer/Dynamic" unique_id=840289974]
+process_mode = 3
+material = SubResource("CanvasItemMaterial_kxaj3")
+amount = 80
+texture = ExtResource("2_s0hi0")
+lifetime = 2.0
+process_material = SubResource("ParticleProcessMaterial_arlpr")
+
+[node name="Game_Layer" type="Node" parent="." unique_id=678300551]
+
+[node name="LevelBoundry" type="Node" parent="Game_Layer" unique_id=1760953486]
+
+[node name="BoundryLeft" type="Area2D" parent="Game_Layer/LevelBoundry" unique_id=87583792 groups=["level_boundry", "wall"]]
+position = Vector2(-576, 0)
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_Layer/LevelBoundry/BoundryLeft" unique_id=965218678 groups=["level_boundry"]]
+shape = SubResource("RectangleShape2D_fteec")
+
+[node name="OnArea2DEnter" type="Node" parent="Game_Layer/LevelBoundry/BoundryLeft" unique_id=1693494230]
+script = ExtResource("3_k85lc")
+event_definition = SubResource("Resource_i3dlo")
+action_runner = SubResource("Resource_b6nhr")
+cooldown_mode = 1
+cooldown_time = 5.0
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="BoundryRight" type="Area2D" parent="Game_Layer/LevelBoundry" unique_id=1818720655 groups=["level_boundry", "wall"]]
+position = Vector2(576, 0)
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_Layer/LevelBoundry/BoundryRight" unique_id=949774388 groups=["level_boundry"]]
+shape = SubResource("RectangleShape2D_fteec")
+
+[node name="OnArea2DEnter" type="Node" parent="Game_Layer/LevelBoundry/BoundryRight" unique_id=461133501]
+script = ExtResource("3_k85lc")
+event_definition = SubResource("Resource_e40eq")
+action_runner = SubResource("Resource_cgmmy")
+cooldown_mode = 1
+cooldown_time = 5.0
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="WallLeft" type="StaticBody2D" parent="Game_Layer/LevelBoundry" unique_id=1226110607]
+position = Vector2(-550, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_Layer/LevelBoundry/WallLeft" unique_id=93625920]
+shape = SubResource("RectangleShape2D_7khlk")
+debug_color = Color(0.95845515, 0.18002293, 0.26143157, 0.41960785)
+
+[node name="WallRight" type="StaticBody2D" parent="Game_Layer/LevelBoundry" unique_id=1195786141]
+position = Vector2(550, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_Layer/LevelBoundry/WallRight" unique_id=893370966]
+shape = SubResource("RectangleShape2D_7khlk")
+debug_color = Color(0.95845515, 0.18002293, 0.26143157, 0.41960785)
+
+[node name="EnemyBuilletRecycler" type="Area2D" parent="Game_Layer/LevelBoundry" unique_id=2014343923 groups=["wall"]]
+position = Vector2(0, 424)
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game_Layer/LevelBoundry/EnemyBuilletRecycler" unique_id=514978940]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_lr2u6")
+
+[node name="EnemyFormation" type="Node2D" parent="Game_Layer" unique_id=1540198515]
+
+[node name="Enemies" type="Node2D" parent="Game_Layer/EnemyFormation" unique_id=917725869]
+scale = Vector2(2.5, 2.5)
+
+[node name="Logic" type="Node" parent="Game_Layer/EnemyFormation" unique_id=2109899363]
+script = ExtResource("14_7khlk")
+scope_id = "EnemyManager"
+variables = Dictionary[String, Variant]({
+"MoveDirect": false,
+"boss_marker": NodePath("../../Markers/Marker_Boss"),
+"bullet_speed": 250.0
+})
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"
+
+[node name="OnReady" type="Node" parent="Game_Layer/EnemyFormation/Logic" unique_id=1623748551]
+script = ExtResource("3_k85lc")
+event_definition = SubResource("Resource_wkm78")
+action_runner = SubResource("Resource_iubae")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="MoveOnInterval" type="Node" parent="Game_Layer/EnemyFormation/Logic" unique_id=1137497576]
+script = ExtResource("3_k85lc")
+event_definition = SubResource("Resource_ouq7j")
+action_runner = SubResource("Resource_7khlk")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="RandomFireOnInterval" type="Node" parent="Game_Layer/EnemyFormation/Logic" unique_id=1316620096]
+script = ExtResource("3_k85lc")
+event_definition = SubResource("Resource_arlvk")
+action_runner = SubResource("Resource_y6eso")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="PlayerShip" parent="Game_Layer" unique_id=1243162289 instance=ExtResource("19_7khlk")]
+position = Vector2(0, 176)
+
+[node name="Markers" type="Node" parent="Game_Layer" unique_id=1384595970]
+
+[node name="Marker_Boss" type="Marker2D" parent="Game_Layer/Markers" unique_id=238285978]
+position = Vector2(0, -240)
+
+[node name="Marker_01" type="Marker2D" parent="Game_Layer/Markers" unique_id=1459388100]
+position = Vector2(-46, -176)
+
+[node name="Marker_02" type="Marker2D" parent="Game_Layer/Markers" unique_id=1028700915]
+position = Vector2(0, -176)
+
+[node name="Marker_03" type="Marker2D" parent="Game_Layer/Markers" unique_id=1179524471]
+position = Vector2(50, -176)
+
+[node name="Marker_04" type="Marker2D" parent="Game_Layer/Markers" unique_id=267508443]
+position = Vector2(-46, -136)
+
+[node name="Marker_05" type="Marker2D" parent="Game_Layer/Markers" unique_id=659214317]
+position = Vector2(0, -136)
+
+[node name="Marker_06" type="Marker2D" parent="Game_Layer/Markers" unique_id=1751567195]
+position = Vector2(50, -136)
+
+[node name="Marker_07" type="Marker2D" parent="Game_Layer/Markers" unique_id=561809210]
+position = Vector2(-46, -96)
+
+[node name="Marker_08" type="Marker2D" parent="Game_Layer/Markers" unique_id=642703401]
+position = Vector2(0, -96)
+
+[node name="Marker_09" type="Marker2D" parent="Game_Layer/Markers" unique_id=2014869870]
+position = Vector2(50, -96)
+
+[node name="FG_Layer" type="Node" parent="." unique_id=1855796192]
+
+[node name="StarDust2" type="GPUParticles2D" parent="FG_Layer" unique_id=510375551]
+process_mode = 3
+material = SubResource("CanvasItemMaterial_kxaj3")
+amount = 20
+texture = ExtResource("2_s0hi0")
+lifetime = 2.0
+trail_lifetime = 1.0
+process_material = SubResource("ParticleProcessMaterial_7v0hv")
+
+[node name="Camera" type="Node" parent="." unique_id=102379844]
+
+[node name="Camera2D" type="Camera2D" parent="Camera" unique_id=1166786475]
+
+[node name="GameManager" type="Node" parent="." unique_id=1109089824]
+script = ExtResource("14_7khlk")
+scope_id = "GameManager"
+variables = Dictionary[String, Variant]({
+"current_score": 0,
+"current_wave": 0,
+"player_life": 3,
+"total_wave": 3
+})
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"
+
+[node name="GlobalVariableAssistant" type="Node" parent="GameManager" unique_id=1210392091]
+script = ExtResource("13_eqo6o")
+current_resource = ExtResource("14_ej378")
+resource_path = "res://demos/fuse/brickian/resources/brikian_variables.tres"
+auto_save = false
+auto_load_on_ready = false
+auto_save_on_change = true
+auto_save_delay = 0.5
+log_level = 0
+metadata/_custom_type_script = "uid://banshq4o4dxat"
+
+[node name="GameFlow" type="Node" parent="GameManager" unique_id=784962586]
+script = ExtResource("35_dcc30")
+event_bindings = Array[ExtResource("36_36vvb")]([SubResource("Resource_h5334"), SubResource("Resource_wrbcl"), SubResource("Resource_o1wkr"), SubResource("Resource_k7heh"), SubResource("Resource_y5ua0")])
+
+[node name="SpawnEnemy" type="Node" parent="GameManager" unique_id=1567478695]
+script = ExtResource("46_i21if")
+action_runner = SubResource("Resource_sx1s8")
+action_runner = SubResource("Resource_sx1s8")
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="GameSceneCanvas" parent="." unique_id=1525789102 instance=ExtResource("29_k17pf")]
+custom_minimum_size = Vector2(1152, 648)

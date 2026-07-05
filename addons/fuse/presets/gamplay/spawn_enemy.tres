@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="FusePreset" format=3 uid="uid://chk2dd76p0x54"]
+
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="1_wc80g"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="2_hkbvk"]
+[ext_resource type="Script" uid="uid://cwmvvpdnkmgka" path="res://addons/fuse/instructions/flow_control/for_each.gd" id="7_nxhbk"]
+[ext_resource type="Script" uid="uid://d3dy4d87y086v" path="res://addons/fuse/instructions/node_operations/get_group_count.gd" id="8_ytvoa"]
+[ext_resource type="Script" uid="uid://dq3x44e84gtf7" path="res://addons/fuse/instructions/flow_control/resume_game.gd" id="9_bwlea"]
+[ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="10_67dd2"]
+
+[sub_resource type="Resource" id="Resource_od456"]
+resource_name = "发送事件: ShowWave"
+script = ExtResource("2_hkbvk")
+event_name = "ShowWave"
+
+[sub_resource type="Resource" id="Resource_7gge6"]
+resource_name = "For Each (spawn_pos) -> item 索引=index [0 个指令]"
+script = ExtResource("7_nxhbk")
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+index_scope_source = 0
+index_custom_scope_id = ""
+index_target_node_path = NodePath("")
+item_scope_source = 0
+item_custom_scope_id = ""
+item_target_node_path = NodePath("")
+source_type = 0
+array_variable = "spawn_pos"
+array_scope = 1
+array_scope_source = 0
+group_name = ""
+item_variable = "item"
+item_scope = 0
+index_variable = "index"
+index_scope = 0
+skip_null_items = true
+loop_instructions = Array[ExtResource("1_wc80g")]([])
+
+[sub_resource type="Resource" id="Resource_66fsa"]
+resource_name = "获取组节点数量 'enemies' → enemy_count [最近作用域]"
+script = ExtResource("8_ytvoa")
+custom_scope_id = ""
+target_node_path = NodePath("")
+group_name = "enemies"
+result_variable = "enemy_count"
+result_scope = 1
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_afrrd"]
+resource_name = "发送事件: HideWave"
+script = ExtResource("2_hkbvk")
+event_name = "HideWave"
+
+[sub_resource type="Resource" id="Resource_wc80g"]
+resource_name = "恢复游戏"
+script = ExtResource("9_bwlea")
+pause_menu_node = NodePath("")
+ui_node_path = NodePath("../../GameSceneCanvas")
+close_pause_menu = false
+
+[resource]
+script = ExtResource("10_67dd2")
+display_name = "spawn-enemy"
+category = "gamplay"
+version = "2.0"
+variables = {
+"global": [],
+"local": [],
+"scope": []
+}
+instructions = Array[ExtResource("1_wc80g")]([SubResource("Resource_od456"), SubResource("Resource_7gge6"), SubResource("Resource_66fsa"), SubResource("Resource_afrrd"), SubResource("Resource_wc80g")])

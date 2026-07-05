@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://by8kx7eidf1pn"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_signal_detector.gd" id="1"]
+
+[node name="TestSignalDetector" type="Node"]
+script = ExtResource("1")

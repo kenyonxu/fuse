@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_virtual_voice_manager"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_virtual_voice_manager.gd" id="1"]
+
+[node name="TestVirtualVoiceManager" type="Node"]
+script = ExtResource("1")

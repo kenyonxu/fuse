@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://o0i725hwtieq"]
+
+[ext_resource type="PackedScene" uid="uid://bmfgotihlmfkw" path="res://demos/fuse/brickian/player_ship_bullet.tscn" id="1_i04so"]
+
+[node name="Node2D" type="Node2D" unique_id=236375870]
+
+[node name="PlayerShipBullet" parent="." unique_id=697602643 instance=ExtResource("1_i04so")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=611673066]
+position = Vector2(0, -208)

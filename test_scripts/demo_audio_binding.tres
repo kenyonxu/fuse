@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://demo_audio_binding"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/resources/audio/audio_binding.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+signal_name = &"on_hit"
+adv_cooldown = 0.5
+adv_delay = 0.0
+adv_volume_override = 0.0

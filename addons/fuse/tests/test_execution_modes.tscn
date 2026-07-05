@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_execution_modes"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_execution_modes.gd" id="1_test_execution_modes"]
+
+[node name="TestExecutionModes" type="Node"]
+script = ExtResource("1_test_execution_modes")

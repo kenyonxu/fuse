@@ -1,0 +1,168 @@
+[gd_scene format=3 uid="uid://cigm4trsjtu5c"]
+
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="1_2y7j6"]
+[ext_resource type="Script" uid="uid://cgl60422nwy0k" path="res://addons/fuse/events/input/on_input_action.gd" id="2_a0lc4"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_8kynm"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="4_a0lc4"]
+[ext_resource type="Script" uid="uid://ckkgx5v576aqw" path="res://addons/fuse/instructions/audio/play_music.gd" id="5_t1ht7"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_gcsf8"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_rucm7"]
+[ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="7_sa3hf"]
+[ext_resource type="Script" uid="uid://cg88npkpvssm6" path="res://addons/fuse/instructions/audio/play_sound.gd" id="7_t1ht7"]
+[ext_resource type="Script" uid="uid://bxpffa11u4dsa" path="res://addons/fuse/instructions/math/random_number.gd" id="8_rucm7"]
+[ext_resource type="Resource" uid="uid://da0754pwaa2kr" path="res://demos/bricks/brick_demo_basic.tres" id="8_ssnyg"]
+[ext_resource type="Texture2D" uid="uid://1m0j5giawk4f" path="res://icon.svg" id="9_py0sa"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_u86u3"]
+[ext_resource type="Script" uid="uid://cdiffiu8yay8q" path="res://addons/juicy_mixer/core/juicy_mixer_manager.gd" id="10_6cb0g"]
+[ext_resource type="Script" uid="uid://n54jcbws8iug" path="res://addons/juicy_mixer/resources/juicy_event_handler_entry.gd" id="11_k62mn"]
+[ext_resource type="Script" uid="uid://dt8hmtjws5iau" path="res://addons/juicy_mixer/resources/juicy_event_resource.gd" id="15_a0lc4"]
+[ext_resource type="Script" uid="uid://ckb6857nycww6" path="res://addons/juicy_mixer/core/juicy_timeline_player.gd" id="15_gcsf8"]
+[ext_resource type="Script" uid="uid://gsgmphyegqv3" path="res://addons/juicy_mixer/resources/juicy_event_track.gd" id="16_pkmmy"]
+[ext_resource type="Script" uid="uid://bubyrar2tvpgm" path="res://addons/juicy_mixer/resources/juicy_feedback_track.gd" id="17_a0lc4"]
+[ext_resource type="Script" uid="uid://muc0m6hmtfqi" path="res://addons/juicy_mixer/resources/juicy_parameter_mapping.gd" id="18_a0lc4"]
+[ext_resource type="Script" uid="uid://c8s55lgmgayu3" path="res://addons/juicy_mixer/resources/juicy_method_track.gd" id="18_t1ht7"]
+[ext_resource type="Script" uid="uid://bad8pugl2u10v" path="res://addons/juicy_mixer/resources/juicy_property_track.gd" id="19_rucm7"]
+[ext_resource type="Script" uid="uid://dhkxfhgsqsuc1" path="res://addons/juicy_mixer/resources/juicy_track.gd" id="20_pkmmy"]
+[ext_resource type="Script" uid="uid://crua5a2d7ixla" path="res://addons/juicy_mixer/resources/juicy_timeline_resource.gd" id="20_u86u3"]
+
+[sub_resource type="Resource" id="Resource_k038w"]
+resource_name = "输入动作: Up [刚按下时]"
+script = ExtResource("2_a0lc4")
+target_input_action = "Up"
+
+[sub_resource type="Resource" id="Resource_u86u3"]
+resource_name = "打印: Hello, World!"
+script = ExtResource("4_a0lc4")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_7k4uo"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("6_rucm7")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_plnsv"]
+resource_name = "播放音乐 未指定音乐 (循环)"
+script = ExtResource("5_t1ht7")
+fade_duration = 2.0
+music_path = "uid://ca13j84i6wdrj"
+volume = 1.0
+loop = true
+bus = "Master"
+fade_in = false
+fade_duration = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_udwmj"]
+resource_name = "播放音效 未指定音频"
+script = ExtResource("7_t1ht7")
+auto_stop = true
+sound_path = "uid://4eyh6y2rkdbr"
+volume = 1.0
+pitch_scale = 1.0
+loop = false
+auto_stop = true
+bus = "Master"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_usph5"]
+resource_name = "随机数 [0.0, 72.0] → random_value"
+script = ExtResource("8_rucm7")
+min_value = 0.0
+max_value = 72.0
+is_integer = false
+save_to_variable = "random_value"
+is_global = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_qnq6v"]
+resource_name = "打印: Hello, World!"
+script = ExtResource("4_a0lc4")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_2sbdj"]
+resource_name = "If/Else (未设置条件) [真:0"
+script = ExtResource("9_u86u3")
+true_instructions = Array[ExtResource("3_8kynm")]([])
+false_instructions = Array[ExtResource("3_8kynm")]([])
+
+[sub_resource type="Resource" id="Resource_scv04"]
+script = ExtResource("6_gcsf8")
+instructions = Array[ExtResource("3_8kynm")]([SubResource("Resource_u86u3"), SubResource("Resource_7k4uo"), SubResource("Resource_plnsv"), SubResource("Resource_udwmj"), SubResource("Resource_usph5"), SubResource("Resource_qnq6v"), SubResource("Resource_2sbdj")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_8kynm"]
+resource_name = "[SequenceEventHandler] ✓"
+script = ExtResource("11_k62mn")
+config_data = {
+"sequence_context_id": "",
+"sequence_event_type": 7,
+"target_event_name": ""
+}
+handler_class_name = "juicy_sequence_event_handler"
+metadata/_custom_type_script = "uid://n54jcbws8iug"
+
+[sub_resource type="Resource" id="Resource_t1ht7"]
+script = ExtResource("15_a0lc4")
+metadata/_custom_type_script = "uid://dt8hmtjws5iau"
+
+[sub_resource type="Resource" id="Resource_rucm7"]
+script = ExtResource("16_pkmmy")
+juicy_event = SubResource("Resource_t1ht7")
+track_name = "事件轨道_2"
+
+[sub_resource type="Resource" id="Resource_pkmmy"]
+script = ExtResource("18_t1ht7")
+target = NodePath("")
+included_inheritance_levels = 4294967295
+exclude_getter_methods = true
+method_name = ""
+track_name = "方法轨道_1"
+
+[sub_resource type="Resource" id="Resource_t6c0l"]
+script = ExtResource("20_u86u3")
+timeline_tracks = Array[ExtResource("20_pkmmy")]([SubResource("Resource_pkmmy"), SubResource("Resource_rucm7")])
+_method_tracks = Array[ExtResource("18_t1ht7")]([SubResource("Resource_pkmmy")])
+_event_tracks = Array[ExtResource("16_pkmmy")]([SubResource("Resource_rucm7")])
+auto_calculate_duration = true
+timeline_duration = 1.0
+loop_mode = 0
+loop_count = 0
+time_scale = 1.0
+snap_enabled = true
+snap_step = 0.1
+metadata/_custom_type_script = "uid://crua5a2d7ixla"
+
+[node name="Node2D" type="Node2D" unique_id=887050830]
+
+[node name="Trigger" type="Node" parent="." unique_id=566564386]
+script = ExtResource("1_2y7j6")
+event_definition = SubResource("Resource_k038w")
+action_runner = SubResource("Resource_scv04")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="GlobalVariableAssistant" type="Node" parent="." unique_id=1189615956]
+script = ExtResource("7_sa3hf")
+current_resource = ExtResource("8_ssnyg")
+log_level = 0
+metadata/_custom_type_script = "uid://banshq4o4dxat"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1639209163]
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D" unique_id=958831327]
+texture = ExtResource("9_py0sa")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Node2D" unique_id=2004150263]
+position = Vector2(191, 0)
+texture = ExtResource("9_py0sa")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1460888428]
+
+[node name="JuicyMixerManager" type="Node" parent="." unique_id=1073193862]
+script = ExtResource("10_6cb0g")
+event_handler_entries = Array[ExtResource("11_k62mn")]([SubResource("Resource_8kynm")])
+metadata/_custom_type_script = "uid://cdiffiu8yay8q"
+
+[node name="JuicyTimelinePlayer" type="Node" parent="." unique_id=76784150]
+script = ExtResource("15_gcsf8")
+timeline = SubResource("Resource_t6c0l")
+metadata/_custom_type_script = "uid://ckb6857nycww6"

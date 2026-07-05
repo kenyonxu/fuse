@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_add_scene_as_child"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_add_scene_as_child.gd" id="1"]
+
+[node name="TestAddSceneAsChild" type="Node"]
+script = ExtResource("1")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8xlq4n9k3p5y"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/unit/test_variable_operations.gd" id="1_test_var_ops"]
+
+[node name="TestVariableOperations" type="Node"]
+script = ExtResource("1_test_var_ops")

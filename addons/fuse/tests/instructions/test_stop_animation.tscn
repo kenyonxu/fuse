@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bxw8n4k2m5hqc"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_stage3d_animation_camera.gd" id="1"]
+
+[node name="TestStage3DAnimationCamera" type="Node"]
+script = ExtResource("1")

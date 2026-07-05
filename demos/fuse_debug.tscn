@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://gse1cbreb0rk"]
+
+[ext_resource type="Material" uid="uid://uyj8uartsnj0" path="res://addons/fuse/texture/text_burn_material.tres" id="1_7fv2m"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_wgpeq"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="3_75vym"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_lhjcm"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_ec0po"]
+
+[sub_resource type="Resource" id="Resource_etd3d"]
+resource_name = "On Ready With Delay: 0.5"
+script = ExtResource("3_75vym")
+delay_seconds = 0.5
+
+[sub_resource type="Resource" id="Resource_tqe2d"]
+script = ExtResource("6_ec0po")
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=353482708]
+
+[node name="Control" type="Control" parent="." unique_id=1736406778]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Control" unique_id=1374621811]
+material = ExtResource("1_7fv2m")
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "asdasdasdasdasd"
+
+[node name="Trigger" type="Node" parent="Control/Label" unique_id=982832678]
+script = ExtResource("2_wgpeq")
+event_definition = SubResource("Resource_etd3d")
+action_runner = SubResource("Resource_tqe2d")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=908452030]

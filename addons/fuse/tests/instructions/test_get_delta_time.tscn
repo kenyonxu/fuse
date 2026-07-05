@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://behsnoptysd5s"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_get_delta_time.gd" id="1"]
+
+[node name="TestGetDeltaTime" type="Node"]
+script = ExtResource("1")

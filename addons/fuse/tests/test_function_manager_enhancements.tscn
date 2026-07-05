@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtf4k2xm8qych"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_function_manager_enhancements.gd" id="1_testfunc"]
+
+[node name="TestFunctionManagerEnhancements" type="Node"]
+script = ExtResource("1_testfunc")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8vn8qm3jy8wc"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/conditions/test_conditions.gd" id="1"]
+
+[node name="TestConditions" type="Node"]
+script = ExtResource("1")

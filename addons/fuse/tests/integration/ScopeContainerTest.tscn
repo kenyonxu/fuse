@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://wc3bva6lf5yx"]
+
+[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="1_aluge"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_fmgon"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="3_i6i4t"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_40d3w"]
+[ext_resource type="Script" uid="uid://ngtx2vlynth" path="res://addons/fuse/instructions/variables/set_scope_variable.gd" id="5_fmgon"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="5_nt0v8"]
+[ext_resource type="Script" uid="uid://b152yfncggvas" path="res://addons/fuse/instructions/variables/set_variable.gd" id="6_vr4g2"]
+[ext_resource type="Script" uid="uid://mh76nrrf2u5" path="res://addons/fuse/instructions/variables/create_variable.gd" id="7_40d3w"]
+[ext_resource type="Script" uid="uid://ig1dqrcisf1w" path="res://addons/fuse/instructions/variables/get_scope_variable.gd" id="8_nt0v8"]
+[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="9_nt0v8"]
+
+[sub_resource type="Resource" id="Resource_vr4g2"]
+resource_name = "On Ready With Delay: 0.1"
+script = ExtResource("3_i6i4t")
+delay_seconds = 0.1
+
+[sub_resource type="Resource" id="Resource_i6i4t"]
+resource_name = "设置作用域变量 [最近作用域] 'ScopeTest' = 100"
+script = ExtResource("5_fmgon")
+variable_name = "ScopeTest"
+new_value = 100
+
+[sub_resource type="Resource" id="Resource_p5cvw"]
+resource_name = "设置变量 [LOCAL] 'LocalTest' 从'ScopeTest'复制"
+script = ExtResource("6_vr4g2")
+target_variable = "LocalTest"
+set_with_another_variable = true
+from_variable = "ScopeTest"
+from_variable_scope = 1
+
+[sub_resource type="Resource" id="Resource_qiea6"]
+resource_name = "FUSE_INSTRUCTION_PRINT_VARIABLE_RESOURCE [LOCAL] 'LocalTest'"
+script = ExtResource("9_nt0v8")
+variable_name = "LocalTest"
+
+[sub_resource type="Resource" id="Resource_h4cfw"]
+resource_name = "设置变量 [GLOBAL] 'GlobalTest' = ABBBBB"
+script = ExtResource("6_vr4g2")
+target_variable = "GlobalTest"
+scope = 2
+new_value = "ABBBBB"
+
+[sub_resource type="Resource" id="Resource_cxqcw"]
+resource_name = "FUSE_INSTRUCTION_PRINT_VARIABLE_RESOURCE [LOCAL] 'GlobalTest'"
+script = ExtResource("9_nt0v8")
+variable_name = "GlobalTest"
+
+[sub_resource type="Resource" id="Resource_1kcvd"]
+script = ExtResource("5_nt0v8")
+instructions = Array[ExtResource("4_40d3w")]([SubResource("Resource_i6i4t"), SubResource("Resource_p5cvw"), SubResource("Resource_qiea6"), SubResource("Resource_h4cfw"), SubResource("Resource_cxqcw")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_5tpfu"]
+resource_name = "On Ready With Delay: 0.2"
+script = ExtResource("3_i6i4t")
+delay_seconds = 0.2
+
+[sub_resource type="Resource" id="Resource_iq2mt"]
+resource_name = "创建变量 [LOCAL] Test = 0"
+script = ExtResource("7_40d3w")
+variable_name = "Test"
+value = 0
+
+[sub_resource type="Resource" id="Resource_v7jdc"]
+resource_name = "获取作用域变量 [最近作用域] 'ScopeTest' → 'Test' (默认: 500)"
+script = ExtResource("8_nt0v8")
+source_variable_name = "ScopeTest"
+target_variable = "Test"
+default_value = 500
+
+[sub_resource type="Resource" id="Resource_xsx3b"]
+resource_name = "FUSE_INSTRUCTION_PRINT_VARIABLE_RESOURCE [LOCAL] 'Test'"
+script = ExtResource("9_nt0v8")
+variable_name = "Test"
+
+[sub_resource type="Resource" id="Resource_715wi"]
+script = ExtResource("5_nt0v8")
+instructions = Array[ExtResource("4_40d3w")]([SubResource("Resource_iq2mt"), SubResource("Resource_v7jdc"), SubResource("Resource_xsx3b")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=1008090525]
+
+[node name="ScopeVariableContainer" type="Node" parent="." unique_id=1419068827]
+script = ExtResource("1_aluge")
+scope_id = "TestScope"
+variables = Dictionary[String, Variant]({
+"ABC": "cool"
+})
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"
+
+[node name="Trigger" type="Node" parent="ScopeVariableContainer" unique_id=696751128]
+script = ExtResource("2_fmgon")
+event_definition = SubResource("Resource_vr4g2")
+action_runner = SubResource("Resource_1kcvd")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Trigger2" type="Node" parent="ScopeVariableContainer" unique_id=2015400023]
+script = ExtResource("2_fmgon")
+event_definition = SubResource("Resource_5tpfu")
+action_runner = SubResource("Resource_715wi")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://mbr8s3k2n5hqc"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/test_stage2_integration.gd" id="1"]
+
+[node name="TestStage2Integration" type="Node"]
+script = ExtResource("1")

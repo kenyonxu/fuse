@@ -1,0 +1,767 @@
+[gd_scene format=3 uid="uid://ducv1dja1u4j2"]
+
+[ext_resource type="Script" uid="uid://c7td5xwyc7t5h" path="res://addons/juicy_mixer/core/juicy_audio_player.gd" id="1_8jape"]
+[ext_resource type="Script" uid="uid://cynkoak4sl68p" path="res://addons/juicy_mixer/resources/audio/audio_binding.gd" id="2_vr3ot"]
+[ext_resource type="Script" uid="uid://1ds61262k0if" path="res://addons/juicy_mixer/resources/audio/audio_variant.gd" id="3_uvd3j"]
+[ext_resource type="Script" uid="uid://cgy81fhugcnju" path="res://addons/juicy_mixer/resources/audio/audio_component.gd" id="3_vsj3u"]
+[ext_resource type="AudioStream" uid="uid://dwyhj62mhbea5" path="res://third_party_resources/Sword/Sword_On_Wood/Wood/Sword_On_Wood_Wood_1.wav" id="4_jppvi"]
+[ext_resource type="Script" uid="uid://ceqvtu5askn70" path="res://addons/juicy_mixer/resources/audio/audio_category.gd" id="4_yfwla"]
+[ext_resource type="Script" uid="uid://b3s0g0mbrxj1a" path="res://addons/juicy_mixer/resources/audio/audio_event_resource.gd" id="5_jppvi"]
+[ext_resource type="AudioStream" uid="uid://dj541gmkwsvnp" path="res://third_party_resources/Sword/Sword_On_Wood/Wood/Sword_On_Wood_Wood_2.wav" id="5_rohox"]
+[ext_resource type="Script" uid="uid://24csjimp3xm5" path="res://addons/juicy_mixer/resources/audio/audio_randomization_config.gd" id="7_rohox"]
+[ext_resource type="Texture2D" uid="uid://1m0j5giawk4f" path="res://icon.svg" id="7_yfwla"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="8_rohox"]
+[ext_resource type="Script" uid="uid://cgl60422nwy0k" path="res://addons/fuse/events/input/on_input_action.gd" id="9_g85l1"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="10_mcskj"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="12_3vkkx"]
+[ext_resource type="AudioStream" uid="uid://cl7sma6hhhp3n" path="res://third_party_resources/music/Empty Corridor.mp3" id="14_6y2sk"]
+[ext_resource type="Script" uid="uid://cfiike1k0ufi0" path="res://addons/juicy_mixer/resources/music/music_track_resource.gd" id="15_3vkkx"]
+[ext_resource type="Script" uid="uid://kqfm5jk6nukr" path="res://addons/fuse/instructions/node_operations/run_target_node_function.gd" id="16_6y2sk"]
+[ext_resource type="Script" uid="uid://d3hi4uv4ibdhm" path="res://addons/juicy_mixer/core/music_manager.gd" id="16_g85l1"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="19_6y2sk"]
+[ext_resource type="AudioStream" uid="uid://dd1m8jepmtl7c" path="res://third_party_resources/music/A new world awaits.mp3" id="20_h6yfp"]
+
+[sub_resource type="Resource" id="Resource_g85l1"]
+script = ExtResource("3_uvd3j")
+audio_stream = ExtResource("4_jppvi")
+metadata/_custom_type_script = "uid://1ds61262k0if"
+
+[sub_resource type="Resource" id="Resource_mcskj"]
+script = ExtResource("3_uvd3j")
+audio_stream = ExtResource("5_rohox")
+metadata/_custom_type_script = "uid://1ds61262k0if"
+
+[sub_resource type="Resource" id="Resource_6y2sk"]
+script = ExtResource("7_rohox")
+metadata/_custom_type_script = "uid://24csjimp3xm5"
+
+[sub_resource type="Resource" id="Resource_5h6xp"]
+script = ExtResource("5_jppvi")
+audio_variants = Array[ExtResource("3_uvd3j")]([SubResource("Resource_g85l1"), SubResource("Resource_mcskj")])
+randomization = SubResource("Resource_6y2sk")
+no_repeat_enabled = false
+event_name = "visibility_changed"
+
+[sub_resource type="Resource" id="Resource_3vkkx"]
+script = ExtResource("2_vr3ot")
+signal_name = "visibility_changed"
+audio_event = SubResource("Resource_5h6xp")
+
+[sub_resource type="Resource" id="Resource_rhy2m"]
+script = ExtResource("3_vsj3u")
+target_path = NodePath("Sprite2D")
+audio_bindings = Array[ExtResource("2_vr3ot")]([SubResource("Resource_3vkkx")])
+
+[sub_resource type="Resource" id="Resource_6a6d1"]
+resource_name = "输入动作: Down [刚按下时]"
+script = ExtResource("9_g85l1")
+target_input_action = "Down"
+metadata/_custom_type_script = "uid://c7315xu18mfr7"
+
+[sub_resource type="Resource" id="Resource_h6yfp"]
+resource_name = "Empty Corridor"
+script = ExtResource("15_3vkkx")
+music_type = 0
+loop_stream = ExtResource("14_6y2sk")
+event_type = 11
+metadata/_custom_type_script = "uid://cfiike1k0ufi0"
+
+[sub_resource type="Resource" id="Resource_84y5s"]
+resource_name = "运行节点函数 → MusicManager 调用: crossfade_to 参数: 2 个"
+script = ExtResource("16_6y2sk")
+serialized_method_cache = Array[Dictionary]([{
+"args": Array[Dictionary]([{
+"class_name": &"MusicLayerResource",
+"hint": 0,
+"hint_string": "",
+"name": "layer",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_in_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "add_music_layer",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "apply_normal_snapshot",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "apply_pause_snapshot",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "create_player",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"MusicTrackResource",
+"hint": 0,
+"hint_string": "",
+"name": "new_track",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "crossfade_to",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "target_volume_db",
+"type": 3,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "duck_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 33,
+"inheritance_level": 0,
+"name": "ensure_exists",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "pause_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"MusicTrackResource",
+"hint": 0,
+"hint_string": "",
+"name": "track",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_in_time",
+"type": 3,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "persistence_key",
+"type": 4,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "play_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "prepare_for_scene_change",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "layer_id",
+"type": 4,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_out_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "remove_music_layer",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 27,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "restore_from_state",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "resume_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"AudioStreamPlayer",
+"hint": 0,
+"hint_string": "",
+"name": "player",
+"type": 24,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "return_player_to_pool",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_out_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "stop_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_out_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "stop_music_by_state",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "target_volume_db",
+"type": 3,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "unduck_music",
+"return_val": 0
+}])
+serialized_parameter_metadata = Array[Dictionary]([{
+"clean_name": "new_track",
+"default": null,
+"hint": 0,
+"hint_string": "",
+"index": 0,
+"name": "param_0___new_track",
+"type": 24,
+"usage": 0
+}, {
+"clean_name": "fade_time",
+"default": null,
+"hint": 0,
+"hint_string": "",
+"index": 1,
+"name": "param_1___fade_time",
+"type": 3,
+"usage": 0
+}])
+target_node = NodePath("../MusicManager")
+target_function = "crossfade_to"
+method_inheritance_levels = 1
+param_0___new_track = SubResource("Resource_h6yfp")
+param_1___fade_time = 2.0
+store_result = false
+metadata/_custom_type_script = "uid://kqfm5jk6nukr"
+
+[sub_resource type="Resource" id="Resource_85re4"]
+script = ExtResource("12_3vkkx")
+instructions = Array[ExtResource("10_mcskj")]([SubResource("Resource_84y5s")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_m1mxn"]
+resource_name = "On Ready With Delay: 0.5"
+script = ExtResource("19_6y2sk")
+delay_seconds = 0.5
+metadata/_custom_type_script = "uid://dtp5y8x5dfud5"
+
+[sub_resource type="Resource" id="Resource_ggdum"]
+resource_name = "A new world awaits"
+script = ExtResource("15_3vkkx")
+music_type = 0
+loop_stream = ExtResource("20_h6yfp")
+event_type = 11
+metadata/_custom_type_script = "uid://cfiike1k0ufi0"
+
+[sub_resource type="Resource" id="Resource_2agsj"]
+resource_name = "运行节点函数 → MusicManager 调用: play_music 参数: 3 个"
+script = ExtResource("16_6y2sk")
+serialized_method_cache = Array[Dictionary]([{
+"args": Array[Dictionary]([{
+"class_name": &"MusicLayerResource",
+"hint": 0,
+"hint_string": "",
+"name": "layer",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_in_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "add_music_layer",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "apply_normal_snapshot",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "apply_pause_snapshot",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "create_player",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"MusicTrackResource",
+"hint": 0,
+"hint_string": "",
+"name": "new_track",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "crossfade_to",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "target_volume_db",
+"type": 3,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "duck_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 33,
+"inheritance_level": 0,
+"name": "ensure_exists",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "pause_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"MusicTrackResource",
+"hint": 0,
+"hint_string": "",
+"name": "track",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_in_time",
+"type": 3,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "persistence_key",
+"type": 4,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "play_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "prepare_for_scene_change",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "layer_id",
+"type": 4,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_out_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "remove_music_layer",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 27,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "restore_from_state",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "resume_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"AudioStreamPlayer",
+"hint": 0,
+"hint_string": "",
+"name": "player",
+"type": 24,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "return_player_to_pool",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_out_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "stop_music",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_out_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "stop_music_by_state",
+"return_val": 0
+}, {
+"args": Array[Dictionary]([{
+"class_name": &"ActiveMusicState",
+"hint": 0,
+"hint_string": "",
+"name": "state",
+"type": 24,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "target_volume_db",
+"type": 3,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "fade_time",
+"type": 3,
+"usage": 0
+}]),
+"defined_in_class": "MusicManager",
+"flags": 1,
+"inheritance_level": 0,
+"name": "unduck_music",
+"return_val": 0
+}])
+serialized_parameter_metadata = Array[Dictionary]([{
+"clean_name": "track",
+"default": null,
+"hint": 0,
+"hint_string": "",
+"index": 0,
+"name": "param_0___track",
+"type": 24,
+"usage": 0
+}, {
+"clean_name": "fade_in_time",
+"default": null,
+"hint": 0,
+"hint_string": "",
+"index": 1,
+"name": "param_1___fade_in_time",
+"type": 3,
+"usage": 0
+}, {
+"clean_name": "persistence_key",
+"default": null,
+"hint": 0,
+"hint_string": "",
+"index": 2,
+"name": "param_2___persistence_key",
+"type": 4,
+"usage": 0
+}])
+target_node = NodePath("../MusicManager")
+target_function = "play_music"
+method_inheritance_levels = 1
+param_0___track = SubResource("Resource_ggdum")
+param_1___fade_in_time = 1.0
+param_2___persistence_key = "111"
+store_result = false
+
+[sub_resource type="Resource" id="Resource_dbb51"]
+script = ExtResource("12_3vkkx")
+instructions = Array[ExtResource("10_mcskj")]([SubResource("Resource_2agsj")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=127195139]
+
+[node name="JuicyAudioPlayer" type="Node" parent="." unique_id=341026665 node_paths=PackedStringArray("target")]
+script = ExtResource("1_8jape")
+audio_component = SubResource("Resource_rhy2m")
+target = NodePath("../Sprite2D")
+debug_mode = true
+metadata/_custom_type_script = "uid://c7td5xwyc7t5h"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=713592435]
+texture = ExtResource("7_yfwla")
+
+[node name="Trigger" type="Node" parent="." unique_id=132671587]
+script = ExtResource("8_rohox")
+event_definition = SubResource("Resource_6a6d1")
+action_runner = SubResource("Resource_85re4")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2131693001]
+
+[node name="MusicManager" type="Node" parent="." unique_id=1325532798]
+script = ExtResource("16_g85l1")
+metadata/_custom_type_script = "uid://d3hi4uv4ibdhm"
+metadata/timeline_track_highlight = Color(1, 1, 1, 1)
+
+[node name="Trigger2" type="Node" parent="." unique_id=570109384]
+script = ExtResource("8_rohox")
+event_definition = SubResource("Resource_m1mxn")
+action_runner = SubResource("Resource_dbb51")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

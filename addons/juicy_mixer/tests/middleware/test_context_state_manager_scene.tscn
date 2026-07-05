@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://bqripotv2i8ke" path="res://addons/juicy_mixer/tests/middleware/test_context_state_manager_node.gd" id="1"]
+
+[node name="ContextStateManagerTest" type="Node"]
+script = ExtResource("1")

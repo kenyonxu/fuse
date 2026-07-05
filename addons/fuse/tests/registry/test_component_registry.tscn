@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_component_registry"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/registry/test_component_registry.gd" id="1"]
+
+[node name="TestComponentRegistry" type="Node"]
+script = ExtResource("1")

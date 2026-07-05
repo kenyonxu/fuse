@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://8t04qxutobxm"]
+
+[ext_resource type="Theme" uid="uid://bb4hsnkvv6itc" path="res://demos/fuse/brick_demo_theme.tres" id="1_vqo5q"]
+[ext_resource type="Script" uid="uid://ctmy6y11nksie" path="res://addons/fuse/utils/brick_button.gd" id="2_ddvh2"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_6bgyd"]
+[ext_resource type="Script" uid="uid://cg88npkpvssm6" path="res://addons/fuse/instructions/audio/play_sound.gd" id="6_3fkbo"]
+[ext_resource type="Script" uid="uid://daiogj0pr3eah" path="res://addons/fuse/instructions/tween/tween_scale_to.gd" id="6_43ph2"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_2uy88"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="10_2iows"]
+
+[sub_resource type="Resource" id="Resource_0a4ut"]
+resource_name = "缩放到 [start] (1.25, 1.25) (0.50s)"
+script = ExtResource("6_43ph2")
+target_node = NodePath("..")
+target_scale = Vector2(1.25, 1.25)
+duration = 0.5
+easing_type = 1
+trans_type = 8
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_3fkbo"]
+resource_name = "播放音效 'ceajfcergtsrl'"
+script = ExtResource("6_3fkbo")
+sound_path = "uid://ceajfcergtsrl"
+volume = 1.0
+pitch_scale = 1.0
+pitch_random_range = 0.2
+bus = "SFX"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ba3n4"]
+script = ExtResource("7_2uy88")
+instructions = Array[ExtResource("4_6bgyd")]([SubResource("Resource_0a4ut"), SubResource("Resource_3fkbo")])
+execution_mode = 1
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_fphpw"]
+resource_name = "缩放到 [start] (1.0, 1.0) (0.50s)"
+script = ExtResource("6_43ph2")
+target_node = NodePath("..")
+target_scale = Vector2(1, 1)
+duration = 0.5
+easing_type = 1
+trans_type = 8
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ddvh2"]
+script = ExtResource("7_2uy88")
+instructions = Array[ExtResource("4_6bgyd")]([SubResource("Resource_fphpw")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_2iows"]
+resource_name = "播放音效 'citwftagbp4s3'"
+script = ExtResource("6_3fkbo")
+sound_path = "uid://citwftagbp4s3"
+volume = 1.0
+pitch_scale = 1.0
+pitch_random_range = 0.2
+bus = "SFX"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_60ljt"]
+script = ExtResource("7_2uy88")
+instructions = Array[ExtResource("4_6bgyd")]([SubResource("Resource_2iows")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="start" type="Button" unique_id=1750617164]
+custom_minimum_size = Vector2(0, 35)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -108.0
+offset_top = -16.0
+offset_right = 107.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme = ExtResource("1_vqo5q")
+text = "start"
+script = ExtResource("2_ddvh2")
+metadata/_custom_type_script = "uid://ctmy6y11nksie"
+
+[node name="MouseEnter" type="Node" parent="." unique_id=1866558905]
+script = ExtResource("10_2iows")
+action_runner = SubResource("Resource_ba3n4")
+target_node = NodePath("..")
+signal_name = "mouse_entered"
+action_runner = SubResource("Resource_ba3n4")
+target_node = NodePath("..")
+signal_name = "mouse_entered"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="MouseExit" type="Node" parent="." unique_id=1402976001]
+script = ExtResource("10_2iows")
+action_runner = SubResource("Resource_ddvh2")
+target_node = NodePath("..")
+signal_name = "mouse_exited"
+action_runner = SubResource("Resource_ddvh2")
+target_node = NodePath("..")
+signal_name = "mouse_exited"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="Pressed" type="Node" parent="." unique_id=1915141946]
+script = ExtResource("10_2iows")
+action_runner = SubResource("Resource_60ljt")
+target_node = NodePath("..")
+signal_name = "pressed"
+action_runner = SubResource("Resource_60ljt")
+target_node = NodePath("..")
+signal_name = "pressed"
+metadata/_custom_type_script = "uid://parouyd882ij"

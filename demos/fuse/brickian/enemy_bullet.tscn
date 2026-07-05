@@ -1,0 +1,361 @@
+[gd_scene format=3 uid="uid://bd83gfasoidja"]
+
+[ext_resource type="Texture2D" uid="uid://d4f2yjf63edg7" path="res://third_party_resources/sprites/Bullet 24x24 Part 9A Free.png" id="1_5w61s"]
+[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="2_14i2g"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="4_flc0s"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_hkf2f"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_kdi6b"]
+[ext_resource type="Script" uid="uid://t4gmw2xe0e2j" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="8_flc0s"]
+[ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="8_s7pk0"]
+[ext_resource type="Script" uid="uid://dcx3nc6egdw67" path="res://addons/fuse/instructions/time/get_delta_time.gd" id="9_fblc3"]
+[ext_resource type="Script" uid="uid://f5o4wmb45kvp" path="res://addons/fuse/instructions/math/vector_operation.gd" id="10_qd0ay"]
+[ext_resource type="Script" uid="uid://bm18bxocu5c06" path="res://addons/fuse/instructions/transform/move_by.gd" id="11_e2lib"]
+[ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="12_uh6o5"]
+[ext_resource type="Script" uid="uid://tbgftdscyfc4" path="res://addons/fuse/events/lifecycle/on_process.gd" id="13_hkf2f"]
+[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="14_8ggsd"]
+[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="15_khqg5"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="16_14i2g"]
+[ext_resource type="Script" uid="uid://c0lvnqfcoe2br" path="res://addons/fuse/instructions/node_operations/recycle_pooled_scene.gd" id="16_r2wjt"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="17_s7pk0"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="18_hkf2f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gwomh"]
+radius = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_14i2g"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(0, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s7pk0"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(24, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flc0s"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(48, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkf2f"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(72, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hfoxf"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(96, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdi6b"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(120, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yyfim"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(144, 144, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fblc3"]
+atlas = ExtResource("1_5w61s")
+region = Rect2(168, 144, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4eqq1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_14i2g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s7pk0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flc0s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hkf2f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hfoxf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdi6b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yyfim")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fblc3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="Resource" id="Resource_s7pk0"]
+resource_name = "获取位置 [2层上级] → my_pos [LOCAL]"
+script = ExtResource("14_8ggsd")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../..")
+save_to_variable = "my_pos"
+save_to_scope = 0
+use_global_position = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_yyfim"]
+resource_name = "'(normalize({scope:player_po...' → velocity [Vector2]"
+script = ExtResource("8_s7pk0")
+target_node_path = NodePath("")
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "(normalize({scope:player_pos} - {local:my_pos})) * {scope:bullet_speed}"
+output_type = 2
+scope_source = 1
+custom_scope_id = "EnemyManager"
+save_to_variable = "velocity"
+save_to_scope = 1
+save_scope_source = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_hfoxf"]
+resource_name = "随机播放音效 未指定音频"
+script = ExtResource("8_flc0s")
+sound_paths = Array[String](["uid://hbrhbybrbof4", "uid://brewxnfa7l8pn", "uid://bes3wx4r24vrd"])
+volume = 1.0
+pitch_scale = 1.0
+pitch_random_range = 0.2
+bus = "SFX"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_uh6o5"]
+script = ExtResource("7_kdi6b")
+instructions = Array[ExtResource("5_hkf2f")]([SubResource("Resource_s7pk0"), SubResource("Resource_yyfim"), SubResource("Resource_hfoxf")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_14i2g"]
+script = ExtResource("4_flc0s")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_hkf2f"]
+resource_name = "场景就绪时触发"
+script = ExtResource("17_s7pk0")
+event = SubResource("Resource_14i2g")
+action_runner = SubResource("Resource_uh6o5")
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[sub_resource type="Resource" id="Resource_6ecd5"]
+resource_name = "获取 Delta 时间 → [本地]变量 'delta_time'"
+script = ExtResource("9_fblc3")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_to_variable = "delta_time"
+save_to_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_77vif"]
+resource_name = "向量缩放(Vector2) → offset [最近作用域]"
+script = ExtResource("10_qd0ay")
+vector_b_value = null
+vector_b_use_variable = false
+vector_b_variable = ""
+vector_b_scope = 0
+vector_b_scope_source = 0
+vector_b_scope_id = ""
+scalar_scope_source = 0
+scalar_scope_id = ""
+scope_id = ""
+operation_type = 2
+vector_type = 0
+vector_a_variable = "velocity"
+vector_a_scope = 1
+vector_a_scope_source = 0
+vector_b_use_variable = false
+vector_b_value = null
+scalar_use_variable = true
+scalar_variable = "delta_time"
+scalar_scope = 0
+scalar_scope_source = 0
+scalar_scope_id = ""
+save_to_variable = "offset"
+save_to_scope = 1
+scope_source = 0
+scope_id = ""
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_p6bx1"]
+resource_name = "相对移动 '../..' [局部] 从作用域变量 'offset' [最近作用域]"
+script = ExtResource("11_e2lib")
+offset = Vector3(0, 0, 0)
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_node = NodePath("../..")
+space = 1
+use_variable = true
+offset_variable = "offset"
+offset_scope = 1
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_oahok"]
+script = ExtResource("7_kdi6b")
+instructions = Array[ExtResource("5_hkf2f")]([SubResource("Resource_6ecd5"), SubResource("Resource_77vif"), SubResource("Resource_p6bx1")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_ftfgd"]
+resource_name = "On Process: 每 0.033s 触发渲染帧s - {mode}"
+script = ExtResource("13_hkf2f")
+execution_interval = 0.033
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_khqg5"]
+resource_name = "每 每 0.033 秒 秒在 {mode} 触发一次（约 {fps}）⚠️ 注意：此事件性能影响极大"
+script = ExtResource("17_s7pk0")
+event = SubResource("Resource_ftfgd")
+action_runner = SubResource("Resource_oahok")
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[sub_resource type="Resource" id="Resource_wj702"]
+resource_name = "发送事件: PlayerHit"
+script = ExtResource("18_hkf2f")
+event_name = "PlayerHit"
+
+[sub_resource type="Resource" id="Resource_3f208"]
+resource_name = "获取位置 [2层上级] → my_pos [LOCAL]"
+script = ExtResource("14_8ggsd")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../..")
+save_to_variable = "my_pos"
+save_to_scope = 0
+use_global_position = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_vcnpc"]
+resource_name = "实例化 'b4e65c431qgjd' 从变量 [[本地]] my_pos [池化]"
+script = ExtResource("15_khqg5")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "uid://b4e65c431qgjd"
+parent_node = NodePath("")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "my_pos"
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = true
+pool_initial_size = 20
+pool_max_size = 100
+auto_recycle = false
+recycle_delay = 0.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_7yvck"]
+resource_name = "回收池化场景 [Scene Path] <未指定场景> from var 'instance_id' [Local]"
+script = ExtResource("16_r2wjt")
+scope_source = 0
+custom_scope_id = "playship_logic"
+scope_target_node = NodePath("")
+recycle_mode = 1
+target_node = NodePath("../..")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_cmwkr"]
+script = ExtResource("7_kdi6b")
+instructions = Array[ExtResource("5_hkf2f")]([SubResource("Resource_wj702"), SubResource("Resource_3f208"), SubResource("Resource_vcnpc"), SubResource("Resource_7yvck")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_l2e6g"]
+resource_name = "当 任何物体 进入 ../.. 时触发"
+script = ExtResource("12_uh6o5")
+area_node_path = NodePath("../..")
+target_group = "player"
+trigger_once_per_body = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_wok5v"]
+resource_name = "当 player 首次进入 ../.. 时触发"
+script = ExtResource("17_s7pk0")
+event = SubResource("Resource_l2e6g")
+action_runner = SubResource("Resource_cmwkr")
+trigger_once = true
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[sub_resource type="Resource" id="Resource_en2c5"]
+resource_name = "回收池化场景 [Scene Path] <未指定场景> from var 'instance_id' [Local]"
+script = ExtResource("16_r2wjt")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node = NodePath("")
+recycle_mode = 1
+target_node = NodePath("../..")
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_b8goj"]
+script = ExtResource("7_kdi6b")
+instructions = Array[ExtResource("5_hkf2f")]([SubResource("Resource_en2c5")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_xi0o4"]
+resource_name = "当 任何物体 进入 ../.. 时触发"
+script = ExtResource("12_uh6o5")
+area_node_path = NodePath("../..")
+target_group = "wall"
+trigger_once_per_body = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_4g7xk"]
+resource_name = "当 wall 首次进入 ../.. 时触发"
+script = ExtResource("17_s7pk0")
+event = SubResource("Resource_xi0o4")
+action_runner = SubResource("Resource_b8goj")
+trigger_once = true
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[node name="EnemyBullet" type="Area2D" unique_id=697602643 groups=["enemy_projectile"]]
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=788358792]
+shape = SubResource("CircleShape2D_gwomh")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=210324550]
+sprite_frames = SubResource("SpriteFrames_4eqq1")
+autoplay = "default"
+frame_progress = 0.09387267
+
+[node name="BulletController" type="Node" parent="." unique_id=501044880]
+script = ExtResource("2_14i2g")
+variables = Dictionary[String, Variant]({
+"offset": Vector2(0, 0),
+"speed": 250.0,
+"velocity": Vector2(0, 0)
+})
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"
+
+[node name="MultiEventTrigger" type="Node" parent="BulletController" unique_id=980933820]
+script = ExtResource("16_14i2g")
+event_bindings = Array[ExtResource("17_s7pk0")]([SubResource("Resource_hkf2f"), SubResource("Resource_khqg5"), SubResource("Resource_wok5v"), SubResource("Resource_4g7xk")])
+pool_mode = true
+metadata/_custom_type_script = "uid://dfknwkmutjhpg"

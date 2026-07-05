@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_reload_scene"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_reload_scene.gd" id="1"]
+
+[node name="TestReloadScene" type="Node"]
+script = ExtResource("1")

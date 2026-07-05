@@ -1,0 +1,61 @@
+# ============================================
+# gdlintrc — GDToolkit 代码检查配置
+# 适用于 Godot 4.x 项目，适配 AI 辅助开发
+# ============================================
+
+# 类成员声明顺序（保留参考，但已 disable）
+class-definitions-order:
+  - tools
+  - classnames
+  - extends
+  - docstrings
+  - signals
+  - enums
+  - consts
+  - staticvars
+  - exports
+  - pubvars
+  - prvvars
+  - onreadypubvars
+  - onreadyprvvars
+  - others
+
+# 命名规范（保持 Godot 社区惯例）
+class-name: ([A-Z][a-z0-9]*)+
+enum-name: ([A-Z][a-z0-9]*)+
+enum-element-name: '[A-Z][A-Z0-9]*(_[A-Z0-9]+)*'
+signal-name: '[a-z][a-z0-9]*(_[a-z0-9]+)*'
+function-name: (_on_([A-Z][a-z0-9]*)+(_[a-z0-9]+)*|_?[a-z][a-z0-9]*(_[a-z0-9]+)*)
+function-argument-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+function-variable-name: '_?[a-z][a-z0-9]*(_[a-z0-9]+)*'
+class-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+class-load-variable-name: (([A-Z][a-z0-9]*)+|_?[a-z][a-z0-9]*(_[a-z0-9]+)*)
+function-preload-variable-name: ([A-Z][a-z0-9]*)+
+load-constant-name: (([A-Z][a-z0-9]*)+|_?[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)
+constant-name: _?[A-Z][A-Z0-9]*(_[A-Z0-9]+)*
+loop-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+sub-class-name: _?([A-Z][a-z0-9]*)+
+
+# 复杂度阈值（根据项目实际情况调整）
+max-file-lines: 1500        # 默认 1000，Godot 组件文件常较大
+max-line-length: 120        # 默认 100，Godot API + 中文注释行长偏长
+max-public-methods: 30      # 默认 20，Player/Manager 类公开方法多属正常
+max-returns: 6
+function-arguments-number: 10
+
+# 格式
+tab-characters: 1
+trailing-whitespace: null
+mixed-tabs-and-spaces: null
+
+# 禁用的规则（对存量代码/AI 生成代码过于严格）
+disable:
+  - class-definitions-order    # 存量代码重排风险大
+  - unused-argument            # Godot 回调常有未用参数
+  - no-else-return             # 风格偏好
+  - no-elif-return             # 风格偏好
+  - expression-not-assigned    # Godot 模式：stream.get_u32() 跳过字段
+
+# 排除目录
+excluded_directories: !!set
+  .git: null

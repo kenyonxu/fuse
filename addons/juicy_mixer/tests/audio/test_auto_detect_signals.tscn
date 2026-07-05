@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjv8n4k2yapqr"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_auto_detect_signals.gd" id="1"]
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_player_with_custom_signals.gd" id="2"]
+
+[sub_resource type="AudioComponent" id="AudioComponent_1"]
+resource_name = "TestAutoDetectComponent"
+target_path = NodePath("../Player")
+
+[node name="TestAutoDetectSignals" type="Node"]
+script = ExtResource("1")
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("2")
+
+[node name="JuicyAudioPlayer" type="JuicyAudioPlayer" parent="Player"]
+target = NodePath("..")
+
+[node name="AudioComponent" type="Resource" parent="."]
+resource = SubResource("AudioComponent_1")

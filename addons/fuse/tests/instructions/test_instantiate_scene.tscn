@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_instantiate_scene"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_instantiate_scene.gd" id="1"]
+
+[node name="TestInstantiateScene" type="Node3D"]
+script = ExtResource("1")

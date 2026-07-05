@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="FusePreset" format=3 uid="uid://c0jxnjqlmoves"]
+
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="1_csno4"]
+[ext_resource type="Script" uid="uid://cmu6yuufyy78a" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="2_h0ugv"]
+[ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="3_qru63"]
+
+[sub_resource type="Resource" id="Resource_ucofn"]
+resource_name = "移动到 [[上级]] (0.0, 900.0) (本地) (50.00s)"
+script = ExtResource("2_h0ugv")
+target_node = NodePath("..")
+target_position = Vector2(0, 900)
+duration = 50.0
+space_mode = 1
+easing_type = 2
+trans_type = 0
+log_level = 0
+
+[resource]
+script = ExtResource("3_qru63")
+display_name = "red_planet"
+category = "gamplay"
+version = "2.0"
+variables = {
+"global": [],
+"local": [],
+"scope": []
+}
+level = "L2"
+event_json = {
+"auto_start": true,
+"emit_repeat_count": true,
+"interval_seconds": 50.0,
+"max_interval_seconds": 2.0,
+"max_repeats": 0,
+"min_interval_seconds": 0.5,
+"stop_condition": null,
+"trigger_on_start": true,
+"type": &"OnInterval",
+"use_random_interval": false
+}
+trigger_config = {
+"cooldown_mode": 0,
+"cooldown_time": 1.0,
+"trigger_once": false
+}
+instructions = Array[ExtResource("1_csno4")]([SubResource("Resource_ucofn")])

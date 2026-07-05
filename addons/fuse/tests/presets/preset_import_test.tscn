@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dvf4yldqccf7u"]
+
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_0wlue"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_1ss58"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="3_tqdvt"]
+
+[node name="Node2D" type="Node2D" unique_id=1229405896]
+
+[node name="MultiEventTrigger" type="Node" parent="." unique_id=1432118430]
+script = ExtResource("1_0wlue")
+metadata/_custom_type_script = "uid://dfknwkmutjhpg"
+
+[node name="Trigger" type="Node" parent="." unique_id=1389854167]
+script = ExtResource("2_1ss58")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Runner" type="Node" parent="." unique_id=1868548004]
+script = ExtResource("3_tqdvt")
+metadata/_custom_type_script = "uid://parouyd882ij"

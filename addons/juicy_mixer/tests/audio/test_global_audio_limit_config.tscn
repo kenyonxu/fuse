@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_global_audio_limit_config"]
+
+[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_global_audio_limit_config.gd" id="1"]
+
+[node name="TestGlobalAudioLimitConfig" type="Node"]
+script = ExtResource("1")
