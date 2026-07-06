@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bk8x9test_event_state_separation"]
-
-[ext_resource type="Script" path="res://test_scripts/test_event_state_separation.gd" id="1_test"]
-
-[node name="TestEventStateSeparation" type="Node"]
-script = ExtResource("1_test")

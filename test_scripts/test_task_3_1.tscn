@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://m8vqj8n3kxqh"]
-
-[ext_resource type="Script" path="res://test_scripts/verify_task_3_1_simple.gd" id="1"]
-
-[node name="TestTask3_1" type="Node"]
-script = ExtResource("1")

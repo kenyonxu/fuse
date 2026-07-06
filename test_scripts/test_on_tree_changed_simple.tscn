@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bvxqj8lamn7ys"]
-
-[ext_resource type="Script" path="res://test_scripts/test_on_tree_changed_simple.gd" id="1"]
-
-[node name="TestOnTreeChangedSimple" type="Node"]
-script = ExtResource("1")

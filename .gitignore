@@ -73,9 +73,13 @@ desktop.ini
 docs/reports/event_migration_evaluation_*.md
 music21/
 
-# Project-level docs (local reference only, not published with plugin)
-# Note: leading slash anchors to repo root — addons/fuse/docs/ is NOT affected.
+# Top-level dev content (local reference / dev-only, not published with plugin)
+# Note: leading slash anchors to repo root — addons/fuse/* is NOT affected.
 /docs/
+/scripts/
+/plans/
+/test_scripts/
+/tools/
 
 # Local-only dev plugins (本地开发依赖，不提交远程)
 # 方案 Y 约束：Fuse 发布零 ast-flow 痕迹。gdscript_ast 仅开发期 codegen 用。
