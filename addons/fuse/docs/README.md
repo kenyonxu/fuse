@@ -200,7 +200,6 @@ Fuse 系统的功能设计和改进提案。
 ## 📖 相关资源
 
 ### 项目文档
-- [JuicyMixer 文档](../juicy_mixer/docs/README.md) - 特效系统文档
 - [项目根文档](../../../docs/) - 项目总体文档
 - [Godot 插件本地化最佳实践](../../../docs/godot/plugin_localization_best_practices.md)
 

@@ -4511,10 +4511,6 @@ FUSE_INSTRUCTION_GENERATOR_CONFLICT,文件已存在,File already exists
 FUSE_INSTRUCTION_GENERATOR_OVERWRITE,覆盖,Overwrite
 FUSE_INSTRUCTION_GENERATOR_SKIP,跳过,Skip
 
-# PlayJuicyMixerFeedback 集成指令验证错误
-FUSE_ERROR_FEEDBACK_RESOURCE_EMPTY,反馈资源不能为空,Feedback resource cannot be empty
-FUSE_ERROR_TARGET_NODE_PATH_EMPTY,目标节点路径不能为空,Target node path cannot be empty
-
 # InstructionValidator 静态分析错误
 FUSE_ERROR_INSTRUCTION_INDEX_EMPTY,指令 {index} 为空,Instruction {index} is empty
 FUSE_ERROR_UNDEFINED_VARIABLE_USAGE,变量 '{variable}' 在指令 {positions} 中使用，但未定义,Variable '{variable}' is used in instruction {positions} but is not defined
