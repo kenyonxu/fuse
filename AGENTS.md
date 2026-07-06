@@ -1,6 +1,6 @@
 # AGENTS.md - AI 代理开发指南
 
-本文档为在此 Godot 4.5 游戏插件项目中工作的 AI 代理提供必要信息。
+本文档为在此 Godot 4.7 游戏插件项目中工作的 AI 代理提供必要信息。
 
 <CRITICAL>
   总是用中文回复
@@ -15,13 +15,13 @@
 ```gdscript
 # 运行单个测试场景：
 # 1. 打开 Godot 编辑器
-# 2. 打开测试场景（如 res://addons/juicy_mixer/tests/test_example.tscn）
+# 2. 打开测试场景（如 res://addons/fuse/tests/conditions/test_conditions.tscn）
 # 3. 按 F5 运行场景
 
 # 以编程方式运行测试：
 extends Node
 func _ready():
-    var test_script = load("res://addons/juicy_mixer/tests/test_example.gd")
+    var test_script = load("res://addons/fuse/tests/conditions/test_conditions.gd")
     var test_instance = test_script.new()
     add_child(test_instance)
     if test_instance.has_method("run_tests"):
@@ -39,14 +39,14 @@ func _ready():
 ## 代码风格指南
 
 ### 文件命名
-- 文件：`snake_case.gd`（如 `juicy_feedback_track.gd`）
+- 文件：`snake_case.gd`（如 `base_instruction.gd`）
 - 测试文件：`test_*.gd` 前缀（如 `test_timeline_system.gd`）
 
 ### 命名约定
 
 ```gdscript
 # 类名 - PascalCase with class_name
-class_name JuicyFeedbackResource
+class_name BaseInstructionResource
 extends Resource
 
 # 变量 - snake_case
@@ -88,8 +88,8 @@ var node: Node2D = null
 func get_duration() -> float:
     return duration
 
-func create_context(target: Node) -> JuicyContext:
-    return JuicyContext.create(resource, target)
+func create_context(target: Node) -> ExecutionContext:
+    return ExecutionContext.create(resource, target)
 
 # 优先使用 Godot 类型而非 Variant
 var position: Vector2 = Vector2.ZERO
@@ -297,14 +297,12 @@ func _test_edge_cases():
 
 ## 项目结构上下文
 
-- **JuicyMixer**: 游戏反馈系统（震动、弹簧、补间、时间线）
-- **Bricks**: 可视化编程系统
-- **SoundManager**: 音频管理
-- **FlowKit**: 事件驱动可视化编程
+- **Fuse**: 可视化编程系统（Event / Instruction / Condition 三类砖块）
 
 核心架构使用：
-- 基于 Resource 的配置
-- 驱动器驱动的执行
-- 中间件管道处理
-- 对象池优化性能
-- 基于 Context 的运行时状态管理
+- 事件驱动的执行
+- 指令编排（ActionRunner）
+- 基于 ExecutionContext 的运行时上下文
+- 全局变量 Service + Assistant 双层
+- 组件自动扫描注册（ComponentScanner）
+- 基于 Godot TranslationDomain 的本地化

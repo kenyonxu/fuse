@@ -1,10 +1,9 @@
-# Project Juicy Godot - AI 开发规范
+# Fuse Visual Programming - AI 开发规范
 
 ## 项目概述
 
-基于 **Godot 4.7** 的游戏插件开发项目，包含以下核心系统：
+基于 **Godot 4.7** 的可视化编程插件项目：
 
-- **Juicy Mixer** - 游戏特效系统（震动、弹簧、补间动画、时间线控制）
 - **Fuse** - 可视化编程/事件系统（类似 Game Creator 的无代码脚本系统）
 
 <CRITICAL>
@@ -21,7 +20,7 @@
    - `/godot` - Godot 文件格式、架构模式、CLI 工具
    - `/godot-gdscript-patterns` - 状态机、对象池、组件系统等模式
    - `/gdscript-validate` - 编辑 GDScript 后验证代码
-3. **提供上下文** - 说明修改哪个系统（JuicyMixer 或 Fuse）
+3. **提供上下文** - 说明修改哪个系统
 4. **明确目标** - 清晰描述要实现的功能
 5. **引用文件** - 提到具体文件路径或类名
 
@@ -37,29 +36,15 @@
 ## 项目结构
 
 ```
-project-juicy-godot/
+fuse/
 ├── addons/
-│   ├── juicy_mixer/     # 特效系统
-│   ├── fuse/            # 可视化编程系统
-│   └── sound_manager/   # 音频系统
+│   └── fuse/            # 可视化编程系统
 ├── docs/                # 项目文档
 ├── demos/               # 演示场景
 └── plans/               # 开发计划
 ```
 
 ## 核心系统快速参考
-
-### Juicy Mixer
-
-**架构：** Resource-based, Driver-driven, Track-based, Context-managed
-
-**关键类：**
-- `JuicyFeedback` - 反馈资源（入口点）
-- `JuicyTrack` - 轨道基类
-- `JuicyDriver` - 驱动器基类
-- `JuicyContext` - 运行时上下文
-
-**详细文档：** [addons/juicy_mixer/docs/](addons/juicy_mixer/docs/)
 
 ### Fuse
 
@@ -81,8 +66,8 @@ project-juicy-godot/
 
 | 类型 | 规范 | 示例 |
 |------|------|------|
-| 文件名 | snake_case | `juicy_feedback_track.gd` |
-| 类名 | PascalCase | `class_name JuicyFeedbackTrack` |
+| 文件名 | snake_case | `base_instruction.gd` |
+| 类名 | PascalCase | `class_name BaseInstruction` |
 | 私有变量 | _前缀 | `var _private_var: int = 0` |
 | 信号 | snake_case | `signal value_changed(new_value: float)` |
 
@@ -104,19 +89,6 @@ project-juicy-godot/
 ## 开发工作流
 
 ### 添加新功能
-
-**JuicyMixer 新 Track/Driver:**
-```gdscript
-# 1. 在 resources/ 或 drivers/ 创建文件，继承基类
-extends JuicyTrack
-
-# 2. 实现必需方法
-func get_track_type() -> String:
-	return "MyType"
-
-func validate_track() -> String:
-	return ""  # 空字符串表示有效
-```
 
 **Fuse 新组件（必须使用对应技能）:**
 ```gdscript
@@ -155,7 +127,6 @@ static func get_metadata() -> Dictionary:
 
 ### 性能优化
 
-- 使用对象池（`JuicyPoolManager`）
 - 缓存节点引用和属性信息
 - 使用 `@export_storage` 存储运行时数据
 
@@ -175,7 +146,6 @@ static func get_metadata() -> Dictionary:
 |------|------|
 | Fuse 系统 | [addons/fuse/docs/](addons/fuse/docs/) |
 | Fuse 多线程 | [addons/fuse/docs/multithreading.md](addons/fuse/docs/multithreading.md) |
-| JuicyMixer | [addons/juicy_mixer/docs/](addons/juicy_mixer/docs/) |
 | 编辑器问题 | [docs/development/editor-issues.md](docs/development/editor-issues.md) |
 | Lambda 规范 | [docs/coding-standards/gdscript-lambda.md](docs/coding-standards/gdscript-lambda.md) |
 | Godot API 参考 | [docs/godot/](docs/godot/) |
@@ -188,7 +158,7 @@ static func get_metadata() -> Dictionary:
 
 ---
 
-**最后更新:** 2026-03-23 | **Godot 版本:** 4.7 | **开发分支:** Develop_brick
+**最后更新:** 2026-07-06 | **Godot 版本:** 4.7 | **主分支:** master
 
 ## graphify
 
