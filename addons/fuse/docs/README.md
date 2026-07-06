@@ -61,12 +61,10 @@
 - [编辑器工具设计](system_docs/architecture/editor_tools_design.md) - 编辑器工具
 - [事件：按键输入](system_docs/architecture/event_on_input_key_design.md) - 按键事件设计
 
-**分析报告** (13 篇文档)：
+**分析报告** (12 篇文档)：
 - [Fuse 架构优势分析](system_docs/analysis/fuse_architecture_advantages_analysis.md) - **核心优势与设计权衡**
 - [Fuse 架构分析](system_docs/analysis/fuse_architecture_analysis.md) - 系统架构分析
 - [核心系统分析](system_docs/analysis/fuse_core_analysis_report.md) - 核心组件分析
-- [优化分析：FlowKit](system_docs/analysis/fuse_optimization_from_flowkit_analysis.md) - 从 FlowKit 学习
-- [优化分析：GameCreator](system_docs/analysis/fuse_optimization_from_gamecreator_analysis.md) - 从 GameCreator 学习
 - [ActionRunner 分析](system_docs/analysis/action_runner_analysis.md) - 动作执行器分析
 - [BaseInstruction 分析](system_docs/analysis/base_instruction_analysis.md) - 指令基类分析
 - [BaseCondition 分析](system_docs/analysis/base_condition_analysis.md) - 条件基类分析
@@ -76,7 +74,6 @@
 - [BaseEvent 分析](system_docs/analysis/base_event_analysis.md) - 事件基类分析
 - [MultiEventTrigger 分析](system_docs/analysis/multi_event_trigger_analysis.md) - 多事件触发器分析
 - [Runner 分析](system_docs/analysis/runner_analysis.md) - Runner 节点分析
-- [Juicy 效果执行链](system_docs/analysis/play_juicy_effect_task_execution_chain_analysis.md) - 效果执行分析
 
 ---
 
@@ -85,31 +82,14 @@
 
 **开发指南**：
 - [条件属性显示](dev_docs/guides/conditional_property_display.md) - 属性显示控制
-
-**开发报告**：
-- [变量存储阶段 1-2](dev_docs/reports/variable_storage_phase1-2_report.md) - 变量存储实现报告
-- [变量存储阶段 3-5](dev_docs/reports/variable_storage_phase3-5_report.md) - 变量存储完成报告
-- [运行时本地化完成](dev_docs/reports/stage3_runtime_localization_complete.md) - 本地化实现报告
-- [本地化覆盖报告](dev_docs/reports/localization_coverage_report.md) - 本地化覆盖分析
+- [运行时指令实例](dev_docs/guides/runtime_instruction_instance_guide.md) - 运行时指令实例机制
+- [条件创建指南](dev_docs/guides/condition_creation_guide.md) - 自定义条件开发
+- [事件创建指南](dev_docs/guides/event_creation_guide.md) - 自定义事件开发
+- [指令创建指南](dev_docs/guides/instruction_creation_guide.md) - 自定义指令开发
+- [图标系统](dev_docs/guides/icon_system.md) - 图标资源体系
 
 **归档文档**：
 - 开发历程文档已归档到 [dev_docs/archive/](dev_docs/archive/) 目录
-
----
-
-### 💡 [设计提案](proposals/)
-Fuse 系统的功能设计和改进提案。
-
-**待实现提案** (5 篇)：
-- [指令选择器：简单设计](proposals/pending/instruction_selector_simple_design.md) - 指令选择简单方案
-- [指令选择器：高级设计](proposals/pending/instruction_selector_advanced_design.md) - 指令选择高级方案
-- [内部优化计划](proposals/pending/internal_optimization_plan.md) - 内部优化方案
-- [Fuse 优化建议](proposals/pending/fuse_optimization_suggestions.md) - 系统优化建议
-- [Fuse 优化实现计划](proposals/pending/fuse_optimization_implementation_plan.md) - 优化实施计划
-- [本地化阶段 4 改进](proposals/pending/2026-01-25-localization-stage4-refinement.md) - 本地化改进
-
-**已实现提案** (1 篇)：
-- [全局变量助手重构](proposals/implemented/global_variable_assistant_refactor_plan.md) - 全局变量系统重构
 
 ---
 
@@ -155,17 +135,15 @@ Fuse 系统的功能设计和改进提案。
 ## 📊 系统状态
 
 ### 版本信息
-- **当前版本**: Fuse 0.6.0
-- **Godot 兼容**: 4.6+
-- **最后更新**: 2026-03-19
-- **文档版本**: 1.3.0
+- **当前版本**: Fuse 1.0.0
+- **Godot 兼容**: 4.7+
+- **最后更新**: 2026-07-07
+- **文档版本**: 1.4.0
 
 ### 文档统计
-- **用户文档**: 26 篇（含快速开始、最佳实践、指南）
-- **系统文档**: 24 篇（架构 + 分析） 2 个新增：MultiEventTrigger 分析、Runner 分析
-- **开发文档**: 11 篇（含归档）
-- **设计提案**: 6 篇
-- **路线图**: 1 篇（待实现计划）
+- **用户文档**: ~27 篇（含快速开始、最佳实践、指南）
+- **系统文档**: ~21 篇（架构 + 分析）
+- **开发文档**: ~6 篇（开发指南）
 
 ---
 
@@ -197,14 +175,9 @@ Fuse 系统的功能设计和改进提案。
 
 ## 📖 相关资源
 
-### 项目文档
-- [项目根文档](../../../docs/) - 项目总体文档
-- [Godot 插件本地化最佳实践](../../../docs/godot/plugin_localization_best_practices.md)
-
 ### 外部参考
 - [Game Creator 文档](https://gamecreator.io/) - 可视化编程参考
 - [Godot 官方文档](https://docs.godotengine.org/) - Godot API 参考
-- [Feel 插件文档](https://feel-docs.mopipi.com/) - Unity 特效插件参考
 
 ### 开发资源
 - [项目开发规范](../../../CLAUDE.md) - 代码规范和开发指南
@@ -214,6 +187,11 @@ Fuse 系统的功能设计和改进提案。
 ---
 
 ## 📝 文档更新日志
+
+### v1.4.0 (2026-07-07)
+- ✅ 重组文档目录：仅保留 system_docs / dev_docs / user_docs
+- ✅ 归档 68 个过时文档到 archive/（Stage specs/plans、proposals、reports、架构整改 plans、ideas、vision 等）
+- ✅ archive/ 加入 .gitignore（本地保留，不发布）
 
 ### v1.3.0 (2026-03-19)
 - ✅ 文档审计与清理：删除 7 个临时文件，归档 19 个过时文档
@@ -267,7 +245,7 @@ Fuse 系统的功能设计和改进提案。
 ---
 
 **文档维护**: Fuse 开发团队
-**最后更新**: 2026-03-19
-**文档版本**: 1.2.0
+**最后更新**: 2026-07-07
+**文档版本**: 1.4.0
 
 如有任何问题或建议，请通过项目 Issue 联系我们。
