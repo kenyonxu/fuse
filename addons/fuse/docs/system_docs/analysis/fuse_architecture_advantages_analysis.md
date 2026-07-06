@@ -529,4 +529,4 @@ Fuse 可以与 Orchestrator/FlowKit 互补使用：
 - [ActionRunner 分析](./action_runner_analysis.md)
 - [指令系统设计](../architecture/instruction_system_design.md)
 - [触发器系统设计](../architecture/trigger_system_design.md)
-- [与 JuicyMixer 集成示例](../../user_docs/guides/play_juicy_effect_examples.md)
+- [Tween 补间动画使用指南](../../user_docs/guides/tween-animation-guide.md)

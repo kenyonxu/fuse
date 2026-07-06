@@ -35,14 +35,6 @@
   - 实际应用案例
   - 最佳实践
 
-#### 集成示例
-- [播放 Juicy 效果示例](guides/play_juicy_effect_examples.md)
-  - 与 JuicyMixer 集成
-  - 播放震动效果
-  - 播放弹簧效果
-  - 播放补间动画
-  - 参数配置示例
-
 #### 事件系统
 - [Event Bus 用户指南](guides/event_bus_guide.md) 🌟 **新增**
   - 全局事件通信机制
@@ -89,7 +81,7 @@
 → 参考 [变量系统 V2 迁移指南](guides/variable_system_v2_migration.md)
 
 #### 添加游戏特效
-→ 学习 [播放 Juicy 效果示例](guides/play_juicy_effect_examples.md)
+→ 学习 [Tween 补间动画使用指南](guides/tween-animation-guide.md)
 
 #### 理解坐标系统
 → 阅读 [坐标系统指南](guides/coordinate_systems_guide.md)
@@ -175,7 +167,7 @@
 **初学者**：
 1. [快速开始指南](quick_start.md)
 2. [全局变量管理器 V2](guides/global_variable_manager_v2.md)
-3. [播放 Juicy 效果示例](guides/play_juicy_effect_examples.md)
+3. [Tween 补间动画使用指南](guides/tween-animation-guide.md)
 
 **进阶用户**：
 1. [变量系统 V2 迁移指南](guides/variable_system_v2_migration.md)
@@ -189,7 +181,7 @@
 | 初始化全局变量 | [全局变量管理器 V2](guides/global_variable_manager_v2.md#快速开始) |
 | 监听变量变化 | [全局变量管理器 V2](guides/global_variable_manager_v2.md#监听变量变化) |
 | 保存/加载变量 | [全局变量管理器 V2](guides/global_variable_manager_v2.md#资源持久化) |
-| 播放震动效果 | [播放 Juicy 效果示例](guides/play_juicy_effect_examples.md#播放震动效果) |
+| 播放震动效果 | [Tween 补间动画使用指南](guides/tween-animation-guide.md) |
 | 理解 Global/Local 坐标 | [坐标系统指南](guides/coordinate_systems_guide.md) |
 | 创建自定义事件 | [创建自定义事件](best_practices/custom_event.md#自定义事件步骤) |
 | 创建自定义指令 | [创建自定义指令](best_practices/custom_instruction.md#自定义指令步骤) |
