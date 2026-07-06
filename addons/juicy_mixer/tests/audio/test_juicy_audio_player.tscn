@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://mjk2r3v8n7q"]
-
-[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_juicy_audio_player.gd" id="1"]
-
-[node name="TestJuicyAudioPlayer" type="Node"]
-script = ExtResource("1")

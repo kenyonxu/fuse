@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://b8k7n3m5p2q6r"]
-
-[ext_resource type="Script" path="res://addons/juicy_mixer/tests/drivers/test_timeline_multi_play.gd" id="1_abc123"]
-
-[node name="TestTimelineMultiPlay" type="Node"]
-script = ExtResource("1_abc123")

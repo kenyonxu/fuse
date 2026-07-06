@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8h5v3q2w4x1n"]
-
-[ext_resource type="Script" uid="uid://b23v7em8xvr5g" path="res://addons/juicy_mixer/tests/middleware/test_middleware_config.gd" id="1_b8k5v3"]
-
-[node name="TestMiddlewareConfig" type="Node"]
-script = ExtResource("1_b8k5v3")

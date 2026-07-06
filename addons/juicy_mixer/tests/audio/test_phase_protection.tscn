@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_phase_protection"]
-
-[ext_resource type="Script" path="res://addons/juicy_mixer/tests/audio/test_phase_protection.gd" id="1"]
-
-[node name="TestPhaseProtection" type="Node"]
-script = ExtResource("1")

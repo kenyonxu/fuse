@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="project_juicy_godot"
+config/name="Fuse Visual Programming"
 run/main_scene="uid://dc20u5mk1dlln"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
@@ -27,7 +27,6 @@ buses/default_bus_layout="uid://cd3b3hij8oxct"
 
 FuseEventBus="*uid://ptmsqnuut75p"
 FuseRuntimeBridge="*uid://c6iequlsnctd7"
-MCPRuntime="*uid://b7qx8f01pxijd"
 
 [debug]
 
@@ -39,17 +38,17 @@ window/stretch/mode="canvas_items"
 
 [dotnet]
 
-project/assembly_name="project_juicy_godot"
+project/assembly_name="fuse"
 
 [editor]
 
 movie_writer/video_quality=0.1
 movie_writer/ogv/encoding_speed=1
-movie_writer/movie_file="E:/Godot/GodotProjects/project-juicy-godot/recordings/record_test.avi"
+movie_writer/movie_file="res://recordings/record_test.avi"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/fuse/plugin.cfg", "res://addons/gdscript_ast/plugin.cfg", "res://addons/godot_mcp_editor/plugin.cfg", "res://addons/godot_mcp_runtime/plugin.cfg", "res://addons/juicy_mixer/plugin.cfg")
+enabled=PackedStringArray("res://addons/fuse/plugin.cfg")
 
 [global_group]
 

@@ -1,6 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://bqxnyxjvqk3r"]
-
-[ext_resource type="Script" path="res://addons/juicy_mixer/tests/time_management_refactor_test.gd" id="1_0x2h"]
-
-[node name="TimeManagementRefactorTest" type="Node"]
-script = ExtResource("1_0x2h")
