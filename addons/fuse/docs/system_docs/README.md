@@ -86,11 +86,6 @@
   - 按键事件总结
   - 使用示例
 
-- [播放 Juicy 效果任务](architecture/play_juicy_effect_task_instruction_design.md)
-  - 与 JuicyMixer 集成
-  - 任务执行设计
-  - 参数传递
-
 ### 🔍 分析报告 (12 篇)
 
 #### 系统分析
@@ -204,7 +199,7 @@
 | 核心架构 | 2 | 系统架构、设计总结 |
 | 系统设计 | 7 | 数据流、变量、指令、条件、触发器等 |
 | 集成扩展 | 3 | Godot 集成、扩展性、编辑器 |
-| 事件设计 | 3 | 按键输入、Juicy 效果 |
+| 事件设计 | 3 | 按键输入、动画事件 |
 
 ### 分析报告分类
 
@@ -256,7 +251,6 @@
 1. [Godot 集成设计](architecture/godot_integration_design.md)
 2. [可扩展性设计](architecture/extensibility_design.md)
 3. [编辑器工具设计](architecture/editor_tools_design.md)
-4. [播放 Juicy 效果任务](architecture/play_juicy_effect_task_instruction_design.md)
 
 ## 📈 技术深度
 

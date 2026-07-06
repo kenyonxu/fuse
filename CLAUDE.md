@@ -31,7 +31,6 @@
 | Godot 版本 | 4.7 |
 | Godot 路径 | `E:\Godot\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64_console.exe` |
 | 主分支 | `master` |
-| 开发分支 | `Develop_brick` |
 
 ## 项目结构
 
@@ -153,7 +152,6 @@ static func get_metadata() -> Dictionary:
 ### 外部参考
 
 - [Godot 官方文档](https://docs.godotengine.org/)
-- [Feel 插件文档](https://feel-docs.mopopi.com/) - Unity 特效插件参考
 - [Game Creator 文档](https://gamecreator.io/) - 可视化编程参考
 
 ---

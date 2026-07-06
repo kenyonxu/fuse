@@ -13,7 +13,6 @@
 **核心指南**：
 - [全局变量管理器 V2](user_docs/guides/global_variable_manager_v2.md) - 全局变量系统使用指南
 - [全局变量持久化](user_docs/guides/global-variable-persistence-guide.md) - 存档/读档功能
-- [播放 Juicy 效果示例](user_docs/guides/play_juicy_effect_examples.md) - 与 JuicyMixer 集成示例
 - [表达式系统指南](user_docs/guides/expression-guide.md) - MathExpression、StringExpression、ExpressionCondition
 - [断点指令指南](user_docs/guides/breakpoint-guide.md) - BreakpointInstruction 调试工具
 - [场景预加载指南](user_docs/guides/scene-preloading-guide.md) - 异步场景预加载
@@ -176,7 +175,6 @@ Fuse 系统的功能设计和改进提案。
 从这里开始：
 - [快速开始指南](user_docs/quick_start.md)
 - [全局变量管理器 V2](user_docs/guides/global_variable_manager_v2.md)
-- [播放 Juicy 效果示例](user_docs/guides/play_juicy_effect_examples.md)
 
 ### 游戏开发者
 推荐阅读：
