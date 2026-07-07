@@ -2032,9 +2032,9 @@ const BRICK_ICONS = {
 
 ### C. 相关文档
 
-- [Fuse 系统文档](../index.md)
-- [指令开发指南](instruction_development.md)
-- [编辑器扩展开发](editor_extensions.md)
+- [指令创建指南](instruction_creation_guide.md)
+- [条件属性显示](conditional_property_display.md)
+- [Fuse 架构总览](../../system_docs/architecture/visual_programming_system_architecture.md)
 
 ### D. 参考资源
 

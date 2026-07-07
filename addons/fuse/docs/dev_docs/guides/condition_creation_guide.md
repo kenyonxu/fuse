@@ -180,7 +180,7 @@ metadata.icon = preload("res://icon.png")  # 直接指定纹理
 - **数学条件**: `Math`, `Graph`, `Curve`, `CurveXY`
 - **通用**: `Script`, `File`, `Folder`, `Search`
 
-**完整列表**: 参考 [icon_system.md](../development/icon_system.md)
+**完整列表**: 参考 [icon_system.md](icon_system.md)
 
 ### 图标配置步骤
 
@@ -455,7 +455,7 @@ func _compute_thread_safety() -> bool:
 - `_thread_safety_cached` 和 `_thread_safety_computed` 由 `BaseCondition` 提供
 - 必须使用缓存机制避免重复计算
 - 不确定时返回 `false`（保守策略）
-- 详见 [多线程开发者指南](../dev/multithreading-developer-guide.md)
+- 详见 [多线程开发者指南](multithreading-developer-guide.md)
 
 ---
 
@@ -2034,7 +2034,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 - 系统自动处理取反和缓存
 
 **参考文档**:
-- [BaseCondition API](../core/base/base_condition.gd)
+- [BaseCondition API](../../../core/base/base_condition.gd)
 - [变量操作（三层变量系统）](#变量操作三层变量系统)
 - [完整条件模板](#完整条件模板)
 - [测试规范](#测试规范)

@@ -1,247 +1,101 @@
-# 开发文档
+# 开发文档（dev_docs）
 
-欢迎来到 Fuse 开发文档！这里提供了面向 Fuse 系统开发者的技术设计、实现细节和开发报告。
+面向 Fuse 系统开发者的技术指南：如何创建事件 / 指令 / 条件，如何使用运行时架构、编辑器集成与各类专项工具。
 
-## 📚 文档导航
-
-### 📖 开发指南
-
-#### 编辑器开发
-- [条件属性显示](guides/conditional_property_display.md)
-  - 属性动态显示机制
-  - 条件判断逻辑
-  - Inspector 集成
-
-### 📊 开发报告
-
-#### 变量系统实现
-- [变量存储阶段 1-2 报告](reports/variable_storage_phase1-2_report.md)
-  - 第一阶段：基础存储实现
-  - 第二阶段：持久化支持
-  - 技术细节
-  - 遇到的问题和解决方案
-
-- [变量存储阶段 3-5 报告](reports/variable_storage_phase3-5_report.md)
-  - 第三阶段：性能优化
-  - 第四阶段：高级特性
-  - 第五阶段：测试和验证
-  - 完成总结
-
-#### 本地化实现
-- [运行时本地化完成](reports/stage3_runtime_localization_complete.md)
-  - 运行时本地化实现
-  - 翻译系统集成
-  - 本地化测试
-  - 阶段性总结
-
-- [本地化覆盖报告](reports/localization_coverage_report.md)
-  - 本地化覆盖分析
-  - 翻译完整性检查
-  - 改进建议
-  - 覆盖率统计
-
-### 📁 归档文档
-
-归档目录包含历史开发文档，记录了系统的开发历程：
-
-#### 实现计划 (implementation_plans/)
-- 各种功能的实现计划和设计文档
-
-#### 本地化文档
-- [本地化实现计划](archive/localization_implementation_plan.md)
-- [本地化实现计划 V2](archive/localization_implementation_plan_v2.md)
-- [本地化进度报告](archive/localization_progress_report.md)
-- [本地化任务 1 修复报告](archive/localization_task1_fix_report.md)
-
-#### 指令开发
-- [创建本地变量指令](archive/CREATE_LOCAL_VARIABLE_INSTRUCTION.md)
-- [创建变量指令优化计划](archive/CREATE_VARIABLE_INSTRUCTION_OPTIMIZATION_PLAN.md)
-- [退出指令实现计划](archive/quit_instruction_implementation_plan.md)
-
-### 📂 专题目录
-
-#### 事件系统 (event_system/)
-事件系统相关开发文档
-
-#### 指令系统 (instruction_system/)
-指令系统相关开发文档
-
-#### 本地化 (localization/)
-本地化开发文档和资源
-
-#### 变量系统 (variable_system/)
-变量系统开发文档
-
-## 🎯 按主题查找
-
-### 我想了解...
-
-#### 编辑器扩展
-→ 查看 [条件属性显示](guides/conditional_property_display.md)
-
-#### 变量存储实现
-→ 阅读 [变量存储阶段 1-2 报告](reports/variable_storage_phase1-2_report.md)
-→ 学习 [变量存储阶段 3-5 报告](reports/variable_storage_phase3-5_report.md)
-
-#### 本地化实现
-→ 参考 [运行时本地化完成](reports/stage3_runtime_localization_complete.md)
-→ 查看 [本地化覆盖报告](reports/localization_coverage_report.md)
-
-#### 历史开发记录
-→ 浏览 [归档文档](archive/) 目录
-
-## 📊 文档统计
-
-| 类别 | 文档数量 | 说明 |
-|------|----------|------|
-| 开发指南 | 1 篇 | 编辑器开发指南 |
-| 开发报告 | 4 篇 | 实现报告和覆盖分析 |
-| 归档文档 | 7 篇 | 历史开发文档 |
-| 专题目录 | 4 个 | 按主题组织 |
-| **总计** | **12+ 篇** | 持续更新中 |
-
-### 开发报告分类
-
-| 报告类型 | 数量 | 关键文档 |
-|----------|------|----------|
-| 变量系统 | 2 | 阶段 1-2、阶段 3-5 |
-| 本地化 | 2 | 运行时完成、覆盖报告 |
-
-### 归档文档分类
-
-| 文档类型 | 数量 | 关键文档 |
-|----------|------|----------|
-| 实现计划 | 多篇 | 各功能计划 |
-| 本地化历史 | 4 | 本地化开发历程 |
-| 指令开发 | 3 | 自定义指令实现 |
-
-## 🔗 相关资源
-
-### 系统文档
-- [变量系统设计](../system_docs/architecture/variable_system_design.md) - 架构设计
-- [BaseVariable 分析](../system_docs/analysis/base_variable_analysis.md) - 组件分析
-
-### 用户文档
-- [变量系统 V2 迁移](../user_docs/guides/variable_system_v2_migration.md) - 用户迁移指南
-- [全局变量管理器 V2](../user_docs/guides/global_variable_manager_v2.md) - 使用指南
-
-### 设计提案
-- [待实现提案](../proposals/pending/) - 计划中的功能
-- [已实现提案](../proposals/implemented/) - 已完成功能
-
-## 💡 阅读建议
-
-### 开发者入门
-推荐阅读顺序：
-1. [变量存储阶段 1-2 报告](reports/variable_storage_phase1-2_report.md)
-2. [变量存储阶段 3-5 报告](reports/variable_storage_phase3-5_report.md)
-3. [运行时本地化完成](reports/stage3_runtime_localization_complete.md)
-
-### 编辑器开发者
-推荐阅读顺序：
-1. [条件属性显示](guides/conditional_property_display.md)
-2. [编辑器工具设计](../system_docs/architecture/editor_tools_design.md)
-3. [Godot 集成设计](../system_docs/architecture/godot_integration_design.md)
-
-### 本地化开发者
-推荐阅读顺序：
-1. [本地化覆盖报告](reports/localization_coverage_report.md)
-2. [运行时本地化完成](reports/stage3_runtime_localization_complete.md)
-3. 归档中的本地化历史文档
-
-### 系统集成者
-推荐阅读顺序：
-1. 所有开发报告（4 篇）
-2. 相关的归档文档
-3. 系统文档中的设计文档
-
-## 📈 开发历程
-
-### 已完成阶段
-
-#### Phase 1: 核心基础设施 ✅
-- 基础架构搭建
-- 核心类实现
-- 基本功能完成
-
-#### Phase 2: 变量系统 ✅
-- 变量存储实现（阶段 1-2）
-- 持久化支持
-- 性能优化（阶段 3-5）
-
-#### Phase 3: 本地化系统 ✅
-- 运行时本地化
-- 翻译集成
-- 覆盖率提升
-
-### 进行中阶段
-
-#### Phase 4: 编辑器增强 🚧
-- 条件属性显示
-- 可视化编辑器
-- Inspector 插件
-
-#### Phase 5: 性能优化 📋
-- 内部优化计划
-- 指令选择器设计
-- 执行效率提升
-
-## 🛠️ 开发工具
-
-### 调试工具
-- 变量查看器
-- 执行追踪器
-- 性能分析器
-
-### 测试工具
-- 单元测试
-- 集成测试
-- 性能测试
-
-### 文档工具
-- API 文档生成
-- 架构图生成
-- 示例代码生成
-
-## 📝 开发规范
-
-### 代码规范
-- 使用 GDScript 2.0 语法
-- 遵循项目代码风格
-- 添加类型注解
-- 编写文档注释
-
-### 测试规范
-- 编写单元测试
-- 覆盖核心功能
-- 测试边界条件
-- 性能基准测试
-
-### 文档规范
-- 更新设计文档
-- 编写使用示例
-- 记录变更日志
-- 维护 API 文档
-
-## 🔄 文档生命周期
-
-### 活跃文档
-- 开发指南（持续更新）
-- 开发报告（新增）
-
-### 归档文档
-- 历史实现计划
-- 旧版本设计文档
-- 阶段性报告
-
-### 待补充文档
-- 测试文档
-- 性能分析
-- 调试指南
+> 用户向使用文档见 [../user_docs/](../user_docs/)；架构与系统级设计见 [../system_docs/](../system_docs/)；历史实现计划与报告见 [../archive/](../archive/)。
 
 ---
 
-**文档维护**: Fuse 开发团队
-**最后更新**: 2026-01-25
+## 📚 开发指南（按主题）
 
-> 注意：归档文档主要用于参考，不是当前实现的主要文档。请优先参考活跃文档。
+### 核心组件创建
+
+| 指南 | 说明 |
+|------|------|
+| [事件创建指南](guides/event_creation_guide.md) | `BaseEvent` 子类化、`RuntimeEventInstance` 状态隔离、信号管理、完整模板与常见陷阱 |
+| [指令创建指南](guides/instruction_creation_guide.md) | `BaseInstruction` 子类化、执行方法、参数与本地化 |
+| [条件创建指南](guides/condition_creation_guide.md) | `BaseCondition` 子类化、复合条件、验证逻辑 |
+
+### 运行时架构
+
+| 指南 | 说明 |
+|------|------|
+| [RuntimeInstructionInstance 指南](guides/runtime_instruction_instance_guide.md) | 运行时状态隔离、超时机制、暂停 / 恢复、信号连接管理 |
+| [多线程开发指南](guides/multithreading-developer-guide.md) | 多线程执行模型、线程安全约束 |
+
+### 编辑器集成
+
+| 指南 | 说明 |
+|------|------|
+| [条件属性显示](guides/conditional_property_display.md) | `_validate_property()`、Inspector 属性动态显示与条件判断 |
+| [图标系统设计](guides/icon_system.md) | 图标注册、配置方式、内置图标命名参考 |
+
+### 专项开发
+
+| 指南 | 说明 |
+|------|------|
+| [数组指令开发](guides/array-instructions-development.md) | `element_value` 属性、变量变化通知、翻译键命名、调试日志 |
+| [变量操作工具](guides/variable-operations-utility.md) | 变量读写工具 API 与用法 |
+
+---
+
+## 🎯 任务导向入口
+
+### 我想新建一个事件 / 指令 / 条件
+→ [事件创建](guides/event_creation_guide.md) · [指令创建](guides/instruction_creation_guide.md) · [条件创建](guides/condition_creation_guide.md)
+
+### 我要让组件支持运行时状态或暂停 / 恢复
+→ [RuntimeInstructionInstance 指南](guides/runtime_instruction_instance_guide.md)
+
+### 我要并发执行或关心线程安全
+→ [多线程开发指南](guides/multithreading-developer-guide.md)
+
+### 我要让 Inspector 属性随条件动态显示
+→ [条件属性显示](guides/conditional_property_display.md)
+
+### 我要为组件配置图标
+→ [图标系统设计](guides/icon_system.md)
+
+### 我在开发数组类指令或调试变量变化通知
+→ [数组指令开发](guides/array-instructions-development.md) · [变量操作工具](guides/variable-operations-utility.md)
+
+---
+
+## 🔗 跨目录资源
+
+### 架构与系统设计（../system_docs/）
+- 架构总览：[visual_programming_system_architecture](../system_docs/architecture/visual_programming_system_architecture.md)、[完整设计摘要](../system_docs/architecture/visual_programming_complete_design_summary.md)
+- 分系统设计：[事件](../system_docs/architecture/event_on_input_key_design.md) · [指令](../system_docs/architecture/instruction_system_design.md) · [条件](../system_docs/architecture/condition_system_design.md) · [变量](../system_docs/architecture/variable_system_design.md)
+- 编辑器：[编辑器工具设计](../system_docs/architecture/editor_tools_design.md) · [Godot 集成设计](../system_docs/architecture/godot_integration_design.md)
+- 数据流 / 控制流：[dataflow_controlflow_design](../system_docs/architecture/dataflow_controlflow_design.md)
+- 组件分析：[BaseEvent](../system_docs/analysis/base_event_analysis.md) · [BaseInstruction](../system_docs/analysis/base_instruction_analysis.md) · [BaseCondition](../system_docs/analysis/base_condition_analysis.md) · [BaseVariable](../system_docs/analysis/base_variable_analysis.md) · [ExecutionContext](../system_docs/analysis/execution_context_analysis.md) · [ActionRunner](../system_docs/analysis/action_runner_analysis.md)
+
+### 用户向使用指南（../user_docs/guides/）
+- [变量系统指南](../user_docs/guides/variable_system_guide.md) · [全局变量管理器 V2](../user_docs/guides/global_variable_manager_v2.md) · [全局变量持久化](../user_docs/guides/global-variable-persistence-guide.md)
+- [指令生成器](../user_docs/guides/instruction-generator-guide.md) · [Runner](../user_docs/guides/runner-guide.md) · [多事件触发器](../user_docs/guides/multi-event-trigger-guide.md) · [事件总线](../user_docs/guides/event_bus_guide.md)
+- [多线程优化](../user_docs/guides/multithreading-optimization.md) · [表达式](../user_docs/guides/expression-guide.md) · [调试](../user_docs/guides/debugging-guide.md) · [图标管理器](../user_docs/guides/icon_manager_guide.md)
+
+### 历史归档（../archive/）
+历史实现计划、阶段性报告、设计提案与迁移文档。仅供参考，**非当前实现的权威来源**——以本目录指南和 `system_docs/` 为准。
+
+---
+
+## 📊 文档统计
+
+| 类别 | 数量 |
+|------|------|
+| 开发指南 | 9 篇（`guides/`） |
+| 更新规格 | 1 篇（[UPDATE_SPEC.md](UPDATE_SPEC.md)） |
+
+---
+
+## 📝 维护
+
+- **代码规范**：GDScript 2.0、TAB 缩进、类型注解、`##` 文档注释（详见项目根 `CLAUDE.md`）
+- **新增指南**：放入 `guides/`，并在本 README 对应主题分组中登记
+- **链接健康**：新增 / 修改文档时，确保所有相对链接指向真实存在的文件
+
+---
+
+**最后更新**：2026-07-07
+**维护者**：Fuse 开发团队

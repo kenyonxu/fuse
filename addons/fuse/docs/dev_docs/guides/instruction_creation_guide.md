@@ -98,7 +98,7 @@ metadata.icon = preload("res://icon.png")  # 直接指定纹理
 - **音频**: `AudioStreamPlayer`, `Play`, `Stop`, `VolumeCurve`
 - **场景**: `MakePacked`, `PackedScene`
 
-**完整列表**: 参考 [icon_system.md](../development/icon_system.md)
+**完整列表**: 参考 [icon_system.md](icon_system.md)
 
 ### 图标配置步骤
 
@@ -2146,7 +2146,7 @@ var description = "变量 %s [%s]" % [var_name, scope_str]
 - [变量系统最佳实践](#变量系统最佳实践)
 - [Phase 0B 经验总结](#关键技术要点)
 - [测试规范](#测试规范)
-- [变量系统设计文档](../system_docs/architecture/variable_system_design.md)
+- [变量系统设计文档](../../system_docs/architecture/variable_system_design.md)
 
 ---
 

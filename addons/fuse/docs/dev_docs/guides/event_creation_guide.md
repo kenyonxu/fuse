@@ -77,7 +77,7 @@ RuntimeEventInstance (RefCounted) = 运行时状态（每个 Trigger 独立）
 
 **如何实施**:
 
-详见 [迁移指南](../dev_docs/archive/migration-guide-to-runtime-instance.md)。
+参考下文「RuntimeInstance 架构」与「获取默认运行时状态」章节。
 
 **新版架构（自声明状态模式）**:
 
@@ -202,7 +202,7 @@ metadata.icon = preload("res://icon.png")  # 直接指定纹理
 - **生命周期**: `Refresh`, `Loop`, `Animation`
 - **通用**: `Script`, `Node`, `File`, `Folder`
 
-**完整列表**: 参考 [icon_system.md](../development/icon_system.md)
+**完整列表**: 参考 [icon_system.md](icon_system.md)
 
 ### 图标配置步骤
 
@@ -1023,7 +1023,6 @@ class_name OnRuntimeInstanceTemplate
 ## - _trigger_count: int - 触发次数
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md
 
 # 参数定义
 @export var target_node_path: NodePath = NodePath("")
@@ -1195,8 +1194,6 @@ static func _get_event_metadata() -> EventMetadata:
 - [ ] 修改所有状态访问使用 `get_runtime_state()` / `set_runtime_state()`
 - [ ] 在 `terminate()` 和 `reset()` 中清理状态
 
-**详见**: [迁移指南](../dev_docs/archive/migration-guide-to-runtime-instance.md)
-
 ---
 
 ## 创建步骤
@@ -1363,8 +1360,6 @@ func test_edge_cases():
 - ✅ 支持多个 Trigger 共享同一个 Event 资源
 - ✅ 轻量级设计（RefCounted，约 200-500 字节/实例）
 - ✅ **无需修改核心代码（新版自声明状态模式）**
-
-**详细指南**: 详见 [迁移指南](../dev_docs/archive/migration-guide-to-runtime-instance.md)
 
 **快速迁移步骤（新版：自声明状态模式）**:
 
@@ -2112,8 +2107,7 @@ func _on_event_triggered():
 - 事件停止时使用 `notify_stopped()` 通知 Trigger
 
 **参考文档**:
-- [BaseEvent API](../core/base/base_event.gd)
-- [RuntimeInstance 迁移指南](../dev_docs/archive/migration-guide-to-runtime-instance.md)
+- [BaseEvent API](../../../core/base/base_event.gd)
 - [完整事件模板](#完整事件模板)
 - [测试规范](#测试规范)
 

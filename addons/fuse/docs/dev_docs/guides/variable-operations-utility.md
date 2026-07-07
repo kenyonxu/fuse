@@ -901,20 +901,15 @@ scope = 1  # 魔数，难以理解
 
 ## 相关文档
 
-### 核心系统
-- [变量系统架构](./variable-system-architecture.md)
-- [作用域容器设计](./scope-container-design.md)
-- [执行上下文指南](./execution-context-guide.md)
-
-### 工具类
-- [VariableScopeUtils 文档](./variable-scope-utils.md)
-- [ScopeVariableManager 参考](./scope-variable-manager.md)
-- [GlobalVariableAssistant 参考](./global-variable-assistant.md)
+### 系统设计
+- [变量系统设计](../../system_docs/architecture/variable_system_design.md)
+- [执行上下文分析](../../system_docs/analysis/execution_context_analysis.md)
+- [BaseVariable 分析](../../system_docs/analysis/base_variable_analysis.md)
 
 ### 指令和条件
-- [SetScopeVariable 指令](../instructions/variables/set_scope_variable.md)
-- [GetScopeVariable 指令](../instructions/variables/get_scope_variable.md)
-- [CheckVariable 条件](../conditions/variable/check_variable.md)
+- [SetScopeVariable 指令](../../../instructions/variables/set_scope_variable.gd)
+- [GetScopeVariable 指令](../../../instructions/variables/get_scope_variable.gd)
+- [CheckVariable 条件](../../../conditions/variable/check_variable.gd)
 
 ---
 
