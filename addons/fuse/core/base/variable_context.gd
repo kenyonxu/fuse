@@ -185,7 +185,9 @@ func _set_scope_variable(name: String, value: Variant) -> bool:
 	var scope_container = _find_scope_container()
 	if scope_container != null:
 		return scope_container.set_variable(name, value)
-	push_warning("未找到作用域容器，回退到本地变量: %s" % name)
+	# B7：未找到 scope 容器属于配置错误（trigger/target/owner 不在 ScopeVariableContainer 树下），
+	# 升级为 error 以避免静默错位；同时保留 fallback 到 LOCAL 不破坏既有契约
+	push_error("未找到作用域容器，回退到本地变量: %s" % name)
 	return _set_local_variable(name, value)
 
 
@@ -193,7 +195,8 @@ func _get_scope_variable(name: String, default: Variant) -> Variant:
 	var scope_container = _find_scope_container()
 	if scope_container != null:
 		return scope_container.get_variable(name, default)
-	push_warning("未找到作用域容器，回退到本地变量: %s" % name)
+	# B7：见 _set_scope_variable
+	push_error("未找到作用域容器，回退到本地变量: %s" % name)
 	return _get_local_variable(name, default)
 
 
@@ -267,6 +270,9 @@ func _set_local_variable(name: String, value: Variant) -> bool:
 	if local_variables.has(name_key):
 		_owner._log_warning_localized("FUSE_LOG_VARIABLE_ALREADY_EXISTS_OVERWRITING", {"name": name})
 	local_variables[name_key] = value
+	# B6 同步：若已 precompile，索引数组镜像 LOCAL 字典，避免双轨不一致
+	if _use_indexed_access and _variable_index_map.has(name_key):
+		_variable_array[_variable_index_map[name_key]] = value
 	return true
 
 
@@ -321,6 +327,12 @@ func set_variable_by_index(index: int, value: Variant):
 		return
 	if index >= 0 and index < _variable_array.size():
 		_variable_array[index] = value
+		# B6 同步：反向镜像到 LOCAL 字典，保证 get_variable(name) 与索引读一致
+		# 通过 _variable_index_map 反查 name_key
+		for name_key in _variable_index_map:
+			if _variable_index_map[name_key] == index:
+				local_variables[name_key] = value
+				break
 	else:
 		_owner._log_error("索引 %d 超出范围，有效范围: 0-%d" % [index, _variable_array.size() - 1])
 
