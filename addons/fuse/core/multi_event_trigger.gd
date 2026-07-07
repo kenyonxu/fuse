@@ -309,6 +309,9 @@ func _check_binding_cooldown(index: int, context: Node) -> bool:
 
 		CooldownMode.PER_OBJECT_COOLDOWN:
 			var object_cooldowns: Dictionary = event_instance.runtime_state.get("object_cooldowns", {})
+			# Mirror of B12（base_trigger.gd）：调用继承的清理方法，防止 object_cooldowns
+			# 在长运行 + 物体频繁进出场景下无限增长（内存泄漏）。
+			_cleanup_expired_object_cooldowns(object_cooldowns, current_time, binding.cooldown_time)
 			var object_id: int = context.get_instance_id() if context != null else 0
 			if object_id != 0 and object_cooldowns.has(object_id):
 				var last_time: float = object_cooldowns[object_id]
