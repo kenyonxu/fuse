@@ -10,6 +10,8 @@ class_name BaseVariable extends Resource
         _log_debug("Variable name set to: %s" % value)
 
 ## 变量值 - 直接使用 Godot Variant
+## setter 唯一负责 emit（value_changed + value_modified）+ 计数/时间。
+## set_value 与其它赋值路径不再 emit/计数，避免双发与计数翻倍（B1/B2/B3）。
 @export var value: Variant = null:
     set(new_value):
         var old_value = value
@@ -18,6 +20,7 @@ class_name BaseVariable extends Resource
         modification_count += 1
         _log_debug("Variable value changed from %s to %s" % [str(old_value), str(new_value)])
         value_changed.emit(old_value, new_value)
+        value_modified.emit(new_value)
 
 ## 变量描述
 @export var description: String = ""
@@ -102,23 +105,12 @@ func get_value() -> Variant:
 ## 设置变量值
 ## new_value: Variant - 要设置的值
 ## returns: bool - 设置是否成功
+## 注：setter 已统一负责 emit（value_changed + value_modified）与计数/时间，
+## 这里只需赋值，避免重复 emit / 重复计数（修复 B2/B3）。
 func set_value(new_value: Variant) -> bool:
-    var old_value = value
     value = new_value
-    last_modified_time = Time.get_ticks_msec() / 1000.0
-    modification_count += 1
-
-    _log_debug("Variable %s changed from %s to %s" % [
-        variable_name, str(old_value), str(new_value)
-    ])
-
-    # 发出信号
-    value_changed.emit(old_value, new_value)
-    value_modified.emit(new_value)
-
     # 注意：持久化已移至 GlobalVariableManager.save_to_resource()
     # 请使用 GlobalVariableAssistant 进行统一的持久化管理
-
     return true
 
 ## 重置变量为默认值
@@ -702,18 +694,22 @@ func deserialize(data: Dictionary):
 
 ## 克隆变量
 ## returns: BaseVariable - 克隆的新变量
+## 字段集与静态 clone_variable() 保持一致（B9：补齐 scope/auto_create/creation_time）
 func clone() -> BaseVariable:
     var new_variable = BaseVariable.new()
-    
+
     # 深拷贝所有属性
     new_variable.variable_name = variable_name
     new_variable.value = value
     new_variable.persistent = persistent
     new_variable.log_level = log_level
+    new_variable.scope = scope
+    new_variable.auto_create = auto_create
+    new_variable.creation_time = Time.get_ticks_msec() / 1000.0
     new_variable.last_modified_time = last_modified_time
     new_variable.modification_count = modification_count
     new_variable.is_initialized = is_initialized
-    
+
     _log_debug("Variable cloned: %s" % variable_name)
     return new_variable
 
