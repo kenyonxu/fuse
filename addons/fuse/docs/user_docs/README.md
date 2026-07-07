@@ -15,74 +15,78 @@
 
 ---
 
-## 📖 使用指南（31 篇）
+## 📖 使用指南（39 篇，五层学习路径）
 
-### 变量系统
-| 文档 | 说明 |
-|------|------|
-| [变量系统指南](guides/variable_system_guide.md) | 变量系统整体使用 |
-| [全局变量管理器 V2](guides/global_variable_manager_v2.md) | 单例管理、API、持久化、信号、调试 |
-| [全局变量持久化](guides/global-variable-persistence-guide.md) | 变量保存 / 加载机制 |
+### 🟢 第一层：入门（01-06）
 
-### 事件与触发
-| 文档 | 说明 |
-|------|------|
-| [Event Bus 用户指南](guides/event_bus_guide.md) | 全局事件通信、SendEvent / OnReceiveEvent、跨 Trigger 通信 |
-| [多事件触发器](guides/multi-event-trigger-guide.md) | MultiEventTrigger 配置 |
-| [触发器选择](guides/trigger-selection-guide.md) | 触发器选型与配置 |
-| [输入事件](guides/input-events-guide.md) | 输入事件处理 |
+| 编号 | 文档 | 说明 |
+|------|------|------|
+| 01 | [变量系统指南](guides/01-variable_system_guide.md) | 变量系统整体使用 |
+| 02 | [触发器选择](guides/02-trigger-selection-guide.md) | 触发器选型与配置 |
+| 03 | [Runner 指南](guides/03-runner-guide.md) | Runner 执行模型 |
+| 04 | [多事件触发器](guides/04-multi-event-trigger-guide.md) | MultiEventTrigger 配置 |
+| 05 | [表达式指南](guides/05-expression-guide.md) | 表达式求值 |
+| 06 | [指令生成器](guides/06-instruction-generator-guide.md) | 自动生成指令 |
 
-### 指令与执行
-| 文档 | 说明 |
-|------|------|
-| [指令生成器](guides/instruction-generator-guide.md) | 自动生成指令 |
-| [Runner 指南](guides/runner-guide.md) | Runner 执行模型 |
-| [流程控制](guides/flow-control-guide.md) | 分支、循环、等待 |
-| [断点调试](guides/breakpoint-guide.md) | 断点使用 |
-| [调试指南](guides/debugging-guide.md) | 调试工具与技巧 |
+### 🔵 第二层：核心系统（10-18）
 
-### 场景与节点
-| 文档 | 说明 |
-|------|------|
-| [场景管理](guides/scene-management-guide.md) | 场景加载 / 切换 |
-| [场景预加载](guides/scene-preloading-guide.md) | 预加载优化 |
-| [移动系统](guides/movement-system-guide.md) | 节点移动 |
-| [对象池系统](guides/object_pool_system_guide.md) | 对象池使用 |
+| 编号 | 文档 | 说明 |
+|------|------|------|
+| 10 | [变换指南](guides/10-transform-guide.md) | Transform 操作 |
+| 11 | [移动系统](guides/11-movement-system-guide.md) | 节点移动 |
+| 12 | [动画指南](guides/12-animation-guide.md) | AnimationPlayer 使用 |
+| 13 | [音频指南](guides/13-audio-guide.md) | 音频播放 |
+| 14 | [物理指南](guides/14-physics-guide.md) | 物理操作 |
+| 15 | [UI 指南](guides/15-ui-guide.md) | UI 操作 |
+| 16 | [相机指南](guides/16-camera-guide.md) | 相机控制 |
+| 17 | [场景管理](guides/17-scene-management-guide.md) | 场景加载/切换 |
+| 18 | [Tween 补间动画](guides/18-tween-animation-guide.md) | Tween 震动/补间效果 |
 
-### 变换与坐标
-| 文档 | 说明 |
-|------|------|
-| [坐标系统指南](guides/coordinate_systems_guide.md) | Global / Local 坐标 |
-| [变换指南](guides/transform-guide.md) | Transform 操作 |
-| [数学与向量](guides/math-vector-guide.md) | 向量运算 |
+### 🟡 第三层：指令操作（20-26）
 
-### 动画 / 音频 / UI
-| 文档 | 说明 |
-|------|------|
-| [动画指南](guides/animation-guide.md) | AnimationPlayer 使用 |
-| [Tween 补间动画](guides/tween-animation-guide.md) | Tween 震动 / 补间效果 |
-| [音频指南](guides/audio-guide.md) | 音频播放 |
-| [UI 指南](guides/ui-guide.md) | UI 操作 |
+| 编号 | 文档 | 说明 |
+|------|------|------|
+| 20 | [节点操作](guides/20-node-operations-guide.md) | 节点指令操作 |
+| 21 | [数组操作](guides/21-array-operations-guide.md) | 数组指令 |
+| 22 | [字典操作](guides/22-dictionary-operations-guide.md) | 字典指令 |
+| 23 | [流程控制](guides/23-flow-control-guide.md) | 分支、循环、等待 |
+| 24 | [数学与向量](guides/24-math-vector-guide.md) | 向量运算 |
+| 25 | [调试指南](guides/25-debugging-guide.md) | 调试工具与技巧 |
+| 26 | [断点调试](guides/26-breakpoint-guide.md) | 断点使用 |
 
-### 物理 / 相机
-| 文档 | 说明 |
-|------|------|
-| [物理指南](guides/physics-guide.md) | 物理操作 |
-| [相机指南](guides/camera-guide.md) | 相机控制 |
+### 🟠 第四层：事件与条件
 
-### 表达式与数据
-| 文档 | 说明 |
-|------|------|
-| [表达式指南](guides/expression-guide.md) | 表达式求值 |
-| [复合条件](guides/composite-conditions-guide.md) | 复合条件配置 |
-| [数组操作](guides/array-operations-guide.md) | 数组指令 |
-| [字典操作](guides/dictionary-operations-guide.md) | 字典指令 |
+#### 事件（30-34）
 
-### 性能与工具
-| 文档 | 说明 |
-|------|------|
-| [多线程优化](guides/multithreading-optimization.md) | 多线程执行 |
-| [图标管理器](guides/icon_manager_guide.md) | 图标配置与管理 |
+| 编号 | 文档 | 说明 |
+|------|------|------|
+| 30 | [生命周期事件](guides/30-lifecycle-events-guide.md) | 节点生命周期事件 |
+| 31 | [计时事件](guides/31-timing-events-guide.md) | 计时相关事件 |
+| 32 | [输入事件](guides/32-input-events-guide.md) | 输入事件处理 |
+| 33 | [节点事件](guides/33-node-events-guide.md) | 节点相关事件 |
+| 34 | [Event Bus](guides/34-event_bus_guide.md) | 全局事件通信 |
+
+#### 条件（40-46）
+
+| 编号 | 文档 | 说明 |
+|------|------|------|
+| 40 | [输入条件](guides/40-input-conditions-guide.md) | 输入检测条件 |
+| 41 | [节点条件](guides/41-node-conditions-guide.md) | 节点状态条件 |
+| 42 | [物理条件](guides/42-physics-conditions-guide.md) | 物理检测条件 |
+| 43 | [动画条件](guides/43-animation-conditions-guide.md) | 动画状态条件 |
+| 44 | [时间条件](guides/44-time-conditions-guide.md) | 时间相关条件 |
+| 45 | [复合条件](guides/45-composite-conditions-guide.md) | 复合条件配置 |
+| 46 | [条件大全](guides/46-comprehensive-conditions-guide.md) | 条件完整参考 |
+
+### 🔴 第五层：高级（50-54）
+
+| 编号 | 文档 | 说明 |
+|------|------|------|
+| 50 | [场景预加载](guides/50-scene-preloading-guide.md) | 预加载优化 |
+| 51 | [对象池系统](guides/51-object_pool_system_guide.md) | 对象池使用 |
+| 52 | [多线程优化](guides/52-multithreading-optimization.md) | 多线程执行 |
+| 53 | [图标管理器](guides/53-icon_manager_guide.md) | 图标配置与管理 |
+| 54 | [全局变量指南](guides/54-global-variables-guide.md) | 全局变量使用 |
 
 ---
 
@@ -99,14 +103,12 @@
 
 ### 我想…
 - **上手 Fuse** → [快速开始](quick_start.md)
-- **管理变量** → [全局变量管理器 V2](guides/global_variable_manager_v2.md) · [持久化](guides/global-variable-persistence-guide.md)
-- **做动画 / 特效** → [Tween 补间动画](guides/tween-animation-guide.md) · [动画指南](guides/animation-guide.md)
-- **理解坐标** → [坐标系统指南](guides/coordinate_systems_guide.md)
-- **Trigger 间通信** → [Event Bus](guides/event_bus_guide.md)
+- **做动画/特效** → [Tween 补间动画](guides/18-tween-animation-guide.md) · [动画指南](guides/12-animation-guide.md)
+- **Trigger 间通信** → [Event Bus](guides/34-event_bus_guide.md)
 - **创建自定义组件** → [自定义事件](best_practices/custom_event.md) · [自定义指令](best_practices/custom_instruction.md)
-- **调试** → [调试指南](guides/debugging-guide.md) · [断点](guides/breakpoint-guide.md)
+- **调试** → [调试指南](guides/25-debugging-guide.md) · [断点](guides/26-breakpoint-guide.md)
 
-> 开发者创建组件的完整流程另见 [../dev_docs/guides/](../dev_docs/guides/)（事件 / 指令 / 条件创建指南）。
+> 开发者创建组件的完整流程另见 [../dev_docs/guides/](../dev_docs/guides/)（事件/指令/条件创建指南）。
 
 ---
 
@@ -117,7 +119,7 @@
 - [组件分析](../system_docs/analysis/)（BaseEvent / BaseInstruction / BaseCondition / BaseVariable 等）
 
 ### 开发文档（../dev_docs/）
-- [开发指南目录](../dev_docs/guides/)（事件 / 指令 / 条件 / 多线程 / 图标系统等创建指南）
+- [开发指南目录](../dev_docs/guides/)（事件/指令/条件/多线程/图标系统等创建指南）
 
 ### 历史归档（../archive/）
 早期使用指南（如变量系统 V2 迁移）、路线图、阶段计划均已归档。仅供参考，**以本目录指南为准**。
@@ -129,17 +131,17 @@
 | 类别 | 数量 |
 |------|------|
 | 入口文档 | 2 篇（quick_start、FEATURES） |
-| 使用指南 | 31 篇（`guides/`） |
+| 使用指南 | 39 篇（`guides/`） |
 | 最佳实践 | 2 篇（`best_practices/`） |
 | 更新规格 | 1 篇（[UPDATE_SPEC.md](UPDATE_SPEC.md)） |
-| **合计** | **35 篇** + spec |
+| **合计** | **43 篇** + spec |
 
 ---
 
 ## 📝 维护
 
 - **新增指南**：使用指南入 `guides/`，最佳实践入 `best_practices/`，并在本 README 对应分组登记
-- **链接健康**：新增 / 修改文档时，确保所有相对链接指向真实存在的文件
+- **链接健康**：新增/修改文档时，确保所有相对链接指向真实存在的文件
 - **职责边界**：用户使用问题归本目录；开发实现细节归 `dev_docs/`；架构设计归 `system_docs/`
 
 ---
