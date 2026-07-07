@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://by1u5566ur36d"]
 
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="1_ha6o6"]
-[ext_resource type="Resource" uid="uid://2ufepkph466t" path="res://demos/fuse/brick_demo_basic.tres" id="2_24aq8"]
+[ext_resource type="Resource" uid="uid://c6ghtc46t7rqf" path="res://demos/fuse/brick_demo_basic.tres" id="2_24aq8"]
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_i5ugf"]
 [ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="4_r4ibc"]
 [ext_resource type="Script" uid="uid://cqhqfchyyqctl" path="res://addons/fuse/conditions/input/check_any_input.gd" id="5_0a2a6"]
@@ -110,7 +110,7 @@ script = ExtResource("15_cm44k")
 message = "loaded"
 
 [sub_resource type="Resource" id="Resource_08rkf"]
-resource_name = "If/Then 检查场景 game_scene.tscn 的预加载状态是否为 LOADED [1 个指令] [FUSE_INSTRUCTION_IF_ELSE_MODE_ASYNC]"
+resource_name = "If/Then 检查场景 game_scene.tscn 的预加载状态是否为 LOADED [1 个指令] [异步]"
 script = ExtResource("15_0a2a6")
 condition = SubResource("Resource_rt6no")
 instructions = Array[ExtResource("6_cm44k")]([SubResource("Resource_xa4at")])
