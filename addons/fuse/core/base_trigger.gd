@@ -102,10 +102,20 @@ func validate() -> Array[String]:
 	return errors
 
 ## 手动触发触发器（子类可覆盖）
+## 默认实现无效果；若子类未覆盖则发出 warning 提示。
 func trigger_manually(context: Node = null) -> void:
-	pass
+	push_warning("BaseTrigger.trigger_manually 未在子类覆盖，调用无效果")
 
 ## ==================== 冷却检查 ====================
+
+## object_cooldowns 过期阈值倍数：
+## 当 (current_time - last_time) > cooldown_time * 此倍数 时，条目视为过期可清理。
+## 4.0 = cooldown 期 + 3 倍宽限（足够长的保留窗口避免抖动）。
+const _OBJECT_COOLDOWN_TTL_MULTIPLIER: float = 4.0
+
+## object_cooldowns 清理触发阈值（摊销策略）：
+## 仅在字典大小 >= 此值时才执行 O(n) 扫描清理；小字典跳过避免每次调用都扫描。
+const _OBJECT_COOLDOWN_CLEANUP_THRESHOLD: int = 8
 
 ## 检查冷却状态
 ## 返回 true 表示可以触发，false 表示冷却中
@@ -123,23 +133,43 @@ func _check_cooldown(index: int, context: Node, cooldown_mode: CooldownMode, coo
 		CooldownMode.GLOBAL_COOLDOWN:
 			var last_time: float = event_instance.runtime_state.get("last_trigger_time", 0.0)
 			if current_time - last_time < cooldown_time:
-				_log_info("全局冷却中：已过 %.2f 秒，需要 %.2f 秒" % [current_time - last_time, cooldown_time])
+				_log_debug("全局冷却中：已过 %.2f 秒，需要 %.2f 秒" % [current_time - last_time, cooldown_time])
 				return false
 			event_instance.runtime_state["last_trigger_time"] = current_time
 
 		CooldownMode.PER_OBJECT_COOLDOWN:
 			var object_cooldowns: Dictionary = event_instance.runtime_state.get("object_cooldowns", {})
+			# B12: 清理过期 object_cooldowns 条目，防止长时间运行（物体频繁进出）下字典无限增长。
+			# 阈值 = cooldown_time * _OBJECT_COOLDOWN_TTL_MULTIPLIER。
+			# 在字典较小时跳过扫描以避免开销；达到阈值后才执行清理。
+			_cleanup_expired_object_cooldowns(object_cooldowns, current_time, cooldown_time)
 			var object_id: int = context.get_instance_id() if context != null else 0
 			if object_id != 0 and object_cooldowns.has(object_id):
 				var last_time: float = object_cooldowns[object_id]
 				if current_time - last_time < cooldown_time:
 					var object_name: String = context.name if context != null else "unknown"
-					_log_info("物体 '%s' (ID:%d) 冷却中" % [object_name, object_id])
+					_log_debug("物体 '%s' (ID:%d) 冷却中" % [object_name, object_id])
 					return false
 			object_cooldowns[object_id] = current_time
 			event_instance.runtime_state["object_cooldowns"] = object_cooldowns
 
 	return true
+
+## 清理 object_cooldowns 中过期的条目。
+## 过期条件：current_time - last_time > cooldown_time * _OBJECT_COOLDOWN_TTL_MULTIPLIER
+func _cleanup_expired_object_cooldowns(object_cooldowns: Dictionary, current_time: float, cooldown_time: float) -> void:
+	if object_cooldowns.size() < _OBJECT_COOLDOWN_CLEANUP_THRESHOLD:
+		return
+	var ttl: float = cooldown_time * _OBJECT_COOLDOWN_TTL_MULTIPLIER
+	var expired_keys: Array = []
+	for key: int in object_cooldowns:
+		var last_time: float = object_cooldowns[key]
+		if current_time - last_time > ttl:
+			expired_keys.append(key)
+	for key: int in expired_keys:
+		object_cooldowns.erase(key)
+	if not expired_keys.is_empty():
+		_log_debug("清理过期 object_cooldowns：删除 %d 条，剩余 %d 条" % [expired_keys.size(), object_cooldowns.size()])
 
 ## 清理冷却状态
 func _clear_cooldown_state(index: int) -> void:
@@ -151,7 +181,7 @@ func _clear_cooldown_state(index: int) -> void:
 ## ==================== 执行上下文 ====================
 
 ## 创建执行上下文
-func _create_execution_context(target: Node, index: int = 0) -> RefCounted:
+func _create_execution_context(target: Node, index: int = 0) -> ExecutionContext:
 	var context := ExecutionContext.new(target, self)
 	context.set_variable("event_source", self)
 	context.set_variable("triggered_node", target)
@@ -168,7 +198,7 @@ func _create_execution_context(target: Node, index: int = 0) -> RefCounted:
 	return context
 
 ## 同步事件参数到 ExecutionContext
-func _sync_event_args_to_context(context: RefCounted, index: int) -> void:
+func _sync_event_args_to_context(context: ExecutionContext, index: int) -> void:
 	var event_instance := get_runtime_event_instance_at(index)
 	if event_instance == null:
 		return
