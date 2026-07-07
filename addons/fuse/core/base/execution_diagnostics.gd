@@ -269,6 +269,27 @@ func get_dependency_visualization_data() -> Dictionary:
 
 
 # ============================================================
+# 复制
+# ============================================================
+
+## 深拷贝诊断子系统（用于 ExecutionContext.duplicate）
+## 所有可变状态（执行状态/进度/历史/统计）独立拷贝，监听器列表拷贝但 Callable 共享引用。
+func duplicate(p_deep: bool = true) -> ExecutionDiagnostics:
+	var copy := ExecutionDiagnostics.new(_owner)
+	copy._execution_state = _execution_state
+	copy._execution_progress = _execution_progress
+	copy._error_message = _error_message
+	copy._is_cancelled = _is_cancelled
+	copy._last_state_change_time = _last_state_change_time
+	copy._max_history_size = _max_history_size
+	# 历史深拷贝：每个 entry 的 data 子字典也独立
+	copy._execution_history = _execution_history.duplicate(true)
+	# 监听器：Callable 是引用语义，列表容器独立即可
+	copy._state_change_listeners = _state_change_listeners.duplicate()
+	return copy
+
+
+# ============================================================
 # cleanup
 # ============================================================
 

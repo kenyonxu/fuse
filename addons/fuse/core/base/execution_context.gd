@@ -112,20 +112,22 @@ func _init(target_node: Node = null, trigger_node: Node = null, global_vars: Var
 		_target_weakref = weakref(target_node)
 	if trigger_node:
 		_trigger_weakref = weakref(trigger_node)
-	
-		# 创建诊断子系统
-		_diagnostics = ExecutionDiagnostics.new(self)
 
-		# 创建变量子系统
-		_variable_context = VariableContext.new(self)
-		_variable_context.global_variables = global_variables
-		_variable_context.set_global_variable_assistant(_global_variable_assistant)
-		# 兼容引用: EC 的 local_variables/global_variables 指向 VariableContext 的同一字典
-		local_variables = _variable_context.local_variables
-		global_variables = _variable_context.global_variables
+	# 创建诊断子系统（无条件：诊断/状态机为 EC 核心能力，不依赖 trigger 存在）
+	_diagnostics = ExecutionDiagnostics.new(self)
 
-		# 初始化执行状态
-		reset_execution_state()
+	# 创建变量子系统（无条件：变量访问为 EC 核心能力，仅 target 存在即可。
+	# 历史 bug B19：此块曾误嵌在 `if trigger_node:` 下，导致仅传 target 时
+	# _variable_context/_diagnostics 为 nil → set_variable/get_variable 报 Nil。）
+	_variable_context = VariableContext.new(self)
+	_variable_context.global_variables = global_variables
+	_variable_context.set_global_variable_assistant(_global_variable_assistant)
+	# 兼容引用: EC 的 local_variables/global_variables 指向 VariableContext 的同一字典
+	local_variables = _variable_context.local_variables
+	global_variables = _variable_context.global_variables
+
+	# 初始化执行状态
+	reset_execution_state()
 
 ## 生成执行ID
 ##
@@ -502,6 +504,9 @@ func duplicate(p_deep: bool = true) -> ExecutionContext:
 	copy.target = target
 	copy.trigger = trigger
 	copy.tree = tree
+	# 弱引用同步（target/trigger 引用一致性）
+	copy._target_weakref = _target_weakref
+	copy._trigger_weakref = _trigger_weakref
 	# 变量子系统深拷贝
 	copy._variable_context = _variable_context.duplicate()
 	copy._variable_context._owner = copy  # 更新 owner 引用
@@ -509,10 +514,19 @@ func duplicate(p_deep: bool = true) -> ExecutionContext:
 	copy.local_variables = copy._variable_context.local_variables
 	copy.global_variables = global_variables
 	copy._global_variable_assistant = _global_variable_assistant
-	copy.custom_data = custom_data.duplicate()
+	# 诊断子系统深拷贝（执行状态/历史/进度/监听器）
+	# 历史 bug B11：duplicate 曾漏拷贝 _diagnostics，导致复制后执行历史/状态丢失。
+	copy._diagnostics = _diagnostics.duplicate()
+	copy._diagnostics._owner = copy  # 更新 owner 引用
+	copy.custom_data = custom_data.duplicate(true)
 	copy.execution_start_time = execution_start_time
 	copy.execution_id = execution_id
+	copy.log_level = log_level
+	copy.owner = owner
 	copy.action_runner = action_runner  # 共享 ActionRunner 引用
+	# FuseError 深拷贝（独立错误实例）
+	if _fuse_error:
+		copy._fuse_error = _fuse_error.duplicate() if _fuse_error.has_method("duplicate") else _fuse_error
 	return copy
 
 ## 获取上下文信息
