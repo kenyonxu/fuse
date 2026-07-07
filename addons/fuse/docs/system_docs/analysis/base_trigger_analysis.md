@@ -69,21 +69,21 @@
 ### 严重问题
 
 1. **内存泄漏风险**：在触发器销毁时，可能存在未清理的资源，导致内存泄漏。
-   - 位置：[`_exit_tree()`](addons/fuse/core/base/base_trigger.gd:258) 方法
+   - 位置：`_exit_tree()` 方法
    - 影响：可能导致内存占用过高，影响系统性能
 
 2. **竞态条件风险**：在多个触发器同时触发时，可能存在竞态条件。
-   - 位置：[`trigger_actions()`](addons/fuse/core/base/base_trigger.gd:81) 方法
+   - 位置：`trigger_actions()` 方法
    - 影响：可能导致不可预测的行为和数据损坏
 
 ### 中等问题
 
 1. **事件数据传递不够灵活**：事件数据的传递和处理机制相对简单。
-   - 位置：[`_create_execution_context()`](addons/fuse/core/base/base_trigger.gd:122) 方法
+   - 位置：`_create_execution_context()` 方法
    - 影响：限制了事件处理的灵活性，影响系统的可扩展性
 
 2. **触发器冷却时间处理不完善**：冷却时间的检查和重置机制相对简单。
-   - 位置：[`_check_cooldown()`](addons/fuse/core/base/base_trigger.gd:136) 方法
+   - 位置：`_check_cooldown()` 方法
    - 影响：可能导致触发器行为不符合预期
 
 ### 轻微问题

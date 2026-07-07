@@ -57,21 +57,21 @@
 ### 严重问题
 
 1. **条件评估阻塞**：`_evaluate_condition()` 方法没有默认实现，可能导致子类忘记重写。
-   - 位置：[`_evaluate_condition()`](addons/fuse/core/base/base_condition.gd:56) 方法
+   - 位置：`_evaluate_condition()` 方法
    - 影响：可能导致条件检查失败，影响整个条件系统的工作
 
 2. **内存泄漏风险**：在大量条件实例化时，可能导致内存泄漏。
-   - 位置：[`clone()`](addons/fuse/core/base/base_condition.gd:204) 方法
+   - 位置：`clone()` 方法
    - 影响：可能导致内存占用过高，影响系统性能
 
 ### 中等问题
 
 1. **条件依赖管理不完善**：`get_dependencies()` 和 `get_affected_variables()` 方法返回空数组。
-   - 位置：[`get_dependencies()`](addons/fuse/core/base/base_condition.gd:140) 和 [`get_affected_variables()`](addons/fuse/core/base/base_condition.gd:146) 方法
+   - 位置：`get_dependencies()` 和 `get_affected_variables()` 方法
    - 影响：可能导致条件之间的依赖关系不明确，影响系统的可维护性
 
 2. **性能优化不足**：缺乏条件评估的性能优化机制。
-   - 位置：[`needs_recheck()`](addons/fuse/core/base/base_condition.gd:133) 方法
+   - 位置：`needs_recheck()` 方法
    - 影响：可能导致不必要的条件评估，影响系统性能
 
 ### 轻微问题
@@ -81,7 +81,7 @@
    - 影响：影响日志的可读性和一致性
 
 2. **错误信息不够详细**：错误信息不够详细，难以定位问题。
-   - 位置：[`_log_error()`](addons/fuse/core/base/base_condition.gd:171) 方法
+   - 位置：`_log_error()` 方法
    - 影响：影响问题排查的效率
 
 ## 5. 改进建议

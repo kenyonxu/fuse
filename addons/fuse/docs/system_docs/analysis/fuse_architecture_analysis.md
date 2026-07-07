@@ -49,7 +49,7 @@ Fuse 系统遵循以下核心设计原则：
 
 ### 2.1 BaseInstruction - 指令基类
 
-[`BaseInstruction`](addons/fuse/core/base/base_instruction.gd:1) 是所有指令的抽象基类，提供了指令执行的核心框架：
+`BaseInstruction` 是所有指令的抽象基类，提供了指令执行的核心框架：
 
 #### 2.1.1 生命周期管理
 
@@ -113,7 +113,7 @@ func _setup_timeout_timer():
 
 ### 2.2 ExecutionContext - 执行上下文
 
-[`ExecutionContext`](addons/fuse/core/base/execution_context.gd:1) 是指令执行的环境容器，提供了丰富的上下文管理功能：
+`ExecutionContext` 是指令执行的环境容器，提供了丰富的上下文管理功能：
 
 #### 2.2.1 变量管理系统
 
@@ -174,7 +174,7 @@ func set_target_node(node: Node):
 
 ### 2.3 ActionRunner - 动作执行器
 
-[`ActionRunner`](addons/fuse/core/base/action_runner.gd:1) 负责管理和执行指令序列：
+`ActionRunner` 负责管理和执行指令序列：
 
 #### 2.3.1 执行模式
 
@@ -223,7 +223,7 @@ if _stop_execution:
 
 ### 2.4 Trigger - 触发器系统
 
-[`Trigger`](addons/fuse/core/trigger.gd:1) 是事件和动作之间的桥梁：
+`Trigger` 是事件和动作之间的桥梁：
 
 #### 2.4.1 内存优化
 
@@ -258,7 +258,7 @@ func _on_event_fired(context: Node) -> void:
 
 ### 3.1 BaseCondition - 条件基类
 
-[`BaseCondition`](addons/fuse/core/base/base_condition.gd:1) 是 Fuse 系统中条件逻辑的核心抽象基类，提供了强大的条件评估和管理功能：
+`BaseCondition` 是 Fuse 系统中条件逻辑的核心抽象基类，提供了强大的条件评估和管理功能：
 
 #### 3.1.1 条件状态管理
 
@@ -504,7 +504,7 @@ func get_cache_info() -> Dictionary:
 
 ### 3.1 BaseEvent - 事件基类
 
-[`BaseEvent`](addons/fuse/core/base/base_event.gd:1) 定义了事件的基本接口：
+`BaseEvent` 定义了事件的基本接口：
 
 ```gdscript
 signal triggered(context: Node)
@@ -518,7 +518,7 @@ func terminate(owner_node: Node) -> void:
 
 ### 3.2 具体事件实现
 
-以 [`OnInputKey`](addons/fuse/events/on_input_key.gd:1) 为例，展示了具体事件的实现：
+以 `OnInputKey` 为例，展示了具体事件的实现：
 
 #### 3.2.1 事件类型支持
 
@@ -571,7 +571,7 @@ func handle_input(event: InputEvent) -> void:
 
 ### 4.1 BaseVariable - 变量基类
 
-[`BaseVariable`](addons/fuse/core/base/base_variable.gd:1) 提供了统一的变量管理接口：
+`BaseVariable` 提供了统一的变量管理接口：
 
 #### 4.1.1 变量作用域
 
@@ -632,7 +632,7 @@ static func create(name: String, val: Variant, scope: VariableScope = VariableSc
 
 ### 4.2 GlobalVariableManager - 全局变量管理器
 
-[`GlobalVariableManager`](addons/fuse/core/global_variable_manager.gd:1) 采用单例模式管理全局变量：
+`GlobalVariableManager` 采用单例模式管理全局变量：
 
 ```gdscript
 static var _instance: GlobalVariableManager = null
@@ -673,7 +673,7 @@ func save_to_resource(path: String) -> bool:
 
 ### 5.1 InstructionRegistry - 指令注册表
 
-[`InstructionRegistry`](addons/fuse/editor/instruction_selector/instruction_registry.gd:1) 负责管理所有可用的指令：
+`InstructionRegistry` 负责管理所有可用的指令：
 
 ```gdscript
 static var _instructions: Array[Dictionary] = []
@@ -730,7 +730,7 @@ func _validate_property(property: Dictionary) -> void:
 
 ### 6.1 InstructionSerializer - 指令序列化器
 
-[`InstructionSerializer`](addons/fuse/core/serialization/instruction_serializer.gd:1) 提供指令的序列化和反序列化功能：
+`InstructionSerializer` 提供指令的序列化和反序列化功能：
 
 #### 6.1.1 属性缓存机制
 
@@ -782,7 +782,7 @@ static func deserialize_instruction(data: Dictionary) -> BaseInstruction:
 
 ### 7.1 FuseLogger - 统一日志系统
 
-[`FuseLogger`](addons/fuse/core/logging/fuse_logger.gd:1) 提供统一的日志管理：
+`FuseLogger` 提供统一的日志管理：
 
 #### 7.1.1 分级日志
 
@@ -978,7 +978,7 @@ func set_properties_batch(node: Node, property_values: Dictionary) -> Dictionary
 
 #### 9.1.1 模板方法模式
 
-[`BaseInstruction`](addons/fuse/core/base/base_instruction.gd:1) 使用模板方法模式定义指令执行流程：
+`BaseInstruction` 使用模板方法模式定义指令执行流程：
 
 ```gdscript
 func execute(context: ExecutionContext):
@@ -1127,9 +1127,9 @@ Fuse 系统为 Godot 开发者提供了一个强大而易用的可视化编程�
 
 | 定义资源 | 运行时实例 | 核心职责 |
 |---------|-----------|---------|
-| `BaseEvent` | [`RuntimeEventInstance`](addons/fuse/core/runtime_event_instance.gd) | 事件运行时状态存储，独立信号转发 |
-| `BaseInstruction` | [`RuntimeInstructionInstance`](addons/fuse/core/runtime_instruction_instance.gd) | 指令运行时实例，超时/暂停/取消支持 |
-| `ActionRunner` | [`RuntimeActionRunnerInstance`](addons/fuse/core/runtime_action_runner_instance.gd) | ActionRunner 运行时实例，指令序列编排 |
+| `BaseEvent` | `RuntimeEventInstance` | 事件运行时状态存储，独立信号转发 |
+| `BaseInstruction` | `RuntimeInstructionInstance` | 指令运行时实例，超时/暂停/取消支持 |
+| `ActionRunner` | `RuntimeActionRunnerInstance` | ActionRunner 运行时实例，指令序列编排 |
 
 #### 11.1.2 自声明状态模式（Self-Declared State Pattern）
 
@@ -1167,7 +1167,7 @@ func get_default_runtime_state() -> Dictionary:
 - **编译缓存集成**：通过 `CompiledInstructionSequence` 缓存指令描述等编译结果
 - **共享对象池**：`InstructionInstancePool` 静态池化 `RuntimeInstructionInstance`，所有实例共享同一池
 
-> **参考文档：** [docs/architecture/runtime-instance-pattern.md](docs/architecture/runtime-instance-pattern.md)
+> **参考文档：** [runtime-instance-pattern](../../archive/architecture/runtime-instance-pattern.md)
 
 ### 11.2 统一变量系统
 
@@ -1177,21 +1177,21 @@ func get_default_runtime_state() -> Dictionary:
 
 全局变量子系统由三个核心类组成：
 
-- **[`GlobalVariableManager`](addons/fuse/core/global_variable_manager.gd)**：单例模式管理器，使用 `Mutex` 保证线程安全，支持变量增删改查、资源持久化（`save_to_resource` / `load_from_resource`）、批量操作和变量快照（`get_all_variables_snapshot`）
-- **[`GlobalVariableResource`](addons/fuse/core/global_variable_resource.gd)**：继承 `Resource`，作为全局变量的数据载体。支持变量数据的标准化（`_normalize_variable_data`）、深拷贝序列化（`from_dict` / `_to_dict`）和可序列化值验证
-- **[`GlobalVariableAssistant`](addons/fuse/core/global_variable_assistant.gd)**：场景节点，作为管理器的场景代理。支持自动保存（含延迟保存计时器）、持久化变量清理、资源加载/保存的桥接
+- **`GlobalVariableManager`**：单例模式管理器，使用 `Mutex` 保证线程安全，支持变量增删改查、资源持久化（`save_to_resource` / `load_from_resource`）、批量操作和变量快照（`get_all_variables_snapshot`）
+- **`GlobalVariableResource`**：继承 `Resource`，作为全局变量的数据载体。支持变量数据的标准化（`_normalize_variable_data`）、深拷贝序列化（`from_dict` / `_to_dict`）和可序列化值验证
+- **`GlobalVariableAssistant`**：场景节点，作为管理器的场景代理。支持自动保存（含延迟保存计时器）、持久化变量清理、资源加载/保存的桥接
 
 #### 11.2.2 作用域变量子系统
 
 作用域变量实现了基于场景树的层次化变量管理：
 
-- **[`ScopeVariableContainer`](addons/fuse/core/base/scope_variable_container.gd)**：作用域容器基类，挂载到场景节点上，提供作用域级别的变量存储
-- **[`ScopeVariableManager`](addons/fuse/core/scope_variable_manager.gd)**：单例注册表，管理所有作用域容器的注册/注销。支持按 `scope_id` 查找、按节点向上搜索最近容器（`find_nearest_scope`）、获取节点链（`get_scope_node_chain`）
+- **`ScopeVariableContainer`**：作用域容器基类，挂载到场景节点上，提供作用域级别的变量存储
+- **`ScopeVariableManager`**：单例注册表，管理所有作用域容器的注册/注销。支持按 `scope_id` 查找、按节点向上搜索最近容器（`find_nearest_scope`）、获取节点链（`get_scope_node_chain`）
 
 #### 11.2.3 变量操作工具
 
-- **[`VariableOperations`](addons/fuse/core/utils/variable_operations.gd)**：统一的三层变量操作接口，提供静态方法 `get_variable()` / `set_variable()` / `check_variable()`，屏蔽了 LOCAL / SCOPE / GLOBAL 的访问差异
-- **[`VariableScopeUtils`](addons/fuse/core/utils/variable_scope_utils.gd)**：作用域工具类，提供枚举与字符串互转、作用域来源（`ScopeSource`）处理、属性可见性验证（`validate_scope_source_property`），用于 `_validate_property()` 回调
+- **`VariableOperations`**：统一的三层变量操作接口，提供静态方法 `get_variable()` / `set_variable()` / `check_variable()`，屏蔽了 LOCAL / SCOPE / GLOBAL 的访问差异
+- **`VariableScopeUtils`**：作用域工具类，提供枚举与字符串互转、作用域来源（`ScopeSource`）处理、属性可见性验证（`validate_scope_source_property`），用于 `_validate_property()` 回调
 
 #### 11.2.4 变量作用域枚举扩展
 
@@ -1209,7 +1209,7 @@ enum VariableScope {
 
 #### 11.3.1 FuseError 类
 
-[`FuseError`](addons/fuse/core/logging/fuse_error.gd) 提供标准化的错误创建和处理机制，与 `FuseLogger` 深度集成：
+`FuseError` 提供标准化的错误创建和处理机制，与 `FuseLogger` 深度集成：
 
 - **错误类型枚举**：`VALIDATION_ERROR` / `EXECUTION_ERROR` / `CONFIGURATION_ERROR` / `RUNTIME_ERROR` / `TIMEOUT_ERROR`
 - **上下文信息**：`context: Dictionary` 存储任意附加上下文数据
@@ -1224,7 +1224,7 @@ enum VariableScope {
 
 #### 11.4.1 FuseLogger 类
 
-[`FuseLogger`](addons/fuse/core/logging/fuse_logger.gd) 提供统一的分级日志管理：
+`FuseLogger` 提供统一的分级日志管理：
 
 - **日志级别**：`NONE` / `INFO` / `WARNING` / `ERROR` / `DEBUG`
 - **双层级别控制**：`component_level` 控制组件输出级别，`message_level` 控制单条消息级别，仅当 `message_level <= component_level` 时才输出
@@ -1238,7 +1238,7 @@ enum VariableScope {
 
 #### 11.5.1 ExpressionHelper 工具类
 
-[`ExpressionHelper`](addons/fuse/core/utils/expression_helper.gd) 是表达式系统的共享核心：
+`ExpressionHelper` 是表达式系统的共享核心：
 
 - **变量引用语法**：使用 `{local:xxx}` / `{scope:xxx}` / `{global:xxx}` 语法在表达式中引用变量，通过正则匹配（`VAR_PATTERN`）进行替换
 - **安全求值**：`evaluate()` 方法封装了 Godot `Expression` 类的解析和执行，失败时通过 `error_text` 参数返回错误信息
@@ -1255,9 +1255,9 @@ enum VariableScope {
 
 基于 `ExpressionHelper` 构建的三个业务组件：
 
-- **[`MathExpression`](addons/fuse/instructions/math/math_expression.gd)**：数学表达式指令，支持四则运算、数学函数、向量字面量，输出类型可选 Float / Int / Vector2 / Vector3
-- **[`StringExpression`](addons/fuse/instructions/math/string_expression.gd)**：字符串表达式指令，支持字符串拼接、条件文本、类型转换和字符串工具函数
-- **[`ExpressionCondition`](addons/fuse/conditions/math/expression_condition.gd)**：表达式条件，支持比较运算、逻辑运算、三元运算，返回布尔值用于条件分支
+- **`MathExpression`**：数学表达式指令，支持四则运算、数学函数、向量字面量，输出类型可选 Float / Int / Vector2 / Vector3
+- **`StringExpression`**：字符串表达式指令，支持字符串拼接、条件文本、类型转换和字符串工具函数
+- **`ExpressionCondition`**：表达式条件，支持比较运算、逻辑运算、三元运算，返回布尔值用于条件分支
 
 三者均支持 `ScopeSource` 枚举，允许在表达式中灵活指定作用域来源（最近容器 / 自定义 ID / 触发器节点 / 目标节点）。
 
@@ -1267,22 +1267,22 @@ enum VariableScope {
 
 #### 11.6.1 调试可视化
 
-- **[`DebugVisualizer`](addons/fuse/editor/debugging/debug_visualizer.gd)**：图形化调试面板，基于 `ExecutionTracker` 提供执行历史的树形展示（颜色编码：绿色=成功，红色=错误，黄色=性能问题）、详情面板、自动刷新和 JSON 导出
-- **[`ExecutionTracker`](addons/fuse/editor/debugging/execution_tracker.gd)**：运行时执行跟踪器，记录每条指令的开始/完成/错误事件，支持性能指标收集（内存使用、执行耗时）、变量状态快照、性能瓶颈检测，提供 `export_execution_history()` 用于历史导出
+- **`DebugVisualizer`**：图形化调试面板，基于 `ExecutionTracker` 提供执行历史的树形展示（颜色编码：绿色=成功，红色=错误，黄色=性能问题）、详情面板、自动刷新和 JSON 导出
+- **`ExecutionTracker`**：运行时执行跟踪器，记录每条指令的开始/完成/错误事件，支持性能指标收集（内存使用、执行耗时）、变量状态快照、性能瓶颈检测，提供 `export_execution_history()` 用于历史导出
 
 #### 11.6.2 静态分析
 
-- **[`StaticAnalysisPanel`](addons/fuse/editor/static_analysis/static_analysis_panel.gd)**：用户友好的分析界面，提供分析按钮、进度条、结果展示（错误/警告/建议分级）、报告导出
-- **[`InstructionValidator`](addons/fuse/editor/static_analysis/instruction_validator.gd)**：核心分析引擎，执行三大类检查：
+- **`StaticAnalysisPanel`**：用户友好的分析界面，提供分析按钮、进度条、结果展示（错误/警告/建议分级）、报告导出
+- **`InstructionValidator`**：核心分析引擎，执行三大类检查：
   - **变量引用验证**：检测未定义的变量使用
   - **死循环检测**：分析跳转指令模式
   - **性能问题分析**：检测高频操作和资源密集型操作
 
 #### 11.6.3 自动生成指令
 
-- **[`InstructionGenerator`](addons/fuse/editor/instruction_generator/instruction_generator.gd)**：方法指令生成器，根据目标类和方法信息自动生成完整的 GDScript 指令文件，支持普通版和变量绑定版（`use_variables`）
-- **[`PropertyInstructionGenerator`](addons/fuse/editor/instruction_generator/property_instruction_generator.gd)**：属性指令生成器，生成 GET / SET 属性指令，与 `InstructionGenerator` 配合使用
-- 辅助模块：[`TypeMapper`](addons/fuse/editor/instruction_generator/type_mapper.gd)（类型映射）、[`ConflictHandler`](addons/fuse/editor/instruction_generator/conflict_handler.gd)（文件名冲突处理）、[`MethodFilter`](addons/fuse/editor/instruction_generator/method_filter.gd)（方法过滤）、[`MethodSelectorDialog`](addons/fuse/editor/instruction_generator/method_selector_dialog.gd)（方法选择对话框）
+- **`InstructionGenerator`**：方法指令生成器，根据目标类和方法信息自动生成完整的 GDScript 指令文件，支持普通版和变量绑定版（`use_variables`）
+- **`PropertyInstructionGenerator`**：属性指令生成器，生成 GET / SET 属性指令，与 `InstructionGenerator` 配合使用
+- 辅助模块：`TypeMapper`（类型映射）、`ConflictHandler`（文件名冲突处理）、`MethodFilter`（方法过滤）、`MethodSelectorDialog`（方法选择对话框）
 
 ### 11.7 多线程支持
 
@@ -1290,7 +1290,7 @@ enum VariableScope {
 
 #### 11.7.1 FuseTaskManager 任务管理器
 
-[`FuseTaskManager`](addons/fuse/core/threading/fuse_task_manager.gd) 封装了 Godot 的 `WorkerThreadPool`，提供统一的异步任务接口：
+`FuseTaskManager` 封装了 Godot 的 `WorkerThreadPool`，提供统一的异步任务接口：
 
 - **任务生命周期**：`PENDING` -> `RUNNING` -> `COMPLETED` / `FAILED` / `CANCELED`
 - **提交接口**：`submit_task()` 提交单个任务，`submit_batch()` 批量提交，返回任务 ID 用于跟踪
@@ -1300,7 +1300,7 @@ enum VariableScope {
 
 #### 11.7.2 ParallelConditionEvaluator 并行条件评估器
 
-[`ParallelConditionEvaluator`](addons/fuse/core/threading/parallel_condition_evaluator.gd) 使用 `WorkerThreadPool` 并行评估多个条件：
+`ParallelConditionEvaluator` 使用 `WorkerThreadPool` 并行评估多个条件：
 
 - **三种评估模式**：
   - `SEQUENTIAL`：串行评估（默认，最安全）
@@ -1312,7 +1312,7 @@ enum VariableScope {
 
 #### 11.7.3 线程安全基础设施
 
-- **[`FuseThreadingConfig`](addons/fuse/core/threading/fuse_threading_config.gd)**：多线程配置资源（单例），提供全局开关（`enable_multithreading`）、并行条件评估开关、最大并行数、每条件超时等可配置项
-- **[`FuseThreadSafe`](addons/fuse/core/threading/fuse_thread_safe.gd)**：线程安全工具类，封装字典和数组的 `get` / `set` / `has` / `erase` / `duplicate` / `append` 操作，自动处理 `Mutex` 加锁解锁
+- **`FuseThreadingConfig`**：多线程配置资源（单例），提供全局开关（`enable_multithreading`）、并行条件评估开关、最大并行数、每条件超时等可配置项
+- **`FuseThreadSafe`**：线程安全工具类，封装字典和数组的 `get` / `set` / `has` / `erase` / `duplicate` / `append` 操作，自动处理 `Mutex` 加锁解锁
 
-> **详细文档：** [addons/fuse/docs/multithreading.md](addons/fuse/docs/multithreading.md)
+> **详细文档：** [多线程开发指南](../../dev_docs/guides/multithreading-developer-guide.md)

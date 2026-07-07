@@ -58,17 +58,17 @@
 ### 严重问题
 
 1. **执行状态不一致**：在子类重写 `execute()` 方法时，可能忘记调用 `super.execute()`，导致状态不一致。
-   - 位置：[`execute()`](addons/fuse/core/base/base_instruction.gd:152) 方法
+   - 位置：`execute()` 方法
    - 影响：可能导致指令状态混乱，影响整个执行流程
 
 2. **内存泄漏风险**：在指令执行过程中，可能存在未清理的资源，导致内存泄漏。
-   - 位置：[`duplicate()`](addons/fuse/core/base/base_instruction.gd:334) 方法
+   - 位置：`duplicate()` 方法
    - 影响：可能导致内存占用过高，影响系统性能
 
 ### 中等问题
 
 1. **错误处理不够详细**：错误信息不够详细，难以定位问题。
-   - 位置：[`set_error()`](addons/fuse/core/base/base_instruction.gd:239) 方法
+   - 位置：`set_error()` 方法
    - 影响：影响问题排查的效率
 
 2. **缺乏执行超时控制**：没有实现指令执行的超时控制机制。

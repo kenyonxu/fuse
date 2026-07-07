@@ -58,21 +58,21 @@
 ### 严重问题
 
 1. **类型验证不够严格**：在 `set_value()` 方法中，类型验证可能不够严格，导致运行时错误。
-   - 位置：[`_validate_value()`](addons/fuse/core/base/base_variable.gd:185) 方法
+   - 位置：`_validate_value()` 方法
    - 影响：可能导致类型不匹配，影响系统的稳定性
 
 2. **内存泄漏风险**：在变量持久化存储时，可能存在未清理的资源，导致内存泄漏。
-   - 位置：[`_save_to_storage()`](addons/fuse/core/base/base_variable.gd:208) 方法
+   - 位置：`_save_to_storage()` 方法
    - 影响：可能导致内存占用过高，影响系统性能
 
 ### 中等问题
 
 1. **变量历史记录功能不完整**：变量历史记录功能较为简单，缺乏详细的变更记录。
-   - 位置：[`get_modification_history()`](addons/fuse/core/base/base_variable.gd:290) 方法
+   - 位置：`get_modification_history()` 方法
    - 影响：限制了变量变更的可追溯性，影响系统的可维护性
 
 2. **变量比较操作不够灵活**：变量比较操作只支持基本类型，缺乏复杂类型的比较支持。
-   - 位置：[`greater_than()`](addons/fuse/core/base/base_variable.gd:323)、[`less_than()`](addons/fuse/core/base/base_variable.gd:341) 等方法
+   - 位置：`greater_than()`、`less_than()` 等方法
    - 影响：限制了变量比较的灵活性，影响系统的可用性
 
 ### 轻微问题

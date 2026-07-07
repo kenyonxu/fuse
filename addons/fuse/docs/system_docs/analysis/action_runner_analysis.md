@@ -57,27 +57,27 @@
 ### 严重问题
 
 1. **并行执行时的竞态条件**：在并行执行模式下，多个指令同时访问共享资源可能导致竞态条件。
-   - 位置：[`_run_parallel()`](addons/fuse/core/base/action_runner.gd:169) 方法
+   - 位置：`_run_parallel()` 方法
    - 影响：可能导致不可预测的行为和数据损坏
 
 2. **内存泄漏风险**：在长时间运行或大量指令执行时，可能导致内存泄漏。
-   - 位置：[`current_context`](addons/fuse/core/base/action_runner.gd:29) 属性
+   - 位置：`current_context` 属性
    - 影响：可能导致内存占用过高，影响系统性能
 
 ### 中等问题
 
 1. **超时处理机制简单**：超时检查仅基于总执行时间，没有针对单个指令的超时控制。
-   - 位置：[`_check_timeout()`](addons/fuse/core/base/action_runner.gd:250) 方法
+   - 位置：`_check_timeout()` 方法
    - 影响：可能导致单个指令长时间运行，影响整体性能
 
 2. **指令验证不够严格**：指令验证过程中，类型检查不够严格。
-   - 位置：[`validate_instructions()`](addons/fuse/core/base/action_runner.gd:109) 方法
+   - 位置：`validate_instructions()` 方法
    - 影响：可能导致运行时错误和不可预测的行为
 
 ### 轻微问题
 
 1. **代码重复**：`_execute_single_instruction` 方法在多个执行模式中重复使用。
-   - 位置：[`_execute_single_instruction()`](addons/fuse/core/base/action_runner.gd:223) 方法
+   - 位置：`_execute_single_instruction()` 方法
    - 影响：增加代码维护成本，但不影响功能
 
 2. **日志格式不统一**：日志输出的格式在不同方法中不统一。

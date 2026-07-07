@@ -58,17 +58,17 @@
 ### 严重问题
 
 1. **内存泄漏风险**：在执行上下文清理时，可能存在未清理的资源，导致内存泄漏。
-   - 位置：[`cleanup()`](addons/fuse/core/base/execution_context.gd:270) 方法
+   - 位置：`cleanup()` 方法
    - 影响：可能导致内存占用过高，影响系统性能
 
 2. **场景树访问不安全**：在 `get_tree()` 方法中，场景树访问可能存在安全隐患。
-   - 位置：[`get_tree()`](addons/fuse/core/base/execution_context.gd:71) 方法
+   - 位置：`get_tree()` 方法
    - 影响：可能导致空引用异常，影响系统稳定性
 
 ### 中等问题
 
 1. **变量作用域管理不完善**：变量作用域的管理相对简单，缺乏精细的控制。
-   - 位置：[`set_variable()`](addons/fuse/core/base/execution_context.gd:121) 和 [`get_variable()`](addons/fuse/core/base/execution_context.gd:153) 方法
+   - 位置：`set_variable()` 和 `get_variable()` 方法
    - 影响：限制了变量管理的灵活性，影响系统的可扩展性
 
 2. **执行状态跟踪不完整**：缺乏对执行状态的完整跟踪和记录。
