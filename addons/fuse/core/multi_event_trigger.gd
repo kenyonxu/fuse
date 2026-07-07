@@ -303,7 +303,7 @@ func _check_binding_cooldown(index: int, context: Node) -> bool:
 		CooldownMode.GLOBAL_COOLDOWN:
 			var last_time: float = event_instance.runtime_state.get("last_trigger_time", 0.0)
 			if current_time - last_time < binding.cooldown_time:
-				_log_info("Binding[%d] 全局冷却中：已过 %.2f 秒，需要 %.2f 秒" % [index, current_time - last_time, binding.cooldown_time])
+				_log_debug("Binding[%d] 全局冷却中：已过 %.2f 秒，需要 %.2f 秒" % [index, current_time - last_time, binding.cooldown_time])
 				return false
 			event_instance.runtime_state["last_trigger_time"] = current_time
 
@@ -317,7 +317,7 @@ func _check_binding_cooldown(index: int, context: Node) -> bool:
 				var last_time: float = object_cooldowns[object_id]
 				if current_time - last_time < binding.cooldown_time:
 					var object_name: String = context.name if context != null else "unknown"
-					_log_info("物体 '%s' (ID:%d) 冷却中" % [object_name, object_id])
+					_log_debug("物体 '%s' (ID:%d) 冷却中" % [object_name, object_id])
 					return false
 			object_cooldowns[object_id] = current_time
 			event_instance.runtime_state["object_cooldowns"] = object_cooldowns
