@@ -75,7 +75,7 @@ enum VariableScope {
 **SCOPE 查找**（`VariableContext._find_scope_container`, variable_context.gd:168-181）：
 - 通过 `ScopeVariableManager.get_instance().find_nearest_scope(node)` 向上遍历父链
 - 搜索起点优先级：`context.trigger` → `context.target` → `context.owner`
-- 未找到则 fallback 到 LOCAL（push_warning）
+- 未找到则 fallback 到 LOCAL（`push_error` 提示作用域容器缺失，CODE_ISSUES B7 已修）
 
 **GLOBAL 读取**（`VariableContext.get_variable` local 分支, variable_context.gd:97-104）：
 - LOCAL 未命中时，**自动 fallback 检查 GLOBAL**（通过 `_global_variable_assistant.get_global_variable(name)`）
@@ -449,10 +449,10 @@ ScopeVariableContainer._exit_tree()
 
 1. **VariableContext 与 GLOBAL 隐式耦合**：LOCAL 读未命中自动 fallback 到 GLOBAL（variable_context.gd:97-104），与「LOCAL/SCOPE/GLOBAL 严格分层」的直觉相悖，调试时易混淆变量来源
 2. **LOCAL 双写策略的脆弱性**：`VariableOperations._set_local_variable` 同时写 EC + Trigger meta（line 256-271），是 Event 与 EC 共享 LOCAL 变量的变通方案，未在 EC 层统一抽象
-3. **SCOPE 层 fallback 到 LOCAL 静默**：`VariableContext._set_scope_variable` / `_get_scope_variable` 未找到容器时仅 `push_warning` 后 fallback 到 LOCAL（variable_context.gd:188, 196），生产环境若日志被屏蔽会导致变量「消失」到 LOCAL
-4. **VariableContainer 依赖图未迁移**：废弃类的 `_variable_dependencies/_dependents`（variable_container.gd:947-1028）无取代者，相关功能若仍被使用将无法迁移
-5. **VariableContext 索引访问与 LOCAL 字典双轨**：`precompile_variable_access` 后 `_variable_array` 与 `local_variables` 并存，写入路径未同步索引数组（仅 `set_variable_by_index` 走索引），存在数据不一致风险
-6. **GlobalVariableManager 单例时机**：`static var _instance = GlobalVariableManager.new()`（global_variable_manager.gd:14）在类加载时即构造，若脚本加载顺序异常可能早于 FuseLogger 初始化
+3. **VariableContainer 依赖图未迁移**：废弃类的 `_variable_dependencies/_dependents`（variable_container.gd:947-1028）无取代者。grep 确认依赖图字段在仓库内**零外部引用**，废弃类无人使用，无迁移需求（CODE_ISSUES B10，归为设计意图）
+4. **GlobalVariableManager 单例时机（误判）**：`static var _instance = GlobalVariableManager.new()`（global_variable_manager.gd:14）静态初始化。曾登记担心脚本加载顺序早于 FuseLogger（CODE_ISSUES B8），核实 FuseLogger 纯静态无实例依赖，**剔除该误判**
+
+> 历史 B6（VariableContext 索引双轨不同步）、B7（SCOPE fallback 静默）已修复（commit `4adf15b`，测试 `test_variable_context_index_sync.tscn`）：写入路径同步索引数组；SCOPE fallback 改 `push_error`。从不足列表移除。
 
 ---
 

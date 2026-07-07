@@ -310,6 +310,8 @@ action_runner.execute(context)  # 内部不 await，靠 finished 信号汇合
 
 `ParallelConditionEvaluator` 在并行评估前**深拷贝** `local_variables`（`duplicate(true)`，L140）并取全局变量快照（L143-144），每个工作线程从快照重建独立 `ExecutionContext`（`_create_temp_context_from_snapshot`，L228-236）。这避免了多线程同时读写 `ExecutionContext` 引发的数据竞争，代价是**条件评估期间对变量的修改不会回写到主上下文**。
 
+> **无副作用约束已声明**（CODE_ISSUES B16，commit `42cb339`）：`_compute_thread_safety()` 默认实现与 ParallelConditionEvaluator 类注释明确要求——"评估带副作用（修改变量）的条件不应标记 `is_thread_safe`"。条件子类重写返回 true 前应自检无变量修改。
+
 ### 6.5 超时与防死锁
 
 - `ParallelConditionEvaluator._evaluate_safe_conditions_parallel()`：总超时 = `max(n * timeout_per_condition, 5.0)` 秒；等待循环用 `Semaphore.try_wait()` 非阻塞 + `OS.delay_msec(1)` 防忙等（L196-223），超时后记 warning 并返回当前结果（部分未完成的索引保留默认 `false`）。
@@ -338,7 +340,7 @@ action_runner.execute(context)  # 内部不 await，靠 finished 信号汇合
 2. **取消机制不完整** — `cancel_task()` 缺少 Callable 内部主动检查的 API，长任务无法及时响应取消。
 3. **两套并行体系割裂** — `core/threading/` 的 WorkerThreadPool 模式与 `ActionRunner` 的信号 await 模式互不复用，概念上易混淆（前者是真线程并行，后者是异步并发）。
 4. **Godot Mutex 限制未被绕过** — `FuseThreadSafe` 注释承认无法提供 `try_lock` 语义，需要非阻塞锁的场景仍需调用方自行设计。
-5. **上下文快照无回写路径** — 并行条件评估对变量的修改丢失，这意味着"评估带副作用"的条件不应标记为 `is_thread_safe`，但此约束未在 `_compute_thread_safety()` 默认实现或文档注释中显式声明。
+5. **上下文快照无回写路径（已声明约束）** — 并行条件评估对变量的修改不回写主上下文（快照隔离是设计，防止污染主线程状态）。**"评估带副作用（修改变量）的条件不应标记 `is_thread_safe`"的约束已在 `_compute_thread_safety()` 默认实现与 ParallelConditionEvaluator 类注释中显式声明**（CODE_ISSUES B16，commit `42cb339`）。条件子类重写 `_compute_thread_safety()` 返回 true 前应确认自身不修改变量。
 6. **配置单例懒加载存在轻微竞态** — `FuseThreadingConfig.get_instance()`（L67-70）的 `if _instance == null` 检查未加锁，与 `FuseTaskManager` 的静态自初始化（L10，无竞态）风格不一致；首帧早期跨线程访问理论上可能创建多份实例。
 
 ---

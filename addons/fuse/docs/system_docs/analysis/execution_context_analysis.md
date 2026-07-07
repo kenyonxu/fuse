@@ -144,6 +144,9 @@ _init(target_node=null, trigger_node=null, global_vars=null, scene_tree=null, ow
   9. reset_execution_state() → IDLE
 ```
 
+> **注**：步骤 6 / 7 在 `if trigger_node:` 块**外**——即 `ExecutionContext.new(target, null)` 仅 target 构造时也会创建 `_diagnostics` 与 `_variable_context`，保证 target-only 用法的变量/诊断 API 可用。
+> 历史：曾因缩进落在 `if trigger_node:` 块内，target-only 构造时子系统未创建，`set_variable` 报 Nil（CODE_ISSUES B19），已修复（commit `1ffe707`）。
+
 ### create_with_params() 静态工厂
 
 ```
@@ -434,9 +437,11 @@ ExecutionDiagnostics 内部 `_max_history_size = 100`，超过自动 pop_front�
   4. 复制 global_variables / _global_variable_assistant（共享容器）
   5. custom_data.duplicate()（浅拷贝字典）
   6. 复制 execution_start_time / execution_id / action_runner（共享 runner）
+  7. _diagnostics 深拷贝（保留执行历史 / 状态 / 监听器）
 ```
 
-> **注**：duplicate 不复制 `_diagnostics`（新 EC 在 `_init` 中已创建空白诊断子系统），也不复制 WeakRef。变量子系统是唯一的深拷贝目标。
+> **注**：duplicate 复制 `_diagnostics`（深拷贝，独立实例），不复制 WeakRef。变量子系统与诊断子系统均为深拷贝目标。
+> 历史：曾遗漏 `_diagnostics` 复制（CODE_ISSUES B11），已修复（commit `1ffe707`，测试 `test_execution_context_init.tscn`）。
 
 ### cleanup()
 
@@ -526,12 +531,12 @@ EC 在多处保留**兼容引用**以维持旧代码的访问路径：
 
 ### 不足与注意点
 
-1. **duplicate 不复制 _diagnostics**：新 EC 的诊断子系统为空白状态，依赖诊断连续性的场景需注意
-2. **create_with_params 不走完整 _init 路径**：未同步子系统兼容引用，使用前需明确语义
-3. **`_global_variable_assistant` 同步点多**：EC、VariableContext、set_global_variable_assistant 三处需保持一致，易遗漏
-4. **get_dependency_graph 仅收集 local 变量**：`_collect_all_variables` 不包含 scope/global，依赖图视图有限
-5. **`_init` 中 _diagnostics 与 _variable_context 创建在 `if trigger_node:` 块外/内的缩进需注意**：源码中两者位于 `if trigger_node:` 块内（实际缩进可能为格式问题），极端情况下若 trigger_node 为 null 可能不创建子系统——使用前应核对实际缩进
-6. **进度更新无信号**：旧稿设想的 `execution_progress_updated` 信号不存在，进度变化只入历史，外部需轮询 `get_execution_progress()`
+1. **create_with_params 不走完整 _init 路径**：未同步子系统兼容引用，使用前需明确语义
+2. **`_global_variable_assistant` 同步点多**：EC、VariableContext、set_global_variable_assistant 三处需保持一致，易遗漏
+3. **get_dependency_graph 仅收集 local 变量**：`_collect_all_variables` 不包含 scope/global，依赖图视图有限
+4. **进度更新无信号**：旧稿设想的 `execution_progress_updated` 信号不存在，进度变化只入历史，外部需轮询 `get_execution_progress()`
+
+> 历史 B11（duplicate 不复制 _diagnostics）、B19（_init 缩进导致 target-only 时子系统 nil）已修复（commit `1ffe707`，测试 `test_execution_context_init.tscn`），从注意点列表移除。
 
 ---
 

@@ -43,7 +43,7 @@
 | 属性 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
 | `variable_name` | String | `""` | 变量名；setter 仅记日志，不触发资源名重建 |
-| `value` | Variant | `null` | 变量值；setter 更新计数并 `emit value_changed`（详见 §5 信号 bug） |
+| `value` | Variant | `null` | 变量值；setter 统一负责 emit `value_changed` + `value_modified` 与计数更新（详见 §5） |
 | `description` | String | `""` | 人类可读描述 |
 | `log_level` | FuseLogger.LogLevel | `INFO` | 日志级别 |
 | `scope` | int | `VariableScope.LOCAL` | 作用域；setter 触发 `_update_resource_name()` |
@@ -56,8 +56,8 @@
 | 变量 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
 | `creation_time` | float | `_init()` 时设为 `Time.get_ticks_msec()/1000.0` | 创建时间戳 |
-| `last_modified_time` | float | 0.0 | 最近一次修改时间戳（value setter 和 set_value 都会更新） |
-| `modification_count` | int | 0 | 修改次数（value setter 和 set_value 都会自增） |
+| `last_modified_time` | float | 0.0 | 最近一次修改时间戳（value setter 唯一负责更新） |
+| `modification_count` | int | 0 | 修改次数（value setter 唯一负责自增） |
 | `is_initialized` | bool | `false` | 是否已通过 `get_value()` 或工厂完成惰性初始化 |
 | `_fuse_error` | FuseError | `null` | 统一错误对象 |
 
@@ -93,13 +93,12 @@ enum VariableScope {
 #### `set_value(new_value: Variant) -> bool`
 **无任何类型校验，直接赋值。** 完整流程：
 1. 保存 `old_value`
-2. `value = new_value`（触发 value setter，但 setter 内只更新计数并 `emit value_changed`）
-3. 显式更新 `last_modified_time` / `modification_count`（与 setter 重复，因 setter 已更新过——这是冗余但无害的设计）
-4. `emit value_changed(old_value, new_value)`（**第二次** emit，与 setter 内的 emit 重复）
-5. `emit value_modified(new_value)`（setter 内**不会** emit 此信号——见 §5）
-6. 返回 `true`（无失败路径）
+2. `value = new_value`（触发 value setter，setter 内负责 emit `value_changed` + `value_modified` + 更新计数/时间——见 §5.2）
+3. `emit value_modified(new_value)`（与 setter 内的 emit 重复一次；保留以稳定历史调用契约）
+4. 返回 `true`（无失败路径——见 §7 已知问题 4）
 
 > 设计取舍：所有值类型都通过 Variant 透传，没有 `_validate_value()` / 类型守卫 / 范围检查。需要类型约束的调用方（如指令层）应在外部校验。
+> 历史：曾在 setter/set_value 间存在信号双发与计数重复（CODE_ISSUES B1/B2/B3），已统一由 setter 负责 emit + 计数（commit `e3c470d`）。set_value 仍保留显式 `value_modified.emit` 以兼容历史调用契约。
 
 ### 3.2 状态查询
 
@@ -156,7 +155,9 @@ enum VariableScope {
 轻量字典序列化，仅含 name/value/persistent/modification_count/last_modified_time。`deserialize` 还会把 `is_initialized` 置 true。**注意**：这不是 `.tres` 持久化路径——真正的资源持久化走 `GlobalVariableResource`（见 §6.4）。
 
 #### `clone() -> BaseVariable`（实例方法）
-深拷贝所有属性到新 `BaseVariable.new()` 实例（注意：不拷贝 `scope`、`auto_create`、`creation_time`——这是个**已存在的小遗漏**，与静态版 `clone_variable()` 行为不同）。
+深拷贝所有属性到新 `BaseVariable.new()` 实例，**包括** `scope` / `auto_create` / `creation_time`（与静态 `clone_variable()` 行为一致）。
+
+> 历史：实例 `clone()` 曾遗漏 `scope` / `auto_create` / `creation_time` 三个字段（CODE_ISSUES B9），已修复（commit `e3c470d`）。
 
 ### 3.8 验证
 
@@ -196,7 +197,7 @@ enum VariableScope {
 
 ---
 
-## 5. 信号机制与已知 bug
+## 5. 信号机制
 
 ### 5.1 三个信号
 
@@ -206,9 +207,9 @@ signal value_modified(value: Variant)
 signal variable_reset()
 ```
 
-### 5.2 ⚠️ 实际 bug：value setter 不 emit `value_modified`
+### 5.2 value setter 与 set_value 的 emit 职责
 
-`value` 字段的 setter（13–20 行）只 `emit value_changed`，**不 emit `value_modified`**：
+`value` 字段的 setter 是信号 emit 与计数更新的**唯一负责人**：
 
 ```gdscript
 @export var value: Variant = null:
@@ -219,27 +220,12 @@ signal variable_reset()
         modification_count += 1
         _log_debug("Variable value changed from %s to %s" % [str(old_value), str(new_value)])
         value_changed.emit(old_value, new_value)
-        # 注意：此处未 emit value_modified
+        value_modified.emit(new_value)
 ```
 
-而 `set_value()`（105–122 行）会同时 emit 两个信号：
+`set_value()` 不再显式 `emit value_changed`（避免双发），但仍保留 `value_modified.emit` 一次以稳定历史调用契约（某些监听者依赖 set_value 路径显式触发）。
 
-```gdscript
-func set_value(new_value: Variant) -> bool:
-    var old_value = value
-    value = new_value              # 触发 setter，emit value_changed（第一次）
-    last_modified_time = ...
-    modification_count += 1
-    value_changed.emit(old_value, new_value)   # 第二次 emit value_changed
-    value_modified.emit(new_value)             # emit value_modified
-    return true
-```
-
-**后果**：
-- 直接对 `variable.value = X` 赋值（包括 Inspector、`deserialize`、`clone`、`load_from_resource` 等内部路径）：`value_changed` 触发一次，`value_modified` **完全不触发**
-- 通过 `variable.set_value(X)`：`value_changed` 触发**两次**（setter 一次 + 显式一次），`value_modified` 触发一次
-
-监听 `value_modified` 的代码（如 UI 双向绑定）在直接赋值路径下会漏事件；监听 `value_changed` 的代码（如 `GlobalVariableManager._on_variable_changed`）在 `set_value` 路径下会收到两次。**调用方应统一使用 `set_value()`**，并避免在 setter 内重复 emit。
+> 历史：曾存在 setter 不 emit `value_modified`、set_value 双发 `value_changed`、计数重复更新三个问题（CODE_ISSUES B1/B2/B3），已统一修复（commit `e3c470d`，测试 `test_base_variable_signals.tscn`）。
 
 ### 5.3 `variable_reset`
 仅由 `reset()` 发出，无 payload。
@@ -396,7 +382,7 @@ func apply_delta(delta: float) -> void:
 
 注意事项：
 - 子类若重写 `_init`，须调 `super._init()` 或自行设置 `creation_time` / `last_modified_time`
-- 修改值时统一用 `set_value()`，避免 §5.2 描述的信号不一致
+- 修改值时统一用 `set_value()`，触发完整的信号链（`value_changed` + `value_modified`）
 - 不要在子类持有 Node 引用（BaseVariable 是 Resource，节点引用会破坏序列化）
 
 ---
@@ -414,11 +400,10 @@ func apply_delta(delta: float) -> void:
 
 ### 已知问题
 
-1. **value setter 信号 bug**（§5.2）：直接赋值不 emit `value_modified`，`set_value` 路径下 `value_changed` 双发。需要调用约定或修复 setter
-2. **`clone()` 实例方法不完整**：不拷贝 `scope` / `auto_create` / `creation_time`，与静态 `clone_variable()` 行为不一致
-3. **`set_value` 与 setter 计数重复**：`modification_count` 和 `last_modified_time` 在 setter 和 `set_value` 中各更新一次（值相同，无害但冗余）
-4. **`set_value` 永远返回 true**：返回类型 `bool` 暗示可能失败，但无失败路径，类型语义偏弱
-5. **VariableContainer 仍存在**：1188 行废弃代码仍在仓库，增加维护负担与混淆风险（其内部 VariableScope 二值枚举与 BaseVariable 三值枚举不兼容）
+1. **`set_value` 永远返回 true**：返回类型 `bool` 暗示可能失败，但当前无失败路径。**决策：保留 bool 以稳定 API 契约**（调用方普遍按 `if set_value(...)` 消费），未来若引入值校验自然产生失败路径（CODE_ISSUES B5）
+2. **VariableContainer 仍存在**：1188 行废弃代码仍在仓库，增加维护负担与混淆风险（其内部 VariableScope 二值枚举与 BaseVariable 三值枚举不兼容）。依赖图字段经 grep 确认**零外部引用**，可随废弃类最终移除（CODE_ISSUES B10）
+
+> 历史 B1/B2/B3/B9 已修复（commit `e3c470d`，测试 `test_base_variable_signals.tscn`），从已知问题列表移除。详见 §5.2 / §3.7。
 
 ---
 

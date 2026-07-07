@@ -148,7 +148,7 @@ enum CooldownMode {
 | `_on_trigger_exit_tree()` | 空实现（子类清理） |
 | `reset()` | 清除 `_fuse_error`（子类追加：清 has_triggered、冷却状态、event.reset()） |
 | `validate() -> Array[String]` | 返回空数组（子类追加配置校验） |
-| `trigger_manually(context: Node = null)` | 空实现（子类转发到 `_on_event_fired`） |
+| `trigger_manually(context: Node = null)` | 默认实现 push_warning 提示子类未覆盖（子类覆盖为转发到 `_on_event_fired`） |
 | `get_description() -> String` | 返回 "BaseTrigger"（子类覆盖为事件描述 + 冷却信息） |
 
 ### 4.2 冷却检查
@@ -186,7 +186,7 @@ enum CooldownMode {
 
 ### 4.3 执行上下文工厂
 
-#### `_create_execution_context(target: Node, index: int = 0) -> RefCounted`
+#### `_create_execution_context(target: Node, index: int = 0) -> ExecutionContext`
 
 ```
 执行流程:
@@ -427,8 +427,9 @@ RuntimeActionRunnerInstance 自身提供: `is_running()`、`cancel_execution(rea
 ### 潜在性能开销
 
 1. **引擎回调全量转发**: `_process` / `_physics_process` / `_unhandled_input` 每帧遍历所有事件并 `has_method` 守卫——事件数量大时存在迭代开销，但 `has_method` 调用廉价
-2. **冷却 Dictionary 操作**: `PER_OBJECT_COOLDOWN` 下 `object_cooldowns` 字典会随物体数量增长；长期运行场景需考虑清理策略（当前仅在 `reset()` 时整体擦除）
-3. **信号 `.bind(index)`**: MultiEventTrigger 为每个回调绑定索引生成 Callable，绑定数量随 event_bindings 线性增长
+2. **信号 `.bind(index)`**: MultiEventTrigger 为每个回调绑定索引生成 Callable，绑定数量随 event_bindings 线性增长
+
+> 历史：PER_OBJECT_COOLDOWN 下 `object_cooldowns` 字典随物体数量增长的问题（CODE_ISSUES B12）已通过自动清理过期条目解决（commit `0bd037b`，测试 `test_base_trigger_cooldown_cleanup.tscn`）。
 
 ---
 
@@ -446,10 +447,8 @@ RuntimeActionRunnerInstance 自身提供: `is_running()`、`cancel_execution(rea
 ### 不足
 
 1. **`event_completed` / `event_stopped` 信号无默认发射**: 基类定义了信号但回调由子类实现，子类若忘记在 `_on_action_runner_completed` 中 `emit` 则信号永不触发（当前两个子类均正确发射，但缺乏基类层面的强制）
-2. **冷却 info 日志频率**: GLOBAL_COOLDOWN / PER_OBJECT_COOLDOWN 冷却中时每次触发都输出 `_log_info`，高频事件下可能产生日志噪声（可考虑降级为 debug 或加采样）
-3. **PER_OBJECT_COOLDOWN 无自动清理**: `object_cooldowns` 字典只在 `reset()` 时整体擦除，长时间运行且物体频繁进出（如 Area 触发器）会持续累积条目
-4. **`trigger_manually` 默认空实现**: 基类提供钩子但不强制，若子类忘记覆盖则手动触发无效果（当前 Trigger 覆盖为转发 `_on_event_fired`，MultiEventTrigger 用 `trigger_binding`）
-5. **`_create_execution_context` 返回 RefCounted 而非 ExecutionContext 类型注解**: 类型推断弱，IDE 补全受限（实际返回 ExecutionContext 实例）
+
+> 历史 B12/B13/B14/B15（PER_OBJECT_COOLDOWN 无清理 / 冷却 info 日志噪声 / trigger_manually 默认空实现 / _create_execution_context 类型注解弱）已修复（commit `0bd037b`），从不足列表移除。
 
 ---
 

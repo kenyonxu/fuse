@@ -340,7 +340,7 @@ _on_timeout 五重校验：
 
 ### 注意点
 
-1. **线性查找**：`FuseObjectPool.get_object` 与 `return_object` 通过遍历 `_pool_items` 查找项，在大池高吞吐场景可能成为瓶颈
+1. **线性查找（CODE_ISSUES B18，⏸ 低优先 skip）**：`FuseObjectPool.get_object` 与 `return_object` 通过遍历 `_pool_items` 查找项。决策：**保留现状**——`_pool_items` 规模典型 n≤100，线性查找开销可忽略；改字典/索引查找增加内存与维护成本，收益有限。未来若池规模显著扩大再排期
 2. **`_find_pool_by_instance_id` 全池遍历**：每次未命中精确路径时遍历所有池的所有池项
 3. **`recycle_pooled` 内多个查找方法（`_find_pool_by_instance_filename` 等）定义但 `recycle_pooled` 实际调用链未使用**：保留作为兜底能力
 4. **`get_shared_pool()` 非线程安全**：`RuntimeActionRunnerInstance._shared_instruction_pool` 静态字段的懒加载未做并发保护，多线程首次访问需注意
