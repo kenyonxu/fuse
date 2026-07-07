@@ -61,12 +61,10 @@ class_name FuseThreadingConfig extends Resource
 ## 信号
 signal config_changed(key: String, new_value: Variant)
 
-## 单例
-static var _instance: FuseThreadingConfig = null
+## 单例 - 静态初始化避免竞态（与 GlobalVariableManager 风格统一，修复 B4）
+static var _instance: FuseThreadingConfig = FuseThreadingConfig.new()
 
 static func get_instance() -> FuseThreadingConfig:
-	if _instance == null:
-		_instance = FuseThreadingConfig.new()
 	return _instance
 
 static func has_instance() -> bool:
