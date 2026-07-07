@@ -2,6 +2,10 @@
 ## 并行条件评估器
 ## 使用 WorkerThreadPool 并行评估多个条件
 ## 仅对标记为 is_thread_safe 的条件启用并行
+##
+## ⚠️ 约束（B16）：并行评估使用上下文快照（深拷贝），条件对变量的修改不会回写原上下文。
+## 因此标记 is_thread_safe 的条件必须无副作用（不修改变量），否则修改会静默丢失。
+## 子类在 _compute_thread_safety() 返回 true 前须确保条件只读。
 class_name ParallelConditionEvaluator extends RefCounted
 
 ## 评估模式

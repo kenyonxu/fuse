@@ -371,6 +371,7 @@ func _compute_dependencies() -> Array[String]
 ## 1. 不访问节点属性（使用快照数据）
 ## 2. 不调用需要在主线程的 API
 ## 3. 只进行纯数学计算或变量比较
+## 4. 不修改变量（无副作用）—— 并行评估使用快照深拷贝，条件对变量的修改不会回写原上下文（B16）
 func _compute_thread_safety() -> bool:
 	if _thread_safety_computed:
 		return _thread_safety_cached
