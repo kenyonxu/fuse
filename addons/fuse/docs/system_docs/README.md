@@ -35,7 +35,7 @@
 
 ---
 
-## 🔍 分析报告（15 篇）
+## 🔍 分析报告（18 篇）
 
 ### 系统分析
 | 文档 | 说明 |
@@ -63,6 +63,9 @@
 | [对象池分析](analysis/pooling_analysis.md) | `core/pooling/` 5 类：FuseObjectPool / PoolManager / InstructionInstancePool 等 |
 | [线程系统分析](analysis/threading_analysis.md) | `core/threading/` 4 类：FuseTaskManager / ParallelConditionEvaluator 等 |
 | [变量系统分析](analysis/variable_system_analysis.md) | 变量 7 类全链：BaseVariable / VariableContext / 三层作用域 / GlobalVariable* |
+| [Runtime 实例分析](analysis/runtime_instance_analysis.md) | 三件套：RuntimeEvent/Instruction/ActionRunnerInstance，状态隔离 + 池化集成 |
+| [全局基础设施分析](analysis/global_infrastructure_analysis.md) | FuseEventBus（事件总线）+ FuseRuntimeBridge（变量监视 TCP 桥） |
+| [序列化分析](analysis/serialization_analysis.md) | InstructionSerializer（反射式序列化）+ CompiledInstructionSequence（编译缓存） |
 
 ---
 
@@ -105,9 +108,9 @@
 | 类别 | 数量 |
 |------|------|
 | 架构设计 | 9 篇（`architecture/`） |
-| 分析报告 | 15 篇（`analysis/`） |
+| 分析报告 | 18 篇（`analysis/`） |
 | 更新规格 | 1 篇（[UPDATE_SPEC.md](UPDATE_SPEC.md)） |
-| **合计** | **24 篇** + spec |
+| **合计** | **27 篇** + spec |
 
 ---
 
