@@ -4,10 +4,10 @@
 
 `Runner` 是 Fuse 系统中的 Node 封装组件，将 ActionRunner 资源包装为场景节点，提供信号绑定、运行时实例管理和 awaitable 执行功能。
 
-- **文件**: `addons/fuse/core/runner.gd` (318 行)
+- **文件**: `addons/fuse/core/runner.gd` (430 行)
 - **类名**: `Runner`
 - **继承**: `Node`
-- **图标**: `res://addons/fuse/icons/builtin/Play.svg`
+- **图标**: `res://addons/fuse/icons/builtin/ViewportSpeed.png`
 
 ## 核心职责
 
@@ -39,6 +39,8 @@
 | `signal_name` | `String` | 要绑定的信号名称 |
 | `log_level` | `FuseLogger.LogLevel` | 日志级别（默认 NONE） |
 
+> 导出属性均使用 `@export_storage`（:11–33）声明：值随场景/资源持久化，但**不**在 Inspector 默认显示——Inspector 入口由 `_get_property_list()`（见下文「编辑器集成」）动态生成，可对 `signal_name` 提供 enum 下拉、对属性分组归档。
+
 ### 内部状态
 
 | 字段 | 类型 | 说明 |
@@ -47,6 +49,7 @@
 | `_bound_node` | `Node` | 信号绑定的目标节点引用 |
 | `_signal_connected` | `bool` | 外部信号是否已连接 |
 | `_runtime_signals_connected` | `bool` | 运行时实例信号是否已连接 |
+| `current_execution_context` | `ExecutionContext` | 当前执行上下文（运行时由 `run()` 写入，:36；变量监视器/调试工具读取此字段以观察最新上下文） |
 
 ## 生命周期
 
@@ -115,10 +118,12 @@ Runner 可以自动监听任意节点的任意信号：
 
 ```
 1. 通过 target_node (NodePath) 找到目标节点
-2. 通过 get_signal_list() 检查信号是否存在
+2. 通过 SignalManager.has_signal_named() 检查信号是否存在
 3. 连接信号到 _on_bound_signal_triggered()
 4. 信号触发后自动调用 run()
 ```
+
+> 信号发现与校验统一委托 `SignalManager`：`has_signal_named(node, signal_name)`（:277）用于运行时绑定前校验；编辑器侧 `_editor_refresh_signals` 调用 `SignalManager.get_node_signals(node)`（:196）枚举目标节点全部信号用于下拉列表。
 
 ### 典型用法
 
@@ -130,6 +135,28 @@ Runner 可以自动监听任意节点的任意信号：
 
 → 按钮点击 → 信号触发 → Runner.run() → 执行指令
 ```
+
+## 编辑器集成
+
+`Runner` 标注 `@tool`（:2），在编辑器中提供动态 Inspector：
+
+- **`_get_property_list()`（:92–157）** 动态生成属性列表，按组分块（`action_runner` / `signal_binding` / `configuration`）；`signal_name` 字段根据目标节点可用信号切换 hint：
+  - 有信号 → `PROPERTY_HINT_ENUM` 下拉（`hint_string = ",".join(signal_names)`，:128–134）
+  - 无信号 → 普通 `TYPE_STRING` 文本输入（:136–140）
+- **信号列表刷新** 由三个内部字段配合（:71–73）：
+  - `_editor_available_signals: Array` —— 缓存 `SignalManager.get_node_signals(target)` 的结果
+  - `_editor_signals_loaded: bool` —— 标记列表是否已加载
+  - `_editor_is_refreshing: bool` —— 防重入标志
+- **`_editor_refresh_signals()`（:183–200）** 调用 `SignalManager.get_node_signals(target)`（:196）填充缓存，再 `notify_property_list_changed()` 通知 Inspector 重绘，最后清 `_editor_is_refreshing`。
+- **`target_node` 变更触发刷新**：setter（:22–24）在 `Engine.is_editor_hint()` 下重置 `_editor_is_refreshing` 并 `call_deferred("_editor_refresh_signals")` 延迟执行，避免在属性设置中调用节点解析。
+- **`_get_target_node_in_editor()`（:203–207）** 通过 `get_node_or_null(target_node)` 解析相对路径（Runner 作为场景节点直接解析自身路径）。
+
+## 内部方法
+
+| 方法 | 说明 |
+|------|------|
+| `_create_execution_context(target)`（:391–394） | 创建 `ExecutionContext`：`ExecutionContext.new(target, self)`，`target` 与 `trigger` 均指向 Runner 自身；并设置 `log_level` |
+| `_on_bound_signal_triggered(_reason, _context)`（:397–398） | 绑定信号的统一回调签名 `(_reason: String = "", _context: Dictionary = {})`，**忽略参数**直接调用 `run()` |
 
 ## 与 Event 系统的关系
 

@@ -1,488 +1,459 @@
-# Event 系统分析报告
-
-> **术语更新**: 本文档中的 "BaseTrigger" (触发器基类) 已更新为 "Trigger" + "BaseEvent" (事件)
-> **实际实现**: `addons/fuse/core/trigger.gd`, `addons/fuse/events/base_event.gd`
-> **实现状态**: ✅ 已实现
-> **最后更新**: 2026-01-25
+# BaseTrigger 分析报告
 
 ## 文档概述
 
-本报告对 Fuse 可视化编程系统中的事件触发系统进行了全面分析。系统采用 **Trigger (触发器节点)** + **BaseEvent (事件资源)** 的分离架构，提供了事件触发的基本框架和接口，为可视化编程系统中的事件触发功能提供了基础支持。
+本报告对 Fuse 可视化编程系统中的 `BaseTrigger` 核心脚本进行了全面分析。`BaseTrigger` 是触发器系统的抽象基类 (`@abstract class_name BaseTrigger extends Node`)，定义了触发器与事件 / 动作运行时实例协作的统一接口、冷却检查、执行上下文创建、引擎回调转发以及池化重置钩子，为 `Trigger` (单事件) 和 `MultiEventTrigger` (多事件绑定) 两个具体子类提供公共能力。
 
-**核心架构**:
-- **Trigger (Node)**: 场景中的节点,负责触发逻辑和执行上下文管理
-- **BaseEvent (Resource)**: 事件定义资源,负责具体的事件监听逻辑
-- **ActionRunner**: 负责执行指令序列
-- **ExecutionContext**: 执行上下文,传递事件数据和变量
+**源文件:** `addons/fuse/core/base_trigger.gd`
+**行数:** 354 行
+**基类:** Node
+**子类:** `Trigger` (`addons/fuse/core/trigger.gd`)、`MultiEventTrigger` (`addons/fuse/core/multi_event_trigger.gd`)
 
-## 1. 设计文档符合性分析
+> **路径说明**: 本类位于 `core/` 顶层（与 `trigger.gd` / `multi_event_trigger.gd` / `runtime_event_instance.gd` / `runtime_action_runner_instance.gd` 同目录）。早期文档曾误写为 `core/base/base_trigger.gd`，该路径不存在。
 
-### 笂合的方面
+---
 
-- **架构设计符合性**：`BaseTrigger` 实现了事件触发的基本架构，提供了完整的事件触发框架。
-- **接口设计符合性**：提供了完整的事件触发接口，包括 `trigger_actions()`、`_setup_trigger()`、`_check_conditions()` 等核心方法。
-- **状态管理符合性**：实现了触发器状态跟踪，包括触发次数、最后触发时间等。
-- **条件检查支持**：集成了条件检查机制，支持基于条件的事件触发。
-- **信号系统**：提供了完整的事件信号系统，包括触发、条件失败、动作完成等信号。
+## 1. 类概述和职责
 
-### 不符合的方面
+`BaseTrigger` 是一个纯抽象基类：自身不持有任何事件 / 动作运行时实例，仅提供协议（5 个抽象方法）和可复用的工具方法。具体的事件存储、信号连接、ActionRunner 调度由子类完成。
 
-- **触发器类型支持不足**：缺乏对不同类型触发器的统一管理机制。
-- **事件数据传递机制不够完善**：事件数据的传递和处理机制相对简单。
-- **触发器生命周期管理不够完善**：缺乏对触发器生命周期的精细管理。
+### 核心职责
 
-## 2. 最佳实践符合性分析
+1. **协议定义**: 通过 5 个 `@abstract` 方法规定子类必须暴露的事件 / 运行时实例访问接口
+2. **冷却控制**: 提供 `_check_cooldown()` / `_clear_cooldown_state()`，支持 `CooldownMode` 三档策略
+3. **执行上下文工厂**: `_create_execution_context()` 创建 ExecutionContext 并自动同步 RuntimeEventInstance 的事件参数
+4. **引擎回调统一转发**: 将 `_process` / `_physics_process` / `_notification` / `_unhandled_input` 转发到所有事件实例的 `on_process` / `on_physics_process` / `handle_process_notification` / `handle_physics_process_notification` / `handle_input`
+5. **ActionRunner 信号桥接**: `_connect_action_runner_signals_at()` / `_disconnect_action_runner_signals_at()` 统一连接 / 断开 `execution_completed` / `execution_failed` / `execution_canceled`
+6. **池化支持**: `pool_reset()` 委托子类的 `_on_pool_reset()` 完成完整重建
+7. **错误与日志**: 统一 FuseError 创建 / 查询接口与本地化日志方法族
 
-### 符合的最佳实践
+### 设计特点
 
-- **配置管理**：使用 `@export` 装饰器提供配置管理，支持在编辑器中直接配置。
-- **调试支持**：提供了完整的调试日志系统，便于问题排查。
-- **资源管理**：实现了触发器的清理机制，避免了内存泄漏。
-- **错误处理**：实现了基本的错误处理机制，包括验证和错误报告。
-- **文档注释**：提供了详细的文档注释，说明了方法的用途和参数。
+- 使用 `@abstract` 标记抽象类与抽象方法（GDScript 2.0 语法）
+- 通过 `@tool` 注解支持编辑器模式运行（与子类一致）
+- 编辑器模式下所有引擎回调立即返回，避免副作用
+- 5 个抽象方法形成「索引式访问契约」，使基类工具方法可同时服务单事件 (Trigger) 与多事件 (MultiEventTrigger) 两种存储模型
 
-### 不符合的最佳实践
+---
 
-- **异步支持不足**：缺乏对异步触发事件的原生支持。
-- **性能优化不足**：缺乏触发器性能优化机制，如事件去重和批处理。
-- **测试支持不足**：缺乏内置的测试支持机制，如模拟触发和验证。
+## 2. 核心属性
 
-## 3. 代码质量评估
+### 枚举
+
+```gdscript
+enum CooldownMode {
+    NONE,               ## 无冷却，每次都触发
+    GLOBAL_COOLDOWN,    ## 全局冷却：触发后所有物体都需要等待
+    PER_OBJECT_COOLDOWN ## 每物体独立冷却：每个物体有自己的冷却计时器
+}
+```
+
+| 值 | 含义 | 冷却状态键 (存于 RuntimeEventInstance.runtime_state) |
+|----|------|-----------------------------------------------------|
+| `NONE` | 不做冷却检查，`_check_cooldown` 立即返回 true | — |
+| `GLOBAL_COOLDOWN` | 触发后所有调用方都需等待 `cooldown_time` 秒 | `last_trigger_time: float` |
+| `PER_OBJECT_COOLDOWN` | 按 `context.get_instance_id()` 分别计时 | `object_cooldowns: Dictionary[int, float]` |
+
+### 信号
+
+| 信号 | 签名 | 说明 |
+|------|------|------|
+| `event_completed` | `(context: Dictionary)` | 事件执行完成（子类可定义自己的完成信号） |
+| `event_stopped` | `(reason: String, context: Dictionary)` | 事件停止时发出（含执行失败 / 取消） |
+
+> 子类 `MultiEventTrigger` 额外定义 `event_completed_with_index(binding_index, context)` 与 `event_stopped_with_index(binding_index, reason, context)`，并在回调中同时发射基类与带索引两个信号以保持兼容（见 `multi_event_trigger.gd:380-403`）。
+
+### @export 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `pool_mode` | bool | false | 池化模式：首次 `_ready()` 跳过初始化，等待显式 `pool_reset()` |
+| `log_level` | FuseLogger.LogLevel | NONE | 日志输出级别控制 |
+
+### 内部状态
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `_fuse_error` | FuseError | 错误实例，统一错误处理（`reset()` 中清除） |
+
+> 注意：BaseTrigger 自身**不**持有 `_runtime_event_instance` / `_runtime_action_runner_instance` / `event_definition` 等成员。这些都在子类中定义，并通过抽象方法暴露给基类。
+
+---
+
+## 3. 抽象方法（子类必须实现）
+
+5 个 `@abstract` 方法构成「索引式访问契约」。基类的所有工具方法（冷却检查、上下文创建、引擎回调转发、信号桥接）都通过这些方法访问子类数据，从而同时支持单事件和多事件两种模型。
+
+### 3.1 事件访问
+
+#### `get_event_count() -> int`
+
+返回当前触发器持有的事件数量。`Trigger` 返回 0 或 1（取决于 `event_definition` 是否为 null）；`MultiEventTrigger` 返回 `event_bindings.size()`。
+
+#### `get_event_at(index: int) -> BaseEvent`
+
+返回指定索引的 BaseEvent 资源。越界时子类返回 null。`Trigger` 仅在 `index == 0` 时返回 `event_definition`。
+
+### 3.2 运行时实例访问
+
+#### `get_runtime_event_instance_at(index: int) -> RuntimeEventInstance`
+
+返回指定索引的 RuntimeEventInstance。这是冷却状态读取 / 写入、事件参数同步的唯一来源。
+
+#### `get_action_runner_instance_at(index: int) -> RuntimeActionRunnerInstance`
+
+返回指定索引的 RuntimeActionRunnerInstance。基类的 ActionRunner 信号桥接方法通过此方法定位实例。
+
+### 3.3 池化重置
+
+#### `_on_pool_reset() -> void`
+
+池化场景下对象被复用时的完整重置逻辑。子类必须实现，负责：
+
+1. 调用 `reset()` 清理自身状态
+2. 调用 `_disable_processing()` 暂停引擎回调
+3. 终止旧事件监听（在设置正确的 `_runtime_instance_ref` 后调用 `event.terminate(self)`）
+4. 清理旧的 RuntimeEventInstance / RuntimeActionRunnerInstance
+5. 创建新的 RuntimeEventInstance 并调用 `event.initialize_with_runtime_instance()`
+6. 创建新的 RuntimeActionRunnerInstance（若有 action_runner）
+7. 重新连接 triggered 信号
+8. 调用 `_enable_processing()` 恢复引擎回调
+
+详见 `trigger.gd:52-86` 与 `multi_event_trigger.gd:78-87` 的具体实现。
+
+---
+
+## 4. 关键方法
+
+### 4.1 生命周期
+
+#### `_ready() -> void`
+
+```
+执行流程:
+  1. 编辑器模式 → 输出本地化调试日志并返回
+  2. pool_mode == true → 跳过首次初始化，等待 pool_reset()
+  3. 调用 _on_trigger_ready()（子类钩子）
+```
+
+#### `_exit_tree() -> void`
+
+委托 `_on_trigger_exit_tree()` 子类钩子。`Trigger` 在此断开信号、清理 RuntimeEventInstance / RuntimeActionRunnerInstance；`MultiEventTrigger` 额外将 `_condition_evaluator` 置 null。
+
+#### 可覆盖钩子
+
+| 方法 | 默认行为 |
+|------|----------|
+| `_on_trigger_ready()` | 空实现（子类初始化事件 / 运行时实例 / 信号） |
+| `_on_trigger_exit_tree()` | 空实现（子类清理） |
+| `reset()` | 清除 `_fuse_error`（子类追加：清 has_triggered、冷却状态、event.reset()） |
+| `validate() -> Array[String]` | 返回空数组（子类追加配置校验） |
+| `trigger_manually(context: Node = null)` | 空实现（子类转发到 `_on_event_fired`） |
+| `get_description() -> String` | 返回 "BaseTrigger"（子类覆盖为事件描述 + 冷却信息） |
+
+### 4.2 冷却检查
+
+#### `_check_cooldown(index, context, cooldown_mode, cooldown_time) -> bool`
+
+参数顺序: `index: int, context: Node, cooldown_mode: CooldownMode, cooldown_time: float`。返回 true 表示可以触发。
+
+```
+执行流程:
+  1. cooldown_mode == NONE 或 cooldown_time <= 0 → 返回 true
+  2. event_instance = get_runtime_event_instance_at(index)
+     若为 null → 返回 true（无实例可记）
+  3. current_time = Time.get_ticks_msec() / 1000.0
+  4. match cooldown_mode:
+       GLOBAL_COOLDOWN:
+         last_time = runtime_state.get("last_trigger_time", 0.0)
+         若 current_time - last_time < cooldown_time → 输出 info 日志、返回 false
+         否则写入 runtime_state["last_trigger_time"] = current_time
+       PER_OBJECT_COOLDOWN:
+         object_cooldowns = runtime_state.get("object_cooldowns", {})
+         object_id = context.get_instance_id() (context 为 null 时为 0)
+         若 object_id != 0 且 object_cooldowns.has(object_id):
+           若 current_time - object_cooldowns[object_id] < cooldown_time
+             → 输出含物体名 / ID 的 info 日志、返回 false
+         写入 object_cooldowns[object_id] = current_time
+  5. 返回 true
+```
+
+> 冷却状态全部存于 RuntimeEventInstance.runtime_state 字典，而非 Trigger 自身字段。这样多个池化对象共享同一 Event 资源时，每个对象有独立的 RuntimeEventInstance，冷却互不干扰。
+
+#### `_clear_cooldown_state(index: int) -> void`
+
+擦除指定索引对应 RuntimeEventInstance 的 `last_trigger_time` 与 `object_cooldowns` 键。`Trigger.reset()` 与 `MultiEventTrigger.reset()` 都会调用此方法。
+
+### 4.3 执行上下文工厂
+
+#### `_create_execution_context(target: Node, index: int = 0) -> RefCounted`
+
+```
+执行流程:
+  1. context = ExecutionContext.new(target, self)
+  2. 写入 context 变量: event_source = self, triggered_node = target
+  3. context.log_level = log_level
+  4. 若 target 有 meta "delta_time" → 同步到 context.delta_time（轮询事件用）
+  5. _sync_event_args_to_context(context, index)
+  6. 返回 context
+```
+
+#### `_sync_event_args_to_context(context, index) -> void`
+
+将 RuntimeEventInstance 的事件参数同步到 ExecutionContext 变量命名空间：
+
+1. 读取 `runtime_state["last_event_args"]`（Dictionary），为每个键写入变量 `event_<key>`
+2. 遍历 runtime_state 中所有 `event_` 前缀的键（除 `event_source`），写入 context
+
+> Trigger 与 MultiEventTrigger 都依赖此机制把事件参数（input_vector、键位、碰撞物体等）暴露给 ActionRunner 中的指令。
+
+### 4.4 ActionRunner 信号桥接
+
+#### `_connect_action_runner_signals_at(index, callbacks) -> bool`
+
+`callbacks` 字典格式: `{"completed": Callable, "failed": Callable, "canceled": Callable}`。
+
+按索引定位 RuntimeActionRunnerInstance，对 `execution_completed` / `execution_failed` / `execution_canceled` 三个信号（若存在且未连接）逐个 `connect`。返回 true 表示至少连接了一个。
+
+#### `_disconnect_action_runner_signals_at(index, callbacks) -> void`
+
+对称断开。子类用 `_action_runner_signals_connected` 标志位防止重复连接 / 断开。
+
+> 子类回调签名: `Trigger` 用 `_on_action_runner_completed(total_time)` / `_on_action_runner_failed(error_message)` / `_on_action_runner_canceled(reason)`；`MultiEventTrigger` 用 `.bind(index)` 携带绑定索引。
+
+### 4.5 引擎回调统一转发
+
+BaseTrigger 把 Godot 节点的四个引擎回调统一转发到所有事件实例（编辑器模式跳过）：
+
+| BaseTrigger 方法 | 转发目标 (事件实例方法) | 说明 |
+|------------------|------------------------|------|
+| `_process(delta)` | `event.on_process(delta, event_instance)` | 每帧轮询（如 OnInterval、OnAnimationMarker） |
+| `_physics_process(delta)` | `event.on_physics_process(delta, event_instance)` | 物理帧轮询（如 OnBodyEntered 持续检测） |
+| `_notification(NOTIFICATION_PROCESS)` | `event.handle_process_notification()` | 进程通知 |
+| `_notification(NOTIFICATION_PHYSICS_PROCESS)` | `event.handle_physics_process_notification()` | 物理进程通知 |
+| `_unhandled_input(event)` | `event.handle_input(event)` | 输入事件（如 OnInputKey、OnMouseButton） |
+
+转发前均以 `event.has_method(...)` 守卫，缺失方法的事件静默跳过。事件通过 `get_event_at(i)` 取得，配套的 RuntimeEventInstance 通过 `get_runtime_event_instance_at(i)` 取得（`on_process` / `on_physics_process` 需要传入实例供事件读写状态）。
+
+### 4.6 池化支持
+
+#### `pool_reset() -> void`
+
+公开入口，委托 `_on_pool_reset()`（抽象）。配合 `pool_mode` 属性实现对象池复用。
+
+#### `_disable_processing() / _enable_processing() -> void`
+
+切换 `set_physics_process` / `set_process` 开关。子类在 `_on_pool_reset()` 起止处调用，避免重建期间触发引擎回调转发到已失效的事件实例。
+
+### 4.7 错误处理
+
+| 方法 | 说明 |
+|------|------|
+| `_create_fuse_error(message, error_type, context)` | 创建 FuseError 实例存入 `_fuse_error`，自动在 context 中追加 `trigger_name = name` |
+| `_create_fuse_error_localized(message_key, error_type, context, args)` | 用 `FuseLocalization.translate_format(message_key, args)` 翻译后再创建 |
+| `get_fuse_error() -> FuseError` | 返回当前错误 |
+| `has_fuse_error() -> bool` | 是否有错误 |
+
+`FuseError.ErrorType` 常用值: `RUNTIME_ERROR`、`CONFIGURATION_ERROR`（子类在 `validate()` / `_on_trigger_ready()` 缺配置时使用）。
+
+### 4.8 日志方法
+
+本地化与非本地化两组，全部委托 `FuseLogger`：
+
+| 非本地化 | 本地化（接受翻译键 + args） |
+|----------|----------------------------|
+| `_log_debug(message)` | `_log_debug_localized(message_key, args = {})` |
+| `_log_info(message)` | `_log_info_localized(message_key, args = {})` |
+| `_log_warning(message)` | `_log_warning_localized(message_key, args = {})` |
+| `_log_error(message)` | `_log_error_localized(message_key, args = {})` |
+
+所有调用统一以 `"Trigger"` 为分类，传入 `log_level` 与节点 `name`。本地化键示例: `FUSE_LOG_TRIGGER_INITIALIZED`、`FUSE_ERROR_TRIGGER_NO_ACTION_RUNNER`、`FUSE_LOG_TRIGGER_POOL_RESET` 等。
+
+---
+
+## 5. 与 RuntimeEventInstance 的协作
+
+`RuntimeEventInstance`（`addons/fuse/core/runtime_event_instance.gd`，288 行，`extends RefCounted`）是 BaseTrigger 体系运行时状态的唯一载体。
+
+### 集成架构
+
+```
+BaseTrigger (Node, 抽象)
+    │
+    ├── 通过 get_event_at(i) → BaseEvent (Resource, 可被多 Trigger 共享)
+    │
+    ├── 通过 get_runtime_event_instance_at(i) → RuntimeEventInstance (RefCounted, 每 Trigger 独立)
+    │        │
+    │        ├── event_definition: BaseEvent       (事件资源引用)
+    │        ├── owner_trigger: Node               (所属触发器)
+    │        ├── runtime_state: Dictionary         (冷却键 / 事件参数 / 自声明状态)
+    │        └── signal triggered(context: Node)   (转发自 BaseEvent.triggered)
+    │
+    └── 通过 get_action_runner_instance_at(i) → RuntimeActionRunnerInstance (RefCounted)
+             │
+             ├── definition: ActionRunner
+             ├── signal execution_completed(total_time)
+             ├── signal execution_failed(error_message)
+             └── signal execution_canceled(reason)
+```
+
+### 信号转发链（关键）
+
+`BaseEvent` 资源是可被多 Trigger 共享的 Resource。RuntimeEventInstance 在构造时连接 `event_definition.triggered` 到自己的 `_on_event_triggered` 回调，转发前检查 `context.get_meta("trigger") == owner_trigger`，只转发属于自己触发器的事件（见 `runtime_event_instance.gd:104-115`）：
+
+```
+BaseEvent.triggered.emit(context_with_trigger_meta)
+    └──→ RuntimeEventInstance._on_event_triggered(context)
+          ├── 若 context.trigger meta != owner_trigger → 丢弃
+          └── RuntimeEventInstance.triggered.emit(context)
+                └──→ Trigger._on_event_fired(context)  [子类连接]
+```
+
+这一层中转解决了"同一 Event 资源被多个池化 Trigger 共享时的信号串扰"。
+
+### 冷却状态存储
+
+冷却状态全部存于 `runtime_state`，键名约定:
+
+| CooldownMode | 键 | 类型 |
+|--------------|----|----|
+| GLOBAL_COOLDOWN | `last_trigger_time` | float (秒) |
+| PER_OBJECT_COOLDOWN | `object_cooldowns` | Dictionary[int, float] (instance_id → 上次触发时间) |
+
+由基类 `_check_cooldown()` / `_clear_cooldown_state()` 直接读写。子类无需关心冷却细节，只需在导出属性中暴露 `cooldown_mode` / `cooldown_time` 并把参数传给基类。
+
+### 池化重置中的关键修复
+
+`Trigger._on_pool_reset()` 与 `MultiEventTrigger._stop_all_events()` 在调用 `event.terminate(self)` 之前**显式设置** `event._runtime_instance_ref = _runtime_event_instance`（trigger.gd:63、multi_event_trigger.gd:215）。原因是 Event 子类的 `terminate()` 内部通过 `get_runtime_state()` 访问状态，而该方法会优先使用传入参数、回退到 `_runtime_instance_ref`。预先设置正确引用可确保 terminate 操作正确的运行时实例，避免多池化对象共享 Event 资源时的状态覆盖。
+
+---
+
+## 6. 子类实现模式
+
+### 6.1 Trigger (单事件触发器, `trigger.gd`, 335 行)
+
+存储模型: 单组字段。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `event_definition` | BaseEvent (@export) | 监听的事件资源 |
+| `action_runner` | ActionRunner (@export) | 触发时执行的动作 |
+| `trigger_once` | bool (@export) | 是否只触发一次 |
+| `cooldown_mode` | CooldownMode (@export) | 冷却模式 |
+| `cooldown_time` | float (@export_range 0.0-60.0) | 冷却秒数 |
+| `has_triggered` | bool | trigger_once 状态 |
+| `_runtime_event_instance` | RuntimeEventInstance | 运行时事件实例 |
+| `_runtime_action_runner_instance` | RuntimeActionRunnerInstance | 运行时动作实例 |
+
+抽象方法实现:
+
+```gdscript
+func get_event_count() -> int:
+    return 1 if event_definition != null else 0
+func get_event_at(index: int) -> BaseEvent:
+    return event_definition if index == 0 else null
+func get_runtime_event_instance_at(index: int) -> RuntimeEventInstance:
+    return _runtime_event_instance if index == 0 else null
+func get_action_runner_instance_at(index: int) -> RuntimeActionRunnerInstance:
+    return _runtime_action_runner_instance if index == 0 else null
+```
+
+`_on_event_fired(context)` 流程: trigger_once 检查 → ActionRunner 运行中检查 → `_check_cooldown(0, ...)` → `_create_execution_context` → 同步 input_vector 等额外参数 → `_runtime_action_runner_instance.run(context)`。
+
+### 6.2 MultiEventTrigger (多事件触发器, `multi_event_trigger.gd`, 481 行)
+
+存储模型: 与 `event_bindings: Array[EventBinding]` 一一对应的并行数组。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `event_bindings` | Array[EventBinding] (@export) | 事件-动作绑定列表 |
+| `_runtime_event_instances` | Array[RuntimeEventInstance] | 一一对应 |
+| `_runtime_action_instances` | Array[RuntimeActionRunnerInstance] | 一一对应 |
+| `_has_triggered` / `_signal_connected` / `_action_signals_connected` / `_initialized` | Array[bool] | 状态标志一一对应 |
+| `use_parallel_condition_evaluation` | bool (@export, 默认 true) | 启用 WorkerThreadPool 并行条件评估 |
+| `_condition_evaluator` | ParallelConditionEvaluator | 并行评估器实例 |
+
+抽象方法实现以 `event_bindings.size()` 为上界做索引访问。`_on_event_fired(context, index)` 通过 `.bind(index)` 携带绑定索引，流程类似 Trigger 但条件检查可走并行路径（`check_conditions_parallel`）或串行回退（`check_conditions_serial`）。
+
+特有方法:
+
+| 方法 | 说明 |
+|------|------|
+| `trigger_binding(index, context = null)` | 手动触发指定绑定 |
+| `set_binding_enabled(index, enabled)` | 动态启用 / 禁用绑定（调用 `event_instance.start_listening()` / `stop_listening()`） |
+| `event_completed_with_index` / `event_stopped_with_index` 信号 | 携带 binding_index，与基类信号同时发射 |
+
+### 6.3 EventBinding (绑定资源, `event_binding.gd`)
+
+`class_name EventBinding extends Resource`，每个绑定封装:
+
+| 字段 | 类型 | 默认值 |
+|------|------|--------|
+| `event` | BaseEvent (@export) | — |
+| `action_runner` | ActionRunner (@export) | — |
+| `enabled` | bool (@export) | true |
+| `trigger_once` | bool (@export) | false |
+| `cooldown_mode` | BaseTrigger.CooldownMode (@export) | NONE |
+| `cooldown_time` | float (@export_range 0.0-60.0) | 0.0 |
+| `use_conditions` | bool (@export) | false (控制 conditions 动态可见性) |
+| `conditions` | Array[BaseCondition] | [] |
+
+---
+
+## 7. 与 ActionRunner 体系的关系
+
+BaseTrigger 通过 RuntimeActionRunnerInstance 间接驱动 ActionRunner：
+
+1. **运行时实例化**: 子类在 `_on_trigger_ready()` 中调用 `RuntimeActionRunnerInstance.new(action_runner, self)`，并把 `set_batch_signal_mode(true)` 打开（Phase 2.5 优化，减少高频触发的信号开销）
+2. **信号连接**: 子类用基类 `_connect_action_runner_signals_at()` 注册 completed / failed / canceled 三个回调
+3. **执行触发**: 子类在 `_on_event_fired()` 中调用 `_runtime_action_runner_instance.run(execution_context)`
+4. **回调分发**: RuntimeActionRunnerInstance 发出 `execution_completed(total_time)` / `execution_failed(error_message)` / `execution_canceled(reason)`，子类回调转换为 `event_completed` / `event_stopped` 信号（MultiEventTrigger 额外发带索引版本）
+5. **清理**: `_on_trigger_exit_tree()` 与 `_on_pool_reset()` 中调用 `action_instance.cleanup()`
+
+RuntimeActionRunnerInstance 自身提供: `is_running()`、`cancel_execution(reason)`、`set_stop_execution(stop, reason)`、`validate_instructions()`、`invalidate_validation_cache()`、`get_runtime_state(key)` / `set_runtime_state(key, value)` 等接口（见 `runtime_action_runner_instance.gd`）。
+
+---
+
+## 8. 性能考虑
+
+### 设计层面的优化
+
+1. **索引式访问契约**: 5 个抽象方法让基类工具方法零拷贝服务单 / 多事件两种模型，避免在基类引入"数组 vs 单值"分支
+2. **批量信号模式**: 子类为 RuntimeActionRunnerInstance 启用 `set_batch_signal_mode(true)`，将逐指令信号合并发射
+3. **并行条件评估**: MultiEventTrigger 默认启用 `use_parallel_condition_evaluation`，用 WorkerThreadPool 并行评估多个 BaseCondition；评估器为 null 时自动回退串行
+4. **编辑器模式跳过**: 所有引擎回调与 `_ready()` 在 `Engine.is_editor_hint()` 下立即返回，避免编辑器中误触发
+5. **池化支持**: `pool_mode` + `pool_reset()` 允许 Trigger 节点被对象池复用，避免反复实例化 Node
+
+### 潜在性能开销
+
+1. **引擎回调全量转发**: `_process` / `_physics_process` / `_unhandled_input` 每帧遍历所有事件并 `has_method` 守卫——事件数量大时存在迭代开销，但 `has_method` 调用廉价
+2. **冷却 Dictionary 操作**: `PER_OBJECT_COOLDOWN` 下 `object_cooldowns` 字典会随物体数量增长；长期运行场景需考虑清理策略（当前仅在 `reset()` 时整体擦除）
+3. **信号 `.bind(index)`**: MultiEventTrigger 为每个回调绑定索引生成 Callable，绑定数量随 event_bindings 线性增长
+
+---
+
+## 9. 总体评估
 
 ### 优点
 
-1. **结构清晰**：代码结构清晰，方法职责明确，易于理解和维护。
-2. **事件驱动设计**：采用了事件驱动的设计模式，便于扩展和定制。
-3. **条件检查集成**：集成了条件检查机制，支持复杂的事件触发逻辑。
-4. **信号系统完善**：提供了完整的信号系统，便于外部监听和响应。
-5. **调试功能完善**：提供了详细的调试日志和状态信息，便于问题排查。
+1. **抽象边界清晰**: 5 个抽象方法形成极简协议，基类工具方法高度复用，两个子类各自只关心"单 / 多存储模型"差异
+2. **运行时状态隔离彻底**: 冷却、事件参数、触发计数全部走 RuntimeEventInstance，Event 资源可安全共享，池化对象互不干扰
+3. **冷却三档设计合理**: NONE / GLOBAL / PER_OBJECT 覆盖常见用例，状态键约定清晰
+4. **引擎回调统一转发**: 一处实现，所有事件子类（OnInputKey、OnInterval、OnAnimationMarker 等）受益，无需各自实现 _process
+5. **池化关键修复到位**: terminate 前预置 `_runtime_instance_ref` 解决了共享 Event 资源的状态覆盖陷阱（注释详尽）
+6. **错误 / 日志统一**: FuseError + FuseLocalization + FuseLogger 三套基础设施贯穿，与 BaseEvent / BaseInstruction 一致
 
-### 缺点
+### 不足
 
-1. **触发器类型支持不足**：缺乏对不同类型触发器的统一管理机制。
-2. **事件数据传递简单**：事件数据的传递和处理机制相对简单，缺乏灵活性。
-3. **异步支持不足**：缺乏对异步触发事件的原生支持。
-4. **性能优化不足**：缺乏触发器性能优化机制。
+1. **`event_completed` / `event_stopped` 信号无默认发射**: 基类定义了信号但回调由子类实现，子类若忘记在 `_on_action_runner_completed` 中 `emit` 则信号永不触发（当前两个子类均正确发射，但缺乏基类层面的强制）
+2. **冷却 info 日志频率**: GLOBAL_COOLDOWN / PER_OBJECT_COOLDOWN 冷却中时每次触发都输出 `_log_info`，高频事件下可能产生日志噪声（可考虑降级为 debug 或加采样）
+3. **PER_OBJECT_COOLDOWN 无自动清理**: `object_cooldowns` 字典只在 `reset()` 时整体擦除，长时间运行且物体频繁进出（如 Area 触发器）会持续累积条目
+4. **`trigger_manually` 默认空实现**: 基类提供钩子但不强制，若子类忘记覆盖则手动触发无效果（当前 Trigger 覆盖为转发 `_on_event_fired`，MultiEventTrigger 用 `trigger_binding`）
+5. **`_create_execution_context` 返回 RefCounted 而非 ExecutionContext 类型注解**: 类型推断弱，IDE 补全受限（实际返回 ExecutionContext 实例）
 
-## 4. 潜在问题识别
+---
 
-### 严重问题
-
-1. **内存泄漏风险**：在触发器销毁时，可能存在未清理的资源，导致内存泄漏。
-   - 位置：`_exit_tree()` 方法
-   - 影响：可能导致内存占用过高，影响系统性能
-
-2. **竞态条件风险**：在多个触发器同时触发时，可能存在竞态条件。
-   - 位置：`trigger_actions()` 方法
-   - 影响：可能导致不可预测的行为和数据损坏
-
-### 中等问题
-
-1. **事件数据传递不够灵活**：事件数据的传递和处理机制相对简单。
-   - 位置：`_create_execution_context()` 方法
-   - 影响：限制了事件处理的灵活性，影响系统的可扩展性
-
-2. **触发器冷却时间处理不完善**：冷却时间的检查和重置机制相对简单。
-   - 位置：`_check_cooldown()` 方法
-   - 影响：可能导致触发器行为不符合预期
-
-### 轻微问题
-
-1. **日志格式不统一**：日志输出的格式在不同方法中不统一。
-   - 位置：各种 `_log_*` 方法
-   - 影响：影响日志的可读性和一致性
-
-2. **文档注释不完整**：部分方法的文档注释不够详细，缺少使用示例。
-   - 位置：部分方法
-   - 影响：影响代码的可维护性
-
-## 5. 改进建议
-
-### 高优先级改进
-
-1. **增强内存管理**
-   - 完善触发器的清理机制
-   - 确保所有资源在触发器销毁时被正确清理
-   - 示例改进：
-     ```gdscript
-     func _exit_tree():
-         # 断开所有信号连接
-         for child in get_children():
-             if child is BaseTrigger:
-                 child._exit_tree()
-         
-         # 清理执行上下文
-         if execution_context:
-             execution_context.cleanup()
-             execution_context = null
-         
-         # 清理动作执行器
-         if action_runner:
-             action_runner.stop()
-             action_runner = null
-         
-         # 清理条件
-         for condition in conditions:
-             if condition and condition.has_method("cleanup"):
-                 condition.cleanup()
-         
-         # 清理局部变量
-         if local_variables:
-             local_variables.clear()
-             local_variables = null
-         
-         _log_debug("Trigger exited tree")
-     ```
-
-2. **实现事件数据传递机制**
-   - 增强事件数据的传递和处理机制
-   - 支持复杂的数据结构和处理逻辑
-   - 示例改进：
-     ```gdscript
-     func _create_execution_context(target: Node, event_data: Dictionary) -> ExecutionContext:
-         var context = ExecutionContext.new()
-         
-         # 设置基本上下文信息
-         context.target = target
-         context.trigger = self
-         
-         # 添加事件数据到局部变量
-         for key in event_data.keys():
-             context.local_variables[key] = event_data[key]
-         
-         # 处理特殊事件数据
-         if event_data.has("position"):
-             context.set_custom_data("trigger_position", event_data["position"])
-         
-         if event_data.has("velocity"):
-             context.set_custom_data("trigger_velocity", event_data["velocity"])
-         
-         if event_data.has("direction"):
-             context.set_custom_data("trigger_direction", event_data["direction"])
-         
-         return context
-     ```
-
-3. **实现异步触发支持**
-   - 添加异步触发事件的支持
-   - 支持异步条件检查和动作执行
-   - 示例改进：
-     ```gdscript
-     signal triggered_async(context: ExecutionContext)
-     signal conditions_failed_async(context: ExecutionContext)
-     
-     func trigger_actions_async(target: Node = null, event_data: Dictionary = {}):
-         if not enabled:
-             _log_debug("Trigger is disabled, ignoring trigger")
-             return
-         
-         # 检查冷却时间
-         if not _check_cooldown():
-             return
-         
-         # 检查单次触发
-         if trigger_once and is_triggered:
-             _log_debug("Trigger already triggered once, ignoring trigger")
-             return
-         
-         # 创建执行上下文
-         execution_context = _create_execution_context(target, event_data)
-         
-         # 异步检查条件
-         var condition_check_task = _check_conditions_async(execution_context)
-         await condition_check_task
-         
-         if not condition_check_task.result:
-             conditions_failed_async.emit(execution_context)
-             return
-         
-         # 标记为已触发
-         is_triggered = true
-         trigger_count += 1
-         
-         _log_debug("Trigger #%d activated" % trigger_count)
-         triggered_async.emit(execution_context)
-         
-         # 异步执行动作
-         if action_runner:
-             action_runner.run(execution_context)
-             await action_runner.action_completed
-             action_completed.emit(execution_context)
-         else:
-             _log_warning("No action runner assigned to trigger")
-             finished.emit()
-     ```
-
-### 中优先级改进
-
-1. **实现触发器类型管理**
-   - 添加触发器类型的统一管理机制
-   - 支持不同类型触发器的注册和查找
-   - 示例改进：
-     ```gdscript
-     var _trigger_type: String = "base"
-     var _trigger_category: String = "general"
-     
-     func get_trigger_type() -> String:
-         return _trigger_type
-     
-     func get_trigger_category() -> String:
-         return _trigger_category
-     
-     func register_trigger_type(trigger_type: String, trigger_category: String):
-         _trigger_type = trigger_type
-         _trigger_category = trigger_category
-         _log_debug("Trigger type registered: %s (%s)" % [trigger_type, trigger_category])
-     
-     func get_compatible_triggers() -> Array[String]:
-         # 返回与此触发器兼容的其他触发器类型
-         return []
-     
-     func can_trigger_with(other_trigger: BaseTrigger) -> bool:
-         # 检查是否可以与其他触发器协同工作
-         return other_trigger.get_trigger_category() == _trigger_category
-     ```
-
-2. **增强冷却时间处理**
-   - 完善冷却时间的检查和重置机制
-   - 支持动态冷却时间调整
-   - 示例改进：
-     ```gdscript
-     var _dynamic_cooldown: bool = false
-     var _adaptive_cooldown: float = 0.0
-     
-     func _check_cooldown() -> bool:
-         if cooldown_time <= 0.0:
-             return true
-         
-         var current_time = Time.get_ticks_msec() / 1000.0
-         
-         # 动态冷却时间调整
-         if _dynamic_cooldown:
-             _adaptive_cooldown = _calculate_adaptive_cooldown()
-             var effective_cooldown = max(cooldown_time, _adaptive_cooldown)
-             
-             if current_time - last_trigger_time < effective_cooldown:
-                 var remaining = effective_cooldown - (current_time - last_trigger_time)
-                 _log_debug("Trigger is in dynamic cooldown, %.2fs remaining" % remaining)
-                 return false
-         else:
-             if current_time - last_trigger_time < cooldown_time:
-                 var remaining = cooldown_time - (current_time - last_trigger_time)
-                 _log_debug("Trigger is in cooldown, %.2fs remaining" % remaining)
-                 return false
-         
-         last_trigger_time = current_time
-         return true
-     
-     func _calculate_adaptive_cooldown() -> float:
-         # 基于触发频率和历史数据计算自适应冷却时间
-         var base_cooldown = cooldown_time
-         var frequency_factor = float(trigger_count) / max(1.0, current_time - _creation_time)
-         return base_cooldown * (1.0 + frequency_factor)
-     ```
-
-3. **实现触发器优先级系统**
-   - 添加触发器优先级支持
-   - 支持触发器的优先级排序和调度
-   - 示例改进：
-     ```gdscript
-     var _priority: int = 0  # 默认优先级
-     var _execution_order: int = 0
-     
-     func get_priority() -> int:
-         return _priority
-     
-     func set_priority(value: int):
-         _priority = value
-         _log_debug("Trigger priority set to: %d" % value)
-     
-     func get_execution_order() -> int:
-         return _execution_order
-     
-     func set_execution_order(value: int):
-         _execution_order = value
-         _log_debug("Trigger execution order set to: %d" % value)
-     
-     # 静态方法：按优先级排序触发器
-     static func sort_by_priority(a: BaseTrigger, b: BaseTrigger) -> bool:
-         if a._priority != b._priority:
-             return a._priority < b._priority
-         return a._execution_order < b._execution_order
-     
-     # 静态方法：按执行顺序排序触发器
-     static func sort_by_execution_order(a: BaseTrigger, b: BaseTrigger) -> bool:
-         return a._execution_order < b._execution_order
-     ```
-
-### 低优先级改进
-
-1. **统一日志格式**
-   - 统一日志输出的格式
-   - 使用统一的日志前缀和格式
-   - 示例改进：
-     ```gdscript
-     func _log_debug(message: String):
-         if debug_mode:
-             var timestamp = Time.get_datetime_string_from_system().replace("T", " ")
-             print("[DEBUG][BaseTrigger][%s][%s] %s" % [timestamp, get_trigger_type(), message])
-     ```
-
-2. **添加触发器历史记录**
-   - 实现触发器触发的历史记录功能
-   - 记录每次触发的详细信息，便于后续分析
-   - 示例改进：
-     ```gdscript
-     var _trigger_history: Array[Dictionary] = []
-     
-     func trigger_actions(target: Node = null, event_data: Dictionary = {}):
-         var trigger_record = {
-             "timestamp": Time.get_ticks_msec() / 1000.0,
-             "trigger_type": get_trigger_type(),
-             "trigger_count": trigger_count,
-             "target": target if target else "null",
-             "event_data": event_data.duplicate(),
-             "conditions_met": true
-         }
-         
-         _trigger_history.append(trigger_record)
-         super.trigger_actions(target, event_data)
-     
-     func get_trigger_history() -> Array[Dictionary]:
-         return _trigger_history
-     
-     func clear_trigger_history():
-         _trigger_history.clear()
-     ```
-
-3. **优化性能**
-   - 优化触发器的性能
-   - 减少不必要的计算和内存分配
-   - 示例改进：
-     ```gdscript
-     var _performance_metrics: Dictionary = {
-         "total_triggers": 0,
-         "condition_checks": 0,
-         "action_executions": 0,
-         "average_trigger_time": 0.0,
-         "total_trigger_time": 0.0
-     }
-     
-     func trigger_actions(target: Node = null, event_data: Dictionary = {}):
-         var start_time = Time.get_ticks_msec() / 1000.0
-         
-         super.trigger_actions(target, event_data)
-         
-         var end_time = Time.get_ticks_msec() / 1000.0
-         var trigger_time = end_time - start_time
-         
-         _performance_metrics["total_triggers"] += 1
-         _performance_metrics["total_trigger_time"] += trigger_time
-         _performance_metrics["average_trigger_time"] = _performance_metrics["total_trigger_time"] / _performance_metrics["total_triggers"]
-     
-     func get_performance_metrics() -> Dictionary:
-         return _performance_metrics.duplicate()
-     ```
-
-## 6. 总体评估和评分
-
-### 总体评估
-
-`BaseTrigger` 是 Fuse 可视化编程系统中的核心组件，整体设计合理，功能完善。它提供了完整的事件触发框架，具有良好的可扩展性。然而，在触发器类型支持、事件数据传递和内存管理方面还有改进空间。
-
-### 评分
-
-- **设计符合性**：8/10
-  - 优点：架构设计合理，接口设计完整，状态管理完善
-  - 缺点：触发器类型支持不足，事件数据传递不够灵活
-
-- **最佳实践符合性**：7/10
-  - 优点：配置管理灵活，调试支持完善，资源管理良好
-  - 缺点：异步支持不足，性能优化不足，测试支持不足
-
-- **代码质量**：7/10
-  - 优点：结构清晰，事件驱动设计良好，条件检查集成完善
-  - 缺点：触发器类型支持不足，事件数据传递简单，异步支持不足
-
-- **潜在问题**：6/10
-  - 优点：大部分问题已经识别并可以解决
-  - 缺点：存在一些严重的潜在问题需要优先解决
-
-- **改进建议**：8/10
-  - 优点：提供了详细的改进建议，覆盖了各个方面
-  - 缺点：部分建议需要更多的实现细节
-
-### 综合评分：7.2/10
-
-`BaseTrigger` 是一个功能完善的设计良好的组件，但在触发器类型支持、事件数据传递和内存管理方面还有改进空间。建议优先解决严重问题，然后逐步实施中优先级和低优先级的改进建议。
-
-## v2.0 新增特性（2026-03 更新）
-
-以下内容基于对 `addons/fuse/core/base/base_trigger.gd` 和 `addons/fuse/core/trigger.gd` 最新源码的分析，记录 v2.0 版本中触发器系统的重要架构改进。
-
-### RuntimeEventInstance 集成
-
-v2.0 引入了 `RuntimeEventInstance`（`addons/fuse/core/runtime_event_instance.gd`），作为 Event Resource 的轻量级运行时包装器：
-
-- **核心职责**：为每个 Trigger 提供独立的运行时状态，解决多个 Trigger 共享同一 Event 资源时的状态干扰问题
-- **持有引用**：`event_definition`（BaseEvent 资源）和 `owner_trigger`（所属 Trigger 节点）
-- **信号转发机制**：连接 Event 资源的 `triggered` 信号，通过 `_on_event_triggered()` 回调转发到 RuntimeEventInstance 自己的 `triggered` 信号。转发时检查 `_meta("trigger")` 确保只有来自对应 Trigger 的事件才被处理
-- **运行时状态**：`runtime_state: Dictionary` 存储事件特定的状态（如计时器引用、输入状态、碰撞计数等）
-- **自声明状态模式**：优先使用 Event 的 `get_default_runtime_state()` 方法初始化状态（新架构），回退到遗留的 match 分支模式（向后兼容）
-- **生命周期**：提供 `start_listening()` / `stop_listening()` 代理方法，以及 `cleanup()` 用于断开信号和清理引用
-
-在 Trigger 中，RuntimeEventInstance 通过 `_runtime_event_instance` 字段持有：
-
-```gdscript
-# trigger.gd
-var _runtime_event_instance: RuntimeEventInstance = null
-```
-
-### 池化支持：_on_pool_reset() 方法
-
-v2.0 在 BaseTrigger 中引入了对象池支持，允许 Trigger 节点被对象池复用：
-
-- **`pool_mode: bool`**（导出属性）：启用池化模式后，`_ready()` 中跳过首次初始化，等待显式调用 `pool_reset()`
-- **`pool_reset() -> void`**（公开方法）：调用抽象方法 `_on_pool_reset()` 执行池化重置
-- **`_on_pool_reset()`（抽象方法）**：子类必须实现，负责：
-  1. 重置自身状态（调用 `reset()`）
-  2. 禁用处理（`_disable_processing()`）
-  3. 终止旧的事件监听（`event_definition.terminate(self)`）
-  4. 清理旧的 RuntimeEventInstance 和 RuntimeActionRunnerInstance
-  5. 创建新的 RuntimeEventInstance 并调用 `event_definition.initialize_with_runtime_instance()`
-  6. 创建新的 RuntimeActionRunnerInstance（如果有 action_runner）
-  7. 重新连接 triggered 信号
-  8. 重新启用处理（`_enable_processing()`）
-
-关键修复：在调用 `terminate()` 之前设置 `event_definition._runtime_instance_ref = _runtime_event_instance`，解决了多个池化对象共享同一 Event 资源时的状态覆盖问题。
-
-### ActionRunner 信号管理
-
-v2.0 在 BaseTrigger 基类中提供了统一的 ActionRunner 信号管理方法：
-
-- **`_connect_action_runner_signals_at(index, callbacks)`**：按索引连接 RuntimeActionRunnerInstance 的 `execution_completed`、`execution_failed`、`execution_canceled` 信号。callbacks 字典格式：`{"completed": callable, "failed": callable, "canceled": callable}`
-- **`_disconnect_action_runner_signals_at(index, callbacks)`**：安全断开指定索引的信号连接
-
-在 Trigger 子类中：
-- `_connect_action_runner_signals()` / `_disconnect_action_runner_signals()` 包装基类方法，提供完成、失败、取消三个回调
-- 回调触发 `event_completed` 和 `event_stopped` 信号，携带执行上下文（包含触发器引用、耗时、错误信息等）
-
-### MultiEventTrigger 多事件触发器
-
-v2.0 新增了 `MultiEventTrigger`（`addons/fuse/core/multi_event_trigger.gd`），继承自 BaseTrigger，将多个 Trigger 的功能合并到一个节点中：
-
-- **EventBinding 配置**：通过 `event_bindings: Array[EventBinding]` 配置多个事件-动作绑定，每个 EventBinding 包含 `event`、`action_runner`、`conditions`、`trigger_once`、`cooldown_mode`、`cooldown_time`
-- **运行时实例数组**：`_runtime_event_instances: Array[RuntimeEventInstance]` 和 `_runtime_action_instances: Array[RuntimeActionRunnerInstance]` 与 event_bindings 一一对应
-- **并行条件评估**：可选的 `ParallelConditionEvaluator`，使用 `WorkerThreadPool` 并行执行条件检查（`use_parallel_condition_evaluation`），回退到串行评估
-- **信号扩展**：新增 `event_completed_with_index(binding_index, context)` 和 `event_stopped_with_index(binding_index, reason, context)` 信号，携带绑定索引便于外部区分不同事件
-- **动态控制**：`trigger_binding(index, context)` 手动触发指定绑定，`set_binding_enabled(index, enabled)` 动态启用/禁用指定绑定
-
-MultiEventTrigger 减少了场景中的节点数量，特别适用于需要多个事件监听同一组动作的场景。
-
-### 其他改进
-
-- **冷却模式枚举**：`CooldownMode` 枚举支持 `NONE`（无冷却）、`GLOBAL_COOLDOWN`（全局冷却）、`PER_OBJECT_COOLDOWN`（每物体独立冷却），冷却状态存储在 RuntimeEventInstance 的 runtime_state 中
-- **事件参数同步**：`_sync_event_args_to_context()` 方法将 RuntimeEventInstance 中的 `last_event_args` 和 `event_*` 前缀的状态同步到 ExecutionContext
-- **引擎回调转发**：BaseTrigger 统一转发 `_process`、`_physics_process`、`_notification`、`_unhandled_input` 到所有事件实例
-- **FuseError 集成**：统一的错误创建和查询接口
-- **本地化日志**：所有日志方法支持本地化键参数
+**文档维护**: Fuse 开发团队
+**最后更新**: 2026-07-07
+**版本**: 1.0.0 (现状描述体例重写)
+**参照源码**: `addons/fuse/core/base_trigger.gd` (354) / `trigger.gd` (335) / `multi_event_trigger.gd` (481) / `runtime_event_instance.gd` (288) / `runtime_action_runner_instance.gd` (691) / `event_binding.gd`

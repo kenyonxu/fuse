@@ -5,7 +5,7 @@
 本报告对 Fuse 可视化编程系统中的 `BaseEvent` 核心脚本进行了全面分析。`BaseEvent` 是事件系统的基类 (class_name BaseEvent extends Resource)，定义了所有事件的生命周期接口、信号机制、运行时状态管理和错误处理框架，为可视化编程系统中的事件驱动功能提供了基础支持。
 
 **源文件:** [base_event.gd](../../../core/base/base_event.gd)
-**行数:** 455 行
+**行数:** 534 行
 **基类:** Resource
 **子类示例:** OnAnimationStarted, OnAnimationFinished, OnBodyEntered 等
 
@@ -103,7 +103,7 @@ BaseEvent 是所有 Fuse 事件的抽象基类。它作为 Resource 子类，可
   5. 调用 _initialize_runtime_state(runtime_instance) 初始化运行时状态
 ```
 
-这是推荐的初始化方式。子类可以重写此方法来处理特定的运行时状态初始化。
+**注**: 此方法不负责连接 `triggered` 信号。信号连接由 `RuntimeEventInstance._init()` 在构造时完成 — RuntimeEventInstance 在 `_init` 中将自己的 `_on_event_triggered` 方法连接到 `event_definition.triggered`，再通过自身的 `triggered` 信号转发给 Trigger（参见 [runtime_event_instance.gd:30](../../../core/runtime_event_instance.gd)）。这是推荐的初始化方式。子类可以重写此方法来处理特定的运行时状态初始化。
 
 #### terminate(owner_node: Node) -- 清理事件
 
@@ -221,6 +221,27 @@ func get_default_runtime_state() -> Dictionary:
 
 返回事件分类。基类默认返回 "general"。常见的分类有 "signal"、"animation"、"physics" 等。
 
+#### get_event_icon() -> Texture2D -- 获取事件图标
+
+返回事件的图标资源。优先级与 `BaseInstruction.get_icon()` 一致：
+
+```
+回退优先级:
+  1. metadata.builtin_icon → FuseIconManager.get_builtin_icon()
+  2. metadata.custom_icon  → FuseIconManager.get_custom_icon()
+  3. metadata.icon_name    → FuseIconManager (has_custom_icon 检查)
+  4. metadata.icon         → 直接返回 Texture2D
+  5. 实例变量 icon_name / icon (向后兼容旧事件)
+```
+
+#### get_detailed_info() -> Dictionary -- 获取事件详细信息
+
+返回包含事件类型、描述、分类的字典；若存在 `_fuse_error`，附加 `fuse_error` 键（值为 `FuseError.get_error_details()` 返回的错误详情）。
+
+#### _get_node_display_name(path: NodePath) -> String -- 节点路径可读化
+
+将相对路径（如 `..`, `../NodeName`）转换为人类可读的节点名称，供 `_update_resource_name()` 和 `get_description()` 使用。解析策略：路径末尾有明确节点名 → 直接提取；编辑器模式下经 `FuseNodeUtils` 解析纯相对引用；多层 `..` 无法解析时智能回退（如 `../../..` → `[3层上级]`）。
+
 #### _get_event_metadata() -> EventMetadata -- 获取事件元数据
 
 静态方法，子类实现以提供指令选择器使用的元数据 (名称、分类、描述、关键词、图标)。
@@ -328,14 +349,22 @@ BaseEvent 采用"自声明状态"模式:
 
 ### 信号流向
 
+事件信号并非直接从 BaseEvent 广播到 Trigger，而是经 RuntimeEventInstance 中转过滤：
+
 ```
-BaseEvent.triggered
-    └──→ Trigger._on_event_triggered()
-          └──→ ActionRunner.execute_instructions()
+BaseEvent.triggered(context)
+    └──→ RuntimeEventInstance._on_event_triggered(context)
+          │   按 context 的 "trigger" meta 过滤：
+          │   仅当 meta == owner_trigger 时转发，否则忽略
+          └──→ RuntimeEventInstance.triggered.emit(context)
+                └──→ Trigger._on_event_triggered()
+                      └──→ ActionRunner.execute_instructions()
 
 BaseEvent.stopped
-    └──→ Trigger.event_stopped (如果存在)
+    └──→ Trigger.event_stopped (如果存在，通过 _trigger_ref 反向通知)
 ```
+
+中转层的价值：当同一个 Event 资源被多个 Trigger 共享时，每个 Trigger 持有自己的 RuntimeEventInstance；通过 `_emit_triggered()` 在 context 上写入 "trigger" meta，RuntimeEventInstance 据此过滤，确保信号只送达归属的 Trigger，避免相互干扰。
 
 ---
 
@@ -354,11 +383,15 @@ BaseEvent 与 BaseTrigger 是协作关系:
 ```
 Trigger._ready()
     ├── 对每个 Event:
-    │   ├── Event.initialize_with_runtime_instance(owner_node, runtime_instance)
-    │   │   ├── Event.set_trigger_ref(owner_node)
-    │   │   ├── Event.initialize(owner_node)  // 子类实现
-    │   │   └── Event._initialize_runtime_state(runtime_instance)
-    │   └── Event.triggered.connect(_on_event_triggered)
+    │   ├── 创建 RuntimeEventInstance(event, self)  // _init 中:
+    │   │   ├── _initialize_runtime_state()         // 初始化状态字典
+    │   │   └── event.triggered.connect(_on_event_triggered)  // 信号中转
+    │   └── runtime_instance.start_listening()
+    │       └── Event.initialize_with_runtime_instance(owner_node, runtime_instance)
+    │           ├── Event.set_trigger_ref(owner_node)
+    │           ├── Event.initialize(owner_node)  // 子类实现
+    │           └── Event._initialize_runtime_state(runtime_instance)
+    └── RuntimeEventInstance.triggered.connect(_on_event_triggered)  // Trigger 监听 REI
 ```
 
 ### 清理流程
@@ -507,5 +540,5 @@ static func _get_event_metadata() -> EventMetadata:
 ---
 
 **文档维护**: Fuse 开发团队
-**最后更新**: 2026-03-19
-**版本**: 1.0.0
+**最后更新**: 2026-07-07
+**版本**: 1.1.0

@@ -4,9 +4,9 @@
 
 `MultiEventTrigger` 是 Fuse 系统中用于将多个 Trigger 功能合并到单个节点的组件。它继承自 `BaseTrigger`，通过 `EventBinding` 数组管理多个事件-动作绑定，减少场景中的节点数量并提升性能。
 
-- **文件**: `addons/fuse/core/multi_event_trigger.gd` (482 行)
+- **文件**: `addons/fuse/core/multi_event_trigger.gd` (481 行)
 - **类名**: `MultiEventTrigger`
-- **继承**: `BaseTrigger extends Node`
+- **继承**: `class_name MultiEventTrigger extends BaseTrigger`（multi_event_trigger.gd:4）
 - **图标**: `res://addons/fuse/icons/builtin/Signal.svg`
 
 ## 核心职责
@@ -44,7 +44,9 @@
 
 ```
 1. _initialize_parallel_evaluator()   # 创建 ParallelConditionEvaluator
+   # 设置 evaluation_mode = EvaluationMode.PARALLEL_SAFE（:108）
 2. _initialize_runtime_instances()  # 为每个绑定创建 Runtime*Instance
+   # 内部先调 _cleanup_runtime_instances()（:113），保证幂等
 3. _start_all_events()               # 启动所有事件监听
 ```
 
@@ -74,7 +76,8 @@
 |------|------|
 | `event` | `BaseEvent` 资源 - 触发的事件 |
 | `action_runner` | `ActionRunner` 资源 - 触发后执行的指令序列 |
-| `conditions` | `Array[BaseCondition]` - 条件检查（可选） |
+| `use_conditions` | `bool`（@export，event_binding.gd:53）- 是否启用条件检查；控制 `conditions` 在编辑器中的动态可见性（通过 `_get_property_list()` 实现） |
+| `conditions` | `Array[BaseCondition]` - 条件列表（**普通 var 非 @export**，event_binding.gd:61；可见性由 `use_conditions` 决定） |
 | `enabled` | `bool` - 是否启用 |
 | `trigger_once` | `bool` - 是否只触发一次 |
 | `cooldown_mode` | `CooldownMode` - 冷却模式 |
@@ -114,14 +117,18 @@ return true
 
 ## 信号
 
+MultiEventTrigger 在 ActionRunner 回调中**同时发射两个信号**（multi_event_trigger.gd:380–381）：基类兼容版本（无 index）+ 本类带 index 版本。
+
 | 信号 | 参数 | 说明 |
 |------|------|------|
 | `event_completed_with_index` | `binding_index: int, context: Dictionary` | 某个绑定执行完成 |
 | `event_stopped_with_index` | `binding_index: int, reason: String, context: Dictionary` | 某个绑定停止 |
 
-继承自 BaseTrigger 的信号：
+继承自 BaseTrigger 的信号（每次触发时一并发射，保持向后兼容）：
 - `event_completed(context: Dictionary)` - 任意绑定完成
 - `event_stopped(reason: String, context: Dictionary)` - 任意绑定停止
+
+> 同时，`binding_index` 会被注入到 `ExecutionContext`（multi_event_trigger.gd:267），供下游指令通过 `context.get_variable("binding_index")` 读取。
 
 ## 公共 API
 
@@ -132,7 +139,7 @@ return true
 | `get_description()` | 获取描述（N 个绑定，M 个启用） |
 | `validate()` | 验证所有绑定配置，返回错误列表 |
 | `reset()` | 重置所有触发状态和冷却 |
-| `trigger_binding(index)` | 手动触发指定绑定 |
+| `trigger_binding(index, context=null)` | 手动触发指定绑定（第二参数为可选触发源节点，multi_event_trigger.gd:458） |
 | `set_binding_enabled(index, enabled)` | 动态启用/禁用绑定 |
 
 ## 性能优化

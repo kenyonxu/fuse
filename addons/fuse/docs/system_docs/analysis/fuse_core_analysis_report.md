@@ -51,34 +51,52 @@ Fuse 是一个为 Godot 4.x 设计的可视化编程系统。通过分析 `addon
     *   **工厂模式**: 提供 `create_local`, `create_global` 等静态工厂方法。
     *   **类型转换**: 内置安全的类型转换和验证逻辑。
 
-### 3.2 变量容器与全局管理
-*   **VariableContainer**: (`addons/fuse/core/base/variable_container.gd`)
-    *   管理不同作用域的变量字典。
-    *   提供缓存机制 (`_variable_cache`) 优化访问性能。
-    *   处理变量的依赖关系。
-*   **GlobalVariableManager**: (`addons/fuse/core/global_variable_manager.gd`)
-    *   **单例模式**: 提供全局访问点。
-    *   **线程安全**: 使用 `Mutex` 保护资源读写。
-    *   **多资源管理**: 支持加载、保存、切换不同的全局变量资源文件 (`.tres`)。
-    *   **持久化**: 处理变量的序列化存储和备份/恢复功能。
+### 3.2 变量容器与全局管理（三层作用域）
+
+> v2.0 后变量系统重构为 **local / scope / global 三层作用域**，旧的 `VariableContainer` 已标注 `@deprecated`（2026-02-08），不再推荐使用。
+
+| 作用域 | 存储 | 涉及类 |
+|--------|------|--------|
+| **local（局部）** | `ExecutionContext.local_variables` 字典 | `ExecutionContext` / `VariableContext` |
+| **scope（作用域）** | 挂载到节点树的 `ScopeVariableContainer`（按 `scope_id` 查找） | `ScopeVariableContainer` + `ScopeVariableManager` + `VariableContext` |
+| **global（全局）** | 静态实例管理的 `BaseVariable` 字典 | `GlobalVariableAssistant`（Node 入口） + `GlobalVariableManager` + `GlobalVariableService` + `GlobalVariableResource` |
+
+*   **VariableContainer** (`addons/fuse/core/base/variable_container.gd`)：
+    *   **@deprecated（2026-02-08）**：仅作兼容保留，新代码改用上述三层结构。原职责已拆分到 `ExecutionContext.local_variables`（局部）和 `GlobalVariableAssistant`（全局）。
+*   **GlobalVariableManager** (`addons/fuse/core/global_variable_manager.gd`)：
+    *   **不是 autoload Node 单例**：`class_name GlobalVariableManager extends RefCounted`，通过静态字段 `static var _instance` + `static func get_instance()` 提供访问点（`global_variable_manager.gd:2/17`）。
+    *   **核心服务层**：纯 RefCounted 逻辑层，不依赖场景树，提供变量 CRUD + 信号（`variable_added/removed/changed`）、持久化（`save_to_resource` / `load_from_resource` / `save_persistent_to_resource`）、线程安全的 `_mutex` 保护。
+    *   **线程安全来源**：内部 Mutex 自身保护；面向用户的高层 API 由配套的 `GlobalVariableService`（RefCounted）和 `GlobalVariableAssistant`（Node，挂场景树）封装并进一步委托 Manager，`GlobalVariableResource`（Resource）负责 `.tres` 持久化格式。
 
 ## 4. 事件驱动架构 (Event-Driven Architecture)
 
-### 4.1 触发器 (Trigger)
-*   **类**: `Trigger` (`addons/fuse/core/trigger.gd`)
-*   **继承**: `Node` (作为场景树中的实体存在)。
-*   **桥接作用**: 连接 **事件定义 (Resource)** 和 **动作执行 (ActionRunner)**。
-*   **流程**:
-    1.  在 `_ready` 中初始化 `event_definition`。
-    2.  监听事件的 `triggered` 信号。
-    3.  信号触发时，创建 `ExecutionContext`。
-    4.  调用 `ActionRunner.run(context)`。
+### 4.1 触发器体系 (Trigger)
+Fuse 的触发器采用**两层继承**结构（v2.0 重构后）：
+
+*   **抽象基类** `BaseTrigger` (`addons/fuse/core/base_trigger.gd`)：
+    *   `@abstract class_name BaseTrigger extends Node`
+    *   集中提供公共功能：冷却检查 (`CooldownMode` 三档 NONE / COOLDOWN / THROTTLE)、执行上下文创建、事件参数同步、引擎回调转发、日志与 FuseError 集成。
+    *   声明 5 个供子类实现的抽象方法，构成 Trigger 的扩展协议。
+*   **具体子类 1** `Trigger` (`addons/fuse/core/trigger.gd`)：
+    *   `class_name Trigger extends BaseTrigger`（注意：**不直接 `extends Node`**）
+    *   单事件触发器：通过 `event_definition: BaseEvent` 与 `action_runner: ActionRunner` 两个 @export 资源字段配置一对「事件 → 动作」绑定。
+*   **具体子类 2** `MultiEventTrigger` (`addons/fuse/core/multi_event_trigger.gd`)：
+    *   `class_name MultiEventTrigger extends BaseTrigger`
+    *   多事件触发器：使用 `EventBinding` 数组将多组 Trigger 的功能合并到单个节点，减少节点数；重载基类信号，附带 `binding_index` 标识触发来源。
+
+**桥接作用**：触发器节点连接 **事件定义 (Resource)** 和 **动作执行 (ActionRunner / RuntimeActionRunnerInstance)**。典型流程：
+    1.  在 `_ready` 中调用事件的 `initialize_with_runtime_instance(owner_node, runtime_instance)`，将事件生命周期绑定到 `RuntimeEventInstance`。
+    2.  监听事件的 `triggered` 信号（信号经 Runtime 实例转发，保证多 Trigger 共享同一 Event 资源时互不干扰）。
+    3.  信号触发时，由 BaseTrigger 创建 `ExecutionContext`（含冷却/节流检查）。
+    4.  委派 `RuntimeActionRunnerInstance` 执行指令序列。
 
 ### 4.2 事件定义
 *   **类**: `BaseEvent` (`addons/fuse/core/base/base_event.gd`)
 *   **继承**: `Resource`。
 *   **解耦**: 事件逻辑封装在资源中，不依赖具体节点。
-*   **接口**: `initialize(owner_node)` 和 `terminate(owner_node)` 用于动态绑定和解绑信号。
+*   **生命周期接口**（双签名）:
+    *   `initialize(owner_node)` / `terminate(owner_node)`：传统动态绑定/解绑信号入口，由子类重写。
+    *   `initialize_with_runtime_instance(owner_node, runtime_instance: RuntimeEventInstance)`（v2.0 引入，`base_event.gd:137/154`）：将事件生命周期绑定到 `RuntimeEventInstance`，保存 `_runtime_instance_ref` 引用后转调 `initialize(owner_node)`，再调用 `_initialize_runtime_state(runtime_instance)` 让子类按需消费运行时状态。这是「定义-运行时分离」架构在事件侧的入口，确保多 Trigger 共享同一 Event 资源时状态隔离。
 
 ## 5. 基础设施与工具
 
@@ -189,8 +207,18 @@ v2.0 引入了 `ExpressionHelper`（`addons/fuse/core/utils/expression_helper.gd
 | 错误处理 | 分散的错误处理方式，缺乏统一上下文 | FuseError |
 | 日志输出 | 不可控的日志级别，格式不统一 | FuseLogger |
 | 状态隔离 | Resource 共享导致运行时状态冲突 | Runtime*Instance 三件套 |
-| 性能优化 | 高频触发时的重复计算和 GC 压力 | CompiledInstructionSequence + 对象池 |
-| 变量作用域 | 只有 LOCAL/GLOBAL 两种粒度 | ScopeVariableContainer + VariableOperations |
-| 全局变量 | 持久化方案不完善，非线程安全 | GlobalVariableManager + GlobalVariableAssistant |
-| 条件评估 | 多条件串行检查影响性能 | ParallelConditionEvaluator |
+| 性能优化 | 高频触发时的重复计算和 GC 压力 | CompiledInstructionSequence + `core/pooling/` 对象池体系 |
+| 变量作用域 | 只有 LOCAL/GLOBAL 两种粒度 | `ScopeVariableContainer` + `ScopeVariableManager` + `VariableContext`（旧 `VariableContainer` 已 @deprecated） |
+| 全局变量 | 持久化方案不完善，非线程安全 | `GlobalVariableManager`（RefCounted + 静态 `get_instance()`） + `GlobalVariableAssistant` + `GlobalVariableService` + `GlobalVariableResource` |
+| 条件评估 | 多条件串行检查影响性能 | `core/threading/ParallelConditionEvaluator` |
 | 多事件支持 | 需要多个 Trigger 节点 | MultiEventTrigger |
+
+### v2.0 附录：基础设施路径速查
+
+*   **`core/pooling/`（对象池体系，5 类）**：
+    *   `FuseObjectPool`（泛型池基类）、`FusePoolItem`（池化项协议）、`FusePoolManager`（多池统一管理）、`FuseRecycleTimer`（周期回收）、`InstructionInstancePool`（专门复用 `RuntimeInstructionInstance`，池大小 32~128 可配置）。
+    *   服务于 RuntimeActionRunnerInstance 高频触发场景，降低 GC 压力。
+*   **`core/threading/`（线程系统，4 类）**：
+    *   `FuseTaskManager`（`extends RefCounted`，统一异步任务调度）、`ParallelConditionEvaluator`（`extends RefCounted`，多条件并行评估，配合 `BaseCondition.is_thread_safe` 标志）、`FuseThreadSafe`（线程安全 mixin / 工具）、`FuseThreadingConfig`（线程行为配置）。
+*   **`ScopeVariableManager`** (`core/scope_variable_manager.gd`)：`extends Node`，挂载到节点树，按 `scope_id` 查找并管理场景中的 `ScopeVariableContainer`，为 `VariableContext` 的作用域层提供后端。
+*   **`CompiledInstructionSequence`** (`core/execution/compiled_instruction_sequence.gd`)：`extends RefCounted`，详见上文「编译指令序列」小节。

@@ -2,586 +2,427 @@
 
 ## 文档概述
 
-本报告对 Fuse 可视化编程系统中的 `BaseVariable` 核心脚本进行了全面分析。`BaseVariable` 是变量系统的基类，提供了变量管理的基本框架和接口，为可视化编程系统中的变量操作功能提供了基础支持。
+本报告对 Fuse 可视化编程系统中的 `BaseVariable` 核心脚本进行了现状描述式分析。`BaseVariable` 是变量系统的基类（`class_name BaseVariable extends Resource`），以 Godot 原生 `Variant` 直接承载值，定义了三层作用域、统一错误处理、生命周期钩子和一组静态工厂方法。它本身不承担存储/查找职责——变量按作用域分别由 `VariableContext`（LOCAL）、`ScopeVariableContainer`（SCOPE）、`GlobalVariableManager`/`Assistant`/`Resource`/`Service` 四件套（GLOBAL）管理。
 
-## 1. 设计文档符合性分析
+**源文件:** [base_variable.gd](../../../core/base/base_variable.gd)
+**行数:** 1073 行
+**基类:** Resource（`@tool` + `@icon`）
+**作用域枚举:** `VariableScope.LOCAL = 0` / `SCOPE = 1` / `GLOBAL = 2`
 
-### 符合的方面
+> 历史背景：本篇替代旧稿（前 6 节基于不存在的 `_validate_value` / `get_modification_history` 等 API，且误称 GlobalVariableManager 为"单例 Node"）。旧稿已归档至 `addons/fuse/docs/archive/analysis/base_variable_analysis.md`。
 
-- **架构设计符合性**：`BaseVariable` 实现了变量管理的基本架构，提供了完整的变量操作框架。
-- **接口设计符合性**：提供了完整的变量操作接口，包括 `get_value()`、`set_value()`、`reset()` 等核心方法。
-- **类型安全**：实现了变量类型验证机制，确保变量值的类型安全。
-- **序列化支持**：实现了完整的序列化和反序列化功能，支持变量的持久化存储。
-- **信号系统**：提供了变量值改变时的信号通知机制，便于外部监听和响应。
+---
 
-### 不符合的方面
+## 1. 类概述和职责
 
-- **变量作用域支持不足**：缺乏对不同作用域变量的统一管理机制。
-- **变量依赖关系管理不完善**：缺乏变量之间的依赖关系管理机制。
-- **变量历史记录功能不完整**：变量历史记录功能较为简单，缺乏详细的变更记录。
+`BaseVariable` 是一个 `Resource` 子类，单实例描述"一个具名变量"——它的名字、值、作用域、持久化倾向、统计计数。它可被序列化进 `.tres`，但不持有节点引用，不直接与场景树耦合。
 
-## 2. 最佳实践符合性分析
+### 核心职责
 
-### 符合的最佳实践
+1. **承载值**：以 `Variant value` 字段直接存储任意 Godot 值，无类型约束、无运行时校验
+2. **作用域声明**：通过 `scope: int`（取 `VariableScope` 枚举值）声明该变量归属哪一层
+3. **修改追踪**：维护 `modification_count`、`last_modified_time`、`access_count`、`creation_time` 等计数
+4. **变更通知**：通过 `value_changed` / `value_modified` / `variable_reset` 三个信号广播变更
+5. **错误承载**：内建 `_fuse_error: FuseError` 字段与 `_create_fuse_error()` 构造器，作为统一错误容器
+6. **工厂支持**：提供 `create()` / `create_local()` / `create_global()` / `create_player_health()` / `create_batch()` / `from_config()` / `clone_variable()` 等静态工厂
+7. **持久化兼容**：保留旧版 ConfigFile 持久化方法（`_save_to_storage` / `_load_from_storage` / `_clear_storage`，均已 `@deprecated`）
 
-- **配置管理**：使用 `@export` 装饰器提供配置管理，支持在编辑器中直接配置。
-- **调试支持**：提供了完整的调试日志系统，便于问题排查。
-- **资源管理**：实现了变量的清理机制，避免了内存泄漏。
-- **错误处理**：实现了基本的错误处理机制，包括验证和错误报告。
-- **文档注释**：提供了详细的文档注释，说明了方法的用途和参数。
+### 设计特点
 
-### 不符合的最佳实践
+- 使用 `@tool` 注解支持编辑器模式运行（`_update_resource_name()` 会在 Inspector 中显示拼接的资源名）
+- 不持节点引用，仅持有 `RefCounted`/`Resource` 友元（如 `FuseError`）
+- 无强制子类化——多数场景直接 `BaseVariable.new()` 即可，不需要派生
+- 类型系统完全交由 Godot Variant：`get_type_name()` / `get_godot_type()` 反射 `typeof(value)`，无独立类型校验层
 
-- **性能优化不足**：缺乏变量操作的性能优化机制，如缓存和批处理。
-- **异步支持不足**：缺乏对异步变量操作的原生支持。
-- **测试支持不足**：缺乏内置的测试支持机制，如模拟变量操作和验证。
+---
 
-## 3. 代码质量评估
+## 2. 核心属性
 
-### 优点
+### 2.1 @export 属性
 
-1. **结构清晰**：代码结构清晰，方法职责明确，易于理解和维护。
-2. **类型安全**：实现了变量类型验证机制，确保变量值的类型安全。
-3. **调试功能完善**：提供了详细的调试日志和状态信息，便于问题排查。
-4. **信号系统完善**：提供了完整的信号系统，便于外部监听和响应。
-5. **序列化支持**：实现了完整的序列化和反序列化功能，支持变量的持久化存储。
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `variable_name` | String | `""` | 变量名；setter 仅记日志，不触发资源名重建 |
+| `value` | Variant | `null` | 变量值；setter 更新计数并 `emit value_changed`（详见 §5 信号 bug） |
+| `description` | String | `""` | 人类可读描述 |
+| `log_level` | FuseLogger.LogLevel | `INFO` | 日志级别 |
+| `scope` | int | `VariableScope.LOCAL` | 作用域；setter 触发 `_update_resource_name()` |
+| `persistent` | bool | `false` | 是否参与持久化（GLOBAL 作用域默认 true） |
+| `auto_create` | bool | `false` | 是否在缺失时自动创建（LOCAL/SCOPE 默认 true） |
+| `access_count` | int | `0` | 通过 `get_value()` 读取的累计次数（`@export`） |
 
-### 缺点
+### 2.2 实例变量（非 @export）
 
-1. **变量作用域支持不足**：缺乏对不同作用域变量的统一管理机制。
-2. **变量依赖关系管理不完善**：缺乏变量之间的依赖关系管理机制。
-3. **性能优化不足**：缺乏变量操作的性能优化机制。
-4. **异步支持不足**：缺乏对异步变量操作的原生支持。
+| 变量 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `creation_time` | float | `_init()` 时设为 `Time.get_ticks_msec()/1000.0` | 创建时间戳 |
+| `last_modified_time` | float | 0.0 | 最近一次修改时间戳（value setter 和 set_value 都会更新） |
+| `modification_count` | int | 0 | 修改次数（value setter 和 set_value 都会自增） |
+| `is_initialized` | bool | `false` | 是否已通过 `get_value()` 或工厂完成惰性初始化 |
+| `_fuse_error` | FuseError | `null` | 统一错误对象 |
 
-## 4. 潜在问题识别
+### 2.3 常量与废弃常量
 
-### 严重问题
+| 常量 | 值 | 说明 |
+|------|----|------|
+| `DEFAULT_VALUE` | `null` | 默认值占位 |
+| `STORAGE_SECTION` | `"variables"` | @deprecated，旧 ConfigFile section |
+| `STORAGE_CONFIG_PATH` | `"user://fuse_variables.cfg"` | @deprecated，旧 ConfigFile 路径 |
 
-1. **类型验证不够严格**：在 `set_value()` 方法中，类型验证可能不够严格，导致运行时错误。
-   - 位置：`_validate_value()` 方法
-   - 影响：可能导致类型不匹配，影响系统的稳定性
-
-2. **内存泄漏风险**：在变量持久化存储时，可能存在未清理的资源，导致内存泄漏。
-   - 位置：`_save_to_storage()` 方法
-   - 影响：可能导致内存占用过高，影响系统性能
-
-### 中等问题
-
-1. **变量历史记录功能不完整**：变量历史记录功能较为简单，缺乏详细的变更记录。
-   - 位置：`get_modification_history()` 方法
-   - 影响：限制了变量变更的可追溯性，影响系统的可维护性
-
-2. **变量比较操作不够灵活**：变量比较操作只支持基本类型，缺乏复杂类型的比较支持。
-   - 位置：`greater_than()`、`less_than()` 等方法
-   - 影响：限制了变量比较的灵活性，影响系统的可用性
-
-### 轻微问题
-
-1. **日志格式不统一**：日志输出的格式在不同方法中不统一。
-   - 位置：各种 `_log_*` 方法
-   - 影响：影响日志的可读性和一致性
-
-2. **文档注释不完整**：部分方法的文档注释不够详细，缺少使用示例。
-   - 位置：部分方法
-   - 影响：影响代码的可维护性
-
-## 5. 改进建议
-
-### 高优先级改进
-
-1. **增强类型验证机制**
-   - 完善变量类型验证机制
-   - 支持更灵活的类型转换和验证
-   - 示例改进：
-     ```gdscript
-     func _validate_value(value: Variant) -> bool:
-         if variable_type == 0:  # NIL
-             _log_debug("Variable type is NIL, accepting any value: %s (type: %s)" % [str(value), typeof(value)])
-             return true
-         
-         var value_type = typeof(value)
-         
-         # 检查类型是否匹配
-         if value_type == variable_type:
-             return true
-         
-         # 尝试类型转换
-         if _try_type_conversion(value, variable_type):
-             return true
-         
-         _log_error("Invalid value type for variable %s: expected %s, got %s" % [
-             variable_name, 
-             _get_type_name(variable_type), 
-             _get_type_name(value_type)
-         ])
-         return false
-     
-     func _try_type_conversion(value: Variant, target_type: int) -> bool:
-         # 尝试将值转换为目标类型
-         match target_type:
-             TYPE_INT:
-                 if typeof(value) == TYPE_FLOAT:
-                     return true
-                 if typeof(value) == TYPE_STRING:
-                     var num = int(value)
-                     if not num.is_nan():
-                         return true
-             TYPE_FLOAT:
-                 if typeof(value) == TYPE_INT:
-                     return true
-                 if typeof(value) == TYPE_STRING:
-                     var num = float(value)
-                     if not num.is_nan():
-                         return true
-             TYPE_STRING:
-                 # 任何类型都可以转换为字符串
-                 return true
-             TYPE_BOOL:
-                 if typeof(value) == TYPE_INT:
-                     return true
-                 if typeof(value) == TYPE_FLOAT:
-                     return true
-                 if typeof(value) == TYPE_STRING:
-                     return not value.is_empty()
-         
-         return false
-     ```
-
-2. **实现变量作用域管理**
-   - 添加变量作用域管理机制
-   - 支持不同作用域的变量隔离和访问
-   - 示例改进：
-     ```gdscript
-     enum VariableScope {
-         LOCAL,      # 局部变量，仅在当前上下文中有效
-         GLOBAL,    # 全局变量，在整个应用中有效
-         PERSISTENT  # 持久化变量，保存到存储中
-     }
-     
-     var _scope: VariableScope = VariableScope.LOCAL
-     
-     func get_scope() -> VariableScope:
-         return _scope
-     
-     func set_scope(scope: VariableScope):
-         _scope = scope
-         _log_debug("Variable scope set to: %s" % VariableScope.keys()[scope])
-     
-     func set_value(value: Variant, scope: VariableScope = _scope) -> bool:
-         if not _validate_value(value):
-             _log_error("Invalid value type for variable %s" % variable_name)
-             return false
-         
-         var old_value = current_value
-         current_value = value
-         last_modified_time = Time.get_ticks_msec() / 1000.0
-         modification_count += 1
-         
-         # 根据作用域处理持久化
-         if scope == VariableScope.PERSISTENT:
-             _save_to_persistent_storage()
-         
-         # 发出信号
-         value_changed.emit(old_value, value)
-         value_modified.emit(value)
-         
-         return true
-     
-     func _save_to_persistent_storage():
-         # 实现持久化存储逻辑
-         var save_data = {
-             "name": variable_name,
-             "value": current_value,
-             "type": variable_type,
-             "timestamp": last_modified_time
-         }
-         # 保存到配置文件或用户设置
-         var config = ConfigFile.new()
-         config.set_value("variables", variable_name, save_data)
-         config.save("user://variables.cfg")
-     ```
-
-3. **实现变量依赖关系管理**
-   - 添加变量之间的依赖关系管理
-   - 支持变量变更时的自动更新
-   - 示例改进：
-     ```gdscript
-     var _dependencies: Array[String] = []
-     var _dependents: Array[String] = []
-     
-     func add_dependency(variable_name: String):
-         if not _dependencies.has(variable_name):
-             _dependencies.append(variable_name)
-             _log_debug("Added dependency: %s" % variable_name)
-     
-     func remove_dependency(variable_name: String):
-         _dependencies.erase(variable_name)
-         _log_debug("Removed dependency: %s" % variable_name)
-     
-     func add_dependent(variable_name: String):
-         if not _dependents.has(variable_name):
-             _dependents.append(variable_name)
-             _log_debug("Added dependent: %s" % variable_name)
-     
-     func remove_dependent(variable_name: String):
-         _dependents.erase(variable_name)
-         _log_debug("Removed dependent: %s" % variable_name)
-     
-     func set_value(value: Variant) -> bool:
-         if not _validate_value(value):
-             return false
-         
-         var old_value = current_value
-         var value_changed = old_value != value
-         
-         # 设置新值
-         current_value = value
-         last_modified_time = Time.get_ticks_msec() / 1000.0
-         modification_count += 1
-         
-         # 如果值发生变化，通知依赖的变量
-         if value_changed:
-             _notify_dependents()
-             value_changed.emit(old_value, value)
-         
-         value_modified.emit(value)
-         
-         return true
-     
-     func _notify_dependents():
-         # 通知所有依赖此变量的变量
-         for dep_name in _dependents:
-             # 这里可以实现具体的依赖更新逻辑
-             _log_debug("Notifying dependent: %s" % dep_name)
-     ```
-
-### 中优先级改进
-
-1. **增强变量历史记录功能**
-   - 完善变量历史记录功能
-   - 支持详细的变更记录和回滚功能
-   - 示例改进：
-     ```gdscript
-     var _modification_history: Array[Dictionary] = []
-     var _max_history_size: int = 100
-     
-     func set_value(value: Variant) -> bool:
-         if not _validate_value(value):
-             return false
-         
-         var old_value = current_value
-         var change_record = {
-             "timestamp": Time.get_ticks_msec() / 1000.0,
-             "old_value": old_value,
-             "new_value": value,
-             "modification_count": modification_count,
-             "context": Engine.get_main_loop().current_scene.name if Engine.get_main_loop().current_scene else "unknown"
-         }
-         
-         # 添加到历史记录
-         _modification_history.append(change_record)
-         
-         # 限制历史记录大小
-         if _modification_history.size() > _max_history_size:
-             _modification_history.pop_front()
-         
-         # 更新变量值
-         current_value = value
-         last_modified_time = change_record["timestamp"]
-         modification_count += 1
-         
-         value_changed.emit(old_value, value)
-         value_modified.emit(value)
-         
-         return true
-     
-     func get_modification_history() -> Array[Dictionary]:
-         return _modification_history.duplicate()
-     
-     func get_modification_history_range(start_index: int, count: int) -> Array[Dictionary]:
-         var end_index = min(start_index + count, _modification_history.size())
-         return _modification_history.slice(start_index, end_index)
-     
-     func revert_to_previous_version():
-         if _modification_history.size() >= 2:
-             var previous_record = _modification_history[_modification_history.size() - 2]
-             set_value(previous_record["old_value"])
-     
-     func clear_modification_history():
-         _modification_history.clear()
-     ```
-
-2. **实现变量比较操作增强**
-   - 增强变量比较操作
-   - 支持复杂类型的比较和自定义比较逻辑
-   - 示例改进：
-     ```gdscript
-     func compare_with(value: Variant, comparison_type: String = "eq") -> bool:
-         # 支持多种比较类型
-         match comparison_type:
-             "eq":
-                 return equals(value)
-             "ne":
-                 return not_equals(value)
-             "gt":
-                 return greater_than(value)
-             "lt":
-                 return less_than(value)
-             "ge":
-                 return greater_equal(value)
-             "le":
-                 return less_equal(value)
-             "contains":
-                 return _contains(value)
-             "matches":
-                 return _matches_pattern(value)
-             _:
-                 _log_error("Unknown comparison type: %s" % comparison_type)
-                 return false
-     
-     func _contains(value: Variant) -> bool:
-         # 检查变量是否包含指定值
-         match typeof(current_value):
-             TYPE_ARRAY:
-                 return current_value.has(value)
-             TYPE_DICTIONARY:
-                 return current_value.has(value)
-             TYPE_STRING:
-                 return str(current_value).find(str(value)) != -1
-             _:
-                 _log_warning("Contains operation not supported for type: %s" % typeof(current_value))
-                 return false
-     
-     func _matches_pattern(pattern: Variant) -> bool:
-         # 检查变量是否匹配指定模式
-         if typeof(current_value) == TYPE_STRING and typeof(pattern) == TYPE_STRING:
-             # 简单的模式匹配
-             return current_value.match(pattern)
-         return false
-     ```
-
-3. **添加异步变量操作支持**
-   - 实现异步变量操作
-   - 支持异步变量设置和获取
-   - 示例改进：
-     ```gdscript
-     signal value_changed_async(old_value: Variant, new_value: Variant)
-     signal value_set_completed(success: bool, error_message: String = "")
-     
-     func set_value_async(value: Variant) -> Signal:
-         # 异步设置变量值
-         var promise = Promise.new()
-         
-         # 模拟异步操作
-         await get_tree().create_timer(0.1).timeout
-         
-         if _validate_value(value):
-             var old_value = current_value
-             current_value = value
-             last_modified_time = Time.get_ticks_msec() / 1000.0
-             modification_count += 1
-             
-             value_changed_async.emit(old_value, value)
-             value_set_completed.emit(true, "")
-             promise.resolve(true)
-         else:
-             value_set_completed.emit(false, "Invalid value type")
-             promise.resolve(false)
-         
-         return promise.finished
-     
-     func get_value_async() -> Signal:
-         # 异步获取变量值
-         var promise = Promise.new()
-         
-         # 模拟异步操作
-         await get_tree().create_timer(0.1).timeout
-         
-         promise.resolve(current_value)
-         return promise.finished
-     ```
-
-### 低优先级改进
-
-1. **统一日志格式**
-   - 统一日志输出的格式
-   - 使用统一的日志前缀和格式
-   - 示例改进：
-     ```gdscript
-     func _log_debug(message: String):
-         if debug_mode:
-             var timestamp = Time.get_datetime_string_from_system().replace("T", " ")
-             print("[DEBUG][BaseVariable][%s][%s] %s" % [timestamp, variable_name, message])
-     ```
-
-2. **添加变量统计信息**
-   - 实现变量统计信息
-   - 提供变量的使用统计和分析
-   - 示例改进：
-     ```gdscript
-     var _access_count: int = 0
-     var _set_count: int = 0
-     var _get_count: int = 0
-     
-     func get_value() -> Variant:
-         _access_count += 1
-         _get_count += 1
-         return super.get_value()
-     
-     func set_value(value: Variant) -> bool:
-         _access_count += 1
-         _set_count += 1
-         return super.set_value(value)
-     
-     func get_statistics() -> Dictionary:
-         return {
-             "variable_name": variable_name,
-             "variable_type": get_type_name(),
-             "access_count": _access_count,
-             "set_count": _set_count,
-             "get_count": _get_count,
-             "modification_count": modification_count,
-             "last_modified_time": last_modified_time,
-             "current_value": current_value
-         }
-     ```
-
-3. **优化性能**
-   - 优化变量操作的性能
-   - 减少不必要的计算和内存分配
-   - 示例改进：
-     ```gdscript
-     var _value_cache: Variant = null
-     var _cache_timestamp: float = 0.0
-     var _cache_timeout: float = 1.0
-     
-     func get_value() -> Variant:
-         # 检查缓存
-         if Time.get_ticks_msec() / 1000.0 - _cache_timestamp < _cache_timeout:
-             return _value_cache
-         
-         # 更新缓存
-         _value_cache = super.get_value()
-         _cache_timestamp = Time.get_ticks_msec() / 1000.0
-         
-         return _value_cache
-     ```
-
-## 6. 总体评估和评分
-
-### 总体评估
-
-`BaseVariable` 是 Fuse 可视化编程系统中的核心组件，整体设计合理，功能完善。它提供了完整的变量管理框架，具有良好的可扩展性。然而，在变量作用域支持、变量依赖关系管理和性能优化方面还有改进空间。
-
-### 评分
-
-- **设计符合性**：8/10
-  - 优点：架构设计合理，接口设计完整，类型安全机制完善
-  - 缺点：变量作用域支持不足，依赖关系管理不完善
-
-- **最佳实践符合性**：7/10
-  - 优点：配置管理灵活，调试支持完善，资源管理良好
-  - 缺点：性能优化不足，异步支持不足，测试支持不足
-
-- **代码质量**：7/10
-  - 优点：结构清晰，类型安全，调试功能完善，信号系统完善
-  - 缺点：变量作用域支持不足，依赖关系管理不完善，性能优化不足
-
-- **潜在问题**：6/10
-  - 优点：大部分问题已经识别并可以解决
-  - 缺点：存在一些严重的潜在问题需要优先解决
-
-- **改进建议**：8/10
-  - 优点：提供了详细的改进建议，覆盖了各个方面
-  - 缺点：部分建议需要更多的实现细节
-
-### 综合评分：7.2/10
-
-`BaseVariable` 是一个功能完善的设计良好的组件，但在变量作用域支持、变量依赖关系管理和性能优化方面还有改进空间。建议优先解决严重问题，然后逐步实施中优先级和低优先级的改进建议。
-
-## v2.0 新增特性（2026-03 更新）
-
-以下内容基于对 `addons/fuse/core/base/base_variable.gd` 及相关变量系统源码的分析，记录 v2.0 版本中变量系统的重要架构改进。
-
-### ScopeVariableContainer / ScopeVariableManager 作用域变量系统
-
-v2.0 引入了完整的作用域变量系统，解决了此前「变量作用域管理不完善」的问题：
-
-**ScopeVariableContainer**（`addons/fuse/core/base/scope_variable_container.gd`）：
-- **节点组件**：附加到场景中的 Node 上，为该节点及其子树提供作用域变量存储
-- **变量存储**：`variables: Dictionary[String, Variant]`，使用 `@export` 支持编辑器直接配置
-- **继承模式**：`InheritanceMode` 枚举支持三种模式：
-  - `NONE`：不继承父作用域
-  - `READ_ONLY`：只读继承父作用域（默认）
-  - `READ_WRITE`：读写继承父作用域
-- **作用域链**：`get_scope_chain()` 返回从根到当前的完整作用域链，支持逐级向上查找
-- **信号通知**：`scope_variable_changed`、`scope_variable_added`、`scope_variable_removed` 用于监听变量变化
-- **ScopeVariableManager 集成**：在 `_enter_tree()` 中自动注册到 ScopeVariableManager 单例，`_exit_tree()` 中注销
-
-**ScopeVariableManager**（`addons/fuse/core/scope_variable_manager.gd`）：
-- 单例模式，管理所有已注册的 ScopeVariableContainer
-- `find_nearest_scope(node)` 方法：从指定节点向上遍历场景树，找到最近的 ScopeVariableContainer
-
-### GlobalVariableManager / GlobalVariableResource / GlobalVariableAssistant 全局变量系统
-
-v2.0 重构了全局变量管理架构，形成了三层结构：
-
-**GlobalVariableManager**（`addons/fuse/core/global_variable_manager.gd`）：
-- **单例模式**：静态 `_instance` 在类加载时初始化，避免竞态条件
-- **线程安全**：所有变量操作通过 `Mutex` 保护（`_mutex`），提供 `_thread_safe` 系列方法
-- **核心 API**：`add_variable()`、`get_variable()`、`has_variable()`、`remove_variable()`
-- **持久化**：`save_to_resource(path)` 和 `save_persistent_to_resource(path)` 支持将变量保存到 `.tres` 资源文件。通过 `GlobalVariableResource` 正确序列化变量数据
-- **资源加载**：`load_from_resource(path)` 支持 GlobalVariableResource 格式和旧 meta 格式（向后兼容）
-- **批量操作**：`get_variables_batch_thread_safe(names)` 减少锁开销
-- **线程安全迭代器**：`get_all_variables_snapshot()` 和 `get_variables_safe()` 返回深拷贝，支持并行条件检测等需要安全遍历的场景
-- **信号通知**：`variable_added`、`variable_removed`、`variable_changed` 用于监听变量变化
-
-**GlobalVariableResource**（`addons/fuse/core/global_variable_resource.gd`）：
-- 专门用于序列化全局变量的 Resource 子类
-- 支持 `add_variable(name, var_data)` / `get_variable(name)` / `get_variable_names()` 的标准化存储接口
-
-**GlobalVariableAssistant**（`addons/fuse/core/global_variable_assistant.gd`）：
-- **场景节点**：添加到场景树中，作为 GlobalVariableManager 的用户界面层
-- **自动加载**：`auto_load_on_ready` 在 `_ready()` 时从 `resource_path` 或 `current_resource` 加载变量
-- **自动保存**：`auto_save` 在 `_exit_tree()` 时自动保存持久化变量；`auto_save_on_change` 支持延迟保存（通过 Timer 节流）
-- **单例桥接**：`get_instance()` 优先查找场景中的节点，回退到内存实例
-
-### VariableOperations / VariableScopeUtils 统一变量访问 API
-
-v2.0 引入了 `VariableOperations`（`addons/fuse/core/utils/variable_operations.gd`）作为变量系统的统一操作工具类：
-
-- **无状态设计**：所有方法为静态方法，不持有任何状态
-- **三作用域统一 API**：
-  - `get_variable(context, name, scope, default)`：根据 `BaseVariable.VariableScope` 枚举从对应作用域读取变量
-  - `set_variable(context, name, scope, value)`：向对应作用域写入变量
-  - `has_variable(context, name, scope)`：检查变量是否存在
-- **作用域容器查找**：`get_scope_container(context, search_node)` 通过 ScopeVariableManager 查找最近的 ScopeVariableContainer
-- **LOCAL 变量双写**：设置 LOCAL 变量时，除了写入 `ExecutionContext.local_variables`，还同时写入 `context.trigger` 的 meta 数据（键格式：`local_variable_{name}`），确保 Event 子类也能访问局部变量
-- **日志级别控制**：可配置的静态 `_log_level`，所有日志通过 FuseLogger 统一输出
-
-此外，ExecutionContext 内部也集成了 VariableOperations 的查找逻辑：通过 `_find_scope_container()` 方法，以 trigger -> target -> owner 的优先级查找 ScopeVariableContainer。
-
-### VariableScope 枚举扩展
-
-v2.0 在 BaseVariable 中扩展了 VariableScope 枚举，从原来的 LOCAL/GLOBAL 两种作用域新增了 SCOPE：
+### 2.4 枚举
 
 ```gdscript
 enum VariableScope {
-    LOCAL = 0,      ## 局部变量（ExecutionContext）
+    LOCAL = 0,      ## 局部变量（ExecutionContext.local_variables）
     SCOPE = 1,      ## 作用域变量（ScopeVariableContainer）
-    GLOBAL = 2      ## 全局变量（GlobalVariableAssistant）
+    GLOBAL = 2      ## 全局变量（GlobalVariableAssistant/Manager）
 }
 ```
 
-每种作用域的默认行为通过 `_configure_by_scope()` 方法配置：
-- LOCAL：`auto_create = true`，`persistent = false`
-- SCOPE：`auto_create = true`，`persistent = false`
-- GLOBAL：`auto_create = false`，`persistent = true`
+三值是 LOCAL/SCOPE/GLOBAL。注意：废弃类 `VariableContainer` 内部自带一个**不同的** `VariableScope = LOCAL/GLOBAL` 二值枚举（见 §7.1），不要混淆。
 
-### 其他改进
+---
 
-- **FuseError 集成**：`_fuse_error` 字段 + `_create_fuse_error()` 方法，错误上下文包含变量名和变量类型
-- **FuseLogger 集成**：所有日志方法通过 FuseLogger 统一输出，支持可配置的日志级别 `log_level`
-- **工厂模式完善**：`BaseVariable.create()`、`create_local()`、`create_global()`、`create_batch()`、`from_config()`、`clone_variable()` 提供丰富的静态工厂方法
-- **废弃标记**：旧的 `_save_to_storage()` / `_load_from_storage()` / `_clear_storage()` 方法标记为 `@deprecated`，建议使用 GlobalVariableManager 进行持久化
-- **验证配置**：`validate_configuration()` 返回配置错误数组，全局变量未启用持久化时降级为警告而非错误
+## 3. 关键方法
+
+### 3.1 值读写
+
+#### `get_value() -> Variant`
+读取当前值，并对 `access_count` 自增；首次访问会触发 `_initialize_value()`（将 `is_initialized` 置 true）。**不做类型转换或校验。**
+
+#### `set_value(new_value: Variant) -> bool`
+**无任何类型校验，直接赋值。** 完整流程：
+1. 保存 `old_value`
+2. `value = new_value`（触发 value setter，但 setter 内只更新计数并 `emit value_changed`）
+3. 显式更新 `last_modified_time` / `modification_count`（与 setter 重复，因 setter 已更新过——这是冗余但无害的设计）
+4. `emit value_changed(old_value, new_value)`（**第二次** emit，与 setter 内的 emit 重复）
+5. `emit value_modified(new_value)`（setter 内**不会** emit 此信号——见 §5）
+6. 返回 `true`（无失败路径）
+
+> 设计取舍：所有值类型都通过 Variant 透传，没有 `_validate_value()` / 类型守卫 / 范围检查。需要类型约束的调用方（如指令层）应在外部校验。
+
+### 3.2 状态查询
+
+| 方法 | 返回 | 说明 |
+|------|------|------|
+| `has_value()` | bool | `is_initialized and value != null` |
+| `is_empty()` | bool | `not has_value()` |
+| `get_type_name()` | String | 反射 `typeof(value)` 转字符串（覆盖 NIL/BOOL/INT/FLOAT/STRING/VECTOR2/VECTOR3/COLOR/ARRAY/DICTIONARY/OBJECT/NODE_PATH 及各类 PackedArray，未覆盖返回 `"Unknown"`） |
+| `get_godot_type()` | int | 直接返回 `typeof(value)` |
+| `get_info()` | Dictionary | 聚合 name/type/value/persistent/modification_count/last_modified_time/is_initialized；若 `_fuse_error` 非空则附 `fuse_error` 键 |
+| `get_debug_info()` | String | 单行调试串；包含 FuseError 时附错误信息 |
+| `get_creation_info()` | Dictionary | name/type/scope（用 `VariableScope.keys()[scope]` 反查名）/creation_time/access_count/persistent/auto_create/modification_count/last_modified_time |
+| `equals(v)` / `not_equals(v)` / `greater_than(v)` / `less_than(v)` / `greater_equal(v)` / `less_equal(v)` | bool | 值比较；`*_than` 系列先 `to_number()` 转换，无法转换记 warning 后返回 false |
+
+### 3.3 类型转换辅助
+
+| 方法 | 行为 |
+|------|------|
+| `to_string()` | `str(value)` |
+| `to_number()` | int/float 直返；string 尝试 `float()`（NaN 时回 0）；其余 0.0 |
+| `to_bool()` | bool 直返；int/float 比较非零；string 判非空；其余 false |
+| `to_array()` | 已是 Array 直返；否则包成 `[value]` |
+| `to_dict()` | 已是 Dictionary 直返；否则 `{}` |
+| `_convert_to_number(val)` | 静态辅助，与 `to_number()` 类似但接受外部值 |
+
+### 3.4 重置与生命周期
+
+#### `reset()`
+将 `value` 置 `null`、计数清零、`is_initialized = true`、`_fuse_error = null`，并 `emit variable_reset()`。**注意**：reset 会直接清空值，与 `_initialize_value()` 的惰性初始化不同。
+
+#### `_init()`
+设置 `last_modified_time = 0`、`modification_count = 0`、`is_initialized = false`、`_fuse_error = null`、`creation_time = now`。注释明确**不**在此调 `reset()`（因为 `value` 可能还没被设置）。
+
+#### `_notification(what)`
+仅处理 `NOTIFICATION_PREDELETE`：把 `_fuse_error` 置 `null`，避免悬空引用。不做其它清理（无节点、无信号断开需求——信号由 Manager 在 `add_variable` 时连接、`remove_variable` 时断开）。
+
+### 3.5 FuseError 集成
+
+#### `_create_fuse_error(message, error_type = RUNTIME_ERROR, context = {})`
+构造 FuseError 实例存入 `_fuse_error`。会自动向 `context` 注入 `variable_name` 和 `variable_type`（来自 `get_type_name()`）。错误源组件名固定为 `"BaseVariable"`。
+
+#### `get_fuse_error() -> FuseError` / `has_fuse_error() -> bool`
+查询接口，供外部（如指令、事件）消费。
+
+> BaseVariable 不主动创建错误——`_fuse_error` 通常由外部检测到异常时通过 `_create_fuse_error()` 写入。错误状态在 `reset()` 和 PREDELETE 时被清除。
+
+### 3.6 日志
+
+四个统一日志方法 `_log_debug` / `_log_info` / `_log_warning` / `_log_error`，全部委托 `FuseLogger`，传入类名 `"BaseVariable"`、`log_level`、消息、以及 `variable_name` 作为上下文标识。
+
+### 3.7 序列化（轻量）
+
+#### `serialize() -> Dictionary` / `deserialize(data)`
+轻量字典序列化，仅含 name/value/persistent/modification_count/last_modified_time。`deserialize` 还会把 `is_initialized` 置 true。**注意**：这不是 `.tres` 持久化路径——真正的资源持久化走 `GlobalVariableResource`（见 §6.4）。
+
+#### `clone() -> BaseVariable`（实例方法）
+深拷贝所有属性到新 `BaseVariable.new()` 实例（注意：不拷贝 `scope`、`auto_create`、`creation_time`——这是个**已存在的小遗漏**，与静态版 `clone_variable()` 行为不同）。
+
+### 3.8 验证
+
+#### `validate_configuration() -> Array[String]`
+返回配置错误字符串数组（**非** FuseError 列表，纯本地化字符串）。当前规则：
+- `variable_name` 为空 → append `FuseLocalization.translate("FUSE_ERROR_VAR_NAME_EMPTY")`
+- `scope == GLOBAL and not persistent` → **不再视为错误**，仅 `_log_warning` 提示"将在场景退出时被自动清理"（旧稿描述的"全局变量必须启用持久化"的强制规则已放宽为建议）
+
+返回空数组即通过。
+
+---
+
+## 4. 静态工厂方法
+
+`BaseVariable` 提供丰富的静态工厂，全部位于文件末尾"内置工厂模式"区段。
+
+| 方法 | 用途 | 备注 |
+|------|------|------|
+| `create(name, val, scope = LOCAL)` | 核心创建入口 | 空名 push_error 并返回 null；调 `_configure_by_scope` 设默认 persistent/auto_create；置 `is_initialized = true` |
+| `create_local(name, val)` | 便捷 LOCAL 创建 | 转发 `create` |
+| `create_global(name, val, persist = true)` | 便捷 GLOBAL 创建 | 转发 `create` 后强制 `persistent = persist` |
+| `create_player_health(health = 100.0)` | 游戏常用 | GLOBAL + persistent，名 `"player_health"` |
+| `create_player_score(score = 0)` | 游戏常用 | GLOBAL + persistent，名 `"player_score"` |
+| `create_player_level(level = 1)` | 游戏常用 | GLOBAL + persistent，名 `"player_level"` |
+| `create_temp_timer(name = "temp_timer", duration = 0.0)` | 临时计时器 | LOCAL，非持久化 |
+| `create_batch(variables_data: Array)` | 批量创建 | 元素为 `{name, value, scope}` 字典；空名/格式错跳过并 push_warning |
+| `from_config(config: Dictionary)` | 从配置字典创建 | 解析 `scope` 字符串（local/scope/global；`"trigger"` 视为弃用别名→LOCAL）；额外支持 persistent/auto_create/log_level 字段 |
+| `clone_variable(original, new_name = "")` | 静态克隆 | 与实例 `clone()` 不同——此版**会**拷贝 scope/auto_create/creation_time |
+
+#### `_configure_by_scope(scope)` 私有默认值
+
+| 作用域 | auto_create | persistent |
+|--------|-------------|------------|
+| LOCAL  | true  | false |
+| SCOPE  | true  | false |
+| GLOBAL | false | true  |
+
+---
+
+## 5. 信号机制与已知 bug
+
+### 5.1 三个信号
+
+```gdscript
+signal value_changed(old_value: Variant, new_value: Variant)
+signal value_modified(value: Variant)
+signal variable_reset()
+```
+
+### 5.2 ⚠️ 实际 bug：value setter 不 emit `value_modified`
+
+`value` 字段的 setter（13–20 行）只 `emit value_changed`，**不 emit `value_modified`**：
+
+```gdscript
+@export var value: Variant = null:
+    set(new_value):
+        var old_value = value
+        value = new_value
+        last_modified_time = Time.get_ticks_msec() / 1000.0
+        modification_count += 1
+        _log_debug("Variable value changed from %s to %s" % [str(old_value), str(new_value)])
+        value_changed.emit(old_value, new_value)
+        # 注意：此处未 emit value_modified
+```
+
+而 `set_value()`（105–122 行）会同时 emit 两个信号：
+
+```gdscript
+func set_value(new_value: Variant) -> bool:
+    var old_value = value
+    value = new_value              # 触发 setter，emit value_changed（第一次）
+    last_modified_time = ...
+    modification_count += 1
+    value_changed.emit(old_value, new_value)   # 第二次 emit value_changed
+    value_modified.emit(new_value)             # emit value_modified
+    return true
+```
+
+**后果**：
+- 直接对 `variable.value = X` 赋值（包括 Inspector、`deserialize`、`clone`、`load_from_resource` 等内部路径）：`value_changed` 触发一次，`value_modified` **完全不触发**
+- 通过 `variable.set_value(X)`：`value_changed` 触发**两次**（setter 一次 + 显式一次），`value_modified` 触发一次
+
+监听 `value_modified` 的代码（如 UI 双向绑定）在直接赋值路径下会漏事件；监听 `value_changed` 的代码（如 `GlobalVariableManager._on_variable_changed`）在 `set_value` 路径下会收到两次。**调用方应统一使用 `set_value()`**，并避免在 setter 内重复 emit。
+
+### 5.3 `variable_reset`
+仅由 `reset()` 发出，无 payload。
+
+---
+
+## 6. 架构关系：BaseVariable 与变量系统七类
+
+`BaseVariable` 是变量系统的"数据记录"，但它本身不解决"变量存在哪里、怎么找到"。这部分职责分布在下列协作类中。理解 BaseVariable 必须理解它的协作图。
+
+### 6.1 协作总览
+
+```
+                   ┌─────────────────────────────────────┐
+                   │   BaseVariable (Resource, 数据载体)   │
+                   │   - value: Variant                   │
+                   │   - scope: int (LOCAL/SCOPE/GLOBAL)  │
+                   │   - persistent / auto_create / stats │
+                   └──────────────┬──────────────────────┘
+                                  │ 由下列三层按 scope 分别存放
+                  ┌───────────────┼───────────────┐
+                  ▼               ▼               ▼
+            [LOCAL]           [SCOPE]          [GLOBAL]
+        VariableContext   ScopeVariable-    GlobalVariable-
+        (RefCounted,      Container         四件套
+         EC 子系统)        (Node)            (见 §6.4)
+        local_variables   _variables        Manager._variables
+          = Variant       = Variant           = BaseVariable
+        (裸值,非BV)       (裸值,非BV)        (BaseVariable 实例)
+```
+
+> 关键事实：LOCAL 与 SCOPE 层在容器中**只存裸 Variant 值**，不存 BaseVariable 实例；只有 GLOBAL 层（`GlobalVariableManager._variables`）以 BaseVariable 实例为值。BaseVariable 工厂创建的对象主要用于：GLOBAL 注册、序列化/克隆、UI 展示。
+
+### 6.2 VariableContext（LOCAL 层核心）
+
+**源文件:** `addons/fuse/core/base/variable_context.gd`（463 行，`extends RefCounted`）
+
+ExecutionContext 的变量子系统，承载：
+- LOCAL 变量 CRUD（`set_variable` / `get_variable` / `has_variable` / `add_variable`，按字符串 scope 分发）
+- LRU 变量名缓存（`_variable_name_cache` + `_cache_access_order`，上限 1000，超限时淘汰 1/5）
+- 索引访问优化（`precompile_variable_access` / `set_variable_by_index` / `get_variable_by_index`）
+- 三层作用域分发（`_set_local_variable` / `_set_scope_variable` / `_set_global_variable`）
+- 作用域容器查找（`_find_scope_container`：trigger → target → owner 顺序调 `ScopeVariableManager.find_nearest_scope`）
+- 变量快照（断点调试用 `get_all_local_variables_snapshot` / `get_all_scope_variables_snapshot` / `get_all_global_variables_snapshot`）
+- 循环控制标志（`_break_loop_flag` / `_continue_loop_flag` + 嵌套栈 `_loop_flag_stack`）
+
+`add_variable(variable: BaseVariable)` 是 BaseVariable 与 VariableContext 的直接接口：它从 BaseVariable 读取 `variable.scope`，若是 GLOBAL 则转发 `_set_global_variable`，否则按 LOCAL 处理——即将 `variable.value` 裸值写入 `local_variables` 字典。
+
+> EC 与 VariableContext 的关系：EC 是 VariableContext 的**门面**。`execution_context.gd` 持 `_variable_context: VariableContext`，自身保留 `local_variables` 作为"兼容引用"指向 `_variable_context.local_variables`（同一字典对象）。所有 EC 上的变量方法委托 VariableContext。
+
+### 6.3 ScopeVariableContainer（SCOPE 层）
+
+**源文件:** `addons/fuse/core/base/scope_variable_container.gd`（183 行，`extends Node`）
+
+附加到场景节点的 Node 组件，为该节点子树提供作用域存储：
+- `@export var variables: Dictionary[String, Variant]`（**裸 Variant 值**，非 BaseVariable）
+- `scope_id: String` 标识；`_enter_tree` 时 `call_deferred("_register_scope")` 注册到 `ScopeVariableManager`
+- 三种 `InheritanceMode`：NONE / READ_ONLY（默认）/ READ_WRITE
+- `get_scope_chain()` 返回从根到当前的容器链
+- 三个信号：`scope_variable_changed(name, old, new)` / `scope_variable_added(name)` / `scope_variable_removed(name)`
+- 与 BaseVariable 无直接耦合——它存的是裸 Variant，作用域查找由 VariableContext/VariableOperations 触发
+
+`ScopeVariableManager`（`addons/fuse/core/scope_variable_manager.gd`，`extends Node`，autoload）提供 `find_nearest_scope(node)` 自底向上查找。
+
+### 6.4 GlobalVariable 四件套（GLOBAL 层）
+
+GLOBAL 层是 BaseVariable 真正作为"对象"被存管的层。四个类分工：
+
+| 类 | 类型 | 文件 | 职责 |
+|----|------|------|------|
+| **GlobalVariableManager** | `extends RefCounted` | `core/global_variable_manager.gd`（437 行） | 事实核心。静态 `_instance` 单例 + `get_instance()`。变量 CRUD（`add_variable` / `get_variable` / `has_variable` / `remove_variable`），所有操作 `Mutex` 保护。`_variables: Dictionary` 直接存 BaseVariable 实例。提供线程安全迭代器（`get_all_variables_snapshot` / `get_variables_safe` / `get_variables_batch_thread_safe`）和持久化（`save_to_resource` / `save_persistent_to_resource` / `load_from_resource`，全部经 `GlobalVariableResource` 序列化）。三个信号：`variable_added` / `variable_removed` / `variable_changed`。 |
+| **GlobalVariableResource** | `extends Resource` | `core/global_variable_resource.gd` | 序列化数据结构。`@export var variables: Dictionary` 存标准化字典 `{value, scope, persistent, description}`。`add_variable` / `set_variable` / `get_variable` / `get_variable_names` / `validate` / `cleanup_invalid_variables`。带版本号、作者、标签元数据。 |
+| **GlobalVariableService** | `extends RefCounted` | `core/global_variable_service.gd` | 纯 RefCounted 中间层。`_init` 时 `_manager = GlobalVariableManager.get_instance()`，所有方法对齐 Assistant 命名（`add_global_variable` / `get_global_variable` 等）并转发 Manager。**用途**：无场景节点时（如 Editor、单测、纯逻辑环境）作为 Assistant 脱树时的 `_service` 兜底。 |
+| **GlobalVariableAssistant** | `extends Node` | `core/global_variable_assistant.gd` | 场景节点层。`@tool` Node，挂在场景树中提供 Inspector 配置（`resource_path` / `auto_load_on_ready` / `auto_save` / `auto_save_on_change` / `cleanup_on_exit`）。持有 `_service: GlobalVariableService` 引用，CRUD 全部委托。负责生命周期：`_ready` 注册 Manager 信号 + 加载资源；`_exit_tree` / `WM_CLOSE_REQUEST` 自动保存持久化变量 + 清理非持久化变量。延迟保存由 `Timer` 节点节流（`auto_save_delay`）。`get_instance()` 优先返回场景中的节点，否则构造一个无场景 Assistant + Service 兜底。 |
+
+#### 四件套调用链
+
+```
+Event/Instruction 变量操作
+        │
+        ▼ （@tool Node, 场景层）
+GlobalVariableAssistant.add_global_variable(name, variable)
+        │  委托
+        ▼ （RefCounted, 命名对齐层）
+GlobalVariableService.add_global_variable(name, variable)
+        │  转发
+        ▼ （RefCounted, 事实核心 + Mutex）
+GlobalVariableManager.add_variable(name, variable)
+        │  连接 variable.value_changed → _on_variable_changed
+        ▼
+emit variable_added(name, variable)  → Assistant 转发为 variable_added
+                                     → 持久化变量触发延迟保存
+```
+
+> `GlobalVariableManager` **不是** Node 单例。它是 `RefCounted`，通过 `static var _instance = GlobalVariableManager.new()` 在类加载时构造，配 `get_instance()` 暴露。`_notification(PREDELETE)` 仅清 `_variables`。旧稿"单例 Node"描述错误。
+
+### 6.5 VariableOperations（统一访问工具）
+
+**源文件:** `addons/fuse/core/utils/variable_operations.gd`（`extends RefCounted`，全静态方法）
+
+无状态工具类，提供按 `BaseVariable.VariableScope` 枚举分发的统一 API：
+- `get_variable(context, name, scope, default)` / `set_variable(context, name, scope, value)` / `has_variable(context, name, scope)`
+- `get_scope_container(context, search_node = null)` —— SCOPE 查找入口，经 `ScopeVariableManager.find_nearest_scope`
+
+特殊行为：`_set_local_variable` 在写入 `ExecutionContext.local_variables` 后，**额外**把值写入 `context.trigger.set_meta("local_variable_" + name, value)`，让 Event 子类（如 OnIntervalWithVariable）也能从 Trigger 节点 meta 读到 LOCAL 变量——这是 Event 与 ExecutionContext 共享 LOCAL 变量的变通方案。
+
+---
+
+## 7. 已废弃与历史遗留
+
+### 7.1 VariableContainer（@deprecated）
+
+**源文件:** `addons/fuse/core/base/variable_container.gd`（1188 行，`extends Resource`）
+
+文件头明确标注 `⚠️ 已废弃 - 2026-02-08`，迁移指引：
+- 局部变量 → `ExecutionContext.local_variables`（即 VariableContext）
+- 全局变量 → `GlobalVariableAssistant`
+
+它自带一个**不同的** `enum VariableScope { LOCAL = 0, GLOBAL = 1 }`（二值，与 BaseVariable 的三值枚举不兼容），内含 `VariableData` 内部类、索引存储、缓存、依赖图等大量重复实现。新代码不应使用。本报告仅作存在性记录，不展开。
+
+### 7.2 BaseVariable 内的 ConfigFile 持久化（@deprecated）
+
+`_save_to_storage` / `_load_from_storage` / `_clear_storage` 三个方法及常量 `STORAGE_SECTION` / `STORAGE_CONFIG_PATH` 均标 `@deprecated`，注释明确"请使用 GlobalVariableManager.save_to_resource() 进行持久化"。这些方法保留向后兼容，操作 `user://fuse_variables.cfg` ConfigFile。它们与 `_serialize_value` / `_parse_value_from_string` 等辅助方法（覆盖 NIL/BOOL/INT/FLOAT/STRING/VECTOR2/VECTOR3/COLOR/ARRAY/DICT/PackedArray/Base64/NodePath 全格式）配套，但不应在新项目使用。
+
+---
+
+## 8. 与 BaseEvent 的关联
+
+`BaseEvent`（`addons/fuse/core/base/base_event.gd`）在文件头 preload 了 `VariableOperations` 和 `VariableScopeUtils`，用于在事件触发时读写变量。事件子类**不直接持有** BaseVariable，而是通过 ExecutionContext 间接交互。BaseVariable 与 BaseEvent 没有直接耦合点——它们的关联完全经由 EC/VariableContext/VariableOperations 中转。
+
+---
+
+## 9. 子类化模式
+
+`BaseVariable` 设计上**不强制子类化**。绝大多数场景应直接 `BaseVariable.create(...)` 创建实例。若需要派生（例如封装业务语义），建议模式：
+
+```gdscript
+class_name MyGameVariable extends BaseVariable
+
+# 业务字段（@export 序列化）
+@export var business_tag: String = ""
+
+# 重写验证（追加业务规则）
+func validate_configuration() -> Array[String]:
+    var errors = super.validate_configuration()
+    if business_tag.is_empty():
+        errors.append("business_tag 不能为空")
+    return errors
+
+# 业务方法（统一走 set_value 以触发完整信号链）
+func apply_delta(delta: float) -> void:
+    set_value(to_number() + delta)
+```
+
+注意事项：
+- 子类若重写 `_init`，须调 `super._init()` 或自行设置 `creation_time` / `last_modified_time`
+- 修改值时统一用 `set_value()`，避免 §5.2 描述的信号不一致
+- 不要在子类持有 Node 引用（BaseVariable 是 Resource，节点引用会破坏序列化）
+
+---
+
+## 10. 总体评估
+
+### 优点
+
+1. **极简数据模型**：单字段 `value: Variant` + 作用域枚举 + 计数，覆盖绝大多数用例
+2. **职责清晰**：BaseVariable 只做"数据记录"，存管职责分散到 Context/Container/Manager 三层，单一职责
+3. **统一错误容器**：`_fuse_error` + `_create_fuse_error` 与 Fuse 全局错误体系一致
+4. **工厂方法完备**：从通用 `create` 到游戏专用 `create_player_health/score/level`，覆盖典型场景
+5. **废弃路径明确**：ConfigFile 持久化和 VariableContainer 都有清晰 @deprecated 标注和迁移指引
+6. **线程安全下沉**：BaseVariable 本身无线程语义，并发安全由 `GlobalVariableManager` 的 Mutex 统一守护
+
+### 已知问题
+
+1. **value setter 信号 bug**（§5.2）：直接赋值不 emit `value_modified`，`set_value` 路径下 `value_changed` 双发。需要调用约定或修复 setter
+2. **`clone()` 实例方法不完整**：不拷贝 `scope` / `auto_create` / `creation_time`，与静态 `clone_variable()` 行为不一致
+3. **`set_value` 与 setter 计数重复**：`modification_count` 和 `last_modified_time` 在 setter 和 `set_value` 中各更新一次（值相同，无害但冗余）
+4. **`set_value` 永远返回 true**：返回类型 `bool` 暗示可能失败，但无失败路径，类型语义偏弱
+5. **VariableContainer 仍存在**：1188 行废弃代码仍在仓库，增加维护负担与混淆风险（其内部 VariableScope 二值枚举与 BaseVariable 三值枚举不兼容）
+
+---
+
+**文档维护**: Fuse 开发团队
+**最后更新**: 2026-07-07
+**版本**: 2.0（重写，替代臆造 API 旧稿）
+**参照代码版本**: base_variable.gd @ 1073 行

@@ -35,7 +35,7 @@
 
 ---
 
-## 🔍 分析报告（12 篇）
+## 🔍 分析报告（15 篇）
 
 ### 系统分析
 | 文档 | 说明 |
@@ -56,6 +56,13 @@
 | [ActionRunner 分析](analysis/action_runner_analysis.md) | 动作执行器、执行流程、性能特征 |
 | [MultiEventTrigger 分析](analysis/multi_event_trigger_analysis.md) | 多事件触发器机制 |
 | [Runner 分析](analysis/runner_analysis.md) | Runner 执行模型 |
+
+### 专题分析
+| 文档 | 说明 |
+|------|------|
+| [对象池分析](analysis/pooling_analysis.md) | `core/pooling/` 5 类：FuseObjectPool / PoolManager / InstructionInstancePool 等 |
+| [线程系统分析](analysis/threading_analysis.md) | `core/threading/` 4 类：FuseTaskManager / ParallelConditionEvaluator 等 |
+| [变量系统分析](analysis/variable_system_analysis.md) | 变量 7 类全链：BaseVariable / VariableContext / 三层作用域 / GlobalVariable* |
 
 ---
 
@@ -98,9 +105,9 @@
 | 类别 | 数量 |
 |------|------|
 | 架构设计 | 9 篇（`architecture/`） |
-| 分析报告 | 12 篇（`analysis/`） |
+| 分析报告 | 15 篇（`analysis/`） |
 | 更新规格 | 1 篇（[UPDATE_SPEC.md](UPDATE_SPEC.md)） |
-| **合计** | **21 篇** + spec |
+| **合计** | **24 篇** + spec |
 
 ---
 

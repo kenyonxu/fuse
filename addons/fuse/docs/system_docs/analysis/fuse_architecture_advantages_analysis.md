@@ -23,10 +23,18 @@ Fuse 利用 Godot 原生工作流，无需学习新界面。
 Player (CharacterBody2D)
 ├── Sprite2D
 ├── CollisionShape2D
-└── Trigger (Node)  # Fuse 事件触发器
+└── Trigger (BaseTrigger)  # Fuse 单事件触发器（addons/fuse/core/trigger.gd）
     ├── event_definition: OnKeyEvent
     └── action_runner: AttackSequence
         └── instructions: [PlayAnim, DealDamage, PlayEffect]
+
+# 或使用 MultiEventTrigger（addons/fuse/core/multi_event_trigger.gd）
+# 将多个事件-动作绑定合入同一节点，减少节点数：
+Player (CharacterBody2D)
+└── MultiEventTrigger (BaseTrigger)
+    └── event_bindings: Array[EventBinding]
+        ├── [0] { event: OnKeyEvent,    action_runner: AttackSequence }
+        └── [1] { event: OnHealthLow,   action_runner: DefenseSequence }
 ```
 
 **为什么这很重要：**
@@ -46,16 +54,20 @@ Orchestrator 需要打开专门的编辑器窗口，逻辑与场景树分离。F
 这是 Fuse 最核心的优势：**ActionRunner 是可序列化的可执行资源**。
 
 ```gdscript
+# addons/fuse/core/base/action_runner.gd
 class_name ActionRunner extends Resource
 
 @export var instructions: Array[BaseInstruction] = []
 @export var execution_mode: ExecutionMode = ExecutionMode.SEQUENTIAL
 
-# 简单的执行接口
+# 简单的执行接口（接受 ExecutionContext）
 func run(context: ExecutionContext):
-    # 执行指令序列
-    await _run_sequential(context)
+    # 内部按 execution_mode 分派到顺序/并行执行路径
+    # SEQUENTIAL / PARALLEL（外加批量 run_batch）
+    pass
 ```
+
+> 注意：在运行期，Trigger 并不直接调用 `ActionRunner.run()`，而是先构造一个轻量级 **RuntimeActionRunnerInstance**（`addons/fuse/core/runtime_action_runner_instance.gd`，`extends RefCounted`）持有运行期状态（执行计数、信号聚合、批处理模式），再由该实例 `run(context)`。这种"资源定义 + Runtime 实例"分层让同一个 `.tres` 资源可被并发触发而状态互不污染。详见 §Runtime 三件套。
 
 **这意味着什么？**
 
@@ -66,17 +78,21 @@ class MyAISystem extends Node:
     @export var defend_actions: ActionRunner
 
     func execute_attack():
-        attack_actions.run(_create_context())
+        # ExecutionContext._init 签名：
+        # _init(target_node, trigger_node, global_vars, scene_tree, owner_node)
+        var ctx := ExecutionContext.new(self, null, null, get_tree(), self)
+        attack_actions.run(ctx)
 
 # 2. 可以在 Inspector 中配置
 # 拖拽 .tres 资源到 @export 字段
 
 # 3. 可以动态加载
-var actions = load("res://actions/combat.tres")
-actions.run(context)
+var actions: ActionRunner = load("res://actions/combat.tres")
+var ctx := ExecutionContext.new(self, null, null, get_tree(), self)
+actions.run(ctx)
 
 # 4. 可以在多处重用
-# 同一个 ActionRunner 可以被多个 Trigger 引用
+# 同一个 ActionRunner 可以被多个 Trigger 引用（Runtime 实例隔离状态）
 ```
 
 **Orchestrator 对比：**
@@ -106,25 +122,31 @@ extends BTAction
 @export var action_runner: ActionRunner
 @export var wait_for_completion: bool = true
 
-var _execution_context: ExecutionContext = null
+var _runtime: RuntimeActionRunnerInstance = null
 var _is_running: bool = false
 
 func _enter() -> void:
     if not action_runner:
         return
 
-    # 创建执行上下文
-    _execution_context = ExecutionContext.new()
-    _execution_context.set_agent(agent)
-    _execution_context.set_scene_root(scene_root)
+    # 创建执行上下文：注意 ExecutionContext 不再有 set_agent / set_scene_root 方法
+    # 实际字段为 target / trigger / owner，构造签名：
+    #   _init(target_node, trigger_node, global_vars, scene_tree, owner_node)
+    var ctx := ExecutionContext.new(
+        agent,        # target —— 指令操作的"主对象"（如玩家、敌人）
+        agent,        # trigger —— 触发该次执行的节点（此处即 BTAgent 自身）
+        null,         # global_vars —— GlobalVariableAssistant/Manager，可省略
+        agent.get_tree(),   # scene_tree
+        agent         # owner —— 创建此上下文的节点
+    )
 
-    # 连接信号
+    # 用 RuntimeActionRunnerInstance 包装，运行期状态隔离
+    _runtime = RuntimeActionRunnerInstance.new(action_runner, agent)
     if wait_for_completion:
-        action_runner.execution_completed.connect(_on_completed)
+        _runtime.execution_completed.connect(_on_completed)
 
-    # 执行 Fuse 指令序列
     _is_running = true
-    action_runner.run(_execution_context)
+    _runtime.run(ctx)
 
 func _tick(delta: float) -> Status:
     if not wait_for_completion:
@@ -132,11 +154,11 @@ func _tick(delta: float) -> Status:
     return RUNNING if _is_running else SUCCESS
 
 func _exit() -> void:
-    if wait_for_completion and action_runner:
-        action_runner.execution_completed.disconnect(_on_completed)
+    if wait_for_completion and _runtime:
+        _runtime.execution_completed.disconnect(_on_completed)
     _is_running = false
 
-func _on_completed():
+func _on_completed(_total_time: float):
     _is_running = false
 ```
 
@@ -170,21 +192,23 @@ extends LimboState
 
 func _enter() -> void:
     if on_enter_actions:
-        on_enter_actions.run(_create_context())
+        var inst := RuntimeActionRunnerInstance.new(on_enter_actions, agent)
+        inst.run(_create_context())
 
 func _update(delta: float) -> void:
-    if on_update_actions and not on_update_actions.is_running:
-        on_update_actions.run(_create_context())
+    if on_update_actions:
+        # 每次创建新的 Runtime 实例以隔离状态
+        var inst := RuntimeActionRunnerInstance.new(on_update_actions, agent)
+        inst.run(_create_context())
 
 func _exit() -> void:
     if on_exit_actions:
-        on_exit_actions.run(_create_context())
+        var inst := RuntimeActionRunnerInstance.new(on_exit_actions, agent)
+        inst.run(_create_context())
 
 func _create_context() -> ExecutionContext:
-    var context = ExecutionContext.new()
-    context.set_agent(agent)
-    context.set_scene_root(scene_root)
-    return context
+    # 字段映射：agent → target/trigger/owner（视语义而定）
+    return ExecutionContext.new(agent, agent, null, agent.get_tree(), agent)
 ```
 
 **为什么这很重要？**
@@ -218,16 +242,17 @@ enum TargetMode {
 @export var custom_target: NodePath
 
 func execute(context: ExecutionContext):
-    var target: Node = null
+    var target_node: Node = null
 
     match target_mode:
         TargetMode.AGENT:
-            target = context.get_agent()
+            target_node = context.target   # 指令操作主对象
         TargetMode.CUSTOM_NODE:
-            target = context.get_scene_root().get_node(custom_target)
+            # get_node 使用 FuseNodeUtils 多策略查找（trigger → target → current_scene → root）
+            target_node = context.get_node(custom_target)
 
-    if target and feedback_resource:
-        JuicyMixer.play(feedback_resource, target)
+    if target_node and feedback_resource:
+        JuicyMixer.play(feedback_resource, target_node)
 
     finished.emit()
 ```
@@ -260,29 +285,140 @@ Orchestrator 和 FlowKit 都没有内置的特效系统集成，需要手动桥�
 
 ---
 
-### 5. 内存优化设计
+### 5. 内存与运行期状态隔离设计
 
-Fuse 使用 RuntimeEventInstance 避免不必要的资源复制。
+Fuse 通过 **"资源定义 + Runtime 实例"双层架构** 避免不必要的资源复制，并将运行期状态从可序列化资源中剥离。
 
 ```gdscript
-# trigger.gd
-class_name Trigger extends Node
+# addons/fuse/core/trigger.gd —— 单事件触发器
+@tool
+class_name Trigger extends BaseTrigger   # 注意：基类是 BaseTrigger，不是 Node
 
+@export var event_definition: BaseEvent
+@export var action_runner: ActionRunner
+
+# 运行期实例（状态隔离层）
 var _runtime_event_instance: RuntimeEventInstance = null
+var _runtime_action_runner_instance: RuntimeActionRunnerInstance = null
 
 func _ready() -> void:
-    # 使用轻量级运行时实例，避免复制整个 Event 资源
+    # 用轻量级 RefCounted 实例承载运行期状态，原始资源保持只读、可序列化
     _runtime_event_instance = RuntimeEventInstance.new(event_definition, self)
     event_definition.initialize_with_runtime_instance(self, _runtime_event_instance)
 
-    event_definition.triggered.connect(_on_event_fired)
+    if action_runner:
+        _runtime_action_runner_instance = RuntimeActionRunnerInstance.new(action_runner, self)
+
+    if _runtime_event_instance.has_signal("triggered"):
+        _runtime_event_instance.triggered.connect(_on_event_fired)
 ```
 
 **优势：**
 
-- 大型 Event 资源不会每帧复制
-- 运行时状态与资源定义分离
-- 支持对象池复用
+- 大型 Event/ActionRunner 资源不会每帧复制
+- 运行时状态（执行计数、信号聚合、缓存）与资源定义分离
+- 支持对象池复用（详见 [对象池分析](./pooling_analysis.md)）
+
+> Trigger 与 MultiEventTrigger 都继承自抽象基类 **BaseTrigger**（`addons/fuse/core/base_trigger.gd`），共享冷却检查、执行上下文创建、引擎回调转发等公共逻辑。详见 [触发器分析](./base_trigger_analysis.md)、[多事件触发器分析](./multi_event_trigger_analysis.md)。
+
+### 6. Runtime 三件套：资源与运行期的彻底解耦
+
+资源侧（可序列化、可热重载、可在 Inspector 编辑）与运行期侧（RefCounted、生命周期与单次触发绑定）由三个 Runtime 类串联：
+
+| 角色 | 资源定义 | Runtime 实例（`addons/fuse/core/`） |
+|------|---------|-------------------------------------|
+| 事件 | `BaseEvent` | `RuntimeEventInstance`（事件状态、信号桥接） |
+| 指令 | `BaseInstruction` | `RuntimeInstructionInstance`（指令级状态） |
+| 动作 | `ActionRunner` | `RuntimeActionRunnerInstance`（执行计数、信号聚合） |
+
+```gdscript
+# RuntimeActionRunnerInstance（addons/fuse/core/runtime_action_runner_instance.gd）
+class_name RuntimeActionRunnerInstance extends RefCounted
+
+signal execution_completed(total_time: float)
+signal execution_failed(error_message: String)
+signal instruction_started(instruction: BaseInstruction)
+signal instruction_completed(instruction: BaseInstruction)
+
+func _init(definition: ActionRunner, trigger: Node): ...
+func run(context: ExecutionContext): ...
+func set_batch_signal_mode(enabled: bool) -> void: ...   # 批量信号模式：合并多个指令事件，减少跨帧信号风暴
+```
+
+**这层抽象带来的架构优势：**
+
+- **状态隔离**：同一个 `.tres` 资源可被多个 Trigger 并发触发，各自的运行期状态互不污染。
+- **批量信号模式**：高密度指令序列可启用 `set_batch_signal_mode(true)`，聚合一帧内的多个 `instruction_started/completed` 信号为一次发射，显著降低信号开销。
+- **生命周期清晰**：Trigger 退出场景树时，Runtime 实例随 RefCounted 引用归零而自动回收。
+
+> 这也是 Orchestrator/FlowKit 没有的能力——它们的运行期状态直接挂在节点/资源上，难以做并发或对象池复用。
+
+---
+
+### 7. 对象池与线程化：为高频与并行场景铺路
+
+Fuse 在 `core/pooling/` 与 `core/threading/` 下提供两个专门的子系统，使其不再局限于"低频事件触发"：
+
+**对象池（`core/pooling/`）：**
+
+| 类 | 作用 |
+|----|------|
+| `FuseObjectPool` | 通用对象池，按类型复用 RefCounted/Node |
+| `FusePoolManager` | 全局池调度，按场景/资源路径分组管理 |
+| `InstructionInstancePool` | 专门缓存 `RuntimeInstructionInstance`，避免热路径反射开销 |
+| `FuseRecycleTimer` | 后台定时回收，控制池容量上限 |
+
+Trigger 通过 `BaseTrigger.pool_mode = true` 进入池化模式：首次创建不初始化，等待 `pool_reset` 由池调度器统一回收/重发。详见 [对象池分析](./pooling_analysis.md)。
+
+**线程化（`core/threading/`）：**
+
+| 类 | 作用 |
+|----|------|
+| `FuseTaskManager` | 封装 WorkerThreadPool，调度后台任务 |
+| `ParallelConditionEvaluator` | 条件批量并行评估（PARALLEL_SAFE / PARALLEL_ALL 双模式） |
+| `FuseThreadSafe` | 线程安全原语（锁、原子访问） |
+| `FuseThreadingConfig` | 全局线程化策略配置 |
+
+`ParallelConditionEvaluator.evaluate_parallel(context, conditions)` 将一批 `BaseCondition` 通过 WorkerThreadPool 并行求值，并自动对不支持线程的条件回退顺序执行（`PARALLEL_SAFE` 模式）。这是 §固有劣势 "复杂控制流支持有限" 在条件评估维度的一次实质缓解。详见 [线程系统分析](./threading_analysis.md)。
+
+---
+
+### 8. 变量四件套：作用域与全局助手
+
+变量系统不再是单一的"BaseVariable + 单例 Manager"，而是由四个互补的组件构成：
+
+| 组件 | 位置 | 角色 |
+|------|------|------|
+| `VariableContext` | `core/base/variable_context.gd` | 指令级变量门面，托管局部变量 + 循环 flag + 索引访问优化 |
+| `ScopeVariableContainer` / `ScopeVariableManager` | `core/base/variable_container.gd`、`core/scope_variable_manager.gd` | 三层作用域：local / trigger / scene |
+| `GlobalVariableAssistant` | `core/global_variable_assistant.gd` | 类型化全局变量访问入口（在 ExecutionContext 内被引用） |
+| `GlobalVariableManager` / `GlobalVariableResource` / `GlobalVariableService` | `core/global_variable_*.gd` | 全局变量存储、序列化与查询服务（注意 Manager 是 RefCounted，**非**单例） |
+
+```gdscript
+# ExecutionContext 把变量操作全部委托给 VariableContext
+context.set_variable("score", 100)                          # 默认 local 作用域
+context.set_variable("hp", 80, "trigger")                   # 三层作用域之一
+context.set_break_loop() / context.set_continue_loop()       # 循环 flag（见下文）
+```
+
+> 设计上，`ExecutionContext` 仅保留 `local_variables` / `global_variables` 字段作为**兼容引用**——真正的存取与索引编译都发生在 `VariableContext` 内。详见 [变量系统分析](./variable_system_analysis.md)、[BaseVariable 分析](./base_variable_analysis.md)。
+
+---
+
+### 9. 全局事件总线：解耦的跨 Trigger 通信
+
+除了由 Trigger 直接监听 Event，Fuse 还提供 `FuseEventBus`（Autoload 单例，`core/fuse_event_bus.gd`）作为发布订阅通道：
+
+```gdscript
+# Autoload: FuseEventBus
+FuseEventBus.send_event("player_died", {"killer": enemy_id})
+FuseEventBus.send_event_deferred("shake_camera", {"intensity": 0.5})  # 帧末发送
+
+# 订阅方（通常在 OnReceiveEvent 事件资源内部）
+FuseEventBus.subscribe("player_died", _on_player_died)
+```
+
+`SendEvent` 指令 / `OnReceiveEvent` 事件资源是 FuseEventBus 在指令侧的封装。它让任意 Trigger 之间可以解耦通信，而不必互相持有引用——这是 FlowKit 的 EventSheet 模式做得到的，但 Fuse 在保留指令级粒度的同时实现了它。
 
 ---
 
@@ -349,10 +485,10 @@ Orchestrator 提供完整的可视化调试器：
 
 **缓解方案：**
 
-- 使用 execution_completed 信号追踪执行
-- 在关键指令添加日志输出
-- 使用 ActionRunner 的 get_execution_status() 查询进度
-- 未来可以添加执行历史查看器
+- 订阅 `RuntimeActionRunnerInstance` 的 `instruction_started` / `instruction_completed` / `execution_completed` 信号追踪执行进度
+- 通过 `ExecutionContext.get_execution_progress()` / `get_execution_history()` / `get_state_statistics()` 查询执行状态与历史
+- 启用 `FuseLogger` 日志级别，关键指令在 `execute()` 中调用 `context.print_message()` 输出
+- `ExecutionDiagnostics`（由 EC 内部持有）提供执行状态机、依赖图与可视化数据，便于二次开发可视化调试器
 
 ---
 
@@ -384,41 +520,49 @@ Orchestrator 的节点搜索和连线更快捷：
 
 ---
 
-### 4. 复杂控制流支持有限
+### 4. 复杂控制流支持有限（部分缓解）
 
-ActionRunner 只支持 SEQUENTIAL 和 PARALLEL 两种模式。
+ActionRunner 自身的 `ExecutionMode` 仍是 SEQUENTIAL / PARALLEL 两种。
 
 ```gdscript
+# addons/fuse/core/base/action_runner.gd
 enum ExecutionMode {
     SEQUENTIAL,  # 顺序执行
     PARALLEL     # 并行执行
 }
 ```
 
-**无法直接表达：**
+**仍然不直接支持：** 复杂的异步流程、跨指令的状态机式回跳。
 
-- 条件分支（if-else）
-- 循环（for, while）
-- 复杂的异步流程
+**但以下两个 v2 能力已经实质缓解了"无法表达分支/循环"的旧评估：**
 
-**变通方案：**
+**a) 循环 flag（ExecutionContext 委托 VariableContext）**
+
+`ExecutionContext` 通过门面方法暴露 break / continue 语义，循环指令（如 `WhileLoopInstruction`、`ForLoopInstruction`）即可在指令层组合出循环结构：
 
 ```gdscript
-# 使用条件指令模拟分支
-instructions = [
-    CheckVariableInstruction,  # 检查变量
-    # 如果条件成立，跳过接下来 2 个指令
-    SkipInstructionsInstruction.new({ count = 2 }),
-    # else 分支
-    ElseBranchInstructions,
-    # if 分支
-    IfBranchInstructions,
-]
+# addons/fuse/core/base/execution_context.gd（委托 VariableContext）
+func set_break_loop(): ...
+func set_continue_loop(): ...
+func should_break_loop() -> bool: ...
+func should_continue_loop() -> bool: ...
+func push_loop_flags() / pop_loop_flags() / clear_loop_flags(): ...   # 嵌套循环支持
 ```
 
-**更好的方案：**
+这把循环控制从"指令格式扩展"降级为"上下文协议"——任意自定义循环指令都可直接复用。
 
-对于复杂控制流，使用 LimboAI + FuseAction：
+**b) 并行条件评估（ParallelConditionEvaluator）**
+
+复杂条件分支背后的瓶颈——一批 BaseCondition 的求值——可由 `core/threading/parallel_condition_evaluator.gd` 通过 WorkerThreadPool 并行化：
+
+```gdscript
+var evaluator := ParallelConditionEvaluator.new()
+evaluator.evaluation_mode = ParallelConditionEvaluator.EvaluationMode.PARALLEL_SAFE
+var results: Array[bool] = evaluator.evaluate_parallel(context, condition_array)
+# 对不支持线程安全的条件自动回退顺序执行
+```
+
+**仍推荐用 LimboAI 表达的：** 多分支决策树、状态切换（这类高层决策本就更适合行为树/状态机，Fuse 通过 FuseAction 配合即可）：
 
 ```
 BTSelector
@@ -479,7 +623,11 @@ BTSelector
 | **节点+检视器模式** | 零学习成本，原生集成 | 可视化程度低 |
 | **Resource-based 架构** | 可组合，可序列化，易于集成 | 需要理解 Resource 系统 |
 | **事件触发器设计** | 逻辑与场景紧密绑定 | 配置分散在多个节点 |
-| **指令序列执行器** | 简单，可预测 | 控制流支持有限 |
+| **资源 + Runtime 双层** | 状态隔离，可并发触发，可池化 | 学习曲线略增 |
+| **指令序列执行器** | 简单，可预测 | 控制流表达力有限（循环 flag + 并行条件评估部分缓解） |
+| **对象池 / 线程化子系统** | 高频热路径与条件并行 | 调用方需理解何时启用 |
+| **变量四件套作用域** | 三层作用域 + 全局助手 | 组件多，初学者需时间区分 |
+| **FuseEventBus 全局总线** | Trigger 间解耦通信 | 调用链路跨节点，调试需订阅跟踪 |
 | **与 JuicyMixer 集成** | 统一资源管理，深度集成 | 耦合度较高 |
 
 **核心理念：**
@@ -527,6 +675,12 @@ Fuse 可以与 Orchestrator/FlowKit 互补使用：
 
 - [Fuse 架构分析](./fuse_architecture_analysis.md)
 - [ActionRunner 分析](./action_runner_analysis.md)
+- [ExecutionContext 分析](./execution_context_analysis.md)
+- [BaseTrigger 分析](./base_trigger_analysis.md)
+- [MultiEventTrigger 分析](./multi_event_trigger_analysis.md)
+- [对象池分析](./pooling_analysis.md)
+- [线程系统分析](./threading_analysis.md)
+- [变量系统分析](./variable_system_analysis.md)
 - [指令系统设计](../architecture/instruction_system_design.md)
 - [触发器系统设计](../../archive/archive/trigger_system_design.md)
 - [Tween 补间动画使用指南](../../user_docs/guides/tween-animation-guide.md)
