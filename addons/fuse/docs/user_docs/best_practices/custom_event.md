@@ -863,4 +863,4 @@ func test_event_performance():
 - 使用 `initialize_with_runtime_instance()` 进行运行时实例初始化
 - 使用 `get_runtime_instance()` 访问运行时实例
 - 元数据通过 `EventMetadata` 类和 `_get_event_metadata()` 静态方法定义
-- 详细参考: [Runtime Instance 模式](../../architecture/runtime-instance-pattern.md)
+- 详细参考: [Runtime Instance 模式](../../archive/architecture/runtime-instance-pattern.md)

@@ -554,9 +554,7 @@ PrintVariableValue:
 
 ## 参考资源
 
-- **完整架构文档：** [变量系统设计文档](../system_docs/architecture/variable_system_design.md)
-- **API 参考：** [VariableOperations](../system_docs/api/variable_operations.md)
-- **工具类：** [VariableScopeUtils](../system_docs/api/variable_scope_utils.md)
+- **完整架构文档：** [变量系统设计文档](../../system_docs/architecture/variable_system_design.md)
 - **示例场景：** `addons/fuse/demos/variable_system_demo.tscn`
 
 ## 快速参考

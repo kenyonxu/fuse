@@ -231,8 +231,6 @@ Event Bus 会记录最近 100 个事件的历史：
 ---
 
 **相关文档:**
-- [SendEvent 指令参考](../reference/instructions/send_event.md)
-- [OnReceiveEvent 事件参考](../reference/events/on_receive_event.md)
 - [自定义事件最佳实践](../best_practices/custom_event.md)
 
 **最后更新**: 2026-02-27

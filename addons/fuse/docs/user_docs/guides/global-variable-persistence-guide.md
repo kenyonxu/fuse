@@ -211,4 +211,4 @@ is_persistent: true
 
 **相关文档:**
 - [全局变量管理器 V2](global_variable_manager_v2.md)
-- [变量系统 V2 迁移](variable_system_v2_migration.md)
+- [变量系统 V2 迁移](../../archive/archive/variable_system_v2_migration.md)

@@ -251,8 +251,7 @@ var local_pos = node.to_local(global_pos)
 - [节点与场景实例](https://docs.godotengine.org/en/stable/tutorials/scripting/scene_tree.html)
 
 ### Fuse 相关文档
-- [移动节点指令](../guides/transform_instructions.md) - 变换指令详解
-- [3D 游戏开发指南](../guides/3d_game_development.md) - 3D 空间中的坐标应用
+- [变换指南](transform-guide.md) - 变换指令详解
 
 ## 🎯 快速参考
 

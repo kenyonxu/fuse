@@ -68,7 +68,7 @@ metadata.icon_name = "Play"  # 仍然有效，但推荐使用 builtin_icon
 - `Add`, `Remove`, `Save`, `Load`
 - `File`, `Folder`, `Search`, `Tools`, `Settings`
 
-完整列表有 1,011 个图标，参考 [icon_system.md](../../development/icon_system.md#按字母顺序的完整列表1011-个图标)。
+完整列表有 1,011 个图标，参考 [icon_system.md](../../dev_docs/guides/icon_system.md)。
 
 ## 自定义图标库
 
@@ -487,6 +487,6 @@ A: 可以！`default_icon_library.tres` 是标准的 Godot Resource 文件：
 
 ## 下一步
 
-- [icon_system.md](../../development/icon_system.md) - 完整的技术文档和 API 参考
+- [icon_system.md](../../dev_docs/guides/icon_system.md) - 完整的技术文档和 API 参考
 - [custom_instruction.md](../best_practices/custom_instruction.md) - 创建自定义指令
 - [custom_event.md](../best_practices/custom_event.md) - 创建自定义事件

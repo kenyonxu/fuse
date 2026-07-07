@@ -130,4 +130,4 @@ Preload Timeout: 30.0  （30秒）
 
 ## 技术细节
 
-想知道更多？查看 [开发者指南](../dev/multithreading-developer-guide.md)。
+想知道更多？查看 [开发者指南](../../dev_docs/guides/multithreading-developer-guide.md)。
