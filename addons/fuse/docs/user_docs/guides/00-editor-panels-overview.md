@@ -1,0 +1,345 @@
+# 编辑器面板总览
+
+Fuse 在 Godot 编辑器中集成了三个专属面板，分别覆盖：**Inspector 增强**（数据流卡片 + 预设操作）、**指令静态分析**（错误/警告/建议检测）、**作用域变量编辑**。本文档作为所有编辑器面板的入口参考。
+
+---
+
+## 目录
+
+| 面板 | 文档章节 | 核心文件 |
+|------|----------|----------|
+| Inspector 插件 | 见本章 | `editor/fuse_inspector_plugin.gd` |
+| 静态分析面板 | [静态分析面板](#静态分析面板) | `editor/static_analysis/static_analysis_panel.gd` |
+| Scope 变量编辑器 | [Scope 变量编辑器](#scope-变量编辑器) | `editor/scope_variable_container_plugin.gd` |
+| 协作者 | [协作场景](#协作场景) | 多组件联动 |
+
+---
+
+## Inspector 插件
+
+`FuseInspectorPlugin`（`EditorInspectorPlugin`）是 Fuse 在 Inspector 面板的核心入口，在选中 Fuse 相关节点或资源时自动激活。
+
+### 适用范围
+
+对于以下类型，插件自动接管 Inspector 渲染：
+
+| 类型 | 生效行为 |
+|------|----------|
+| `BaseInstruction` | 继承默认属性编辑 |
+| `BaseEvent` | 添加「选择事件」按钮 |
+| `BaseCondition` | 添加「选择条件」按钮 |
+| `BaseVariable` | 继承默认属性编辑 |
+| `ActionRunner` | 继承默认属性编辑 |
+| `BaseTrigger` | **数据流卡片** + 导出/导入按钮 |
+| 含 `instructions` / `event` / `condition` 属性的对象 | 按钮增强 |
+
+**选择器按钮**用于快速替换事件/条件资源：
+
+```
+[ 点击以选择事件... ▼ ]   ← BaseEvent 属性
+[ 点击以选择条件... ▼ ]   ← BaseCondition 属性
+```
+
+点击后打开 `ComponentSelector` 弹窗，展示注册表中所有可用组件供选择。
+
+---
+
+### Inspector 数据流卡片
+
+当选中 **BaseTrigger** 节点（如 Trigger 或 MultiEventTrigger）时，Inspector 底部自动生成一张**可折叠的数据流信息卡**，直观展示该 Trigger 的指令链整体结构。
+
+#### 触发器按钮
+
+Inspector 底部出现一行按钮：
+
+```
+[📊 数据流: OnInterval (5指令, 3节点, 8变量, 2信号)]     ← 数据流汇总
+[📦 导出 (Trigger/触发器)] [📥 导入预设]                  ← 预设操作
+```
+
+`📊 数据流` 按钮是**可点击折叠**的，点击展开/收起数据流卡片。
+
+#### 数据流卡片内容
+
+卡片以缩进文本形式展示分析结果：
+
+```
+数据流
+  事件: OnInterval
+  操作节点: Player, Enemy, ScoreLabel
+  变量: [local] damage, cooldown | [scope] hp(../Player) | [global] score
+  信号: score_changed(ScoreManager) | on_death(Player)
+  指令链 (5 条)
+    ┊ SetVariable → damage = 25
+    ┊ CompareVariable → hp > 0 ?
+    ┊ TweenMoveTo → 移动到 Enemy
+    ┊ EmitSignal → score_changed
+    ┊ LogInstruction → "攻击完成"
+```
+
+**数据来源**：`InstructionAnalyzer.build_topology()` 分析结果，包含：
+
+| 字段 | 说明 |
+|------|------|
+| `event` | 事件资源名称 |
+| `nodes` | 指令中引用到的所有操作节点路径 |
+| `variables` | 按 local/scope/global 分类的变量信息 |
+| `signals` | 指令链中所有 EmitSignal 引用的信号 |
+| `instructions_flat` | 扁平化的指令链（含缩进前缀） |
+
+---
+
+### 预设操作
+
+数据流卡片下方提供预设导出/导入按钮，详细操作见 [预设系统使用指南](55-preset-system-guide.md)。
+
+#### 导出（Export）
+
+- 自动检测当前节点的预设层级（L2/L3/L4）
+- 按钮文本动态显示当前层级：`📦 导出 (Trigger/触发器)`
+- 点击弹出 `PresetExportDialog`，配置名称/分类/描述后导出 `.tres` + `.json`
+
+**前置验证**：导出按钮仅在以下条件满足时显示：
+
+| 层级 | 条件 |
+|------|------|
+| L2 (Trigger) | `event_definition` 已配置 |
+| L3 (Runner) | `action_runner` 已配置 |
+| L4 (MultiEventTrigger) | 至少 1 个 `enabled` 的绑定 |
+
+若验证不通过，导出按钮不显示（仅显示导入按钮）。
+
+#### 导入（Import）
+
+- 始终可用
+- 点击打开 `FileDialog`，过滤 `.tres` / `.json`
+- 根据预设层级创建对应节点（Trigger / Runner / MultiEventTrigger）
+- 自动弹出 NodePath 映射确认对话框
+
+---
+
+### Inspector 属性识别流程
+
+`_parse_property()` 的判断流程（主流程；指令数组委托给独立的 `instructions_array_inspector_plugin.gd`）：
+
+```
+1. 是否是指令数组属性？             → 委托 instructions_array_inspector_plugin
+2. 类型为 OBJECT + PROPERTY_HINT_RESOURCE_TYPE
+   + 类型字符串包含 "BaseEvent"     → 添加事件选择器按钮
+3. 类型为 OBJECT + PROPERTY_HINT_RESOURCE_TYPE
+   + 类型字符串包含 "BaseCondition"  → 添加条件选择器按钮
+4. 否则 → 不处理，返回 false
+```
+
+---
+
+## 静态分析面板
+
+静态分析面板是一个独立的 `Control`，可在编辑器工具栏或自定义 Dock 中打开，对当前场景的指令序列进行全量静态分析。
+
+**文件:** `editor/static_analysis/static_analysis_panel.gd`
+
+### 界面布局
+
+```
++------------------------------------------------------+
+| 静态分析工具                                           |
++------------------------------------------------------+
+| [分析指令序列]  [清除结果]  [导出报告]                  |
+| 状态: 就绪                                            |
+| [═══════════════════ 进度条 ════════════════════]    |
++------------------------------------------------------+
+| ↗ 分析结果区域 (RichTextLabel)                         |
+|                                                       |
+| ✓ 指令序列验证通过                                     |
+|                                                       |
+| 错误 (2):                                             |
+| • 变量 "speed" 类型不匹配                             |
+| • 死循环检测: 第 5 条循环无终止条件                     |
+|                                                       |
+| 警告 (3):                                             |
+| • 指令 "TweenMoveTo" target_node 为 null              |
+| • PrintVariableValue 引用未声明变量                     |
+| • 未使用的本地变量 "temp"                               |
+|                                                       |
+| 建议 (4):                                             |
+| • 可将重复指令序列提取为 L1 预设                        |
+| • 使用 BreakpointInstruction 替代多个 Print            |
+|                                                       |
+| 统计信息:                                              |
+|   • 总指令数: 22                                       |
+|   • 验证状态: 失败                                     |
+|   • 问题总数: 9                                        |
++------------------------------------------------------+
+```
+
+### 分析流程
+
+```
+分析按钮点击 → _on_analyze_pressed()
+  │
+  ├─ 查找当前 ActionRunner (优先编辑中场景 → 选中节点)
+  │   （注意：优先取场景树中第一个 ActionRunner，可能不是当前选中节点）
+  │
+  ├─ 验证 ActionRunner 不为空且含指令
+  │   └─ 空 → 显示错误提示
+  │
+  ├─ _start_analysis(instructions)
+  │   ├─ 显示进度条 (模拟进度 10% → 100%)
+  │   ├─ InstructionValidator.validate_instruction_sequence()
+  │   └─ _display_results() 渲染结果
+  │
+  └─ 完成 → 恢复 UI 状态
+      └─ 状态标签: "分析完成 - 发现 2 个错误，3 个警告，4 个建议"
+```
+
+### 结果分级
+
+| 级别 | 颜色 | 严重程度 | 示例 |
+|------|------|----------|------|
+| **错误 (Error)** | 红色 | 必须修复 | 变量类型不匹配、死循环 |
+| **警告 (Warning)** | 黄色 | 建议修复 | 空 target_node、未声明变量 |
+| **建议 (Suggestion)** | 青色 | 优化提示 | 提取预设、使用断点指令 |
+
+### 导出报告
+
+点击 **导出报告** 按钮，将当前分析结果写入 `user://static_analysis_report_{时间}.txt`：
+
+```
+Fuse 静态分析报告
+生成时间: 14:30:25
+══════════════════════════════════════════════════
+
+验证结果: 失败
+错误数: 2
+警告数: 3
+建议数: 4
+
+错误详情:
+1. 变量 "speed" 类型不匹配
+2. 死循环检测: 第 5 条循环无终止条件
+
+警告详情:
+1. 指令 "TweenMoveTo" target_node 为 null
+...
+
+分析完成
+```
+
+---
+
+## Scope 变量编辑器
+
+`ScopeVariableContainerPlugin`（`EditorInspectorPlugin`）为 `ScopeVariableContainer` 节点提供专用的变量编辑面板。
+
+**文件:** `editor/scope_variable_container_plugin.gd`
+**目标节点:** `core/base/scope_variable_container.gd`
+
+### 界面布局
+
+选中场景中的 `ScopeVariableContainer` 节点后，Inspector 中显示：
+
+```
++------------------------------------------------------+
+| 作用域变量                                            |
++------------------------------------------------------|
+| [────────────────────]                               |
+|                                                       |
+|   health = 100                                        |
+|   mana = 50                                           |
+|   current_state = "idle"                              |
+|                                                       |
+| [────────────────────]                               |
+| [+ 添加变量]  [- 删除变量]  [↻ 刷新]                  |
++------------------------------------------------------+
+```
+
+### 功能
+
+| 按钮 | 说明 |
+|------|------|
+| **添加变量** | 创建新变量，自动命名 `new_var_{索引}`，初始值 `0` |
+| **删除变量** | 删除列表中选中的变量 |
+| **刷新** | 重新从节点读取变量列表并更新显示 |
+
+### 格式化显示
+
+变量值按类型格式化显示：
+
+| 值类型 | 显示格式 |
+|--------|----------|
+| null | `变量名 = null` |
+| String | `变量名 = "文本内容"` |
+| Array | `变量名 = [N elements]` |
+| Dictionary | `变量名 = {N keys}` |
+| 其他 | `变量名 = value` (直接调用 `str()`) |
+
+### 编辑操作
+
+所有修改（添加/删除/刷新）后自动调用 `notify_property_list_changed()`，同步更新 Inspector 其余属性的显示状态。
+
+---
+
+## 协作场景
+
+三个面板在编辑器中的协作关系：
+
+```
+┌─────────────────────────────────────────────────────┐
+│                     Godot Editor                    │
+│                                                      │
+│  ┌────────────────────┐  ┌────────────────────────┐│
+│  │   Scene Dock       │  │  Inspector (Fuse 增强) ││
+│  │                    │  │                        ││
+│  │  ☐ Trigger (选中)  │  │  event: [选择事件 ▼]  ││
+│  │    ├─ ActionRunner │  │  📊 数据流卡片         ││
+│  │    └─ ...          │  │  📦 导出  📥 导入      ││
+│  │                    │  │                        ││
+│  │  ☐ ScopeVarContr. │  │  作用域变量编辑器       ││
+│  │    (选中)          │  │  [+] [-] [↻]          ││
+│  └────────────────────┘  └────────────────────────┘│
+│                                                      │
+│  ┌──────────────────────────────────────────────────┐│
+│  │  Bottom Dock                                     ││
+│  │                                                  ││
+│  │  [StaticAnalysis]  [VariableWatcher]             ││
+│  │                                                  ││
+│  │  静态分析面板 / 变量监视器                        ││
+│  └──────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────┘
+```
+
+### 典型工作流
+
+**调试流程：**
+1. 在场景中选中 `Trigger` → Inspector 查看**数据流卡片**确认指令链
+2. 运行场景 → 底部 **VariableWatcher** 实时观察变量变化
+3. 发现问题 → 打开**静态分析面板**扫描指令序列
+4. 修复 → 从 Inspector 导出预设备份 → 继续迭代
+
+**配置流程：**
+1. 场景中添加 `ScopeVariableContainer` 节点
+2. Inspector 中通过**作用域变量编辑器**添加变量初值
+3. Trigger 中的指令引用这些 scope 变量
+4. 运行后 **VariableWatcher** 显示 scope 变量的运行时值
+
+---
+
+## 常见问题
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| Inspector 未显示数据流卡片 | 选中节点不是 BaseTrigger | 选中 Trigger / MultiEventTrigger 节点 |
+| 静态分析报错"没有找到 ActionRunner" | 当前场景无可分析的指令链 | 确保场景中有 Trigger/ActionRunner |
+| 作用域变量编辑器空白 | ScopeVariableContainer 无变量 | 点击「添加变量」创建 |
+| 导出按钮不显示 | 前置验证未通过 | 检查 event_definition/action_runner 配置 |
+| 本地化文本未生效 | 编辑器语言检测延迟 | 重启编辑器或切换语言 |
+
+---
+
+**相关文档:**
+- [预设系统使用指南](55-preset-system-guide.md)
+- [变量监视器使用指南](56-variable-watcher-guide.md)
+- [变量系统指南](01-variable_system_guide.md)
+- [调试系统指南](25-debugging-guide.md)
+- [断点指南](26-breakpoint-guide.md)

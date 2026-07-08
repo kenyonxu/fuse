@@ -18,7 +18,7 @@ log_level = 0
 [resource]
 script = ExtResource("3_qru63")
 display_name = "red_planet"
-category = "gamplay"
+category = "gameplay"
 version = "2.0"
 variables = {
 "global": [],

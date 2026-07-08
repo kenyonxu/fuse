@@ -61,7 +61,7 @@ close_pause_menu = false
 [resource]
 script = ExtResource("10_67dd2")
 display_name = "spawn-enemy"
-category = "gamplay"
+category = "gameplay"
 version = "2.0"
 variables = {
 "global": [],

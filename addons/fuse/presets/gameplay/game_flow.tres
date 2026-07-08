@@ -157,7 +157,7 @@ store_result = false
 [resource]
 script = ExtResource("11_8wic3")
 display_name = "GameFlow"
-category = "gamplay"
+category = "gameplay"
 version = "2.0"
 variables = {
 "global": [],
