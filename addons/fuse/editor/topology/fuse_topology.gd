@@ -228,7 +228,12 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
 		var item: TreeItem = _tree.create_item(parent_item)
 		var display_name: String = node_info.get("name", "?")
 
-		# resource_name 已含描述（_update_resource_name），不需额外摘要
+		# 优先 get_description（实时，避免 resource_name 陈旧），回退 name
+		if inst != null and inst.has_method("get_description"):
+			var desc: String = inst.get_description()
+			if not desc.is_empty():
+				display_name = desc
+
 		item.set_text(0, display_name)
 
 		# 图标（任务 B）
@@ -280,9 +285,17 @@ func _create_flat_item(parent_item: TreeItem, inst_info: Dictionary, report: Dic
 	var item: TreeItem = _tree.create_item(parent_item)
 	var prefix: String = inst_info.get("prefix", "")
 	var inst_name: String = inst_info.get("name", "?")
+
+	# 优先 get_description（实时，避免 resource_name 陈旧），回退 name
+	var inst = inst_info.get("inst", null)
+	if inst != null and inst.has_method("get_description"):
+		var desc: String = inst.get_description()
+		if not desc.is_empty():
+			inst_name = desc
+
 	item.set_text(0, "%s📦 %s" % [prefix, inst_name])
 	item.set_selectable(0, true)
-	item.set_metadata(0, {"type": "instruction", "inst": null, "report": report})
+	item.set_metadata(0, {"type": "instruction", "inst": inst, "report": report})
 
 
 func _branch_label_display(p_label: String) -> String:
