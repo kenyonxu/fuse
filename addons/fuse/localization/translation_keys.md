@@ -230,53 +230,6 @@ static func get_metadata() -> Dictionary:
 | FUSE_UI_LANGUAGE_MENU | 🌐 语言 | Language | 语言菜单 |
 | FUSE_UI_LANGUAGE_SETTINGS | 语言设置 | Language Settings | 语言设置 |
 
-#### 静态分析面板
-
-| 键名 | 中文 | 英文 | 用途 |
-|------|------|------|------|
-| FUSE_UI_STATIC_ANALYSIS_TITLE | 静态分析工具 | Static Analysis Tool | 分析面板标题 |
-| FUSE_UI_BTN_ANALYZE_INSTRUCTIONS | 分析指令序列 | Analyze Instructions | 分析按钮 |
-| FUSE_UI_BTN_CLEAR_RESULTS | 清除结果 | Clear Results | 清除结果按钮 |
-| FUSE_UI_BTN_EXPORT_REPORT | 导出报告 | Export Report | 导出报告按钮 |
-| FUSE_UI_STATUS_READY | 就绪 | Ready | 就绪状态 |
-| FUSE_UI_STATUS_ANALYZING | 正在分析指令序列... | Analyzing instruction sequence... | 分析中状态 |
-| FUSE_UI_STATUS_ANALYSIS_COMPLETE | 分析完成 - 发现 %d 个错误，%d 个警告，%d 个建议 | Analysis complete - Found %d errors, %d warnings, %d suggestions | 分析完成状态 |
-| FUSE_UI_STATUS_CLEARED | 结果已清除 | Results cleared | 清除完成状态 |
-| FUSE_UI_STATUS_EXPORTED | 报告已导出到: %s | Report exported to: %s | 导出完成状态 |
-| FUSE_UI_ERROR_PREFIX | 错误 | Error | 错误前缀 |
-| FUSE_UI_ERROR_NO_ACTION_RUNNER | 没有找到 ActionRunner | ActionRunner not found | 无 ActionRunner 错误 |
-| FUSE_UI_ERROR_NO_INSTRUCTIONS | 没有指令可供分析 | No instructions to analyze | 无指令错误 |
-| FUSE_UI_ERROR_NO_RESULTS | 没有可导出的分析结果 | No analysis results to export | 无结果错误 |
-| FUSE_UI_ERROR_SAVE_FAILED | 无法保存报告文件 | Failed to save report file | 保存失败错误 |
-| FUSE_UI_WELCOME_TITLE | 欢迎使用静态分析工具 | Welcome to Static Analysis Tool | 欢迎标题 |
-| FUSE_UI_WELCOME_DESCRIPTION | 此工具可以帮助您在开发阶段发现潜在问题： | This tool helps you discover potential issues during development: | 欢迎描述 |
-| FUSE_UI_WELCOME_FEATURE_1 | 变量引用错误 | Variable reference errors | 功能1 |
-| FUSE_UI_WELCOME_FEATURE_2 | 潜在死循环 | Potential infinite loops | 功能2 |
-| FUSE_UI_WELCOME_FEATURE_3 | 性能问题 | Performance issues | 功能3 |
-| FUSE_UI_WELCOME_FEATURE_4 | 资源使用问题 | Resource usage issues | 功能4 |
-| FUSE_UI_WELCOME_INSTRUCTION | 点击"分析指令序列"按钮开始分析。 | Click "Analyze Instructions" to start analysis. | 操作说明 |
-| FUSE_UI_VALIDATION_PASSED | 指令序列验证通过 | Instruction sequence validation passed | 验证通过 |
-| FUSE_UI_VALIDATION_FAILED | 指令序列验证失败 | Instruction sequence validation failed | 验证失败 |
-| FUSE_UI_ERRORS | 错误 | Errors | 错误标签 |
-| FUSE_UI_WARNINGS | 警告 | Warnings | 警告标签 |
-| FUSE_UI_SUGGESTIONS | 建议 | Suggestions | 建议标签 |
-| FUSE_UI_STATISTICS | 统计信息 | Statistics | 统计标签 |
-| FUSE_UI_TOTAL_INSTRUCTIONS | 总指令数 | Total Instructions | 总指令数标签 |
-| FUSE_UI_VALIDATION_STATUS | 验证状态 | Validation Status | 验证状态标签 |
-| FUSE_UI_TOTAL_ISSUES | 问题总数 | Total Issues | 问题总数标签 |
-| FUSE_UI_STATUS_PASSED | 通过 | Passed | 通过状态 |
-| FUSE_UI_STATUS_FAILED | 失败 | Failed | 失败状态 |
-| FUSE_UI_REPORT_TITLE | Fuse 静态分析报告 | Fuse Static Analysis Report | 报告标题 |
-| FUSE_UI_REPORT_TIME | 生成时间: %s | Generated at: %s | 报告时间 |
-| FUSE_UI_REPORT_VALIDATION_RESULT | 验证结果: %s | Validation Result: %s | 验证结果 |
-| FUSE_UI_REPORT_ERROR_COUNT | 错误数: %d | Error Count: %d | 错误计数 |
-| FUSE_UI_REPORT_WARNING_COUNT | 警告数: %d | Warning Count: %d | 警告计数 |
-| FUSE_UI_REPORT_SUGGESTION_COUNT | 建议数: %d | Suggestion Count: %d | 建议计数 |
-| FUSE_UI_REPORT_ERROR_DETAILS | 错误详情 | Error Details | 错误详情 |
-| FUSE_UI_REPORT_WARNING_DETAILS | 警告详情 | Warning Details | 警告详情 |
-| FUSE_UI_REPORT_SUGGESTION_DETAILS | 建议详情 | Suggestion Details | 建议详情 |
-| FUSE_UI_REPORT_COMPLETED | 分析完成 | Analysis completed | 分析完成 |
-
 #### 调试可视化器
 
 | 键名 | 中文 | 英文 | 用途 |

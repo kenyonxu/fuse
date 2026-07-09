@@ -1,88 +1,36 @@
 # Fuse 编辑器工具使用指南
 
-本文档介绍如何使用 Fuse 插件的静态分析工具和调试可视化工具。
+本文档介绍如何使用 Fuse 插件的调试可视化工具。静态分析已整合到 FuseTopology 主屏（刷新自动标注 local 未声明变量等问题）。
 
 ## 目录
-1. [静态分析工具](#静态分析工具)
+1. [静态分析（已整合）](#静态分析已整合)
 2. [调试可视化工具](#调试可视化工具)
 3. [ActionRunner 调试集成](#actionrunner-调试集成)
 4. [使用示例](#使用示例)
 5. [最佳实践](#最佳实践)
 
-## 静态分析工具
+## 静态分析（已整合）
 
-### 1. 指令验证器 (InstructionValidator)
+静态分析逻辑已从独立的 `InstructionValidator` / `StaticAnalysisPanel` 迁入 `InstructionAnalyzer.analyze_problems`，结果在 FuseTopology 主屏就地标注。原 `editor/static_analysis/` 目录已移除。
 
-指令验证器提供编程式接口进行静态分析，适用于自动化测试和构建流程。
-
-#### 基本用法
+### 编程式调用（可选）
 ```gdscript
-# 获取指令验证器实例
-var validator = InstructionValidator.new()
-
-# 验证指令序列
+# 分析指令序列的潜在问题（local 未声明变量等）
 var instructions = get_your_instructions()  # Array[BaseInstruction]
-var results = validator.validate_instruction_sequence(instructions)
+var results = InstructionAnalyzer.analyze_problems(instructions)
 
 # 检查结果
 if results.valid:
-    print("✅ 指令序列验证通过")
+    print("✅ 未发现问题")
 else:
-    print("❌ 发现 %d 个错误，%d 个警告，%d 个建议" % [
-        results.errors.size(), 
-        results.warnings.size(), 
-        results.suggestions.size()
-    ])
-
-# 处理错误
-for error in results.errors:
-    print("错误: %s" % error)
-
-# 处理警告
-for warning in results.warnings:
-    print("警告: %s" % warning)
-
-# 处理建议
-for suggestion in results.suggestions:
-    print("建议: %s" % suggestion)
+    for problem in results.problems:
+        print("问题: %s" % problem)
 ```
 
-#### 验证结果结构
-```gdscript
-var results = {
-    "valid": bool,           # 是否通过验证
-    "errors": Array[String], # 错误信息数组
-    "warnings": Array[String], # 警告信息数组
-    "suggestions": Array[String] # 优化建议数组
-}
-```
-
-### 2. 静态分析面板 (StaticAnalysisPanel)
-
-静态分析面板提供图形化界面，适用于编辑器中的交互式分析。
-
-#### 在编辑器中使用
-1. **打开静态分析面板**：
-   - 在 Godot 编辑器中，选择包含 ActionRunner 的节点
-   - 静态分析面板会自动检测并显示当前 ActionRunner 的指令序列
-
-2. **执行分析**：
-   - 点击"分析指令序列"按钮
-   - 等待分析完成（会显示进度条）
-
-3. **查看结果**：
-   - 错误：红色显示，必须修复
-   - 警告：黄色显示，建议关注
-   - 建议：青色显示，可选优化
-
-4. **导出报告**：
-   - 点击"导出报告"按钮
-   - 报告将保存到 `user://` 目录下
-
-#### 面板功能
-- **自动刷新**：启用后可自动检测指令变化
-- **清除结果**：清除当前分析结果
-- **导出报告**：将分析结果保存为文本文件
+### 在编辑器中查看
+1. 打开 FuseTopology 主屏
+2. 刷新拓扑视图，分析结果会自动标注在对应节点上
+3. 鼠标悬停 / 点击标注可查看问题详情
 
 ## 调试可视化工具
 
@@ -229,32 +177,23 @@ func execute(context: ExecutionContext):
 
 ## 使用示例
 
-### 示例1：完整的静态分析工作流程
+### 示例1：静态分析 + 调试执行的工作流程
 ```gdscript
 extends Node
 
 var action_runner: ActionRunner
-var validator: InstructionValidator
 
 func _ready():
-    # 创建组件
     action_runner = ActionRunner.new()
-    validator = InstructionValidator.new()
-    
-    # 添加一些指令
     _setup_instructions()
     
-    # 执行静态分析
+    # 1. 编程式静态分析（编辑器中通常直接看 FuseTopology 标注）
     _perform_static_analysis()
     
-    # 如果分析通过，执行指令
-    if _should_execute():
-        _execute_with_debug()
+    # 2. 启用调试执行
+    _execute_with_debug()
 
 func _setup_instructions():
-    # 添加各种指令到 action_runner
-    # 这里添加的指令可能包含潜在问题供分析
-    
     var move_instruction = MoveNodeInstruction.new()
     move_instruction.target_path = "Player"
     move_instruction.new_position = Vector2(100, 200)
@@ -264,59 +203,30 @@ func _setup_instructions():
     variable_instruction.variable_name = "score"
     variable_instruction.variable_value = 100
     action_runner.add_instruction(variable_instruction)
-    
-    # 可能添加一些有问题的指令用于测试
-    # ...
 
 func _perform_static_analysis():
     print("=== 执行静态分析 ===")
-    
-    var results = validator.validate_instruction_sequence(action_runner.instructions)
-    
+    var results = InstructionAnalyzer.analyze_problems(action_runner.instructions)
     if not results.valid:
-        print("发现 %d 个错误，需要修复：" % results.errors.size())
-        for error in results.errors:
-            print("  ❌ %s" % error)
-    
-    if results.warnings.size() > 0:
-        print("发现 %d 个警告：" % results.warnings.size())
-        for warning in results.warnings:
-            print("  ⚠️ %s" % warning)
-    
-    if results.suggestions.size() > 0:
-        print("发现 %d 个优化建议：" % results.suggestions.size())
-        for suggestion in results.suggestions:
-            print("  💡 %s" % suggestion)
-    
+        for problem in results.problems:
+            print("  ❌ %s" % problem)
     return results.valid
-
-func _should_execute() -> bool:
-    # 可以添加额外的执行条件检查
-    return true
 
 func _execute_with_debug():
     print("=== 执行指令序列（启用调试）===")
-    
-    # 启用调试模式
     action_runner.enable_debug()
     
-    # 创建执行上下文
     var context = ExecutionContext.new()
     context.target = self
     context.tree = get_tree()
     
-    # 执行指令
     action_runner.run(context)
-    
-    # 等待执行完成
     await action_runner.execution_completed
     
-    # 获取调试信息
     var tracker = action_runner.get_execution_tracker()
     if tracker:
         _display_debug_info(tracker)
     
-    # 禁用调试模式
     action_runner.disable_debug()
 
 func _display_debug_info(tracker):
@@ -463,8 +373,8 @@ func _export_debug_info():
 
 ### 常见问题
 
-1. **静态分析面板不显示结果**
-   - 确保选择了包含 ActionRunner 的节点
+1. **FuseTopology 上看不到静态分析标注**
+   - 刷新拓扑视图（分析在刷新时自动执行）
    - 检查 ActionRunner 中是否有指令
    - 验证指令是否正确初始化
 

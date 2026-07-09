@@ -93,7 +93,7 @@ Fuse 是 Godot 4.6 的可视化编程插件，通过 Inspector 配置事件、�
 - **上下文菜单** — 合并/拆分 Trigger，一键操作
 - **输入键选择器** — 可视化选择键盘、鼠标、手柄按键
 - **调试面板** — DebugVisualizer + ExecutionTracker，实时查看执行流程
-- **静态分析** — InstructionValidator 检查指令配置问题
+- **静态分析** — InstructionAnalyzer.analyze_problems 检测 local 未声明变量，FuseTopology 主屏就地标注
 
 ## 本地化
 

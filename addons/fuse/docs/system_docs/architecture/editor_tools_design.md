@@ -271,60 +271,9 @@ execution_history: Array[Dictionary]
 
 **自动刷新：** 通过 `Timer` 实现定时刷新（默认 1 秒间隔）。
 
-### 5. 静态分析 (Static Analysis)
+### 5. 静态分析（已整合）
 
-**目录：** `addons/fuse/editor/static_analysis/`
-
-#### InstructionValidator
-
-**文件：** `instruction_validator.gd`
-**class_name：** `InstructionValidator`
-**继承：** `RefCounted`
-
-指令验证器，在开发阶段对指令序列进行静态分析，检测潜在问题。
-
-**分析维度：**
-
-| 维度 | 检测内容 | 级别 |
-|------|----------|------|
-| 变量引用 | 未定义变量的使用 | 错误 |
-| 循环检测 | 向后跳转指令（潜在的无限循环） | 警告 |
-| 高频操作 | 同一操作类型出现超过 10 次 | 建议 |
-| 资源密集 | 类名含 heavy/complex/batch 等关键词的指令 | 建议 |
-
-**变量检测策略：**
-- 通过 `get_defined_variables()` / `get_used_variables()` 方法（如果指令实现）
-- 通过源码正则匹配：`set_variable("...")` / `add_variable("...")` 为定义，`get_variable("...")` / `has_variable("...")` 为使用
-
-**返回结构：**
-```gdscript
-{
-    "valid": bool,           # 无错误时为 true
-    "errors": Array[String], # 错误列表
-    "warnings": Array[String], # 警告列表
-    "suggestions": Array[String]  # 建议列表
-}
-```
-
-#### StaticAnalysisPanel
-
-**文件：** `static_analysis_panel.gd`
-**class_name：** `StaticAnalysisPanel`
-**继承：** `Control`
-
-静态分析的用户界面面板。
-
-**主要功能：**
-- 「分析指令序列」按钮 -- 从当前场景查找 `ActionRunner` 并分析其指令列表
-- 「清除结果」按钮 -- 重置分析状态
-- 「导出报告」按钮 -- 生成文本报告保存到 `user://` 目录
-- `RichTextLabel` 以彩色富文本显示分析结果（错误红色、警告黄色、建议青色）
-- 显示统计信息（总指令数、验证状态、问题总数）
-
-**ActionRunner 获取策略：**
-1. 从编辑器场景根节点查找子节点
-2. 从当前选中的节点查找子节点
-3. 检查选中节点本身
+静态分析逻辑已从独立的 `InstructionValidator` / `StaticAnalysisPanel` 迁入 `InstructionAnalyzer.analyze_problems`，结果在 FuseTopology 主屏标注（见 [FuseTopology](#fusetopology) 或 `topology/fuse_topology.gd`）。原 `editor/static_analysis/` 目录已移除。
 
 ### 6. 指令生成器 (Instruction Generator)
 
@@ -530,8 +479,6 @@ TriggerMerger 和 TriggerSplitter 完整集成了 Godot 的 UndoRedo 系统，�
 | `editor/input_key_selector/input_key_dialog.gd` | InputKeyDialog | AcceptDialog | 按键捕获对话框 |
 | `editor/debugging/debug_visualizer.gd` | DebugVisualizer | Control | 调试可视化面板 |
 | `editor/debugging/execution_tracker.gd` | ExecutionTracker | RefCounted | 执行跟踪器 |
-| `editor/static_analysis/static_analysis_panel.gd` | StaticAnalysisPanel | Control | 静态分析面板 |
-| `editor/static_analysis/instruction_validator.gd` | InstructionValidator | RefCounted | 指令验证器 |
 | `editor/instruction_generator/instruction_generator.gd` | InstructionGenerator | RefCounted | 方法指令生成器 |
 | `editor/instruction_generator/property_instruction_generator.gd` | PropertyInstructionGenerator | RefCounted | 属性指令生成器 |
 | `editor/context_menu/fuse_context_menu_plugin.gd` | FuseContextMenuPlugin | EditorContextMenuPlugin | 右键菜单入口 |

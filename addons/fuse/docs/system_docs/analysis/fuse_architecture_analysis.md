@@ -107,7 +107,7 @@ Fuse `core/` 实际目录与职责分层如下（路径均为 `addons/fuse/core/
 - **生命周期状态机**：`ExecutionStatus = { PENDING, RUNNING, COMPLETED, CANCELLED, ERROR }`
 - **超时机制**：`set_timeout()` / `_setup_timeout_timer()` 使用 `SceneTreeTimer`，避免长指令阻塞
 - **集成 RuntimeInstructionInstance**：运行期状态（超时/暂停/取消）由 `RuntimeInstructionInstance` 承担，BaseInstruction 自身保持 Resource 的纯数据/配置属性
-- **静态分析钩子**：`_get_variable_accesses()` 等方法供编辑器 `InstructionValidator` 调用
+- **静态分析钩子**：`_get_variable_accesses()` 等方法供 `InstructionAnalyzer.analyze_problems` 调用
 - **i18n 资源名**：通过 `FuseLocalization` 同步本地化的指令名/描述
 - **图标四级回退**：metadata icon → category icon → 类型默认 → builtin 占位
 - **统一日志/错误**：`_log_debug/_log_info/_log_warning/_log_error` + `_log_*_localized` 全部委托 `FuseLogger`；`_create_fuse_error()` / `_create_fuse_error_localized()` 创建 `FuseError` 实例存入 `_fuse_error`
@@ -779,7 +779,7 @@ extends Node  # Autoload 单例（project.godot 注册为 FuseRuntimeBridge）
 2026 年大幅扩展了编辑器工具链（位于 `editor/`，不在本文范围），覆盖调试可视化、静态分析和代码生成三个维度。本节仅列概览：
 
 - **调试可视化**：`DebugVisualizer` + `ExecutionTracker`（`editor/debugging/`）—— 执行历史树形展示、性能指标、JSON 导出
-- **静态分析**：`StaticAnalysisPanel` + `InstructionValidator` —— 变量引用验证、死循环检测、性能问题分析
+- **静态分析**：`InstructionAnalyzer.analyze_problems` + `FuseTopology` 标注 —— local 未声明变量检测，结果在 Topology 主屏就地标注
 - **自动生成指令**：`InstructionGenerator` + `PropertyInstructionGenerator` + 辅助模块（`TypeMapper` / `ConflictHandler` / `MethodFilter` / `MethodSelectorDialog`）
 
 ---

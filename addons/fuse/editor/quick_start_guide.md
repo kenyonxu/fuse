@@ -6,13 +6,15 @@
 
 #### 1. 基本使用 - 只需2行代码
 ```gdscript
-# 验证你的指令序列
-var results = InstructionValidator.validate_instruction_sequence(your_instructions)
+# 分析指令序列的潜在问题（local 未声明变量等）
+var results = InstructionAnalyzer.analyze_problems(your_instructions)
 
 # 检查结果
 if not results.valid:
-    print("发现 %d 个错误" % results.errors.size())
+    print("发现 %d 个问题" % results.problems.size())
 ```
+
+> 注：在编辑器中，静态分析结果会自动在 FuseTopology 主屏就地标注，无需手动调用。
 
 #### 2. 在编辑器中使用
 1. 选择包含 ActionRunner 的节点
@@ -61,7 +63,7 @@ print("执行了 %d 个步骤，耗时 %.3f 秒" % [history[-1].steps.size(), hi
 ### 开发阶段（推荐组合使用）
 ```gdscript
 # 1. 先静态分析
-var results = InstructionValidator.validate_instruction_sequence(instructions)
+var results = InstructionAnalyzer.analyze_problems(instructions)
 if results.valid:
     # 2. 再启用调试执行
     action_runner.enable_debug()
