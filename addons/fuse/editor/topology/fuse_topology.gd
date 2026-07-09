@@ -163,6 +163,17 @@ func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> voi
 	t_item.set_text(1, event_info.get("resource_name", ""))
 	t_item.set_metadata(0, {"type": "trigger", "report": report})
 
+	# 问题汇总标注（按 report.problems.summary）
+	var probs: Dictionary = report.get("problems", {"summary": {"errors": 0, "warnings": 0}})
+	var n_err: int = probs.get("summary", {}).get("errors", 0)
+	var n_warn: int = probs.get("summary", {}).get("warnings", 0)
+	if n_err > 0:
+		t_item.set_custom_color(0, Color(1.0, 0.3, 0.3))
+		t_item.set_text(0, t_item.get_text(0) + "  (%d🔴 %d🟡)" % [n_err, n_warn])
+	elif n_warn > 0:
+		t_item.set_custom_color(0, Color(1.0, 0.8, 0.3))
+		t_item.set_text(0, t_item.get_text(0) + "  (%d🟡)" % n_warn)
+
 	# MultiEventTrigger：展开 event_bindings
 	var bindings: Array = report.get("event_bindings", [])
 	if not bindings.is_empty():
@@ -220,8 +231,29 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
 		item.set_selectable(0, true)
 		item.set_metadata(0, {"type": "instruction", "inst": inst, "report": report})
 
-		# 分支颜色
-		if is_branch:
+		# 按问题标注指令节点（🔴/🟡 前缀 + 着色）
+		# 问题严重度优先于分支装饰色（错误/警告更需用户注意）
+		var inst_problems := _find_problems_for_inst(inst, report)
+		var has_problem_color := false
+		if not inst_problems.is_empty():
+			var has_error := false
+			var has_warning := false
+			for p in inst_problems:
+				if p.get("severity") == "error":
+					has_error = true
+				elif p.get("severity") == "warning":
+					has_warning = true
+			if has_error:
+				item.set_custom_color(0, Color(1.0, 0.3, 0.3))
+				item.set_text(0, "🔴 " + item.get_text(0))
+				has_problem_color = true
+			elif has_warning:
+				item.set_custom_color(0, Color(1.0, 0.8, 0.3))
+				item.set_text(0, "🟡 " + item.get_text(0))
+				has_problem_color = true
+
+		# 分支颜色（仅当未因问题着色时）
+		if is_branch and not has_problem_color:
 			item.set_custom_color(0, Color(1.0, 0.65, 0.1))
 
 		# 递归子分支（then ✓ / else ✗ / loop ↻）
@@ -653,3 +685,12 @@ func _index_problems(problems: Array) -> Dictionary:
 			"warning": summary.warnings += 1
 			"suggestion": summary.suggestions += 1
 	return {"by_inst": by_inst, "summary": summary}
+
+
+## 按 inst 引用查该指令的问题（by_inst 索引，O(1)）
+## inst 为 null（flat 回退路径）时返回空数组 — 自动跳过标注。
+func _find_problems_for_inst(inst, report: Dictionary) -> Array:
+	if inst == null:
+		return []
+	var by_inst: Dictionary = report.get("problems", {}).get("by_inst", {})
+	return by_inst.get(inst.get_instance_id(), [])
