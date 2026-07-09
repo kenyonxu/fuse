@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://dtggqe1inyyi"]
+
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="1_n0xrp"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_ivgqn"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_l3cvo"]
+[ext_resource type="Script" uid="uid://3pk8f51cbmow" path="res://addons/fuse/instructions/animation/play_animation.gd" id="4_asfye"]
+[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="5_rta7j"]
+[ext_resource type="Script" uid="uid://bjducirfbgpcq" path="res://addons/fuse/instructions/flow_control/run_condition_check.gd" id="6_q52aq"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_x7fw1"]
+
+[sub_resource type="Resource" id="Resource_4lsqp"]
+script = ExtResource("2_ivgqn")
+
+[sub_resource type="Resource" id="Resource_w7ca7"]
+resource_name = "播放动画 未指定播放器 未指定动画"
+script = ExtResource("4_asfye")
+target_player = NodePath("")
+animation_name = ""
+speed = 1.0
+from_end = false
+autoplay_only = false
+
+[sub_resource type="Resource" id="Resource_1sw1x"]
+resource_name = "检查变量 [[本地]]: int EQUALS 0"
+script = ExtResource("5_rta7j")
+variable_name = "int"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_3ur0k"]
+resource_name = "条件检查: 检查变量 (未指定变量名) (真:继续执行"
+script = ExtResource("6_q52aq")
+condition = SubResource("Resource_1sw1x")
+
+[sub_resource type="Resource" id="Resource_rxgda"]
+script = ExtResource("7_x7fw1")
+instructions = Array[ExtResource("3_l3cvo")]([SubResource("Resource_w7ca7"), SubResource("Resource_3ur0k")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=1653604846]
+
+[node name="Trigger" type="Node" parent="." unique_id=1574720465]
+script = ExtResource("1_n0xrp")
+event_definition = SubResource("Resource_4lsqp")
+action_runner = SubResource("Resource_rxgda")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
