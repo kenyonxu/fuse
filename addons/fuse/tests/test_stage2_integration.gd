@@ -57,9 +57,6 @@ func run_all_tests() -> void:
 	# 测试2: 输入键选择器本地化
 	await test_input_key_selector_localization()
 
-	# 测试3: 静态分析面板本地化
-	await test_static_analysis_panel_localization()
-
 	# 测试4: 调试可视化器本地化
 	await test_debug_visualizer_localization()
 
@@ -188,67 +185,6 @@ func test_input_key_selector_localization() -> void:
 	# 记录结果
 	var result = {
 		"test_name": "输入键选择器本地化",
-		"index": current_test_index,
-		"passed": test_pass,
-		"errors": errors
-	}
-	test_results.append(result)
-
-	# 输出结果
-	if test_pass:
-		print("  ✓ 测试通过\n")
-	else:
-		print("  ✗ 测试失败")
-		for error in errors:
-			print(error)
-		print()
-
-	await get_tree().process_frame
-
-
-## 测试3: 静态分析面板本地化
-func test_static_analysis_panel_localization() -> void:
-	current_test_index = 3
-	print("测试 %d: 静态分析面板本地化" % current_test_index)
-
-	var test_pass: bool = true
-	var errors: Array[String] = []
-
-	# 检查必要的翻译键（抽样检查）
-	var sample_keys = [
-		"FUSE_UI_STATIC_ANALYSIS_TITLE",
-		"FUSE_UI_BTN_ANALYZE_INSTRUCTIONS",
-		"FUSE_UI_BTN_CLEAR_RESULTS",
-		"FUSE_UI_STATUS_READY",
-		"FUSE_UI_WELCOME_TITLE"
-	]
-
-	for key in sample_keys:
-		var result = FuseLocalization_class.translate(key)
-		if result == key:
-			test_pass = false
-			errors.append("  - 翻译键缺失或无效: %s" % key)
-
-	# 检查文件是否存在
-	var panel_file = "res://addons/fuse/editor/static_analysis/static_analysis_panel.gd"
-	if not FileAccess.file_exists(panel_file):
-		test_pass = false
-		errors.append("  - 静态分析面板文件不存在")
-
-	# 检查文件是否使用 translate()
-	var file = FileAccess.open(panel_file, FileAccess.READ)
-	if file:
-		var content = file.get_as_text()
-		file.close()
-		if "translate(" in content:
-			print("  ✓ 静态分析面板已使用本地化 API")
-		else:
-			test_pass = false
-			errors.append("  - 静态分析面板未使用本地化 API")
-
-	# 记录结果
-	var result = {
-		"test_name": "静态分析面板本地化",
 		"index": current_test_index,
 		"passed": test_pass,
 		"errors": errors

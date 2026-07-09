@@ -4,152 +4,29 @@ class_name EditorToolsTest
 
 ## 编辑器工具测试
 ##
-## 测试静态分析工具和调试可视化工具的功能
+## 测试调试可视化工具的功能
 
-# 预加载模拟指令类
-const MockNormalInstruction = preload("res://addons/fuse/tests/mock_instructions/mock_normal_instruction.gd")
-const MockVariableInstruction = preload("res://addons/fuse/tests/mock_instructions/mock_variable_instruction.gd")
-const MockUseVariableInstruction = preload("res://addons/fuse/tests/mock_instructions/mock_use_variable_instruction.gd")
-const MockJumpInstruction = preload("res://addons/fuse/tests/mock_instructions/mock_jump_instruction.gd")
-const MockFileOperationInstruction = preload("res://addons/fuse/tests/mock_instructions/mock_file_operation_instruction.gd")
-const MockHeavyOperationInstruction = preload("res://addons/fuse/tests/mock_instructions/mock_heavy_operation_instruction.gd")
-
-var instruction_validator: InstructionValidator
 var execution_tracker: ExecutionTracker
-var static_analysis_panel: StaticAnalysisPanel
 var debug_visualizer: DebugVisualizer
 var test_results: Dictionary = {}
 
 func _ready():
 	print("开始编辑器工具测试...")
 	_setup_test_environment()
-	_run_static_analysis_tests()
 	_run_debugging_tests()
 	_display_test_results()
 
 ## 设置测试环境
 func _setup_test_environment():
 	# 创建测试用的指令
-	instruction_validator = InstructionValidator.new()
 	execution_tracker = ExecutionTracker.new()
-	static_analysis_panel = StaticAnalysisPanel.new()
 	debug_visualizer = DebugVisualizer.new()
-	
+
 	test_results = {
-		"static_analysis": {"passed": 0, "failed": 0, "total": 0},
-		"debugging": {"passed": 0, "failed": 0, "total": 0},
-		"integration": {"passed": 0, "failed": 0, "total": 0}
+		"debugging": {"passed": 0, "failed": 0, "total": 0}
 	}
 	
 	print("测试环境设置完成")
-
-## 运行静态分析测试
-func _run_static_analysis_tests():
-	print("\n=== 静态分析工具测试 ===")
-	
-	# 测试1: 验证空指令序列
-	var test1_result = _test_empty_instruction_sequence()
-	_record_test_result("static_analysis", "空指令序列验证", test1_result)
-	
-	# 测试2: 验证变量引用
-	var test2_result = _test_variable_reference_validation()
-	_record_test_result("static_analysis", "变量引用验证", test2_result)
-	
-	# 测试3: 检测潜在死循环
-	var test3_result = _test_loop_detection()
-	_record_test_result("static_analysis", "死循环检测", test3_result)
-	
-	# 测试4: 性能问题分析
-	var test4_result = _test_performance_analysis()
-	_record_test_result("static_analysis", "性能问题分析", test4_result)
-	
-	print("静态分析测试完成")
-
-## 测试空指令序列
-func _test_empty_instruction_sequence() -> bool:
-	var empty_instructions: Array[BaseInstruction] = []
-	var result = instruction_validator.validate_instruction_sequence(empty_instructions)
-	
-	if not result:
-		print("❌ 空指令序列测试失败: 没有返回结果")
-		return false
-	
-	if not result.valid:
-		print("❌ 空指令序列测试失败: 验证未通过")
-		return false
-	
-	if result.errors.size() > 0:
-		print("❌ 空指令序列测试失败: 出现错误")
-		return false
-	
-	print("✅ 空指令序列测试通过")
-	return true
-
-## 测试变量引用验证
-func _test_variable_reference_validation() -> bool:
-	# 创建模拟指令
-	var mock_instructions = _create_mock_instructions_with_variable_issues()
-	var result = instruction_validator.validate_instruction_sequence(mock_instructions)
-	
-	if not result:
-		print("❌ 变量引用测试失败: 没有返回结果")
-		return false
-	
-	# 应该检测到未定义变量的使用
-	var has_undefined_variable_error = false
-	for error in result.errors:
-		if "未定义" in error:
-			has_undefined_variable_error = true
-			break
-	
-	if not has_undefined_variable_error:
-		print("❌ 变量引用测试失败: 未检测到未定义变量错误")
-		return false
-	
-	print("✅ 变量引用测试通过")
-	return true
-
-## 测试死循环检测
-func _test_loop_detection() -> bool:
-	# 创建模拟的跳转指令
-	var mock_instructions = _create_mock_instructions_with_loops()
-	var result = instruction_validator.validate_instruction_sequence(mock_instructions)
-	
-	if not result:
-		print("❌ 死循环检测测试失败: 没有返回结果")
-		return false
-	
-	# 应该检测到潜在的循环
-	var has_loop_warning = false
-	for warning in result.warnings:
-		if "循环" in warning:
-			has_loop_warning = true
-			break
-	
-	if not has_loop_warning:
-		print("❌ 死循环检测测试失败: 未检测到循环警告")
-		return false
-	
-	print("✅ 死循环检测测试通过")
-	return true
-
-## 测试性能问题分析
-func _test_performance_analysis() -> bool:
-	# 创建模拟的高频操作指令
-	var mock_instructions = _create_mock_instructions_with_performance_issues()
-	var result = instruction_validator.validate_instruction_sequence(mock_instructions)
-	
-	if not result:
-		print("❌ 性能分析测试失败: 没有返回结果")
-		return false
-	
-	# 应该提供性能优化建议
-	if result.suggestions.size() == 0:
-		print("❌ 性能分析测试失败: 没有提供优化建议")
-		return false
-	
-	print("✅ 性能分析测试通过")
-	return true
 
 ## 运行调试测试
 func _run_debugging_tests():
@@ -271,106 +148,6 @@ func _test_export_functionality() -> bool:
 	
 	print("✅ 导出功能测试通过")
 	return true
-
-## 运行集成测试
-func _run_integration_tests():
-	print("\n=== 集成测试 ===")
-	
-	# 测试1: ActionRunner调试集成
-	var test1_result = _test_action_runner_debug_integration()
-	_record_test_result("integration", "ActionRunner调试集成", test1_result)
-	
-	# 测试2: 面板功能测试
-	var test2_result = _test_panel_functionality()
-	_record_test_result("integration", "面板功能测试", test2_result)
-	
-	print("集成测试完成")
-
-## 测试ActionRunner调试集成
-func _test_action_runner_debug_integration() -> bool:
-	var action_runner = ActionRunner.new()
-	
-	# 启用调试
-	action_runner.enable_debug()
-	
-	if not action_runner.is_debug_enabled():
-		print("❌ ActionRunner调试集成测试失败: 调试模式未启用")
-		return false
-	
-	if not action_runner.get_execution_tracker():
-		print("❌ ActionRunner调试集成测试失败: 执行跟踪器未创建")
-		return false
-	
-	# 禁用调试
-	action_runner.disable_debug()
-	
-	if action_runner.is_debug_enabled():
-		print("❌ ActionRunner调试集成测试失败: 调试模式未禁用")
-		return false
-	
-	print("✅ ActionRunner调试集成测试通过")
-	return true
-
-## 测试面板功能
-func _test_panel_functionality() -> bool:
-	# 测试静态分析面板
-	var analysis_info = static_analysis_panel.get_panel_info()
-	if not analysis_info or not analysis_info.has("is_analyzing"):
-		print("❌ 面板功能测试失败: 静态分析面板信息异常")
-		return false
-	
-	# 测试调试可视化面板
-	var debug_info = debug_visualizer.get_panel_info()
-	if not debug_info or not debug_info.has("execution_count"):
-		print("❌ 面板功能测试失败: 调试可视化面板信息异常")
-		return false
-	
-	print("✅ 面板功能测试通过")
-	return true
-
-## 创建模拟指令（带变量问题）
-func _create_mock_instructions_with_variable_issues() -> Array[BaseInstruction]:
-	var instructions: Array[BaseInstruction] = []
-	
-	# 创建一个定义变量的指令
-	var define_instruction = MockVariableInstruction.new("test_var", 42)
-	instructions.append(define_instruction)
-	
-	# 创建一个使用未定义变量的指令
-	var use_undefined_instruction = MockUseVariableInstruction.new("undefined_var")
-	instructions.append(use_undefined_instruction)
-	
-	return instructions
-
-## 创建模拟指令（带循环）
-func _create_mock_instructions_with_loops() -> Array[BaseInstruction]:
-	var instructions: Array[BaseInstruction] = []
-	
-	# 创建一些普通指令
-	for i in range(3):
-		var normal_instruction = MockNormalInstruction.new("指令_%d" % i)
-		instructions.append(normal_instruction)
-	
-	# 创建一个跳转指令，跳转到更早的指令
-	var jump_instruction = MockJumpInstruction.new(1)  # 跳转到索引1
-	instructions.append(jump_instruction)
-	
-	return instructions
-
-## 创建模拟指令（带性能问题）
-func _create_mock_instructions_with_performance_issues() -> Array[BaseInstruction]:
-	var instructions: Array[BaseInstruction] = []
-	
-	# 创建大量相同类型的指令（高频操作）
-	for i in range(15):
-		var file_instruction = MockFileOperationInstruction.new("文件操作_%d" % i)
-		instructions.append(file_instruction)
-	
-	# 创建一个资源密集型指令
-	var heavy_instruction = MockHeavyOperationInstruction.new("大型数据处理")
-	instructions.append(heavy_instruction)
-	
-	return instructions
 
 ## 创建基础模拟指令
 func _create_mock_instruction() -> BaseInstruction:

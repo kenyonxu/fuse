@@ -120,8 +120,6 @@ func _get_configuration_warnings() -> PackedStringArray:
         {"name": "FuseLogger", "path": "res://addons/fuse/core/logging/fuse_logger.gd"},
         {"name": "FuseError", "path": "res://addons/fuse/core/logging/fuse_error.gd"},
         {"name": "RuntimeEventInstance", "path": "res://addons/fuse/core/runtime_event_instance.gd"},
-        {"name": "InstructionValidator", "path": "res://addons/fuse/editor/static_analysis/instruction_validator.gd"},
-        {"name": "StaticAnalysisPanel", "path": "res://addons/fuse/editor/static_analysis/static_analysis_panel.gd"},
         {"name": "ExecutionTracker", "path": "res://addons/fuse/editor/debugging/execution_tracker.gd"},
         {"name": "DebugVisualizer", "path": "res://addons/fuse/editor/debugging/debug_visualizer.gd"},
         {"name": "FuseMetadata", "path": "res://addons/fuse/editor/metadata/fuse_metadata.gd"},

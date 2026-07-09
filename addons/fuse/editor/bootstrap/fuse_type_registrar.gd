@@ -33,8 +33,6 @@ const _TYPES: Array = [
 	["RuntimeActionRunnerInstance", "RefCounted", "res://addons/fuse/core/runtime_action_runner_instance.gd"],
 	["CompiledInstructionSequence", "RefCounted", "res://addons/fuse/core/execution/compiled_instruction_sequence.gd"],
 	["InstructionInstancePool", "RefCounted", "res://addons/fuse/core/pooling/instruction_instance_pool.gd"],
-	["InstructionValidator", "RefCounted", "res://addons/fuse/editor/static_analysis/instruction_validator.gd"],
-	["StaticAnalysisPanel", "Control", "res://addons/fuse/editor/static_analysis/static_analysis_panel.gd"],
 	["ExecutionTracker", "RefCounted", "res://addons/fuse/editor/debugging/execution_tracker.gd"],
 	["DebugVisualizer", "Control", "res://addons/fuse/editor/debugging/debug_visualizer.gd"],
 	["FuseMetadata", "Resource", "res://addons/fuse/editor/metadata/fuse_metadata.gd"],
