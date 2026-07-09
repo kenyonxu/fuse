@@ -1,6 +1,6 @@
 # 编辑器面板总览
 
-Fuse 在 Godot 编辑器中集成了多个专属界面，分别覆盖：**Fuse Topology 主屏 Tab**（全场景 Trigger 拓扑总览）、**Inspector 增强**（数据流卡片 + 预设操作）、**指令静态分析**（错误/警告/建议检测）、**作用域变量编辑**、**底部变量监视器**（[56-variable-watcher-guide](56-variable-watcher-guide.md)）。本文档作为所有编辑器面板的入口参考。
+Fuse 在 Godot 编辑器中集成了多个专属界面，分别覆盖：**Fuse Topology 主屏 Tab**（全场景 Trigger 拓扑总览 + 问题标注）、**Inspector 增强**（数据流卡片 + 预设操作）、**作用域变量编辑**、**底部变量监视器**（[56-variable-watcher-guide](56-variable-watcher-guide.md)）。本文档作为所有编辑器面板的入口参考。
 
 ---
 
@@ -10,7 +10,6 @@ Fuse 在 Godot 编辑器中集成了多个专属界面，分别覆盖：**Fuse T
 |------|----------|----------|
 | **Fuse Topology 主屏** | [Fuse Topology](#fuse-topology-主屏) | `editor/topology/fuse_topology.gd` |
 | Inspector 插件 | 见本章 | `editor/fuse_inspector_plugin.gd` |
-| 静态分析面板 | [静态分析面板](#静态分析面板) | `editor/static_analysis/static_analysis_panel.gd` |
 | Scope 变量编辑器 | [Scope 变量编辑器](#scope-变量编辑器) | `editor/scope_variable_container_plugin.gd` |
 | 协作者 | [协作场景](#协作场景) | 多组件联动 |
 
@@ -52,6 +51,17 @@ Fuse 插件在编辑器主屏注册了 **"Fuse" Tab**（与 2D / 3D / Script 并
 | **右侧详情面板** | BBCode 富文本：选中 Trigger 显示概要，选中指令显示指令详情（参数/依赖/引用） |
 | **全局关联扫描** | `cross_ref_label` 标注跨 Trigger 的变量 / 信号 / 节点引用关联 |
 | **刷新** | 重新扫描当前场景，重建 Trigger 树与详情 |
+
+### 问题标注（静态分析）
+
+Topology 刷新时自动跑指令序列分析（local 未声明变量检测），结果就地标注：
+
+- **指令节点**：🔴 红色 = error / 🟡 黄色 = warning（文本前缀 + 着色）
+- **Trigger 节点**：汇总子树问题计数（如 `(2🔴 1🟡)`），有 error 整行标红
+- **选中节点** → 右侧详情面板显示该节点具体问题（BBCode 分级着色）
+- **「导出问题报告」按钮**（顶部 banner）→ 全场景问题汇总写 `user://fuse_problems_report_*.txt`
+
+分析由 `InstructionAnalyzer.analyze_problems` 提供（复用 `_extract_variables` 反射式提取，非独立引擎）。
 
 ### GraphEdit（降级保留）
 
@@ -177,101 +187,6 @@ Inspector 底部出现一行按钮：
 
 ---
 
-## 静态分析面板
-
-静态分析面板是一个独立的 `Control`，可在编辑器工具栏或自定义 Dock 中打开，对当前场景的指令序列进行全量静态分析。
-
-**文件:** `editor/static_analysis/static_analysis_panel.gd`
-
-### 界面布局
-
-```
-+------------------------------------------------------+
-| 静态分析工具                                           |
-+------------------------------------------------------+
-| [分析指令序列]  [清除结果]  [导出报告]                  |
-| 状态: 就绪                                            |
-| [═══════════════════ 进度条 ════════════════════]    |
-+------------------------------------------------------+
-| ↗ 分析结果区域 (RichTextLabel)                         |
-|                                                       |
-| ✓ 指令序列验证通过                                     |
-|                                                       |
-| 错误 (2):                                             |
-| • 变量 "speed" 类型不匹配                             |
-| • 死循环检测: 第 5 条循环无终止条件                     |
-|                                                       |
-| 警告 (3):                                             |
-| • 指令 "TweenMoveTo" target_node 为 null              |
-| • PrintVariableValue 引用未声明变量                     |
-| • 未使用的本地变量 "temp"                               |
-|                                                       |
-| 建议 (4):                                             |
-| • 可将重复指令序列提取为 L1 预设                        |
-| • 使用 BreakpointInstruction 替代多个 Print            |
-|                                                       |
-| 统计信息:                                              |
-|   • 总指令数: 22                                       |
-|   • 验证状态: 失败                                     |
-|   • 问题总数: 9                                        |
-+------------------------------------------------------+
-```
-
-### 分析流程
-
-```
-分析按钮点击 → _on_analyze_pressed()
-  │
-  ├─ 查找当前 ActionRunner (优先编辑中场景 → 选中节点)
-  │   （注意：优先取场景树中第一个 ActionRunner，可能不是当前选中节点）
-  │
-  ├─ 验证 ActionRunner 不为空且含指令
-  │   └─ 空 → 显示错误提示
-  │
-  ├─ _start_analysis(instructions)
-  │   ├─ 显示进度条 (模拟进度 10% → 100%)
-  │   ├─ InstructionValidator.validate_instruction_sequence()
-  │   └─ _display_results() 渲染结果
-  │
-  └─ 完成 → 恢复 UI 状态
-      └─ 状态标签: "分析完成 - 发现 2 个错误，3 个警告，4 个建议"
-```
-
-### 结果分级
-
-| 级别 | 颜色 | 严重程度 | 示例 |
-|------|------|----------|------|
-| **错误 (Error)** | 红色 | 必须修复 | 变量类型不匹配、死循环 |
-| **警告 (Warning)** | 黄色 | 建议修复 | 空 target_node、未声明变量 |
-| **建议 (Suggestion)** | 青色 | 优化提示 | 提取预设、使用断点指令 |
-
-### 导出报告
-
-点击 **导出报告** 按钮，将当前分析结果写入 `user://static_analysis_report_{时间}.txt`：
-
-```
-Fuse 静态分析报告
-生成时间: 14:30:25
-══════════════════════════════════════════════════
-
-验证结果: 失败
-错误数: 2
-警告数: 3
-建议数: 4
-
-错误详情:
-1. 变量 "speed" 类型不匹配
-2. 死循环检测: 第 5 条循环无终止条件
-
-警告详情:
-1. 指令 "TweenMoveTo" target_node 为 null
-...
-
-分析完成
-```
-
----
-
 ## Scope 变量编辑器
 
 `ScopeVariableContainerPlugin`（`EditorInspectorPlugin`）为 `ScopeVariableContainer` 节点提供专用的变量编辑面板。
@@ -346,9 +261,9 @@ Fuse 静态分析报告
 │  ┌──────────────────────────────────────────────────┐│
 │  │  Bottom Dock                                     ││
 │  │                                                  ││
-│  │  [StaticAnalysis]  [VariableWatcher]             ││
+│  │  [VariableWatcher]                               ││
 │  │                                                  ││
-│  │  静态分析面板 / 变量监视器                        ││
+│  │  变量监视器（问题标注在 Fuse Topology 主屏查看）  ││
 │  └──────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────┘
 ```
@@ -358,7 +273,7 @@ Fuse 静态分析报告
 **调试流程：**
 1. 在场景中选中 `Trigger` → Inspector 查看**数据流卡片**确认指令链
 2. 运行场景 → 底部 **VariableWatcher** 实时观察变量变化
-3. 发现问题 → 打开**静态分析面板**扫描指令序列
+3. 发现问题 → **Fuse Topology 主屏**刷新自动标注指令序列问题（红=error/黄=warning）
 4. 修复 → 从 Inspector 导出预设备份 → 继续迭代
 
 **配置流程：**
@@ -374,7 +289,7 @@ Fuse 静态分析报告
 | 问题 | 原因 | 解决方案 |
 |------|------|----------|
 | Inspector 未显示数据流卡片 | 选中节点不是 BaseTrigger | 选中 Trigger / MultiEventTrigger 节点 |
-| 静态分析报错"没有找到 ActionRunner" | 当前场景无可分析的指令链 | 确保场景中有 Trigger/ActionRunner |
+| Topology 中指令节点标红 | `analyze_problems` 检测到 error（如 local 未声明变量） | 选中该节点，右侧详情面板查看具体问题 |
 | 作用域变量编辑器空白 | ScopeVariableContainer 无变量 | 点击「添加变量」创建 |
 | 导出按钮不显示 | 前置验证未通过 | 检查 event_definition/action_runner 配置 |
 | 本地化文本未生效 | 编辑器语言检测延迟 | 重启编辑器或切换语言 |
