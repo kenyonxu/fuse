@@ -1,6 +1,6 @@
 # 编辑器面板总览
 
-Fuse 在 Godot 编辑器中集成了三个专属面板，分别覆盖：**Inspector 增强**（数据流卡片 + 预设操作）、**指令静态分析**（错误/警告/建议检测）、**作用域变量编辑**。本文档作为所有编辑器面板的入口参考。
+Fuse 在 Godot 编辑器中集成了多个专属界面，分别覆盖：**Fuse Topology 主屏 Tab**（全场景 Trigger 拓扑总览）、**Inspector 增强**（数据流卡片 + 预设操作）、**指令静态分析**（错误/警告/建议检测）、**作用域变量编辑**、**底部变量监视器**（[56-variable-watcher-guide](56-variable-watcher-guide.md)）。本文档作为所有编辑器面板的入口参考。
 
 ---
 
@@ -8,10 +8,54 @@ Fuse 在 Godot 编辑器中集成了三个专属面板，分别覆盖：**Inspec
 
 | 面板 | 文档章节 | 核心文件 |
 |------|----------|----------|
+| **Fuse Topology 主屏** | [Fuse Topology](#fuse-topology-主屏) | `editor/topology/fuse_topology.gd` |
 | Inspector 插件 | 见本章 | `editor/fuse_inspector_plugin.gd` |
 | 静态分析面板 | [静态分析面板](#静态分析面板) | `editor/static_analysis/static_analysis_panel.gd` |
 | Scope 变量编辑器 | [Scope 变量编辑器](#scope-变量编辑器) | `editor/scope_variable_container_plugin.gd` |
 | 协作者 | [协作场景](#协作场景) | 多组件联动 |
+
+---
+
+## Fuse Topology 主屏
+
+Fuse 插件在编辑器主屏注册了 **"Fuse" Tab**（与 2D / 3D / Script 并列），提供全场景的 Trigger 拓扑总览，是 Fuse 编辑器集成的**顶级入口**。
+
+**文件:** `editor/topology/fuse_topology.gd`（依赖 `fuse_graph_builder.gd`、`fuse_graph_node.gd`、`analysis/instruction_analyzer.gd`）
+
+### 注册机制
+
+| 阶段 | 行为 |
+|------|------|
+| 插件启用 (`_enter_tree`) | `EditorInterface.get_editor_main_screen().add_child(_topology)` + `_make_visible(false)` 初始隐藏 |
+| 用户切到 "Fuse" Tab | `_make_visible(true)` 显示 |
+| 插件元信息 | `_has_main_screen() = true`；`_get_plugin_name()` → `"Fuse"`；图标 `VisualShader` |
+
+### 界面布局
+
+```
+[Fuse 场景拓扑]                                    [🔄 刷新]
+┌────────────────────────┬─────────────────────────────────┐
+│ Trigger          事件   │  详情（BBCode 富文本）            │
+│ ├ Trigger(OnKey)  on_key│  选中 Trigger → Trigger 概要     │
+│ │  ├ SetVariable        │  选中指令   → 指令详情           │
+│ │  ├ CompareVariable    │                                  │
+│ │  └ EmitSignal         │  全局关联扫描                    │
+│ └ Runner(OnTimer) timer │  （跨 Trigger 的变量/信号引用）   │
+└────────────────────────┴─────────────────────────────────┘
+```
+
+### 功能
+
+| 区域 | 说明 |
+|------|------|
+| **左侧 Trigger 树** | 扫描全场景，按 Trigger 分组展示嵌套指令链（含图标 + 分支标记）；第二列显示绑定事件 |
+| **右侧详情面板** | BBCode 富文本：选中 Trigger 显示概要，选中指令显示指令详情（参数/依赖/引用） |
+| **全局关联扫描** | `cross_ref_label` 标注跨 Trigger 的变量 / 信号 / 节点引用关联 |
+| **刷新** | 重新扫描当前场景，重建 Trigger 树与详情 |
+
+### GraphEdit（降级保留）
+
+代码中保留了 `FuseGraphEdit`（基于 Godot `GraphEdit` 的可视化节点图）与 `FuseGraphNode`，但当前**默认降级隐藏**（`visible = false`）。现阶段以 **Tree 树形视图**为主交互方式，GraphEdit 视图未启用，仅保留代码备查。
 
 ---
 
