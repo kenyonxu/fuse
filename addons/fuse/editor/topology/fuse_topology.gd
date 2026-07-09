@@ -14,6 +14,7 @@ var _detail: RichTextLabel
 var _graph_edit: FuseGraphEdit  # 保留但降级（不默认显示）
 var _cross_ref_label: Label
 var _refresh_btn: Button
+var _last_topology: Dictionary = {}
 
 
 func _init() -> void:
@@ -34,6 +35,11 @@ func _init() -> void:
 	_refresh_btn.text = "刷新"
 	_refresh_btn.pressed.connect(refresh)
 	banner.add_child(_refresh_btn)
+
+	var export_btn := Button.new()
+	export_btn.text = "导出问题报告"
+	export_btn.pressed.connect(_on_export_problems)
+	banner.add_child(export_btn)
 
 	# ---- 左右分栏 ----
 	var hsplit := HSplitContainer.new()
@@ -146,6 +152,7 @@ func refresh() -> void:
 
 	# 全局关联
 	_refresh_cross_references(topology)
+	_last_topology = topology
 
 
 # ============================================================
@@ -383,6 +390,20 @@ func _on_item_selected() -> void:
 		_show_binding_detail(meta)
 	else:
 		_show_trigger_detail(meta.get("report", {}))
+
+	# 追加问题段（任务 5）
+	var report: Dictionary = meta.get("report", {})
+	if meta_type == "trigger":
+		var s: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
+		if s.get("errors", 0) > 0 or s.get("warnings", 0) > 0:
+			_detail.append_text("\n[b]问题（%d🔴 %d🟡）:[/b]\n" % [s.get("errors", 0), s.get("warnings", 0)])
+	elif meta_type == "instruction":
+		var inst_problems: Array = _find_problems_for_inst(meta.get("inst", null), report)
+		if not inst_problems.is_empty():
+			_detail.append_text("\n[b]本指令问题:[/b]\n")
+			for p in inst_problems:
+				var color := "red" if p.get("severity") == "error" else "yellow"
+				_detail.append_text("[color=%s]• %s[/color]\n" % [color, p.get("message", "")])
 
 
 ## 选中 EventBinding → 右侧详情
@@ -694,3 +715,30 @@ func _find_problems_for_inst(inst, report: Dictionary) -> Array:
 		return []
 	var by_inst: Dictionary = report.get("problems", {}).get("by_inst", {})
 	return by_inst.get(inst.get_instance_id(), [])
+
+
+## 导出全场景问题报告到 user://fuse_problems_report_*.txt
+func _on_export_problems() -> void:
+	if _last_topology.is_empty():
+		_detail.append_text("\n[color=yellow]无分析数据，先刷新[/color]")
+		return
+	var lines := ["Fuse 问题报告 %s" % Time.get_time_string_from_system(), "=".repeat(50), ""]
+	var total_err := 0
+	var total_warn := 0
+	for t in _last_topology.get("triggers", []):
+		var s: Dictionary = t.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
+		if s.get("errors", 0) == 0 and s.get("warnings", 0) == 0:
+			continue
+		lines.append("%s (%s): %d🔴 %d🟡" % [t.get("trigger_name", "?"), t.get("trigger_type", "?"), s.get("errors", 0), s.get("warnings", 0)])
+		total_err += s.get("errors", 0)
+		total_warn += s.get("warnings", 0)
+	lines.append("")
+	lines.append("合计: %d 错误, %d 警告" % [total_err, total_warn])
+	var path := "user://fuse_problems_report_%s.txt" % Time.get_time_string_from_system().replace(":", "-")
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f:
+		f.store_string("\n".join(lines))
+		f.close()
+		_detail.append_text("\n[color=green]报告已导出: %s[/color]" % path)
+	else:
+		_detail.append_text("\n[color=red]导出失败: %s[/color]" % path)
