@@ -388,3 +388,45 @@ static func build_topology(scene_root: Node) -> Dictionary:
 					})
 
 	return topology
+
+
+# ============================================================
+# 静态分析：问题检测
+# ============================================================
+
+## 静态分析：检测指令序列中的问题（local 未声明变量使用）
+## @param instructions: Array - 指令序列（flat 顺序）
+## @return: Dictionary - {valid: bool, problems: Array[Dictionary]}
+##   problem: {severity, message, instruction_index, variable, inst}
+static func analyze_problems(instructions: Array) -> Dictionary:
+	var problems: Array = []
+	var defined_locals: Dictionary = {}  # var_name → true（已被 write 定义）
+
+	for i in range(instructions.size()):
+		var inst = instructions[i]
+		if inst == null:
+			continue
+		# 复用 _extract_variables：每指令单独提取
+		var tmp := {"variables": {"local": [], "scope": [], "global": []},
+					"nodes": [], "signals": []}
+		_extract_variables(inst, tmp)
+		var entries: Array = tmp.variables.local  # scope==0 的变量
+		for entry in entries:
+			var vname: String = entry.get("name", "")
+			var mode: String = entry.get("mode", "read_write")
+			if vname.is_empty():
+				continue
+			# write / read_write → 视为定义（累积）
+			if mode == "write" or mode == "read_write":
+				defined_locals[vname] = true
+			# read → 检查是否已定义
+			if mode == "read" and not defined_locals.has(vname):
+				problems.append({
+					"severity": "error",
+					"message": "未声明的局部变量被使用: %s（指令 %d）" % [vname, i],
+					"instruction_index": i,
+					"variable": vname,
+					"inst": inst  # 供 Topology by_inst 索引（instance_id）
+				})
+
+	return {"valid": problems.is_empty(), "problems": problems}
