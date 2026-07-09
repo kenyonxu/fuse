@@ -429,4 +429,25 @@ static func analyze_problems(instructions: Array) -> Dictionary:
 					"inst": inst  # 供 Topology by_inst 索引（instance_id）
 				})
 
+		# 递归 condition（条件变量全部 read，不进 defined_locals）
+		# 注意：条件只读不写，故只检测未声明，忽略 cond_entry.mode
+		# 用 cond != null + "condition" in inst 判断（与 _analyze_instructions 一致），
+		# 避免硬绑 BaseCondition（测试 mock 用 Resource 子类即可注入）。
+		var cond = inst.get("condition") if inst != null else null
+		if cond != null:
+			var cond_tmp := {"variables": {"local": [], "scope": [], "global": []}, "nodes": [], "signals": []}
+			_extract_variables(cond, cond_tmp)
+			for cond_entry in cond_tmp.variables.local:
+				var cvname: String = cond_entry.get("name", "")
+				if cvname.is_empty():
+					continue
+				if not defined_locals.has(cvname):
+					problems.append({
+						"severity": "error",
+						"message": "未声明的局部变量被使用（条件）: %s（指令 %d）" % [cvname, i],
+						"instruction_index": i,
+						"variable": cvname,
+						"inst": inst
+					})
+
 	return {"valid": problems.is_empty(), "problems": problems}
