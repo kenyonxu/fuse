@@ -113,4 +113,16 @@ TDD：RED（加测试，condition 不递归 → FAIL）→ GREEN（实现递归�
 
 ---
 
+## 7. 附：Topology resource_name 陈旧修复（选项 C）
+
+`test_topology_warning.tscn` 的"未指定变量名"经核实是 **RunConditionCheck.resource_name 陈旧**（嵌套资源同步问题：容器不监听 condition 内部属性变化），**非 CheckVariable bug**（CheckVariable `get_description`/`_update_resource_name` 都正确显示 variable_name）。
+
+**修复（选项 C，绕过陈旧）**：Topology 树节点显示改用 `inst.get_description()`（实时）而非 resource_name（静态陈旧）。
+
+- **改动**：`fuse_topology._build_tree_items` / `_create_flat_item` 的 `display_name` 优先 `inst.get_description()`，回退 `node_info["name"]`（resource_name）
+- **范围**：Topology 显示层小改，不动 resource_name 同步机制（选项 A/B 留 future）
+- **效果**：嵌套条件容器的显示实时反映 condition 内部变量名变化
+
+---
+
 **下一步**：用户审 spec → writing-plans。
