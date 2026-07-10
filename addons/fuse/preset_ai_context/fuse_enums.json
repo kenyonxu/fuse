@@ -1,0 +1,26 @@
+{
+  "CooldownMode": {
+    "GLOBAL_COOLDOWN": 1,
+    "NONE": 0,
+    "PER_OBJECT_COOLDOWN": 2
+  },
+  "ExecutionMode": {
+    "PARALLEL": 1,
+    "SEQUENTIAL": 0
+  },
+  "ScopeSource": {
+    "CUSTOM_ID": 1,
+    "NEAREST": 0,
+    "TARGET_NODE": 3,
+    "TRIGGER_SCOPE": 2
+  },
+  "SequenceMode": {
+    "ASYNCHRONOUS": 1,
+    "SYNCHRONOUS": 0
+  },
+  "VariableScope": {
+    "GLOBAL": 2,
+    "LOCAL": 0,
+    "SCOPE": 1
+  }
+}
