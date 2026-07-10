@@ -335,7 +335,8 @@ static func build_topology(scene_root: Node) -> Dictionary:
 	var topology := {
 		"scene_name": scene_root.name,
 		"triggers": [],
-		"cross_references": []
+		"cross_references": [],
+		"variable_analysis": []
 	}
 	var all_reports := {}
 	var triggers: Array[Node] = scene_root.find_children("*", "Trigger")
@@ -368,26 +369,145 @@ static func build_topology(scene_root: Node) -> Dictionary:
 						"type": "signal", "detail": signal_info.signal
 					})
 
-	# 跨 Trigger 关联：共享全局变量
-	var global_vars_used := {}
-	for t_name in all_reports:
-		for var_entry in all_reports[t_name].variables.global:
+	# E3: 全局变量读写方向收集
+	# global_vars_usage: { vname: [{trigger_name, mode}, ...] }
+	# mode 来自 _infer_variable_mode: write（target_）/ read（from_）/ read_write（其他）
+	var global_vars_usage := {}
+	for report in all_reports.values():
+		for var_entry in report.variables.global:
 			var vname: String = var_entry.name
-			if not global_vars_used.has(vname):
-				global_vars_used[vname] = []
-			global_vars_used[vname].append(t_name)
+			var mode: String = var_entry.get("mode", "read_write")
+			if not global_vars_usage.has(vname):
+				global_vars_usage[vname] = []
+			global_vars_usage[vname].append({
+				"trigger_name": report.trigger_name,
+				"mode": mode
+			})
 
-	for vname in global_vars_used:
-		var users = global_vars_used[vname]
-		if users.size() > 1:
-			for i in range(users.size()):
-				for j in range(i + 1, users.size()):
-					topology.cross_references.append({
-						"from": users[i], "to": users[j],
-						"type": "shared_global_variable", "detail": vname
-					})
+	# E3 §3.3: 跨 Trigger 变量关联生成
+	_build_variable_cross_references(global_vars_usage, all_reports, topology)
+
+	# E3 §3.3: 孤写/孤读标注（variable_analysis 顶层）
+	_build_variable_analysis(global_vars_usage, topology)
 
 	return topology
+
+
+## E3: 基于全局变量读写方向生成跨 Trigger 关联条目
+## - variable_write_to_read: 写者 → 变量 → 读者（跨 Trigger）
+## - variable_write_to_write: 多 Trigger 共写 + 无互斥 → 竞态预警
+static func _build_variable_cross_references(
+		global_vars_usage: Dictionary,
+		all_reports: Dictionary,
+		topology: Dictionary) -> void:
+	for vname in global_vars_usage:
+		var usages: Array = global_vars_usage[vname]
+		# writers: mode in [write, read_write]; readers: mode in [read, read_write]
+		# 注：read_write 同时进入 writers 和 readers（修订 MEDIUM#7 双向性）
+		var writers := usages.filter(func(u): return u.mode in ["write", "read_write"])
+		var readers := usages.filter(func(u): return u.mode in ["read", "read_write"])
+
+		# variable_write_to_read: 写者 → 读者（跳过自环）
+		for writer in writers:
+			for reader in readers:
+				if writer.trigger_name == reader.trigger_name:
+					continue
+				topology.cross_references.append({
+					"from": writer.trigger_name,
+					"from_mode": writer.mode,
+					"to": reader.trigger_name,
+					"to_mode": reader.mode,
+					"type": "variable_write_to_read",
+					"detail": vname
+				})
+
+		# variable_write_to_write: 竞态预警（2+ writers，无互斥）
+		if writers.size() >= 2:
+			var has_mutex := false
+			for writer in writers:
+				var wreport: Dictionary = all_reports.get(writer.trigger_name, {})
+				if _has_mutex_protection(wreport):
+					has_mutex = true
+					break
+			if not has_mutex:
+				for i in range(writers.size()):
+					for j in range(i + 1, writers.size()):
+						topology.cross_references.append({
+							"from": writers[i].trigger_name,
+							"from_mode": writers[i].mode,
+							"to": writers[j].trigger_name,
+							"to_mode": writers[j].mode,
+							"type": "variable_write_to_write",
+							"detail": vname,
+							"warning": true
+						})
+
+
+## E3: 全局变量孤写/孤读标注（单 Trigger 维度统计）
+## anomaly: "write_only"（无读者）/ "read_only"（无写者）/ "normal"
+static func _build_variable_analysis(global_vars_usage: Dictionary, topology: Dictionary) -> void:
+	for vname in global_vars_usage:
+		var usages: Array = global_vars_usage[vname]
+		var writers := usages.filter(func(u): return u.mode in ["write", "read_write"])
+		var readers := usages.filter(func(u): return u.mode in ["read", "read_write"])
+		var entry := {"name": vname, "writers": writers, "readers": readers}
+		if writers.is_empty() and not readers.is_empty():
+			entry["anomaly"] = "read_only"
+		elif not writers.is_empty() and readers.is_empty():
+			entry["anomaly"] = "write_only"
+		else:
+			entry["anomaly"] = "normal"
+		topology.variable_analysis.append(entry)
+
+
+## E3: 检测 Trigger 是否对全局变量有互斥保护
+## Phase 1 简化策略：扫描指令链中是否含 lock/mutex/sync 关键词
+## （修订 MEDIUM#2: inst 是 Resource 对象，用 inst.resource_name 取脚本资源名）
+static func _has_mutex_protection(report: Dictionary) -> bool:
+	# 复用 fuse_topology 的收集策略：优先 flat（含 inst），回退 tree 递归 + event_bindings
+	var insts: Array = _collect_insts_for_mutex(report)
+	for inst in insts:
+		if inst == null:
+			continue
+		var name: String = inst.resource_name
+		if name.is_empty():
+			continue
+		var name_lower := name.to_lower()
+		if name_lower.contains("lock") or name_lower.contains("mutex") or name_lower.contains("sync"):
+			return true
+	return false
+
+
+## E3 辅助：从 report 收集所有指令 inst（mutex 检测用，三路径覆盖）
+## 与 fuse_topology._collect_insts_from_report 同构（analysis 端独立实现，避免循环依赖）
+static func _collect_insts_for_mutex(report: Dictionary) -> Array:
+	var insts: Array = []
+	for info in report.get("instructions_flat", []):
+		var inst = info.get("inst", null)
+		if inst != null:
+			insts.append(inst)
+	if not insts.is_empty():
+		return insts
+	insts.append_array(_collect_insts_for_mutex_tree(report.get("instructions_tree", [])))
+	for binding in report.get("event_bindings", []):
+		insts.append_array(_collect_insts_for_mutex_tree(binding.get("instructions_tree", [])))
+		for info in binding.get("instructions_flat", []):
+			var inst = info.get("inst", null)
+			if inst != null and inst not in insts:
+				insts.append(inst)
+	return insts
+
+
+static func _collect_insts_for_mutex_tree(tree: Array) -> Array:
+	var out: Array = []
+	for node_info in tree:
+		var inst = node_info.get("inst", null)
+		if inst != null:
+			out.append(inst)
+		var children: Dictionary = node_info.get("children", {})
+		for branch in children:
+			out.append_array(_collect_insts_for_mutex_tree(children[branch]))
+	return out
 
 
 # ============================================================

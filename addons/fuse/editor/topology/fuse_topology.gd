@@ -12,7 +12,7 @@ extends VBoxContainer
 var _tree: Tree
 var _detail: RichTextLabel
 var _graph_edit: FuseGraphEdit  # 保留但降级（不默认显示）
-var _cross_ref_label: Label
+var _cross_ref_label: RichTextLabel
 var _refresh_btn: Button
 var _last_topology: Dictionary = {}
 
@@ -82,8 +82,11 @@ func _init() -> void:
 	_graph_edit.right_disconnects = false
 	right.add_child(_graph_edit)
 
-	_cross_ref_label = Label.new()
+	_cross_ref_label = RichTextLabel.new()
 	_cross_ref_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_cross_ref_label.bbcode_enabled = true
+	_cross_ref_label.fit_content = true
+	_cross_ref_label.selection_enabled = true
 	right.add_child(_cross_ref_label)
 
 	refresh()
@@ -596,6 +599,9 @@ func _show_trigger_detail(report: Dictionary) -> void:
 			var inst_name: String = inst_info.get("name", "?")
 			_detail.append_text("  %s📦 %s\n" % [prefix, inst_name])
 
+	# E3: 跨 Trigger 变量关联（追加段）
+	_append_cross_trigger_relations(report)
+
 
 # ============================================================
 # GraphEdit（保留，不默认显示）
@@ -649,27 +655,102 @@ static func _build_variable_parts(report: Dictionary) -> PackedStringArray:
 
 func _refresh_cross_references(topology: Dictionary) -> void:
 	var ref_lines := PackedStringArray()
+	var warning_lines := PackedStringArray()
+
 	for ref in topology.get("cross_references", []):
 		var ref_type: String = ref.get("type", "?")
-		var type_label: String
-		match ref_type:
-			"signal":
-				type_label = "🔗 信号"
-			"shared_global_variable":
-				type_label = "🌐 全局变量"
-			_:
-				type_label = ref_type
 		var from_name: String = ref.get("from", "?")
 		var to_name: String = ref.get("to", "?")
 		var detail: String = ref.get("detail", "")
-		if not detail.is_empty():
-			ref_lines.append("%s  %s → %s  (%s)" % [type_label, from_name, to_name, detail])
-		else:
-			ref_lines.append("%s  %s → %s" % [type_label, from_name, to_name])
+
+		match ref_type:
+			"signal":
+				ref_lines.append("🔗  %s → %s  信号: %s" % [from_name, to_name, detail])
+			"variable_write_to_read":
+				ref_lines.append("📝  %s (%s) → [%s] → %s (%s)" % [
+					from_name, _mode_label(ref.get("from_mode", "")),
+					detail,
+					to_name, _mode_label(ref.get("to_mode", ""))])
+			"variable_write_to_write":
+				# 竞态预警 → warning 区（BBCode 黄色）
+				warning_lines.append("[color=yellow]🔥  %s ↔ %s  共享变量: %s (竞态)[/color]" % [
+					from_name, to_name, detail])
+			_:
+				# 兼容旧 shared_global_variable（理论不再产出，保险）
+				ref_lines.append("🌐  %s → %s  (%s)" % [from_name, to_name, detail])
+
+	# E3: 孤写/孤读标注（variable_analysis 顶层）
+	for entry in topology.get("variable_analysis", []):
+		match entry.get("anomaly", "normal"):
+			"write_only":
+				warning_lines.append("[color=yellow]📤  孤写: %s → (无读者)[/color]" % entry.get("name", "?"))
+			"read_only":
+				warning_lines.append("[color=yellow]📥  孤读: %s ← (无写者)[/color]" % entry.get("name", "?"))
+
+	# 组装显示（BBCode，_cross_ref_label 已是 RichTextLabel + bbcode_enabled）
+	var all_lines := PackedStringArray()
 	if not ref_lines.is_empty():
-		_cross_ref_label.text = "跨 Trigger 关联 (%d 条):\n" % ref_lines.size() + "\n".join(ref_lines)
-	else:
+		all_lines.append("跨 Trigger 关联 (%d 条):" % ref_lines.size())
+		all_lines.append_array(ref_lines)
+	if not warning_lines.is_empty():
+		if not all_lines.is_empty():
+			all_lines.append("")
+		all_lines.append("⚠ 预警 (%d 条):" % warning_lines.size())
+		all_lines.append_array(warning_lines)
+	if all_lines.is_empty():
 		_cross_ref_label.text = "跨 Trigger 关联: (无)"
+	else:
+		_cross_ref_label.text = "\n".join(all_lines)
+
+
+## E3: 变量访问 mode → 中文标签（渲染辅助）
+static func _mode_label(mode: String) -> String:
+	match mode:
+		"write": return "写"
+		"read": return "读"
+		"read_write": return "读写"
+		_: return mode
+
+
+## E3: 在 _show_trigger_detail 末尾追加当前 Trigger 的跨 Trigger 关联信息
+## 从 _last_topology.cross_references 中过滤出与当前 trigger 相关的条目
+func _append_cross_trigger_relations(report: Dictionary) -> void:
+	if _last_topology.is_empty():
+		return
+	var cross_refs: Array = _last_topology.get("cross_references", [])
+	var this_name: String = report.get("trigger_name", "")
+	if this_name.is_empty():
+		return
+	var related_refs := cross_refs.filter(func(r):
+		return r.get("from", "") == this_name or r.get("to", "") == this_name)
+	if related_refs.is_empty():
+		return
+
+	_detail.append_text("\n[b]跨 Trigger 关联 (%d 条):[/b]\n" % related_refs.size())
+	for r in related_refs:
+		var r_type: String = r.get("type", "")
+		var from_name: String = r.get("from", "?")
+		var to_name: String = r.get("to", "?")
+		var detail: String = r.get("detail", "")
+		match r_type:
+			"variable_write_to_read":
+				var direction := "→" if from_name == this_name else "←"
+				var target := to_name if from_name == this_name else from_name
+				_detail.append_text("  📝 %s %s [color=gray]变量: %s (%s→%s)[/color]\n" % [
+					direction, target, detail,
+					_mode_label(r.get("from_mode", "")),
+					_mode_label(r.get("to_mode", ""))])
+			"variable_write_to_write":
+				_detail.append_text("  [color=yellow]🔥 竞态 ↔ %s [color=gray]变量: %s[/color][/color]\n" % [
+					to_name if from_name == this_name else from_name, detail])
+			"signal":
+				var direction := "→" if from_name == this_name else "←"
+				var target := to_name if from_name == this_name else from_name
+				_detail.append_text("  🔗 %s %s [color=gray]信号: %s[/color]\n" % [
+					direction, target, detail])
+			_:
+				_detail.append_text("  • %s ↔ %s [color=gray]%s[/color]\n" % [
+					from_name, to_name, detail])
 
 
 # ============================================================
