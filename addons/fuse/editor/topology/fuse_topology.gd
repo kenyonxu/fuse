@@ -120,9 +120,10 @@ func refresh() -> void:
 		return
 
 	# 注入静态分析结果到每 trigger report（report.problems: {by_inst, summary}）
+	# E1: 传 scene_root 触发 NodePath 解析失败检测（warning）
 	for report in topology.triggers:
 		var insts: Array = _collect_insts_from_report(report)
-		var analysis := InstructionAnalyzer.analyze_problems(insts)
+		var analysis := InstructionAnalyzer.analyze_problems(insts, scene_root)
 		report["problems"] = _index_problems(analysis.problems)
 
 	# 填充 Trigger 列表（主场景 + 嵌套场景分组）

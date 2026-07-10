@@ -52,6 +52,46 @@ static func _scan_instructions(instructions: Array, report: Dictionary) -> void:
 # 8a-2: 自动匹配 — 三级策略
 # ============================================================
 
+## 公开静态：尝试所有策略解析 NodePath 字符串到节点，失败返 null
+## 锚点为 scene_root（与 E1 静态分析匹配；预设粘贴用 resolve_mapping 的 target_node 锚点不变）。
+## 策略：
+##   1. scene_root.get_node_or_null(np) —— 覆盖绝对路径 /root/... 和相对路径 Player
+##   1b. scene_root.get_parent().get_node_or_null(np) —— 覆盖 ../... 跨兄弟路径
+##   2. scene_root.find_children(last_name, ...) —— 全树按最后段节点名搜索（兜底）
+## 守卫：np_str 为空或 scene_root 为 null 时直接返 null
+static func resolve_or_null(np_str: String, scene_root: Node) -> Node:
+	# 自守卫（spec §3.4 + 审阅 MEDIUM #4）
+	if np_str.is_empty() or scene_root == null:
+		return null
+
+	var np := NodePath(np_str)
+
+	# —— 策略 1: 相对路径结构 —— 从 scene_root 直接解析
+	var found: Node = scene_root.get_node_or_null(np)
+	if found != null:
+		return found
+
+	# —— 策略 1b: 父级回退 —— 覆盖 ../... 跨兄弟路径
+	var parent := scene_root.get_parent()
+	if parent != null:
+		found = parent.get_node_or_null(np)
+		if found != null:
+			return found
+
+	# —— 策略 2: 全局同名 —— 取最后一段节点名，全场景广度优先搜索
+	if np.get_name_count() > 0:
+		var last_name := _get_last_name(np_str)
+		if last_name != "" and last_name != ".." and last_name != ".":
+			# 守卫：节点未入树时 get_tree() 为 null，find_children 会崩溃
+			if scene_root.get_tree() != null:
+				var children := scene_root.find_children(last_name, "", true, false)
+				if not children.is_empty():
+					return children[0]
+
+	# —— 策略 3: 全部失败 ——
+	return null
+
+
 ## 生成 NodePath 映射建议
 ##
 ## 返回 {old_np_str: {"new": NodePath, "matched": bool, "suggestions": Array[String]}}

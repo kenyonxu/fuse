@@ -394,11 +394,13 @@ static func build_topology(scene_root: Node) -> Dictionary:
 # 静态分析：问题检测
 # ============================================================
 
-## 静态分析：检测指令序列中的问题（local 未声明变量使用）
+## 静态分析：检测指令序列中的问题（local 未声明变量使用 + NodePath 解析失败）
 ## @param instructions: Array - 指令序列（flat 顺序）
+## @param scene_root: Node - 场景根节点（可选；为 null 时跳过 NodePath 检测）
 ## @return: Dictionary - {valid: bool, problems: Array[Dictionary]}
 ##   problem: {severity, message, instruction_index, variable, inst}
-static func analyze_problems(instructions: Array) -> Dictionary:
+##   NodePath 检测产生的 problem 额外含字段 nodepath: String
+static func analyze_problems(instructions: Array, scene_root: Node = null) -> Dictionary:
 	var problems: Array = []
 	var defined_locals: Dictionary = {}  # var_name → true（已被 write 定义）
 
@@ -450,4 +452,44 @@ static func analyze_problems(instructions: Array) -> Dictionary:
 						"inst": inst
 					})
 
+	# —— E1: NodePath 解析失败检测（仅在 scene_root 提供时启用）——
+	# 与变量检测解耦：独立分支，scene_root=null 时完全跳过（零误报）
+	if scene_root != null:
+		_check_nodepath_targets(instructions, scene_root, problems)
+
 	return {"valid": problems.is_empty(), "problems": problems}
+
+
+## E1: 扫描指令序列的 NodePath 引用，对无法解析的路径报 warning
+## 对每条指令：
+##   1. 调用 _extract_nodepaths 提取 NodePath 字符串（反射 + 命名启发式）
+##   2. 也提取 condition 节点中的 NodePath 引用（与变量检测对齐）
+##   3. 对每个 np_str 调 NodePathResolver.resolve_or_null 解析，失败 → warning problem
+## warning 而非 error：NodePath 可能运行时动态填充（占位符），静态不确定
+static func _check_nodepath_targets(
+	instructions: Array,
+	scene_root: Node,
+	problems: Array
+) -> void:
+	for i in range(instructions.size()):
+		var inst = instructions[i]
+		if inst == null:
+			continue
+		var tmp := {"nodes": []}
+		_extract_nodepaths(inst, tmp)
+		# 条件节点中的 NodePath 引用（与 analyze_problems 变量检测对齐）
+		var cond = inst.get("condition") if inst != null else null
+		if cond != null:
+			_extract_nodepaths(cond, tmp)
+		for np_str in tmp.nodes:
+			var np_s: String = str(np_str)
+			if np_s.is_empty():
+				continue
+			if NodePathResolver.resolve_or_null(np_s, scene_root) == null:
+				problems.append({
+					"severity": "warning",
+					"message": "节点路径无法解析: %s（指令 %d）" % [np_s, i],
+					"instruction_index": i,
+					"nodepath": np_s,
+					"inst": inst
+				})
