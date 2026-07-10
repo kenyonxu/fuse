@@ -223,10 +223,11 @@ static func _extract_variables(inst, report: Dictionary) -> void:
 		var name: String = name_val
 		if name.is_empty():
 			continue
-		# 配对 scope 属性（*_variable_scope）
-		var scope_prop := pname + "_scope"
+		# 配对 scope 属性（默认 *_variable_scope；variable_name → variable_scope，CheckVariable 命名约定）
+		var scope_val = inst.get(pname + "_scope")
+		if scope_val == null and pname.ends_with("_name"):
+			scope_val = inst.get(pname.substr(0, pname.length() - 5) + "_scope")
 		var scope: int = 0
-		var scope_val = inst.get(scope_prop)
 		if scope_val != null:
 			scope = int(scope_val)
 		var entry := {"name": name, "source_prop": pname, "mode": _infer_variable_mode(pname)}

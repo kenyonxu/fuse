@@ -19,6 +19,7 @@ func _ready() -> void:
 	_test_read_write_defines_variable()
 	_test_condition_read_undefined()
 	_test_condition_read_defined()
+	_test_condition_read_scope_not_undefined()
 	_test_condition_does_not_define()
 	# E1: NodePath 解析失败检测
 	_setup_nodepath_test_scene()
@@ -170,6 +171,18 @@ func _test_condition_read_defined() -> void:
 	var r := InstructionAnalyzer.analyze_problems([write_inst, cond_inst])
 	_check(r.valid == true, "条件读已声明 valid=true")
 	_check(r.problems.is_empty(), "0 problem")
+
+
+func _test_condition_read_scope_not_undefined() -> void:
+	print("\n--- 条件读 scope 变量（variable_scope=1）→ 不报未声明（scope 非 local）---")
+	var cond := MockCondition.new()
+	cond.variable_name = "scope_var"
+	cond.variable_scope = 1  # SCOPE
+	var inst := _make_inst("", "", "")
+	inst.condition = cond
+	var r := InstructionAnalyzer.analyze_problems([inst])
+	_check(r.valid == true, "scope 变量不报未声明 valid=true")
+	_check(r.problems.is_empty(), "0 problem（scope 不在 local 未声明检测范围）")
 
 
 func _test_condition_does_not_define() -> void:
