@@ -131,6 +131,8 @@ for report in all_reports.values():
         })
 ```
 
+> （审阅修订 MEDIUM#4：trigger_name 字段确认）已核对 `instruction_analyzer.gd:28-30`：`analyze_trigger` 返回的 report **含 `trigger_name` 字段**（`"trigger_name": trigger.name`），`build_topology` 用 `all_reports[trigger.name] = report`（`:354`）存入——因此 `report.trigger_name` 在 `all_reports.values()` 迭代中可直接取到。无需 `report.get("trigger_name", report.get("name", "?"))` 兜底。
+
 ### 3.3 cross_references 新条目类型
 
 | type | 语义 | 生成条件 |
@@ -154,13 +156,18 @@ for vname in global_vars_usage:
                 continue
             topology.cross_references.append({
                 "from": writer.trigger_name,
-                "from_mode": "write",
+                "from_mode": writer.mode,  # （审阅修订 MEDIUM#3：取实际 mode，与 write_to_write 对称，不再硬编码 "write"）
                 "to": reader.trigger_name,
                 "to_mode": reader.mode,
                 "type": "variable_write_to_read",
                 "detail": vname
             })
 ```
+
+> （审阅修订 MEDIUM#7：read_write 双向性澄清）`_infer_variable_mode` 对非 `target_`/`from_` 命名的变量判定为 `read_write`，会**同时**进入 `writers` 和 `readers` 集合。因此：
+> - 孤写/孤读判定**主要对严格 `target_`/`from_` 命名的变量有效**；
+> - 对 `read_write` 变量，仅当它独自出现且无其他指令引用时才算孤（实际几乎不会触发孤写/孤读）；
+> - 写-读关系中 `read_write` 变量会与自身或其他 `read_write` 变量产生冗余边（已通过 `writer.trigger_name == reader.trigger_name` 跳过自环），跨 Trigger 时会标记为"读写 → 读写"。
 
 #### write_to_write 条目（竞态）
 
@@ -303,7 +310,9 @@ Phase 1 的竞态检测采用**保守策略**：
 static func _has_mutex_protection(report: Dictionary) -> bool:
     var insts := _collect_insts_from_report(report)
     for inst in insts:
-        var name: String = inst.get("name", "") if inst is Dictionary else inst.name
+        # （审阅修订 MEDIUM#2：_collect_insts_from_report 返回 inst 对象（Resource），
+        # 非 Dictionary，去掉 Dictionary 分支，用 inst.resource_name 取脚本资源名）
+        var name: String = inst.resource_name
         if name.to_lower().contains("lock") or name.to_lower().contains("mutex") \
                 or name.to_lower().contains("sync"):
             return true
@@ -412,9 +421,13 @@ FuseTopology._has_mutex_protection(report: Dictionary) -> bool
 - 渲染含 variable_write_to_write 的 topology
 - 预期：输出文本含 `🔥` 和 `竞态`
 
-**`test_no_cross_ref_when_single_trigger`**
-- 只有一个 Trigger 使用全局变量
-- 预期：cross_references 为空
+**`test_no_cross_ref_when_single_trigger`**（审阅修订 MEDIUM#5：区分 cross_references 关联类与 variable_analysis 孤写孤读）
+- 构造单个 Trigger T1：既写又读 `global_x`（`target_global_variable = "global_x"` + 另一指令 `from_global_variable = "global_x"`），即无孤写也无孤读
+- 预期：
+  - `cross_references.variable_write_to_read.is_empty()`（单 Trigger 无跨 Trigger 关联）
+  - `cross_references.variable_write_to_write.is_empty()`
+  - `variable_analysis` 中 `global_x` 的 `anomaly = "normal"`（既有写者又有读者）
+- 注：若改为"单 Trigger 只写不读"，则 `cross_references` 仍为空（孤写不进 cross_ref），但 `variable_analysis` 会标记 `write_only`——测试场景需明确区分这两类断言
 
 ### 5.2 视觉验证（手动）
 
@@ -455,15 +468,20 @@ FuseTopology._has_mutex_protection(report: Dictionary) -> bool
 
 **文件**: `addons/fuse/editor/topology/fuse_topology.gd`
 
-1. `_refresh_cross_references` 新增 `variable_write_to_read` 和 `variable_write_to_write` 渲染分支
-2. 新增 `_mode_label` 辅助方法
-3. 新增孤写/孤读渲染（读取 `topology.variable_analysis`）
-4. `_show_trigger_detail` 追加跨 Trigger 关联信息段（可选，Phase 2）
+1. **（审阅修订 HIGH#1：将 `_cross_ref_label` 从 `Label` 改为 `RichTextLabel`，bbcode_enabled=true）**：当前 `fuse_topology.gd:15` 声明 `var _cross_ref_label: Label`，`:85` 实例化 `Label.new()`，纯文本不解析 BBCode。warning_lines 使用了 `[color=yellow]...[/color]` 标签，必须改造为 `RichTextLabel`：
+   - `:15` → `var _cross_ref_label: RichTextLabel`
+   - `:85` → `_cross_ref_label = RichTextLabel.new()`
+   - `:86` 之后追加 `_cross_ref_label.bbcode_enabled = true`（保留 `autowrap_mode = TextServer.AUTOWRAP_WORD_SMART`，RichTextLabel 兼容此属性）
+2. `_refresh_cross_references` 新增 `variable_write_to_read` 和 `variable_write_to_write` 渲染分支
+3. 新增 `_mode_label` 辅助方法
+4. 新增孤写/孤读渲染（读取 `topology.variable_analysis`）
+5. `_show_trigger_detail` 追加跨 Trigger 关联信息段（可选，Phase 2）
 
 **验收**：
+- [ ] `_cross_ref_label` 已改为 `RichTextLabel`，`bbcode_enabled = true`
 - [ ] 写-读关系正确渲染为 `📝 T1 (写) → [var] → T2 (读)`
-- [ ] 竞态预警行含 `🔥` + 黄色着色
-- [ ] 孤写/孤读在底部预警区显示
+- [ ] 竞态预警行含 `🔥` + 黄色着色（BBCode `[color=yellow]` 被正常解析，非原始文本显示）
+- [ ] 孤写/孤读在底部预警区显示（BBCode 着色正常）
 - [ ] 信号关联无退化
 
 ### Phase 3：测试
@@ -497,6 +515,7 @@ FuseTopology._has_mutex_protection(report: Dictionary) -> bool
 | `_infer_variable_mode` 对 `read_write` 的双向性判断不准确 | 写-读关系中可能错误标记写者/读者 | `read_write` 同时出现在 writers 和 readers 集合中，不会遗漏但可能产生冗余条目——文本渲染中会标记为"读写" |
 | build_topology 中 variable_analysis 影响 topology 体积 | 大场景下 cross_ref 条目数膨胀（N 个变量 × M² 个 Trigger） | 每个变量的竞态全连接只对 `writers.size() >= 2` 的变量做 O(W²) 生成，W 通常 ≤ 3。variable_analysis 是 O(V) 的线性数组 |
 | `_refresh_cross_references` 输出文本过长 | Label 可能超出可见区域 | 已有 `autowrap_mode = WORD_SMART`（`:86`），长文本自动换行 |
+| `trigger.name` 跨场景同名碰撞（审阅修订 MEDIUM#6） | `build_topology` 用 `trigger.name` 作 `all_reports` 的 key（`:354`），跨场景（如多个场景各有一个名为 "TriggerA" 的节点）合并扫描时后者覆盖前者，cross_ref 关联到错误 Trigger | Phase 1 不引入跨场景合并扫描（`build_topology` 仅扫描单 scene_root 子树）。若未来做跨场景拓扑，需改用 `node_path` 或 `instance_id` 作唯一 key，并在 cross_ref 渲染中带上场景前缀去重 |
 
 ---
 
@@ -519,7 +538,7 @@ FuseTopology._has_mutex_protection(report: Dictionary) -> bool
 | 文件 | 变更类型 | 说明 |
 |------|---------|------|
 | `addons/fuse/editor/analysis/instruction_analyzer.gd` | 修改 | `build_topology` 中全局变量收集逻辑重构 + 新增竞态检测 + `variable_analysis` |
-| `addons/fuse/editor/topology/fuse_topology.gd` | 修改 | `_refresh_cross_references` 渲染增强 + `_mode_label` + `_show_trigger_detail` 追加跨 Trigger 段 |
+| `addons/fuse/editor/topology/fuse_topology.gd` | 修改 | `_cross_ref_label` 由 `Label` 改为 `RichTextLabel`（bbcode_enabled=true）（审阅修订 HIGH#1）+ `_refresh_cross_references` 渲染增强 + `_mode_label` + `_show_trigger_detail` 追加跨 Trigger 段 |
 | `addons/fuse/tests/test_build_topology.gd` | 新增用例 | Phase 5.1 全部测试 |
 
 ---

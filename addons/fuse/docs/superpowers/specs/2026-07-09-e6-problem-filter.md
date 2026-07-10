@@ -43,6 +43,8 @@ E6 在 Topology banner 增加过滤控件，允许用户按严重度筛选问题
 
 ### 2.2 当前问题标注路径
 
+> （审阅修订：下方流程描述的是 **E4 落地前** 的源码状态（`fuse_topology.gd:258-265` 当前实际行为——`set_text + set_custom_color`，无 `set_icon`）。E4（Wave 1，先于 E6）落地后此路径变更：emoji 文本前缀被 `set_icon(0, StatusError/StatusWarning)` 覆盖分类图标替代（见 E4 §3.2/§3.3）。E6（Wave 2）在 E4 落地后的状态上加过滤——本 spec §3.4/§3.5/§4 已按 E4 落地后前提编写。）
+
 问题标注经过以下步骤（当前无过滤介入）：
 
 ```
@@ -95,9 +97,9 @@ Banner 新增过滤控件（OptionButton / 按钮组）
   └─ 仍显示完整问题列表（不过滤——详情是"当前选中项的全部信息"）
 
 问题计数：
-  └─ Trigger 汇总文本按过滤模式显示
-  └─ 全部模式："(3🔴 5🟡)"
-  └─ 仅错误模式："(3🔴)"（warning 不计入文本）
+  └─ Trigger 汇总文本按过滤模式显示（审阅修订：与 E4 §3.3 中文标签一致）
+  └─ 全部模式："(3 错误, 5 警告)"
+  └─ 仅错误模式："(3 错误)"（warning 不计入文本）
   └─ 无模式：无后缀
 ```
 
@@ -160,13 +162,23 @@ func _on_filter_changed(item_index: int) -> void:
 
 ### 3.4 `_build_tree_items` 按过滤标注
 
+> （审阅修订：本节原叙事错误——spec 原声称"对照 `_set_item_icon:335` 行为顺序：先分类图标 → 再问题图标，E6 覆盖"，但**现有 `_build_tree_items:258-265` 只 `set_text + set_custom_color`，无 `set_icon`**，问题态根本没有 StatusError/StatusWarning 图标。事实上 **E4（Wave 1）才是首次引入问题图标**——E4 §3.2 把 `🔴/🟡 ` 文本前缀改为 `set_icon(0, StatusError/StatusWarning)`；E6（Wave 2，E4 之后）在 E4 已落地的图标基础上加过滤。下文按此修正后的前提重写。）
+
+**前置事实**（E4 落地后、E6 落地前的状态）：
+
+- `_set_item_icon:321-342` 为每个指令节点设置**分类图标**（`metadata.builtin_icon` 或 `_category_emoji` 回退）
+- E4 §3.2 在 `_build_tree_items:258-265` 追加 **`set_icon(0, StatusError/StatusWarning)`**，**覆盖**分类图标（E4 §3.7 边界 + §4 接口契约均确认此覆盖是有意设计）
+- 即：E4 之后，有问题节点 = 问题图标；无问题节点 = 分类图标
+
+**E6 在此基础上加过滤**——过滤逻辑决定"是否应用 E4 的问题图标 + 着色 + 文本前缀"：
+
 ```gdscript
 func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictionary) -> void:
     for node_info in tree_data:
         var inst = node_info.get("inst")
-        # ... 现有逻辑：创建 item、set_text、_set_item_icon ...
+        # ... 现有逻辑：创建 item、set_text、_set_item_icon（分类图标） ...
 
-        # 按过滤模式标注问题（E6 修改）
+        # 按过滤模式标注问题（E6 修改，叠加在 E4 的 set_icon 之上）
         var inst_problems := _find_problems_for_inst(inst, report)
         var has_problem_color := false
 
@@ -179,20 +191,21 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
                 elif p.get("severity") == "warning":
                     has_warning = true
 
+            # 分支 1：error 优先（FILTER_ALL + FILTER_ERROR 两模式下，只要有 error 都标）
+            # （审阅修订：澄清原 elif 注释易误读——has_error 分支独立，不受过滤模式约束）
             if has_error:
-                # 全部模式 + 仅错误模式：都标 error
+                # FILTER_ALL / FILTER_ERROR：都标 error（E4 提供的 StatusError 图标 + 着色）
                 item.set_custom_color(0, Color(1.0, 0.3, 0.3))
-                item.set_icon(0, EditorInterface.get_editor_theme().get_icon("StatusError", "EditorIcons"))
-                item.set_text(0, "🔴 " + item.get_text(0))
+                item.set_icon(0, _get_theme_icon("StatusError"))
                 has_problem_color = true
+            # 分支 2：warning 仅在 FILTER_ALL 且无 error 时才标
+            # （审阅修订：原 elif 注释 "elif has_warning and FILTER_ALL" 易误读为 FILTER_ERROR 也走 elif）
             elif has_warning and _filter_mode == FILTER_ALL:
-                # 仅 warning + 全部模式 → 标 warning
                 item.set_custom_color(0, Color(1.0, 0.8, 0.3))
-                item.set_icon(0, EditorInterface.get_editor_theme().get_icon("StatusWarning", "EditorIcons"))
-                item.set_text(0, "🟡 " + item.get_text(0))
+                item.set_icon(0, _get_theme_icon("StatusWarning"))
                 has_problem_color = true
-            # 仅错误模式 + 只有 warning → 不标注（无着色、无前缀、保留分类图标）
-            # 无模式 → 不标注（_filter_mode == FILTER_NONE 已跳过）
+            # FILTER_ERROR + 仅 warning：不进 set_icon，分类图标保留（E4 的 _set_item_icon 结果不变）
+            # FILTER_NONE：外层 if 已跳过
 
         # 分支颜色（仅当未因问题着色时）
         if is_branch and not has_problem_color:
@@ -200,33 +213,37 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
         # ...
 ```
 
+> 注：上面用 E4 引入的 `_get_theme_icon("StatusError")` 封装（替代直接 `EditorInterface.get_editor_theme().get_icon(...)`），与 E4 §3.6 一致。E6 不重复 emoji 文本前缀——E4 已移除 `"🔴 "/"🟡 "` 前缀，指令名完整显示。
+
 **关键行为变化**：
 
-| 过滤模式 | error 标注 | warning 标注 | 无问题节点 |
-|---------|-----------|-------------|-----------|
-| 全部（FILTER_ALL） | 🔴 红色 + StatusError | 🟡 黄色 + StatusWarning | 正常 |
-| 仅错误（FILTER_ERROR） | 🔴 红色 + StatusError | 不标（分类图标保留） | 正常 |
-| 无（FILTER_NONE） | 不标 | 不标 | 正常 |
+| 过滤模式 | error 标注 | warning 标注（无 error） | 无问题节点 |
+|---------|-----------|--------------------------|-----------|
+| 全部（FILTER_ALL） | 红色 + StatusError 图标（覆盖分类） | 黄色 + StatusWarning 图标（覆盖分类） | 分类图标保留 |
+| 仅错误（FILTER_ERROR） | 红色 + StatusError 图标（覆盖分类） | 不标（分类图标保留，无着色） | 分类图标保留 |
+| 无（FILTER_NONE） | 不标（分类图标保留） | 不标（分类图标保留） | 分类图标保留 |
 
-> **🟡 行为变更取舍：`set_icon` 覆盖分类图标**
+> **🟡 行为变更取舍：E6 过滤如何作用于 E4 引入的问题图标**
 >
-> 当前 `_set_item_icon`（`fuse_topology.gd:321-342`）在构建树时已为每个指令节点设置了**分类图标**（通过 `inst._get_instruction_metadata().builtin_icon` 或 `_category_emoji` 回退）。E6 的问题标注代码调用 `item.set_icon(0, StatusError/StatusWarning)` **会覆盖**此分类图标。
+> （审阅修订：取舍的命题已变——不是"E6 是否首次引入问题图标"，而是"E6 过滤如何叠加在 E4 已有的图标覆盖行为之上"。）
 >
-> **影响**：
-> - 有 error 的节点：用户看到红色的 `StatusError` 图标，失去「这是变量指令还是流程指令」的分类信息
-> - 有 warning 的节点同理
-> - 无问题节点：分类图标保留不变
+> **现状**（E4 落地后）：`_set_item_icon:321-342` 已为每个指令节点设置分类图标（`metadata.builtin_icon` 或 `_category_emoji` 回退）；E4 §3.2 在此之后调用 `set_icon(0, StatusError/StatusWarning)` **覆盖**分类图标（E4 §3.7 + §4 接口契约确认此覆盖是有意设计）。
+>
+> **E6 的影响**：E6 决定"是否调用 E4 的覆盖逻辑"——过滤跳过的节点根本不调用 `set_icon`，分类图标自然保留。
 >
 > **取舍方案**（需在实现阶段决定）：
-> | 方案 | 行为 | 优点 | 缺点 |
-> |------|------|------|------|
-> | A（覆盖） | 问题图标替换分类图标 | 问题视觉突出，一目了然 | 丢失分类信息 |
-> | B（仅颜色+前缀，保留图标） | 只改色和文本前缀，不改 icon | 分类信息保留 | 问题标注弱于纯图标替换 |
-> | C（覆盖，但详情可查分类） | 同 A，分类信息在展开详情中可查 | 同 A | 用户需点开节点查看分类 |
+> | 方案 | FILTER_ALL | FILTER_ERROR | FILTER_NONE | 优点 | 缺点 |
+> |------|-----------|--------------|-------------|------|------|
+> | A（与 E4 一致） | error+warning 均覆盖 | 仅 error 覆盖，warning 跳过 | 不覆盖 | 与 E4 覆盖语义一致，实现最简（条件分支即可） | FILTER_ERROR 模式下 warning 节点"看不出有 warning" |
+> | B（warning 仅着色不覆盖图标） | error 覆盖；warning 仅 set_custom_color | 仅 error 覆盖 | 不覆盖 | warning 节点保留分类信息 | FILTER_ALL 下 warning 视觉弱化（只有色，无图标），与 E4 退化 |
+> | C（全部模式覆盖，但详情查分类） | 同 A | 同 A | 同 A | 同 A | 同 A |
 >
-> **本 spec 推荐方案 C**：因为树节点的主要导航维度是"该指令有无问题"，分类信息的次要需求可通过展开详情满足。若社区反馈需要保留分类图标，可降级为方案 B。
+> **本 spec 推荐方案 A**：（审阅修订——方案 C 的"详情可查分类"是 E4 已有的设计，A 与 C 实际等价，统一为 A）。理由：
+> 1. 保持与 E4 已落地的覆盖语义一致——E6 不重新决策"是否覆盖"，只决策"是否标注"
+> 2. FILTER_ERROR 模式下 warning 不标是有意为之（用户明确说"只看 error"），不应再暗示有 warning
+> 3. 分类信息在详情面板（`_show_instruction_detail:499-503`）中已显示 `分类: <category_key>`，丢失树节点分类图标的损失可控
 >
-> 对照源码 `_set_item_icon:335` 的行为顺序：先设分类图标 → 再设问题图标（E6 覆盖），与方案 C 一致。
+> 若社区反馈 FILTER_ALL 下分类信息丢失严重，可退回方案 B（warning 节点不覆盖图标），但需同步修改 E4 §3.2 保持一致。
 
 ### 3.5 `_create_trigger_tree_item` 按过滤标注
 
@@ -255,21 +272,21 @@ func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> voi
 
     var has_problems := display_err > 0 or display_warn > 0
     if has_problems:
-        # 构建过滤后的后缀文本
+        # 构建过滤后的后缀文本（审阅修订：用 E4 §3.3 已统一的中文标签，不回退到 🔴/🟡 emoji）
         var suffix_parts := PackedStringArray()
         if display_err > 0:
-            suffix_parts.append("%d🔴" % display_err)
+            suffix_parts.append("%d 错误" % display_err)
         if display_warn > 0:
-            suffix_parts.append("%d🟡" % display_warn)
-        t_item.set_text(0, t_item.get_text(0) + "  (%s)" % " ".join(suffix_parts))
+            suffix_parts.append("%d 警告" % display_warn)
+        t_item.set_text(0, t_item.get_text(0) + "  (%s)" % ", ".join(suffix_parts))
 
-        # 着色
+        # 着色 + E4 提供的 StatusError/StatusWarning 图标（用 _get_theme_icon 封装）
         if display_err > 0:
             t_item.set_custom_color(0, Color(1.0, 0.3, 0.3))
-            t_item.set_icon(0, EditorInterface.get_editor_theme().get_icon("StatusError", "EditorIcons"))
+            t_item.set_icon(0, _get_theme_icon("StatusError"))
         elif display_warn > 0:
             t_item.set_custom_color(0, Color(1.0, 0.8, 0.3))
-            t_item.set_icon(0, EditorInterface.get_editor_theme().get_icon("StatusWarning", "EditorIcons"))
+            t_item.set_icon(0, _get_theme_icon("StatusWarning"))
 ```
 
 ### 3.6 详情面板问题段不过滤
@@ -339,13 +356,15 @@ func _on_filter_changed(item_index: int) -> void:
 
 ### 行为矩阵
 
+（审阅修订：行为矩阵中已删除 "🔴/🟡 前缀"——E4 已移除文本前缀，改用 StatusError/StatusWarning 图标。E6 的过滤仅决定"是否标注"，标注形态沿用 E4。）
+
 | 场景 | 全部模式 | 仅错误模式 | 无模式 |
 |------|---------|-----------|-------|
-| 指令有 error | 🔴 标红 + 前缀 + StatusError | 🔴 标红 + 前缀 + StatusError | 无标注 |
-| 指令有 warning（无error） | 🟡 标黄 + 前缀 + StatusWarning | 无标注（分类图标保留） | 无标注 |
-| 指令有 error + warning | 🔴 标红（优先级高于 warning） | 🔴 标红（warning 被忽略） | 无标注 |
-| Trigger 汇总（有 error + warning） | `"(3🔴 5🟡)"` 红色着色 | `"(3🔴)"` 红色着色 | 无后缀 |
-| Trigger 汇总（仅 warning） | `"(5🟡)"` 黄色着色 | 无后缀 | 无后缀 |
+| 指令有 error | 红色 + StatusError 图标（覆盖分类图标） | 红色 + StatusError 图标（覆盖分类图标） | 不标注（分类图标保留） |
+| 指令有 warning（无error） | 黄色 + StatusWarning 图标（覆盖分类图标） | 不标注（分类图标保留） | 不标注（分类图标保留） |
+| 指令有 error + warning | 红色 + StatusError（warning 被忽略） | 红色 + StatusError（warning 被忽略） | 不标注（分类图标保留） |
+| Trigger 汇总（有 error + warning） | `"(3 错误, 5 警告)"` 红色 + StatusError 图标 | `"(3 错误)"` 红色 + StatusError 图标 | 无后缀、无图标 |
+| Trigger 汇总（仅 warning） | `"(5 警告)"` 黄色 + StatusWarning 图标 | 无后缀、无图标 | 无后缀、无图标 |
 | 详情面板问题段 | 完整问题列表 | 完整问题列表 | 完整问题列表 |
 | 导出报告 | 全量 | 全量 | 全量 |
 
@@ -358,12 +377,12 @@ func _on_filter_changed(item_index: int) -> void:
 **`test_filter_all_shows_all`**
 - 场景含 error + warning
 - 过滤 = 全部
-- 预期：error 和 warning 均标注，Trigger 汇总显示 `"N🔴 M🟡"`
+- 预期：error 和 warning 均标注，Trigger 汇总显示 `"N 错误, M 警告"`（审阅修订：与 E4 §3.3 中文标签一致，不再用 emoji）
 
 **`test_filter_error_only`**
 - 场景含 error + warning
 - 过滤 = 仅错误
-- 预期：error 标注，warning 不标，Trigger 汇总仅显示 `"N🔴"`（无 warning 计数）
+- 预期：error 标注，warning 不标，Trigger 汇总仅显示 `"N 错误"`（无 warning 计数）
 
 **`test_filter_error_search_by_warning`**
 - 场景仅含 warning
@@ -407,9 +426,9 @@ func _on_filter_changed(item_index: int) -> void:
 
 ### 5.4 回归
 
-- 默认全部模式 → E4 之前的全标注行为不变
-- 无问题的场景 → 三个过滤模式下的行为一致（均无标注）
-- `set_selectable`、`set_metadata`、`set_icon`（分类图标）不被过滤逻辑破坏
+- 默认全部模式 → 与 E4 落地后的全标注行为完全一致（审阅修订：原描述 "E4 之前" 错误——E6 的"全部"基线就是 E4 已有的图标覆盖行为）
+- 无问题的场景 → 三个过滤模式下的行为一致（均无标注，分类图标保留）
+- `set_selectable`、`set_metadata`、`_set_item_icon`（分类图标）不被过滤逻辑破坏
 - 分支着色（`_branch_color`）在过滤模式下不受影响
 
 ---
@@ -458,8 +477,8 @@ func _on_filter_changed(item_index: int) -> void:
    - 构建后缀文本时只使用 `display` 版本的数字
 
 **验收**：
-- [ ] 全部模式 → `"(N🔴 M🟡)"`
-- [ ] 仅错误模式 → warning 不显示，只显示 `"(N🔴)"`
+- [ ] 全部模式 → `"(N 错误, M 警告)"`（审阅修订：与 E4 §3.3 中文标签一致）
+- [ ] 仅错误模式 → warning 不显示，只显示 `"(N 错误)"`
 - [ ] 无模式 → 无后缀
 
 ### Phase 4：验证
@@ -501,8 +520,8 @@ func _on_filter_changed(item_index: int) -> void:
 ## 9. 验收标准
 
 - [ ] Banner 新增 `OptionButton` 过滤控件（全部 / 仅错误 / 无）
-- [ ] 全部模式 → 所有问题标注（与当前行为一致）
-- [ ] 仅错误模式 → error 标注，warning 不标
+- [ ] 全部模式 → 所有问题标注（审阅修订：与 E4 落地后的行为一致——error/warning 节点显示 StatusError/StatusWarning 图标 + 着色）
+- [ ] 仅错误模式 → error 标注，warning 不标（分类图标保留）
 - [ ] 无模式 → 整个树无问题标注
 - [ ] Trigger 汇总文本随过滤模式调整（warning 计数对应增减）
 - [ ] 详情面板完整显示全量问题（不受过滤影响）

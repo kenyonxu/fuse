@@ -116,44 +116,30 @@ Inspector 选中 Trigger
 func _parse_end(object: Object) -> void:
     if object is BaseTrigger:
         var report = InstructionAnalyzerClass.analyze_trigger(object)
-        # 新增：注入问题分析
-        var insts := _collect_insts_from_trigger_report(report)
+        # 新增：注入问题分析（审阅修订：复用提升后的 analyzer 静态方法，不在 Inspector 内复制）
+        var insts := InstructionAnalyzerClass.collect_insts_from_report(report)
         if not insts.is_empty():
             var analysis := InstructionAnalyzerClass.analyze_problems(insts)
-            report["problems"] = _index_problems(analysis.problems)
+            report["problems"] = InstructionAnalyzerClass.index_problems(analysis.problems)
         else:
-            report["problems"] = {"by_inst": {}, "summary": {"errors": 0, "warnings": 0}}
+            # 审阅修订：fallback summary 补 suggestions，与 Topology 结构一致
+            report["problems"] = {"by_inst": {}, "summary": {"errors": 0, "warnings": 0, "suggestions": 0}}
         _report_cache = report
         _current_node = object as Node
         _add_action_buttons(object as Node)
         _add_dataflow_ui(report)
 ```
 
-**`_collect_insts_from_trigger_report`** — 从 `analyze_trigger` 的 report 中收集所有指令 inst（复用 Topology 的 `_collect_insts_from_tree` 逻辑的简化版）：
+**审阅修订**：`collect_insts_from_report` / `collect_insts_from_tree` / `index_problems` 不再在 Inspector 内复制——三者从 `fuse_topology.gd` 的私有方法提升为 `InstructionAnalyzer` 公开静态方法，Topology + Inspector 共用。Inspector 仅作为消费者，不在自身内维护副本。提升后的 analyzer 方法签名：
 
 ```gdscript
-## 从 Trigger report 收集所有指令 inst
-func _collect_insts_from_trigger_report(report: Dictionary) -> Array:
-    var insts: Array = []
-    # EventBinding 分支
-    for binding in report.get("event_bindings", []):
-        insts.append_array(_collect_insts_from_tree(binding.get("instructions_tree", [])))
-    # 普通 Trigger 分支
-    insts.append_array(_collect_insts_from_tree(report.get("instructions_tree", [])))
-    return insts
-
-
-## 递归收集 instructions_tree 中的 inst
-func _collect_insts_from_tree(tree: Array) -> Array:
-    var out: Array = []
-    for node_info in tree:
-        var inst = node_info.get("inst")
-        if inst != null:
-            out.append(inst)
-        for branch in node_info.get("children", {}).values():
-            out.append_array(_collect_insts_from_tree(branch))
-    return out
+# addons/fuse/editor/analysis/instruction_analyzer.gd
+static func collect_insts_from_report(report: Dictionary) -> Array  # 从 report 收集所有 inst（flat + tree + event_bindings）
+static func collect_insts_from_tree(tree: Array) -> Array           # 递归收集嵌套 tree 的 inst
+static func index_problems(problems: Array) -> Dictionary           # 按 inst 重组 + 汇总（原 fuse_topology._index_problems）
 ```
+
+> 见 §10 文件清单——`instruction_analyzer.gd` 新增 3 个公开静态方法；`fuse_topology.gd` 的 `_index_problems` / `_collect_insts_from_report` / `_collect_insts_from_tree` 改为委托调用 analyzer，行为零变化。
 
 ### 3.3 数据流卡片按钮加问题角标
 
@@ -168,8 +154,8 @@ func _add_dataflow_ui(report: Dictionary) -> void:
     for scope in report.variables:
         var_count += report.variables[scope].size()
 
-    # 新增：问题摘要
-    var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
+    # 新增：问题摘要（审阅修订：fallback 补 suggestions，与 Topology summary 结构一致）
+    var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
     var err_count: int = summary.get("errors", 0)
     var warn_count: int = summary.get("warnings", 0)
     var problem_suffix: String = ""
@@ -224,7 +210,8 @@ func _create_dataflow_card() -> void:
 
 
 func _add_problems_section(content: VBoxContainer, report: Dictionary) -> void:
-    var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
+    # 审阅修订：fallback 补 suggestions，与 Topology summary 结构一致
+    var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
     var err_count: int = summary.get("errors", 0)
     var warn_count: int = summary.get("warnings", 0)
 
@@ -239,9 +226,7 @@ func _add_problems_section(content: VBoxContainer, report: Dictionary) -> void:
         label_text += "🟡%d 警告 " % warn_count
     content.add_child(_make_section_label(label_text))
 
-> **注意**：`_make_info_line` 必须创建 `RichTextLabel`（`bbcode_enabled = true`）而非 `Label`，因为消息文本含 `[color=red]` / `[color=yellow]` BBCode 标签。Label 不解析 BBCode。
-
-    # 列出具体问题
+    # 列出具体问题（审阅修订：问题行用新增的 _make_problem_line RichTextLabel，不复用 _make_info_line）
     var by_inst: Dictionary = report.get("problems", {}).get("by_inst", {})
     var seen_messages: Array = []  # 去重（同条指令的类似问题）
     for inst_id in by_inst:
@@ -250,8 +235,22 @@ func _add_problems_section(content: VBoxContainer, report: Dictionary) -> void:
             if msg not in seen_messages:
                 seen_messages.append(msg)
                 var color := "red" if p.get("severity") == "error" else "yellow"
-                content.add_child(_make_info_line("[color=%s]• %s[/color]" % [color, msg]))
+                content.add_child(_make_problem_line("[color=%s]• %s[/color]" % [color, msg]))
+
+
+## 审阅修订：问题行专用工厂方法 — RichTextLabel + bbcode_enabled
+## 不能复用 _make_info_line：它返回 Label 且强制 font_color override（灰色），
+## 会覆盖 BBCode 内联颜色，导致红色/黄色不生效。
+func _make_problem_line(text: String) -> RichTextLabel:
+    var rtl := RichTextLabel.new()
+    rtl.bbcode_enabled = true
+    rtl.fit_content = true
+    rtl.text = "  " + text
+    rtl.add_theme_font_size_override("normal_font_size", 12)
+    return rtl
 ```
+
+> **审阅修订（BBCode Label 坑）**：现有 `_make_info_line`（`fuse_inspector_plugin.gd:326-330`）返回 `Label` 且硬编码 `add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))`，会覆盖 BBCode `[color=red]` / `[color=yellow]`，导致颜色不生效。因此新增专用工厂方法 `_make_problem_line(text) -> RichTextLabel`（`bbcode_enabled = true`、`fit_content = true`），只用于问题消息行；其余 info line（如"问题: (无)"）保持用 `_make_info_line`。§10 文件清单 + §6 Phase 4 步骤 + §4 接口契约已显式列入此新增方法。
 
 **去重说明**：`by_inst` 是按 `inst instance_id` 索引的。如果同一变量被同一指令多处引用（如 condition + body 都引用了同一个未声明变量），`analyze_problems` 时会生成多条 `instruction_index` 相同的 problem。去重确保卡片中每条错误消息只显示一次。
 
@@ -285,36 +284,49 @@ if _dataflow_button:
 
 | 场景 | 行为 |
 |------|------|
-| Trigger 无指令（空 Trigger） | `_collect_insts_from_trigger_report` 返回空数组 → `analyze_problems` 返回 `{valid: true, problems: []}` → `summary` 全零 → 显示"问题: (无)" |
+| Trigger 无指令（空 Trigger） | `InstructionAnalyzer.collect_insts_from_report` 返回空数组 → `analyze_problems` 返回 `{valid: true, problems: []}` → `summary` 全零（含 suggestions） → 显示"问题: (无)" |
 | Trigger 已无问题（修复后） | `analyze_problems` 的 `problems` 数组为空 → `summary{errors: 0, warnings: 0}` → 按钮无角标，卡片显示"问题: (无)" |
-| 嵌套场景 Trigger | `analyze_problems` 的 `scene_root` 默认为 `null`（Inspector 中无 `scene_root` 上下文）→ NodePath 检测和信号跳过——不影响变量检测 |
+| 嵌套场景 Trigger | `analyze_problems` 的 `scene_root` 默认为 `null`（Inspector 中无 `scene_root` 上下文）→ NodePath 检测和信号跳过——不影响变量检测。审阅修订：E1 落地后 `analyze_problems(instructions, scene_root=null)` 在 `scene_root == null` 时，NodePath/信号检测分支显式跳过（由 E1 的 `if scene_root:` 守卫保证），Inspector 因此仅做变量检测——这是设计意图，非缺陷 |
 | 展开问题卡片时问题为空 | `err_count == 0 && warn_count == 0` → 不显示问题段，不影响卡片展示 |
-| 问题列表超长 | `VBoxContainer` + `_make_info_line` 每种问题一行，随卡片滚动可见 |
-| EventBinding（MultiEventTrigger） | `_collect_insts_from_trigger_report` 同时收集 `event_bindings[].instructions_tree` 中的指令——覆盖多 binding 形态 |
+| 问题列表超长 | `VBoxContainer` + `_make_problem_line` 每种问题一行，随卡片滚动可见 |
+| EventBinding（MultiEventTrigger） | `InstructionAnalyzer.collect_insts_from_report` 同时收集 `event_bindings[].instructions_tree` 中的指令——覆盖多 binding 形态 |
 | `analyze_problems` 返回 null 或异常 | `report.get("problems", {})` 确保安全访问，不影响卡片其他内容 |
 
 ---
 
 ## 4. 接口契约
 
-### `FuseInspectorPlugin._collect_insts_from_trigger_report` 新增
+### `InstructionAnalyzer.collect_insts_from_report` 公开静态方法（审阅修订：从 fuse_topology 提升共用）
 
 ```
-FuseInspectorPlugin._collect_insts_from_trigger_report(report: Dictionary) -> Array
+InstructionAnalyzer.collect_insts_from_report(report: Dictionary) -> Array
 ```
 
-- 私有方法
+- 公开静态方法
 - 从 `analyze_trigger` 的 report 结构中收集所有指令 inst
 - 返回 `Array[BaseInstruction]`（flat 列表）
-- 优先收集 `instructions_tree` 中的 inst（含 event_bindings 嵌套）
+- 覆盖 `instructions_flat` + `instructions_tree`（嵌套）+ `event_bindings[].instructions_*`（MultiEventTrigger）
+- 由 Topology 的 `_collect_insts_from_report` 和 Inspector 的 `_parse_end` 共用，不在两侧维护副本
 
-### `FuseInspectorPlugin._collect_insts_from_tree` 新增
+### `InstructionAnalyzer.collect_insts_from_tree` 公开静态方法（审阅修订：从 fuse_topology 提升共用）
 
 ```
-FuseInspectorPlugin._collect_insts_from_tree(tree: Array) -> Array
+InstructionAnalyzer.collect_insts_from_tree(tree: Array) -> Array
 ```
 
-- 递归收集嵌套 `instructions_tree` 中的 inst
+- 公开静态方法
+- 递归收集嵌套 `instructions_tree` 中的 inst（含 children 分支：then/else/loop body 等）
+- 由 `collect_insts_from_report` 内部调用，也供 Topology 委托使用
+
+### `InstructionAnalyzer.index_problems` 公开静态方法（审阅修订：从 fuse_topology._index_problems 提升）
+
+```
+InstructionAnalyzer.index_problems(problems: Array) -> Dictionary
+```
+
+- 公开静态方法
+- 按 `inst.get_instance_id()` 重组 problems 为 `by_inst`，并汇总 `summary = {errors, warnings, suggestions}`
+- 由 Topology 的 `_index_problems`（改委托）和 Inspector 的 `_parse_end` 共用
 
 ### `FuseInspectorPlugin._add_problems_section` 新增
 
@@ -322,12 +334,24 @@ FuseInspectorPlugin._collect_insts_from_tree(tree: Array) -> Array
 FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictionary) -> void
 ```
 
+- 私有方法
 - 在数据流卡片中新增问题段
 - 根据 `report.problems.summary` 决定显示"无"还是列具体问题
 
-### 无外部签名变更
+### `FuseInspectorPlugin._make_problem_line` 新增（审阅修订：BBCode 坑专用工厂方法）
 
-所有新增方法均为 `fuse_inspector_plugin.gd` 的私有方法。`analyze_problems` 和 `_index_problems` 复用已有公开/私有 API。
+```
+FuseInspectorPlugin._make_problem_line(text: String) -> RichTextLabel
+```
+
+- 私有方法
+- 创建 `RichTextLabel`（`bbcode_enabled = true`、`fit_content = true`），专用于问题消息行
+- 不复用 `_make_info_line`——后者返回 `Label` 且强制灰色 `font_color` override，会覆盖 BBCode 内联颜色
+- 详见 §3.4 末尾"BBCode Label 坑"说明
+
+### 无其他外部签名变更
+
+`analyze_problems` 复用已有公开 API。`fuse_topology.gd` 的 `_collect_insts_from_report` / `_collect_insts_from_tree` / `_index_problems` 改为委托 `InstructionAnalyzer` 对应静态方法（签名不变，行为零变化）。
 
 ---
 
@@ -357,15 +381,18 @@ FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictio
 - Trigger 无指令
 - 预期：问题段显示"问题: (无)"
 
-### 5.2 单元测试（`test_fuse_inspector_plugin.gd` 或 `test_instruction_analyzer_problems.gd`）
+### 5.2 单元测试（`test_instruction_analyzer_problems.gd`）
 
-**`test_collect_insts_from_trigger_report`**
+> 审阅修订：`collect_insts_from_report` / `collect_insts_from_tree` / `index_problems` 已提升为 `InstructionAnalyzer` 公开静态方法，对应单元测试在 analyzer 层而非 Inspector 层（Inspector 是 EditorInspectorPlugin，测试框架无法实例化）。
+
+**`test_collect_insts_from_report`**
 - 构造含 `instructions_tree` 的 report
-- 调用 `_collect_insts_from_trigger_report`
+- 调用 `InstructionAnalyzer.collect_insts_from_report`
 - 预期：返回数组长度 > 0，每个元素是 `BaseInstruction` 实例
 
 **`test_collect_insts_from_tree_recursive`**
 - 含嵌套分支（`then` / `else`）的 instructions_tree
+- 调用 `InstructionAnalyzer.collect_insts_from_tree`
 - 预期：返回数组包含所有嵌套层的 inst
 
 **`test_problems_empty_when_no_instructions`**
@@ -374,38 +401,45 @@ FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictio
 
 ### 5.3 回归
 
-- Topology 的 `_collect_insts_from_report` / `_collect_insts_from_tree` 不变，不受影响
+- 审阅修订：Topology 的 `_collect_insts_from_report` / `_collect_insts_from_tree` / `_index_problems` 改为委托 `InstructionAnalyzer` 对应公开静态方法（签名不变），行为零变化——Topology 刷新结果与提升前完全一致
 - Inspector 现有数据流卡片内容（事件、节点、变量、信号、指令链）不变
 - 按钮展开/折叠行为不变
+- `_make_info_line` 仍用于"问题: (无)"等纯文本 info line，不被 `_make_problem_line` 替代——两者职责分离
 
 ---
 
 ## 6. 实现步骤
 
-### Phase 1：收集指令 inst 的方法
+### Phase 1：收集/index 工具方法提升为 InstructionAnalyzer 公开静态方法（审阅修订）
 
-**文件**: `addons/fuse/editor/fuse_inspector_plugin.gd`
+**文件**: `addons/fuse/editor/analysis/instruction_analyzer.gd` + `addons/fuse/editor/topology/fuse_topology.gd`
 
-1. 新增 `_collect_insts_from_trigger_report(report: Dictionary) -> Array`
-2. 新增 `_collect_insts_from_tree(tree: Array) -> Array`
+1. `instruction_analyzer.gd` 新增 3 个公开静态方法：
+   - `collect_insts_from_report(report) -> Array`
+   - `collect_insts_from_tree(tree) -> Array`
+   - `index_problems(problems) -> Dictionary`
+2. `fuse_topology.gd` 将 `_collect_insts_from_report` / `_collect_insts_from_tree` / `_index_problems` 改为委托调用 analyzer 对应方法（签名、返回结构不变）
 
 **验收**：
-- [ ] 从含 instructions_tree 的 report 中收集到所有 inst
-- [ ] 从含 event_bindings 的 report 中收集到所有 binding 内的 inst
-- [ ] 空 report → 返回空数组
+- [ ] Topology 刷新结果与提升前完全一致（零退化，regression test 覆盖）
+- [ ] `collect_insts_from_report` 覆盖 instructions_flat / instructions_tree（嵌套）/ event_bindings[].instructions_*
+- [ ] `collect_insts_from_tree` 递归处理 children 分支
+- [ ] `index_problems` 返回 `{by_inst, summary:{errors,warnings,suggestions}}`，与 Topology 原结构一致
+- [ ] 空 report / 空 problems → 安全返回空结构
 
-### Phase 2：`_parse_end` 注入问题分析
+### Phase 2：`_parse_end` 注入问题分析（审阅修订：调用 analyzer 静态方法）
 
 **文件**: `addons/fuse/editor/fuse_inspector_plugin.gd`
 
 1. `_parse_end` 中 `analyze_trigger` 后新增：
-   - 收集 inst
+   - `InstructionAnalyzer.collect_insts_from_report(report)` 收集 inst
    - 调用 `analyze_problems(insts)`
-   - 调用 `_index_problems(analysis.problems)` 注入 `report["problems"]`
+   - 调用 `InstructionAnalyzer.index_problems(analysis.problems)` 注入 `report["problems"]`
+   - 空 inst 时 fallback summary 含 `{errors:0, warnings:0, suggestions:0}`
 
 **验收**：
 - [ ] 含未声明变量 Trigger → `report.problems.summary.errors > 0`
-- [ ] 无问题 Trigger → `report.problems.summary.errors == 0`
+- [ ] 无问题 Trigger → `report.problems.summary.errors == 0` 且 `suggestions == 0`
 - [ ] 收集体已在 EventBinding 场景覆盖
 
 ### Phase 3：按钮角标 + 颜色警示
@@ -421,18 +455,20 @@ FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictio
 - [ ] 无问题 Trigger → 按钮文本无后缀
 - [ ] 有 error → 按钮文字显示红色
 
-### Phase 4：卡片问题段
+### Phase 4：卡片问题段（审阅修订：含 _make_problem_line 新增步骤）
 
 **文件**: `addons/fuse/editor/fuse_inspector_plugin.gd`
 
-1. 新增 `_add_problems_section(content, report)`
-2. 在 `_create_dataflow_card` 末尾调用
-3. 按 severity 分组显示具体问题消息（去重）
+1. 新增 `_add_problems_section(content, report)`，在 `_create_dataflow_card` 末尾调用
+2. **新增 `_make_problem_line(text) -> RichTextLabel`**（`bbcode_enabled = true`、`fit_content = true`）——专用于问题消息行，不复用 `_make_info_line`（Label + 强制灰色 override 会覆盖 BBCode 颜色）
+3. 按 severity 分组显示具体问题消息（去重），消息行经 `_make_problem_line` 渲染
+4. summary / fallback 含 `suggestions` 字段
 
 **验收**：
 - [ ] 有问题 Trigger → 展开卡片后显示 "问题: 🔴N 错误 🟡M 警告" + 消息列表
 - [ ] 无问题 Trigger → 显示 "问题: (无)"
 - [ ] 消息列表按去重显示（同变量不重复）
+- [ ] error 消息文本实际呈红色（BBCode 解析生效），warning 呈黄色——验证 `_make_info_line` 的灰色 override 未污染问题行
 
 ---
 
@@ -453,8 +489,8 @@ FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictio
 | 风险 | 影响 | 缓解 |
 |------|------|------|
 | `analyze_trigger` + `analyze_problems` 双重调用增加 Inspector 响应时间 | 选中 Trigger 时轻微延迟（< 20ms） | 纯反射提取 + 单 Trigger 分析 O(N)，N 为该 Trigger 的指令数（通常 ≤ 50），无性能瓶颈 |
-| `_index_problems` 是 Topology 的私有方法，Inspector 不可用 | Inspector 无法索引 problems | 将 `_index_problems` 提取到 `InstructionAnalyzer` 的公开方法，或直接在 Inspector 内复制简化版索引逻辑。推荐前者——`_index_problems` 本身是工具方法，与 Topology 无耦合 |
-| `report["problems"]` 字段名与 `_add_dataflow_ui` 的 report 结构约定 | 与 Topology 的 report.problems 结构一致 | 写入前确认结构匹配：`{by_inst: {int → [problem]}, summary: {errors, warnings}}` |
+| `_index_problems` 是 Topology 的私有方法，Inspector 不可用 | Inspector 无法索引 problems | 审阅修订（已定方案）：将 `_index_problems` 提取为 `InstructionAnalyzer.index_problems` 公开静态方法，Topology 改委托；Inspector 直接调用——不在两侧维护副本 |
+| `report["problems"]` 字段名与 `_add_dataflow_ui` 的 report 结构约定 | 与 Topology 的 report.problems 结构一致 | 写入前确认结构匹配：`{by_inst: {int → [problem]}, summary: {errors, warnings, suggestions}}`（审阅修订：补 suggestions，与 Topology 实际结构一致，见 `fuse_topology.gd:710`） |
 | `analyze_problems` 的 scene_root 在 Inspector 中为 null | NodePath 检测 + 信号检测无法工作 | 这是有意的——Inspector 中仅运行变量检测（不需要 scene_root），NodePath/信号检测在 Topology 刷新时覆盖 |
 | 当前测试框架无法实例化 `EditorInspectorPlugin` | Inspector 级别测试只能手动验证 | 将 `_collect_insts_from_trigger_report` 和 `_collect_insts_from_tree` 抽象为 `InstructionAnalyzer` 的公开方法后可在测试框架中直接测试 |
 
@@ -467,7 +503,8 @@ FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictio
 - [ ] 有 error 时按钮颜色变为红色
 - [ ] 展开数据流卡片显示问题详情（汇总 + 具体消息列表，去重）
 - [ ] 无问题 Trigger → 按钮无角标，卡片显示"问题: (无)"
-- [ ] `_index_problems` 移至 `InstructionAnalyzer` 公开方法（或等价）
+- [ ] `_index_problems` 移至 `InstructionAnalyzer` 公开方法（或等价）（审阅修订：含 `collect_insts_from_report` / `collect_insts_from_tree` 同步提升，Topology 改委托零退化）
+- [ ] `_make_problem_line` 作为 RichTextLabel 工厂方法落地，问题消息行的 BBCode 红/黄颜色实际生效
 - [ ] E3 的 variable_analysis 范围正确渲染
 - [ ] Roadmap 中 E5 标记为 "spec 完成"
 
@@ -477,10 +514,10 @@ FuseInspectorPlugin._add_problems_section(content: VBoxContainer, report: Dictio
 
 | 文件 | 变更类型 | 说明 |
 |------|---------|------|
-| `addons/fuse/editor/fuse_inspector_plugin.gd` | 修改 | `_parse_end` 注入 analyze_problems；`_add_dataflow_ui` 加角标；`_create_dataflow_card` 追加问题段；新增 `_collect_insts_from_trigger_report` + `_collect_insts_from_tree` + `_add_problems_section` |
-| `addons/fuse/editor/topology/fuse_topology.gd` | 修改 | `_index_problems` 提升为公开静态方法，或迁至 `InstructionAnalyzer` |
-| `addons/fuse/editor/analysis/instruction_analyzer.gd` | 可选 | 若抽取 `_index_problems`，增加公开方法 `index_problems(problems)` |
-| `addons/fuse/tests/test_instruction_analyzer_problems.gd` | 新增用例 | `_collect_insts` 相关测试 |
+| `addons/fuse/editor/fuse_inspector_plugin.gd` | 修改 | `_parse_end` 注入 analyze_problems（调用 analyzer 静态方法）；`_add_dataflow_ui` 加角标；`_create_dataflow_card` 追加问题段；新增 `_add_problems_section` + `_make_problem_line`（RichTextLabel 工厂，专用于 BBCode 问题行）。审阅修订：不在 Inspector 内复制 collect/index 方法——直接调用 `InstructionAnalyzer` 静态方法 |
+| `addons/fuse/editor/analysis/instruction_analyzer.gd` | 修改（必改，原为"可选"） | 审阅修订：新增 3 个公开静态方法 `collect_insts_from_report(report)` / `collect_insts_from_tree(tree)` / `index_problems(problems)`，从 fuse_topology 提升共用 |
+| `addons/fuse/editor/topology/fuse_topology.gd` | 修改 | 审阅修订：`_index_problems` / `_collect_insts_from_report` / `_collect_insts_from_tree` 改为委托 `InstructionAnalyzer` 对应公开静态方法（签名、返回结构、行为零变化） |
+| `addons/fuse/tests/test_instruction_analyzer_problems.gd` | 新增用例 | `collect_insts_from_report` / `collect_insts_from_tree` / `index_problems` 在 analyzer 层的单元测试（审阅修订：测试落在 analyzer 而非 Inspector，因 EditorInspectorPlugin 无法在测试框架实例化） |
 
 ---
 
