@@ -269,6 +269,52 @@ static func _is_variable_prop(pname: String) -> bool:
 
 
 # ============================================================
+# E2: 信号引用提取
+# ============================================================
+
+## 判断属性名是否为信号引用（命名启发式）
+## 覆盖：signal_name（EmitSignal 标准）/ *_signal（自定义扩展）/ emit_signal（显式）
+## spec §3.2 + §6 Phase 1：与 _is_variable_prop 同级，单点扩展
+static func _is_signal_prop(pname: String) -> bool:
+	return pname == "signal_name" \
+		or pname.ends_with("_signal") \
+		or pname == "emit_signal"
+
+
+## 提取指令中的信号引用（信号名 + 目标节点路径字符串）
+## 反射 + 命名启发式，覆盖动态属性组件（与 _extract_nodepaths 同构）
+## @param inst: 指令（Resource）
+## @param report: Dictionary - 写入 report["signal_refs"] 数组
+## 每条 entry: {signal_name: String, target_str: String, source_prop: String}
+static func _extract_signal_refs(inst, report: Dictionary) -> void:
+	if not report.has("signal_refs"):
+		report["signal_refs"] = []
+	if inst == null:
+		return
+	for prop in inst.get_property_list():
+		var pname: String = prop.get("name", "")
+		if not _is_signal_prop(pname):
+			continue
+		var val = inst.get(pname)
+		if val == null:
+			continue
+		var sig_name: String = str(val)
+		if sig_name.is_empty():
+			continue
+		# 取配对 target_node（NodePath 字符串形式）
+		var target_str := ""
+		if "target_node" in inst:
+			var tn = inst.get("target_node")
+			if tn != null:
+				target_str = str(tn)
+		report["signal_refs"].append({
+			"signal_name": sig_name,
+			"target_str": target_str,
+			"source_prop": pname
+		})
+
+
+# ============================================================
 # 事件与信号提取
 # ============================================================
 
@@ -577,6 +623,11 @@ static func analyze_problems(instructions: Array, scene_root: Node = null) -> Di
 	if scene_root != null:
 		_check_nodepath_targets(instructions, scene_root, problems)
 
+	# —— E2: 信号引用检测（仅在 scene_root 提供时启用）——
+	# 检测 EmitSignal 等指令引用的信号是否在目标节点存在（has_signal）
+	if scene_root != null:
+		_check_signal_references(instructions, scene_root, problems)
+
 	return {"valid": problems.is_empty(), "problems": problems}
 
 
@@ -611,5 +662,53 @@ static func _check_nodepath_targets(
 					"message": "节点路径无法解析: %s（指令 %d）" % [np_s, i],
 					"instruction_index": i,
 					"nodepath": np_s,
+					"inst": inst
+				})
+
+
+## E2: 扫描指令序列的信号引用，对目标节点不存在该信号的指令报 error
+## 对每条指令：
+##   1. 调用 _extract_signal_refs 提取 signal_name + target_str
+##   2. 解析 target_str：
+##        - 空 → 直接用 scene_root（MEDIUM #5：绕过 resolve_or_null，避免空字符串返回 null）
+##        - 非空 → NodePathResolver.resolve_or_null
+##   3. 解析失败（target=null）→ 跳过（由 E1 _check_nodepath_targets 报 NodePath 问题）
+##   4. target.has_signal(signal_name) == false → error problem
+## error 而非 warning：has_signal 是确定性的静态检测，信号不存在是确定的
+static func _check_signal_references(
+	instructions: Array,
+	scene_root: Node,
+	problems: Array
+) -> void:
+	if scene_root == null:
+		return
+	for i in range(instructions.size()):
+		var inst = instructions[i]
+		if inst == null:
+			continue
+		var tmp := {"signal_refs": []}
+		_extract_signal_refs(inst, tmp)
+		for ref in tmp.get("signal_refs", []):
+			var sig_name: String = ref.get("signal_name", "")
+			var target_str: String = ref.get("target_str", "")
+			if sig_name.is_empty():
+				continue
+			# 解析目标节点（spec §3.3 + MEDIUM #5）
+			var target_node: Node
+			if target_str.is_empty():
+				# 空 target → 默认 scene_root，绕过 resolve_or_null
+				target_node = scene_root
+			else:
+				target_node = NodePathResolver.resolve_or_null(target_str, scene_root)
+			if target_node == null:
+				# target 本身不可解析 → 由 E1 报 NodePath 问题，此处跳过
+				continue
+			if not target_node.has_signal(sig_name):
+				problems.append({
+					"severity": "error",
+					"message": "目标节点不存在信号: %s（指令 %d）" % [sig_name, i],
+					"instruction_index": i,
+					"signal_name": sig_name,
+					"target_node_str": target_str,
 					"inst": inst
 				})

@@ -37,6 +37,18 @@ func _ready() -> void:
 	_test_nodepath_global_name_fallback()
 	_test_nodepath_multiple_instructions()
 	_teardown_nodepath_test_scene()
+	# E2: 信号引用检测
+	_setup_signal_test_scene()
+	_test_extract_signal_refs_basic()
+	_test_extract_signal_refs_empty_skip()
+	_test_extract_signal_refs_no_signal_prop()
+	_test_extract_signal_refs_naming_heuristics()
+	_test_signal_target_has_signal_no_error()
+	_test_signal_target_missing_signal_error()
+	_test_signal_skip_when_no_scene_root()
+	_test_signal_target_node_unresolvable_skip()
+	_test_signal_empty_target_defaults_to_scene_root()
+	_teardown_signal_test_scene()
 	print("\n=== 结果: %d 处失败 ===" % _fail)
 	if _fail > 0:
 		push_error("analyze_problems 测试失败: %d 处" % _fail)
@@ -63,6 +75,10 @@ class MockInst extends Resource:
 	@export var condition: Resource = null          # 条件（MockCondition）
 	# E1: NodePath 引用属性（命名命中 _extract_nodepaths 的 *_node 启发式）
 	@export var target_node: NodePath = NodePath("")
+	# E2: 信号引用属性（命名命中 _is_signal_prop / target_node 复用）
+	@export var signal_name: String = ""
+	@export var custom_signal: String = ""          # *_signal 启发式覆盖
+	@export var emit_signal: String = ""             # 显式 emit_signal 命名
 
 
 ## 最小 mock 条件：variable_name 让 _extract_variables 提取（_is_variable_prop 支持）
@@ -341,5 +357,178 @@ func _count_warnings(problems: Array) -> int:
 func _first_warning(problems: Array) -> Dictionary:
 	for p in problems:
 		if p.get("severity", "") == "warning":
+			return p
+	return {}
+
+
+# ============================================================
+# E2: 信号引用检测
+# ============================================================
+
+## E2 信号测试场景：
+##   SignalScene (Node)
+##   ├── SignalButton (Button)        ← 有内置信号 pressed / button_up / button_down
+##   └── PlainNode (Node)             ← 无自定义信号，仅 Object 基础信号
+var _signal_scene_root: Node = null
+
+
+func _setup_signal_test_scene() -> void:
+	print("\n[setup] 构造信号引用测试场景树")
+	var root := Node.new()
+	root.name = "SignalScene"
+	var btn := Button.new()
+	btn.name = "SignalButton"
+	root.add_child(btn)
+	var plain := Node.new()
+	plain.name = "PlainNode"
+	root.add_child(plain)
+	add_child(root)
+	_signal_scene_root = root
+
+
+func _teardown_signal_test_scene() -> void:
+	if _signal_scene_root != null and is_instance_valid(_signal_scene_root):
+		_signal_scene_root.queue_free()
+	_signal_scene_root = null
+
+
+## 构造含信号引用的 mock 指令
+## signal_name / custom_signal / emit_signal 三选一；target_node 可选 NodePath
+func _make_signal_inst(p_signal_name: String, p_target: NodePath = NodePath("")) -> Resource:
+	var inst := MockInst.new()
+	if not p_signal_name.is_empty():
+		inst.signal_name = p_signal_name
+	if p_target != NodePath(""):
+		inst.target_node = p_target
+	return inst
+
+
+# ----- _extract_signal_refs 直接测试（单元级） -----
+
+func _test_extract_signal_refs_basic() -> void:
+	print("\n--- _extract_signal_refs 提取 signal_name + target_node ---")
+	var inst := MockInst.new()
+	inst.signal_name = "pressed"
+	inst.target_node = NodePath("SignalButton")
+	var tmp := {}
+	InstructionAnalyzer._extract_signal_refs(inst, tmp)
+	var refs: Array = tmp.get("signal_refs", [])
+	_check(refs.size() == 1, "提取 1 条 signal_ref（实际 %d）" % refs.size())
+	if refs.size() >= 1:
+		_check(refs[0].signal_name == "pressed", "signal_name=pressed")
+		_check(refs[0].target_str == "SignalButton", "target_str=SignalButton")
+
+
+func _test_extract_signal_refs_empty_skip() -> void:
+	print("\n--- _extract_signal_refs 空 signal_name 跳过 ---")
+	var inst := MockInst.new()
+	inst.signal_name = ""  # 空字符串
+	var tmp := {}
+	InstructionAnalyzer._extract_signal_refs(inst, tmp)
+	var refs: Array = tmp.get("signal_refs", [])
+	_check(refs.is_empty(), "空 signal_name → 0 ref（实际 %d）" % refs.size())
+
+
+func _test_extract_signal_refs_no_signal_prop() -> void:
+	print("\n--- _extract_signal_refs 无信号属性的指令 → 0 ref ---")
+	# 仅设变量属性，无 signal_name 等
+	var inst := _make_inst("hp", "", "")
+	var tmp := {}
+	InstructionAnalyzer._extract_signal_refs(inst, tmp)
+	var refs: Array = tmp.get("signal_refs", [])
+	_check(refs.is_empty(), "无信号属性 → 0 ref（实际 %d）" % refs.size())
+
+
+func _test_extract_signal_refs_naming_heuristics() -> void:
+	print("\n--- _extract_signal_refs 命名启发式：signal_name / custom_signal / emit_signal ---")
+	var inst := MockInst.new()
+	inst.signal_name = "sig_a"
+	inst.custom_signal = "sig_b"
+	inst.emit_signal = "sig_c"
+	var tmp := {}
+	InstructionAnalyzer._extract_signal_refs(inst, tmp)
+	var refs: Array = tmp.get("signal_refs", [])
+	_check(refs.size() == 3, "命名启发式覆盖 3 个属性（实际 %d）" % refs.size())
+	if refs.size() >= 3:
+		var names: Array = []
+		for r in refs:
+			names.append(r.signal_name)
+		_check("sig_a" in names, "signal_name 命中")
+		_check("sig_b" in names, "custom_signal 命中（*_signal）")
+		_check("sig_c" in names, "emit_signal 命中")
+
+
+# ----- analyze_problems 信号检测（集成级） -----
+
+func _test_signal_target_has_signal_no_error() -> void:
+	print("\n--- 目标节点有该信号 → 0 signal error ---")
+	# Button.pressed 是内置信号，必然存在
+	var inst := _make_signal_inst("pressed", NodePath("SignalButton"))
+	var r := InstructionAnalyzer.analyze_problems([inst], _signal_scene_root)
+	var errs := _count_signal_errors(r.problems)
+	_check(errs == 0, "pressed 信号存在 → 0 error（实际 %d）" % errs)
+
+
+func _test_signal_target_missing_signal_error() -> void:
+	print("\n--- 目标节点无该信号 → 1 signal error ---")
+	# SignalButton 不存在 nonexistent_signal
+	var inst := _make_signal_inst("nonexistent_signal", NodePath("SignalButton"))
+	var r := InstructionAnalyzer.analyze_problems([inst], _signal_scene_root)
+	var errs := _count_signal_errors(r.problems)
+	_check(errs == 1, "nonexistent_signal 不存在 → 1 error（实际 %d）" % errs)
+	if errs >= 1:
+		var p = _first_signal_error(r.problems)
+		_check(p.severity == "error", "severity=error")
+		_check(p.signal_name == "nonexistent_signal", "signal_name=nonexistent_signal")
+		_check(p.target_node_str == "SignalButton", "target_node_str=SignalButton")
+		_check(p.instruction_index == 0, "instruction_index=0")
+		_check(p.inst == inst, "inst 指向触发指令")
+
+
+func _test_signal_skip_when_no_scene_root() -> void:
+	print("\n--- scene_root=null 跳过信号检测 ---")
+	var inst := _make_signal_inst("nonexistent_signal", NodePath("SignalButton"))
+	var r := InstructionAnalyzer.analyze_problems([inst])
+	var errs := _count_signal_errors(r.problems)
+	_check(errs == 0, "scene_root=null → 0 signal error（跳过检测）")
+
+
+func _test_signal_target_node_unresolvable_skip() -> void:
+	print("\n--- target_node 解析失败 → 跳过（由 E1 报 NodePath 问题） ---")
+	# GhostNode 不存在 → resolve_or_null 返 null → E2 跳过，不报信号错误
+	var inst := _make_signal_inst("nonexistent_signal", NodePath("GhostNode"))
+	var r := InstructionAnalyzer.analyze_problems([inst], _signal_scene_root)
+	var errs := _count_signal_errors(r.problems)
+	_check(errs == 0, "target 不可解析 → 0 signal error（实际 %d）" % errs)
+
+
+func _test_signal_empty_target_defaults_to_scene_root() -> void:
+	print("\n--- 空 target_str → 默认 scene_root（绕过 resolve_or_null，MEDIUM #5） ---")
+	# 不设 target_node（空 NodePath），信号为 SignalScene 自身没有的信号
+	# scene_root 是普通 Node，不存在 "some_signal"
+	var inst := _make_signal_inst("some_signal", NodePath(""))
+	var r := InstructionAnalyzer.analyze_problems([inst], _signal_scene_root)
+	var errs := _count_signal_errors(r.problems)
+	_check(errs == 1, "空 target → 默认 scene_root，无该信号 → 1 error（实际 %d）" % errs)
+	if errs >= 1:
+		var p = _first_signal_error(r.problems)
+		_check(p.signal_name == "some_signal", "signal_name=some_signal")
+		_check(p.target_node_str == "", "target_node_str 为空（默认 scene_root）")
+
+
+# ----- E2 辅助 -----
+
+func _count_signal_errors(problems: Array) -> int:
+	# 信号检测 problem 含 signal_name 字段，与变量检测区分
+	var n := 0
+	for p in problems:
+		if p.get("severity", "") == "error" and p.has("signal_name"):
+			n += 1
+	return n
+
+
+func _first_signal_error(problems: Array) -> Dictionary:
+	for p in problems:
+		if p.get("severity", "") == "error" and p.has("signal_name"):
 			return p
 	return {}
