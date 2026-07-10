@@ -149,9 +149,11 @@ func refresh() -> void:
 
 	# 注入静态分析结果到每 trigger report（report.problems: {by_inst, summary}）
 	# E1: 传 scene_root 触发 NodePath 解析失败检测（warning）
+	# E7: predefined_locals 从 event 提取（事件提供的 LOCAL 变量白名单）
 	for report in topology.triggers:
 		var insts: Array = _collect_insts_from_report(report)
-		var analysis := InstructionAnalyzer.analyze_problems(insts, scene_root)
+		var provided_locals: Array = _collect_provided_locals(report)
+		var analysis := InstructionAnalyzer.analyze_problems(insts, scene_root, provided_locals)
 		report["problems"] = _index_problems(analysis.problems)
 
 	# 填充 Trigger 列表（主场景 + 嵌套场景分组）
@@ -806,6 +808,23 @@ func _append_cross_trigger_relations(report: Dictionary) -> void:
 ## 从 trigger report 收集所有指令 inst（E5：委托 InstructionAnalyzer 公开静态方法，行为零变化）
 func _collect_insts_from_report(report: Dictionary) -> Array:
 	return InstructionAnalyzer.collect_insts_from_report(report)
+
+
+## E7: 收集 trigger 自身 + 所有 event_binding 的 provided_locals 并集
+## MultiEventTrigger 多 binding 时保守合并（任一 binding 提供的都视为已定义）
+func _collect_provided_locals(report: Dictionary) -> Array:
+	var merged: Array = []
+	var seen: Dictionary = {}
+	for v in report.get("provided_locals", []):
+		if v is String and not v.is_empty() and not seen.has(v):
+			merged.append(v)
+			seen[v] = true
+	for binding in report.get("event_bindings", []):
+		for v in binding.get("provided_locals", []):
+			if v is String and not v.is_empty() and not seen.has(v):
+				merged.append(v)
+				seen[v] = true
+	return merged
 
 
 ## 从 instructions_tree（嵌套）递归收集所有 inst（E5：委托，行为零变化）

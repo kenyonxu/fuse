@@ -543,6 +543,15 @@ func validate() -> Array[String]:
 func get_default_runtime_state() -> Dictionary:
 	return super.get_default_runtime_state()
 
+## 触发时自动提供的 LOCAL 变量
+## 仅当 variable_scope == LOCAL 且 initialize_variable == true 时，
+## 事件初始化阶段会创建 variable_name 到 owner_node meta（LOCAL 作用域）。
+## 其他作用域（SCOPE/GLOBAL）不属于 LOCAL，不在此白名单。
+func get_provided_local_variables() -> Array[String]:
+	if variable_scope == BaseVariable.VariableScope.LOCAL and initialize_variable and not variable_name.is_empty():
+		return [variable_name]
+	return []
+
 ## 获取事件元数据
 static func _get_event_metadata() -> EventMetadata:
 	var metadata = EventMetadata.new()

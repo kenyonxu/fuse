@@ -36,7 +36,8 @@ static func analyze_trigger(trigger: Node) -> Dictionary:
 		"variables": {"local": [], "scope": [], "global": []},
 		"signals": [],
 		"instructions_flat": [],
-		"instructions_tree": []
+		"instructions_tree": [],
+		"provided_locals": []  # E7: 事件提供的 LOCAL 变量名（白名单）
 	}
 
 	# MultiEventTrigger：遍历 event_bindings
@@ -54,6 +55,8 @@ static func analyze_trigger(trigger: Node) -> Dictionary:
 	if event_def:
 		_extract_nodepaths(event_def, report)
 		_extract_variables(event_def, report)
+		# E7: 提取事件提供的 LOCAL 变量（白名单）
+		report["provided_locals"] = _extract_provided_locals(event_def)
 
 	# 获取 ActionRunner：优先从 trigger 自身读取，再查 Runner 子节点
 	var action_runner = _get_action_runner(trigger)
@@ -85,13 +88,16 @@ static func _analyze_event_bindings(trigger: Node) -> Array:
 			"instructions_flat": [],
 			"instructions_tree": [],
 			"nodes": [],
-			"variables": {"local": [], "scope": [], "global": []}
+			"variables": {"local": [], "scope": [], "global": []},
+			"provided_locals": []  # E7: 事件提供的 LOCAL 变量（白名单）
 		}
 		# event 节点/变量引用
 		var ev = binding.event
 		if ev:
 			_extract_nodepaths(ev, binding_report)
 			_extract_variables(ev, binding_report)
+			# E7: 提取事件提供的 LOCAL 变量
+			binding_report["provided_locals"] = _extract_provided_locals(ev)
 		# action_runner 指令链
 		var ar = binding.action_runner
 		if ar and ar.instructions.size() > 0:
@@ -334,6 +340,23 @@ static func _extract_event_resource(event_def) -> Dictionary:
 		"type": script.get_global_name() if script else "?",
 		"resource_name": event_def.resource_name
 	}
+
+
+## E7: 从 event_definition 提取其提供的 LOCAL 变量名（白名单）
+## 调用 event_def.get_provided_local_variables()；失败/无方法返回空数组。
+static func _extract_provided_locals(event_def) -> Array:
+	if event_def == null:
+		return []
+	if not event_def.has_method("get_provided_local_variables"):
+		return []
+	var result: Array = []
+	var raw = event_def.get_provided_local_variables()
+	if raw == null:
+		return result
+	for v in raw:
+		if v is String and not v.is_empty():
+			result.append(v)
+	return result
 
 
 ## 提取信号信息
@@ -631,12 +654,18 @@ static func index_problems(problems: Array) -> Dictionary:
 ## 静态分析：检测指令序列中的问题（local 未声明变量使用 + NodePath 解析失败）
 ## @param instructions: Array - 指令序列（flat 顺序）
 ## @param scene_root: Node - 场景根节点（可选；为 null 时跳过 NodePath 检测）
+## @param predefined_locals: Array[String] - 事件提供的 LOCAL 变量名白名单（视为已定义，不报未声明）
 ## @return: Dictionary - {valid: bool, problems: Array[Dictionary]}
 ##   problem: {severity, message, instruction_index, variable, inst}
 ##   NodePath 检测产生的 problem 额外含字段 nodepath: String
-static func analyze_problems(instructions: Array, scene_root: Node = null) -> Dictionary:
+static func analyze_problems(instructions: Array, scene_root: Node = null, predefined_locals: Array = []) -> Dictionary:
 	var problems: Array = []
 	var defined_locals: Dictionary = {}  # var_name → true（已被 write 定义）
+
+	# E7: predefined_locals 视为已定义（事件提供的 LOCAL 变量，如 input_vector）
+	for v in predefined_locals:
+		if v is String and not v.is_empty():
+			defined_locals[v] = true
 
 	for i in range(instructions.size()):
 		var inst = instructions[i]

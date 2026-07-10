@@ -137,7 +137,9 @@ func _parse_end(object: Object) -> void:
 		# 不在 Inspector 内复制 collect/index 逻辑。
 		var insts: Array = InstructionAnalyzerClass.collect_insts_from_report(report)
 		if not insts.is_empty():
-			var analysis := InstructionAnalyzerClass.analyze_problems(insts)
+			# E7: 从 trigger + event_bindings 提取事件提供的 LOCAL 变量白名单
+			var provided_locals: Array = _collect_provided_locals_from_report(report)
+			var analysis := InstructionAnalyzerClass.analyze_problems(insts, null, provided_locals)
 			report["problems"] = InstructionAnalyzerClass.index_problems(analysis.problems)
 		else:
 			# fallback summary 含 suggestions，与 Topology 结构一致
@@ -150,6 +152,23 @@ func _parse_end(object: Object) -> void:
 	if object is Runner:
 		_current_node = object as Runner
 		_add_action_buttons(object as Runner)
+
+
+## E7: 收集 trigger 自身 + 所有 event_binding 的 provided_locals 并集
+## 与 FuseTopology._collect_provided_locals 同构（避免跨类依赖）
+func _collect_provided_locals_from_report(report: Dictionary) -> Array:
+	var merged: Array = []
+	var seen: Dictionary = {}
+	for v in report.get("provided_locals", []):
+		if v is String and not v.is_empty() and not seen.has(v):
+			merged.append(v)
+			seen[v] = true
+	for binding in report.get("event_bindings", []):
+		for v in binding.get("provided_locals", []):
+			if v is String and not v.is_empty() and not seen.has(v):
+				merged.append(v)
+				seen[v] = true
+	return merged
 
 
 func _add_action_buttons(node: Node) -> void:

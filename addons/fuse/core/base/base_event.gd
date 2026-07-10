@@ -281,6 +281,14 @@ func get_event_icon() -> Texture2D:
 		return icon
 	return null
 
+## 事件触发时自动提供的 LOCAL 变量名（供静态分析白名单）
+## 默认空数组；子类按需覆盖。
+## 例如 OnInputActionComposite 提供 ["input_vector", "last_input_vector"]。
+## 静态分析器（analyze_problems）将这些变量视为已定义，避免误报"未声明"。
+func get_provided_local_variables() -> Array[String]:
+	return []
+
+
 ## 重置事件状态
 ## 子类可以重写此方法来重置特定状态
 func reset() -> void:

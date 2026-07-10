@@ -440,6 +440,13 @@ func get_event_category() -> String:
 func get_event_icon() -> Texture2D:
 	return null
 
+## 触发时自动提供的 LOCAL 变量（与 _usage_hint 自声明对齐）
+## - input_vector: 当前输入向量（trigger_on_zero=false 时仅非零可用，true 时归零也触发）
+## - last_input_vector: 上次输入向量（永远可用）
+## 静态分析器将这些视为已定义，避免指令 read 时误报未声明。
+func get_provided_local_variables() -> Array[String]:
+	return ["input_vector", "last_input_vector"]
+
 ## 处理输入事件（虚函数，由 Trigger 的 _unhandled_input 调用）
 func handle_input(event: InputEvent) -> void:
 	# 复合输入事件使用 _process_inputs() 而不是 handle_input()

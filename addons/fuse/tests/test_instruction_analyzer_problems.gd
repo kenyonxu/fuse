@@ -21,6 +21,11 @@ func _ready() -> void:
 	_test_condition_read_defined()
 	_test_condition_read_scope_not_undefined()
 	_test_condition_does_not_define()
+	# E7: predefined_locals 白名单（事件提供的 local 变量）
+	_test_predefined_locals_empty_still_reports()
+	_test_predefined_locals_suppresses_read_undefined()
+	_test_predefined_locals_suppresses_condition_read()
+	_test_predefined_locals_partial_match()
 	# E1: NodePath 解析失败检测
 	_setup_nodepath_test_scene()
 	_test_resolve_or_null_relative_ok()
@@ -194,6 +199,53 @@ func _test_condition_does_not_define() -> void:
 	var read_inst := _make_inst("", "cond_only", "")
 	var r := InstructionAnalyzer.analyze_problems([cond_inst, read_inst])
 	_check(r.problems.size() >= 1, "cond_only 未被条件定义，read 仍报（实际 %d）" % r.problems.size())
+
+
+# ============================================================
+# E7: predefined_locals 白名单（事件提供的 local 变量）
+# ============================================================
+
+## predefined_locals 空 → 读未声明变量仍报错（保持现状）
+func _test_predefined_locals_empty_still_reports() -> void:
+	print("\n--- predefined_locals=[] → 读未声明仍报 ---")
+	var insts := [_make_inst("", "input_vector")]
+	var r := InstructionAnalyzer.analyze_problems(insts, null, [])
+	_check(r.valid == false, "predefined_locals 空 valid=false")
+	_check(r.problems.size() == 1, "1 problem（实际 %d）" % r.problems.size())
+
+
+## predefined_locals 含 input_vector → read 不报（事件提供的 local）
+func _test_predefined_locals_suppresses_read_undefined() -> void:
+	print("\n--- predefined_locals 含变量 → read 不报 ---")
+	var insts := [_make_inst("", "input_vector")]
+	var r := InstructionAnalyzer.analyze_problems(insts, null, ["input_vector"])
+	_check(r.valid == true, "predefined_locals 含 input_vector valid=true")
+	_check(r.problems.is_empty(), "无 problems（input_vector 已白名单）")
+
+
+## predefined_locals 对 condition 中的 read 同样生效
+func _test_predefined_locals_suppresses_condition_read() -> void:
+	print("\n--- predefined_locals 对条件 read 生效 ---")
+	var cond := MockCondition.new()
+	cond.variable_name = "last_input_vector"
+	var inst := _make_inst("", "", "")
+	inst.condition = cond
+	var r := InstructionAnalyzer.analyze_problems([inst], null, ["last_input_vector"])
+	_check(r.valid == true, "predefined_locals 含 last_input_vector → 条件 read valid=true")
+	_check(r.problems.is_empty(), "无 problems（条件变量已白名单）")
+
+
+## predefined_locals 部分匹配：白名单含 a，read b 仍报
+func _test_predefined_locals_partial_match() -> void:
+	print("\n--- predefined_locals 部分匹配 ---")
+	# 两条指令：inst1 读 input_vector（白名单），inst2 读 unknown_var（未声明）
+	var inst1 := _make_inst("", "input_vector")
+	var inst2 := _make_inst("", "unknown_var")
+	var r := InstructionAnalyzer.analyze_problems([inst1, inst2], null, ["input_vector"])
+	_check(r.valid == false, "部分匹配 valid=false（unknown_var 未声明）")
+	_check(r.problems.size() == 1, "1 problem（实际 %d）" % r.problems.size())
+	if r.problems.size() == 1:
+		_check(r.problems[0].variable == "unknown_var", "report variable=unknown_var")
 
 
 # ============================================================
