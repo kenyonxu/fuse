@@ -132,6 +132,16 @@ var _current_node: Node = null
 func _parse_end(object: Object) -> void:
 	if object is BaseTrigger:
 		var report = InstructionAnalyzerClass.analyze_trigger(object)
+		# E5: 注入静态分析（变量检测；Inspector 无 scene_root，NodePath/信号检测跳过——E1 守卫）
+		# 审阅修订：复用 InstructionAnalyzer 公开静态方法（collect_insts_from_report / index_problems），
+		# 不在 Inspector 内复制 collect/index 逻辑。
+		var insts: Array = InstructionAnalyzerClass.collect_insts_from_report(report)
+		if not insts.is_empty():
+			var analysis := InstructionAnalyzerClass.analyze_problems(insts)
+			report["problems"] = InstructionAnalyzerClass.index_problems(analysis.problems)
+		else:
+			# fallback summary 含 suggestions，与 Topology 结构一致
+			report["problems"] = {"by_inst": {}, "summary": {"errors": 0, "warnings": 0, "suggestions": 0}}
 		_report_cache = report
 		_current_node = object as Node
 		_add_action_buttons(object as Node)
@@ -231,21 +241,29 @@ func _on_export_confirmed(dialog: PresetExportDialog) -> void:
 
 
 func _add_dataflow_ui(report: Dictionary) -> void:
+	# 计算问题角标（E5）：err/warn 计数，从 report.problems.summary 提取
+	# 无 emoji：用按钮字体颜色 + 中文后缀（与 Topology 中文标签一致，E4 已去 emoji）
+	var problem_suffix := _compute_problem_suffix(report)
+	var problem_color := _compute_problem_color(report)
+
 	# 按钮已存在则只更新文本,避免 add_custom_control 重复调用
 	if _dataflow_button:
-		var node_count: int = report.nodes.size()
-		var var_count := 0
+		var node_count_upd: int = report.nodes.size()
+		var var_count_upd := 0
 		for scope in report.variables:
-			var_count += report.variables[scope].size()
-		_dataflow_button.text = "📊 数据流: %s (%d指令, %d节点, %d变量, %d信号)" % [
+			var_count_upd += report.variables[scope].size()
+		_dataflow_button.text = "📊 数据流: %s (%d指令, %d节点, %d变量, %d信号)%s" % [
 			report.event.get("resource_name", "?"),
-			report.instructions_flat.size(), node_count, var_count, report.signals.size()
+			report.instructions_flat.size(), node_count_upd, var_count_upd, report.signals.size(),
+			problem_suffix
 		]
+		_apply_problem_color(_dataflow_button, problem_color)
 		return
 
 	if report.instructions_flat.is_empty():
 		_dataflow_button = Button.new()
-		_dataflow_button.text = "📊 数据流: (无指令)"
+		_dataflow_button.text = "📊 数据流: (无指令)%s" % problem_suffix
+		_apply_problem_color(_dataflow_button, problem_color)
 		add_custom_control(_dataflow_button)
 		return
 
@@ -256,10 +274,12 @@ func _add_dataflow_ui(report: Dictionary) -> void:
 	for scope in report.variables:
 		var_count += report.variables[scope].size()
 	_dataflow_button = Button.new()
-	_dataflow_button.text = "📊 数据流: %s (%d指令, %d节点, %d变量, %d信号)" % [
+	_dataflow_button.text = "📊 数据流: %s (%d指令, %d节点, %d变量, %d信号)%s" % [
 		report.event.get("resource_name", "?"),
-		report.instructions_flat.size(), node_count, var_count, signal_count
+		report.instructions_flat.size(), node_count, var_count, signal_count,
+		problem_suffix
 	]
+	_apply_problem_color(_dataflow_button, problem_color)
 	_dataflow_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_dataflow_button.pressed.connect(_toggle_dataflow)
 	add_custom_control(_dataflow_button)
@@ -269,6 +289,41 @@ func _add_dataflow_ui(report: Dictionary) -> void:
 	_create_dataflow_card()
 	_dataflow_card.visible = false
 	_dataflow_expanded = false
+
+
+## E5: 计算数据流按钮的问题角标后缀（中文标签，无 emoji）
+## 返回 "" 或 " N 错误 M 警告" 形式
+func _compute_problem_suffix(report: Dictionary) -> String:
+	var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
+	var err_count: int = summary.get("errors", 0)
+	var warn_count: int = summary.get("warnings", 0)
+	if err_count == 0 and warn_count == 0:
+		return ""
+	if err_count > 0 and warn_count > 0:
+		return " %d 错误 %d 警告" % [err_count, warn_count]
+	if err_count > 0:
+		return " %d 错误" % err_count
+	return " %d 警告" % warn_count
+
+
+## E5: 计算数据流按钮的问题警示颜色（无问题→null 用默认色）
+func _compute_problem_color(report: Dictionary) -> Color:
+	var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
+	var err_count: int = summary.get("errors", 0)
+	var warn_count: int = summary.get("warnings", 0)
+	if err_count > 0:
+		return Color(1.0, 0.3, 0.3)
+	if warn_count > 0:
+		return Color(1.0, 0.8, 0.3)
+	return Color(1.0, 1.0, 1.0)
+
+
+## E5: 应用按钮字体颜色（与 err/warn 警示同步）
+func _apply_problem_color(button: Button, color: Color) -> void:
+	button.add_theme_color_override("font_color", color)
+	button.add_theme_color_override("font_hover_color", color)
+	button.add_theme_color_override("font_pressed_color", color)
+	button.add_theme_color_override("font_hover_pressed_color", color)
 
 func _toggle_dataflow() -> void:
 	_dataflow_expanded = not _dataflow_expanded
@@ -313,6 +368,10 @@ func _create_dataflow_card() -> void:
 	content.add_child(_make_section_label("指令链 (%d 条)" % report.instructions_flat.size()))
 	for inst_info in report.instructions_flat:
 		content.add_child(_make_info_line("%s %s" % [inst_info.prefix, inst_info.name]))
+
+	# E5: 问题详情段（汇总 + 具体消息列表）
+	_add_problems_section(content, report)
+
 	add_custom_control(_dataflow_card)
 
 
@@ -328,6 +387,68 @@ func _make_info_line(text: String) -> Label:
 	lbl.text = "  " + text
 	lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
 	return lbl
+
+
+## E5: 问题行专用工厂方法 — RichTextLabel + bbcode_enabled
+## 不能复用 _make_info_line：后者返回 Label 且强制 font_color override（灰色），
+## 会覆盖 BBCode 内联颜色，导致红色/黄色不生效。
+func _make_problem_line(text: String) -> RichTextLabel:
+	var rtl := RichTextLabel.new()
+	rtl.bbcode_enabled = true
+	rtl.fit_content = true
+	rtl.text = "  " + text
+	rtl.custom_minimum_size.y = 16
+	rtl.add_theme_font_size_override("normal_font_size", 12)
+	return rtl
+
+
+## E5: 在数据流卡片末尾追加问题详情段
+## - 无问题 → 显示 "问题: (无)"
+## - 有问题 → 显示 "问题: N 错误 M 警告" section label + 具体消息列表（去重，BBCode 着色）
+func _add_problems_section(content: VBoxContainer, report: Dictionary) -> void:
+	# fallback summary 含 suggestions，与 Topology summary 结构一致
+	var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
+	var err_count: int = summary.get("errors", 0)
+	var warn_count: int = summary.get("warnings", 0)
+
+	if err_count == 0 and warn_count == 0:
+		content.add_child(_make_info_line("问题: (无)"))
+		return
+
+	# section label：汇总（无 emoji，与按钮一致）
+	var label_text := "问题: "
+	if err_count > 0:
+		label_text += "%d 错误" % err_count
+	if err_count > 0 and warn_count > 0:
+		label_text += " "
+	if warn_count > 0:
+		label_text += "%d 警告" % warn_count
+	content.add_child(_make_section_label(label_text))
+
+	# 列具体问题（按消息去重，避免同变量被多处引用重复显示）
+	var by_inst: Dictionary = report.get("problems", {}).get("by_inst", {})
+	var seen_messages: Dictionary = {}  # message → severity（去重 + 保留首次 severity）
+	for inst_id in by_inst:
+		for p in by_inst[inst_id]:
+			var msg: String = p.get("message", "")
+			if msg.is_empty():
+				continue
+			if seen_messages.has(msg):
+				continue
+			var sev: String = p.get("severity", "warning")
+			seen_messages[msg] = sev
+
+	# 先 errors 后 warnings（更直观）
+	for msg in seen_messages:
+		var sev: String = seen_messages[msg]
+		if sev != "error":
+			continue
+		content.add_child(_make_problem_line("[color=red]• %s[/color]" % msg))
+	for msg in seen_messages:
+		var sev: String = seen_messages[msg]
+		if sev != "warning":
+			continue
+		content.add_child(_make_problem_line("[color=yellow]• %s[/color]" % msg))
 
 func _on_import_preset_pressed() -> void:
 	var fd := FileDialog.new()

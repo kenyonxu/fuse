@@ -49,6 +49,16 @@ func _ready() -> void:
 	_test_signal_target_node_unresolvable_skip()
 	_test_signal_empty_target_defaults_to_scene_root()
 	_teardown_signal_test_scene()
+	# E5: index_problems / collect_insts_from_report / collect_insts_from_tree（公开静态）
+	_test_index_problems_structure()
+	_test_index_problems_empty_safe()
+	_test_index_problems_summary_suggestions()
+	_test_collect_insts_from_report_flat_with_inst()
+	_test_collect_insts_from_report_tree_fallback()
+	_test_collect_insts_from_report_event_bindings()
+	_test_collect_insts_from_report_empty()
+	_test_collect_insts_from_tree_recursive_children()
+	_test_collect_insts_from_tree_empty()
 	print("\n=== 结果: %d 处失败 ===" % _fail)
 	if _fail > 0:
 		push_error("analyze_problems 测试失败: %d 处" % _fail)
@@ -532,3 +542,169 @@ func _first_signal_error(problems: Array) -> Dictionary:
 		if p.get("severity", "") == "error" and p.has("signal_name"):
 			return p
 	return {}
+
+
+# ============================================================
+# E5: InstructionAnalyzer.index_problems / collect_insts_from_report / collect_insts_from_tree（公开静态）
+# ============================================================
+
+## index_problems 基础结构：按 inst.instance_id 分组 + summary 计数
+func _test_index_problems_structure() -> void:
+	print("\n--- index_problems 按 inst 分组 + summary ---")
+	var inst1 := _make_inst("", "missing", "")  # 读未声明 → 1 error
+	var inst2 := _make_inst("", "another_missing", "")  # 另一读未声明 → 1 error
+	var analysis := InstructionAnalyzer.analyze_problems([inst1, inst2])
+	var indexed: Dictionary = InstructionAnalyzer.index_problems(analysis.problems)
+	_check(indexed.has("by_inst"), "返回含 by_inst")
+	_check(indexed.has("summary"), "返回含 summary")
+	var summary: Dictionary = indexed.get("summary", {})
+	_check(summary.has("errors"), "summary 含 errors")
+	_check(summary.has("warnings"), "summary 含 warnings")
+	_check(summary.has("suggestions"), "summary 含 suggestions（与 Topology 结构一致）")
+	_check(summary.get("errors", 0) == 2, "errors=2（实际 %d）" % summary.get("errors", 0))
+	_check(summary.get("warnings", 0) == 0, "warnings=0")
+	# by_inst 应按 inst.instance_id 索引
+	var by_inst: Dictionary = indexed.get("by_inst", {})
+	_check(by_inst.has(inst1.get_instance_id()), "by_inst 含 inst1 key")
+	_check(by_inst.has(inst2.get_instance_id()), "by_inst 含 inst2 key")
+	_check(by_inst[inst1.get_instance_id()].size() == 1, "inst1 1 problem")
+
+
+## index_problems 空 problems 安全返回零 summary
+func _test_index_problems_empty_safe() -> void:
+	print("\n--- index_problems 空 problems 安全返回 ---")
+	var indexed: Dictionary = InstructionAnalyzer.index_problems([])
+	_check(indexed.has("by_inst"), "空 → 含 by_inst（空 dict）")
+	_check(indexed.by_inst.is_empty(), "空 → by_inst 为空")
+	var summary: Dictionary = indexed.get("summary", {})
+	_check(summary.get("errors", -1) == 0, "空 → errors=0")
+	_check(summary.get("warnings", -1) == 0, "空 → warnings=0")
+	_check(summary.get("suggestions", -1) == 0, "空 → suggestions=0")
+
+
+## index_problems summary 含 warnings + suggestions 计数
+func _test_index_problems_summary_suggestions() -> void:
+	print("\n--- index_problems summary warnings/suggestions 计数 ---")
+	# 构造含 warning + suggestion severity 的 problems（analyze_problems 不产 suggestion，
+	# 此处直接构造 problems 数组验证 _index_problems 的 severity 分类逻辑）
+	var inst := _make_inst("", "", "")
+	var problems := [
+		{"severity": "warning", "inst": inst, "message": "w1"},
+		{"severity": "suggestion", "inst": inst, "message": "s1"},
+		{"severity": "suggestion", "inst": inst, "message": "s2"},
+	]
+	var indexed: Dictionary = InstructionAnalyzer.index_problems(problems)
+	var summary: Dictionary = indexed.get("summary", {})
+	_check(summary.get("warnings", 0) == 1, "warnings=1（实际 %d）" % summary.get("warnings", 0))
+	_check(summary.get("suggestions", 0) == 2, "suggestions=2（实际 %d）" % summary.get("suggestions", 0))
+	_check(summary.get("errors", 0) == 0, "errors=0")
+
+
+## collect_insts_from_report 优先 instructions_flat（含 inst 字段）
+func _test_collect_insts_from_report_flat_with_inst() -> void:
+	print("\n--- collect_insts_from_report flat 含 inst 字段 ---")
+	var inst1 := _make_inst("a", "", "")
+	var inst2 := _make_inst("", "", "b")
+	var report := {
+		"instructions_flat": [{"name": "A", "prefix": "", "inst": inst1}, {"name": "B", "prefix": "", "inst": inst2}],
+		"instructions_tree": [],
+		"event_bindings": [],
+	}
+	var insts: Array = InstructionAnalyzer.collect_insts_from_report(report)
+	_check(insts.size() == 2, "flat 含 inst → 收集 2（实际 %d）" % insts.size())
+	if insts.size() >= 2:
+		_check(inst1 in insts, "inst1 在结果中")
+		_check(inst2 in insts, "inst2 在结果中")
+
+
+## collect_insts_from_report flat 无 inst 字段 → 回退 instructions_tree 递归
+func _test_collect_insts_from_report_tree_fallback() -> void:
+	print("\n--- collect_insts_from_report flat 无 inst → 回退 tree ---")
+	var inst1 := _make_inst("a", "", "")
+	var inst2 := _make_inst("", "", "b")
+	# flat 不含 inst 字段（与 analyze_trigger 实际输出一致），触发回退
+	var report := {
+		"instructions_flat": [{"name": "A", "prefix": ""}, {"name": "B", "prefix": ""}],
+		"instructions_tree": [
+			{"name": "A", "inst": inst1, "children": {}},
+			{"name": "B", "inst": inst2, "children": {}},
+		],
+		"event_bindings": [],
+	}
+	var insts: Array = InstructionAnalyzer.collect_insts_from_report(report)
+	_check(insts.size() == 2, "tree 回退 → 收集 2（实际 %d）" % insts.size())
+	if insts.size() >= 2:
+		_check(inst1 in insts, "inst1 在结果中")
+		_check(inst2 in insts, "inst2 在结果中")
+
+
+## collect_insts_from_report 覆盖 event_bindings（MultiEventTrigger 形态）
+func _test_collect_insts_from_report_event_bindings() -> void:
+	print("\n--- collect_insts_from_report 覆盖 event_bindings ---")
+	var inst1 := _make_inst("a", "", "")
+	var inst2 := _make_inst("", "", "b")
+	var report := {
+		"instructions_flat": [],
+		"instructions_tree": [],
+		"event_bindings": [
+			{"index": 0, "instructions_flat": [], "instructions_tree": [{"name": "A", "inst": inst1, "children": {}}]},
+			{"index": 1, "instructions_flat": [{"name": "B", "prefix": "", "inst": inst2}], "instructions_tree": []},
+		],
+	}
+	var insts: Array = InstructionAnalyzer.collect_insts_from_report(report)
+	_check(insts.size() == 2, "event_bindings → 收集 2（实际 %d）" % insts.size())
+	if insts.size() >= 2:
+		_check(inst1 in insts, "binding0 inst1 在结果中")
+		_check(inst2 in insts, "binding1 inst2 在结果中")
+
+
+## collect_insts_from_report 空 report 安全返回空数组
+func _test_collect_insts_from_report_empty() -> void:
+	print("\n--- collect_insts_from_report 空 report 安全返回 ---")
+	var insts: Array = InstructionAnalyzer.collect_insts_from_report({})
+	_check(insts.is_empty(), "空 report → 空数组")
+	# 完整结构但全空
+	var report := {
+		"instructions_flat": [],
+		"instructions_tree": [],
+		"event_bindings": [],
+	}
+	insts = InstructionAnalyzer.collect_insts_from_report(report)
+	_check(insts.is_empty(), "全空结构 → 空数组")
+
+
+## collect_insts_from_tree 递归处理 children 分支（then/else/loop）
+func _test_collect_insts_from_tree_recursive_children() -> void:
+	print("\n--- collect_insts_from_tree 递归 children 分支 ---")
+	var inst_root := _make_inst("a", "", "")
+	var inst_then := _make_inst("", "x", "")
+	var inst_else := _make_inst("", "y", "")
+	var inst_loop := _make_inst("", "", "z")
+	var tree := [
+		{
+			"name": "Root",
+			"inst": inst_root,
+			"children": {
+				"then": [{"name": "Then", "inst": inst_then, "children": {}}],
+				"else": [{"name": "Else", "inst": inst_else, "children": {}}],
+				"loop": [{"name": "Loop", "inst": inst_loop, "children": {}}],
+			}
+		}
+	]
+	var out: Array = InstructionAnalyzer.collect_insts_from_tree(tree)
+	_check(out.size() == 4, "递归 4 inst（root+then+else+loop）（实际 %d）" % out.size())
+	if out.size() >= 4:
+		_check(inst_root in out, "inst_root 在结果中")
+		_check(inst_then in out, "inst_then 在结果中")
+		_check(inst_else in out, "inst_else 在结果中")
+		_check(inst_loop in out, "inst_loop 在结果中")
+
+
+## collect_insts_from_tree 空数组安全
+func _test_collect_insts_from_tree_empty() -> void:
+	print("\n--- collect_insts_from_tree 空数组安全 ---")
+	var out: Array = InstructionAnalyzer.collect_insts_from_tree([])
+	_check(out.is_empty(), "空 tree → 空数组")
+	# 节点无 inst 字段也不应崩
+	var out2: Array = InstructionAnalyzer.collect_insts_from_tree([{"name": "X", "children": {}}])
+	_check(out2.is_empty(), "无 inst 字段 → 空数组（不崩）")

@@ -557,6 +557,73 @@ static func _collect_insts_for_mutex_tree(tree: Array) -> Array:
 
 
 # ============================================================
+# E5: 共用工具方法（公开静态） — Topology + Inspector 共用
+# ============================================================
+
+## 从 trigger report 收集所有指令 inst（flat 优先，回退 tree 递归 + event_bindings）
+## @param report: analyze_trigger 返回的 report
+## @return: Array[BaseInstruction]（flat 列表，已去重 binding.flat 路径）
+## 覆盖：
+##   1. instructions_flat（若含 inst 字段）
+##   2. instructions_tree 递归（含 children 分支）
+##   3. event_bindings[].instructions_tree + instructions_flat（MultiEventTrigger）
+static func collect_insts_from_report(report: Dictionary) -> Array:
+	var insts: Array = []
+	# 优先 instructions_flat（若含 inst 字段）
+	for info in report.get("instructions_flat", []):
+		var inst = info.get("inst", null)
+		if inst != null:
+			insts.append(inst)
+	if not insts.is_empty():
+		return insts
+	# 回退：instructions_tree 递归 + event_bindings
+	insts.append_array(collect_insts_from_tree(report.get("instructions_tree", [])))
+	for binding in report.get("event_bindings", []):
+		insts.append_array(collect_insts_from_tree(binding.get("instructions_tree", [])))
+		for info in binding.get("instructions_flat", []):
+			var inst = info.get("inst", null)
+			if inst != null and inst not in insts:
+				insts.append(inst)
+	return insts
+
+
+## 从 instructions_tree（嵌套）递归收集所有 inst（含 children 分支：then/else/loop）
+## @param tree: analyze_trigger 生成的 instructions_tree
+## @return: Array[BaseInstruction]
+static func collect_insts_from_tree(tree: Array) -> Array:
+	var out: Array = []
+	for node_info in tree:
+		var inst = node_info.get("inst", null)
+		if inst != null:
+			out.append(inst)
+		var children: Dictionary = node_info.get("children", {})
+		for branch in children:
+			out.append_array(collect_insts_from_tree(children[branch]))
+	return out
+
+
+## 把 problems 按 inst 引用重组 + 汇总（by_inst 供 Inspector / Topology 共用）
+## @param problems: analyze_problems 返回的 problems 数组
+## @return: Dictionary {by_inst: {int → [problem]}, summary: {errors, warnings, suggestions}}
+##   by_inst key = inst.get_instance_id()（int），value = problems[]
+##   summary 含 suggestions（与 Topology 原结构一致）
+static func index_problems(problems: Array) -> Dictionary:
+	var by_inst: Dictionary = {}
+	var summary := {"errors": 0, "warnings": 0, "suggestions": 0}
+	for p in problems:
+		var inst = p.get("inst", null)
+		var key: int = inst.get_instance_id() if inst != null else -1
+		if not by_inst.has(key):
+			by_inst[key] = []
+		by_inst[key].append(p)
+		match p.get("severity", ""):
+			"error": summary.errors += 1
+			"warning": summary.warnings += 1
+			"suggestion": summary.suggestions += 1
+	return {"by_inst": by_inst, "summary": summary}
+
+
+# ============================================================
 # 静态分析：问题检测
 # ============================================================
 

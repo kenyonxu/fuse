@@ -803,59 +803,21 @@ func _append_cross_trigger_relations(report: Dictionary) -> void:
 # 静态分析注入辅助（任务 3 — 注入 problems 到 report）
 # ============================================================
 
-## 从 trigger report 收集所有指令 inst（优先 flat，回退 tree 递归）
-## 注：当前 instructions_flat 不含 inst 字段（仅 name/prefix），
-## 故 flat 路径通常返回空，自动回退到 instructions_tree。
+## 从 trigger report 收集所有指令 inst（E5：委托 InstructionAnalyzer 公开静态方法，行为零变化）
 func _collect_insts_from_report(report: Dictionary) -> Array:
-	var insts: Array = []
-	# 优先 instructions_flat（若含 inst 字段）
-	for info in report.get("instructions_flat", []):
-		var inst = info.get("inst", null)
-		if inst != null:
-			insts.append(inst)
-	if not insts.is_empty():
-		return insts
-	# 回退：instructions_tree 递归 + event_bindings
-	insts.append_array(_collect_insts_from_tree(report.get("instructions_tree", [])))
-	for binding in report.get("event_bindings", []):
-		insts.append_array(_collect_insts_from_tree(binding.get("instructions_tree", [])))
-		for info in binding.get("instructions_flat", []):
-			var inst = info.get("inst", null)
-			if inst != null and inst not in insts:
-				insts.append(inst)
-	return insts
+	return InstructionAnalyzer.collect_insts_from_report(report)
 
 
-## 从 instructions_tree（嵌套）递归收集所有 inst
+## 从 instructions_tree（嵌套）递归收集所有 inst（E5：委托，行为零变化）
 func _collect_insts_from_tree(tree: Array) -> Array:
-	var out: Array = []
-	for node_info in tree:
-		var inst = node_info.get("inst", null)
-		if inst != null:
-			out.append(inst)
-		var children: Dictionary = node_info.get("children", {})
-		for branch in children:
-			out.append_array(_collect_insts_from_tree(children[branch]))
-	return out
+	return InstructionAnalyzer.collect_insts_from_tree(tree)
 
 
-## 把 problems 按 inst 引用重组 + 汇总（by_inst，供树节点按 inst 查）
+## 把 problems 按 inst 引用重组 + 汇总（E5：委托 InstructionAnalyzer 公开静态方法，行为零变化）
 ## by_inst key = inst.get_instance_id()（int），value = problems[]
 ## summary = {errors, warnings, suggestions}
 func _index_problems(problems: Array) -> Dictionary:
-	var by_inst: Dictionary = {}
-	var summary := {"errors": 0, "warnings": 0, "suggestions": 0}
-	for p in problems:
-		var inst = p.get("inst", null)
-		var key: int = inst.get_instance_id() if inst != null else -1
-		if not by_inst.has(key):
-			by_inst[key] = []
-		by_inst[key].append(p)
-		match p.get("severity", ""):
-			"error": summary.errors += 1
-			"warning": summary.warnings += 1
-			"suggestion": summary.suggestions += 1
-	return {"by_inst": by_inst, "summary": summary}
+	return InstructionAnalyzer.index_problems(problems)
 
 
 ## 按 inst 引用查该指令的问题（by_inst 索引，O(1)）
