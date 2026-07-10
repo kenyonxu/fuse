@@ -1,0 +1,51 @@
+{
+	"action_runner": {
+		"instructions": [
+			{
+				"duration": 0.5,
+				"easing_type": 1,
+				"from_alpha": 0.0,
+				"target_node": "..",
+				"to_alpha": 1.0,
+				"trans_type": 1,
+				"type": "TweenFadeIn"
+			},
+			{
+				"auto_free": false,
+				"duration": 0.5,
+				"easing_type": 1,
+				"target_node": "..",
+				"trans_type": 3,
+				"type": "TweenFadeOut"
+			}
+		]
+	},
+	"category": "ui",
+	"description": "",
+	"display_name": "HintBreath",
+	"event": {
+		"auto_start": true,
+		"emit_repeat_count": true,
+		"interval_seconds": 1.3,
+		"max_interval_seconds": 2.0,
+		"max_repeats": 0,
+		"min_interval_seconds": 0.5,
+		"stop_condition": "res://demos/fuse/brickian/title_scene.tscn::Resource_fknqa",
+		"trigger_on_start": false,
+		"type": "OnInterval",
+		"use_random_interval": false
+	},
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L2",
+	"trigger_config": {
+		"cooldown_mode": 0,
+		"cooldown_time": 1.0,
+		"trigger_once": false
+	},
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}

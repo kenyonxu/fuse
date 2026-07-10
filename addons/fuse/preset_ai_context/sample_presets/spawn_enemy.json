@@ -1,0 +1,70 @@
+{
+	"action_runner": {
+		"instructions": [
+			{
+				"deferred": false,
+				"event_args": {},
+				"event_name": "ShowWave",
+				"type": "SendEvent"
+			},
+			{
+				"array_custom_scope_id": "",
+				"array_scope": 1,
+				"array_scope_source": 0,
+				"array_target_node_path": "",
+				"array_variable": "spawn_pos",
+				"group_name": "",
+				"index_custom_scope_id": "",
+				"index_scope": 0,
+				"index_scope_source": 0,
+				"index_target_node_path": "",
+				"index_variable": "index",
+				"item_custom_scope_id": "",
+				"item_scope": 0,
+				"item_scope_source": 0,
+				"item_target_node_path": "",
+				"item_variable": "item",
+				"loop_instructions": [
+					"If/Else index [[本地]] EQUALS 0 [真:1 [FUSE_INSTRUCTION_IF_ELSE_MODE_ASYNC] (res://demos/fuse/brickian/game_scene.tscn::Resource_w6cft):<Resource#-9223369356442774187>",
+					"等待 0.5 秒 (res://demos/fuse/brickian/game_scene.tscn::Resource_up3tw):<Resource#-9223369356392442538>"
+				],
+				"sequence_mode": 1,
+				"skip_null_items": true,
+				"source_type": 0,
+				"type": "ForEach"
+			},
+			{
+				"custom_scope_id": "",
+				"group_name": "enemies",
+				"result_scope": 1,
+				"result_variable": "enemy_count",
+				"scope_source": 0,
+				"target_node_path": "",
+				"type": "GetGroupCount"
+			},
+			{
+				"deferred": false,
+				"event_args": {},
+				"event_name": "HideWave",
+				"type": "SendEvent"
+			},
+			{
+				"close_pause_menu": false,
+				"pause_menu_node": "",
+				"type": "ResumeGame",
+				"ui_node_path": "../../GameSceneCanvas"
+			}
+		]
+	},
+	"category": "gameplay",
+	"description": "",
+	"display_name": "spawn-enemy",
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L1",
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}
