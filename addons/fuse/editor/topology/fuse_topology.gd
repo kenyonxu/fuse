@@ -784,20 +784,20 @@ func _append_cross_trigger_relations(report: Dictionary) -> void:
 			"variable_write_to_read":
 				var direction := "→" if from_name == this_name else "←"
 				var target := to_name if from_name == this_name else from_name
-				_detail.append_bbcode("  📝 %s %s [color=gray]变量: %s (%s→%s)[/color]\n" % [
+				_detail.append_text("  📝 %s %s [color=gray]变量: %s (%s→%s)[/color]\n" % [
 					direction, target, detail,
 					_mode_label(r.get("from_mode", "")),
 					_mode_label(r.get("to_mode", ""))])
 			"variable_write_to_write":
-				_detail.append_bbcode("  [color=yellow]🔥 竞态 ↔ %s [color=gray]变量: %s[/color][/color]\n" % [
+				_detail.append_text("  [color=yellow]🔥 竞态 ↔ %s [color=gray]变量: %s[/color][/color]\n" % [
 					to_name if from_name == this_name else from_name, detail])
 			"signal":
 				var direction := "→" if from_name == this_name else "←"
 				var target := to_name if from_name == this_name else from_name
-				_detail.append_bbcode("  🔗 %s %s [color=gray]信号: %s[/color]\n" % [
+				_detail.append_text("  🔗 %s %s [color=gray]信号: %s[/color]\n" % [
 					direction, target, detail])
 			_:
-				_detail.append_bbcode("  • %s ↔ %s [color=gray]%s[/color]\n" % [
+				_detail.append_text("  • %s ↔ %s [color=gray]%s[/color]\n" % [
 					from_name, to_name, detail])
 
 
