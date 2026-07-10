@@ -9,12 +9,18 @@ extends VBoxContainer
 ## 选中 Trigger → 右侧 Trigger 概要；选中指令 → 右侧指令详情。
 ## 依赖 InstructionAnalyzer 解析引擎。
 
+# E6: 问题过滤模式
+const FILTER_ALL := 0
+const FILTER_ERROR := 1
+const FILTER_NONE := 2
+
 var _tree: Tree
 var _detail: RichTextLabel
 var _graph_edit: FuseGraphEdit  # 保留但降级（不默认显示）
 var _cross_ref_label: RichTextLabel
 var _refresh_btn: Button
 var _last_topology: Dictionary = {}
+var _filter_mode: int = FILTER_ALL
 
 
 func _init() -> void:
@@ -29,6 +35,19 @@ func _init() -> void:
 	var title := Label.new()
 	title.text = "Fuse 场景拓扑"
 	banner.add_child(title)
+
+	# E6: 问题过滤下拉框
+	var filter_label := Label.new()
+	filter_label.text = "问题过滤:"
+	banner.add_child(filter_label)
+	var filter_option := OptionButton.new()
+	filter_option.add_item("全部", FILTER_ALL)
+	filter_option.add_item("仅错误", FILTER_ERROR)
+	filter_option.add_item("无", FILTER_NONE)
+	filter_option.select(_filter_mode)
+	filter_option.item_selected.connect(_on_filter_changed)
+	banner.add_child(filter_option)
+
 	banner.add_spacer(true)
 
 	_refresh_btn = Button.new()
@@ -95,6 +114,12 @@ func _init() -> void:
 # ============================================================
 # 刷新（Tree 构建）
 # ============================================================
+
+## E6: 切换过滤模式 → 重建树
+func _on_filter_changed(item_index: int) -> void:
+	_filter_mode = item_index
+	refresh()
+
 
 ## 重新扫描当前场景，刷新树和详情
 func refresh() -> void:
@@ -174,17 +199,34 @@ func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> voi
 	t_item.set_text(1, event_info.get("resource_name", ""))
 	t_item.set_metadata(0, {"type": "trigger", "report": report})
 
-	# 问题汇总标注（按 report.problems.summary）
+	# 问题汇总标注（按 report.problems.summary + E6 过滤模式）
 	var probs: Dictionary = report.get("problems", {"summary": {"errors": 0, "warnings": 0}})
 	var n_err: int = probs.get("summary", {}).get("errors", 0)
 	var n_warn: int = probs.get("summary", {}).get("warnings", 0)
-	if n_err > 0:
+	# E6: 按过滤模式调整显示计数
+	var display_err := 0
+	var display_warn := 0
+	match _filter_mode:
+		FILTER_ALL:
+			display_err = n_err
+			display_warn = n_warn
+		FILTER_ERROR:
+			display_err = n_err
+			display_warn = 0
+		FILTER_NONE:
+			display_err = 0
+			display_warn = 0
+	if display_err > 0:
+		var suffix_parts := PackedStringArray()
+		suffix_parts.append("%d %s" % [display_err, _severity_label("error")])
+		if display_warn > 0:
+			suffix_parts.append("%d %s" % [display_warn, _severity_label("warning")])
 		t_item.set_custom_color(0, Color(1.0, 0.3, 0.3))
-		t_item.set_text(0, t_item.get_text(0) + "  (%d %s, %d %s)" % [n_err, _severity_label("error"), n_warn, _severity_label("warning")])
+		t_item.set_text(0, t_item.get_text(0) + "  (%s)" % ", ".join(suffix_parts))
 		t_item.set_icon(0, _get_theme_icon("StatusError"))
-	elif n_warn > 0:
+	elif display_warn > 0:
 		t_item.set_custom_color(0, Color(1.0, 0.8, 0.3))
-		t_item.set_text(0, t_item.get_text(0) + "  (%d %s)" % [n_warn, _severity_label("warning")])
+		t_item.set_text(0, t_item.get_text(0) + "  (%d %s)" % [display_warn, _severity_label("warning")])
 		t_item.set_icon(0, _get_theme_icon("StatusWarning"))
 
 	# MultiEventTrigger：展开 event_bindings
@@ -249,11 +291,13 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
 		item.set_selectable(0, true)
 		item.set_metadata(0, {"type": "instruction", "inst": inst, "report": report})
 
-		# 按问题标注指令节点（StatusError/StatusWarning 主题图标 + 着色，E4）
+		# 按问题标注指令节点（StatusError/StatusWarning 主题图标 + 着色，E4 + E6 过滤）
 		# 问题严重度图标优先于分类图标（_set_item_icon 之后覆盖），错误/警告更需用户注意
+		# E6: 按 _filter_mode 决定是否标注——FILTER_NONE 全不标；FILTER_ERROR 仅 error；
+		# FILTER_ALL 全标（与 E4 落地后行为一致）
 		var inst_problems := _find_problems_for_inst(inst, report)
 		var has_problem_color := false
-		if not inst_problems.is_empty():
+		if _filter_mode != FILTER_NONE and not inst_problems.is_empty():
 			var has_error := false
 			var has_warning := false
 			for p in inst_problems:
@@ -261,11 +305,13 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
 					has_error = true
 				elif p.get("severity") == "warning":
 					has_warning = true
+			# has_error 分支独立——FILTER_ALL/FILTER_ERROR 两模式下只要有 error 都标
 			if has_error:
 				item.set_custom_color(0, Color(1.0, 0.3, 0.3))
 				item.set_icon(0, _get_theme_icon("StatusError"))
 				has_problem_color = true
-			elif has_warning:
+			# warning 仅 FILTER_ALL 且无 error 时才标
+			elif has_warning and _filter_mode == FILTER_ALL:
 				item.set_custom_color(0, Color(1.0, 0.8, 0.3))
 				item.set_icon(0, _get_theme_icon("StatusWarning"))
 				has_problem_color = true
