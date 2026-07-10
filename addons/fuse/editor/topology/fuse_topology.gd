@@ -176,10 +176,12 @@ func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> voi
 	var n_warn: int = probs.get("summary", {}).get("warnings", 0)
 	if n_err > 0:
 		t_item.set_custom_color(0, Color(1.0, 0.3, 0.3))
-		t_item.set_text(0, t_item.get_text(0) + "  (%d🔴 %d🟡)" % [n_err, n_warn])
+		t_item.set_text(0, t_item.get_text(0) + "  (%d %s, %d %s)" % [n_err, _severity_label("error"), n_warn, _severity_label("warning")])
+		t_item.set_icon(0, _get_theme_icon("StatusError"))
 	elif n_warn > 0:
 		t_item.set_custom_color(0, Color(1.0, 0.8, 0.3))
-		t_item.set_text(0, t_item.get_text(0) + "  (%d🟡)" % n_warn)
+		t_item.set_text(0, t_item.get_text(0) + "  (%d %s)" % [n_warn, _severity_label("warning")])
+		t_item.set_icon(0, _get_theme_icon("StatusWarning"))
 
 	# MultiEventTrigger：展开 event_bindings
 	var bindings: Array = report.get("event_bindings", [])
@@ -243,8 +245,8 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
 		item.set_selectable(0, true)
 		item.set_metadata(0, {"type": "instruction", "inst": inst, "report": report})
 
-		# 按问题标注指令节点（🔴/🟡 前缀 + 着色）
-		# 问题严重度优先于分支装饰色（错误/警告更需用户注意）
+		# 按问题标注指令节点（StatusError/StatusWarning 主题图标 + 着色，E4）
+		# 问题严重度图标优先于分类图标（_set_item_icon 之后覆盖），错误/警告更需用户注意
 		var inst_problems := _find_problems_for_inst(inst, report)
 		var has_problem_color := false
 		if not inst_problems.is_empty():
@@ -257,11 +259,11 @@ func _build_tree_items(parent_item: TreeItem, tree_data: Array, report: Dictiona
 					has_warning = true
 			if has_error:
 				item.set_custom_color(0, Color(1.0, 0.3, 0.3))
-				item.set_text(0, "🔴 " + item.get_text(0))
+				item.set_icon(0, _get_theme_icon("StatusError"))
 				has_problem_color = true
 			elif has_warning:
 				item.set_custom_color(0, Color(1.0, 0.8, 0.3))
-				item.set_text(0, "🟡 " + item.get_text(0))
+				item.set_icon(0, _get_theme_icon("StatusWarning"))
 				has_problem_color = true
 
 		# 分支颜色（仅当未因问题着色时）
@@ -408,8 +410,15 @@ func _on_item_selected() -> void:
 	var report: Dictionary = meta.get("report", {})
 	if meta_type == "trigger":
 		var s: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
-		if s.get("errors", 0) > 0 or s.get("warnings", 0) > 0:
-			_detail.append_text("\n[b]问题（%d🔴 %d🟡）:[/b]\n" % [s.get("errors", 0), s.get("warnings", 0)])
+		var err_count: int = s.get("errors", 0)
+		var warn_count: int = s.get("warnings", 0)
+		if err_count > 0 or warn_count > 0:
+			var parts := PackedStringArray()
+			if err_count > 0:
+				parts.append("[color=red]%d %s[/color]" % [err_count, _severity_label("error")])
+			if warn_count > 0:
+				parts.append("[color=yellow]%d %s[/color]" % [warn_count, _severity_label("warning")])
+			_detail.append_text("\n[b]问题（%s）:[/b]\n" % ", ".join(parts))
 	elif meta_type == "instruction":
 		var inst_problems: Array = _find_problems_for_inst(meta.get("inst", null), report)
 		if not inst_problems.is_empty():
@@ -742,7 +751,7 @@ func _on_export_problems() -> void:
 		var s: Dictionary = t.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
 		if s.get("errors", 0) == 0 and s.get("warnings", 0) == 0:
 			continue
-		lines.append("%s (%s): %d🔴 %d🟡" % [t.get("trigger_name", "?"), t.get("trigger_type", "?"), s.get("errors", 0), s.get("warnings", 0)])
+		lines.append("%s (%s): %d %s, %d %s" % [t.get("trigger_name", "?"), t.get("trigger_type", "?"), s.get("errors", 0), _severity_label("error"), s.get("warnings", 0), _severity_label("warning")])
 		total_err += s.get("errors", 0)
 		total_warn += s.get("warnings", 0)
 	lines.append("")
@@ -755,3 +764,24 @@ func _on_export_problems() -> void:
 		_detail.append_text("\n[color=green]报告已导出: %s[/color]" % path)
 	else:
 		_detail.append_text("\n[color=red]导出失败: %s[/color]" % path)
+
+
+# ============================================================
+# E4：主题图标 + 严重度标签辅助
+# ============================================================
+
+## 获取编辑器主题图标，不存在时返回 null（E4）
+func _get_theme_icon(icon_name: String) -> Texture2D:
+	var theme := EditorInterface.get_editor_theme()
+	if theme and theme.has_icon(icon_name, "EditorIcons"):
+		return theme.get_icon(icon_name, "EditorIcons")
+	return null
+
+
+## 严重度 → 中文标签（E4，替代 emoji 文本）
+static func _severity_label(p_severity: String) -> String:
+	match p_severity:
+		"error": return "错误"
+		"warning": return "警告"
+		"suggestion": return "建议"
+		_: return p_severity
