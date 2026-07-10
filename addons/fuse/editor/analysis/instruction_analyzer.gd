@@ -685,7 +685,7 @@ static func analyze_problems(instructions: Array, scene_root: Node = null, prede
 			if mode == "write" or mode == "read_write":
 				defined_locals[vname] = true
 			# read → 检查是否已定义
-			if mode == "read" and not defined_locals.has(vname):
+			if mode == "read" and not defined_locals.has(vname) and not vname.begins_with("event_"):
 				problems.append({
 					"severity": "error",
 					"message": "未声明的局部变量被使用: %s（指令 %d）" % [vname, i],
@@ -706,7 +706,7 @@ static func analyze_problems(instructions: Array, scene_root: Node = null, prede
 				var cvname: String = cond_entry.get("name", "")
 				if cvname.is_empty():
 					continue
-				if not defined_locals.has(cvname):
+				if not defined_locals.has(cvname) and not cvname.begins_with("event_"):
 					problems.append({
 						"severity": "error",
 						"message": "未声明的局部变量被使用（条件）: %s（指令 %d）" % [cvname, i],
