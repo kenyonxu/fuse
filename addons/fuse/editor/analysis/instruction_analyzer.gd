@@ -229,10 +229,12 @@ static func _extract_variables(inst, report: Dictionary) -> void:
 		var name: String = name_val
 		if name.is_empty():
 			continue
-		# 配对 scope 属性（默认 *_variable_scope；variable_name → variable_scope，CheckVariable 命名约定）
+		# 配对 scope 属性（默认 *_variable_scope；variable_name → variable_scope；array_variable → array_scope）
 		var scope_val = inst.get(pname + "_scope")
 		if scope_val == null and pname.ends_with("_name"):
 			scope_val = inst.get(pname.substr(0, pname.length() - 5) + "_scope")
+		if scope_val == null and pname.ends_with("_variable"):
+			scope_val = inst.get(pname.substr(0, pname.length() - 9) + "_scope")
 		var scope: int = 0
 		if scope_val != null:
 			scope = int(scope_val)
