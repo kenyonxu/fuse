@@ -446,8 +446,12 @@ static func build_topology(scene_root: Node) -> Dictionary:
 	# mode 来自 _infer_variable_mode: write（target_）/ read（from_）/ read_write（其他）
 	var global_vars_usage := {}
 	for report in all_reports.values():
+		var seen := {}  # 同 trigger 内同 vname 去重（_extract_variables 可能重复提取）
 		for var_entry in report.variables.global:
 			var vname: String = var_entry.name
+			if seen.has(vname):
+				continue
+			seen[vname] = true
 			var mode: String = var_entry.get("mode", "read_write")
 			if not global_vars_usage.has(vname):
 				global_vars_usage[vname] = []
