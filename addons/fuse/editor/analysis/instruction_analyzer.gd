@@ -773,7 +773,7 @@ static func _check_nodepath_in_object(
 			continue
 		# scope_source 感知：*_target_node_path 仅 scope_source==TARGET_NODE 时使用
 		if pname.ends_with("_target_node_path"):
-			var prefix := pname.substr(0, pname.length() - "_target_node_path".length())
+			var prefix := pname.substr(0, pname.length() - "target_node_path".length())
 			var scope_source_prop := prefix + "scope_source"
 			if scope_source_prop in obj and obj.get(scope_source_prop) != TARGET_NODE:
 				continue  # 非 active（scope_source 非 TARGET_NODE），跳过遗留值
