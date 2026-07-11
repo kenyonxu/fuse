@@ -32,7 +32,6 @@ func _test_print_variable_read_mode() -> void:
 			_check(m.mode == "read", "mode=read（实际 %s）" % m.mode)
 			found = true
 	_check(found, "含 variable_name 声明")
-	inst.free()
 
 func _test_foreach_array_read_mode() -> void:
 	print("\n--- ForEach array_variable = read ---")
@@ -43,7 +42,6 @@ func _test_foreach_array_read_mode() -> void:
 		if m.name == "array_variable":
 			array_mode = m.mode
 	_check(array_mode == "read", "array_variable mode=read（实际 %s）" % array_mode)
-	inst.free()
 
 func _test_check_variable_read_mode() -> void:
 	print("\n--- CheckVariable variable_name = read ---")
@@ -58,4 +56,3 @@ func _test_check_variable_read_mode() -> void:
 			cv_mode = m.mode
 	_check(vn_mode == "read", "variable_name read（实际 %s）" % vn_mode)
 	_check(cv_mode == "read", "compare_variable read（实际 %s）" % cv_mode)
-	inst.free()

@@ -192,6 +192,13 @@ func validate() -> Array[String]:
 
 	return errors
 
+## 声明变量读写模式（精确化静态分析）
+## variable_name 为 write（execute 中通过 scope_container.set_variable 写入）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "variable_name", "mode": "write"},
+	]
+
 func get_description() -> String:
 	var scope_str = _get_scope_source_string()
 	return FuseLocalization.translate_format("FUSE_INSTRUCTION_SET_SCOPE_VARIABLE_DESC_FORMAT", {

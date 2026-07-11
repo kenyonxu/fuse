@@ -814,6 +814,15 @@ func _validate_property(property: Dictionary) -> void:
 		if property.name in ["index_scope_source", "index_custom_scope_id", "index_target_node_path"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 
+## 声明变量读写模式（精确化静态分析）
+## array_variable 读源数组；item_variable/index_variable 每次迭代写入
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "array_variable", "mode": "read"},
+		{"name": "item_variable", "mode": "write"},
+		{"name": "index_variable", "mode": "write"},
+	]
+
 ## 获取指令描述
 func get_description() -> String:
 	var source_str := ""

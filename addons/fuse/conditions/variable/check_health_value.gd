@@ -163,6 +163,13 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "variable"
 
+## 声明变量读写模式（精确化静态分析）
+## health_variable 仅 read（_evaluate_condition 中读取血量比较）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "health_variable", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	if health_variable.is_empty():

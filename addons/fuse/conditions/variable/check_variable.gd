@@ -776,6 +776,14 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "variable"
 
+## 声明变量读写模式（精确化静态分析）
+## variable_name/compare_variable 均为 read（_evaluate_condition 中 _get_variable_value 仅读）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "variable_name", "mode": "read"},
+		{"name": "compare_variable", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	if variable_name.is_empty():

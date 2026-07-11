@@ -173,6 +173,13 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "time"
 
+## 声明变量读写模式（精确化静态分析）
+## start_time_variable 仅 read（_evaluate_condition 中读取开始时间计算剩余）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "start_time_variable", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	if start_time_variable.is_empty():

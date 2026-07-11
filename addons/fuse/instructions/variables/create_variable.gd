@@ -395,6 +395,13 @@ func _add_global_variable_to_resource(variable: BaseVariable) -> bool:
 	_log_info_localized("FUSE_LOG_GLOBAL_VAR_ADDED_TO_RESOURCE", {"name": variable_name, "resource": target_resource_path})
 	return true
 
+## 声明变量读写模式（精确化静态分析）
+## variable_name 为 write（execute 中通过 set_variable 写入新创建的变量）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "variable_name", "mode": "write"},
+	]
+
 ## 获取指令描述
 func get_description() -> String:
 	var desc_parts = []

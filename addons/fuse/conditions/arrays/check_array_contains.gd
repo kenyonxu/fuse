@@ -416,6 +416,13 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "arrays"
 
+## 声明变量读写模式（精确化静态分析）
+## array_variable 仅 read（_evaluate_condition 中读取数组并查找 search_value）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "array_variable", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	var source_str := ""

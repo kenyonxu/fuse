@@ -765,6 +765,14 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "node"
 
+## 声明变量读写模式（精确化静态分析）
+## source/target_variable_name 仅 read（VARIABLE 来源读取存节点引用的变量）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "source_variable_name", "mode": "read"},
+		{"name": "target_variable_name", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	var source_str = _get_source_node_source_string()

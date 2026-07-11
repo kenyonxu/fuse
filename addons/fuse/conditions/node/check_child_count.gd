@@ -485,6 +485,14 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "node"
 
+## 声明变量读写模式（精确化静态分析）
+## node_variable_name 仅 read（VARIABLE 来源读取存节点路径的变量）
+## 注：实际属性名为 node_variable_name（非 source/target_variable_name）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "node_variable_name", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	var node_str = _get_node_source_string()

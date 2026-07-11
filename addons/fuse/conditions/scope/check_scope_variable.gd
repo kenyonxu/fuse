@@ -377,6 +377,14 @@ func validate() -> Array[String]:
 
 	return errors
 
+## 声明变量读写模式（精确化静态分析）
+## variable_name/compare_variable 仅 read（_evaluate_condition 中只读不写）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "variable_name", "mode": "read"},
+		{"name": "compare_variable", "mode": "read"},
+	]
+
 func get_description() -> String:
 	return _description
 

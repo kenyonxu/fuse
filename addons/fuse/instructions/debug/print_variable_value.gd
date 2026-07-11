@@ -284,6 +284,12 @@ func _convert_actual_value_to_string(value: Variant) -> String:
 		_:
 			return str(value)
 
+## 声明变量读写模式（精确化静态分析）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "variable_name", "mode": "read"},
+	]
+
 ## 获取指令描述
 func get_description() -> String:
 	var desc_parts = []

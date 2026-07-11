@@ -419,6 +419,13 @@ func get_condition_type() -> String:
 func get_condition_category() -> String:
 	return "animation"
 
+## 声明变量读写模式（精确化静态分析）
+## node_variable_name 仅 read（变量模式读取存节点路径/引用的变量）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "node_variable_name", "mode": "read"},
+	]
+
 ## 获取条件描述
 func get_description() -> String:
 	var node_str = _get_node_source_string()
