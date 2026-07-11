@@ -188,7 +188,12 @@ static func _collect_node_suggestions(target_node: Node) -> Array[String]:
 	var tree := target_node.get_tree()
 	if tree == null:
 		return suggestions
-	var root := tree.current_scene
+	# 优先编辑中场景根（过滤编辑器内部节点，避免映射面板显示 @editor 等）
+	var root: Node = null
+	if Engine.is_editor_hint():
+		root = EditorInterface.get_edited_scene_root()
+	if root == null:
+		root = tree.current_scene
 	if root == null:
 		root = tree.root
 	if root == null:
