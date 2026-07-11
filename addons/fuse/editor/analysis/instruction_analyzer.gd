@@ -743,24 +743,49 @@ static func _check_nodepath_targets(
 		var inst = instructions[i]
 		if inst == null:
 			continue
-		var tmp := {"nodes": []}
-		_extract_nodepaths(inst, tmp)
+		_check_nodepath_in_object(inst, inst, i, scene_root, problems)
 		# 条件节点中的 NodePath 引用（与 analyze_problems 变量检测对齐）
 		var cond = inst.get("condition") if inst != null else null
 		if cond != null:
-			_extract_nodepaths(cond, tmp)
-		for np_str in tmp.nodes:
-			var np_s: String = str(np_str)
-			if np_s.is_empty():
-				continue
-			if NodePathResolver.resolve_or_null(np_s, scene_root) == null:
-				problems.append({
-					"severity": "warning",
-					"message": "节点路径无法解析: %s（指令 %d）" % [np_s, i],
-					"instruction_index": i,
-					"nodepath": np_s,
-					"inst": inst
-				})
+			_check_nodepath_in_object(cond, inst, i, scene_root, problems)
+
+
+## 扫描对象（指令/条件）的 NodePath 属性，scope_source 感知检测
+## obj = 被扫描对象；owner_inst = 所属指令（problem.inst 索引用）
+## *_target_node_path 仅当对应 *_scope_source == TARGET_NODE(3) 时才实际使用，
+## 非 TARGET_NODE 时的遗留值不检测（避免序列化残留误报）
+static func _check_nodepath_in_object(
+	obj, owner_inst, inst_index: int, scene_root: Node, problems: Array
+) -> void:
+	const TARGET_NODE := 3  # ScopeSource.TARGET_NODE
+	for prop in obj.get_property_list():
+		var pname: String = prop.get("name", "")
+		var ptype: int = prop.get("type", 0)
+		# NodePath 属性（NodePath 类型，或命名 *_node/*_node_path）
+		var is_np := ptype == TYPE_NODE_PATH or pname.ends_with("_node") or pname.ends_with("_node_path")
+		if not is_np:
+			continue
+		var np_val = obj.get(pname)
+		if np_val == null:
+			continue
+		var np_s: String = str(np_val)
+		if np_s.is_empty():
+			continue
+		# scope_source 感知：*_target_node_path 仅 scope_source==TARGET_NODE 时使用
+		if pname.ends_with("_target_node_path"):
+			var prefix := pname.substr(0, pname.length() - "_target_node_path".length())
+			var scope_source_prop := prefix + "scope_source"
+			if scope_source_prop in obj and obj.get(scope_source_prop) != TARGET_NODE:
+				continue  # 非 active（scope_source 非 TARGET_NODE），跳过遗留值
+		# 检测
+		if NodePathResolver.resolve_or_null(np_s, scene_root) == null:
+			problems.append({
+				"severity": "warning",
+				"message": "节点路径无法解析: %s（指令 %d）" % [np_s, inst_index],
+				"instruction_index": inst_index,
+				"nodepath": np_s,
+				"inst": owner_inst
+			})
 
 
 ## E2: 扫描指令序列的信号引用，对目标节点不存在该信号的指令报 error
