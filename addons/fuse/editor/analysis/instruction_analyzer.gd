@@ -502,6 +502,8 @@ static func _build_variable_cross_references(
 			if not has_mutex:
 				for i in range(writers.size()):
 					for j in range(i + 1, writers.size()):
+						if writers[i].trigger_name == writers[j].trigger_name:
+							continue  # 同 Trigger 不算竞态（顺序执行，非并发）
 						topology.cross_references.append({
 							"from": writers[i].trigger_name,
 							"from_mode": writers[i].mode,
