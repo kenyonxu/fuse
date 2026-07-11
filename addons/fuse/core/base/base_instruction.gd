@@ -329,6 +329,13 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 static func _get_variable_accesses() -> Array:
 	return []
 
+## 声明本组件变量属性的精确读写模式（供 InstructionAnalyzer 静态分析用）
+## 返回 [{name: String, mode: String}]，mode ∈ "read"/"write"/"read_write"
+## name 为属性名（与 source_prop 对齐，如 "target_variable"）
+## 默认空数组 → fallback _infer_variable_mode（向后兼容，存量组件渐进迁移）
+func get_variable_modes() -> Array[Dictionary]:
+	return []
+
 ## 返回该指令引用的场景节点属性名（仅补充类型非 NodePath 的，如用 String 存的 *_node）。
 ## 类型为 NodePath 的属性由反射自动覆盖，无需在此声明。
 ## 返回: Array[String]

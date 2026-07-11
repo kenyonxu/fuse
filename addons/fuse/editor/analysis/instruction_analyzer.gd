@@ -215,6 +215,14 @@ static func _extract_nodepaths(inst, report: Dictionary) -> void:
 
 ## 提取指令中的变量引用
 static func _extract_variables(inst, report: Dictionary) -> void:
+	# 优先用组件声明的精确 mode（get_variable_modes）
+	# 默认空数组 → fallback _infer_variable_mode（向后兼容，存量组件渐进迁移）
+	var declared_modes := {}
+	if inst.has_method("get_variable_modes"):
+		for entry in inst.get_variable_modes():
+			var entry_name: String = entry.get("name", "")
+			if not entry_name.is_empty():
+				declared_modes[entry_name] = entry.get("mode", "read_write")
 	# 反射扫所有属性，命名启发式找变量引用（*_variable）
 	for prop in inst.get_property_list():
 		var pname: String = prop.get("name", "")
@@ -238,7 +246,9 @@ static func _extract_variables(inst, report: Dictionary) -> void:
 		var scope: int = 0
 		if scope_val != null:
 			scope = int(scope_val)
-		var entry := {"name": name, "source_prop": pname, "mode": _infer_variable_mode(pname)}
+		# mode：组件声明优先，fallback 命名启发式
+		var mode: String = declared_modes.get(pname, _infer_variable_mode(pname))
+		var entry := {"name": name, "source_prop": pname, "mode": mode}
 		if scope == 1:  # SCOPE
 			if "scope_source" in inst:
 				entry["source"] = inst.scope_source

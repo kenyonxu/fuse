@@ -935,6 +935,13 @@ func get_fuse_error() -> FuseError:
 func has_fuse_error() -> bool:
 	return _fuse_error != null
 
+## 声明本组件变量属性的精确读写模式（供 InstructionAnalyzer 静态分析用）
+## 返回 [{name: String, mode: String}]，mode ∈ "read"/"write"/"read_write"
+## name 为属性名（与 source_prop 对齐，如 "compare_variable"）
+## 默认空数组 → fallback _infer_variable_mode（向后兼容，存量组件渐进迁移）
+func get_variable_modes() -> Array[Dictionary]:
+	return []
+
 ## 获取条件元数据
 ##
 ## 子类应实现此方法以提供条件的元数据信息
