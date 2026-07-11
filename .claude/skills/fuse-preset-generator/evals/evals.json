@@ -1,0 +1,26 @@
+{
+  "skill_name": "fuse-preset-generator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "attack-sequence-l2",
+      "prompt": "帮我做个攻击 preset：当按键攻击时，对目标扣血 25，播放攻击动画，然后发送一个 Hit 事件",
+      "expected_output": "L2 preset JSON，event=OnInputAction(attack)，instructions 含 SetVariable(damage) / PlayAnimation / SendEvent(Hit)，落盘 presets/gameplay/",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "countdown-l2",
+      "prompt": "生成一个倒计时 preset：每隔 1 秒显示 3、2、1，然后隐藏 UI",
+      "expected_output": "L2 preset JSON，event=OnInterval(1s)，instructions 含 SetUIText ×3 + Wait ×2 + HideUI，落盘 presets/ui/",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "patrol-sequence-l1",
+      "prompt": "做个巡逻指令序列：移动到点 A，等待 2 秒，移动到点 B，等待 2 秒",
+      "expected_output": "L1 preset JSON（无 event），instructions 含 TweenMoveTo ×2 + Wait ×2，落盘 presets/gameplay/",
+      "files": []
+    }
+  ]
+}

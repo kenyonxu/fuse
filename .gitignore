@@ -90,3 +90,4 @@ addons/at-icons/
 
 # Archived fuse docs (historical, kept locally, not published with plugin)
 /addons/fuse/docs/archive/
+fuse-preset-generator-workspace/
