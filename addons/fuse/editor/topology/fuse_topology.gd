@@ -343,7 +343,7 @@ func _create_flat_item(parent_item: TreeItem, inst_info: Dictionary, report: Dic
 	# 优先 get_description（实时，避免 resource_name 陈旧），回退 name
 	var inst = inst_info.get("inst", null)
 	if inst != null and inst.has_method("get_description"):
-		var desc: String = inst.get_description()
+		var desc: String = _strip_bbcode(inst.get_description())
 		if not desc.is_empty():
 			inst_name = desc
 
@@ -423,12 +423,20 @@ func _get_param_summary(inst) -> String:
 	if inst == null:
 		return ""
 	if inst.has_method("get_description"):
-		var desc: String = inst.get_description()
+		var desc: String = _strip_bbcode(inst.get_description())
 		if not desc.is_empty():
 			if desc.length() > 50:
 				desc = desc.substr(0, 47) + "..."
 			return " — " + desc
 	return ""
+
+
+## 剥离 BBCode 标签（防止用户指令 text 的 BBCode 污染 _detail 渲染状态）
+## 如 SetUIText 的 text 含 [font_size=30] 会导致 _detail 后续字体变大
+static func _strip_bbcode(text: String) -> String:
+	var regex = RegEx.new()
+	regex.compile("\\[[^\\]]+\\]")
+	return regex.sub(text, "", true)
 
 
 # ============================================================
@@ -538,7 +546,7 @@ func _show_binding_detail(meta: Dictionary) -> void:
 		for inst_info in flat:
 			var prefix: String = inst_info.get("prefix", "")
 			var inst_name: String = inst_info.get("name", "?")
-			_detail.append_text("  %s📦 %s\n" % [prefix, inst_name])
+			_detail.append_text("  %s📦 %s\n" % [prefix, _strip_bbcode(inst_name)])
 
 
 ## 选中指令 → 右侧详情
@@ -551,7 +559,7 @@ func _show_instruction_detail(meta: Dictionary) -> void:
 		_detail.append_text("[color=gray](指令详情需要 instructions_tree 支持)[/color]")
 		return
 
-	var iname: String = inst.resource_name
+	var iname: String = _strip_bbcode(inst.resource_name)
 	if iname.is_empty():
 		iname = inst.get_class()
 
@@ -645,7 +653,7 @@ func _show_trigger_detail(report: Dictionary) -> void:
 		for inst_info in flat:
 			var prefix: String = inst_info.get("prefix", "")
 			var inst_name: String = inst_info.get("name", "?")
-			_detail.append_text("  %s📦 %s\n" % [prefix, inst_name])
+			_detail.append_text("  %s📦 %s\n" % [prefix, _strip_bbcode(inst_name)])
 
 	# E3: 跨 Trigger 变量关联（追加段）
 	_append_cross_trigger_relations(report)
