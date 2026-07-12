@@ -55,7 +55,7 @@ func _init() -> void:
 
 	_refresh_btn = Button.new()
 	_refresh_btn.text = "刷新"
-	_refresh_btn.pressed.connect(refresh)
+	_refresh_btn.pressed.connect(_do_refresh)
 	banner.add_child(_refresh_btn)
 
 	_refresh_timer = Timer.new()
@@ -262,7 +262,7 @@ func _on_item_activated() -> void:
 			var path: String = meta.get("report", {}).get("trigger_path", "")
 			print("[Topo] _on_item_activated: trigger_path=", path)
 			if not path.is_empty():
-				var node: Node = get_node_or_null(NodePath(path))
+				var node: Node = get_tree().root.get_node_or_null(NodePath(path))
 				print("[Topo] _on_item_activated: node=", node)
 				if node:
 					EditorInterface.edit_node(node)
