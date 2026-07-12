@@ -457,7 +457,11 @@ static func build_topology(scene_root: Node) -> Dictionary:
 	var global_vars_usage := {}
 	for report in all_reports.values():
 		var seen := {}  # 同 trigger 内同 vname 去重（_extract_variables 可能重复提取）
-		for var_entry in report.variables.global:
+		# 收集 trigger 级 + event_bindings 级（MultiEventTrigger）的全局变量
+		var all_global_vars: Array = report.variables.global.duplicate()
+		for binding in report.get("event_bindings", []):
+			all_global_vars.append_array(binding.get("variables", {}).get("global", []))
+		for var_entry in all_global_vars:
 			var vname: String = var_entry.name
 			if seen.has(vname):
 				continue
