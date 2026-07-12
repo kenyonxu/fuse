@@ -326,6 +326,57 @@ variable_scope: Global
 4. 运行场景，断点只在血量低于 30 时触发
 5. 检查变量快照，分析问题原因
 
+### 工作流 5: Topology 静态分析调试
+
+Fuse Topology 主屏（编辑器顶部 "Fuse" Tab）集成静态分析，**无需运行场景**即可在编辑阶段发现问题。详见 [编辑器面板总览](00-editor-panels-overview.md)。
+
+#### 静态分析覆盖
+
+| 检测项 | 说明 |
+|--------|------|
+| **local 未声明变量** | 指令链中读写但未通过 `SetVariable` 声明的 local 变量（含条件嵌套分支内的声明） |
+| **事件提供变量白名单** | 部分事件（如 OnInput）会向 ExecutionContext 注入变量，白名单内不算未声明 |
+| **NodePath 解析失败** | 指令引用的 NodePath 在当前场景中无法解析到实际节点 |
+| **信号引用检测** | EmitSignal 指令引用的信号名是否在目标节点上存在 |
+| **跨 Trigger 变量关联** | 写-读箭头 / 竞态预警（多 Trigger 写同一变量）/ 孤写孤读 |
+
+#### 问题过滤
+
+Topology banner 的 OptionButton 提供三档过滤：
+
+- **全部** — 显示所有节点（默认）
+- **仅错误** — 仅显示 error 节点，快速定位必须修复的问题
+- **无** — 关闭标注，纯拓扑视图
+
+#### 自动刷新
+
+Topology 在以下时机自动刷新（0.5s 防抖）：
+
+- **切换场景** — 切到新场景自动重建拓扑
+- **保存场景（Ctrl+S）** — 编辑后保存自动同步问题标注
+
+无需手动点「刷新」按钮即可保持最新状态；刷新后选中条目自动恢复。
+
+#### 双击跳转 Inspector
+
+- **双击 Trigger** → Inspector 跳转到场景中对应节点（可直接编辑事件 / 指令配置）
+- **双击指令** → Inspector 显示该指令 Resource（可直接编辑参数）
+
+#### 调试工作流：Topology → Inspector → 保存
+
+```
+1. 打开 Fuse Topology 主屏 → 看全局拓扑 + 问题标注
+2. 问题过滤切到「仅错误」→ 聚焦必须修复的问题
+3. 双击问题节点 → Inspector 跳转定位
+4. 在 Inspector 编辑指令参数 / 修正 NodePath / 补充 SetVariable 声明
+5. Ctrl+S 保存场景 → Topology 自动刷新，问题标注更新
+6. 重复直到无 error → 运行场景验证
+```
+
+#### 导出问题报告
+
+banner「导出问题报告」按钮 → 全场景问题汇总写 `user://fuse_problems_report_*.txt`，适合在无法直接看 Topology 时（如 CI / 离线审查）归档问题清单。
+
 ---
 
 ## 调试指令对比

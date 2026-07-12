@@ -93,7 +93,19 @@ Fuse 是 Godot 4.6 的可视化编程插件，通过 Inspector 配置事件、�
 - **上下文菜单** — 合并/拆分 Trigger，一键操作
 - **输入键选择器** — 可视化选择键盘、鼠标、手柄按键
 - **调试面板** — DebugVisualizer + ExecutionTracker，实时查看执行流程
-- **静态分析** — InstructionAnalyzer.analyze_problems 检测 local 未声明变量，FuseTopology 主屏就地标注
+- **静态分析** — InstructionAnalyzer.analyze_problems 在编辑阶段检测以下问题，FuseTopology 主屏就地标注（🔴 error / 🟡 warning）：
+  - **local 未声明变量** — 指令链中读写但未通过 `SetVariable` 声明的 local 变量，含条件嵌套分支内的声明追溯
+  - **事件提供变量白名单** — 部分事件（如 OnInput）向 ExecutionContext 注入的变量不算未声明
+  - **NodePath 解析失败** — 指令引用的 NodePath 在当前场景中无法解析到实际节点
+  - **信号引用检测** — EmitSignal 指令引用的信号名是否在目标节点上存在
+  - **跨 Trigger 变量关联** — 写-读箭头 / 竞态预警（多 Trigger 写同一变量）/ 孤写孤读（仅写无读 / 仅读无写）
+- **Fuse Topology 主屏** — 编辑器顶部 "Fuse" Tab，全场景 Trigger 拓扑总览：
+  - **自动刷新** — 切换场景 / 保存场景（Ctrl+S）时自动刷新（0.5s 防抖）
+  - **选中保持** — 刷新后自动恢复之前选中的 Trigger / 指令条目
+  - **双击跳转** — 双击 Trigger → Inspector 跳转到场景节点；双击指令 → Inspector 显示指令 Resource
+  - **问题过滤** — OptionButton 三档：全部 / 仅错误 / 无
+  - **主题图标** — 使用 Godot 主题图标，跟随编辑器明暗主题
+  - **Inspector 问题计数** — 数据流按钮角标显示该 Trigger 的问题数，展开卡片查看分级详情
 
 ## 本地化
 

@@ -187,6 +187,8 @@ var found = target_node.get_node_or_null(old_np)  # 原样解析
 
 当以上策略均未匹配时，在 NodePathMappingDialog 中展示**场景所有节点路径**供用户手动选择。
 
+> **节点过滤**：映射面板仅显示**场景节点**，已过滤编辑器内部节点（如 `@editor`、`@editor_*` 临时节点），避免下拉列表过长。若目标节点未出现在列表中，检查该节点是否属于编辑器内部节点或未挂到场景树。
+
 ### 映射处理流程
 
 完整流程如下（`fuse_inspector_plugin.gd:_apply_preset_to_node`）：

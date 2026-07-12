@@ -63,6 +63,35 @@ Topology 刷新时自动跑指令序列分析（local 未声明变量检测）�
 
 分析由 `InstructionAnalyzer.analyze_problems` 提供（复用 `_extract_variables` 反射式提取，非独立引擎）。
 
+### 问题过滤
+
+Topology 顶部 banner 提供问题过滤 OptionButton：
+
+| 选项 | 行为 |
+|------|------|
+| **全部** | 显示所有 Trigger / 指令（默认） |
+| **仅错误** | 仅显示含 error 的节点（隐藏无问题与纯 warning 节点） |
+| **无** | 关闭问题标注，纯拓扑视图 |
+
+配合问题计数（Trigger 行后缀 `(2🔴 1🟡)`）可快速定位问题集中区域。
+
+### 跨 Trigger 关联
+
+Topology 详情面板自动扫描跨 Trigger 的变量 / 信号引用关联：
+
+- **写-读箭头**：Trigger A 写入变量 `x`，Trigger B 读取 `x` → 详情面板标注 `x: 写入于 TriggerA → 读取于 TriggerB`
+- **竞态预警**：多个 Trigger 写入同一变量（写-写冲突）→ 标注 ⚠ 警告，提示执行顺序未定义
+- **孤写 / 孤读**：
+  - 孤写：变量只有写无读 → 标注提示（可能为冗余逻辑）
+  - 孤读：变量只有读无写 → 标注 error（运行时必为默认值，疑似漏写）
+
+### 自动刷新与交互
+
+- **自动刷新**：切换场景 / 保存场景（Ctrl+S）时自动刷新 Topology（0.5s 防抖，避免频繁刷新）
+- **选中保持**：刷新后自动恢复之前选中的条目（Trigger/指令）
+- **双击跳转**：双击 Trigger → Inspector 跳转到场景中对应节点；双击指令 → Inspector 显示指令 Resource
+- **手动刷新**：banner「刷新」按钮仍可用（也含选中保持）
+
 ### GraphEdit（降级保留）
 
 代码中保留了 `FuseGraphEdit`（基于 Godot `GraphEdit` 的可视化节点图）与 `FuseGraphNode`，但当前**默认降级隐藏**（`visible = false`）。现阶段以 **Tree 树形视图**为主交互方式，GraphEdit 视图未启用，仅保留代码备查。
@@ -112,6 +141,10 @@ Inspector 底部出现一行按钮：
 ```
 
 `📊 数据流` 按钮是**可点击折叠**的，点击展开/收起数据流卡片。
+
+#### 问题计数角标
+
+当该 Trigger 的指令链存在静态分析问题时，`📊 数据流` 按钮右上角显示**问题计数角标**（如 `🔴2` 表示 2 个 error）。展开数据流卡片后，底部「问题详情」段按 error / warning 分级列出具体问题（含指令名 + 问题描述），与 Topology 主屏的问题标注保持一致。
 
 #### 数据流卡片内容
 
