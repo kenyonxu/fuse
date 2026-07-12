@@ -1,8 +1,8 @@
-# Topology 自动刷新 + 选中保持 + 防抖 设计规格
+# Topology 可用性改进 — 自动刷新 + 选中保持 + 防抖 + 双击跳转 设计规格
 
 > 日期：2026-07-12
 > 状态：设计已批准，待实现
-> 范围：Topology 主屏面板自动刷新（场景切换/保存触发 + 选中保持 + 防抖）
+> 范围：Topology 主屏面板自动刷新（场景切换/保存触发 + 选中保持 + 防抖）+ 双击条目跳转 Inspector
 
 ---
 
@@ -142,7 +142,49 @@ func _restore_selection(key: String) -> void:
 
 ---
 
-## 3. 不做的事（Out of Scope）
+## 3. 双击条目跳转 Inspector
+
+用户双击 Topology 树中的条目 → Inspector 跳转到对应节点/资源，方便直接编辑。
+
+Godot Tree 有 `item_activated` 信号（双击触发），当前未连。`EditorInterface.edit_node` / `edit_resource` 是标准 API。
+
+### 实现
+```gdscript
+# _init 连信号
+_tree.item_activated.connect(_on_item_activated)
+
+func _on_item_activated() -> void:
+    var item := _tree.get_selected()
+    if item == null:
+        return
+    var meta: Dictionary = item.get_metadata(0)
+    match meta.get("type", ""):
+        "trigger":
+            # report.trigger_path = trigger.get_path()（"/root/Scene/..."）
+            var path: String = meta.get("report", {}).get("trigger_path", "")
+            if not path.is_empty():
+                var node := get_tree().get_node_or_null(NodePath(path))
+                if node:
+                    EditorInterface.edit_node(node)  # 选中节点 + Inspector 显示
+        "instruction":
+            var inst = meta.get("inst", null)
+            if inst is Resource:
+                EditorInterface.edit_resource(inst)  # Inspector 显示指令资源
+        "binding":
+            var binding = meta.get("binding", null)
+            if binding is Resource:
+                EditorInterface.edit_resource(binding)
+```
+
+- **双击 Trigger** → 选中场景中对应 Trigger 节点（Inspector 显示节点属性）
+- **双击指令** → Inspector 显示指令 Resource（编辑指令参数）
+- **双击 EventBinding** → 同（Resource）
+
+注意：`inst` 是树重建时的 Resource 引用，在树未刷新期间有效。刷新后树重建，inst 更新为新对象。
+
+---
+
+## 4. 不做的事（Out of Scope）
 
 - ❌ 增量刷新（只更新变化的 Trigger）—— 复杂，YAGNI
 - ❌ 自动滚动到选中项 —— 后续
@@ -165,6 +207,8 @@ func _restore_selection(key: String) -> void:
 - 新增 `_capture_selection() -> String`（TreeItem → 唯一标识）
 - 新增 `_restore_selection(key: String)`（遍历树恢复）
 - 新增 `_get_tree_path(item) -> String`（TreeItem 链路径）
+- `_init` 连 `_tree.item_activated.connect(_on_item_activated)`
+- 新增 `_on_item_activated()`（双击 → edit_node / edit_resource）
 
 ---
 
@@ -176,6 +220,9 @@ func _restore_selection(key: String) -> void:
 - [ ] Topology 未显示（非 Fuse tab）→ 不刷新（守卫）
 - [ ] 快速连续切换（< 0.5s）→ 仅刷新 1 次（防抖）
 - [ ] 手动刷新按钮仍可用（不变）
+- [ ] 双击 Trigger 项 → Inspector 跳转到场景中对应 Trigger 节点
+- [ ] 双击指令项 → Inspector 显示指令 Resource
+- [ ] 双击 EventBinding 项 → Inspector 显示 binding Resource
 - [ ] 现有 Topology 功能不破坏
 
 ---
