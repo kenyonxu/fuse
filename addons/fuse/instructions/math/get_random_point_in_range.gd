@@ -207,6 +207,14 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 func _setup_metadata():
 	pass
 
+## 声明变量读写模式（save_to=write, origin/range=read）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "save_to_variable", "mode": "write"},
+		{"name": "origin_variable", "mode": "read"},
+		{"name": "range_variable", "mode": "read"},
+	]
+
 # =============================================
 # 属性列表
 # =============================================

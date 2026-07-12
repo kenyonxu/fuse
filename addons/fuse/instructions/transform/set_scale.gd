@@ -36,6 +36,10 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 func _setup_metadata():
 	pass
 
+## 声明变量读写模式（scale=read）
+func get_variable_modes() -> Array[Dictionary]:
+	return [{"name": "scale_variable", "mode": "read"}]
+
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
 	var properties := []

@@ -119,6 +119,13 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 func _setup_metadata():
 	pass
 
+## 声明变量读写模式（source_dict=read, target_dict=write 合并结果）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "source_dict_variable", "mode": "read"},
+		{"name": "target_dict_variable", "mode": "write"},
+	]
+
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
 	var properties := []

@@ -3,6 +3,9 @@ extends Node
 const PrintVariableValue = preload("res://addons/fuse/instructions/debug/print_variable_value.gd")
 const ForEach = preload("res://addons/fuse/instructions/flow_control/for_each.gd")
 const CheckVariable = preload("res://addons/fuse/conditions/variable/check_variable.gd")
+const MathOperation = preload("res://addons/fuse/instructions/math/math_operation.gd")
+const RandomNumber = preload("res://addons/fuse/instructions/math/random_number.gd")
+const DictGetValue = preload("res://addons/fuse/instructions/dictionaries/dict_get_value.gd")
 
 var _fail := 0
 
@@ -10,6 +13,9 @@ func _ready() -> void:
 	_test_print_variable_read_mode()
 	_test_foreach_array_read_mode()
 	_test_check_variable_read_mode()
+	_test_math_operation_multi_mode()
+	_test_random_number_save_to_write()
+	_test_dict_get_value_modes()
 	print("\n=== 结果: %d 处失败 ===" % _fail)
 	if _fail > 0:
 		push_error("variable_modes 测试失败: %d 处" % _fail)
@@ -56,3 +62,52 @@ func _test_check_variable_read_mode() -> void:
 			cv_mode = m.mode
 	_check(vn_mode == "read", "variable_name read（实际 %s）" % vn_mode)
 	_check(cv_mode == "read", "compare_variable read（实际 %s）" % cv_mode)
+
+## Phase 2: MathOperation 多属性（save_to=write + operand_a/b=read）
+func _test_math_operation_multi_mode() -> void:
+	print("\n--- MathOperation save_to=write, operand_a/b=read ---")
+	var inst := MathOperation.new()
+	var modes := inst.get_variable_modes()
+	var save_mode := ""
+	var opa_mode := ""
+	var opb_mode := ""
+	for m in modes:
+		if m.name == "save_to_variable":
+			save_mode = m.mode
+		if m.name == "operand_a_variable":
+			opa_mode = m.mode
+		if m.name == "operand_b_variable":
+			opb_mode = m.mode
+	_check(save_mode == "write", "save_to_variable write（实际 %s）" % save_mode)
+	_check(opa_mode == "read", "operand_a_variable read（实际 %s）" % opa_mode)
+	_check(opb_mode == "read", "operand_b_variable read（实际 %s）" % opb_mode)
+
+## Phase 2: RandomNumber save_to-only（write）
+func _test_random_number_save_to_write() -> void:
+	print("\n--- RandomNumber save_to_variable = write ---")
+	var inst := RandomNumber.new()
+	var modes := inst.get_variable_modes()
+	var save_mode := ""
+	for m in modes:
+		if m.name == "save_to_variable":
+			save_mode = m.mode
+	_check(save_mode == "write", "save_to_variable write（实际 %s）" % save_mode)
+
+## Phase 2: DictGetValue（dict/key=read + target=write）
+func _test_dict_get_value_modes() -> void:
+	print("\n--- DictGetValue dict/key=read, target=write ---")
+	var inst := DictGetValue.new()
+	var modes := inst.get_variable_modes()
+	var dict_mode := ""
+	var key_mode := ""
+	var tgt_mode := ""
+	for m in modes:
+		if m.name == "dict_variable":
+			dict_mode = m.mode
+		if m.name == "key_variable":
+			key_mode = m.mode
+		if m.name == "target_variable":
+			tgt_mode = m.mode
+	_check(dict_mode == "read", "dict_variable read（实际 %s）" % dict_mode)
+	_check(key_mode == "read", "key_variable read（实际 %s）" % key_mode)
+	_check(tgt_mode == "write", "target_variable write（实际 %s）" % tgt_mode)

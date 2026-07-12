@@ -38,6 +38,10 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 func _setup_metadata():
 	pass
 
+## 声明变量读写模式（save_to=write）
+func get_variable_modes() -> Array[Dictionary]:
+	return [{"name": "save_to_variable", "mode": "write"}]
+
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
 	var properties := []
