@@ -141,7 +141,9 @@ func request_refresh() -> void:
 ## 防抖后实际执行刷新（捕获选中 → refresh → 恢复选中）
 func _do_refresh() -> void:
 	var selected_key := _capture_selection()
+	print("[Topo] _do_refresh: captured key=", selected_key)
 	refresh()
+	print("[Topo] _do_refresh: refresh done, restoring...")
 	_restore_selection(selected_key)
 
 
@@ -149,16 +151,23 @@ func _do_refresh() -> void:
 func _capture_selection() -> String:
 	var selected := _tree.get_selected()
 	if selected == null:
+		print("[Topo] _capture: no selection")
 		return ""
 	var meta: Dictionary = selected.get_metadata(0)
 	var type: String = meta.get("type", "")
+	print("[Topo] _capture: type=", type, " text=", selected.get_text(0))
 	match type:
 		"trigger":
-			return "trigger:%s" % meta.get("report", {}).get("trigger_name", "")
+			var tn: String = meta.get("report", {}).get("trigger_name", "")
+			print("[Topo] _capture: trigger_name=", tn)
+			return "trigger:%s" % tn
 		"instruction":
 			var trigger_name: String = meta.get("report", {}).get("trigger_name", "")
-			return "instruction:%s:%s" % [trigger_name, _get_tree_path(selected)]
+			var path := _get_tree_path(selected)
+			print("[Topo] _capture: trigger=", trigger_name, " path=", path)
+			return "instruction:%s:%s" % [trigger_name, path]
 		_:
+			print("[Topo] _capture: unknown type, meta=", meta)
 			return ""
 
 
@@ -178,31 +187,44 @@ func _get_tree_path(item: TreeItem) -> String:
 ## 刷新后恢复选中
 func _restore_selection(key: String) -> void:
 	if key.is_empty():
+		print("[Topo] _restore: key empty, skip")
 		return
 	var parts := key.split(":", true, 2)
 	if parts.size() < 2:
+		print("[Topo] _restore: parts < 2, key=", key)
 		return
 	var type := parts[0]
 	var info := parts[1]
 	var root := _tree.get_root()
 	if root == null:
+		print("[Topo] _restore: root null")
 		return
+	print("[Topo] _restore: type=", type, " info=", info)
 	var trigger_item := root.get_first_child()
+	var count := 0
 	while trigger_item != null:
+		count += 1
 		var trigger_name: String = trigger_item.get_metadata(0).get("report", {}).get("trigger_name", "")
+		print("[Topo] _restore: item[", count, "] name=", trigger_name, " text=", trigger_item.get_text(0))
 		if type == "trigger" and info == trigger_name:
+			print("[Topo] _restore: MATCH trigger, selecting")
 			trigger_item.select(0)
 			_on_item_selected()
 			return
 		if type == "instruction":
 			var sub_parts := info.split(":", true, 1)
 			if sub_parts.size() == 2 and sub_parts[0] == trigger_name:
+				print("[Topo] _restore: matching instruction path=", sub_parts[1])
 				var found := _find_tree_item_by_path(trigger_item, sub_parts[1])
 				if found:
+					print("[Topo] _restore: found instruction, selecting")
 					found.select(0)
 					_on_item_selected()
 					return
+				else:
+					print("[Topo] _restore: instruction NOT found")
 		trigger_item = trigger_item.get_next()
+	print("[Topo] _restore: no match found (scanned ", count, " items)")
 
 
 ## 递归查找 TreeItem 匹配路径
@@ -231,17 +253,25 @@ func _find_tree_item_by_path(parent: TreeItem, path: String) -> TreeItem:
 func _on_item_activated() -> void:
 	var item := _tree.get_selected()
 	if item == null:
+		print("[Topo] _on_item_activated: no selection")
 		return
 	var meta: Dictionary = item.get_metadata(0)
+	print("[Topo] _on_item_activated: type=", meta.get("type", ""), " text=", item.get_text(0))
 	match meta.get("type", ""):
 		"trigger":
 			var path: String = meta.get("report", {}).get("trigger_path", "")
+			print("[Topo] _on_item_activated: trigger_path=", path)
 			if not path.is_empty():
 				var node: Node = get_node_or_null(NodePath(path))
+				print("[Topo] _on_item_activated: node=", node)
 				if node:
 					EditorInterface.edit_node(node)
+					print("[Topo] _on_item_activated: edit_node called")
+			else:
+				print("[Topo] _on_item_activated: path empty!")
 		"instruction":
 			var inst = meta.get("inst", null)
+			print("[Topo] _on_item_activated: inst=", inst)
 			if inst is Resource:
 				EditorInterface.edit_resource(inst)
 		"binding":
