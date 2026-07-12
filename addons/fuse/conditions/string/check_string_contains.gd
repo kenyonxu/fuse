@@ -61,6 +61,13 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 func _compute_dependencies() -> Array[String]:
 	return [source_variable]
 
+## 声明变量读写模式（精确化静态分析）
+## source_variable 仅 read（_evaluate_condition 中读取字符串变量并检查是否包含子串）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "source_variable", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "string_contains"

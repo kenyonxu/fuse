@@ -429,6 +429,15 @@ func _get_key(context: ExecutionContext) -> Variant:
 	else:
 		return key_value
 
+## 声明变量读写模式（精确化静态分析）
+## dict_variable 仅 read（读取字典值并检查是否包含 key）
+## key_from_variable 仅 read（当 use_key_from_variable=true 时读取键值）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "dict_variable", "mode": "read"},
+		{"name": "key_from_variable", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "check_dict_contains_key"

@@ -443,6 +443,13 @@ func _perform_comparison(actual: int, expected: int) -> bool:
 			_log_error("Unknown comparison operator: %s" % Comparison.keys()[comparison])
 			return false
 
+## 声明变量读写模式（精确化静态分析）
+## array_variable 仅 read（_evaluate_condition 中读取数组并取 size 比较）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "array_variable", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "check_array_size"

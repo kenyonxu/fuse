@@ -433,6 +433,13 @@ func _compute_dependencies() -> Array[String]:
 # 条件信息
 # =============================================
 
+## 声明变量读写模式（精确化静态分析）
+## group_variable_name 仅 read（_evaluate_condition 中读取组名变量并查询组成员数）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "group_variable_name", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "group_count_check"

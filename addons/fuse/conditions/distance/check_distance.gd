@@ -792,6 +792,15 @@ func _compute_dependencies() -> Array[String]:
 # 条件信息
 # =============================================
 
+## 声明变量读写模式（精确化静态分析）
+## source_variable_name 仅 read（通过变量解析源节点路径并读取位置）
+## target_variable_name 仅 read（通过变量解析目标节点路径并读取位置）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "source_variable_name", "mode": "read"},
+		{"name": "target_variable_name", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "distance"

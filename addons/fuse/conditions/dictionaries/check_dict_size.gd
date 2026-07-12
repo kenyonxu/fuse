@@ -293,6 +293,13 @@ func _perform_comparison(actual: int, expected: int) -> bool:
 			_log_error("Unknown comparison operator: %s" % Comparison.keys()[comparison])
 			return false
 
+## 声明变量读写模式（精确化静态分析）
+## dict_variable 仅 read（读取字典值并取 size 比较）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "dict_variable", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "check_dict_size"

@@ -166,6 +166,13 @@ func _compute_dependencies() -> Array[String]:
 # =============================================
 # 类型信息
 # =============================================
+## 声明变量读写模式（精确化静态分析）
+## save_to_variable 仅 write（_evaluate_condition 中检测到重叠时把重叠体列表写入变量）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "save_to_variable", "mode": "write"},
+	]
+
 func get_condition_type() -> String:
 	return "check_overlap_area"
 

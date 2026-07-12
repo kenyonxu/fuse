@@ -6,6 +6,9 @@ const CheckVariable = preload("res://addons/fuse/conditions/variable/check_varia
 const MathOperation = preload("res://addons/fuse/instructions/math/math_operation.gd")
 const RandomNumber = preload("res://addons/fuse/instructions/math/random_number.gd")
 const DictGetValue = preload("res://addons/fuse/instructions/dictionaries/dict_get_value.gd")
+const CheckNodeActive = preload("res://addons/fuse/conditions/node/check_node_active.gd")
+const CheckDistance = preload("res://addons/fuse/conditions/distance/check_distance.gd")
+const CheckOverlapArea = preload("res://addons/fuse/conditions/physics/check_overlap_area.gd")
 
 var _fail := 0
 
@@ -16,6 +19,9 @@ func _ready() -> void:
 	_test_math_operation_multi_mode()
 	_test_random_number_save_to_write()
 	_test_dict_get_value_modes()
+	_test_check_node_active_read_mode()
+	_test_check_distance_dual_read_mode()
+	_test_check_overlap_area_write_mode()
 	print("\n=== 结果: %d 处失败 ===" % _fail)
 	if _fail > 0:
 		push_error("variable_modes 测试失败: %d 处" % _fail)
@@ -111,3 +117,40 @@ func _test_dict_get_value_modes() -> void:
 	_check(dict_mode == "read", "dict_variable read（实际 %s）" % dict_mode)
 	_check(key_mode == "read", "key_variable read（实际 %s）" % key_mode)
 	_check(tgt_mode == "write", "target_variable write（实际 %s）" % tgt_mode)
+
+## Phase 3: CheckNodeActive（node_variable_name read）— 代表节点类 condition 抽验
+func _test_check_node_active_read_mode() -> void:
+	print("\n--- CheckNodeActive node_variable_name = read ---")
+	var inst := CheckNodeActive.new()
+	var modes := inst.get_variable_modes()
+	var vn_mode := ""
+	for m in modes:
+		if m.name == "node_variable_name":
+			vn_mode = m.mode
+	_check(vn_mode == "read", "node_variable_name read（实际 %s）" % vn_mode)
+
+## Phase 3: CheckDistance（source/target 双 read）— 代表双节点类 condition 抽验
+func _test_check_distance_dual_read_mode() -> void:
+	print("\n--- CheckDistance source/target_variable_name = read ---")
+	var inst := CheckDistance.new()
+	var modes := inst.get_variable_modes()
+	var src_mode := ""
+	var tgt_mode := ""
+	for m in modes:
+		if m.name == "source_variable_name":
+			src_mode = m.mode
+		if m.name == "target_variable_name":
+			tgt_mode = m.mode
+	_check(src_mode == "read", "source_variable_name read（实际 %s）" % src_mode)
+	_check(tgt_mode == "read", "target_variable_name read（实际 %s）" % tgt_mode)
+
+## Phase 3: CheckOverlapArea（save_to_variable write）— condition 写变量场景抽验
+func _test_check_overlap_area_write_mode() -> void:
+	print("\n--- CheckOverlapArea save_to_variable = write ---")
+	var inst := CheckOverlapArea.new()
+	var modes := inst.get_variable_modes()
+	var save_mode := ""
+	for m in modes:
+		if m.name == "save_to_variable":
+			save_mode = m.mode
+	_check(save_mode == "write", "save_to_variable write（实际 %s）" % save_mode)

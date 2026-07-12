@@ -439,6 +439,13 @@ func _compute_dependencies() -> Array[String]:
 # 条件信息
 # =============================================
 
+## 声明变量读写模式（精确化静态分析）
+## node_variable_name 仅 read（_evaluate_condition 中通过变量解析 CharacterBody 节点并读取 velocity）
+func get_variable_modes() -> Array[Dictionary]:
+	return [
+		{"name": "node_variable_name", "mode": "read"},
+	]
+
 ## 获取条件类型
 func get_condition_type() -> String:
 	return "velocity"
