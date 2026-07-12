@@ -22,6 +22,9 @@ var _refresh_btn: Button
 var _last_topology: Dictionary = {}
 var _filter_mode: int = FILTER_ALL
 
+const _REFRESH_DEBOUNCE := 0.5
+var _refresh_timer: Timer
+
 
 func _init() -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -55,6 +58,12 @@ func _init() -> void:
 	_refresh_btn.pressed.connect(refresh)
 	banner.add_child(_refresh_btn)
 
+	_refresh_timer = Timer.new()
+	_refresh_timer.one_shot = true
+	_refresh_timer.wait_time = _REFRESH_DEBOUNCE
+	_refresh_timer.timeout.connect(_do_refresh)
+	add_child(_refresh_timer)
+
 	var export_btn := Button.new()
 	export_btn.text = "导出问题报告"
 	export_btn.pressed.connect(_on_export_problems)
@@ -78,6 +87,7 @@ func _init() -> void:
 	_tree.set_column_expand(1, false)
 	_tree.allow_reselect = true
 	_tree.item_selected.connect(_on_item_selected)
+	_tree.item_activated.connect(_on_item_activated)
 	hsplit.add_child(_tree)
 
 	# 右侧：详情面板
@@ -119,6 +129,121 @@ func _init() -> void:
 func _on_filter_changed(item_index: int) -> void:
 	_filter_mode = item_index
 	refresh()
+
+
+## 请求刷新（防抖：0.5s 内多次请求合并为 1 次；未显示时不刷新）
+func request_refresh() -> void:
+	if not visible:
+		return
+	_refresh_timer.start()
+
+
+## 防抖后实际执行刷新（捕获选中 → refresh → 恢复选中）
+func _do_refresh() -> void:
+	var selected_key := _capture_selection()
+	refresh()
+	_restore_selection(selected_key)
+
+
+## 捕获当前选中项的唯一标识（刷新前调用）
+func _capture_selection() -> String:
+	var selected := _tree.get_selected()
+	if selected == null:
+		return ""
+	var meta: Dictionary = selected.get_metadata(0)
+	var type: String = meta.get("type", "")
+	match type:
+		"trigger":
+			return "trigger:%s" % meta.get("report", {}).get("trigger_name", "")
+		"instruction":
+			var trigger_name: String = meta.get("report", {}).get("trigger_name", "")
+			return "instruction:%s:%s" % [trigger_name, _get_tree_path(selected)]
+		_:
+			return ""
+
+
+## 从 TreeItem 向上遍历到 Trigger 根，记录路径
+func _get_tree_path(item: TreeItem) -> String:
+	var parts: PackedStringArray = []
+	var current: TreeItem = item
+	while current != null:
+		parts.insert(0, current.get_text(0))
+		var parent := current.get_parent()
+		if parent == null or parent == _tree.get_root():
+			break
+		current = parent
+	return "/".join(parts)
+
+
+## 刷新后恢复选中
+func _restore_selection(key: String) -> void:
+	if key.is_empty():
+		return
+	var parts := key.split(":", true, 2)
+	if parts.size() < 2:
+		return
+	var type := parts[0]
+	var info := parts[1]
+	var root := _tree.get_root()
+	if root == null:
+		return
+	for trigger_item in root.get_children():
+		var trigger_name: String = trigger_item.get_metadata(0).get("report", {}).get("trigger_name", "")
+		if type == "trigger" and info == trigger_name:
+			trigger_item.select(0)
+			_on_item_selected()
+			return
+		if type == "instruction":
+			var sub_parts := info.split(":", true, 1)
+			if sub_parts.size() == 2 and sub_parts[0] == trigger_name:
+				var found := _find_tree_item_by_path(trigger_item, sub_parts[1])
+				if found:
+					found.select(0)
+					_on_item_selected()
+					return
+
+
+## 递归查找 TreeItem 匹配路径
+func _find_tree_item_by_path(parent: TreeItem, path: String) -> TreeItem:
+	var segments := path.split("/")
+	if segments.size() == 0:
+		return null
+	var current: TreeItem = parent
+	for segment in segments:
+		if segment.is_empty():
+			continue
+		var found: TreeItem = null
+		for child in current.get_children():
+			if child.get_text(0) == segment:
+				found = child
+				break
+		if found == null:
+			return null
+		current = found
+	return current
+
+
+## 双击条目 → Inspector 跳转到对应节点/资源
+func _on_item_activated() -> void:
+	var item := _tree.get_selected()
+	if item == null:
+		return
+	var meta: Dictionary = item.get_metadata(0)
+	match meta.get("type", ""):
+		"trigger":
+			var path: String = meta.get("report", {}).get("trigger_path", "")
+			if not path.is_empty():
+				var node: Node = get_tree().get_node_or_null(NodePath(path))
+				if node:
+					EditorInterface.edit_node(node)
+		"instruction":
+			var inst = meta.get("inst", null)
+			if inst is Resource:
+				EditorInterface.edit_resource(inst)
+		"binding":
+			var binding = meta.get("binding", null)
+			if binding is Resource:
+				EditorInterface.edit_resource(binding)
 
 
 ## 重新扫描当前场景，刷新树和详情

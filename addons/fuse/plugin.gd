@@ -52,6 +52,9 @@ func _enter_tree():
 	# 初始隐藏,用户切换到 Fuse Tab 时 _make_visible(true) 显示
     _make_visible(false)
 
+    # Topology 自动刷新：场景切换时触发（防抖）
+    scene_changed.connect(_on_topology_scene_changed)
+
     print("Fuse Visual Programming 插件已激活")
 
 ## 当插件停用时调用
@@ -59,7 +62,9 @@ func _exit_tree():
     # 逆序清理
     # Stage 5.3: 移除拓扑面板
     if _topology:
-        
+        if scene_changed.is_connected(_on_topology_scene_changed):
+            scene_changed.disconnect(_on_topology_scene_changed)
+
         _topology.queue_free()
         _topology = null
 
@@ -98,6 +103,18 @@ func _has_main_screen() -> bool:
 func _make_visible(visible: bool):
     if _topology:
         _topology.visible = visible
+
+
+## 场景切换 → Topology 自动刷新（防抖）
+func _on_topology_scene_changed(_scene_root: Node) -> void:
+    if _topology:
+        _topology.request_refresh()
+
+
+## 保存场景/资源 → Topology 自动刷新（防抖）
+func _save_external_data() -> void:
+    if _topology:
+        _topology.request_refresh()
 
 ## 配置检查
 func _get_configuration_warnings() -> PackedStringArray:
