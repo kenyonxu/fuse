@@ -187,7 +187,8 @@ func _restore_selection(key: String) -> void:
 	var root := _tree.get_root()
 	if root == null:
 		return
-	for trigger_item in root.get_children():
+	var trigger_item := root.get_first_child()
+	while trigger_item != null:
 		var trigger_name: String = trigger_item.get_metadata(0).get("report", {}).get("trigger_name", "")
 		if type == "trigger" and info == trigger_name:
 			trigger_item.select(0)
@@ -201,6 +202,7 @@ func _restore_selection(key: String) -> void:
 					found.select(0)
 					_on_item_selected()
 					return
+		trigger_item = trigger_item.get_next()
 
 
 ## 递归查找 TreeItem 匹配路径
@@ -213,10 +215,12 @@ func _find_tree_item_by_path(parent: TreeItem, path: String) -> TreeItem:
 		if segment.is_empty():
 			continue
 		var found: TreeItem = null
-		for child in current.get_children():
+		var child := current.get_first_child()
+		while child != null:
 			if child.get_text(0) == segment:
 				found = child
 				break
+			child = child.get_next()
 		if found == null:
 			return null
 		current = found
@@ -233,7 +237,7 @@ func _on_item_activated() -> void:
 		"trigger":
 			var path: String = meta.get("report", {}).get("trigger_path", "")
 			if not path.is_empty():
-				var node: Node = get_tree().get_node_or_null(NodePath(path))
+				var node: Node = get_node_or_null(NodePath(path))
 				if node:
 					EditorInterface.edit_node(node)
 		"instruction":
