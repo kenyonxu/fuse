@@ -259,16 +259,15 @@ func _on_item_activated() -> void:
 	print("[Topo] _on_item_activated: type=", meta.get("type", ""), " text=", item.get_text(0))
 	match meta.get("type", ""):
 		"trigger":
-			var path: String = meta.get("report", {}).get("trigger_path", "")
-			print("[Topo] _on_item_activated: trigger_path=", path)
-			if not path.is_empty():
-				var node: Node = get_tree().root.get_node_or_null(NodePath(path))
+			var trigger_name: String = meta.get("report", {}).get("trigger_name", "")
+			var scene_root := EditorInterface.get_edited_scene_root()
+			print("[Topo] _on_item_activated: trigger_name=", trigger_name, " scene_root=", scene_root)
+			if scene_root and not trigger_name.is_empty():
+				var node: Node = scene_root.find_child(trigger_name, true, false)
 				print("[Topo] _on_item_activated: node=", node)
 				if node:
 					EditorInterface.edit_node(node)
 					print("[Topo] _on_item_activated: edit_node called")
-			else:
-				print("[Topo] _on_item_activated: path empty!")
 		"instruction":
 			var inst = meta.get("inst", null)
 			print("[Topo] _on_item_activated: inst=", inst)
