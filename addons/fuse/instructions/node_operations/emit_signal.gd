@@ -10,14 +10,12 @@ var target_node: NodePath = NodePath(""):
 	set(value):
 		target_node = value
 		_update_resource_name()
-		notify_property_list_changed()
 
 ## 信号名
 var signal_name: String = "":
 	set(value):
 		signal_name = value
 		_update_resource_name()
-		notify_property_list_changed()
 
 ## 信号参数
 var signal_args: Array = []:
