@@ -11,7 +11,7 @@ Topology 注册在编辑器顶部的 "Fuse" Tab，和 2D/3D/Script 并列。界�
 树形视图大概这样：
 
 ```
-Trigger(OnKey)         on_key
+Trigger(OnInputKey)    on_input_key
   ├ SetVariable
   ├ CompareVariable
   └ EmitSignal
