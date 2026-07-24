@@ -1,21 +1,20 @@
-# Graph Report - fuse  (2026-07-07)
+# Graph Report - fuse  (2026-07-24)
 
 ## Corpus Check
-- 117 files · ~217,035 words
+- 180 files · ~318,615 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 24464 nodes · 35827 edges · 1428 communities (1220 shown, 208 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 1758 edges (avg confidence: 0.8)
+- 23528 nodes · 30871 edges · 1447 communities (1242 shown, 205 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b4d828b5`
+- Built from commit: `5cd1be39`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_editor_node.cpp|editor_node.cpp]]
 - [[_COMMUNITY_store.c|store.c]]
 - [[_COMMUNITY_juicy_timeline_canvas.gd|juicy_timeline_canvas.gd]]
 - [[_COMMUNITY_genmidi.c|genmidi.c]]
@@ -836,6 +835,7 @@
 - [[_COMMUNITY_FindBaseControl|FindBaseControl]]
 - [[_COMMUNITY_performance_load_vs_preload.gd|performance_load_vs_preload.gd]]
 - [[_COMMUNITY_verify_icon_system.gd|verify_icon_system.gd]]
+- [[_COMMUNITY_fix_backslashes_in_json|fix_backslashes_in_json]]
 - [[_COMMUNITY_condition_metadata.gd|condition_metadata.gd]]
 - [[_COMMUNITY_event_metadata.gd|event_metadata.gd]]
 - [[_COMMUNITY_juicy_feedback_data.gd|juicy_feedback_data.gd]]
@@ -843,16 +843,30 @@
 - [[_COMMUNITY_animation_track_editor.cpp|animation_track_editor.cpp]]
 - [[_COMMUNITY_editor_data.cpp|editor_data.cpp]]
 - [[_COMMUNITY_commit_action|commit_action]]
+- [[_COMMUNITY_abc.h|abc.h]]
 - [[_COMMUNITY_animation_player_editor_plugin.cpp|animation_player_editor_plugin.cpp]]
+- [[_COMMUNITY_drawtune.h|drawtune.h]]
 - [[_COMMUNITY_yapstree.c|yapstree.c]]
+- [[_COMMUNITY_midicopy.h|midicopy.h]]
 - [[_COMMUNITY_drawtune.c|drawtune.c]]
 - [[_COMMUNITY_get_singleton|get_singleton]]
 - [[_COMMUNITY_toabc.c|toabc.c]]
+- [[_COMMUNITY_queues.h|queues.h]]
 - [[_COMMUNITY_clear|clear]]
+- [[_COMMUNITY_editor_undo_redo_manager.h|editor_undo_redo_manager.h]]
+- [[_COMMUNITY_register_editor_types.h|register_editor_types.h]]
+- [[_COMMUNITY_animation_track_editor_plugins.h|animation_track_editor_plugins.h]]
 - [[_COMMUNITY_get_path|get_path]]
+- [[_COMMUNITY_crack.c|crack.c]]
 - [[_COMMUNITY_abcmatch.c|abcmatch.c]]
+- [[_COMMUNITY_genmidi.h|genmidi.h]]
 - [[_COMMUNITY_一、✅ 已修问题（含附 commit）|一、✅ 已修问题（含附 commit）]]
+- [[_COMMUNITY_midifile.h|midifile.h]]
+- [[_COMMUNITY_parseabc.h|parseabc.h]]
+- [[_COMMUNITY_parser2.h|parser2.h]]
 - [[_COMMUNITY_ExecutionContext 分析报告|ExecutionContext 分析报告]]
+- [[_COMMUNITY_sizes.h|sizes.h]]
+- [[_COMMUNITY_structs.h|structs.h]]
 - [[_COMMUNITY_select|select]]
 - [[_COMMUNITY_Fuse 对象池系统开发指南|Fuse 对象池系统开发指南]]
 - [[_COMMUNITY_parseabc.c|parseabc.c]]
@@ -1087,7 +1101,6 @@
 - [[_COMMUNITY_.execute(context, next)|.execute(context, next)]]
 - [[_COMMUNITY__refresh_cache_and_notify|_refresh_cache_and_notify]]
 - [[_COMMUNITY__update_property_type_info|_update_property_type_info]]
-- [[_COMMUNITY_headerprocess|headerprocess]]
 - [[_COMMUNITY_命名规范|命名规范]]
 - [[_COMMUNITY_必需实现的方法|必需实现的方法]]
 - [[_COMMUNITY_创建步骤|创建步骤]]
@@ -1225,6 +1238,7 @@
 - [[_COMMUNITY_execution_completed|execution_completed]]
 - [[_COMMUNITY_.handle_context_event(context, event)|.handle_context_event(context, event)]]
 - [[_COMMUNITY_.apply_parameter_mappings_to_sub_effect(context, sub_context_id)|.apply_parameter_mappings_to_sub_effect(context, sub_context_id)]]
+- [[_COMMUNITY_animation_track_editor.h|animation_track_editor.h]]
 - [[_COMMUNITY_main|main]]
 - [[_COMMUNITY_finishfile|finishfile]]
 - [[_COMMUNITY_图标规范|图标规范]]
@@ -1379,59 +1393,75 @@
 - [[_COMMUNITY__apply_curve_preset_smart(preset)|_apply_curve_preset_smart(preset)]]
 - [[_COMMUNITY_zoom_changed|zoom_changed]]
 - [[_COMMUNITY_static create_curve(preset)|[static] create_curve(preset)]]
+- [[_COMMUNITY_AnimationTreeNodeEditorPlugin|AnimationTreeNodeEditorPlugin]]
+- [[_COMMUNITY_创建步骤|创建步骤]]
+- [[_COMMUNITY_命名规范|命名规范]]
+- [[_COMMUNITY_流程控制类指令|流程控制类指令]]
+- [[_COMMUNITY_场景管理类指令|场景管理类指令]]
+- [[_COMMUNITY_音频控制类指令|音频控制类指令]]
+- [[_COMMUNITY_创建步骤|创建步骤]]
+- [[_COMMUNITY_命名规范|命名规范]]
+- [[_COMMUNITY_必须本地化的内容|必须本地化的内容]]
+- [[_COMMUNITY_步骤 3：修复本地化问题|步骤 3：修复本地化问题]]
+- [[_COMMUNITY_OnAnimationFrameReached -- 动画帧到达事件|OnAnimationFrameReached -- 动画帧到达事件]]
+- [[_COMMUNITY_OnAnimationMarker -- 动画标记事件|OnAnimationMarker -- 动画标记事件]]
+- [[_COMMUNITY_条件评估核心|条件评估核心]]
+- [[_COMMUNITY_动画控制类指令|动画控制类指令]]
+- [[_COMMUNITY_变量操作类指令|变量操作类指令]]
+- [[_COMMUNITY_数学运算类指令|数学运算类指令]]
+- [[_COMMUNITY_static create_global(name, val, )|[static] create_global(name, val, )]]
+- [[_COMMUNITY_1. 类概述和职责|1. 类概述和职责]]
+- [[_COMMUNITY_4.2 冷却检查|4.2 冷却检查]]
+- [[_COMMUNITY_图标规范|图标规范]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `get_singleton()` - 378 edges
-2. `ExecutionContext` - 129 edges
-3. `JuicyTimelineEditor` - 111 edges
-4. `JuicyMiddlewarePipeline` - 100 edges
-5. `VariableContainer` - 98 edges
-6. `RunTargetNodeFunction` - 93 edges
-7. `BaseCondition` - 92 edges
-8. `JuicyPropertyTrack` - 92 edges
-9. `ActionRunner` - 87 edges
-10. `BaseInstruction` - 87 edges
+1. `ExecutionContext` - 129 edges
+2. `JuicyTimelineEditor` - 111 edges
+3. `JuicyMiddlewarePipeline` - 100 edges
+4. `VariableContainer` - 98 edges
+5. `RunTargetNodeFunction` - 93 edges
+6. `BaseCondition` - 92 edges
+7. `JuicyPropertyTrack` - 92 edges
+8. `ActionRunner` - 87 edges
+9. `BaseInstruction` - 87 edges
+10. `BaseVariable` - 87 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `remove_scene()` --calls--> `has_history()`  [INFERRED]
-  E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_data.cpp → E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_undo_redo_manager.cpp
-- `script_class_is_parent()` --calls--> `popup_quick_open()`  [INFERRED]
-  E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_data.cpp → E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_interface.cpp
-- `script_class_save_global_classes()` --calls--> `get_singleton()`  [INFERRED]
-  E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_data.cpp → E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_undo_redo_manager.cpp
-- `popup_dialog()` --calls--> `_palette_quick_open_dialog()`  [INFERRED]
-  E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_interface.cpp → E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_node.cpp
-- `popup_dialog()` --calls--> `_tool_menu_option()`  [INFERRED]
-  E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_interface.cpp → E:/Godot/GodotProjects/project-juicy-godot/godot_src/editor/editor_node.cpp
+- `_enter_tree()` --calls--> `_initialize_icon_manager()`  [EXTRACTED]
+  E:/Godot/GodotProjects/project-juicy-godot/addons/juicy_mixer/plugin.gd → E:/Godot/GodotProjects/project-juicy-godot/addons/fuse/plugin.gd
+- `_enter_tree()` --calls--> `_initialize_localization()`  [EXTRACTED]
+  E:/Godot/GodotProjects/project-juicy-godot/addons/juicy_mixer/plugin.gd → E:/Godot/GodotProjects/project-juicy-godot/addons/fuse/plugin.gd
+- `_enter_tree()` --calls--> `_register_context_menu_plugin()`  [EXTRACTED]
+  E:/Godot/GodotProjects/project-juicy-godot/addons/juicy_mixer/plugin.gd → E:/Godot/GodotProjects/project-juicy-godot/addons/fuse/plugin.gd
+- `_enter_tree()` --calls--> `_register_event_bus()`  [EXTRACTED]
+  E:/Godot/GodotProjects/project-juicy-godot/addons/juicy_mixer/plugin.gd → E:/Godot/GodotProjects/project-juicy-godot/addons/fuse/plugin.gd
+- `_enter_tree()` --calls--> `_register_reflection_cache_cleanup()`  [EXTRACTED]
+  E:/Godot/GodotProjects/project-juicy-godot/addons/juicy_mixer/plugin.gd → E:/Godot/GodotProjects/project-juicy-godot/addons/fuse/plugin.gd
 
 ## Import Cycles
 - None detected.
 
-## Communities (1428 total, 208 thin omitted)
-
-### Community 0 - "editor_node.cpp"
-Cohesion: 0.01
-Nodes (146): get_key_height(), get_minimum_size(), remove_plugin(), get_extension_editor_plugin(), get_plugin_window_layout(), has_extension_editor_plugin(), is_scene_changed(), set_plugin_window_layout() (+138 more)
+## Communities (1447 total, 205 thin omitted)
 
 ### Community 1 - "store.c"
 Cohesion: 0.04
-Nodes (122): init_drum_map(), print_voicecodes(), readaln(), add_missing_repeats(), addchordname(), addfeature(), altermap(), append_words() (+114 more)
+Nodes (48): 1. 始终生成双格式, 2. 变量声明保持最新, 3. NodePath 使用相对路径, 4. 新指令遵循变量属性命名约定, 5. 版本字段语义化, API, FusePreset 资源定义, .json 格式（跨项目/版本控制） (+40 more)
 
 ### Community 2 - "juicy_timeline_canvas.gd"
 Cohesion: 0.03
 Nodes (66): batch_drag_enabled, bg_color, clip_drag_mode, clip_drag_start_data, _create_diamond_icon(size, color), current_timeline, drag_mode, drag_start_pos (+58 more)
 
 ### Community 3 - "genmidi.c"
-Cohesion: 0.06
-Nodes (77): addunits(), apply_velocity_increment_for_one_note(), articulated_stress_factors(), calculate_stress_parameters(), checkbar(), checksyllables(), configure_gchord(), delay() (+69 more)
+Cohesion: 0.04
+Nodes (47): 1. 缓存单例引用, 2. 幂等初始化, 3. 关闭 auto_save_on_change, 4. 分层选择, 5. 多线程只用 _thread_safe 系列, API（命名与 Assistant 对齐）, CRUD API, GlobalVariableAssistant（场景树助手） (+39 more)
 
 ### Community 4 - "ExecutionContext"
 Cohesion: 0.03
 Nodes (45): ExecutionContext, action_runner, _break_loop_flag, _cache_access_order, _cache_max_size, _continue_loop_flag, .create_with_params(, , , ), custom_data (+37 more)
 
 ### Community 5 - "EventEvaluator"
-Cohesion: 0.14
-Nodes (9): EventEvaluation, EventEvaluator, main(), 评估共享风险  		Args: 			event_name: Event 类名 			content: Event 文件内容  		Returns: 			"h, 应用决策矩阵  		Args: 			has_state: 是否有状态变量 			sharing_risk: 共享风险等级 ("high", "medium",, 评估所有 Event  		Args: 			filter_priority: 可选，按优先级过滤 ("high", "medium", "low", "non, test_evaluation_counts(), test_high_priority_events() (+1 more)
+Cohesion: 0.05
+Nodes (44): 1. 动画持续时间选择, 2. 缓动和过渡搭配, 3. 性能优化, 4. 代码组织, 5. 调试技巧, Q: 为什么动画没有播放？, Q: 可以同时播放多个动画吗？, Q: 如何动画化自定义属性？ (+36 more)
 
 ### Community 6 - "JuicyMiddlewarePipeline"
 Cohesion: 0.04
@@ -1443,7 +1473,7 @@ Nodes (47): JuicyTimelineEditor, _batch_drag_button, _cleanup_dialog(dialog), co
 
 ### Community 8 - "midi2abc.c"
 Cohesion: 0.05
-Nodes (39): addnote(), addtext(), close_note(), count_splits(), event_error(), label_split(), listnotes(), mftxt_chanpressure() (+31 more)
+Nodes (43): BreakpointInstruction -- 断点调试, DebugVisualizer -- 调试可视化面板, ExecutionTracker -- 执行追踪器, Print -- 打印消息, PrintVariableValue -- 打印变量值, 作用域说明, 使用场景, 使用场景 (+35 more)
 
 ### Community 9 - "VariableContainer"
 Cohesion: 0.04
@@ -1462,8 +1492,8 @@ Cohesion: 0.05
 Nodes (30): BaseInstruction, completion_timing, error_message, execution_mode, _execution_start_time, execution_status, _fuse_error, _fuse_localization_class (+22 more)
 
 ### Community 13 - "matchsup.c"
-Cohesion: 0.06
-Nodes (3): dumpfeat(), event_field(), free_feature_representation()
+Cohesion: 0.05
+Nodes (40): 1. 指令选择器（Instruction Selector）, 2. Inspector 面板（Array[BaseInstruction]）, Fuse 图标管理器使用指南, Q: builtin_icon 和 custom_icon 应该选择哪个？, Q: 可以使用自定义图标文件吗？, Q: 图标名称拼写错误会怎样？, Q: 图标库可以共享给其他项目吗？, Q: 如何将自定义图标添加到图标库？ (+32 more)
 
 ### Community 14 - "ActionRunner"
 Cohesion: 0.05
@@ -1475,7 +1505,7 @@ Nodes (32): BaseCondition, cache_context_changes, _cache_context_hash, cache_dur
 
 ### Community 16 - "BaseVariable"
 Cohesion: 0.06
-Nodes (28): BaseVariable, access_count, auto_create, [static] create_global(name, val, ), [static] create_player_health(), [static] create_player_level(), [static] create_player_score(), creation_time (+20 more)
+Nodes (26): BaseVariable, access_count, auto_create, _create_fuse_error(message, , ), creation_time, DEFAULT_VALUE, description, _fuse_error (+18 more)
 
 ### Community 17 - "JuicyCurveFactory"
 Cohesion: 0.09
@@ -1487,7 +1517,7 @@ Nodes (21): CheckVariable, auto_convert_types, case_sensitive, check_with_anothe
 
 ### Community 19 - "GlobalVariableAssistant"
 Cohesion: 0.06
-Nodes (60): GlobalVariableAssistant, .add_global_variable(name, variable), auto_load_on_ready, auto_register, auto_save, auto_save_delay, auto_save_on_change, _cleanup_non_persistent_variables() (+52 more)
+Nodes (59): GlobalVariableAssistant, .add_global_variable(name, variable), auto_load_on_ready, auto_register, auto_save, auto_save_delay, auto_save_on_change, _cleanup_non_persistent_variables() (+51 more)
 
 ### Community 20 - "WaitUntil"
 Cohesion: 0.06
@@ -1502,8 +1532,8 @@ Cohesion: 0.04
 Nodes (30): JuicyTimelineResource, .add_parameter_preset(name, values), .apply_parameter_preset(name, context), auto_calculate_duration, description, _event_tracks, _feedback_tracks, .get_data_at(index) (+22 more)
 
 ### Community 23 - "midicopy.c"
-Cohesion: 0.09
-Nodes (66): alloc_trackdata(), append_rest_of_track(), append_to_string(), badbyte(), biggermsg(), chanmessage(), close_note(), copy_chanpressure() (+58 more)
+Cohesion: 0.05
+Nodes (39): FuseRuntimeBridge（TCP 桥）, GlobalVariableService, HistoryGraph 组件, InstructionAnalyzer（静态声明）, `_refresh()` 执行流程, Stage 7a — 双击编辑, Stage 7b — 历史折线图, Stage 7c — 静态声明分区 (+31 more)
 
 ### Community 24 - "MethodSelectorDialog"
 Cohesion: 0.06
@@ -1530,8 +1560,8 @@ Cohesion: 0.04
 Nodes (39): JuicyContext, context_id, context_type, creation_time, current_time, driver_cache, duration, _dynamic_parameters (+31 more)
 
 ### Community 30 - "shake_properties"
-Cohesion: 0.15
-Nodes (17): shake_properties, custom, global_rotation, offset, pivot_offset, position, spring_properties, global_position (+9 more)
+Cohesion: 0.05
+Nodes (37): 1. 优先使用 LOCAL, 2. 变量命名规范, 3. 验证前提条件, 4. 统一的显示格式, Fuse 变量使用指南, GLOBAL 变量, LOCAL 变量, SCOPE 变量 (+29 more)
 
 ### Community 31 - "CheckDistance"
 Cohesion: 0.06
@@ -1683,7 +1713,7 @@ Nodes (39): CheckIsChildOf, child_custom_scope_id, child_node, child_node_source
 
 ### Community 68 - "GlobalVariableManager"
 Cohesion: 0.06
-Nodes (36): GlobalVariableManager, .add_variable(name, variable), .get_variable(name), .get_variable_thread_safe(name), .get_variables_batch_thread_safe(names), .has_variable(name), .has_variable_thread_safe(name), _instance (+28 more)
+Nodes (35): GlobalVariableManager, .add_variable(name, variable), .get_variable(name), .get_variable_thread_safe(name), .get_variables_batch_thread_safe(names), .has_variable(name), .has_variable_thread_safe(name), _instance (+27 more)
 
 ### Community 69 - "Runner"
 Cohesion: 0.06
@@ -1814,8 +1844,8 @@ Cohesion: 0.06
 Nodes (35): RunRunner, _cleanup_resources(), _connect_runner_signals(), _connected_runner, context_node_path, custom_scope_id, _disconnect_runner_signals(), .execute(context) (+27 more)
 
 ### Community 101 - "Lerp"
-Cohesion: 0.05
-Nodes (33): Lerp, custom_scope_id, .execute(context), from_scope, from_source, from_value, from_variable, FromSource (+25 more)
+Cohesion: 0.06
+Nodes (31): Lerp, custom_scope_id, .execute(context), from_scope, from_source, from_value, from_variable, FromSource (+23 more)
 
 ### Community 102 - "JuicyFeedbackResource"
 Cohesion: 0.05
@@ -1879,7 +1909,7 @@ Nodes (26): JuicyPoolItem, average_use_duration, [static] compare_by_efficiency(
 
 ### Community 117 - "animated_sprite2d_play_with_variable.gd"
 Cohesion: 0.06
-Nodes (31): custom_speed_custom_scope_id, custom_speed_scope, custom_speed_scope_source, custom_speed_source, custom_speed_target_node_path, custom_speed_value, custom_speed_variable, CustomSpeedSource (+23 more)
+Nodes (29): custom_speed_custom_scope_id, custom_speed_scope, custom_speed_scope_source, custom_speed_source, custom_speed_target_node_path, custom_speed_value, custom_speed_variable, CustomSpeedSource (+21 more)
 
 ### Community 118 - "CheckDictContainsKey"
 Cohesion: 0.06
@@ -1983,7 +2013,7 @@ Nodes (27): CheckNodeInGroup, _evaluate_condition(context), _get_node_by_path(co
 
 ### Community 143 - "ScopeVariableContainer"
 Cohesion: 0.07
-Nodes (27): ScopeVariableContainer, _child_scopes, _exit_tree(), .get_variable(name, ), .has_variable(name), inheritance_mode, InheritanceMode, NONE (+19 more)
+Nodes (26): ScopeVariableContainer, _child_scopes, _exit_tree(), .get_variable(name, ), .has_variable(name), inheritance_mode, InheritanceMode, NONE (+18 more)
 
 ### Community 144 - "OnHealthChanged"
 Cohesion: 0.08
@@ -2106,8 +2136,8 @@ Cohesion: 0.10
 Nodes (29): MiddlewareOptimizationValidation, _create_test_camera(), _create_test_context(index), _create_test_nodes(), _create_test_resources(), _event_middleware, _execute_middleware_chain(context), _generate_validation_report() (+21 more)
 
 ### Community 174 - "editor_log.cpp"
-Cohesion: 0.13
-Nodes (25): _add_log_line(), add_message(), _check_display_message(), clear(), _clear_request(), _copy_request(), _editor_settings_changed(), EditorLog() (+17 more)
+Cohesion: 0.06
+Nodes (36): 10. 修改文件清单, 1. 动机, 2.1 当前 Banner 布局, 2.2 当前问题标注路径, 2.3 当前缺口, 2. 现状分析, 3.1 总览, 3.2 过滤控件 UI (+28 more)
 
 ### Community 175 - "FuseError"
 Cohesion: 0.08
@@ -2190,8 +2220,8 @@ Cohesion: 0.09
 Nodes (25): MiddlewareEntry, _available_middlewares, [static] clear_scan_cache(), config_data, _config_schema, _create_temp_instance(), _default_config, enabled (+17 more)
 
 ### Community 195 - "printlib"
-Cohesion: 0.24
-Nodes (15): printlib(), ps_header(), section1(), section10(), section11(), section12(), section13(), section2() (+7 more)
+Cohesion: 0.06
+Nodes (35): CloneNode, EmitSignal, EnableDisableNode, FindNode, GetAllChildren, GetAllChildrenPosition, GetChildByIndex, GetChildCount (+27 more)
 
 ### Community 196 - "MiddlewarePerformanceBenchmark"
 Cohesion: 0.10
@@ -2582,8 +2612,8 @@ Cohesion: 0.18
 Nodes (15): .assert_almost_equals(expected, actual, , ), .assert_equals(, , ), .assert_false(condition, ), .assert_not_null(, ), .assert_true(condition, ), _create_mock_property_buffer(), _ready(), _test_buffer (+7 more)
 
 ### Community 293 - "ScopeVariableManager"
-Cohesion: 0.10
-Nodes (20): ScopeVariableManager, .find_nearest_scope(node), .find_scope_by_node_path(node_path, context), .get_scope_by_id(scope_id), .get_scope_node_chain(node), _instance, MAX_SCOPE_SEARCH_DEPTH, .register_scope(container) (+12 more)
+Cohesion: 0.11
+Nodes (19): ScopeVariableManager, .find_nearest_scope(node), .find_scope_by_node_path(node_path, context), .get_scope_by_id(scope_id), .get_scope_node_chain(node), _instance, MAX_SCOPE_SEARCH_DEPTH, .register_scope(container) (+11 more)
 
 ### Community 294 - "OnAnimationStarted"
 Cohesion: 0.11
@@ -3925,6 +3955,10 @@ Nodes (3): AudioBindingClass, AudioEventResourceClass, _ready()
 Cohesion: 0.48
 Nodes (6): _create_test_event(event_name), _print_all_bindings(player), _ready(), _run_automated_tests(), _setup_test_scene(), TestParentNode
 
+### Community 702 - "editor_builders.py"
+Cohesion: 0.06
+Nodes (35): 1. 启用对象池, 2. 游戏初始化时预热池（推荐）, 3. 使用方式, API 参考, Fuse 对象池系统使用指南, FusePoolManager, FuseRecycleTimer 内部机制, InstantiateScene 指令配置 (+27 more)
+
 ### Community 704 - "instructions_array_inspector_plugin.gd"
 Cohesion: 0.40
 Nodes (5): _can_handle(object), _ensure_localization_loaded(), _fuse_localization_class, _open_selector(object, property_name), _parse_property(object, type, name, hint_type, hint_string, usage_flags, wide)
@@ -4017,6 +4051,10 @@ Nodes (3): InstructionSearch, [static] _match_keywords(keywords, query), [static
 Cohesion: 0.67
 Nodes (3): debug_mode, _physics_process(), _print_debug_info()
 
+### Community 816 - "extract_class_name"
+Cohesion: 0.06
+Nodes (34): API 文档, Fuse Event RuntimeInstance 迁移技能（自声明状态模式）, Q1: 迁移后 Event 不触发, Q2: 状态没有正确隔离, Q3: 信号上下文（context）问题, Q4: Timer 或其他节点对象的迁移, Q5: 性能影响, 参考资源 (+26 more)
+
 ### Community 818 - "test_localized_logging.gd"
 Cohesion: 0.83
 Nodes (3): _ready(), _test_basic_translation(), _test_localized_logging()
@@ -4025,77 +4063,137 @@ Nodes (3): _ready(), _test_basic_translation(), _test_localized_logging()
 Cohesion: 0.67
 Nodes (3): _ready(), TestNode, .type_to_string(type)
 
+### Community 836 - "fix_backslashes_in_json"
+Cohesion: 0.06
+Nodes (33): ExpressionCondition, MathExpression, move_toward_val vs move_toward, Scope 来源配置, StringExpression, 三元运算, 三元运算, 作用域输出配置 (+25 more)
+
 ### Community 864 - "animation_track_editor.cpp"
-Cohesion: 0.02
-Nodes (152): _bezier_h_to_pixel(), _draw_line_clipped(), _draw_track(), _notification(), _pan_callback(), _play_position_draw(), add_track_edit_plugin(), _animation_changed() (+144 more)
+Cohesion: 0.06
+Nodes (32): 10. 修改文件清单, 1. 动机, 2.1 当前 `_extract_signals` 的作用域, 2.2 `EmitSignal` 指令的典型属性布局, 2.3 引用检测三件套现状, 2.4 当前缺口, 2. 现状分析, 3.1 总览 (+24 more)
 
 ### Community 865 - "editor_data.cpp"
-Cohesion: 0.03
-Nodes (128): get_state(), add_edited_scene(), add_node(), apply_changes_in_editors(), check_and_update_scene(), cleanup_history(), clear(), clear_edited_scenes() (+120 more)
+Cohesion: 0.06
+Nodes (32): 1. 伤害计算, 2. 随机掉落位置, 3. 平滑相机跟随, 3D 平面类型, 4. 计算敌人与玩家的距离, ClampValue, GetRandomPointInRange, Lerp (+24 more)
 
 ### Community 866 - "commit_action"
-Cohesion: 0.03
-Nodes (139): _change_selected_keys_handle_mode(), copy_selected_keys(), delete_selection(), duplicate_selected_keys(), get_bezier_key_value(), gui_input(), _menu_selected(), paste_keys() (+131 more)
+Cohesion: 0.06
+Nodes (31): 1. 关卡切换流程, 2. 死亡重试, 3. 敌人生成器, 4. UI 面板按需加载, 5. 场景路径用于存档, AddSceneAsChild, ChangeScene, GetScenePath (+23 more)
+
+### Community 871 - "abc.h"
+Cohesion: 0.07
+Nodes (30): 10. 修改文件清单, 1. 动机, 2.1 已有提取能力, 2.2 已有解析规则, 2.3 当前缺口, 2. 现状分析, 3.1 总览, 3.2 签名变更 (+22 more)
 
 ### Community 872 - "animation_player_editor_plugin.cpp"
-Cohesion: 0.04
-Nodes (99): set_animation_mixer(), _allocate_onion_layers(), _animation_clone(), _animation_duplicate(), _animation_edit(), _animation_key_editor_seek(), _animation_libraries_updated(), _animation_name_edited() (+91 more)
+Cohesion: 0.07
+Nodes (30): 10. 修改文件清单, 1. 动机, 2.1 emoji 使用全景, 2.2 当前图标系统, 2.3 Godot 主题图标 API, 2. 现状分析, 3.1 总览, 3.2 `_build_tree_items` 中指令节点严重度图标 (+22 more)
+
+### Community 873 - "drawtune.h"
+Cohesion: 0.07
+Nodes (29): 4.1 E1 — NodePath 解析失败检测, 4.2 E4 — Godot 主题图标替代 emoji, 4.3 E3 — 跨 Trigger 变量关联标注, 4.4 E2 — 信号引用检测, 4.5 E6 — 问题过滤, 4.6 E5 — Inspector 问题计数集成, 4. 每项详细计划, E3 与 E1/E4 的合并说明 (+21 more)
 
 ### Community 874 - "yapstree.c"
-Cohesion: 0.05
-Nodes (102): lookup_abbreviation(), parsemusic(), parsenote(), event_gchord(), event_info(), event_instruction(), event_reserved(), event_slur() (+94 more)
+Cohesion: 0.07
+Nodes (28): 1. 背景与动机, 2. 方案：get_variable_modes() 声明, 3. 误判清单 + 覆盖计划, 4.1 BaseInstruction / BaseCondition API, 4.2 _extract_variables hook, 4.3 组件 override 示例, 4. 实现规格, 5. 验收标准 (+20 more)
+
+### Community 875 - "midicopy.h"
+Cohesion: 0.07
+Nodes (29): Fuse Topology 主屏, GraphEdit（降级保留）, Inspector 属性识别流程, Inspector 插件, Inspector 数据流卡片, Scope 变量编辑器, 典型工作流, 功能 (+21 more)
 
 ### Community 876 - "drawtune.c"
-Cohesion: 0.05
-Nodes (99): _animation_update_key_frame(), showfeature(), showline(), showtune(), acc_downsize(), acc_upsize(), beamline(), blockline() (+91 more)
+Cohesion: 0.07
+Nodes (29): GlobalVariableAssistant, GlobalVariableManager 使用, GlobalVariableResource, LoadGlobalVariables（读档）, Manager 级方法, SaveGlobalVariables（存档）, 保存策略, 信号 (+21 more)
 
 ### Community 877 - "get_singleton"
-Cohesion: 0.04
-Nodes (90): cleanup(), _calculate_aabb_for_scene(), _call_dialog_callback(), close_scene(), _create_dialog_item_selected(), edit_node(), edit_resource(), edit_script() (+82 more)
+Cohesion: 0.07
+Nodes (28): 10. 修改文件清单, 1. 动机, 2.1 当前数据流卡片实现, 2.2 `analyze_trigger` 的当前输出, 2.3 当前 `analyze_problems` 调用路径, 2.4 当前缺口, 2. 现状分析, 3.1 总览 (+20 more)
 
 ### Community 878 - "toabc.c"
-Cohesion: 0.05
-Nodes (86): parseron(), accidental_to_code(), addunits(), appendfield(), close_newabc(), complete_all(), complete_bars(), compute_keysignature() (+78 more)
+Cohesion: 0.07
+Nodes (28): 10. 总结, 1. 总览, 2. 依赖关系图, 3. 三波并行方案, 5. 实施顺序建议, 6. 关键接口变更一览, 7. 并行开发 — 分支管理方案, 8. 风险与对策 (+20 more)
+
+### Community 879 - "queues.h"
+Cohesion: 0.07
+Nodes (27): 10. 最后一步：skill-creator 创建 skill（阶段 2，本 spec 后）, 1. 背景与动机 + 阶段划分, 2. MVP 范围（preset 层级）, 3.1 参数 schema 提取（核心缺口）, 3.2 枚举值 dump, 3.3 dump 工具, 3.4 样例参考, 3. 准备工作（基础设施，阶段 1 实现） (+19 more)
 
 ### Community 880 - "clear"
-Cohesion: 0.05
-Nodes (58): AnimationNodeBlendSpace1DEditor(), _blend_space_draw(), _blend_space_gui_input(), can_edit(), edit(), _erase_selected(), get_blend_position_path(), _notification() (+50 more)
+Cohesion: 0.07
+Nodes (28): gameplay（游戏玩法）, .json 格式, NodePath 映射机制, NodePath 规范, PresetRegistry 注册表, .tres 格式, ui（用户界面）, 变量依赖检查 (+20 more)
+
+### Community 882 - "editor_undo_redo_manager.h"
+Cohesion: 0.07
+Nodes (27): CheckDistance, CheckFrameRate, CheckHealthValue, CheckIsOnScreen, CheckPathAvailable, CheckPlatform, CheckPreloadStatus, CheckScopeVariable (+19 more)
+
+### Community 883 - "register_editor_types.h"
+Cohesion: 0.08
+Nodes (25): tween, UI 控制, 事件, 作用域变量, 动画, 变换操作, 变量, 场景管理 (+17 more)
+
+### Community 884 - "animation_track_editor_plugins.h"
+Cohesion: 0.08
+Nodes (24): GET 属性指令, SET 属性指令, 使用变量, 使用示例, 各类指令详解, 存放位置, 对话框界面, 属性标签页 (+16 more)
 
 ### Community 885 - "get_path"
-Cohesion: 0.05
-Nodes (58): _add_library(), _add_library_validate(), AnimationLibraryEditor(), _get_mixer_signature(), _load_config_libs_folding(), _load_mixer_libs_folding(), _save_mixer_lib_folding(), shortcut_input() (+50 more)
+Cohesion: 0.08
+Nodes (24): 1. 事件（Events）, 2. 指令（Instructions）, Fuse 移动系统用户指南, MoveCharacterBody2DComposite, OnInputActionComposite, Q: 如何使用手柄控制？, Q: 如何添加对角线移动？, Q: 移动速度太慢/太快？ (+16 more)
+
+### Community 886 - "crack.c"
+Cohesion: 0.09
+Nodes (23): 10. 修改文件清单, 1. 动机, 2.1 当前 cross_references 实现, 2.2 当前 `_refresh_cross_references` 展示, 2.3 当前缺口, 2. 现状分析, 4. 接口契约, 5.1 单元测试（`test_build_topology.gd` 新增） (+15 more)
 
 ### Community 887 - "abcmatch.c"
-Cohesion: 0.08
-Nodes (55): analyze_abc_file(), compute_note_histograms(), count_matched_template_bars(), count_matched_tune_bars(), count_matching_template_bars(), difference_midipitch(), event_init(), find_and_report_matching_bars() (+47 more)
+Cohesion: 0.09
+Nodes (22): 1. 创建 RuntimeInstance 类（可选方案）, 2. 修改 Event 类（使用通用 RuntimeEventInstance）, 3. 测试迁移结果, 4. 更新文档, Event RuntimeInstance 迁移快速指南, Q1: 如何查看哪些 Event 需要迁移？, Q2: 迁移后性能会受影响吗？, Q3: 所有 Event 都需要迁移吗？ (+14 more)
+
+### Community 888 - "genmidi.h"
+Cohesion: 0.10
+Nodes (20): Fuse 知乎文章写作规格文档, 一、总体写作策略, 三、单篇质量检查清单（11 条）, 二、15 篇逐篇写作规格, 四、发布节奏建议, 第 10 篇 · 条件系统, 第 11 篇 · 场景与节点管理, 第 12 篇 · 零代码扩展：指令生成器（护城河） (+12 more)
 
 ### Community 889 - "一、✅ 已修问题（含附 commit）"
 Cohesion: 0.04
 Nodes (47): B11. ExecutionContext duplicate 不复制 _diagnostics — 低 ✅, B12. BaseTrigger PER_OBJECT_COOLDOWN 无自动清理 — 低 ✅, B13. BaseTrigger 冷却 info 日志噪声 — 低 ✅, B14. BaseTrigger trigger_manually 默认空实现 — 低 ✅, B15. BaseTrigger _create_execution_context 类型注解弱 — 低 ✅, B16. ParallelConditionEvaluator 上下文快照无回写 — 中 ✅, B18. FuseObjectPool 线性查找 — 低 ⏸, B19.（新发现）ExecutionContext _init 缩进 → 仅 target 时 VC nil — 中 ✅ (+39 more)
 
+### Community 890 - "midifile.h"
+Cohesion: 0.10
+Nodes (21): scope, UI 控制, 动画, 变量, 变量操作, 场景管理, 复合逻辑, 字典 (+13 more)
+
+### Community 891 - "parseabc.h"
+Cohesion: 0.10
+Nodes (20): CheckChildCount, CheckDirection, CheckFacingDirection, CheckGroupCount, CheckIsChildOf, CheckNodeActive, CheckNodeExists, CheckNodeInGroup (+12 more)
+
+### Community 892 - "parser2.h"
+Cohesion: 0.10
+Nodes (20): 1. Local（本地变量）, 2. Scope（作用域变量）, 3. Global（全局变量）, 7a — 双击编辑, 7b — 折线图, 7c — 静态声明, 7d — 快照补全, Stage 7 功能 (+12 more)
+
 ### Community 893 - "ExecutionContext 分析报告"
 Cohesion: 0.04
 Nodes (48): 10. ActionRunner 集成, 11. WeakRef 节点引用管理, 12. 复制与清理, 13. 调试信息, 14. 自定义数据, 15. 兼容性设计, 16. 总体评估, 1. 类概述和职责 (+40 more)
 
+### Community 894 - "sizes.h"
+Cohesion: 0.10
+Nodes (19): After: 新架构（状态隔离）, Before: 旧架构（状态共享问题）, RuntimeInstance 架构完整迁移指南, 向后兼容性, 完整示例, 常见模式, 性能影响, 概述 (+11 more)
+
+### Community 895 - "structs.h"
+Cohesion: 0.11
+Nodes (18): Fuse 知乎预热文章清单, 写作建议, 整体节奏, 第 10 篇 · 条件系统（满足什么才做）, 第 11 篇 · 场景与节点管理, 第 12 篇 · 零代码扩展：指令生成器, 第 13 篇 · 调试体系（断点 + 追踪 + 变量监视器）, 第 14 篇 · 编辑器深度集成（Topology + 静态分析） (+10 more)
+
 ### Community 896 - "select"
-Cohesion: 0.07
-Nodes (44): _node_selected(), _open_set_custom_timeline_from_marker_dialog(), edit(), handles(), make_visible(), add_object(), get_handling_main_editor(), get_handling_sub_editors() (+36 more)
+Cohesion: 0.11
+Nodes (19): Event Bus 用户指南, OnReceiveEvent 事件, SendEvent 指令, 与其他通信方式对比, 事件参数访问, 事件命名规范, 使用示例, 参数设计 (+11 more)
 
 ### Community 897 - "Fuse 对象池系统开发指南"
 Cohesion: 0.04
 Nodes (46): 1. 根据实例类型选择初始池大小, 2. 在加载阶段预热, 3. 保持场景树中的 Trigger 清洁, 4. 利用 UID 路径, Fuse 对象池系统开发指南, Fuse 组件递归重置, FuseObjectPool API, FusePoolItem API (+38 more)
 
 ### Community 898 - "parseabc.c"
-Cohesion: 0.10
-Nodes (44): casecmp(), stringcmp(), append_fieldcmd(), checkend(), init_voicecode(), interpret_voicestring(), isclef(), ismicrotone() (+36 more)
+Cohesion: 0.11
+Nodes (19): Fuse 指令分类参考, UI 操作类指令, 常见模式, 常见模式, 常见模式, 常见模式, 物理控制类指令, 特点 (+11 more)
 
 ### Community 899 - "自定义 Event 创建最佳实践指南"
 Cohesion: 0.04
 Nodes (44): 1. 单元测试模式, 1. 延迟触发模式, 1. 必须实现的抽象方法, 1. 本地化类缓存（内置优化）, 1. 统一错误处理, 1. 节点引用管理, 2. 信号连接管理, 2. 分级日志记录 (+36 more)
 
 ### Community 900 - "Tween 补间动画使用指南"
-Cohesion: 0.05
-Nodes (44): 1. 动画持续时间选择, 2. 缓动和过渡搭配, 3. 性能优化, 4. 代码组织, 5. 调试技巧, Q: 为什么动画没有播放？, Q: 可以同时播放多个动画吗？, Q: 如何动画化自定义属性？ (+36 more)
+Cohesion: 0.11
+Nodes (18): MultiEventTrigger：多事件合并触发器, Runner：轻量信号绑定与代码调用, Trigger：带事件系统的单触发器, 三者总览, 不适用场景, 不适用场景, 不适用场景, 决策流程 (+10 more)
 
 ### Community 901 - "GDScript Coding Patterns"
 Cohesion: 0.05
@@ -4123,15 +4221,15 @@ Nodes (41): 1. event_sent 信号, 1. 事件命名规范, 2. 事件历史, 2. 参
 
 ### Community 907 - "编辑器工具模块"
 Cohesion: 0.05
-Nodes (41): 1. Inspector 驱动而非独立编辑器, 1. 指令选择器 (Instruction Selector), 2. 组件选择器 (Component Selector), 2. 装饰器模式保留原生编辑器, 3. 按键选择器 (Input Key Selector), 3. 统一注册器 + 类型专用外观, 4. 调试工具 (Debugging Tools), 4. 静态方法为主的服务类 (+33 more)
+Nodes (39): 1. Inspector 驱动而非独立编辑器, 1. 指令选择器 (Instruction Selector), 2. 组件选择器 (Component Selector), 2. 装饰器模式保留原生编辑器, 3. 按键选择器 (Input Key Selector), 3. 统一注册器 + 类型专用外观, 4. 调试工具 (Debugging Tools), 4. 静态方法为主的服务类 (+31 more)
 
 ### Community 908 - "坐标系统指南 - Global 与 Local"
-Cohesion: 0.05
-Nodes (40): 1. 明确语义, 2. 节点层级设计, 3. 调试技巧, 4. 性能考虑, Child 节点的坐标, 🔧 Fuse 指令中的坐标空间选择, Fuse 相关文档, 🌍 Global（全局）坐标系统 (+32 more)
+Cohesion: 0.11
+Nodes (18): Lifecycle 事件指南, OnEnterTree, OnExitTree, OnInterval, OnIntervalWithVariable, OnPhysicsProcess, OnProcess, OnReady (+10 more)
 
 ### Community 909 - "Fuse 图标管理器使用指南"
-Cohesion: 0.05
-Nodes (40): 1. 指令选择器（Instruction Selector）, 2. Inspector 面板（Array[BaseInstruction]）, Fuse 图标管理器使用指南, Q: builtin_icon 和 custom_icon 应该选择哪个？, Q: 可以使用自定义图标文件吗？, Q: 图标名称拼写错误会怎样？, Q: 图标库可以共享给其他项目吗？, Q: 如何将自定义图标添加到图标库？ (+32 more)
+Cohesion: 0.11
+Nodes (18): CheckInAir, CheckIsFalling, CheckOnFloor, CheckOnWall, CheckOverlapArea, CheckSlope, CheckVelocity, Physics 条件指南 (+10 more)
 
 ### Community 910 - "Fuse 图标系统开发指南"
 Cohesion: 0.05
@@ -4146,28 +4244,28 @@ Cohesion: 0.05
 Nodes (37): 1.1 设计理念, 1.2 条件分类体系, 1. 条件系统概述, 2.1 基础条件类, 2.2.1 变量比较条件, 2.2.2 变量存在条件, 2.2 变量条件, 2.3.1 节点存在条件 (+29 more)
 
 ### Community 913 - "Fuse 变量使用指南"
-Cohesion: 0.05
-Nodes (37): 1. 优先使用 LOCAL, 2. 变量命名规范, 3. 验证前提条件, 4. 统一的显示格式, Fuse 变量使用指南, GLOBAL 变量, LOCAL 变量, SCOPE 变量 (+29 more)
+Cohesion: 0.11
+Nodes (18): 1. 开始预加载, 2. 检查加载状态, 3. 加载完成后实例化, CheckPreloadStatus, PreloadSceneInstruction, UI 资源预加载, 使用前提, 使用流程 (+10 more)
 
 ### Community 914 - "CreateLocalVariableInstruction 动态 Inspector 插件设计方案"
 Cohesion: 0.05
 Nodes (36): 10.1 单元测试, 10.2 集成测试, 10.3 用户测试, 10. 测试策略, 1.1 目标, 1.2 核心需求, 1. 项目概述, 2.1 插件架构层次 (+28 more)
 
 ### Community 915 - "animation_bezier_editor.cpp"
-Cohesion: 0.07
-Nodes (22): AnimationBezierTrackEdit(), auto_fit_vertically(), _clear_selection(), _clear_selection_for_anim(), _hide_track(), _is_track_curves_displayed(), _is_track_displayed(), _lock_track() (+14 more)
+Cohesion: 0.12
+Nodes (17): 1. 背景与动机, 2. 目标, 3.1 引擎统一 — `InstructionAnalyzer.analyze_problems`, 3.2 Topology 标注集成, 3.3 触发时机, 3.4 数据流, 3.5 移除清单, 3.6 新增测试 (+9 more)
 
 ### Community 916 - "Godot 条件化属性显示实现指南"
 Cohesion: 0.06
 Nodes (36): 1. 基本结构, 1. 多条件判断, 1. 实现要点, 1. 属性没有正确禁用, 2. 代码组织, 2. 关键方法实现, 2. 动态属性提示, 2. 属性状态不一致 (+28 more)
 
 ### Community 917 - "调试系统用户指南"
-Cohesion: 0.06
-Nodes (36): BreakpointInstruction -- 断点调试, DebugVisualizer -- 调试可视化面板, ExecutionTracker -- 执行追踪器, Print -- 打印消息, PrintVariableValue -- 打印变量值, 作用域说明, 使用场景, 使用场景 (+28 more)
+Cohesion: 0.12
+Nodes (17): MultiEventTrigger 使用指南, 与普通 Trigger 的对比, 信号, 冷却模式, 创建 MultiEventTrigger, 动态启用/禁用, 性能优化, 手动触发 (+9 more)
 
 ### Community 918 - "Fuse 对象池系统使用指南"
-Cohesion: 0.06
-Nodes (35): 1. 启用对象池, 2. 游戏初始化时预热池（推荐）, 3. 使用方式, API 参考, Fuse 对象池系统使用指南, FusePoolManager, FuseRecycleTimer 内部机制, InstantiateScene 指令配置 (+27 more)
+Cohesion: 0.12
+Nodes (17): CheckAnyInput, CheckInputDirection, CheckInputHeld, CheckInputMagnitude, CheckInputPressed, CheckInputReleased, Input 条件指南, 三态检测 (+9 more)
 
 ### Community 919 - "对象池体系分析报告"
 Cohesion: 0.06
@@ -4190,12 +4288,12 @@ Cohesion: 0.06
 Nodes (33): 1. PropertyInfo 类测试, 2. TypeConverter 类测试, 3. PropertyManager 类测试, PropertyInfo 测试用例, PropertyManager 测试用例, TypeConverter 测试用例, 值验证测试, 兼容性检查测试 (+25 more)
 
 ### Community 924 - "midifile.c"
-Cohesion: 0.17
-Nodes (32): badbyte(), biggermsg(), chanmessage(), egetc(), eputc(), metaevent(), mf_write_header_chunk(), mf_write_tempo() (+24 more)
+Cohesion: 0.12
+Nodes (17): 1. 规划指令, 2. 创建代码, 3. 添加本地化, 4. 创建测试, 5. 验证和调试, Fuse 指令生成器, 参考资料详解, 工作流程 (+9 more)
 
 ### Community 925 - "表达式系统使用指南"
-Cohesion: 0.06
-Nodes (33): ExpressionCondition, MathExpression, move_toward_val vs move_toward, Scope 来源配置, StringExpression, 三元运算, 三元运算, 作用域输出配置 (+25 more)
+Cohesion: 0.12
+Nodes (16): Fuse 多线程优化 - 用户指南, 什么时候有用？, 使用方法, 兼容性, 场景加载超时？, 场景预加载, 如何启用, 常见问题 (+8 more)
 
 ### Community 926 - "CreateLocalVariableInstruction 动态 Inspector 插件项目总结"
 Cohesion: 0.06
@@ -4214,16 +4312,16 @@ Cohesion: 0.06
 Nodes (32): 1. 类清单与职责对照表, 2.1 作用域枚举, 2.2 各层存储位置与生命周期, 2.3 作用域查找链（写入与读取的统一规则）, 2.4 ScopeSource 二级选择（仅 SCOPE 层）, 2. 三层作用域模型, 3.1 BaseVariable（单变量 API）, 3.2 VariableContext（三层分发） (+24 more)
 
 ### Community 930 - "数学/向量指令使用指南"
-Cohesion: 0.06
-Nodes (32): 1. 伤害计算, 2. 随机掉落位置, 3. 平滑相机跟随, 3D 平面类型, 4. 计算敌人与玩家的距离, ClampValue, GetRandomPointInRange, Lerp (+24 more)
+Cohesion: 0.13
+Nodes (15): 1. 角色瞬移, 2. 角色朝向敌人, 3. 获取敌人位置并计算距离, Global（全局）坐标, Local（局部）坐标, 变换指令详解, 变换系统使用指南, 坐标空间选择决策树 (+7 more)
 
 ### Community 931 - "Fuse 编辑器工具使用指南"
-Cohesion: 0.06
-Nodes (31): 1. 执行跟踪器 (ExecutionTracker), 1. 指令验证器 (InstructionValidator), 1. 静态分析最佳实践, 2. 调试可视化面板 (DebugVisualizer), 2. 调试最佳实践, 2. 静态分析面板 (StaticAnalysisPanel), 3. 性能优化建议, 4. 错误处理策略 (+23 more)
+Cohesion: 0.07
+Nodes (27): 1. 执行跟踪器 (ExecutionTracker), 1. 静态分析最佳实践, 2. 调试可视化面板 (DebugVisualizer), 2. 调试最佳实践, 3. 性能优化建议, 4. 错误处理策略, 5. 团队协作, ActionRunner 调试集成 (+19 more)
 
 ### Community 932 - "场景管理指令使用指南"
-Cohesion: 0.06
-Nodes (31): 1. 关卡切换流程, 2. 死亡重试, 3. 敌人生成器, 4. UI 面板按需加载, 5. 场景路径用于存档, AddSceneAsChild, ChangeScene, GetScenePath (+23 more)
+Cohesion: 0.13
+Nodes (15): Condition 分组, Scope Source Config 分组, 与其他调试指令的区别, 使用场景, 场景 1：检查变量状态, 场景 2：条件断点, 场景 3：跳过前 N 次命中, 场景 4：暂停执行 (+7 more)
 
 ### Community 933 - "Fuse 元数据系统 - 阶段 1 完成报告"
 Cohesion: 0.07
@@ -4251,7 +4349,7 @@ Nodes (27): 1.1 数据流概述, 1.2 数据流架构, 1.3 执行上下文系统,
 
 ### Community 939 - "mftext.c"
 Cohesion: 0.13
-Nodes (21): initfuncs(), main(), prtime(), txt_arbitrary(), txt_chanpressure(), txt_keysig(), txt_metaeot(), txt_metamisc() (+13 more)
+Nodes (15): 1. 角色控制, 2. UI 交互, 3. 手柄支持, 4. 触摸手势, 上下文数据, 事件总览, 常见用例, 文本 (+7 more)
 
 ### Community 940 - "独特优势"
 Cohesion: 0.08
@@ -4262,7 +4360,7 @@ Cohesion: 0.08
 Nodes (26): CurvePreset, BOUNCE_IN, BOUNCE_IN_OUT, BOUNCE_OUT, EASE_IN, EASE_IN_BACK, EASE_IN_CUBIC, EASE_IN_ELASTIC (+18 more)
 
 ### Community 942 - "RuntimeInstructionInstance 开发指南"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (18): RuntimeInstructionInstance 开发指南, 为指令添加运行时实例支持, 信号, 信号连接管理, 方法1：声明默认状态, 方法2：实现运行时执行方法, 方法3：实现暂停/恢复回调, 暂停/恢复 (+10 more)
 
 ### Community 943 - "Godot特性集成设计方案"
@@ -4270,16 +4368,16 @@ Cohesion: 0.08
 Nodes (25): 1. 概述, 2.1 资源重用机制, 2.2 内嵌逻辑支持, 2.3 资源版本管理, 2. Resource系统深度集成, 3.1 信号连接管理器, 3.2 异步执行优化, 3.3 事件分发机制 (+17 more)
 
 ### Community 944 - "Fuse 移动系统用户指南"
-Cohesion: 0.08
-Nodes (24): 1. 事件（Events）, 2. 指令（Instructions）, Fuse 移动系统用户指南, MoveCharacterBody2DComposite, OnInputActionComposite, Q: 如何使用手柄控制？, Q: 如何添加对角线移动？, Q: 移动速度太慢/太快？ (+16 more)
+Cohesion: 0.13
+Nodes (14): 1. Skill 目标, 2. 工作流（5 步）, 3. 上下文素材清单（路径相对于 `addons/fuse/preset_ai_context/`）, 4. 产物路径约定, 5. 验证约定（不在 skill 内跑）, 6. 反例：什么样的描述应该拒绝 / 澄清, 7. few-shot 引用建议, 8. Skill 输入输出契约 (+6 more)
 
 ### Community 945 - "1. InstructionSerializer"
 Cohesion: 0.08
 Nodes (24): 1.1 类概述和职责, 1.2 序列化格式, 1.3 API（均为 static）, 1.4 与 BaseInstruction 的关系, 1.5 属性列表缓存, 1.6 ActionRunner 中的集成, 1.7 preload 与全局类解析（重要澄清）, 1.8 实际持久化路径（重要） (+16 more)
 
 ### Community 946 - "指令生成器使用指南"
-Cohesion: 0.08
-Nodes (24): GET 属性指令, SET 属性指令, 使用变量, 使用示例, 各类指令详解, 存放位置, 对话框界面, 属性标签页 (+16 more)
+Cohesion: 0.13
+Nodes (12): Fuse 指令创建完整指南, 内置图标命名参考, 图标规范, 图标配置方式, 图标配置步骤, 完整指令模板, 总结, 测试文件结构 (+4 more)
 
 ### Community 947 - "user_docs 更新规格说明（UPDATE_SPEC）"
 Cohesion: 0.08
@@ -4322,8 +4420,8 @@ Cohesion: 0.09
 Nodes (22): Runner 分析, 与 Event 系统的关系, 与 Trigger 的关系, 信号, 信号绑定机制, 公共 API, 典型用法, 内部方法 (+14 more)
 
 ### Community 957 - "全局变量持久化系统"
-Cohesion: 0.09
-Nodes (22): LoadGlobalVariables, SaveGlobalVariables, 使用变量指令设置持久化, 使用流程, 保存目标, 保存范围, 全局变量持久化系统, 加载来源 (+14 more)
+Cohesion: 0.14
+Nodes (14): Tween, UI, 事件, 事件 (Event), 动画, 场景, 导航, 时间 (+6 more)
 
 ### Community 958 - "_log_debug(message, )"
 Cohesion: 0.17
@@ -4338,8 +4436,8 @@ Cohesion: 0.10
 Nodes (21): 专题分析, 事件设计, 🎯 任务导向入口, 🔍 分析报告（18 篇）, 历史归档（../archive/）, 开发文档（../dev_docs/）, 我想做 Godot 集成或编辑器扩展, 我想深入某个子系统 (+13 more)
 
 ### Community 961 - "📖 使用指南（31 篇）"
-Cohesion: 0.10
-Nodes (21): 事件与触发, 🎯 任务导向入口, 📖 使用指南（31 篇）, 🚀 入口, 动画 / 音频 / UI, 历史归档（../archive/）, 变换与坐标, 变量系统 (+13 more)
+Cohesion: 0.11
+Nodes (19): 事件（30-34）, 🎯 任务导向入口, 📖 使用指南（39 篇，五层学习路径）, 🚀 入口, 历史归档（../archive/）, 开发文档（../dev_docs/）, 我想…, 📊 文档统计 (+11 more)
 
 ### Community 962 - "Fuse 本地化系统"
 Cohesion: 0.10
@@ -4353,10 +4451,6 @@ Nodes (20): 1. 基础设施测试（4个测试）, 2. 指令本地化测试（3�
 Cohesion: 0.10
 Nodes (20): AGENTS.md - AI 代理开发指南, 代码风格指南, 信号连接, 命名约定, 导入和类结构, 数组最佳实践, 文件命名, 文档注释 (+12 more)
 
-### Community 965 - "BricksComponentChecker"
-Cohesion: 0.16
-Nodes (11): BricksComponentChecker, Issue, main(), 检查 1: 是否使用 find_node_by_relative_path()          高严重性 - 因为不使用可能导致运行时错误, 检查 2: 场景加载顺序检查          中严重性 - 因为缺少可能导致属性丢失, 检查 3: 缓存机制          低严重性 - 因为缺少只影响性能, 运行所有检查          Returns:             检查结果字典, 递归扫描指定目录          Args:             instructions_dir: 相对于 bricks_root 的指令目录 (+3 more)
-
 ### Community 966 - "CreateLocalVariableInstruction 动态 Inspector 插件技术规格"
 Cohesion: 0.10
 Nodes (19): 1.1 基础值编辑器接口, 1.2 类型映射系统接口, 1. 核心接口定义, 2.1 CreateLocalVariableInspector, 2.2 DynamicValueEditor 核心逻辑, 2. 主插件实现规格, 3.1 基础类型编辑器, 3.2 向量类型编辑器 (+11 more)
@@ -4366,8 +4460,8 @@ Cohesion: 0.14
 Nodes (17): .check_dependencies(dependencies), .check_dependencies_batch(dependencies_list), _create_temporary_variable(name, value), _find_scope_container(), _get_cached_name_key(name), _get_global_variable(name, default), _get_local_variable(name, default), _get_scope_variable(name, default) (+9 more)
 
 ### Community 968 - "printtrack_split_voice"
-Cohesion: 0.27
-Nodes (20): addtochord(), advancechord(), checkchordlist(), dospecial(), fatal_error(), findshortest(), freshline(), guessana() (+12 more)
+Cohesion: 0.14
+Nodes (13): 1. 背景与动机, 2.1 自动刷新触发（plugin.gd）, 2.2 防抖（fuse_topology.gd）, 2.3 选中保持（fuse_topology.gd）, 2. 方案, 3. 双击条目跳转 Inspector, 4.1 plugin.gd 改动, 4.2 fuse_topology.gd 改动 (+5 more)
 
 ### Community 969 - "数组指令开发指南"
 Cohesion: 0.11
@@ -4386,16 +4480,16 @@ Cohesion: 0.11
 Nodes (18): 1. 背景与动机, 2.1 实际目录结构（21 个 md，共 ~17523 行）, 2.2 README 失真对照, 2.3 analysis/ 系统性链接基准错误（重点）, 2.4 真·死链（目标已归档或重构）, 2.5 元信息过时, 2. 现状盘点（As-Is）, 3. 更新目标（To-Be） (+10 more)
 
 ### Community 973 - "Event Bus 用户指南"
-Cohesion: 0.11
-Nodes (19): Event Bus 用户指南, OnReceiveEvent 事件, SendEvent 指令, 与其他通信方式对比, 事件参数访问, 事件命名规范, 使用示例, 参数设计 (+11 more)
+Cohesion: 0.14
+Nodes (14): Fuse 用户指南索引, ⚡ 事件（30-34）, 📖 使用说明, 🚀 入门基础（00-06）, 功能开发路径, 📚 开发者文档入口, 🎯 推荐学习路径, 新手路径（第 1 天） (+6 more)
 
 ### Community 974 - "场景预加载系统"
-Cohesion: 0.11
-Nodes (18): 1. 开始预加载, 2. 检查加载状态, 3. 加载完成后实例化, CheckPreloadStatus, PreloadSceneInstruction, UI 资源预加载, 使用前提, 使用流程 (+10 more)
+Cohesion: 0.14
+Nodes (14): Animation 条件指南, AnimationTree 状态机驱动 AI 行为, AnimationTree 集成, CheckAnimationFinished, CheckAnimationTreeParameter, CheckAnimationTreeState, CheckIsAnimation, CheckIsPlaying (+6 more)
 
 ### Community 975 - "触发器选型指南：Runner、Trigger 与 MultiEventTrigger"
-Cohesion: 0.11
-Nodes (18): MultiEventTrigger：多事件合并触发器, Runner：轻量信号绑定与代码调用, Trigger：带事件系统的单触发器, 三者总览, 不适用场景, 不适用场景, 不适用场景, 决策流程 (+10 more)
+Cohesion: 0.14
+Nodes (14): CheckCountdownFinished, CheckGameTime, CheckTimeRange, CheckTimeReached, Time 条件指南, 倒计时与游戏时间, 常见用例, 技能冷却中判断 (+6 more)
 
 ### Community 976 - "Fuse 阶段 2 本地化集成测试说明"
 Cohesion: 0.11
@@ -4414,16 +4508,16 @@ Cohesion: 0.12
 Nodes (17): 3.10 优化检查, 3.13 元数据接口, 3.14 FuseError 集成, 3.15 日志方法（委托 FuseLogger）, 3.16 资源名本地化拦截, 3.17 节点路径显示名解析, 3.2 抽象方法清单, 3.3 验证与描述方法 (+9 more)
 
 ### Community 980 - "MultiEventTrigger 使用指南"
-Cohesion: 0.12
-Nodes (17): MultiEventTrigger 使用指南, 与普通 Trigger 的对比, 信号, 冷却模式, 创建 MultiEventTrigger, 动态启用/禁用, 性能优化, 手动触发 (+9 more)
+Cohesion: 0.14
+Nodes (14): 1. 初始化阶段（initialize）, 2. 运行阶段（触发）, 3. 清理阶段（terminate）, Fuse 事件创建完整指南, 事件生命周期, 图标规范, 图标配置方式, 图标配置步骤 (+6 more)
 
 ### Community 981 - "_handle_right_click(pos)"
 Cohesion: 0.12
 Nodes (17): _add_curve_preset_submenu_items(menu), _add_new_track(), _copy_selected_keyframes(), _delete_clip(track), _delete_selected_keyframes(), _duplicate_clip(track), _get_parent_editor(), _handle_right_click(pos) (+9 more)
 
 ### Community 982 - "_handle_left_click(pos)"
-Cohesion: 0.18
-Nodes (17): _delete_selected_keyframe(), _get_clip_at_position(pos), _get_method_track_at_position(pos), _get_property_track_time_range_at_position(pos), _get_track_at_position(y), _get_track_by_index(index), _handle_clip_selection(track, region, pos), _handle_double_click(pos) (+9 more)
+Cohesion: 0.24
+Nodes (13): _get_clip_at_position(pos), _get_keyframe_at_position(track, screen_x), _get_method_track_at_position(pos), _get_property_track_time_range_at_position(pos), _get_track_at_position(y), _get_track_by_index(index), _handle_clip_selection(track, region, pos), _handle_double_click(pos) (+5 more)
 
 ### Community 983 - "_update_status_bar"
 Cohesion: 0.14
@@ -4434,8 +4528,8 @@ Cohesion: 0.12
 Nodes (16): AudioServer API（Godot 4.x）, GDScript 2.0 三元运算符, SceneTree 和当前场景访问, Tween 创建（Resource 上下文）, 关键技术要点, 变量操作（三层变量系统）, 变量类型推断, 完成信号时机（CompletionSignalTiming） (+8 more)
 
 ### Community 985 - "Fuse 多线程优化 - 用户指南"
-Cohesion: 0.12
-Nodes (16): Fuse 多线程优化 - 用户指南, 什么时候有用？, 使用方法, 兼容性, 场景加载超时？, 场景预加载, 如何启用, 常见问题 (+8 more)
+Cohesion: 0.15
+Nodes (12): 1. 问题, 2. 方案, 3. 范围, 4. 测试策略, 5. 验收标准, 6. 改动量, 7. 附：Topology resource_name 陈旧修复（选项 C）, analyze_problems 条件递归扩展 — 设计规格 (+4 more)
 
 ### Community 986 - "_log_debug_localized(message_key, )"
 Cohesion: 0.14
@@ -4466,12 +4560,12 @@ Cohesion: 0.13
 Nodes (15): 11.10 编辑器工具扩展, 11.1.1 三层运行时实例体系, 11.1.2 自声明状态模式（Self-Declared State Pattern）, 11.1.3 RuntimeInstructionInstance 的关键特性, 11.1.4 RuntimeActionRunnerInstance 的性能优化, 11.1 运行时实例架构（Runtime Instance Pattern）, 11.3 对象池系统（core/pooling/，5 个类）, 11.5.1 CompiledInstructionSequence（execution/compiled_instruction_sequence.gd） (+7 more)
 
 ### Community 993 - "断点指令使用指南"
-Cohesion: 0.13
-Nodes (15): Condition 分组, Scope Source Config 分组, 与其他调试指令的区别, 使用场景, 场景 1：检查变量状态, 场景 2：条件断点, 场景 3：跳过前 N 次命中, 场景 4：暂停执行 (+7 more)
+Cohesion: 0.15
+Nodes (13): Runner vs Trigger, Runner 使用指南, 使用方式, 信号, 信号使用示例, 创建 Runner, 完整的执行生命周期, 执行控制 (+5 more)
 
 ### Community 994 - "事件总览"
-Cohesion: 0.13
-Nodes (15): 1. 角色控制, 2. UI 交互, 3. 手柄支持, 4. 触摸手势, 上下文数据, 事件总览, 常见用例, 文本 (+7 more)
+Cohesion: 0.15
+Nodes (13): 1. 管理敌人列表, 2. 排行榜系统, 3. 寻找最近敌人, Array 操作指南, 向量运算, 基础操作, 常见用例, 指令总览 (+5 more)
 
 ### Community 995 - "Fuse 翻译键参考文档"
 Cohesion: 0.13
@@ -4490,8 +4584,8 @@ Cohesion: 0.19
 Nodes (13): .add_variable(name, value, , ), _get_cache_key(name, scope), _invalidate_cache_for_variable(name, scope), _is_cache_valid(name, scope), _log_debug(message), _log_error(message), .precompile_variable_indices(variable_names), .set_auto_create_variables(enabled) (+5 more)
 
 ### Community 999 - "JuicyMixerEnums"
-Cohesion: 0.15
-Nodes (13): JuicyMixerEnums, [static] get_interruption_policy_description(policy), [static] get_interruption_policy_from_name(name), [static] get_interruption_policy_name(policy), [static] get_property_type_hint(property_name), [static] get_restoration_mode_description(mode), [static] get_restoration_mode_from_name(name), [static] get_restoration_mode_name(mode) (+5 more)
+Cohesion: 0.07
+Nodes (42): JuicyMixerEnums, [static] get_interruption_policy_description(policy), [static] get_interruption_policy_from_name(name), [static] get_interruption_policy_name(policy), [static] get_property_type_hint(property_name), [static] get_restoration_mode_description(mode), [static] get_restoration_mode_from_name(name), [static] get_restoration_mode_name(mode) (+34 more)
 
 ### Community 1000 - "变量操作（三层变量系统）"
 Cohesion: 0.14
@@ -4531,19 +4625,19 @@ Nodes (13): 5.1.1 资源重用机制, 5.1.2 资源版本管理, 5.1 Resource系�
 
 ### Community 1009 - "指令总览"
 Cohesion: 0.15
-Nodes (13): 1. 管理敌人列表, 2. 排行榜系统, 3. 寻找最近敌人, Array 操作指南, 向量运算, 基础操作, 常见用例, 指令总览 (+5 more)
+Nodes (13): 1. 玩家数据管理, 2. 游戏配置表, 3. 物品栏系统, Dictionary 操作指南, JSON 转换, 基础操作, 字典来源, 嵌套路径访问 (+5 more)
 
 ### Community 1010 - "指令总览"
 Cohesion: 0.15
-Nodes (13): 1. 玩家数据管理, 2. 游戏配置表, 3. 物品栏系统, Dictionary 操作指南, JSON 转换, 基础操作, 字典来源, 嵌套路径访问 (+5 more)
+Nodes (13): 1. 敌人 AI 决策, 2. 波次生成系统, 3. 暂停菜单, 4. 遍历所有敌人执行操作, 常见用例, 循环, 指令总览, 条件分支 (+5 more)
 
 ### Community 1011 - "指令总览"
 Cohesion: 0.15
-Nodes (13): 1. 敌人 AI 决策, 2. 波次生成系统, 3. 暂停菜单, 4. 遍历所有敌人执行操作, 常见用例, 循环, 指令总览, 条件分支 (+5 more)
+Nodes (12): 1. L1 JSON 结构（ActionRunner 指令序列）, 2. L2 JSON 结构（Trigger：事件 + 指令）, 3. 组件对象结构（指令 / 事件 / 条件）, 4. L1 vs L2 决策树, 5. NodePath 约定, 6. 变量声明（`variables` 字段）, 7. 枚举值引用, 8. 嵌套指令（递归） (+4 more)
 
 ### Community 1012 - "Runner 使用指南"
-Cohesion: 0.15
-Nodes (13): Runner vs Trigger, Runner 使用指南, 使用方式, 信号, 信号使用示例, 创建 Runner, 完整的执行生命周期, 执行控制 (+5 more)
+Cohesion: 0.17
+Nodes (11): 一、为什么"表达式"是可视化系统的试金石, 七、一个能直接跑的小案例：完整的伤害结算链, 三、统一变量引用语法：三件套共用一把钥匙, 《不写一行代码算伤害公式：Fuse 表达式系统实战》, 九、几点容易踩的坑, 二、三件套：一个公式、一段文本、一个判断, 五、StringExpression：飘字、进度条、补零，都是拼接, 八、护城河加重：三个让 Fuse 表达式与众不同的设计 (+3 more)
 
 ### Community 1013 - "_log_warning(message)"
 Cohesion: 0.37
@@ -4559,7 +4653,7 @@ Nodes (13): _add_values(a, b), _apply_blend_mode(raw_value, context), _apply_eas
 
 ### Community 1016 - "process_command_line_arguments"
 Cohesion: 0.17
-Nodes (13): getarg(), huntfilename(), init_notechan(), initfunc_for_mftext(), initfunc_for_midinotes(), is_power_of_two(), main(), mftext() (+5 more)
+Nodes (11): 《If、循环、数组、字典：在可视化系统里搭出复杂逻辑》, 一、先纠正一个误解：可视化 ≠ 简单, 七、字典：16 个操作管键值对, 三、实战：敌人 AI 决策, 九、几个要记牢的注意事项, 二、流程控制全家桶：14 个指令, 五、实战：暂停菜单（游戏控制 + 分支）, 八、可视化照样写出真实逻辑：把四块拼起来 (+3 more)
 
 ### Community 1017 - "Runtime 实例三件套分析报告"
 Cohesion: 0.17
@@ -4614,12 +4708,12 @@ Cohesion: 0.20
 Nodes (11): _build_execution_chain(), _create_middleware_execution_func(middleware, middleware_index), _end_execution_timer(start_time), .error_code_to_string(error_code), .execute(context), _execute_middleware_chain(), _get_failed_middleware_info(), _log_warning(message, ) (+3 more)
 
 ### Community 1030 - "_handle_mouse_motion(event)"
-Cohesion: 0.29
-Nodes (12): _add_keyframe_at_position(pos), _get_keyframe_at_position(track, screen_x), _get_track_from_rect(track_rect), _get_track_rect(track), _handle_clip_drag(pos), _handle_method_track_drag(pos), _handle_mouse_motion(event), _handle_time_range_drag(pos) (+4 more)
+Cohesion: 0.33
+Nodes (11): _add_keyframe_at_position(pos), _get_track_from_rect(track_rect), _get_track_rect(track), _handle_clip_drag(pos), _handle_method_track_drag(pos), _handle_mouse_motion(event), _handle_time_range_drag(pos), _screen_to_time(screen_x) (+3 more)
 
 ### Community 1031 - "midi2abc"
-Cohesion: 0.18
-Nodes (12): findana(), findkey(), guesslengths(), initfuncs(), midi2abc(), postprocess(), printQ(), quantize() (+4 more)
+Cohesion: 0.17
+Nodes (12): E1. NodePath 解析失败检测, E2. 信号引用检测, E3. 跨 Trigger 变量关联标注, E4. Godot 主题图标替代 emoji, E5. Inspector 就地问题计数, E6. 问题过滤, 一、高价值（数据现成，`analyze_problems` 加分支）, 三、不做（本 roadmap 排除） (+4 more)
 
 ### Community 1032 - "创建 Fuse 条件指南"
 Cohesion: 0.18
@@ -4650,12 +4744,12 @@ Cohesion: 0.18
 Nodes (7): 1. 必须实现的抽象方法, 2. 推荐重写的方法, execute(context: ExecutionContext), get_description() -> String, _get_instruction_metadata() - 静态方法, validate() -> Array[String], 核心方法实现
 
 ### Community 1039 - "使用方式"
-Cohesion: 0.18
-Nodes (11): CheckAll - 全部满足, CheckAny - 任一满足, CheckComposite - 自定义组合, CheckNot - 逻辑取反, 使用方式, 复合条件指南, 嵌套组合, 条件总览 (+3 more)
+Cohesion: 0.17
+Nodes (12): OnCooldownFinished（冷却完成）, OnCountdown（倒计时）, OnRealtime（现实时间）, OnTimer（定时器）, Timing 事件指南, 事件对比, 关卡倒计时, 常见用例 (+4 more)
 
 ### Community 1040 - "测试内容"
-Cohesion: 0.18
-Nodes (11): 测试10: 回退机制, 测试1: 指令选择器本地化, 测试2: 输入键选择器本地化, 测试3: 静态分析面板本地化, 测试4: 调试可视化器本地化, 测试5: 执行跟踪器本地化, 测试6: Inspector 插件本地化, 测试7: 翻译键覆盖率 (+3 more)
+Cohesion: 0.20
+Nodes (10): 测试1: 指令选择器本地化, 测试2: 输入键选择器本地化, 测试3: 调试可视化器本地化, 测试4: 执行跟踪器本地化, 测试5: Inspector 插件本地化, 测试6: 翻译键覆盖率, 测试7: 参数化翻译, 测试8: 语言切换 (+2 more)
 
 ### Community 1041 - ".is_empty"
 Cohesion: 0.20
@@ -4682,16 +4776,16 @@ Cohesion: 0.22
 Nodes (11): _create_event_track_actions(editor_theme, track), _create_feedback_track_actions(editor_theme, track), _create_method_track_actions(editor_theme, track), _on_edit_mode_toggled(), _on_track_property_changed(), _on_track_selected(track), _rebuild_buttons_after_dialog(track), _update_context_actions(track) (+3 more)
 
 ### Community 1047 - "free"
-Cohesion: 0.38
-Nodes (8): free(), check_voice_end(), freefeature(), freekey(), freellist(), freetempo(), freetune(), freevoice()
+Cohesion: 0.17
+Nodes (10): Fuse 条件生成器, 参考资料详解, 常见错误参考, 快速开始, 提示和技巧, 条件类型参考, 模板文件, 获取帮助 (+2 more)
 
 ### Community 1048 - "addfeature"
-Cohesion: 0.18
-Nodes (11): addfeature(), event_endmusicline(), event_linebreak(), event_rep1(), event_rep2(), event_sluroff(), event_sluron(), event_startmusicline() (+3 more)
+Cohesion: 0.17
+Nodes (10): Fuse 事件生成器, 事件类型参考, 参考资料详解, 常见错误参考, 快速开始, 提示和技巧, 模板文件, 获取帮助 (+2 more)
 
 ### Community 1049 - "event_error"
-Cohesion: 0.22
-Nodes (11): checkbreak(), event_broken(), event_error(), event_graceoff(), event_graceon(), event_part(), event_start_extended_overlay(), event_stop_extended_overlay() (+3 more)
+Cohesion: 0.17
+Nodes (12): AudioServer API（Godot 4.x）, GDScript 2.0 三元运算符, SceneTree 和当前场景访问, Tween 创建（Resource 上下文）, 全局变量保存, 关键技术要点, 变量类型推断, 异步操作（定时器） (+4 more)
 
 ### Community 1050 - "最佳实践"
 Cohesion: 0.20
@@ -4715,7 +4809,7 @@ Nodes (10): 3.2 抽象方法, 3.4 信号触发方法, 3.7 资源名称自动更�
 
 ### Community 1055 - "4. 关键方法"
 Cohesion: 0.20
-Nodes (10): 4.2 冷却检查, 4.3 执行上下文工厂, 4.5 引擎回调统一转发, 4.7 错误处理, 4.8 日志方法, 4. 关键方法, `_check_cooldown(index, context, cooldown_mode, cooldown_time) -> bool`, `_clear_cooldown_state(index: int) -> void` (+2 more)
+Nodes (10): 4.3 执行上下文工厂, 4.4 ActionRunner 信号桥接, 4.5 引擎回调统一转发, 4.7 错误处理, 4.8 日志方法, 4. 关键方法, `_connect_action_runner_signals_at(index, callbacks) -> bool`, `_create_execution_context(target: Node, index: int = 0) -> ExecutionContext` (+2 more)
 
 ### Community 1056 - "VariableScopeUtils（作用域工具类）"
 Cohesion: 0.20
@@ -4734,8 +4828,8 @@ Cohesion: 0.20
 Nodes (10): 1. 超时管理, 2. 完成信号时机, ON_FINISH 模式（默认）, ON_START 模式, 使用场景, 动态设置完成时机, 基本超时设置, 自定义超时处理 (+2 more)
 
 ### Community 1060 - "API 参考"
-Cohesion: 0.20
-Nodes (10): API 参考, `get_debug_info() -> String`, `get_instance() -> GlobalVariableManager`, `get_statistics() -> Dictionary`, `variable_added(name: String, variable: BaseVariable)`, `variable_changed(name: String, old_value: Variant, new_value: Variant)`, `variable_removed(name: String)`, 信号 (+2 more)
+Cohesion: 0.18
+Nodes (10): 《Fuse：让Godot策划和美术也能搭逻辑的可视化编程插件（附能力全图）》, 一、Fuse 想解决什么问题, 七、五类适用场景：Fuse 最能发挥价值的地方, 三、三大砖块到底有多厚, 九、系列预告：后面十四篇会怎么走, 二、三句话理解 Fuse 的核心模型, 五、5 分钟跑通第一个案例：按钮点击输出 Hello World, 八、一张图看完 Fuse 全部能力 (+2 more)
 
 ### Community 1061 - "在指令中使用本地化"
 Cohesion: 0.20
@@ -4770,8 +4864,8 @@ Cohesion: 0.29
 Nodes (9): .execute(context), _get_scope_source_string(), _get_search_root(context), _get_search_scope_key(), _get_search_scope_string(), _get_search_type_key(), _get_search_type_string(), _save_result(context, value) (+1 more)
 
 ### Community 1069 - "tween_properties"
-Cohesion: 0.20
-Nodes (10): modulate, tween_properties, custom, global_rotation, global_scale, rotation, scale, self_modulate (+2 more)
+Cohesion: 0.18
+Nodes (10): 一、两套动画体系，各管一摊, 七、一个能跑的受击反馈案例, 三、BlendAnimation：动画树混合, 九、下一篇：让角色真正受控, 二、AnimationPlayer 控制：4 个指令, 五、Tween 全家桶：13 个补间指令, 《从动画播放到弹性补间：Fuse 动画全家桶与手感打磨》, 八、手感打磨的几条经验 (+2 more)
 
 ### Community 1070 - "_on_draw"
 Cohesion: 0.20
@@ -4782,8 +4876,8 @@ Cohesion: 0.33
 Nodes (10): _on_canvas_time_changed(time), _on_ruler_jump_to_end(), _on_ruler_jump_to_start(), _on_ruler_time_dragged(time), _on_ruler_time_selected(time), _on_stop_pressed(), _process(), _update_playback_head() (+2 more)
 
 ### Community 1072 - "rename_conditions.py"
-Cohesion: 0.31
-Nodes (8): main(), print_section(), 更新文件内容中的类名引用      Args:         content: 文件内容字符串         old_class: 旧类名, 重命名单个条件文件      Args:         old_file_path: 旧文件路径（相对路径）         mapping: 映射字典，包含, 更新测试文件中的所有类名引用      Args:         test_file_path: 测试文件路径, rename_condition_file(), update_class_names(), update_test_file()
+Cohesion: 0.18
+Nodes (11): 3.1 总览, 3.2 变量读写方向分析, 3.3 cross_references 新条目类型, 3.4 `_refresh_cross_references` 渲染增强, 3.5 与 `analyze_problems` 的联动, 3.6 竞态检测的简化策略, 3.7 Trigger 详情面板中的变量关系, 3. 设计 (+3 more)
 
 ### Community 1073 - "常见陷阱"
 Cohesion: 0.22
@@ -4814,8 +4908,8 @@ Cohesion: 0.22
 Nodes (9): 3.5 元数据方法, get_description() -> String -- 获取事件描述, get_detailed_info() -> Dictionary -- 获取事件详细信息, get_event_category() -> String -- 获取事件分类, get_event_icon() -> Texture2D -- 获取事件图标, _get_event_metadata() -> EventMetadata -- 获取事件元数据, get_event_type() -> String -- 获取事件类型, _get_node_display_name(path: NodePath) -> String -- 节点路径可读化 (+1 more)
 
 ### Community 1080 - "BaseTrigger 分析报告"
-Cohesion: 0.22
-Nodes (9): 1. 类概述和职责, 7. 与 ActionRunner 体系的关系, 9. 总体评估, BaseTrigger 分析报告, 不足, 优点, 文档概述, 核心职责 (+1 more)
+Cohesion: 0.20
+Nodes (10): 6.1 Trigger (单事件触发器, `trigger.gd`, 335 行), 6.2 MultiEventTrigger (多事件触发器, `multi_event_trigger.gd`, 481 行), 6.3 EventBinding (绑定资源, `event_binding.gd`), 6. 子类实现模式, 7. 与 ActionRunner 体系的关系, 9. 总体评估, BaseTrigger 分析报告, 不足 (+2 more)
 
 ### Community 1081 - "3. 抽象方法（子类必须实现）"
 Cohesion: 0.22
@@ -4838,28 +4932,28 @@ Cohesion: 0.22
 Nodes (9): 2.1 BaseInstruction - 指令基类（base/base_instruction.gd）, 2.2 ExecutionContext - 执行上下文（base/execution_context.gd）, 2.3 ActionRunner - 资源定义 + Runtime 编排双层（base/action_runner.gd）, 2.4.1 BaseTrigger 抽象方法（base_trigger.gd:51-63）, 2.4.2 Trigger - 单事件触发器（trigger.gd）, 2.4.3 MultiEventTrigger - 多事件触发器（multi_event_trigger.gd）, 2.4.4 Runner - 信号自动绑定执行入口（runner.gd）, 2.4 Trigger - 触发器四兄弟 + 双 Runtime 实例 (+1 more)
 
 ### Community 1086 - "全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge）"
-Cohesion: 0.22
-Nodes (9): 5.1 直接调用关系：无, 5.2 职责对比, 5.3 共同的注册/清理宿主, 5. 两者协作关系, 8. 总体评估, 不足, 优点, 全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge） (+1 more)
+Cohesion: 0.50
+Nodes (4): 5.1 直接调用关系：无, 5.2 职责对比, 5.3 共同的注册/清理宿主, 5. 两者协作关系
 
 ### Community 1087 - "常见问题"
 Cohesion: 0.22
 Nodes (9): Q1: 什么时候应该使用 SCOPE 变量？, Q2: SCOPE 变量为 null 报错怎么办？, Q3: LOCAL 变量的生命周期有多长？, Q4: 如何在编辑器中调试变量值？, Q5: 变量作用域会影响性能吗？, Q6: ScopeSource 和 VariableScope 有什么区别？, Q7: 为什么需要 ScopeSource？不能直接用 NEAREST？, Q8: 如何判断组件是否需要 ScopeSource？ (+1 more)
 
 ### Community 1088 - "事件 (Events)"
-Cohesion: 0.22
-Nodes (9): OnAnimationFinished -- 动画完成事件, OnAnimationStarted -- 动画开始事件, 事件 (Events), 传递的上下文参数, 传递的上下文参数, 属性, 属性, 常见用法 (+1 more)
+Cohesion: 0.18
+Nodes (11): Node 事件指南, OnNodeInstance（节点实例化）, OnPropertyChanged（属性变化）, OnSignalFromGroup（组信号）, OnTargetSignalEmit（目标信号）, 常见用例, 按钮点击启动游戏, 概述 (+3 more)
 
 ### Community 1089 - "常见用例"
-Cohesion: 0.22
-Nodes (9): 1. 场景音乐切换, 2. 暂停菜单, 3. 节奏游戏 - 音乐同步, 事件使用说明, 事件列表, 常见用例, 指令使用说明, 指令列表 (+1 more)
+Cohesion: 0.18
+Nodes (11): CheckAll - 全部满足, CheckAny - 任一满足, CheckComposite - 自定义组合, CheckNot - 逻辑取反, 使用方式, 复合条件指南, 嵌套组合, 条件总览 (+3 more)
 
 ### Community 1090 - "常见用例"
-Cohesion: 0.22
-Nodes (9): 1. 平台游戏 - 角色跳跃, 2. 2D 游戏 - 敌人视野检测, 3. 多人游戏 - 区域人数检测, 事件使用说明, 事件列表, 常见用例, 指令使用说明, 指令列表 (+1 more)
+Cohesion: 0.18
+Nodes (10): 1. 资源名称动态更新 (`_update_resource_name()`), 2. 指令描述 (`get_description()`), 3. 所有日志输出, 4. 验证错误消息, 5. 参数化错误消息, 6. 元数据, 必须本地化的内容, 指令（Instruction）本地化规范 (+2 more)
 
 ### Community 1091 - "UI 系统使用指南"
-Cohesion: 0.22
-Nodes (9): 1. HP 血条更新, 2. 分数显示, 3. 暂停菜单切换, UI 系统使用指南, 事件使用说明, 事件列表, 常见用例, 指令使用说明 (+1 more)
+Cohesion: 0.18
+Nodes (10): 1. 必读两份结构文档（每次）, 2. 据用户描述决策, 3. 产 JSON（FusePreset.from_json 兼容）, 4. 落盘, 5. 返回摘要, Fuse Preset Generator, MVP 范围, 关键约定（易错点） (+2 more)
 
 ### Community 1092 - "Fuse user_docs 新增/合并指南规格说明（NEW_DOCS_SPEC）"
 Cohesion: 0.22
@@ -4954,8 +5048,8 @@ Cohesion: 0.25
 Nodes (8): 1. API 设计不够 Godot 风格, 2. Editor 插件缺少状态同步, 3. 性能优化建议, 4. 缺少输入优先级控制, 专家审查和关键修复, 📋 关键修复清单, 🧪 测试验证要点, 🟡 设计改进（建议实现）
 
 ### Community 1115 - "变量操作方法"
-Cohesion: 0.25
-Nodes (8): `add_variable(name: String, variable: BaseVariable) -> bool`, `clear_all_variables()`, `get_all_variable_names() -> Array[String]`, `get_variable_count() -> int`, `get_variable(name: String) -> BaseVariable`, `has_variable(name: String) -> bool`, `remove_variable(name: String) -> bool`, 变量操作方法
+Cohesion: 0.20
+Nodes (9): 一、先把变量的"住处"想清楚, 七、三条工程纪律, 三、LOCAL：临时数据该去的地方, 二、三层各自住哪, 五、GLOBAL：跨场景与多存档槽位, 八、收尾, 六、选型对照表, 《别让全局变量满天飞：Fuse的LOCAL/SCOPE/GLOBAL三层变量怎么管》 (+1 more)
 
 ### Community 1116 - "合并项 B：坐标系统概念 → 并入 transform-guide.md"
 Cohesion: 0.25
@@ -4966,8 +5060,8 @@ Cohesion: 0.25
 Nodes (8): ActionRunner 日志, GlobalVariableManager 日志, 事件触发日志, 其他日志, 执行跟踪日志, 指令执行日志, 日志消息（FUSE_LOG_）, 通用执行日志
 
 ### Community 1118 - "UI文本（FUSE_UI_）"
-Cohesion: 0.25
-Nodes (8): UI文本（FUSE_UI_）, 指令选择器, 标签和提示, 语言设置, 调试可视化器, 输入键选择器, 通用按钮, 静态分析面板
+Cohesion: 0.29
+Nodes (7): UI文本（FUSE_UI_）, 指令选择器, 标签和提示, 语言设置, 调试可视化器, 输入键选择器, 通用按钮
 
 ### Community 1119 - ".get_description"
 Cohesion: 0.29
@@ -4990,8 +5084,8 @@ Cohesion: 0.25
 Nodes (8): .execute(context), _get_array_variable(context), _get_furthest_vector(arr, ref_point), _get_node_children_array(context), _get_node_group_array(context), _get_reference_point(context), _is_packed_vector_array(value), _set_target_variable(context, value)
 
 ### Community 1125 - "InterruptionPolicy"
-Cohesion: 0.25
-Nodes (8): InterruptionPolicy, FADE_OUT_FADE_IN, IGNORE, PRIORITY_OVERRIDE, PRIORITY_STACK, RESTART, SMOOTH_TRANSITION, STACK
+Cohesion: 0.20
+Nodes (9): Fuse 条件创建完整指南, 完整条件模板, 常见陷阱, 总结, 测试用例设计, 测试规范, 目录, 陷阱 1: 返回非布尔值 (+1 more)
 
 ### Community 1126 - "_create_interpolation_icon(keyframe, is_selected)"
 Cohesion: 0.25
@@ -5012,10 +5106,6 @@ Nodes (8): _deserialize_method_cache(), _editor_init(), _get_target_node_in_edit
 ### Community 1130 - "_update_property_type_info"
 Cohesion: 0.25
 Nodes (8): .create_keyframe(time, ), _ensure_property_type_detected(), _get_default_keyframe_value(), .load_from_dict(config_dict), _update_keyframes_value_type(), _update_property_type_info(), _update_target_node_info(), _update_target_node_info_safe()
-
-### Community 1131 - "headerprocess"
-Cohesion: 0.25
-Nodes (8): autoextend(), event_info_key(), event_octave(), event_voice(), event_warning(), headerprocess(), set_meter(), tempounits()
 
 ### Community 1132 - "命名规范"
 Cohesion: 0.29
@@ -5062,24 +5152,24 @@ Cohesion: 0.29
 Nodes (7): 1.1 设计理念, 1.2 整体架构图, 1.3.1 资源与节点的分离设计, 1.3.2 异步优先的执行模型, 1.3.3 上下文驱动的参数传递, 1.3 核心设计原则, 1. 核心架构设计概述
 
 ### Community 1144 - "自定义 Instruction 创建最佳实践指南"
-Cohesion: 0.29
-Nodes (7): 完整示例, 总结, 更新说明（2026-03）, 概述, 目录, 自定义 Instruction 创建最佳实践指南, 自定义指令示例：MoveNodeInstruction
+Cohesion: 0.18
+Nodes (11): 1. 条件检查优化, 2. 资源复用, 3. 批量操作, 完整示例, 性能优化, 总结, 更新说明（2026-03）, 概述 (+3 more)
 
 ### Community 1145 - "动画系统用户指南"
-Cohesion: 0.29
-Nodes (7): BlendAnimation -- 混合动画, 两种模式, 动画系统用户指南, 属性, 所有动画事件共享的上下文参数传递模式, 指令 (Instructions), 验证规则
+Cohesion: 0.22
+Nodes (9): OnAnimationFinished -- 动画完成事件, OnAnimationStarted -- 动画开始事件, 事件 (Events), 传递的上下文参数, 传递的上下文参数, 属性, 属性, 常见用法 (+1 more)
 
 ### Community 1146 - "常见用例"
-Cohesion: 0.29
-Nodes (7): 1. 横版卷轴游戏 - 相机跟随玩家, 2. 关卡边界限制, 3. 爆炸/受击反馈, 常见用例, 指令使用说明, 指令列表, 相机系统使用指南
+Cohesion: 0.22
+Nodes (9): 1. 场景音乐切换, 2. 暂停菜单, 3. 节奏游戏 - 音乐同步, 事件使用说明, 事件列表, 常见用例, 指令使用说明, 指令列表 (+1 more)
 
 ### Community 1147 - "最佳实践"
-Cohesion: 0.29
-Nodes (7): 1. 变量命名规范, 2. 初始化模式, 3. 保存策略, 4. 错误处理, 5. 性能优化, 使用 GlobalVariableAssistant 自动保存, 最佳实践
+Cohesion: 0.22
+Nodes (9): 1. 平台游戏 - 角色跳跃, 2. 2D 游戏 - 敌人视野检测, 3. 多人游戏 - 区域人数检测, 事件使用说明, 事件列表, 常见用例, 指令使用说明, 指令列表 (+1 more)
 
 ### Community 1148 - "常见用例"
-Cohesion: 0.29
-Nodes (7): 1. 角色瞬移, 2. 角色朝向敌人, 3. 获取敌人位置并计算距离, 变换系统使用指南, 常见用例, 指令使用说明, 指令列表
+Cohesion: 0.22
+Nodes (9): 1. HP 血条更新, 2. 分数显示, 3. 暂停菜单切换, UI 系统使用指南, 事件使用说明, 事件列表, 常见用例, 指令使用说明 (+1 more)
 
 ### Community 1149 - "P0-A：Node Operations 指令指南"
 Cohesion: 0.29
@@ -5146,8 +5236,8 @@ Cohesion: 0.29
 Nodes (7): PipelineState, BUILDING, DESTROYED, ERROR, EXECUTING, IDLE, READY
 
 ### Community 1166 - "keyframe_moved"
-Cohesion: 0.29
-Nodes (7): keyframe_moved, keyframe, new_time, track, keyframe_selected, track, track_selected
+Cohesion: 0.40
+Nodes (6): keyframe_moved, keyframe, new_time, keyframe_selected, track, track_selected
 
 ### Community 1167 - "_setup_ui"
 Cohesion: 0.29
@@ -5158,12 +5248,12 @@ Cohesion: 0.29
 Nodes (5): _denormalize_time(normalized_time), _map_curve_value_to_property_type(curve_value), _normalize_time(time), _normalize_value(value), _set(property, value)
 
 ### Community 1169 - "event_key"
-Cohesion: 0.33
-Nodes (7): altermap(), copymap(), event_key(), event_refno(), event_tempo(), setmap(), startfile()
+Cohesion: 0.22
+Nodes (9): stopped 信号, 事件触发方式, 信号连接模式, 关键开发规范, 命名规范, 必需实现的方法, 性能追踪, 生命周期模式 (+1 more)
 
 ### Community 1170 - "event_rest"
-Cohesion: 0.29
-Nodes (7): event_bar(), event_fatal_error(), event_mrest(), event_playonrep(), event_rest(), textfeature(), zerobar()
+Cohesion: 0.22
+Nodes (9): 常见陷阱, 陷阱 1: 在 Resource 中使用 Node 方法, 陷阱 2: 忘记调用 `_start_execution()`, 陷阱 3: 同步/异步混淆, 陷阱 4: 相对路径解析失败, 陷阱 5: 全局变量访问, 陷阱 6: 类型推断失败, 陷阱 7: NaN 和 Infinity 验证 (+1 more)
 
 ### Community 1171 - "条件特性"
 Cohesion: 0.33
@@ -5214,8 +5304,8 @@ Cohesion: 0.33
 Nodes (6): 4.5 编辑器侧（TCPServer 模式）, 公开 API `get_cached_vars() -> Dictionary`, 监听启动, 粘包处理 `_read_json_lines()`, 缓存更新 `_update_cache()`, 轮询逻辑 `_server_poll()`
 
 ### Community 1183 - "6. 设计意图与权衡"
-Cohesion: 0.33
-Nodes (6): 6.1 选用 Autoload 而非 Resource 单例, 6.2 双模式 Autoload（FuseRuntimeBridge）, 6.3 消费方"降级访问"约定, 6.4 TCP 桥实时性 > 完整性, 6.5 历史记录限长（FIFO 100 条）, 6. 设计意图与权衡
+Cohesion: 0.18
+Nodes (11): 6.1 选用 Autoload 而非 Resource 单例, 6.2 双模式 Autoload（FuseRuntimeBridge）, 6.3 消费方"降级访问"约定, 6.4 TCP 桥实时性 > 完整性, 6.5 历史记录限长（FIFO 100 条）, 6. 设计意图与权衡, 8. 总体评估, 不足 (+3 more)
 
 ### Community 1184 - "7. 潜在问题与改进点"
 Cohesion: 0.33
@@ -5234,20 +5324,20 @@ Cohesion: 0.33
 Nodes (6): BaseInstruction 核心职责, Instruction 架构基础, 完成信号时机（CompletionSignalTiming 枚举）, 执行模式（ExecutionMode 枚举）, 执行状态管理（ExecutionStatus 枚举）, 指令生命周期
 
 ### Community 1188 - "OnAnimationBlend -- 动画混合权重变化事件"
-Cohesion: 0.33
-Nodes (6): OnAnimationBlend -- 动画混合权重变化事件, 传递的上下文参数, 使用场景, 属性, 比较方式, 行为说明
+Cohesion: 0.22
+Nodes (9): Fuse 本地化修复技能, 参考文档, 工作流程, 常见问题, 快速诊断, 步骤 1：检查本地化状态, 步骤 2：识别常见错误, 步骤 4：添加翻译键到 CSV (+1 more)
 
 ### Community 1189 - "SetAnimationSpeed -- 设置播放速度"
-Cohesion: 0.33
-Nodes (6): SetAnimationSpeed -- 设置播放速度, 与 PlayAnimation 的区别, 使用场景, 属性, 速度值参考, 验证规则
+Cohesion: 0.25
+Nodes (7): 5分钟搭出第一个游戏逻辑：Runner / Trigger / MultiEventTrigger 怎么选, MultiEventTrigger：把一堆触发器合并成一个节点, Runner：按钮点击，以及代码里 await 它, Trigger：碰到敌人掉血，还得带冷却, 一张图理清选型, 三件套：Fuse 事件入口的三把钥匙, 小结
 
 ### Community 1190 - "核心功能"
-Cohesion: 0.33
-Nodes (6): 1. 单例模式, 2. 变量管理, 3. 资源持久化, 4. 信号系统, 5. 本地化支持, 核心功能
+Cohesion: 0.25
+Nodes (8): 信号断开, 信号连接, 定时器创建, 定时器清理, 常用代码片段, 常用日志键, 常用错误键, 快速参考
 
 ### Community 1191 - "GlobalVariableManager 使用指南"
-Cohesion: 0.33
-Nodes (6): GlobalVariableManager 使用指南, 实际应用示例, 总结, 概述, 游戏状态管理, 玩家属性管理
+Cohesion: 0.25
+Nodes (8): 三层变量系统, 关键开发规范, 命名规范, 完成信号时机（CompletionSignalTiming）, 必需实现的方法, 执行模式（ExecutionMode）, 执行流程模式, 指令取消和超时
 
 ### Community 1192 - "P0-B：Lifecycle 事件指南"
 Cohesion: 0.33
@@ -5276,6 +5366,10 @@ Nodes (6): _connect_instruction_signal(instruction, handler), _log_debug(message
 ### Community 1198 - "ExecutionStatus"
 Cohesion: 0.33
 Nodes (6): ExecutionStatus, CANCELLED, COMPLETED, ERROR, PENDING, RUNNING
+
+### Community 1199 - ".get_type_name"
+Cohesion: 0.25
+Nodes (8): 事件命名, 关键词命名, 分类命名, 命名模式, 指令命名, 日志消息命名, 条件命名, 错误消息命名
 
 ### Community 1200 - "_deserialize_legacy_format(data)"
 Cohesion: 0.40
@@ -5310,12 +5404,12 @@ Cohesion: 0.47
 Nodes (5): _create_track_from_dict(track_dict, ), .load_from_dict(config_dict), _migrate_legacy_format(config_dict), .move_track(track, new_index, ), _sync_timeline_tracks_to_groups(tracks)
 
 ### Community 1208 - "reduce"
-Cohesion: 0.33
-Nodes (6): addfract(), addunits(), brokenadjust(), dotie(), lenmul(), reduce()
+Cohesion: 0.25
+Nodes (8): 前缀分类, 占位符格式, 参数化翻译, 命名规则, 多参数示例, 检查清单, 添加翻译的完整流程, 翻译键命名规范
 
 ### Community 1209 - "event_chordoff"
-Cohesion: 0.40
-Nodes (6): event_chord(), event_chordoff(), event_chordon(), marknote(), marknoteend(), marknotestart()
+Cohesion: 0.29
+Nodes (7): 4. 接口契约, `FuseInspectorPlugin._add_problems_section` 新增, `FuseInspectorPlugin._make_problem_line` 新增（审阅修订：BBCode 坑专用工厂方法）, `InstructionAnalyzer.collect_insts_from_report` 公开静态方法（审阅修订：从 fuse_topology 提升共用）, `InstructionAnalyzer.collect_insts_from_tree` 公开静态方法（审阅修订：从 fuse_topology 提升共用）, `InstructionAnalyzer.index_problems` 公开静态方法（审阅修订：从 fuse_topology._index_problems 提升）, 无其他外部签名变更
 
 ### Community 1210 - "[Unreleased]"
 Cohesion: 0.40
@@ -5414,20 +5508,20 @@ Cohesion: 0.40
 Nodes (5): 1. 统一错误处理, 2. 本地化错误处理, 3. 上下文信息记录, 3. 分级日志记录, 错误处理和日志
 
 ### Community 1234 - "OnAnimationLoop -- 动画循环事件"
-Cohesion: 0.40
-Nodes (5): OnAnimationLoop -- 动画循环事件, 传递的上下文参数, 使用场景, 属性, 触发模式
+Cohesion: 0.29
+Nodes (7): BlendAnimation -- 混合动画, 两种模式, 动画系统用户指南, 属性, 所有动画事件共享的上下文参数传递模式, 指令 (Instructions), 验证规则
 
 ### Community 1235 - "PlayAnimation -- 播放动画"
-Cohesion: 0.40
-Nodes (5): PlayAnimation -- 播放动画, 使用场景, 基本用法, 属性, 验证规则
+Cohesion: 0.29
+Nodes (7): 1. 横版卷轴游戏 - 相机跟随玩家, 2. 关卡边界限制, 3. 爆炸/受击反馈, 常见用例, 指令使用说明, 指令列表, 相机系统使用指南
 
 ### Community 1236 - "StopAnimation -- 停止动画"
-Cohesion: 0.40
-Nodes (5): StopAnimation -- 停止动画, 使用场景, 属性, 行为说明, 验证规则
+Cohesion: 0.29
+Nodes (7): 1. 信号连接和断开, 2. 资源清理, 3. 触发一次模式, 4. 上下文数据传递, 5. 节点获取, 6. 日志记录, 最佳实践
 
 ### Community 1237 - "常见工作流"
-Cohesion: 0.40
-Nodes (5): 场景 1: 角色动画状态机, 场景 2: 过场动画序列, 场景 3: 动画混合控制, 场景 4: 慢动作效果, 常见工作流
+Cohesion: 0.29
+Nodes (7): 1. 错误处理, 2. 资源清理, 3. 类型注解, 4. 属性验证, 5. 属性刷新, 6. 代码组织, 最佳实践
 
 ### Community 1238 - "P1-B：Node 事件指南"
 Cohesion: 0.40
@@ -5542,8 +5636,8 @@ Cohesion: 0.40
 Nodes (5): _cleanup_icon_manager(), _unregister_context_menu_plugin(), _unregister_event_bus(), _unregister_reflection_cache_cleanup(), _exit_tree()
 
 ### Community 1267 - "execution_completed"
-Cohesion: 0.40
-Nodes (5): execution_completed, success, execution_error, context, error
+Cohesion: 0.33
+Nodes (6): execution_completed, success, execution_error, context, error, execution_started
 
 ### Community 1268 - ".handle_context_event(context, event)"
 Cohesion: 0.40
@@ -5553,13 +5647,17 @@ Nodes (5): .handle_context_event(context, event), .on_context_created(context), 
 Cohesion: 0.40
 Nodes (5): _apply_composite_resource_mapping(context, sub_context, property_buffer, mapping), _apply_custom_mapping(context, sub_context, property_buffer, mapping), .apply_parameter_mappings_to_sub_effect(context, sub_context_id), _apply_track_property_mapping(context, sub_context, property_buffer, mapping), .update_sub_effect_parameters(context, progress)
 
+### Community 1270 - "animation_track_editor.h"
+Cohesion: 0.29
+Nodes (7): SceneTree 操作, 变量操作, 常用代码片段, 常用错误键, 快速参考, 节点操作, 音频操作
+
 ### Community 1271 - "main"
-Cohesion: 0.60
-Nodes (4): main(), Rename single condition file, rename_condition_file(), update_test_file()
+Cohesion: 0.29
+Nodes (4): 参考模板, 条件（Condition）本地化规范, 检查清单, 注意事项
 
 ### Community 1272 - "finishfile"
-Cohesion: 0.40
-Nodes (5): clearvoicecontexts(), event_blankline(), event_eof(), finishfile(), tiefix()
+Cohesion: 0.29
+Nodes (6): 事件（Event）本地化规范, 常见错误, 检查清单, 禁止事项, 错误 1：代码中使用翻译键，但未添加到 CSV, 错误 2：枚举值未本地化
 
 ### Community 1273 - "图标规范"
 Cohesion: 0.50
@@ -5630,8 +5728,8 @@ Cohesion: 0.50
 Nodes (4): 4.1 生命周期, `_exit_tree() -> void`, `_ready() -> void`, 可覆盖钩子
 
 ### Community 1290 - "6. 子类实现模式"
-Cohesion: 0.50
-Nodes (4): 6.1 Trigger (单事件触发器, `trigger.gd`, 335 行), 6.2 MultiEventTrigger (多事件触发器, `multi_event_trigger.gd`, 481 行), 6.3 EventBinding (绑定资源, `event_binding.gd`), 6. 子类实现模式
+Cohesion: 0.33
+Nodes (6): OnAnimationBlend -- 动画混合权重变化事件, 传递的上下文参数, 使用场景, 属性, 比较方式, 行为说明
 
 ### Community 1291 - "3.4 重置与生命周期"
 Cohesion: 0.50
@@ -5690,28 +5788,28 @@ Cohesion: 0.50
 Nodes (4): 1. 单元测试模式, 2. 集成测试模式, 3. 性能测试, 测试和验证
 
 ### Community 1305 - "性能优化"
-Cohesion: 0.50
-Nodes (4): 1. 条件检查优化, 2. 资源复用, 3. 批量操作, 性能优化
+Cohesion: 0.33
+Nodes (6): SetAnimationSpeed -- 设置播放速度, 与 PlayAnimation 的区别, 使用场景, 属性, 速度值参考, 验证规则
 
 ### Community 1306 - "OnAnimationFrameReached -- 动画帧到达事件"
-Cohesion: 0.50
-Nodes (4): OnAnimationFrameReached -- 动画帧到达事件, 传递的上下文参数, 属性, 行为说明
+Cohesion: 0.33
+Nodes (6): 1. 布尔返回值, 2. 错误处理, 3. 日志记录, 4. 依赖计算, 5. 参数验证, 最佳实践
 
 ### Community 1307 - "OnAnimationMarker -- 动画标记事件"
-Cohesion: 0.50
-Nodes (4): OnAnimationMarker -- 动画标记事件, 传递的上下文参数, 属性, 标记检测机制
+Cohesion: 0.33
+Nodes (6): 变量检查, 布尔转换, 常用代码片段, 快速参考, 数值比较, 节点检查
 
 ### Community 1308 - "调试技巧"
-Cohesion: 0.50
-Nodes (4): 1. 使用调试信息, 2. 监控变量变化, 3. 导出变量状态, 调试技巧
+Cohesion: 0.33
+Nodes (6): 1. 规划条件, 2. 创建代码, 3. 添加本地化, 4. 创建测试, 5. 验证和调试, 工作流程
 
 ### Community 1309 - "常见问题"
-Cohesion: 0.50
-Nodes (4): Q: 如何处理变量不存在的情况？, Q: 如何重置所有变量？, Q: 如何验证资源文件是否有效？, 常见问题
+Cohesion: 0.33
+Nodes (6): 依赖计算, 关键开发规范, 变量作用域, 命名规范, 必需实现的方法, 条件评估模式
 
 ### Community 1310 - "快速开始"
-Cohesion: 0.50
-Nodes (4): 基本使用, 快速开始, 监听变量变化, 资源持久化
+Cohesion: 0.33
+Nodes (4): 常见陷阱, 陷阱 1: 忘记断开信号, 陷阱 2: 定时器未清理, 陷阱 5: 信号重复连接
 
 ### Community 1311 - "API 参考"
 Cohesion: 0.50
@@ -5818,12 +5916,12 @@ Cohesion: 0.50
 Nodes (3): [static] create(resource, target, ), [static] create_for_event(target, ), [static] _generate_unique_id()
 
 ### Community 1337 - "RestorationMode"
-Cohesion: 0.50
-Nodes (4): RestorationMode, CURVE, EASE, SNAP
+Cohesion: 0.33
+Nodes (6): 1. 规划事件, 2. 创建代码, 3. 添加本地化, 4. 创建测试, 5. 验证和调试, 工作流程
 
 ### Community 1338 - "_handle_left_release"
-Cohesion: 0.50
-Nodes (4): _handle_clip_release(), _handle_left_release(), _handle_method_track_release(), _handle_time_range_release()
+Cohesion: 0.22
+Nodes (9): _delete_selected_keyframe(), _handle_clip_release(), _handle_key_input(event), _handle_left_release(), _handle_method_track_release(), _handle_mouse_button(event), _handle_time_range_release(), _on_gui_input(event) (+1 more)
 
 ### Community 1340 - "BlendMode"
 Cohesion: 0.50
@@ -5834,16 +5932,16 @@ Cohesion: 0.50
 Nodes (4): LoopMode, LOOP, NO_LOOP, PING_PONG
 
 ### Community 1342 - "template_builders.py"
-Cohesion: 0.67
-Nodes (3): make_templates(), parse_template(), Functions used to generate source files during build time
+Cohesion: 0.33
+Nodes (6): 1. 资源名称动态更新 (`_update_resource_name()`), 2. 事件描述 (`get_description()`), 3. 枚举提示字符串 (`hint_string`), 4. 验证错误 (`validate()`), 5. 元数据, 必须本地化的内容
 
 ### Community 1343 - "update_document"
-Cohesion: 0.67
-Nodes (3): main(), Update the evaluation result document, update_document()
+Cohesion: 0.40
+Nodes (4): Fuse 组件名对照表, 概览, 缺失 `name_key`（无法定位翻译键）, 附录：需要补全的组件
 
 ### Community 1344 - "update_test_file"
-Cohesion: 0.67
-Nodes (3): main(), Update test file with new class names, update_test_file()
+Cohesion: 0.40
+Nodes (5): OnAnimationLoop -- 动画循环事件, 传递的上下文参数, 使用场景, 属性, 触发模式
 
 ### Community 1345 - "最佳实践"
 Cohesion: 0.67
@@ -5874,8 +5972,8 @@ Cohesion: 0.67
 Nodes (3): 3.8 结果回调方法（非信号）, `on_condition_failed(context)`（505–512 行）, `on_condition_met(context)`（497–503 行）
 
 ### Community 1352 - "4.4 ActionRunner 信号桥接"
-Cohesion: 0.67
-Nodes (3): 4.4 ActionRunner 信号桥接, `_connect_action_runner_signals_at(index, callbacks) -> bool`, `_disconnect_action_runner_signals_at(index, callbacks) -> void`
+Cohesion: 0.40
+Nodes (5): PlayAnimation -- 播放动画, 使用场景, 基本用法, 属性, 验证规则
 
 ### Community 1353 - "4.6 池化支持"
 Cohesion: 0.67
@@ -5930,8 +6028,8 @@ Cohesion: 0.67
 Nodes (3): 5.3.1 路径解析器, 5.3.2 路径验证器, 5.3 NodePath系统集成
 
 ### Community 1366 - "资源操作方法"
-Cohesion: 0.67
-Nodes (3): `load_from_resource(path: String) -> bool`, `save_to_resource(path: String) -> bool`, 资源操作方法
+Cohesion: 0.40
+Nodes (5): StopAnimation -- 停止动画, 使用场景, 属性, 行为说明, 验证规则
 
 ### Community 1368 - "NodeSource"
 Cohesion: 0.67
@@ -6010,12 +6108,12 @@ Cohesion: 0.67
 Nodes (3): ContextType, EVENT, FEEDBACK
 
 ### Community 1389 - "middleware_activation_changed"
-Cohesion: 0.67
-Nodes (3): middleware_activation_changed, active, middleware
+Cohesion: 0.40
+Nodes (5): middleware_activation_changed, active, middleware, middleware_added, middleware_removed
 
 ### Community 1390 - "middleware_added"
-Cohesion: 0.67
-Nodes (3): middleware_added, middleware, middleware_removed
+Cohesion: 0.40
+Nodes (5): 场景 1: 角色动画状态机, 场景 2: 过场动画序列, 场景 3: 动画混合控制, 场景 4: 慢动作效果, 常见工作流
 
 ### Community 1391 - "_process_scenetree_highlights"
 Cohesion: 0.67
@@ -6033,25 +6131,109 @@ Nodes (3): EditMode, CURVE_BASED, KEYFRAME_BASED
 Cohesion: 0.67
 Nodes (3): _get_property_enum_string(), _get_property_list(), _is_valid_property_for_track(prop_info)
 
+### Community 1416 - "execution_started"
+Cohesion: 0.40
+Nodes (5): Step 1: 创建条件类骨架, Step 2: 添加本地化翻译, Step 3: 创建测试场景, Step 4: 测试验证, 创建步骤
+
+### Community 1427 - "AnimationTreeNodeEditorPlugin"
+Cohesion: 0.40
+Nodes (5): 命名规范, 文件命名, 测试文件命名, 类命名, 统一性原则
+
+### Community 1428 - "创建步骤"
+Cohesion: 0.40
+Nodes (5): Step 1: 创建事件类骨架, Step 2: 添加本地化翻译, Step 3: 创建测试场景, Step 4: 测试验证, 创建步骤
+
+### Community 1429 - "命名规范"
+Cohesion: 0.40
+Nodes (5): 命名规范, 文件命名, 测试文件命名, 类命名, 统一性原则
+
+### Community 1430 - "流程控制类指令"
+Cohesion: 0.40
+Nodes (5): 同步流程控制, 异步流程控制（定时器）, 流程控制类指令, 特点, 示例指令
+
+### Community 1431 - "场景管理类指令"
+Cohesion: 0.40
+Nodes (5): 后台加载场景（异步）, 场景管理类指令, 常见模式, 特点, 示例指令
+
+### Community 1432 - "音频控制类指令"
+Cohesion: 0.40
+Nodes (5): 常见模式, 特点, 示例指令, 获取音频总线列表, 音频控制类指令
+
+### Community 1433 - "创建步骤"
+Cohesion: 0.40
+Nodes (5): Step 1: 创建指令类骨架, Step 2: 添加本地化翻译, Step 3: 创建测试场景, Step 4: 测试验证, 创建步骤
+
+### Community 1434 - "命名规范"
+Cohesion: 0.40
+Nodes (5): 命名规范, 文件命名, 测试文件命名, 类命名, 统一性原则
+
+### Community 1435 - "必须本地化的内容"
+Cohesion: 0.40
+Nodes (5): 1. 资源名称动态更新 (`_update_resource_name()`), 2. 元数据系统, 3. 关键词多语言支持, 4. 验证错误 (`validate()`), 必须本地化的内容
+
+### Community 1436 - "步骤 3：修复本地化问题"
+Cohesion: 0.40
+Nodes (5): 修复日志调用, 修复枚举提示字符串（性能问题）, 修复硬编码字符串, 修复错误消息, 步骤 3：修复本地化问题
+
+### Community 1437 - "OnAnimationFrameReached -- 动画帧到达事件"
+Cohesion: 0.50
+Nodes (4): OnAnimationFrameReached -- 动画帧到达事件, 传递的上下文参数, 属性, 行为说明
+
+### Community 1438 - "OnAnimationMarker -- 动画标记事件"
+Cohesion: 0.50
+Nodes (4): OnAnimationMarker -- 动画标记事件, 传递的上下文参数, 属性, 标记检测机制
+
+### Community 1439 - "条件评估核心"
+Cohesion: 0.50
+Nodes (4): 变量检查模式, 基本模式, 条件评估核心, 节点检查模式
+
+### Community 1440 - "动画控制类指令"
+Cohesion: 0.50
+Nodes (4): 动画控制类指令, 常见模式, 特点, 示例指令
+
+### Community 1441 - "变量操作类指令"
+Cohesion: 0.50
+Nodes (4): 变量操作类指令, 常见模式, 特点, 示例指令
+
+### Community 1442 - "数学运算类指令"
+Cohesion: 0.50
+Nodes (4): 常见模式, 数学运算类指令, 特点, 示例指令
+
+### Community 1443 - "[static] create_global(name, val, )"
+Cohesion: 0.50
+Nodes (4): [static] create_global(name, val, ), [static] create_player_health(), [static] create_player_level(), [static] create_player_score()
+
+### Community 1444 - "1. 类概述和职责"
+Cohesion: 0.67
+Nodes (3): 1. 类概述和职责, 核心职责, 设计特点
+
+### Community 1445 - "4.2 冷却检查"
+Cohesion: 0.67
+Nodes (3): 4.2 冷却检查, `_check_cooldown(index, context, cooldown_mode, cooldown_time) -> bool`, `_clear_cooldown_state(index: int) -> void`
+
+### Community 1446 - "图标规范"
+Cohesion: 0.67
+Nodes (3): 图标规范, 图标配置步骤, 常用图标命名参考
+
 ## Knowledge Gaps
-- **9678 isolated node(s):** `运行测试`, `无构建命令`, `无 Lint 命令`, `文件命名`, `命名约定` (+9673 more)
+- **10682 isolated node(s):** `快速开始`, `条件类型参考`, `命名规范`, `必需实现的方法`, `条件评估模式` (+10677 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **208 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **205 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `free()` connect `free` to `store.c`, `parseabc.c`, `midi2abc`, `midi2abc.c`, `headerprocess`, `drawtune.c`, `get_singleton`, `matchsup.c`, `toabc.c`, `midicopy.c`, `abcmatch.c`, `finishfile`, `midifile.c`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Why does `get_singleton()` connect `get_singleton` to `editor_node.cpp`, `editor_data.cpp`, `select`, `commit_action`, `animation_track_editor.cpp`, `animation_player_editor_plugin.cpp`, `editor_log.cpp`, `clear`, `animation_bezier_editor.cpp`, `get_path`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Why does `unregister_editor_types()` connect `get_singleton` to `free`?**
+- **Why does `Godot 4.x 可视化编程系统完整架构设计` connect `Godot 4.x 可视化编程系统完整架构设计` to `3. 数据流和控制流设计`, `2.1 核心资源组件`, `5. 与Godot特性的集成方案`, `README.md`, `1.3 核心设计原则`, `4. 扩展点设计`?**
   _High betweenness centrality (0.005) - this node is a cross-community bridge._
-- **Are the 375 inferred relationships involving `get_singleton()` (e.g. with `cleanup_history()` and `clear_edited_scenes()`) actually correct?**
-  _`get_singleton()` has 375 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `运行测试`, `无构建命令`, `无 Lint 命令` to the rest of the system?**
-  _9696 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `创建 Fuse 条件指南` connect `创建 Fuse 条件指南` to `变量操作（三层变量系统）`, `测试规范`, `命名规范`, `README.md`, `常见陷阱`, `可选实现的方法`, `创建步骤`, `常用代码片段`, `条件特性`, `图标规范`, `最佳实践`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+- **Why does `Fuse 变量系统设计文档` connect `Fuse 变量系统设计文档` to `VariableScopeUtils（作用域工具类）`, `ScopeSource 架构设计`, `版本历史`, `从旧 API 迁移到新 API`, `README.md`, `三层变量架构`, `作用域选择指南`, `基本步骤`, `实际应用示例`, `最佳实践`, `已重构的指令列表`, `常见问题`?**
+  _High betweenness centrality (0.002) - this node is a cross-community bridge._
+- **What connects `快速开始`, `条件类型参考`, `命名规范` to the rest of the system?**
+  _10682 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `editor_node.cpp` be split into smaller, more focused modules?**
-  _Cohesion score 0.014488554042306577 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0935374149659864 - nodes in this community are weakly interconnected._
 - **Should `store.c` be split into smaller, more focused modules?**
-  _Cohesion score 0.03767711464147703 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
+- **Should `juicy_timeline_canvas.gd` be split into smaller, more focused modules?**
+  _Cohesion score 0.02564102564102564 - nodes in this community are weakly interconnected._
