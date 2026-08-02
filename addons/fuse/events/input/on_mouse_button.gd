@@ -31,13 +31,13 @@ enum TriggerMode {
 }
 
 ## 监听的鼠标按键
-@export var mouse_button: CustomMouseButton = CustomMouseButton.LEFT:
+var mouse_button: CustomMouseButton = CustomMouseButton.LEFT:
 	set(value):
 		mouse_button = value
 		_update_resource_name()
 
 ## 触发模式
-@export var trigger_mode: TriggerMode = TriggerMode.PRESSED:
+var trigger_mode: TriggerMode = TriggerMode.PRESSED:
 	set(value):
 		trigger_mode = value
 		_update_resource_name()

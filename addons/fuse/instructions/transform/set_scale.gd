@@ -20,7 +20,7 @@ var use_variable: bool = false
 var scale_variable: String = ""
 
 # 缩放变量作用域
-@export var scale_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
+var scale_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
 ## 获取指令元数据（用于指令选择器）
 static func _get_instruction_metadata() -> InstructionMetadata:

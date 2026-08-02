@@ -20,7 +20,7 @@ var value: float = 1.0
 var value_variable: String = ""
 
 # 进度值变量作用域
-@export var value_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var value_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		value_scope = value
 		_update_resource_name()

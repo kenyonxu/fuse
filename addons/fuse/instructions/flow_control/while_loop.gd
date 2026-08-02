@@ -35,7 +35,7 @@ enum ScopeSource {
 var condition_variable: String = ""
 
 # 变量作用域（LOCAL/SCOPE/GLOBAL）
-@export var variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if variable_scope != value:
 			variable_scope = value

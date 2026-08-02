@@ -24,7 +24,7 @@ var look_at_node: NodePath = NodePath("")
 var position_variable: String = ""
 
 # 位置变量作用域
-@export var position_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
+var position_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
 # Up 向量（仅 3D）
 var use_custom_up: bool = false

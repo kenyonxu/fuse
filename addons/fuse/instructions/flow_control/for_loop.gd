@@ -41,7 +41,7 @@ var use_variable_count: bool = false
 var loop_count_variable: String = ""
 
 # 循环次数变量作用域
-@export var loop_count_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var loop_count_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if loop_count_scope != value:
 			loop_count_scope = value
@@ -74,7 +74,7 @@ var loop_count_target_node_path: NodePath = NodePath(""):
 var index_variable: String = "i"
 
 # 索引变量作用域
-@export var index_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var index_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if index_scope != value:
 			index_scope = value

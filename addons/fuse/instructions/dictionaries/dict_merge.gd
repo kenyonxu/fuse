@@ -100,7 +100,7 @@ var target_target_node_path: NodePath = NodePath(""):
 # ========== 合并选项 ==========
 
 ## 是否覆盖已存在的键
-@export var overwrite_existing: bool = true:
+var overwrite_existing: bool = true:
 	set(value):
 		overwrite_existing = value
 		_update_resource_name()

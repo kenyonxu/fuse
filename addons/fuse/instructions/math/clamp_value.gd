@@ -39,7 +39,7 @@ var value_variable: String = "":
 		_update_resource_name()
 
 # 值变量作用域
-@export var value_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var value_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		value_scope = value
 		_update_resource_name()
@@ -63,7 +63,7 @@ var save_to_variable: String = "clamped_value":
 		_update_resource_name()
 
 ## 保存到作用域
-@export var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		save_to_scope = value
 		_update_resource_name()

@@ -22,7 +22,7 @@ var space: CoordinateSpace = CoordinateSpace.GLOBAL
 var rotation_variable: String = "rotation"
 
 # 旋转变量作用域
-@export var rotation_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.SCOPE
+var rotation_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.SCOPE
 
 ## 获取指令元数据（用于指令选择器）
 static func _get_instruction_metadata() -> InstructionMetadata:

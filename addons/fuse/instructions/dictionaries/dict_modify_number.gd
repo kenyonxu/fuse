@@ -104,7 +104,7 @@ var key_target_node_path: NodePath = NodePath(""):
 			_update_resource_name()
 
 ## 键值（直接输入，当 use_key_from_variable = false 时使用）
-@export var key_value: Variant:
+var key_value: Variant:
 	set(value):
 		key_value = value
 		_update_resource_name()
@@ -158,7 +158,7 @@ var amount_target_node_path: NodePath = NodePath(""):
 			_update_resource_name()
 
 ## 修改量（直接输入，当 use_amount_from_variable = false 时使用）
-@export var amount: float = 0.0:
+var amount: float = 0.0:
 	set(value):
 		amount = value
 		_update_resource_name()

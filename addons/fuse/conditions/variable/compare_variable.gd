@@ -19,7 +19,7 @@ enum ScopeSource {
 
 ## 变量名
 @export_group("Variable Comparison")
-@export var variable_name: String = "":
+var variable_name: String = "":
 	set(value):
 		variable_name = value
 		clear_dependencies_cache()

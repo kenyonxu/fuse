@@ -27,7 +27,7 @@ var use_variable: bool = false
 var position_variable: String = ""
 
 # 位置变量作用域
-@export var position_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
+var position_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
 ## 获取指令元数据（用于指令选择器）
 static func _get_instruction_metadata() -> InstructionMetadata:

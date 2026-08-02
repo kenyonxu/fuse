@@ -39,7 +39,7 @@ var from_variable: String = "":
 		_update_resource_name()
 
 # 起始值变量作用域
-@export var from_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var from_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		from_scope = value
 		_update_resource_name()
@@ -68,7 +68,7 @@ var to_variable: String = "":
 		_update_resource_name()
 
 # 目标值变量作用域
-@export var to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		to_scope = value
 		_update_resource_name()
@@ -97,7 +97,7 @@ var weight_variable: String = "":
 		_update_resource_name()
 
 # 权重变量作用域
-@export var weight_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var weight_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		weight_scope = value
 		_update_resource_name()
@@ -109,7 +109,7 @@ var save_to_variable: String = "lerped_value":
 		_update_resource_name()
 
 ## 保存到作用域
-@export var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		save_to_scope = value
 		_update_resource_name()

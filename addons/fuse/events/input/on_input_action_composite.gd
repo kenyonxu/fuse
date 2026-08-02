@@ -60,7 +60,7 @@ enum TriggerRate {
 
 ## 是否在输入归零时触发事件
 ## 启用后，当用户释放所有方向键时会触发一次事件，指令可以获取零向量
-@export var trigger_on_zero: bool = false:
+var trigger_on_zero: bool = false:
 	set(value):
 		trigger_on_zero = value
 		if Engine.is_editor_hint():

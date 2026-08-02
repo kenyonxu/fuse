@@ -32,7 +32,7 @@ var use_variable: bool = false
 var blend_variable: String = ""
 
 # 混合变量作用域
-@export var blend_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var blend_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if blend_scope != value:
 			blend_scope = value

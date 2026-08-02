@@ -25,7 +25,7 @@ var texture_path: String = ""
 var texture_variable: String = ""
 
 # 纹理变量作用域
-@export var texture_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var texture_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		texture_scope = value
 		_update_resource_name()

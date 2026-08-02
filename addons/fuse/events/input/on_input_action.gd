@@ -29,7 +29,7 @@ var target_input_action: String = "":
 			_update_resource_name()
 
 ## 触发模式
-@export var trigger_mode: TriggerMode = TriggerMode.JUST_PRESSED:
+var trigger_mode: TriggerMode = TriggerMode.JUST_PRESSED:
 	set(value):
 		trigger_mode = value
 		_update_resource_name()

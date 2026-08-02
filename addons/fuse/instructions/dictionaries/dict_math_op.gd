@@ -106,7 +106,7 @@ var key_target_node_path: NodePath = NodePath(""):
 			_update_resource_name()
 
 ## 键值（直接输入，当 use_key_from_variable = false 时使用）
-@export var key_value: Variant:
+var key_value: Variant:
 	set(value):
 		key_value = value
 		_update_resource_name()
@@ -160,7 +160,7 @@ var operand_target_node_path: NodePath = NodePath(""):
 			_update_resource_name()
 
 ## 操作数值（直接输入，当 use_operand_from_variable = false 时使用）
-@export var operand: float = 1.0:
+var operand: float = 1.0:
 	set(value):
 		operand = value
 		_update_resource_name()

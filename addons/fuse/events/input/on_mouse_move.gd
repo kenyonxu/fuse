@@ -24,7 +24,7 @@ enum TriggerMode {
 }
 
 ## 触发模式
-@export var trigger_mode: TriggerMode = TriggerMode.CONTINUOUS:
+var trigger_mode: TriggerMode = TriggerMode.CONTINUOUS:
 	set(value):
 		trigger_mode = value
 		_update_resource_name()

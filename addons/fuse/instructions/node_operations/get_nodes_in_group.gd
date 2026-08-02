@@ -18,19 +18,19 @@ enum ScopeSource {
 }
 
 ## 组名称
-@export var group_name: String = "":
+var group_name: String = "":
 	set(value):
 		group_name = value
 		_update_resource_name()
 
 ## 结果变量名
-@export var result_variable: String = "":
+var result_variable: String = "":
 	set(value):
 		result_variable = value
 		_update_resource_name()
 
 ## 结果变量作用域
-@export var result_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var result_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if result_scope != value:
 			result_scope = value

@@ -75,13 +75,13 @@ var node_target_node_path: NodePath = NodePath(""):
 		_update_resource_name()
 
 ## 属性名
-@export var property_name: String = "":
+var property_name: String = "":
 	set(value):
 		property_name = value
 		_update_resource_name()
 
 ## 期望的属性值
-@export var property_value: Variant = null:
+var property_value: Variant = null:
 	set(value):
 		property_value = value
 		_update_resource_name()

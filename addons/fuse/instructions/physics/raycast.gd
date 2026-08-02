@@ -43,7 +43,7 @@ var save_result: bool = false
 var result_variable: String = ""
 
 ## 保存到作用域
-@export var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if save_to_scope != value:
 			save_to_scope = value

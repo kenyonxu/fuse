@@ -69,7 +69,7 @@ var group_name: String = ""
 var target_node_path: NodePath = NodePath("")
 
 # 搜索值（要查找的元素值）
-@export var search_value: Variant:
+var search_value: Variant:
 	set(value):
 		search_value = value
 		_update_resource_name()

@@ -26,7 +26,7 @@ enum ScopeSource {
 		_update_resource_name()
 
 ## 变量作用域
-@export var variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+var variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		if variable_scope != value:
 			variable_scope = value
