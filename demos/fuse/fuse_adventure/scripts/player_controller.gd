@@ -21,6 +21,10 @@ extends CharacterBody2D
 var _jump_count: int = 0
 var _was_on_floor: bool = false
 
+# 待触发的一次性动画条件标志（本帧设置、下一帧清除，确保 AnimationTree 能读到）
+var _pending_jump: bool = false
+var _pending_double_jump: bool = false
+
 
 func _ready() -> void:
 	_anim_tree.active = true
@@ -61,30 +65,36 @@ func _handle_jump() -> void:
 		if is_on_floor():
 			velocity.y = jump_force
 			_jump_count = 1
-			_set_anim_condition("jump", true)
+			_pending_jump = true
 		elif enable_double_jump and _jump_count == 1:
 			velocity.y = jump_force
 			_jump_count = 2
-			_set_anim_condition("do_double_jump", true)
+			_pending_double_jump = true
 
 
 ## 根据状态更新 AnimationTree 条件参数
 func _update_animation() -> void:
 	var on_floor_now := is_on_floor()
 
-	# 离开地面 → 进入下落
-	if _was_on_floor and not on_floor_now and velocity.y > 0.0:
-		_set_anim_condition("fall", true)
-
-	# 着陆
-	if not _was_on_floor and on_floor_now:
-		_set_anim_condition("land", true)
-
-	# 清除一次性条件，避免下一帧继续触发
+	# 先清除上一帧的一次性条件
 	_set_anim_condition("jump", false)
 	_set_anim_condition("do_double_jump", false)
 	_set_anim_condition("fall", false)
 	_set_anim_condition("land", false)
+
+	# 触发本帧的一次性条件
+	if _pending_jump:
+		_set_anim_condition("jump", true)
+		_pending_jump = false
+	elif _pending_double_jump:
+		_set_anim_condition("do_double_jump", true)
+		_pending_double_jump = false
+
+	if _was_on_floor and not on_floor_now and velocity.y > 0.0:
+		_set_anim_condition("fall", true)
+
+	if not _was_on_floor and on_floor_now:
+		_set_anim_condition("land", true)
 
 
 ## 根据移动方向翻转精灵
