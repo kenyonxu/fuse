@@ -38,7 +38,7 @@ advance_condition = &"fall"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ds1tm"]
 advance_mode = 2
 advance_condition = &"land"
-advance_expression = "not is_on_floor()"
+advance_expression = "is_on_floor()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5bacu"]
 advance_mode = 2

@@ -1808,7 +1808,14 @@ FUSE_CAMERA_FOLLOW_DAMPING_OFF,关,Off
 FUSE_CAMERA_FOLLOW_DAMPING,阻尼: {state},Damping: {state}
 FUSE_CAMERA_FOLLOW_DISABLED,禁用,Disabled
 FUSE_CAMERA_FOLLOW_ENABLED,启用,Enabled
-FUSE_INSTRUCTION_CAMERA_FOLLOW_DESC_FORMAT,相机跟随 {target} ({state}, {mode}),Camera Follow {target} ({state}, {mode})
+FUSE_INSTRUCTION_CAMERA_FOLLOW_DESC_FORMAT,相机跟随 {target} → {camera} ({state} {mode}),Camera Follow {target} → {camera} ({state} {mode})
+FUSE_INSTRUCTION_CAMERA_FOLLOW_TARGET_VARIABLE_EMPTY,未指定目标变量,Target Variable Not Specified
+FUSE_INSTRUCTION_CAMERA_FOLLOW_TARGET_VARIABLE,变量 {variable},Variable {variable}
+FUSE_INSTRUCTION_CAMERA_FOLLOW_CAMERA_VARIABLE_EMPTY,未指定相机变量,Camera Variable Not Specified
+FUSE_INSTRUCTION_CAMERA_FOLLOW_CAMERA_VARIABLE,变量 {variable},Variable {variable}
+FUSE_INSTRUCTION_CAMERA_FOLLOW_NO_TARGET,未选择目标,No Target Selected
+FUSE_INSTRUCTION_CAMERA_FOLLOW_NO_CAMERA,未选择相机,No Camera Selected
+FUSE_ERROR_CAMERA_VARIABLE_EMPTY,相机节点变量名不能为空,Camera node variable name cannot be empty
 
 # Camera Shake - Resource Name & Description
 FUSE_INSTRUCTION_CAMERA_SHAKE_BASE_NAME,相机抖动,Camera Shake

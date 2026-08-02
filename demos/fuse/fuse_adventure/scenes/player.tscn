@@ -25,7 +25,7 @@ states/PlayerNormal/position = Vector2(442.8, 86.399994)
 states/player_hit/node = SubResource("AnimationNodeAnimation_wga5u")
 states/player_hit/position = Vector2(420, -79.2)
 transitions = ["Start", "PlayerNormal", SubResource("AnimationNodeStateMachineTransition_haqlu"), "PlayerNormal", "player_hit", SubResource("AnimationNodeStateMachineTransition_fkm5b"), "player_hit", "PlayerNormal", SubResource("AnimationNodeStateMachineTransition_lrobt")]
-graph_offset = Vector2(-38, -176)
+graph_offset = Vector2(-235, -203)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rxgda"]
 radius = 7.0
@@ -37,7 +37,7 @@ script = ExtResource("4_7t5up")
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 7
+frame = 10
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cxiwcx0w5nofb"]
 
+[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="1_4e7ko"]
 [ext_resource type="PackedScene" uid="uid://der7wpomdo217" path="res://demos/fuse/fuse_adventure/scenes/fuse_demo_map.tscn" id="1_hc3n1"]
 [ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="2_ntk0i"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_lwyyc"]
@@ -11,7 +12,7 @@
 [ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="9_sqapb"]
 [ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="9_u5por"]
 [ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="10_plqys"]
-[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="10_u5por"]
+[ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="13_scxm5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 652)
@@ -77,20 +78,9 @@ save_to_variable = "pos_spawn"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_4e7ko"]
-resource_name = "打印变量 'pos_spawn' [[本地]]"
-script = ExtResource("10_u5por")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-variable_name = "pos_spawn"
-variable_scope = 0
-
 [sub_resource type="Resource" id="Resource_sqapb"]
 resource_name = "实例化 'player.tscn' 从变量 [[本地]] pos_spawn"
 script = ExtResource("8_io55n")
-target_variable = "instance_id"
-save_to_scope = 0
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -105,17 +95,29 @@ spawn_position = Vector3(0, 0, 0)
 spawn_offset = Vector3(0, 0, 0)
 position_variable = "pos_spawn"
 position_scope = 0
-save_instance_id = false
+save_instance_id = true
 target_variable = "instance_id"
 save_to_scope = 0
 use_object_pool = false
 
+[sub_resource type="Resource" id="Resource_3ucjy"]
+resource_name = "相机跟随 平滑 速度: 5.0"
+script = ExtResource("13_scxm5")
+target_node = NodePath("")
+camera_node = NodePath("")
+follow_mode = 1
+smooth_speed = 5.0
+enabled = true
+
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("5_m0hyj")
-instructions = Array[ExtResource("3_lwyyc")]([SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_4e7ko"), SubResource("Resource_sqapb")])
+instructions = Array[ExtResource("3_lwyyc")]([SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_sqapb"), SubResource("Resource_3ucjy")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
-[node name="FuseDemoLevel" type="Node2D" unique_id=1184444632]
+[node name="FuseDemoLevel" type="Node" unique_id=1396739659]
+script = ExtResource("1_4e7ko")
+scope_id = "level_scope"
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"
 
 [node name="Worlds" type="Node2D" parent="." unique_id=529313865]
 
