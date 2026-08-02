@@ -20,6 +20,7 @@ extends CharacterBody2D
 
 var _jump_count: int = 0
 var _was_on_floor: bool = false
+var _was_falling: bool = false
 
 # 待触发的一次性动画条件标志（本帧设置、下一帧清除，确保 AnimationTree 能读到）
 var _pending_jump: bool = false
@@ -41,6 +42,8 @@ func _physics_process(delta: float) -> void:
 	_update_facing()
 
 	_was_on_floor = is_on_floor()
+	if _was_on_floor:
+		_was_falling = false
 
 
 ## 应用重力，限制最大下落速度
@@ -90,8 +93,10 @@ func _update_animation() -> void:
 		_set_anim_condition("do_double_jump", true)
 		_pending_double_jump = false
 
-	if _was_on_floor and not on_floor_now and velocity.y > 0.0:
+	# 进入下落阶段（起跳到最高点之后 velocity.y 转正是触发时机）
+	if not on_floor_now and velocity.y > 0.0 and not _was_falling:
 		_set_anim_condition("fall", true)
+		_was_falling = true
 
 	if not _was_on_floor and on_floor_now:
 		_set_anim_condition("land", true)
