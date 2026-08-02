@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://d11yuj3gwya3x"]
+
+[ext_resource type="SpriteFrames" uid="uid://7t5upta3sbcv" path="res://demos/fuse/fuse_adventure/resources/animatedSprites/player.tres" id="1_yihwy"]
+[ext_resource type="AnimationLibrary" uid="uid://xumr4l813imn" path="res://demos/fuse/fuse_adventure/resources/animationLibs/player.res" id="2_wga5u"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://c8b16jwsdrrn5" path="res://demos/fuse/fuse_adventure/resources/animation_stm/player_normal.tres" id="3_wga5u"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
+animation = &"player/hit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_haqlu"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_fkm5b"]
+advance_mode = 2
+advance_condition = &"hit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lrobt"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_phq6w"]
+states/PlayerNormal/node = ExtResource("3_wga5u")
+states/PlayerNormal/position = Vector2(442.8, 86.399994)
+states/player_hit/node = SubResource("AnimationNodeAnimation_wga5u")
+states/player_hit/position = Vector2(420, -79.2)
+transitions = ["Start", "PlayerNormal", SubResource("AnimationNodeStateMachineTransition_haqlu"), "PlayerNormal", "player_hit", SubResource("AnimationNodeStateMachineTransition_fkm5b"), "player_hit", "PlayerNormal", SubResource("AnimationNodeStateMachineTransition_lrobt")]
+graph_offset = Vector2(-38, -176)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rxgda"]
+radius = 7.0
+height = 24.0
+
+[node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
+
+[node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
+sprite_frames = ExtResource("1_yihwy")
+animation = &"idle"
+frame = 7
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
+libraries/player = ExtResource("2_wga5u")
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=24855767]
+root_node = NodePath("../PlayerSprites")
+tree_root = SubResource("AnimationNodeStateMachine_phq6w")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../PlayerSprites/AnimationPlayer")
+parameters/conditions/hit = false
+parameters/PlayerNormal/conditions/do_double_jump = false
+parameters/PlayerNormal/conditions/fall = false
+parameters/PlayerNormal/conditions/jump = false
+parameters/PlayerNormal/conditions/land = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=432326056]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape2D_rxgda")

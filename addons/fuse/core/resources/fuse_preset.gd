@@ -3,6 +3,13 @@
 class_name FusePreset
 extends Resource
 
+## 动态属性列表
+##
+## 显式返回 Array[Dictionary]，避免 Godot 4.x 使用 Resource 基类的 Array 返回类型
+## 触发 "_get_property_list() should return Array[Dictionary]" 兼容性警告。
+func _get_property_list() -> Array[Dictionary]:
+	return []
+
 ## 预设名称(显示在面板中)
 @export var display_name: String = ""
 

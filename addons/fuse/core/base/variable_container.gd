@@ -12,6 +12,13 @@
 ##
 class_name VariableContainer extends Resource
 
+## 动态属性列表
+##
+## 显式返回 Array[Dictionary]，避免 Godot 4.x 使用 Resource 基类的 Array 返回类型
+## 触发 "_get_property_list() should return Array[Dictionary]" 兼容性警告。
+func _get_property_list() -> Array[Dictionary]:
+	return []
+
 ## 变量容器
 ##
 ## 用于存储和管理作用域变量的容器类，支持局部变量和全局变量的管理。

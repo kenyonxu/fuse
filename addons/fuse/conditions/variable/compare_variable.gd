@@ -64,8 +64,7 @@ enum ComparisonOperator {
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	properties.append({
 		name = "variable_name",
 		type = TYPE_STRING,

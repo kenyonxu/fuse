@@ -113,8 +113,7 @@ func get_variable_modes() -> Array[Dictionary]:
 # =============================================
 
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	properties.append({
 		name = "Expression",
 		type = TYPE_NIL,

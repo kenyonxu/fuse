@@ -115,8 +115,7 @@ func _update_resource_name():
 
 ## 获取动态属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties = []
-
+	var properties: Array[Dictionary] = []
 	# 初始化本地化缓存（如果还没有初始化）
 	_init_localization_cache()
 

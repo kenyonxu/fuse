@@ -1,6 +1,13 @@
 # fuse_metadata.gd
 class_name FuseMetadata extends Resource
 
+## 动态属性列表
+##
+## 显式返回 Array[Dictionary]，避免 Godot 4.x 使用 Resource 基类的 Array 返回类型
+## 触发 "_get_property_list() should return Array[Dictionary]" 兼容性警告。
+func _get_property_list() -> Array[Dictionary]:
+	return []
+
 ## Fuse 元数据基类
 ##
 ## 为 Event、Instruction、Condition 提供统一的元数据接口

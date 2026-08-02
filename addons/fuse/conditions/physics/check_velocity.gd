@@ -92,8 +92,7 @@ var comparison_operator: int = 0:
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# ========== 节点配置 ==========
 	properties.append({
 		name = "Node Configuration",

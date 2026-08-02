@@ -123,8 +123,7 @@ func get_variable_modes() -> Array[Dictionary]:
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# Expression 分组
 	properties.append({
 		name = "Expression",

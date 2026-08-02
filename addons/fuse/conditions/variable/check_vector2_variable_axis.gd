@@ -94,8 +94,7 @@ var _last_comparison_result: bool = false
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# 变量作用域
 	properties.append({
 		name = "variable_name",

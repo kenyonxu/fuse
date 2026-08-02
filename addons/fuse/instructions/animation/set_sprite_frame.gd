@@ -40,8 +40,7 @@ func _setup_metadata():
 # 动态属性列表
 # =============================================
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	properties.append({
 		name = "Target",
 		type = TYPE_NIL,

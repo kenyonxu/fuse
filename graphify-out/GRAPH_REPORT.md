@@ -1,1418 +1,1431 @@
-# Graph Report - fuse  (2026-07-24)
+# Graph Report - fuse  (2026-08-02)
 
 ## Corpus Check
-- 180 files · ~318,615 words
+- 192 files · ~323,058 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 23528 nodes · 30871 edges · 1447 communities (1242 shown, 205 thin omitted)
+- 23645 nodes · 30976 edges · 1460 communities (1253 shown, 207 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5cd1be39`
+- Built from commit: `6258afb4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_store.c|store.c]]
-- [[_COMMUNITY_juicy_timeline_canvas.gd|juicy_timeline_canvas.gd]]
-- [[_COMMUNITY_genmidi.c|genmidi.c]]
-- [[_COMMUNITY_ExecutionContext|ExecutionContext]]
-- [[_COMMUNITY_EventEvaluator|EventEvaluator]]
-- [[_COMMUNITY_JuicyMiddlewarePipeline|JuicyMiddlewarePipeline]]
-- [[_COMMUNITY_JuicyTimelineEditor|JuicyTimelineEditor]]
-- [[_COMMUNITY_midi2abc.c|midi2abc.c]]
-- [[_COMMUNITY_VariableContainer|VariableContainer]]
-- [[_COMMUNITY_RunTargetNodeFunction|RunTargetNodeFunction]]
-- [[_COMMUNITY_JuicyPropertyTrack|JuicyPropertyTrack]]
-- [[_COMMUNITY_BaseInstruction|BaseInstruction]]
-- [[_COMMUNITY_matchsup.c|matchsup.c]]
-- [[_COMMUNITY_ActionRunner|ActionRunner]]
-- [[_COMMUNITY_BaseCondition|BaseCondition]]
-- [[_COMMUNITY_BaseVariable|BaseVariable]]
-- [[_COMMUNITY_JuicyCurveFactory|JuicyCurveFactory]]
-- [[_COMMUNITY_CheckVariable|CheckVariable]]
-- [[_COMMUNITY_GlobalVariableAssistant|GlobalVariableAssistant]]
-- [[_COMMUNITY_WaitUntil|WaitUntil]]
-- [[_COMMUNITY_JuicyMiddleware|JuicyMiddleware]]
-- [[_COMMUNITY_JuicyTimelineResource|JuicyTimelineResource]]
-- [[_COMMUNITY_midicopy.c|midicopy.c]]
-- [[_COMMUNITY_MethodSelectorDialog|MethodSelectorDialog]]
-- [[_COMMUNITY_ForEach|ForEach]]
-- [[_COMMUNITY_PropertyStateManager|PropertyStateManager]]
-- [[_COMMUNITY_RuntimeActionRunnerInstance|RuntimeActionRunnerInstance]]
-- [[_COMMUNITY_InstantiateScene|InstantiateScene]]
-- [[_COMMUNITY_JuicyContext|JuicyContext]]
-- [[_COMMUNITY_shake_properties|shake_properties]]
-- [[_COMMUNITY_CheckDistance|CheckDistance]]
-- [[_COMMUNITY_FindNode|FindNode]]
-- [[_COMMUNITY_GetRandomPointInRange|GetRandomPointInRange]]
-- [[_COMMUNITY_plugin.gd|plugin.gd]]
-- [[_COMMUNITY_BaseEvent|BaseEvent]]
-- [[_COMMUNITY_JuicyMixer|JuicyMixer]]
-- [[_COMMUNITY_JuicyMethodTrack|JuicyMethodTrack]]
-- [[_COMMUNITY_JuicyContextPool|JuicyContextPool]]
-- [[_COMMUNITY_juicy_track_editor.gd|juicy_track_editor.gd]]
-- [[_COMMUNITY_ArrayVectorSort|ArrayVectorSort]]
-- [[_COMMUNITY_test_phase1_integration.gd|test_phase1_integration.gd]]
-- [[_COMMUNITY_MusicPlayer|MusicPlayer]]
-- [[_COMMUNITY_JuicyInterruptionManager|JuicyInterruptionManager]]
-- [[_COMMUNITY_RuntimeInstructionInstance|RuntimeInstructionInstance]]
-- [[_COMMUNITY_CheckScopeVariable|CheckScopeVariable]]
-- [[_COMMUNITY_ArrayVectorGetClosest|ArrayVectorGetClosest]]
-- [[_COMMUNITY_ArrayVectorGetFurthest|ArrayVectorGetFurthest]]
-- [[_COMMUNITY_ForLoop|ForLoop]]
-- [[_COMMUNITY_WhileLoop|WhileLoop]]
-- [[_COMMUNITY_CheckDirection|CheckDirection]]
-- [[_COMMUNITY_BaseTrigger|BaseTrigger]]
-- [[_COMMUNITY_ArrayInsert|ArrayInsert]]
-- [[_COMMUNITY_ArrayRemove|ArrayRemove]]
-- [[_COMMUNITY_DictMathOp|DictMathOp]]
-- [[_COMMUNITY_JuicyObjectPool|JuicyObjectPool]]
-- [[_COMMUNITY_JuicyFeedbackTrack|JuicyFeedbackTrack]]
-- [[_COMMUNITY_TweenPropertyInstruction|TweenPropertyInstruction]]
-- [[_COMMUNITY_CheckArraySize|CheckArraySize]]
-- [[_COMMUNITY_DictModifyNumber|DictModifyNumber]]
-- [[_COMMUNITY_MathOperation|MathOperation]]
-- [[_COMMUNITY_MusicManager|MusicManager]]
-- [[_COMMUNITY_VectorOperation|VectorOperation]]
-- [[_COMMUNITY_CreateVariable|CreateVariable]]
-- [[_COMMUNITY_PropertyInfo|PropertyInfo]]
-- [[_COMMUNITY_AnimationPlayData|AnimationPlayData]]
-- [[_COMMUNITY_CheckChildCount|CheckChildCount]]
-- [[_COMMUNITY_CheckIsChildOf|CheckIsChildOf]]
-- [[_COMMUNITY_GlobalVariableManager|GlobalVariableManager]]
-- [[_COMMUNITY_Runner|Runner]]
-- [[_COMMUNITY_SetPropertyValue|SetPropertyValue]]
-- [[_COMMUNITY_InterruptionState|InterruptionState]]
-- [[_COMMUNITY_JuicyPoolManager|JuicyPoolManager]]
-- [[_COMMUNITY_CheckGroupCount|CheckGroupCount]]
-- [[_COMMUNITY_CheckVector2VariableAxis|CheckVector2VariableAxis]]
-- [[_COMMUNITY_OnMouseButton|OnMouseButton]]
-- [[_COMMUNITY_ArraySet|ArraySet]]
-- [[_COMMUNITY_ArrayAdd|ArrayAdd]]
-- [[_COMMUNITY_MathExpression|MathExpression]]
-- [[_COMMUNITY_ActiveMusicState|ActiveMusicState]]
-- [[_COMMUNITY_JuicyTimeRuler|JuicyTimeRuler]]
-- [[_COMMUNITY_CheckArrayContains|CheckArrayContains]]
-- [[_COMMUNITY_GlobalVariableResource|GlobalVariableResource]]
-- [[_COMMUNITY_MultiEventTrigger|MultiEventTrigger]]
-- [[_COMMUNITY_PropertyManager|PropertyManager]]
-- [[_COMMUNITY_juicy_timeline_inspector.gd|juicy_timeline_inspector.gd]]
-- [[_COMMUNITY_JuicyAudioEventHandler|JuicyAudioEventHandler]]
-- [[_COMMUNITY_system_integration_test.gd|system_integration_test.gd]]
-- [[_COMMUNITY_MusicTrackResource|MusicTrackResource]]
-- [[_COMMUNITY_DebugVisualizer|DebugVisualizer]]
-- [[_COMMUNITY_ArrayNumericSort|ArrayNumericSort]]
-- [[_COMMUNITY_DictGetByPath|DictGetByPath]]
-- [[_COMMUNITY_test_runner.gd|test_runner.gd]]
-- [[_COMMUNITY_JuicyTimelineDriver|JuicyTimelineDriver]]
-- [[_COMMUNITY_JuicyEvent|JuicyEvent]]
-- [[_COMMUNITY_test_music_player_ui.gd|test_music_player_ui.gd]]
-- [[_COMMUNITY_CompareVariable|CompareVariable]]
-- [[_COMMUNITY_OnTargetSignalEmit|OnTargetSignalEmit]]
-- [[_COMMUNITY_DictGetValue|DictGetValue]]
-- [[_COMMUNITY_DictSetKeyValue|DictSetKeyValue]]
-- [[_COMMUNITY_RunRunner|RunRunner]]
-- [[_COMMUNITY_Lerp|Lerp]]
-- [[_COMMUNITY_JuicyFeedbackResource|JuicyFeedbackResource]]
-- [[_COMMUNITY_test_middleware_integration.gd|test_middleware_integration.gd]]
-- [[_COMMUNITY_test_lod_middleware.gd|test_lod_middleware.gd]]
-- [[_COMMUNITY_CheckNodeActive|CheckNodeActive]]
-- [[_COMMUNITY_FuseObjectPool|FuseObjectPool]]
-- [[_COMMUNITY_OnInterval|OnInterval]]
-- [[_COMMUNITY_ArrayGet|ArrayGet]]
-- [[_COMMUNITY_ArrayNumericGetLargest|ArrayNumericGetLargest]]
-- [[_COMMUNITY_ArrayNumericGetSmallest|ArrayNumericGetSmallest]]
-- [[_COMMUNITY_JuicyMethodInfo|JuicyMethodInfo]]
-- [[_COMMUNITY_CheckNodeProperty|CheckNodeProperty]]
-- [[_COMMUNITY_ArrayContains|ArrayContains]]
-- [[_COMMUNITY_ArrayFind|ArrayFind]]
-- [[_COMMUNITY_ArrayRandom|ArrayRandom]]
-- [[_COMMUNITY_JuicyPoolItem|JuicyPoolItem]]
-- [[_COMMUNITY_animated_sprite2d_play_with_variable.gd|animated_sprite2d_play_with_variable.gd]]
-- [[_COMMUNITY_CheckDictContainsKey|CheckDictContainsKey]]
-- [[_COMMUNITY_CheckDictSize|CheckDictSize]]
-- [[_COMMUNITY_ExecutionTracker|ExecutionTracker]]
-- [[_COMMUNITY_ArraySize|ArraySize]]
-- [[_COMMUNITY_JuicySequenceDriver|JuicySequenceDriver]]
-- [[_COMMUNITY_CheckVelocity|CheckVelocity]]
-- [[_COMMUNITY_OnInputKey|OnInputKey]]
-- [[_COMMUNITY_ArrayClear|ArrayClear]]
-- [[_COMMUNITY_ArrayReverse|ArrayReverse]]
-- [[_COMMUNITY_ArrayShuffle|ArrayShuffle]]
-- [[_COMMUNITY_StateRestorationMiddleware|StateRestorationMiddleware]]
-- [[_COMMUNITY_JuicyEventTrack|JuicyEventTrack]]
-- [[_COMMUNITY_CheckAnimationTreeState|CheckAnimationTreeState]]
-- [[_COMMUNITY_CheckFacingDirection|CheckFacingDirection]]
-- [[_COMMUNITY_OnInputActionComposite|OnInputActionComposite]]
-- [[_COMMUNITY_OnValueChanged|OnValueChanged]]
-- [[_COMMUNITY_DictFromJson|DictFromJson]]
-- [[_COMMUNITY_Wait|Wait]]
-- [[_COMMUNITY_FunctionInfo|FunctionInfo]]
-- [[_COMMUNITY_JuicyPropertyBuffer|JuicyPropertyBuffer]]
-- [[_COMMUNITY_AudioMixingConfig|AudioMixingConfig]]
-- [[_COMMUNITY_CheckAnimationFinished|CheckAnimationFinished]]
-- [[_COMMUNITY_CheckIsAnimation|CheckIsAnimation]]
-- [[_COMMUNITY_CheckComposite|CheckComposite]]
-- [[_COMMUNITY_CheckNodeInGroup|CheckNodeInGroup]]
-- [[_COMMUNITY_ScopeVariableContainer|ScopeVariableContainer]]
-- [[_COMMUNITY_OnHealthChanged|OnHealthChanged]]
-- [[_COMMUNITY_OnTextChanged|OnTextChanged]]
-- [[_COMMUNITY_LoadSceneBackground|LoadSceneBackground]]
-- [[_COMMUNITY_JuicyParameterMapping|JuicyParameterMapping]]
-- [[_COMMUNITY_test_timeline_editor.gd|test_timeline_editor.gd]]
-- [[_COMMUNITY_CheckIsPlaying|CheckIsPlaying]]
-- [[_COMMUNITY_CheckNodeExists|CheckNodeExists]]
-- [[_COMMUNITY_CheckInAir|CheckInAir]]
-- [[_COMMUNITY_CheckIsFalling|CheckIsFalling]]
-- [[_COMMUNITY_CheckOnFloor|CheckOnFloor]]
-- [[_COMMUNITY_CheckOnWall|CheckOnWall]]
-- [[_COMMUNITY_FuseTaskManager|FuseTaskManager]]
-- [[_COMMUNITY_OnVariableChanged|OnVariableChanged]]
-- [[_COMMUNITY_DictToggleBoolean|DictToggleBoolean]]
-- [[_COMMUNITY_SetVariable|SetVariable]]
-- [[_COMMUNITY_EditorToolsTest|EditorToolsTest]]
-- [[_COMMUNITY_FunctionManager|FunctionManager]]
-- [[_COMMUNITY_JuicyEventHandler|JuicyEventHandler]]
-- [[_COMMUNITY_OnSoundListened|OnSoundListened]]
-- [[_COMMUNITY_BreakpointInstruction|BreakpointInstruction]]
-- [[_COMMUNITY_GetAllChildrenPosition|GetAllChildrenPosition]]
-- [[_COMMUNITY_Raycast|Raycast]]
-- [[_COMMUNITY_SetIntVariable|SetIntVariable]]
-- [[_COMMUNITY_translation_checker.gd|translation_checker.gd]]
-- [[_COMMUNITY_JuicyDirector|JuicyDirector]]
-- [[_COMMUNITY_StateSnapshot|StateSnapshot]]
-- [[_COMMUNITY_JuicyCompositeResource|JuicyCompositeResource]]
-- [[_COMMUNITY_JuicyKeyframe|JuicyKeyframe]]
-- [[_COMMUNITY_test_property_track_phase1.gd|test_property_track_phase1.gd]]
-- [[_COMMUNITY_MiddlewareOptimizationValidation|MiddlewareOptimizationValidation]]
-- [[_COMMUNITY_editor_log.cpp|editor_log.cpp]]
-- [[_COMMUNITY_FuseError|FuseError]]
-- [[_COMMUNITY_SetCameraZoom|SetCameraZoom]]
-- [[_COMMUNITY_GetAllChildren|GetAllChildren]]
-- [[_COMMUNITY_GetChildByIndex|GetChildByIndex]]
-- [[_COMMUNITY_test_variable_operations.gd|test_variable_operations.gd]]
-- [[_COMMUNITY_TypeConverter|TypeConverter]]
-- [[_COMMUNITY_JuicyDriver|JuicyDriver]]
-- [[_COMMUNITY_JuicyTimelineResourceCreator|JuicyTimelineResourceCreator]]
-- [[_COMMUNITY_ChannelInterruptionConfig|ChannelInterruptionConfig]]
-- [[_COMMUNITY_visual_tween_demo.gd|visual_tween_demo.gd]]
-- [[_COMMUNITY_OnInputAction|OnInputAction]]
-- [[_COMMUNITY_OnShapeCast|OnShapeCast]]
-- [[_COMMUNITY_OnCooldownFinished|OnCooldownFinished]]
-- [[_COMMUNITY_DictRemoveKey|DictRemoveKey]]
-- [[_COMMUNITY_DictSetByPath|DictSetByPath]]
-- [[_COMMUNITY_RunConditionCheck|RunConditionCheck]]
-- [[_COMMUNITY_PreloadSceneInstruction|PreloadSceneInstruction]]
-- [[_COMMUNITY_JuicyLODMiddleware|JuicyLODMiddleware]]
-- [[_COMMUNITY_EventHandlerEntry|EventHandlerEntry]]
-- [[_COMMUNITY_MiddlewareEntry|MiddlewareEntry]]
-- [[_COMMUNITY_printlib|printlib]]
-- [[_COMMUNITY_MiddlewarePerformanceBenchmark|MiddlewarePerformanceBenchmark]]
-- [[_COMMUNITY_OnMouseMove|OnMouseMove]]
-- [[_COMMUNITY_OnTouchSwipe|OnTouchSwipe]]
-- [[_COMMUNITY_OnScreenEnteredExited|OnScreenEnteredExited]]
-- [[_COMMUNITY_OnCountdown|OnCountdown]]
-- [[_COMMUNITY_PrintVariableValue|PrintVariableValue]]
-- [[_COMMUNITY_DictDuplicate|DictDuplicate]]
-- [[_COMMUNITY_DictMerge|DictMerge]]
-- [[_COMMUNITY_DictToJson|DictToJson]]
-- [[_COMMUNITY_test_property_system_common_classes.gd|test_property_system_common_classes.gd]]
-- [[_COMMUNITY_test_find_node.gd|test_find_node.gd]]
-- [[_COMMUNITY_ContextStateManager|ContextStateManager]]
-- [[_COMMUNITY_RuntimeEventInstance|RuntimeEventInstance]]
-- [[_COMMUNITY_Trigger|Trigger]]
-- [[_COMMUNITY_StaticAnalysisPanel|StaticAnalysisPanel]]
-- [[_COMMUNITY_OnNodePausedResumed|OnNodePausedResumed]]
-- [[_COMMUNITY_DictGetKeys|DictGetKeys]]
-- [[_COMMUNITY_DictGetValues|DictGetValues]]
-- [[_COMMUNITY_ClampValue|ClampValue]]
-- [[_COMMUNITY_QueueFreeNode|QueueFreeNode]]
-- [[_COMMUNITY_GetPosition|GetPosition]]
-- [[_COMMUNITY_PlayJuicyMixerFeedback|PlayJuicyMixerFeedback]]
-- [[_COMMUNITY_FuseLocalization|FuseLocalization]]
-- [[_COMMUNITY_JuicyPropertyManager|JuicyPropertyManager]]
-- [[_COMMUNITY_PlayMusic|PlayMusic]]
-- [[_COMMUNITY_DictSize|DictSize]]
-- [[_COMMUNITY_StringExpression|StringExpression]]
-- [[_COMMUNITY_GetScopeVariable|GetScopeVariable]]
-- [[_COMMUNITY_JuicyCompositeDriver|JuicyCompositeDriver]]
-- [[_COMMUNITY_JuicySpringDriver|JuicySpringDriver]]
-- [[_COMMUNITY_JuicyTimeScaleMiddleware|JuicyTimeScaleMiddleware]]
-- [[_COMMUNITY_AudioEventResource|AudioEventResource]]
-- [[_COMMUNITY_test_timeline_runner.gd|test_timeline_runner.gd]]
-- [[_COMMUNITY_CompareHealthThreshold|CompareHealthThreshold]]
-- [[_COMMUNITY_FusePoolManager|FusePoolManager]]
-- [[_COMMUNITY_InstructionSelector|InstructionSelector]]
-- [[_COMMUNITY_FuseMetadata|FuseMetadata]]
-- [[_COMMUNITY_CrossfadeToMusic|CrossfadeToMusic]]
-- [[_COMMUNITY_DictClear|DictClear]]
-- [[_COMMUNITY_SetUIText|SetUIText]]
-- [[_COMMUNITY_FuseNodeUtils|FuseNodeUtils]]
-- [[_COMMUNITY_InterruptionMiddleware|InterruptionMiddleware]]
-- [[_COMMUNITY_JuicyTrack|JuicyTrack]]
-- [[_COMMUNITY_RestorationConfig|RestorationConfig]]
-- [[_COMMUNITY_test_performance_optimization.gd|test_performance_optimization.gd]]
-- [[_COMMUNITY_test_property_track_phase2.gd|test_property_track_phase2.gd]]
-- [[_COMMUNITY_test_timeline_driver.gd|test_timeline_driver.gd]]
-- [[_COMMUNITY_test_variant_system.gd|test_variant_system.gd]]
-- [[_COMMUNITY_test_three_tier_demo.gd|test_three_tier_demo.gd]]
-- [[_COMMUNITY_test_juicy_shake_driver.gd|test_juicy_shake_driver.gd]]
-- [[_COMMUNITY_test_juicy_spring_driver.gd|test_juicy_spring_driver.gd]]
-- [[_COMMUNITY_test_comprehensive_performance.gd|test_comprehensive_performance.gd]]
-- [[_COMMUNITY_ExpressionCondition|ExpressionCondition]]
-- [[_COMMUNITY_OnAnimationLoop|OnAnimationLoop]]
-- [[_COMMUNITY_OnAnimationMarker|OnAnimationMarker]]
-- [[_COMMUNITY_MoveCharacterBody2DComposite|MoveCharacterBody2DComposite]]
-- [[_COMMUNITY_RecyclePooledScene|RecyclePooledScene]]
-- [[_COMMUNITY_WarmUpPool|WarmUpPool]]
-- [[_COMMUNITY_GetScenePath|GetScenePath]]
-- [[_COMMUNITY_SetUITexture|SetUITexture]]
-- [[_COMMUNITY_SetScopeVariable|SetScopeVariable]]
-- [[_COMMUNITY_JuicySequenceResource|JuicySequenceResource]]
-- [[_COMMUNITY_test_timeline_system.gd|test_timeline_system.gd]]
-- [[_COMMUNITY_JuicyMethodReflection|JuicyMethodReflection]]
-- [[_COMMUNITY_UndoRedoManager|UndoRedoManager]]
-- [[_COMMUNITY_CheckCountdownFinished|CheckCountdownFinished]]
-- [[_COMMUNITY_CheckHealthValue|CheckHealthValue]]
-- [[_COMMUNITY_OnGamepadAxis|OnGamepadAxis]]
-- [[_COMMUNITY_OnArea2DEnter|OnArea2DEnter]]
-- [[_COMMUNITY_BlendAnimation|BlendAnimation]]
-- [[_COMMUNITY_PauseResumeAudio|PauseResumeAudio]]
-- [[_COMMUNITY_test_composite_integration.gd|test_composite_integration.gd]]
-- [[_COMMUNITY_test_integration_event_handlers.gd|test_integration_event_handlers.gd]]
-- [[_COMMUNITY_test_target_methods.gd|test_target_methods.gd]]
-- [[_COMMUNITY_test_timeline_examples.gd|test_timeline_examples.gd]]
-- [[_COMMUNITY_test_timeline_integration.gd|test_timeline_integration.gd]]
-- [[_COMMUNITY_test_timeline_performance_optimization.gd|test_timeline_performance_optimization.gd]]
-- [[_COMMUNITY_test_context_state_manager_node.gd|test_context_state_manager_node.gd]]
-- [[_COMMUNITY_EditorToolsDemo|EditorToolsDemo]]
-- [[_COMMUNITY_OnAnimationBlend|OnAnimationBlend]]
-- [[_COMMUNITY_OnGamepadButton|OnGamepadButton]]
-- [[_COMMUNITY_OnPropertyChanged|OnPropertyChanged]]
-- [[_COMMUNITY_OnArea3DEntered|OnArea3DEntered]]
-- [[_COMMUNITY_OnRaycastHit|OnRaycastHit]]
-- [[_COMMUNITY_OnTimer|OnTimer]]
-- [[_COMMUNITY_SetAudioVolume|SetAudioVolume]]
-- [[_COMMUNITY_CameraShake|CameraShake]]
-- [[_COMMUNITY_GetLastChild|GetLastChild]]
-- [[_COMMUNITY_GetRandomChild|GetRandomChild]]
-- [[_COMMUNITY_MoveBy|MoveBy]]
-- [[_COMMUNITY_AudioMixingController|AudioMixingController]]
-- [[_COMMUNITY_JuicyShakeDriver|JuicyShakeDriver]]
-- [[_COMMUNITY_JuicyEventBuffer|JuicyEventBuffer]]
-- [[_COMMUNITY_ChannelMiddleware|ChannelMiddleware]]
-- [[_COMMUNITY_EventHandlingMiddleware|EventHandlingMiddleware]]
-- [[_COMMUNITY_test_timeline_final_integration.gd|test_timeline_final_integration.gd]]
-- [[_COMMUNITY_test_timeline_parameter_mapping.gd|test_timeline_parameter_mapping.gd]]
-- [[_COMMUNITY_ScopeVariableManager|ScopeVariableManager]]
-- [[_COMMUNITY_OnAnimationStarted|OnAnimationStarted]]
-- [[_COMMUNITY_OnIntervalWithVariable|OnIntervalWithVariable]]
-- [[_COMMUNITY_StopAudio|StopAudio]]
-- [[_COMMUNITY_IfElse|IfElse]]
-- [[_COMMUNITY_RandomNumber|RandomNumber]]
-- [[_COMMUNITY_GetChildCount|GetChildCount]]
-- [[_COMMUNITY_TweenMoveTo|TweenMoveTo]]
-- [[_COMMUNITY_TweenPulseAnimation|TweenPulseAnimation]]
-- [[_COMMUNITY_TweenRotateTo|TweenRotateTo]]
-- [[_COMMUNITY_TweenShakeAnimation|TweenShakeAnimation]]
-- [[_COMMUNITY_SaveGlobalVariables|SaveGlobalVariables]]
-- [[_COMMUNITY_run_localization_tests.gd|run_localization_tests.gd]]
-- [[_COMMUNITY_JuicyAnimationPlayDriver|JuicyAnimationPlayDriver]]
-- [[_COMMUNITY_DataOverride|DataOverride]]
-- [[_COMMUNITY_JuicyAnimationPlayResource|JuicyAnimationPlayResource]]
-- [[_COMMUNITY_MusicPriorityConfig|MusicPriorityConfig]]
-- [[_COMMUNITY_test_juicy_tween_driver.gd|test_juicy_tween_driver.gd]]
-- [[_COMMUNITY_CheckTimeReached|CheckTimeReached]]
-- [[_COMMUNITY_fuse_event_bus.gd|fuse_event_bus.gd]]
-- [[_COMMUNITY_ParallelConditionEvaluator|ParallelConditionEvaluator]]
-- [[_COMMUNITY_VariableScopeUtils|VariableScopeUtils]]
-- [[_COMMUNITY_OnAnimationFrameReached|OnAnimationFrameReached]]
-- [[_COMMUNITY_OnAudioBusVolumeChanged|OnAudioBusVolumeChanged]]
-- [[_COMMUNITY_OnOverlappingBodies|OnOverlappingBodies]]
-- [[_COMMUNITY_OnFocus|OnFocus]]
-- [[_COMMUNITY_IfThen|IfThen]]
-- [[_COMMUNITY_GetGroupCount|GetGroupCount]]
-- [[_COMMUNITY_GetNodesInGroup|GetNodesInGroup]]
-- [[_COMMUNITY_TransitionType|TransitionType]]
-- [[_COMMUNITY_MemoryOptimizationTest|MemoryOptimizationTest]]
-- [[_COMMUNITY_test_stage3_runtime_localization.gd|test_stage3_runtime_localization.gd]]
-- [[_COMMUNITY_SignalInfo|SignalInfo]]
-- [[_COMMUNITY_MusicBusController|MusicBusController]]
-- [[_COMMUNITY_JuicyParticleEventHandler|JuicyParticleEventHandler]]
-- [[_COMMUNITY_JuicySequenceEventHandler|JuicySequenceEventHandler]]
-- [[_COMMUNITY_composite_system_usage_guide.gd|composite_system_usage_guide.gd]]
-- [[_COMMUNITY_ValidationMiddleware|ValidationMiddleware]]
-- [[_COMMUNITY_JuicySpringResource|JuicySpringResource]]
-- [[_COMMUNITY_test_sequence_debug.gd|test_sequence_debug.gd]]
-- [[_COMMUNITY_test_timeline_tracks.gd|test_timeline_tracks.gd]]
-- [[_COMMUNITY_CheckAnyInput|CheckAnyInput]]
-- [[_COMMUNITY_CheckPreloadStatus|CheckPreloadStatus]]
-- [[_COMMUNITY_OnReceiveEvent|OnReceiveEvent]]
-- [[_COMMUNITY_OnCollision|OnCollision]]
-- [[_COMMUNITY_OnBackgroundLoadProgress|OnBackgroundLoadProgress]]
-- [[_COMMUNITY_SetCameraLimit|SetCameraLimit]]
-- [[_COMMUNITY_ChangeScene|ChangeScene]]
-- [[_COMMUNITY_GetDeltaTime|GetDeltaTime]]
-- [[_COMMUNITY_SetPosition|SetPosition]]
-- [[_COMMUNITY_test_set_position.gd|test_set_position.gd]]
-- [[_COMMUNITY_JuicyEventScheduler|JuicyEventScheduler]]
-- [[_COMMUNITY_JuicyResourceVariant|JuicyResourceVariant]]
-- [[_COMMUNITY_JuicyShakeResource|JuicyShakeResource]]
-- [[_COMMUNITY_JuicyTweenResource|JuicyTweenResource]]
-- [[_COMMUNITY_test_parameter_mapping_system.gd|test_parameter_mapping_system.gd]]
-- [[_COMMUNITY_test_channel_interruption_config.gd|test_channel_interruption_config.gd]]
-- [[_COMMUNITY_TestPoolingPerformance|TestPoolingPerformance]]
-- [[_COMMUNITY_FuseLogger|FuseLogger]]
-- [[_COMMUNITY_InstructionInstancePool|InstructionInstancePool]]
-- [[_COMMUNITY_ComponentRegistry|ComponentRegistry]]
-- [[_COMMUNITY_OnAudioStarted|OnAudioStarted]]
-- [[_COMMUNITY_OnMouseEnter|OnMouseEnter]]
-- [[_COMMUNITY_OnMouseExit|OnMouseExit]]
-- [[_COMMUNITY_OnPhysicsProcess|OnPhysicsProcess]]
-- [[_COMMUNITY_OnArea2DExited|OnArea2DExited]]
-- [[_COMMUNITY_OnArea3DExited|OnArea3DExited]]
-- [[_COMMUNITY_OnRealtime|OnRealtime]]
-- [[_COMMUNITY_OnItemSelected|OnItemSelected]]
-- [[_COMMUNITY_LookAt|LookAt]]
-- [[_COMMUNITY_RotateBy|RotateBy]]
-- [[_COMMUNITY_TweenFadeIn|TweenFadeIn]]
-- [[_COMMUNITY_test_array_remove.gd|test_array_remove.gd]]
-- [[_COMMUNITY_ReflectionCache|ReflectionCache]]
-- [[_COMMUNITY_MusicEventHandler|MusicEventHandler]]
-- [[_COMMUNITY_test_condition_system.gd|test_condition_system.gd]]
-- [[_COMMUNITY_test_state_restoration_middleware.gd|test_state_restoration_middleware.gd]]
-- [[_COMMUNITY_visual_spring_demo.gd|visual_spring_demo.gd]]
-- [[_COMMUNITY_test_juicy_mixer_enums.gd|test_juicy_mixer_enums.gd]]
-- [[_COMMUNITY_FusePoolItem|FusePoolItem]]
-- [[_COMMUNITY_ComponentSelector|ComponentSelector]]
-- [[_COMMUNITY_OnTouch|OnTouch]]
-- [[_COMMUNITY_OnProcess|OnProcess]]
-- [[_COMMUNITY_OnSignalFromGroup|OnSignalFromGroup]]
-- [[_COMMUNITY_SetRotation|SetRotation]]
-- [[_COMMUNITY_TweenColorTransition|TweenColorTransition]]
-- [[_COMMUNITY_TweenFadeOut|TweenFadeOut]]
-- [[_COMMUNITY_TweenScaleTo|TweenScaleTo]]
-- [[_COMMUNITY_LoadGlobalVariables|LoadGlobalVariables]]
-- [[_COMMUNITY_test_array_contains.gd|test_array_contains.gd]]
-- [[_COMMUNITY_test_array_find.gd|test_array_find.gd]]
-- [[_COMMUNITY_JuicyAudioPlayer|JuicyAudioPlayer]]
-- [[_COMMUNITY_JuicyTweenDriver|JuicyTweenDriver]]
-- [[_COMMUNITY_TestMiddleware|TestMiddleware]]
-- [[_COMMUNITY_test_juicy_composite_driver.gd|test_juicy_composite_driver.gd]]
-- [[_COMMUNITY_test_timeline_system_integration_verification.gd|test_timeline_system_integration_verification.gd]]
-- [[_COMMUNITY_get_animated_sprite2d_speed_scale.gd|get_animated_sprite2d_speed_scale.gd]]
-- [[_COMMUNITY_FuseThreadingConfig|FuseThreadingConfig]]
-- [[_COMMUNITY_FuseIconManager|FuseIconManager]]
-- [[_COMMUNITY_VariableOperations|VariableOperations]]
-- [[_COMMUNITY_OnMusicBeat|OnMusicBeat]]
-- [[_COMMUNITY_OnInputText|OnInputText]]
-- [[_COMMUNITY_OnBodyEntered|OnBodyEntered]]
-- [[_COMMUNITY_CameraFollow|CameraFollow]]
-- [[_COMMUNITY_SetCollisionLayer|SetCollisionLayer]]
-- [[_COMMUNITY_TweenBounceAnimation|TweenBounceAnimation]]
-- [[_COMMUNITY_test_run_target_node_function.gd|test_run_target_node_function.gd]]
-- [[_COMMUNITY_JuicyParameterCondition|JuicyParameterCondition]]
-- [[_COMMUNITY_AudioManager|AudioManager]]
-- [[_COMMUNITY_AudioUtils|AudioUtils]]
-- [[_COMMUNITY_JuicyTimelineEditorPlugin|JuicyTimelineEditorPlugin]]
-- [[_COMMUNITY_timeline_performance_benchmark.gd|timeline_performance_benchmark.gd]]
-- [[_COMMUNITY_basic_timeline_demo_controller.gd|basic_timeline_demo_controller.gd]]
-- [[_COMMUNITY_TweenData|TweenData]]
-- [[_COMMUNITY_position_type_test.gd|position_type_test.gd]]
-- [[_COMMUNITY_test_juicy_particle_event_handler.gd|test_juicy_particle_event_handler.gd]]
-- [[_COMMUNITY_test_state_restoration_performance.gd|test_state_restoration_performance.gd]]
-- [[_COMMUNITY_test_juicy_shake_resource.gd|test_juicy_shake_resource.gd]]
-- [[_COMMUNITY_test_juicy_spring_resource.gd|test_juicy_spring_resource.gd]]
-- [[_COMMUNITY_set_animated_sprite2d_speed_scale_with_variable.gd|set_animated_sprite2d_speed_scale_with_variable.gd]]
-- [[_COMMUNITY_CheckInputHeld|CheckInputHeld]]
-- [[_COMMUNITY_FuseIconLibrary|FuseIconLibrary]]
-- [[_COMMUNITY_FuseContextMenuPlugin|FuseContextMenuPlugin]]
-- [[_COMMUNITY_OnAnimationFinished|OnAnimationFinished]]
-- [[_COMMUNITY_OnAudioFinished|OnAudioFinished]]
-- [[_COMMUNITY_OnReady|OnReady]]
-- [[_COMMUNITY_OnNodeInstance|OnNodeInstance]]
-- [[_COMMUNITY_OnSceneAboutToChange|OnSceneAboutToChange]]
-- [[_COMMUNITY_OnSceneLoaded|OnSceneLoaded]]
-- [[_COMMUNITY_OnButtonPressed|OnButtonPressed]]
-- [[_COMMUNITY_EnableDisableNode|EnableDisableNode]]
-- [[_COMMUNITY_TweenPopAnimation|TweenPopAnimation]]
-- [[_COMMUNITY_test_check_array_contains.gd|test_check_array_contains.gd]]
-- [[_COMMUNITY_test_composite_conditions.gd|test_composite_conditions.gd]]
-- [[_COMMUNITY_test_array_get.gd|test_array_get.gd]]
-- [[_COMMUNITY_test_array_random.gd|test_array_random.gd]]
-- [[_COMMUNITY_test_array_size.gd|test_array_size.gd]]
-- [[_COMMUNITY_test_stop_animation.gd|test_stop_animation.gd]]
-- [[_COMMUNITY_test_tween_property.gd|test_tween_property.gd]]
-- [[_COMMUNITY_JuicyDriverRegistry|JuicyDriverRegistry]]
-- [[_COMMUNITY_MusicTransitionScheduler|MusicTransitionScheduler]]
-- [[_COMMUNITY_event_handler_example.gd|event_handler_example.gd]]
-- [[_COMMUNITY_ShakeData|ShakeData]]
-- [[_COMMUNITY_AudioCategory|AudioCategory]]
-- [[_COMMUNITY_AudioVariant|AudioVariant]]
-- [[_COMMUNITY_test_juicy_audio_event_handler.gd|test_juicy_audio_event_handler.gd]]
-- [[_COMMUNITY_test_runner_updated.gd|test_runner_updated.gd]]
-- [[_COMMUNITY_test_state_restoration_integration.gd|test_state_restoration_integration.gd]]
-- [[_COMMUNITY_TestPlayerWithCustomSignals|TestPlayerWithCustomSignals]]
-- [[_COMMUNITY_test_juicy_tween_resource.gd|test_juicy_tween_resource.gd]]
-- [[_COMMUNITY_test_timeline_multi_play.gd|test_timeline_multi_play.gd]]
-- [[_COMMUNITY_test_interruption_state.gd|test_interruption_state.gd]]
-- [[_COMMUNITY_JuicyParameterEditor|JuicyParameterEditor]]
-- [[_COMMUNITY_animated_sprite2d_is_playing.gd|animated_sprite2d_is_playing.gd]]
-- [[_COMMUNITY_TriggerSplitter|TriggerSplitter]]
-- [[_COMMUNITY_ApplyForce|ApplyForce]]
-- [[_COMMUNITY_ApplyImpulse|ApplyImpulse]]
-- [[_COMMUNITY_SetScale|SetScale]]
-- [[_COMMUNITY_test_event_bus.gd|test_event_bus.gd]]
-- [[_COMMUNITY_test_stage2_integration.gd|test_stage2_integration.gd]]
-- [[_COMMUNITY_test_math_expression.gd|test_math_expression.gd]]
-- [[_COMMUNITY_test_vector_operation.gd|test_vector_operation.gd]]
-- [[_COMMUNITY_SignalSelectionDialog|SignalSelectionDialog]]
-- [[_COMMUNITY_timeline_examples.gd|timeline_examples.gd]]
-- [[_COMMUNITY_test_juicy_property_buffer.gd|test_juicy_property_buffer.gd]]
-- [[_COMMUNITY_visual_shake_demo.gd|visual_shake_demo.gd]]
-- [[_COMMUNITY_audio_demo_controller.gd|audio_demo_controller.gd]]
-- [[_COMMUNITY_CheckAll|CheckAll]]
-- [[_COMMUNITY_CheckAny|CheckAny]]
-- [[_COMMUNITY_scope_variable_container_plugin.gd|scope_variable_container_plugin.gd]]
-- [[_COMMUNITY_TriggerMerger|TriggerMerger]]
-- [[_COMMUNITY_InputKeyDialog|InputKeyDialog]]
-- [[_COMMUNITY_instructions_array_property.gd|instructions_array_property.gd]]
-- [[_COMMUNITY_OnEnterTree|OnEnterTree]]
-- [[_COMMUNITY_OnTweenCompleted|OnTweenCompleted]]
-- [[_COMMUNITY_PlayRandomSound|PlayRandomSound]]
-- [[_COMMUNITY_test_check_variable_condition.gd|test_check_variable_condition.gd]]
-- [[_COMMUNITY_test_runtime_instruction_instance.gd|test_runtime_instruction_instance.gd]]
-- [[_COMMUNITY_TestVariableContainerPerformance|TestVariableContainerPerformance]]
-- [[_COMMUNITY_test_math_operation.gd|test_math_operation.gd]]
-- [[_COMMUNITY_test_expression_helper.gd|test_expression_helper.gd]]
-- [[_COMMUNITY_FusePerformanceTracker|FusePerformanceTracker]]
-- [[_COMMUNITY_JuicyTimeCondition|JuicyTimeCondition]]
-- [[_COMMUNITY_TargetHighlightManager|TargetHighlightManager]]
-- [[_COMMUNITY_SpringData|SpringData]]
-- [[_COMMUNITY_GlobalAudioLimitConfig|GlobalAudioLimitConfig]]
-- [[_COMMUNITY_test_transition_cache_node.gd|test_transition_cache_node.gd]]
-- [[_COMMUNITY_CheckNot|CheckNot]]
-- [[_COMMUNITY_InstructionGenerator|InstructionGenerator]]
-- [[_COMMUNITY_OnExitTree|OnExitTree]]
-- [[_COMMUNITY_PlaySound|PlaySound]]
-- [[_COMMUNITY_PauseGame|PauseGame]]
-- [[_COMMUNITY_SetVelocity|SetVelocity]]
-- [[_COMMUNITY_AddSceneAsChild|AddSceneAsChild]]
-- [[_COMMUNITY_SetUIProgress|SetUIProgress]]
-- [[_COMMUNITY_TestInstructionAsyncDetection|TestInstructionAsyncDetection]]
-- [[_COMMUNITY_test_run_condition_check.gd|test_run_condition_check.gd]]
-- [[_COMMUNITY_test_check_array_size.gd|test_check_array_size.gd]]
-- [[_COMMUNITY_test_expression_condition.gd|test_expression_condition.gd]]
-- [[_COMMUNITY_test_on_gamepad_axis.gd|test_on_gamepad_axis.gd]]
-- [[_COMMUNITY_test_string_expression.gd|test_string_expression.gd]]
-- [[_COMMUNITY_test_movement_integration.gd|test_movement_integration.gd]]
-- [[_COMMUNITY_JuicyTimeGroupConfig|JuicyTimeGroupConfig]]
-- [[_COMMUNITY_AudioComponent|AudioComponent]]
-- [[_COMMUNITY_MusicStateMap|MusicStateMap]]
-- [[_COMMUNITY_test_property_state_manager.gd|test_property_state_manager.gd]]
-- [[_COMMUNITY_CheckInputPressed|CheckInputPressed]]
-- [[_COMMUNITY_CheckInputReleased|CheckInputReleased]]
-- [[_COMMUNITY_CheckTimeRange|CheckTimeRange]]
-- [[_COMMUNITY_EventBinding|EventBinding]]
-- [[_COMMUNITY_FuseAudioContainer|FuseAudioContainer]]
-- [[_COMMUNITY_CompiledInstructionSequence|CompiledInstructionSequence]]
-- [[_COMMUNITY_FuseRecycleTimer|FuseRecycleTimer]]
-- [[_COMMUNITY_InstructionValidator|InstructionValidator]]
-- [[_COMMUNITY_PlayAnimation|PlayAnimation]]
-- [[_COMMUNITY_ResumeGame|ResumeGame]]
-- [[_COMMUNITY_SetTimeScale|SetTimeScale]]
-- [[_COMMUNITY_test_event_on_target_signal_emit.gd|test_event_on_target_signal_emit.gd]]
-- [[_COMMUNITY_test_lerp.gd|test_lerp.gd]]
-- [[_COMMUNITY_test_trigger_splitter.gd|test_trigger_splitter.gd]]
-- [[_COMMUNITY_JuicyCompositeCondition|JuicyCompositeCondition]]
-- [[_COMMUNITY_condition_system_example.gd|condition_system_example.gd]]
-- [[_COMMUNITY_ExampleMiddleware|ExampleMiddleware]]
-- [[_COMMUNITY_JuicyLODConfig|JuicyLODConfig]]
-- [[_COMMUNITY_AudioBinding|AudioBinding]]
-- [[_COMMUNITY_AudioRandomizationConfig|AudioRandomizationConfig]]
-- [[_COMMUNITY_TestFeedbackResource|TestFeedbackResource]]
-- [[_COMMUNITY_animated_sprite2d_play.gd|animated_sprite2d_play.gd]]
-- [[_COMMUNITY_CheckGameTime|CheckGameTime]]
-- [[_COMMUNITY_ReloadScene|ReloadScene]]
-- [[_COMMUNITY_test_event_condition_selector.gd|test_event_condition_selector.gd]]
-- [[_COMMUNITY_test_function_manager_enhancements.gd|test_function_manager_enhancements.gd]]
-- [[_COMMUNITY_test_instruction_concurrent_execution.gd|test_instruction_concurrent_execution.gd]]
-- [[_COMMUNITY_TestRunTargetNodeFunctionPerformance|TestRunTargetNodeFunctionPerformance]]
-- [[_COMMUNITY_test_clamp_value.gd|test_clamp_value.gd]]
-- [[_COMMUNITY_test_random_number.gd|test_random_number.gd]]
-- [[_COMMUNITY_test_tween_pulse_animation.gd|test_tween_pulse_animation.gd]]
-- [[_COMMUNITY_JuicyMixerManager|JuicyMixerManager]]
-- [[_COMMUNITY_VirtualVoiceManager|VirtualVoiceManager]]
-- [[_COMMUNITY_DuckingRule|DuckingRule]]
-- [[_COMMUNITY_test_parameter_display.gd|test_parameter_display.gd]]
-- [[_COMMUNITY_test_audio_component.gd|test_audio_component.gd]]
-- [[_COMMUNITY_test_juicy_audio_player.gd|test_juicy_audio_player.gd]]
-- [[_COMMUNITY_test_driver_integration.gd|test_driver_integration.gd]]
-- [[_COMMUNITY_test_juicy_shake_driver_simple.gd|test_juicy_shake_driver_simple.gd]]
-- [[_COMMUNITY_test_history_cleanup_optimization.gd|test_history_cleanup_optimization.gd]]
-- [[_COMMUNITY_TestPoolingSystem|TestPoolingSystem]]
-- [[_COMMUNITY_SendEvent|SendEvent]]
-- [[_COMMUNITY_BreakLoop|BreakLoop]]
-- [[_COMMUNITY_ContinueLoop|ContinueLoop]]
-- [[_COMMUNITY_ReparentNode|ReparentNode]]
-- [[_COMMUNITY_Quit|Quit]]
-- [[_COMMUNITY_test_trigger_merger.gd|test_trigger_merger.gd]]
-- [[_COMMUNITY_SignalManager|SignalManager]]
-- [[_COMMUNITY_parameter_mapping_examples.gd|parameter_mapping_examples.gd]]
-- [[_COMMUNITY_JuicyChannelConfig|JuicyChannelConfig]]
-- [[_COMMUNITY_JuicyCompositeItem|JuicyCompositeItem]]
-- [[_COMMUNITY_JuicyEventResource|JuicyEventResource]]
-- [[_COMMUNITY_test_event_handler_entry.gd|test_event_handler_entry.gd]]
-- [[_COMMUNITY_ExpressionHelper|ExpressionHelper]]
-- [[_COMMUNITY_InputKeySelector|InputKeySelector]]
-- [[_COMMUNITY_PropertyInstructionGenerator|PropertyInstructionGenerator]]
-- [[_COMMUNITY_SetAnimationSpeed|SetAnimationSpeed]]
-- [[_COMMUNITY_StopAnimation|StopAnimation]]
-- [[_COMMUNITY_test_check_vector2_variable_axis.gd|test_check_vector2_variable_axis.gd]]
-- [[_COMMUNITY_test_if_else.gd|test_if_else.gd]]
-- [[_COMMUNITY_test_raycast.gd|test_raycast.gd]]
-- [[_COMMUNITY_generate_builtin_icons.gd|generate_builtin_icons.gd]]
-- [[_COMMUNITY_AudioVariationManager|AudioVariationManager]]
-- [[_COMMUNITY_AudioComponentInspector|AudioComponentInspector]]
-- [[_COMMUNITY_event_scheduler_example.gd|event_scheduler_example.gd]]
-- [[_COMMUNITY_test_inheritance_filter.gd|test_inheritance_filter.gd]]
-- [[_COMMUNITY_test_virtual_voice_manager.gd|test_virtual_voice_manager.gd]]
-- [[_COMMUNITY_test_event_state_separation.gd|test_event_state_separation.gd]]
-- [[_COMMUNITY_InstructionSerializer|InstructionSerializer]]
-- [[_COMMUNITY_FuseThreadSafe|FuseThreadSafe]]
-- [[_COMMUNITY_TestActionRunnerTimeout|TestActionRunnerTimeout]]
-- [[_COMMUNITY_test_complete_system_refactor.gd|test_complete_system_refactor.gd]]
-- [[_COMMUNITY_test_variable_refactoring.gd|test_variable_refactoring.gd]]
-- [[_COMMUNITY_test_on_cooldown_finished.gd|test_on_cooldown_finished.gd]]
-- [[_COMMUNITY_test_on_focus.gd|test_on_focus.gd]]
-- [[_COMMUNITY_test_on_overlapping_bodies.gd|test_on_overlapping_bodies.gd]]
-- [[_COMMUNITY_test_move_by.gd|test_move_by.gd]]
-- [[_COMMUNITY_test_pause_game.gd|test_pause_game.gd]]
-- [[_COMMUNITY_test_rotate_by.gd|test_rotate_by.gd]]
-- [[_COMMUNITY_test_tween_fade_out_instruction.gd|test_tween_fade_out_instruction.gd]]
-- [[_COMMUNITY_FuseButton|FuseButton]]
-- [[_COMMUNITY_SignalDetector|SignalDetector]]
-- [[_COMMUNITY_MusicLayerResource|MusicLayerResource]]
-- [[_COMMUNITY_simple_particle_test.gd|simple_particle_test.gd]]
-- [[_COMMUNITY_test_integration.gd|test_integration.gd]]
-- [[_COMMUNITY_test_juicy_driver_registry.gd|test_juicy_driver_registry.gd]]
-- [[_COMMUNITY_test_juicy_feedback_resource.gd|test_juicy_feedback_resource.gd]]
-- [[_COMMUNITY_test_middleware_config.gd|test_middleware_config.gd]]
-- [[_COMMUNITY_fuse_inspector_plugin.gd|fuse_inspector_plugin.gd]]
-- [[_COMMUNITY_TypeMapper|TypeMapper]]
-- [[_COMMUNITY_ExecutionHint|ExecutionHint]]
-- [[_COMMUNITY_ShowHideUI|ShowHideUI]]
-- [[_COMMUNITY_TestConditionCacheHash|TestConditionCacheHash]]
-- [[_COMMUNITY_test_execution_modes.gd|test_execution_modes.gd]]
-- [[_COMMUNITY_test_object_pool_system.gd|test_object_pool_system.gd]]
-- [[_COMMUNITY_test_variable_serialization.gd|test_variable_serialization.gd]]
-- [[_COMMUNITY_variable_lookup_optimization_test.gd|variable_lookup_optimization_test.gd]]
-- [[_COMMUNITY_test_on_interval.gd|test_on_interval.gd]]
-- [[_COMMUNITY_test_on_realtime.gd|test_on_realtime.gd]]
-- [[_COMMUNITY_test_array_shuffle.gd|test_array_shuffle.gd]]
-- [[_COMMUNITY_test_camera_follow.gd|test_camera_follow.gd]]
-- [[_COMMUNITY_test_for_loop.gd|test_for_loop.gd]]
-- [[_COMMUNITY_test_set_velocity.gd|test_set_velocity.gd]]
-- [[_COMMUNITY_MockVariableInstruction|MockVariableInstruction]]
-- [[_COMMUNITY_IconTestEvent|IconTestEvent]]
-- [[_COMMUNITY_test_bricks_task_manager.gd|test_bricks_task_manager.gd]]
-- [[_COMMUNITY_test_parallel_condition_evaluator.gd|test_parallel_condition_evaluator.gd]]
-- [[_COMMUNITY_test_thread_safety.gd|test_thread_safety.gd]]
-- [[_COMMUNITY_music_player_inspector.gd|music_player_inspector.gd]]
-- [[_COMMUNITY_event_scheduler_test_runner.gd|event_scheduler_test_runner.gd]]
-- [[_COMMUNITY_run_integration_tests.gd|run_integration_tests.gd]]
-- [[_COMMUNITY_test_juicy_context_parameters.gd|test_juicy_context_parameters.gd]]
-- [[_COMMUNITY_test_global_audio_limit_config.gd|test_global_audio_limit_config.gd]]
-- [[_COMMUNITY_test_global_integration.gd|test_global_integration.gd]]
-- [[_COMMUNITY_test_spring_performance.gd|test_spring_performance.gd]]
-- [[_COMMUNITY_ConditionRegistry|ConditionRegistry]]
-- [[_COMMUNITY_EventRegistry|EventRegistry]]
-- [[_COMMUNITY_ConflictHandler|ConflictHandler]]
-- [[_COMMUNITY_MethodFilter|MethodFilter]]
-- [[_COMMUNITY_InstructionRegistry|InstructionRegistry]]
-- [[_COMMUNITY_test_stage4_integration.gd|test_stage4_integration.gd]]
-- [[_COMMUNITY_test_variable_refactor.gd|test_variable_refactor.gd]]
-- [[_COMMUNITY_test_variable_storage_migration.gd|test_variable_storage_migration.gd]]
-- [[_COMMUNITY_test_animation_conditions.gd|test_animation_conditions.gd]]
-- [[_COMMUNITY_test_input_conditions.gd|test_input_conditions.gd]]
-- [[_COMMUNITY_test_on_area_2d_exited.gd|test_on_area_2d_exited.gd]]
-- [[_COMMUNITY_test_on_area_3d_exited.gd|test_on_area_3d_exited.gd]]
-- [[_COMMUNITY_test_on_countdown.gd|test_on_countdown.gd]]
-- [[_COMMUNITY_test_on_signal_from_group.gd|test_on_signal_from_group.gd]]
-- [[_COMMUNITY_test_on_touch.gd|test_on_touch.gd]]
-- [[_COMMUNITY_test_on_tree_changed.gd|test_on_tree_changed.gd]]
-- [[_COMMUNITY_test_array_add.gd|test_array_add.gd]]
-- [[_COMMUNITY_test_array_clear.gd|test_array_clear.gd]]
-- [[_COMMUNITY_test_change_scene.gd|test_change_scene.gd]]
-- [[_COMMUNITY_MockJumpInstruction|MockJumpInstruction]]
-- [[_COMMUNITY_MockUseVariableInstruction|MockUseVariableInstruction]]
-- [[_COMMUNITY_test_tween_rotate_to_instruction.gd|test_tween_rotate_to_instruction.gd]]
-- [[_COMMUNITY_test_text_burn.gd|test_text_burn.gd]]
-- [[_COMMUNITY_import_custom_icons.gd|import_custom_icons.gd]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_audio_test_scene.gd|audio_test_scene.gd]]
-- [[_COMMUNITY_test_condition_integration.gd|test_condition_integration.gd]]
-- [[_COMMUNITY_test_timeline_tracks_unified.gd|test_timeline_tracks_unified.gd]]
-- [[_COMMUNITY_test_audio_mixing_config.gd|test_audio_mixing_config.gd]]
-- [[_COMMUNITY_test_category_level_limiting.gd|test_category_level_limiting.gd]]
-- [[_COMMUNITY_test_signal_detector.gd|test_signal_detector.gd]]
-- [[_COMMUNITY_test_signal_selection_dialog.gd|test_signal_selection_dialog.gd]]
-- [[_COMMUNITY_performance_localization_benchmark.gd|performance_localization_benchmark.gd]]
-- [[_COMMUNITY_verify_task_4_3.gd|verify_task_4_3.gd]]
-- [[_COMMUNITY_test_editor_signal_dropdown.gd|test_editor_signal_dropdown.gd]]
-- [[_COMMUNITY_TestExecutionContextCacheLimit|TestExecutionContextCacheLimit]]
-- [[_COMMUNITY_test_execution_context_cleanup.gd|test_execution_context_cleanup.gd]]
-- [[_COMMUNITY_test_conditions.gd|test_conditions.gd]]
-- [[_COMMUNITY_test_on_animation_blend.gd|test_on_animation_blend.gd]]
-- [[_COMMUNITY_test_on_animation_loop.gd|test_on_animation_loop.gd]]
-- [[_COMMUNITY_test_on_background_load_progress.gd|test_on_background_load_progress.gd]]
-- [[_COMMUNITY_test_on_music_beat.gd|test_on_music_beat.gd]]
-- [[_COMMUNITY_test_on_node_paused_resumed.gd|test_on_node_paused_resumed.gd]]
-- [[_COMMUNITY_test_on_physics_process.gd|test_on_physics_process.gd]]
-- [[_COMMUNITY_test_on_raycast_hit.gd|test_on_raycast_hit.gd]]
-- [[_COMMUNITY_test_on_text_changed.gd|test_on_text_changed.gd]]
-- [[_COMMUNITY_test_on_timer.gd|test_on_timer.gd]]
-- [[_COMMUNITY_test_on_tween_completed.gd|test_on_tween_completed.gd]]
-- [[_COMMUNITY_test_on_value_changed.gd|test_on_value_changed.gd]]
-- [[_COMMUNITY_test_check_any_input.gd|test_check_any_input.gd]]
-- [[_COMMUNITY_test_apply_force.gd|test_apply_force.gd]]
-- [[_COMMUNITY_test_apply_impulse.gd|test_apply_impulse.gd]]
-- [[_COMMUNITY_test_blend_animation.gd|test_blend_animation.gd]]
-- [[_COMMUNITY_test_crossfade_to_music.gd|test_crossfade_to_music.gd]]
-- [[_COMMUNITY_test_for_each.gd|test_for_each.gd]]
-- [[_COMMUNITY_test_look_at.gd|test_look_at.gd]]
-- [[_COMMUNITY_test_pause_resume_audio.gd|test_pause_resume_audio.gd]]
-- [[_COMMUNITY_test_play_music.gd|test_play_music.gd]]
-- [[_COMMUNITY_test_play_sound.gd|test_play_sound.gd]]
-- [[_COMMUNITY_test_set_audio_volume.gd|test_set_audio_volume.gd]]
-- [[_COMMUNITY_test_set_camera_limit.gd|test_set_camera_limit.gd]]
-- [[_COMMUNITY_test_set_collision_layer.gd|test_set_collision_layer.gd]]
-- [[_COMMUNITY_test_set_scale.gd|test_set_scale.gd]]
-- [[_COMMUNITY_test_stop_audio.gd|test_stop_audio.gd]]
-- [[_COMMUNITY_test_execution_context_scope_integration.gd|test_execution_context_scope_integration.gd]]
-- [[_COMMUNITY_MockFileOperationInstruction|MockFileOperationInstruction]]
-- [[_COMMUNITY_MockHeavyOperationInstruction|MockHeavyOperationInstruction]]
-- [[_COMMUNITY_MockNormalInstruction|MockNormalInstruction]]
-- [[_COMMUNITY_test_tween_move_to_instruction.gd|test_tween_move_to_instruction.gd]]
-- [[_COMMUNITY_test_tween_scale_to_instruction.gd|test_tween_scale_to_instruction.gd]]
-- [[_COMMUNITY_update_condition_icon_decorators.gd|update_condition_icon_decorators.gd]]
-- [[_COMMUNITY_update_event_icon_decorators.gd|update_event_icon_decorators.gd]]
-- [[_COMMUNITY_update_instruction_icon_decorators.gd|update_instruction_icon_decorators.gd]]
-- [[_COMMUNITY_JuicyCondition|JuicyCondition]]
-- [[_COMMUNITY_JuicyTimelinePlayer|JuicyTimelinePlayer]]
-- [[_COMMUNITY_JuicyAudioPlayerInspector|JuicyAudioPlayerInspector]]
-- [[_COMMUNITY_MusicPriorityEntry|MusicPriorityEntry]]
-- [[_COMMUNITY_simple_audio_test.gd|simple_audio_test.gd]]
-- [[_COMMUNITY_test_audio_binding.gd|test_audio_binding.gd]]
-- [[_COMMUNITY_test_audio_player_inspector.gd|test_audio_player_inspector.gd]]
-- [[_COMMUNITY_test_audio_randomization_config.gd|test_audio_randomization_config.gd]]
-- [[_COMMUNITY_test_ducking_rule.gd|test_ducking_rule.gd]]
-- [[_COMMUNITY_test_event_category_integration.gd|test_event_category_integration.gd]]
-- [[_COMMUNITY_test_juicy_context_events.gd|test_juicy_context_events.gd]]
-- [[_COMMUNITY_test_juicy_context_events_enabled.gd|test_juicy_context_events_enabled.gd]]
-- [[_COMMUNITY_test_juicy_event_fixed.gd|test_juicy_event_fixed.gd]]
-- [[_COMMUNITY_editor_builders.py|editor_builders.py]]
-- [[_COMMUNITY_test_language_detection.gd|test_language_detection.gd]]
-- [[_COMMUNITY_instructions_array_inspector_plugin.gd|instructions_array_inspector_plugin.gd]]
-- [[_COMMUNITY_test_backward_compat.gd|test_backward_compat.gd]]
-- [[_COMMUNITY_test_icon_system.gd|test_icon_system.gd]]
-- [[_COMMUNITY_test_signal_system.gd|test_signal_system.gd]]
-- [[_COMMUNITY_test_on_animation_frame_reached.gd|test_on_animation_frame_reached.gd]]
-- [[_COMMUNITY_test_on_animation_marker.gd|test_on_animation_marker.gd]]
-- [[_COMMUNITY_test_on_animation_started.gd|test_on_animation_started.gd]]
-- [[_COMMUNITY_test_on_area_3d_entered.gd|test_on_area_3d_entered.gd]]
-- [[_COMMUNITY_test_on_audio_bus_volume_changed.gd|test_on_audio_bus_volume_changed.gd]]
-- [[_COMMUNITY_test_on_audio_started.gd|test_on_audio_started.gd]]
-- [[_COMMUNITY_test_on_body_entered.gd|test_on_body_entered.gd]]
-- [[_COMMUNITY_test_on_gamepad_button.gd|test_on_gamepad_button.gd]]
-- [[_COMMUNITY_test_on_item_selected.gd|test_on_item_selected.gd]]
-- [[_COMMUNITY_test_on_mouse_move.gd|test_on_mouse_move.gd]]
-- [[_COMMUNITY_test_on_process.gd|test_on_process.gd]]
-- [[_COMMUNITY_test_on_scene_about_to_change.gd|test_on_scene_about_to_change.gd]]
-- [[_COMMUNITY_test_on_screen_entered_exited.gd|test_on_screen_entered_exited.gd]]
-- [[_COMMUNITY_test_on_sound_listened.gd|test_on_sound_listened.gd]]
-- [[_COMMUNITY_test_break_loop.gd|test_break_loop.gd]]
-- [[_COMMUNITY_test_camera_shake.gd|test_camera_shake.gd]]
-- [[_COMMUNITY_test_continue_loop.gd|test_continue_loop.gd]]
-- [[_COMMUNITY_test_enable_disable_node.gd|test_enable_disable_node.gd]]
-- [[_COMMUNITY_test_get_delta_time.gd|test_get_delta_time.gd]]
-- [[_COMMUNITY_test_instantiate_scene.gd|test_instantiate_scene.gd]]
-- [[_COMMUNITY_test_load_scene_background.gd|test_load_scene_background.gd]]
-- [[_COMMUNITY_test_resume_game.gd|test_resume_game.gd]]
-- [[_COMMUNITY_test_set_rotation.gd|test_set_rotation.gd]]
-- [[_COMMUNITY_test_set_ui_progress.gd|test_set_ui_progress.gd]]
-- [[_COMMUNITY_test_set_ui_text.gd|test_set_ui_text.gd]]
-- [[_COMMUNITY_test_show_hide_ui.gd|test_show_hide_ui.gd]]
-- [[_COMMUNITY_test_wait_until.gd|test_wait_until.gd]]
-- [[_COMMUNITY_test_while_loop.gd|test_while_loop.gd]]
-- [[_COMMUNITY_quick_verification.gd|quick_verification.gd]]
-- [[_COMMUNITY_test_component_registry.gd|test_component_registry.gd]]
-- [[_COMMUNITY_test_tween_bounce_animation_instruction.gd|test_tween_bounce_animation_instruction.gd]]
-- [[_COMMUNITY_test_tween_color_transition_instruction.gd|test_tween_color_transition_instruction.gd]]
-- [[_COMMUNITY_test_tween_fade_in_instruction.gd|test_tween_fade_in_instruction.gd]]
-- [[_COMMUNITY_test_tween_pop_animation_instruction.gd|test_tween_pop_animation_instruction.gd]]
-- [[_COMMUNITY_final_verification_test.gd|final_verification_test.gd]]
-- [[_COMMUNITY_test_example_safe.gd|test_example_safe.gd]]
-- [[_COMMUNITY_time_management_refactor_test.gd|time_management_refactor_test.gd]]
-- [[_COMMUNITY_QuickAutoDetectTest|QuickAutoDetectTest]]
-- [[_COMMUNITY_test_audio_category.gd|test_audio_category.gd]]
-- [[_COMMUNITY_test_audio_manager_node.gd|test_audio_manager_node.gd]]
-- [[_COMMUNITY_test_audio_variant.gd|test_audio_variant.gd]]
-- [[_COMMUNITY_test_audio_variation_manager.gd|test_audio_variation_manager.gd]]
-- [[_COMMUNITY_test_target_property.gd|test_target_property.gd]]
-- [[_COMMUNITY_test_juicy_mixer_event_api.gd|test_juicy_mixer_event_api.gd]]
-- [[_COMMUNITY_test_node_runner_validation.gd|test_node_runner_validation.gd]]
-- [[_COMMUNITY_test_bricks_error_localization.gd|test_bricks_error_localization.gd]]
-- [[_COMMUNITY_TestAsyncAwaitInstruction|TestAsyncAwaitInstruction]]
-- [[_COMMUNITY_test_on_animation_finished.gd|test_on_animation_finished.gd]]
-- [[_COMMUNITY_test_on_audio_finished.gd|test_on_audio_finished.gd]]
-- [[_COMMUNITY_test_on_button_pressed.gd|test_on_button_pressed.gd]]
-- [[_COMMUNITY_test_on_collision.gd|test_on_collision.gd]]
-- [[_COMMUNITY_test_on_health_changed.gd|test_on_health_changed.gd]]
-- [[_COMMUNITY_test_on_input_text.gd|test_on_input_text.gd]]
-- [[_COMMUNITY_test_on_mouse_button.gd|test_on_mouse_button.gd]]
-- [[_COMMUNITY_test_on_mouse_enter.gd|test_on_mouse_enter.gd]]
-- [[_COMMUNITY_test_on_mouse_exit.gd|test_on_mouse_exit.gd]]
-- [[_COMMUNITY_test_on_node_instance.gd|test_on_node_instance.gd]]
-- [[_COMMUNITY_test_on_property_changed.gd|test_on_property_changed.gd]]
-- [[_COMMUNITY_test_on_shape_cast.gd|test_on_shape_cast.gd]]
-- [[_COMMUNITY_test_on_touch_swipe.gd|test_on_touch_swipe.gd]]
-- [[_COMMUNITY_test_on_variable_changed.gd|test_on_variable_changed.gd]]
-- [[_COMMUNITY_test_add_scene_as_child.gd|test_add_scene_as_child.gd]]
-- [[_COMMUNITY_test_get_scene_path.gd|test_get_scene_path.gd]]
-- [[_COMMUNITY_test_move_character_body_2d_composite.gd|test_move_character_body_2d_composite.gd]]
-- [[_COMMUNITY_test_play_animation.gd|test_play_animation.gd]]
-- [[_COMMUNITY_test_queue_free_node.gd|test_queue_free_node.gd]]
-- [[_COMMUNITY_test_reload_scene.gd|test_reload_scene.gd]]
-- [[_COMMUNITY_test_reparent_node.gd|test_reparent_node.gd]]
-- [[_COMMUNITY_test_set_time_scale.gd|test_set_time_scale.gd]]
-- [[_COMMUNITY_test_set_ui_texture.gd|test_set_ui_texture.gd]]
-- [[_COMMUNITY_test_scope_variable_basic.gd|test_scope_variable_basic.gd]]
-- [[_COMMUNITY_test_performance_benchmark.gd|test_performance_benchmark.gd]]
-- [[_COMMUNITY_test_tween_shake_animation_instruction.gd|test_tween_shake_animation_instruction.gd]]
-- [[_COMMUNITY_test_example.gd|test_example.gd]]
-- [[_COMMUNITY_test_audio_integration.gd|test_audio_integration.gd]]
-- [[_COMMUNITY_test_audio_mixing_controller.gd|test_audio_mixing_controller.gd]]
-- [[_COMMUNITY_test_audio_utils.gd|test_audio_utils.gd]]
-- [[_COMMUNITY_test_phase_protection.gd|test_phase_protection.gd]]
-- [[_COMMUNITY_test_transition_cache_optimization.gd|test_transition_cache_optimization.gd]]
-- [[_COMMUNITY_test_middleware_integration_node.gd|test_middleware_integration_node.gd]]
-- [[_COMMUNITY_test_channel_interruption_config_node.gd|test_channel_interruption_config_node.gd]]
-- [[_COMMUNITY_test_interruption_state_node.gd|test_interruption_state_node.gd]]
-- [[_COMMUNITY_test_juicy_mixer_enums_node.gd|test_juicy_mixer_enums_node.gd]]
-- [[_COMMUNITY_test_music_track_resource.gd|test_music_track_resource.gd]]
-- [[_COMMUNITY_input_map_example.gd|input_map_example.gd]]
-- [[_COMMUNITY_test_base_instruction_icon.gd|test_base_instruction_icon.gd]]
-- [[_COMMUNITY_verify_phase2_batch3.gd|verify_phase2_batch3.gd]]
-- [[_COMMUNITY_InstructionSearch|InstructionSearch]]
-- [[_COMMUNITY_test_signal_cleanup.gd|test_signal_cleanup.gd]]
-- [[_COMMUNITY_test_animation_tree_state_condition.gd|test_animation_tree_state_condition.gd]]
-- [[_COMMUNITY_test_node_conditions.gd|test_node_conditions.gd]]
-- [[_COMMUNITY_test_physics_conditions.gd|test_physics_conditions.gd]]
-- [[_COMMUNITY_test_time_conditions.gd|test_time_conditions.gd]]
-- [[_COMMUNITY_test_on_enter_tree.gd|test_on_enter_tree.gd]]
-- [[_COMMUNITY_test_on_exit_tree.gd|test_on_exit_tree.gd]]
-- [[_COMMUNITY_test_on_scene_loaded.gd|test_on_scene_loaded.gd]]
-- [[_COMMUNITY_verify_backward_compatibility.gd|verify_backward_compatibility.gd]]
-- [[_COMMUNITY_test_event_scheduler.gd|test_event_scheduler.gd]]
-- [[_COMMUNITY_movement_demo.gd|movement_demo.gd]]
-- [[_COMMUNITY_extract_class_name|extract_class_name]]
-- [[_COMMUNITY_test_base_event_localization.gd|test_base_event_localization.gd]]
-- [[_COMMUNITY_test_localized_logging.gd|test_localized_logging.gd]]
-- [[_COMMUNITY_test_signal_manual.gd|test_signal_manual.gd]]
-- [[_COMMUNITY_input_key_inspector_plugin.gd|input_key_inspector_plugin.gd]]
-- [[_COMMUNITY_test_component_selector.gd|test_component_selector.gd]]
-- [[_COMMUNITY_test_distance_conditions.gd|test_distance_conditions.gd]]
-- [[_COMMUNITY_test_on_input_action_composite.gd|test_on_input_action_composite.gd]]
-- [[_COMMUNITY_test_scene_to_instance.gd|test_scene_to_instance.gd]]
-- [[_COMMUNITY_test_audio_component_inspector.gd|test_audio_component_inspector.gd]]
-- [[_COMMUNITY_test_auto_detect_signals.gd|test_auto_detect_signals.gd]]
-- [[_COMMUNITY_test_spring_simple.gd|test_spring_simple.gd]]
-- [[_COMMUNITY_game_scene_performance.gd|game_scene_performance.gd]]
-- [[_COMMUNITY_FindBaseControl|FindBaseControl]]
-- [[_COMMUNITY_performance_load_vs_preload.gd|performance_load_vs_preload.gd]]
-- [[_COMMUNITY_verify_icon_system.gd|verify_icon_system.gd]]
-- [[_COMMUNITY_fix_backslashes_in_json|fix_backslashes_in_json]]
-- [[_COMMUNITY_condition_metadata.gd|condition_metadata.gd]]
-- [[_COMMUNITY_event_metadata.gd|event_metadata.gd]]
-- [[_COMMUNITY_juicy_feedback_data.gd|juicy_feedback_data.gd]]
-- [[_COMMUNITY_check_translations.gd|check_translations.gd]]
-- [[_COMMUNITY_animation_track_editor.cpp|animation_track_editor.cpp]]
-- [[_COMMUNITY_editor_data.cpp|editor_data.cpp]]
-- [[_COMMUNITY_commit_action|commit_action]]
-- [[_COMMUNITY_abc.h|abc.h]]
-- [[_COMMUNITY_animation_player_editor_plugin.cpp|animation_player_editor_plugin.cpp]]
-- [[_COMMUNITY_drawtune.h|drawtune.h]]
-- [[_COMMUNITY_yapstree.c|yapstree.c]]
-- [[_COMMUNITY_midicopy.h|midicopy.h]]
-- [[_COMMUNITY_drawtune.c|drawtune.c]]
-- [[_COMMUNITY_get_singleton|get_singleton]]
-- [[_COMMUNITY_toabc.c|toabc.c]]
-- [[_COMMUNITY_queues.h|queues.h]]
-- [[_COMMUNITY_clear|clear]]
-- [[_COMMUNITY_editor_undo_redo_manager.h|editor_undo_redo_manager.h]]
-- [[_COMMUNITY_register_editor_types.h|register_editor_types.h]]
-- [[_COMMUNITY_animation_track_editor_plugins.h|animation_track_editor_plugins.h]]
-- [[_COMMUNITY_get_path|get_path]]
-- [[_COMMUNITY_crack.c|crack.c]]
-- [[_COMMUNITY_abcmatch.c|abcmatch.c]]
-- [[_COMMUNITY_genmidi.h|genmidi.h]]
-- [[_COMMUNITY_一、✅ 已修问题（含附 commit）|一、✅ 已修问题（含附 commit）]]
-- [[_COMMUNITY_midifile.h|midifile.h]]
-- [[_COMMUNITY_parseabc.h|parseabc.h]]
-- [[_COMMUNITY_parser2.h|parser2.h]]
-- [[_COMMUNITY_ExecutionContext 分析报告|ExecutionContext 分析报告]]
-- [[_COMMUNITY_sizes.h|sizes.h]]
-- [[_COMMUNITY_structs.h|structs.h]]
-- [[_COMMUNITY_select|select]]
-- [[_COMMUNITY_Fuse 对象池系统开发指南|Fuse 对象池系统开发指南]]
-- [[_COMMUNITY_parseabc.c|parseabc.c]]
-- [[_COMMUNITY_自定义 Event 创建最佳实践指南|自定义 Event 创建最佳实践指南]]
-- [[_COMMUNITY_Tween 补间动画使用指南|Tween 补间动画使用指南]]
-- [[_COMMUNITY_GDScript Coding Patterns|GDScript Coding Patterns]]
-- [[_COMMUNITY_FuseLogger 日志系统开发指南|FuseLogger 日志系统开发指南]]
-- [[_COMMUNITY_可视化编程系统完整设计总结|可视化编程系统完整设计总结]]
-- [[_COMMUNITY_Fuse ActionRunner 开发指南|Fuse ActionRunner 开发指南]]
-- [[_COMMUNITY_FuseComponentScanner 组件扫描器开发指南|FuseComponentScanner 组件扫描器开发指南]]
-- [[_COMMUNITY_FuseEventBus 事件总线开发指南|FuseEventBus 事件总线开发指南]]
-- [[_COMMUNITY_编辑器工具模块|编辑器工具模块]]
-- [[_COMMUNITY_坐标系统指南 - Global 与 Local|坐标系统指南 - Global 与 Local]]
-- [[_COMMUNITY_Fuse 图标管理器使用指南|Fuse 图标管理器使用指南]]
-- [[_COMMUNITY_Fuse 图标系统开发指南|Fuse 图标系统开发指南]]
-- [[_COMMUNITY_Fuse 快速开始指南|Fuse 快速开始指南]]
-- [[_COMMUNITY_条件系统详细设计|条件系统详细设计]]
-- [[_COMMUNITY_Fuse 变量使用指南|Fuse 变量使用指南]]
-- [[_COMMUNITY_CreateLocalVariableInstruction 动态 Inspector 插件设计方案|CreateLocalVariableInstruction 动态 Inspector 插件设计方案]]
-- [[_COMMUNITY_animation_bezier_editor.cpp|animation_bezier_editor.cpp]]
-- [[_COMMUNITY_Godot 条件化属性显示实现指南|Godot 条件化属性显示实现指南]]
-- [[_COMMUNITY_调试系统用户指南|调试系统用户指南]]
-- [[_COMMUNITY_Fuse 对象池系统使用指南|Fuse 对象池系统使用指南]]
-- [[_COMMUNITY_对象池体系分析报告|对象池体系分析报告]]
-- [[_COMMUNITY_Fuse 阶段3运行时本地化集成测试报告|Fuse 阶段3运行时本地化集成测试报告]]
-- [[_COMMUNITY_Fuse 线程系统分析报告|Fuse 线程系统分析报告]]
-- [[_COMMUNITY_指令系统详细设计|指令系统详细设计]]
-- [[_COMMUNITY_属性系统通用类测试计划|属性系统通用类测试计划]]
-- [[_COMMUNITY_midifile.c|midifile.c]]
-- [[_COMMUNITY_表达式系统使用指南|表达式系统使用指南]]
-- [[_COMMUNITY_CreateLocalVariableInstruction 动态 Inspector 插件项目总结|CreateLocalVariableInstruction 动态 Inspector 插件项目总结]]
-- [[_COMMUNITY_Fuse RuntimeBridge 开发指南|Fuse RuntimeBridge 开发指南]]
-- [[_COMMUNITY_3. 逐篇详审|3. 逐篇详审]]
-- [[_COMMUNITY_Variable System 分析报告|Variable System 分析报告]]
-- [[_COMMUNITY_数学向量指令使用指南|数学/向量指令使用指南]]
-- [[_COMMUNITY_Fuse 编辑器工具使用指南|Fuse 编辑器工具使用指南]]
-- [[_COMMUNITY_场景管理指令使用指南|场景管理指令使用指南]]
-- [[_COMMUNITY_Fuse 元数据系统 - 阶段 1 完成报告|Fuse 元数据系统 - 阶段 1 完成报告]]
-- [[_COMMUNITY_Fuse 可视化编程系统 - 文档中心|Fuse 可视化编程系统 - 文档中心]]
-- [[_COMMUNITY_MultiEventTrigger 分析|MultiEventTrigger 分析]]
-- [[_COMMUNITY_Fuse 编辑器工具快速入门指南|Fuse 编辑器工具快速入门指南]]
-- [[_COMMUNITY_Fuse Visual Programming System - 核心架构分析报告|Fuse Visual Programming System - 核心架构分析报告]]
-- [[_COMMUNITY_数据流和控制流详细设计|数据流和控制流详细设计]]
-- [[_COMMUNITY_mftext.c|mftext.c]]
-- [[_COMMUNITY_独特优势|独特优势]]
-- [[_COMMUNITY_CurvePreset|CurvePreset]]
-- [[_COMMUNITY_RuntimeInstructionInstance 开发指南|RuntimeInstructionInstance 开发指南]]
-- [[_COMMUNITY_Godot特性集成设计方案|Godot特性集成设计方案]]
-- [[_COMMUNITY_Fuse 移动系统用户指南|Fuse 移动系统用户指南]]
-- [[_COMMUNITY_1. InstructionSerializer|1. InstructionSerializer]]
-- [[_COMMUNITY_指令生成器使用指南|指令生成器使用指南]]
-- [[_COMMUNITY_user_docs 更新规格说明（UPDATE_SPEC）|user_docs 更新规格说明（UPDATE_SPEC）]]
-- [[_COMMUNITY_CreateLocalVariableInstruction 动态 Inspector 插件实现指南|CreateLocalVariableInstruction 动态 Inspector 插件实现指南]]
-- [[_COMMUNITY_Movement Integration Tests|Movement Integration Tests]]
-- [[_COMMUNITY_Fuse Visual Programming - AI 开发规范|Fuse Visual Programming - AI 开发规范]]
-- [[_COMMUNITY_Fuse 多线程系统 - 开发者指南|Fuse 多线程系统 - 开发者指南]]
-- [[_COMMUNITY_BaseInstruction 分析报告|BaseInstruction 分析报告]]
-- [[_COMMUNITY_system_docsanalysis 重写规格说明（UPDATE_SPEC）|system_docs/analysis 重写规格说明（UPDATE_SPEC）]]
-- [[_COMMUNITY_OnTreeChanged|OnTreeChanged]]
-- [[_COMMUNITY_ActionRunner 分析报告|ActionRunner 分析报告]]
-- [[_COMMUNITY_Runner 分析|Runner 分析]]
-- [[_COMMUNITY_全局变量持久化系统|全局变量持久化系统]]
-- [[_COMMUNITY__log_debug(message, )|_log_debug(message, )]]
-- [[_COMMUNITY_dev_docs 更新规格说明（UPDATE_SPEC）|dev_docs 更新规格说明（UPDATE_SPEC）]]
-- [[_COMMUNITY_系统文档（system_docs）|系统文档（system_docs）]]
-- [[_COMMUNITY_📖 使用指南（31 篇）|📖 使用指南（31 篇）]]
-- [[_COMMUNITY_Fuse 本地化系统|Fuse 本地化系统]]
-- [[_COMMUNITY_Fuse 阶段3运行时本地化集成测试|Fuse 阶段3运行时本地化集成测试]]
-- [[_COMMUNITY_代码风格指南|代码风格指南]]
-- [[_COMMUNITY_BricksComponentChecker|BricksComponentChecker]]
-- [[_COMMUNITY_CreateLocalVariableInstruction 动态 Inspector 插件技术规格|CreateLocalVariableInstruction 动态 Inspector 插件技术规格]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY_printtrack_split_voice|printtrack_split_voice]]
-- [[_COMMUNITY_数组指令开发指南|数组指令开发指南]]
-- [[_COMMUNITY_ExecutionContext API|ExecutionContext API]]
-- [[_COMMUNITY_🎯 任务导向入口|🎯 任务导向入口]]
-- [[_COMMUNITY_system_docs 更新规格说明（UPDATE_SPEC）|system_docs 更新规格说明（UPDATE_SPEC）]]
-- [[_COMMUNITY_Event Bus 用户指南|Event Bus 用户指南]]
-- [[_COMMUNITY_场景预加载系统|场景预加载系统]]
-- [[_COMMUNITY_触发器选型指南：Runner、Trigger 与 MultiEventTrigger|触发器选型指南：Runner、Trigger 与 MultiEventTrigger]]
-- [[_COMMUNITY_Fuse 阶段 2 本地化集成测试说明|Fuse 阶段 2 本地化集成测试说明]]
-- [[_COMMUNITY_Fuse 本地化系统测试|Fuse 本地化系统测试]]
-- [[_COMMUNITY__time_to_screen(time)|_time_to_screen(time)]]
-- [[_COMMUNITY_3. 关键方法|3. 关键方法]]
-- [[_COMMUNITY_MultiEventTrigger 使用指南|MultiEventTrigger 使用指南]]
-- [[_COMMUNITY__handle_right_click(pos)|_handle_right_click(pos)]]
-- [[_COMMUNITY__handle_left_click(pos)|_handle_left_click(pos)]]
-- [[_COMMUNITY__update_status_bar|_update_status_bar]]
-- [[_COMMUNITY_关键技术要点|关键技术要点]]
-- [[_COMMUNITY_Fuse 多线程优化 - 用户指南|Fuse 多线程优化 - 用户指南]]
-- [[_COMMUNITY__log_debug_localized(message_key, )|_log_debug_localized(message_key, )]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY_JuicySequenceItem|JuicySequenceItem]]
-- [[_COMMUNITY_RuntimeInstructionInstance 架构支持|RuntimeInstructionInstance 架构支持]]
-- [[_COMMUNITY_常见陷阱|常见陷阱]]
-- [[_COMMUNITY_11. 架构演进：2026 年新增系统|11. 架构演进：2026 年新增系统]]
-- [[_COMMUNITY_断点指令使用指南|断点指令使用指南]]
-- [[_COMMUNITY_事件总览|事件总览]]
-- [[_COMMUNITY_Fuse 翻译键参考文档|Fuse 翻译键参考文档]]
-- [[_COMMUNITY_ComparisonOperator|ComparisonOperator]]
-- [[_COMMUNITY__log_debug_localized(message_key, )|_log_debug_localized(message_key, )]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY_JuicyMixerEnums|JuicyMixerEnums]]
-- [[_COMMUNITY_变量操作（三层变量系统）|变量操作（三层变量系统）]]
-- [[_COMMUNITY_BaseCondition 分析报告|BaseCondition 分析报告]]
-- [[_COMMUNITY_Fuse 可视化编程系统架构分析报告|Fuse 可视化编程系统架构分析报告]]
-- [[_COMMUNITY_ScopeSource 架构设计|ScopeSource 架构设计]]
-- [[_COMMUNITY_.get_description|.get_description]]
-- [[_COMMUNITY_.get_name|.get_name]]
-- [[_COMMUNITY_Count|Count]]
-- [[_COMMUNITY_创建 Fuse 指令指南|创建 Fuse 指令指南]]
-- [[_COMMUNITY_5. 与Godot特性的集成方案|5. 与Godot特性的集成方案]]
-- [[_COMMUNITY_指令总览|指令总览]]
-- [[_COMMUNITY_指令总览|指令总览]]
-- [[_COMMUNITY_指令总览|指令总览]]
-- [[_COMMUNITY_Runner 使用指南|Runner 使用指南]]
-- [[_COMMUNITY__log_warning(message)|_log_warning(message)]]
-- [[_COMMUNITY_Print|Print]]
-- [[_COMMUNITY__sample_from_curve(time, context)|_sample_from_curve(time, context)]]
-- [[_COMMUNITY_process_command_line_arguments|process_command_line_arguments]]
-- [[_COMMUNITY_Runtime 实例三件套分析报告|Runtime 实例三件套分析报告]]
-- [[_COMMUNITY_已重构的指令列表|已重构的指令列表]]
-- [[_COMMUNITY_4. 扩展点设计|4. 扩展点设计]]
-- [[_COMMUNITY_Fuse 特性总结|Fuse 特性总结]]
-- [[_COMMUNITY_翻译键列表|翻译键列表]]
-- [[_COMMUNITY_文字烧蚀效果 (Text Burn Effect)|文字烧蚀效果 (Text Burn Effect)]]
-- [[_COMMUNITY_IS_EMPTY|IS_EMPTY]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY__create_instance(context, state)|_create_instance(context, state)]]
-- [[_COMMUNITY__enter_tree|_enter_tree]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY__handle_mouse_motion(event)|_handle_mouse_motion(event)]]
-- [[_COMMUNITY_midi2abc|midi2abc]]
-- [[_COMMUNITY_创建 Fuse 条件指南|创建 Fuse 条件指南]]
-- [[_COMMUNITY_BaseEvent 分析报告|BaseEvent 分析报告]]
-- [[_COMMUNITY_4. FuseRuntimeBridge —— 运行时变量 TCP 桥|4. FuseRuntimeBridge —— 运行时变量 TCP 桥]]
-- [[_COMMUNITY_3.3 RuntimeActionRunnerInstance|3.3 RuntimeActionRunnerInstance]]
-- [[_COMMUNITY_OnInputKey 事件设计文档|OnInputKey 事件设计文档]]
-- [[_COMMUNITY_2.1 核心资源组件|2.1 核心资源组件]]
-- [[_COMMUNITY_1. 必须实现的抽象方法|1. 必须实现的抽象方法]]
-- [[_COMMUNITY_使用方式|使用方式]]
-- [[_COMMUNITY_测试内容|测试内容]]
-- [[_COMMUNITY_.is_empty|.is_empty]]
-- [[_COMMUNITY__get_variable_data(name)|_get_variable_data(name)]]
-- [[_COMMUNITY_GET|GET]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY__execute_next_iteration_runtime(runtime_instance)|_execute_next_iteration_runtime(runtime_instance)]]
-- [[_COMMUNITY__update_context_actions(track)|_update_context_actions(track)]]
-- [[_COMMUNITY_free|free]]
-- [[_COMMUNITY_addfeature|addfeature]]
-- [[_COMMUNITY_event_error|event_error]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_ExecutionDiagnostics API|ExecutionDiagnostics API]]
-- [[_COMMUNITY_VariableOperations 工具类架构文档|VariableOperations 工具类架构文档]]
-- [[_COMMUNITY_3. 关键方法|3. 关键方法]]
-- [[_COMMUNITY_4. 关键方法|4. 关键方法]]
-- [[_COMMUNITY_VariableScopeUtils（作用域工具类）|VariableScopeUtils（作用域工具类）]]
-- [[_COMMUNITY_Fuse 变量系统设计文档|Fuse 变量系统设计文档]]
-- [[_COMMUNITY_常见实现模式|常见实现模式]]
-- [[_COMMUNITY_2. 完成信号时机|2. 完成信号时机]]
-- [[_COMMUNITY_API 参考|API 参考]]
-- [[_COMMUNITY_在指令中使用本地化|在指令中使用本地化]]
-- [[_COMMUNITY__evaluate_condition(context)|_evaluate_condition(context)]]
-- [[_COMMUNITY__perform_comparison(actual_value, expected_value)|_perform_comparison(actual_value, expected_value)]]
-- [[_COMMUNITY__log_warning_localized(message_key, )|_log_warning_localized(message_key, )]]
-- [[_COMMUNITY__remove_variable_data(name)|_remove_variable_data(name)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_tween_properties|tween_properties]]
-- [[_COMMUNITY__on_draw|_on_draw]]
-- [[_COMMUNITY__update_time_display|_update_time_display]]
-- [[_COMMUNITY_rename_conditions.py|rename_conditions.py]]
-- [[_COMMUNITY_常见陷阱|常见陷阱]]
-- [[_COMMUNITY_创建 Fuse 事件指南|创建 Fuse 事件指南]]
-- [[_COMMUNITY_常见陷阱|常见陷阱]]
-- [[_COMMUNITY_ExecutionContext 与 ExecutionDiagnostics 开发指南|ExecutionContext 与 ExecutionDiagnostics 开发指南]]
-- [[_COMMUNITY_基本用法|基本用法]]
-- [[_COMMUNITY_2. 核心属性|2. 核心属性]]
-- [[_COMMUNITY_3.5 元数据方法|3.5 元数据方法]]
-- [[_COMMUNITY_BaseTrigger 分析报告|BaseTrigger 分析报告]]
-- [[_COMMUNITY_3. 抽象方法（子类必须实现）|3. 抽象方法（子类必须实现）]]
-- [[_COMMUNITY_BaseVariable 分析报告|BaseVariable 分析报告]]
-- [[_COMMUNITY_3. 关键方法|3. 关键方法]]
-- [[_COMMUNITY_10. 设计模式分析|10. 设计模式分析]]
-- [[_COMMUNITY_2.4 Trigger - 触发器四兄弟 + 双 Runtime 实例|2.4 Trigger - 触发器四兄弟 + 双 Runtime 实例]]
-- [[_COMMUNITY_全局基础设施分析报告（FuseEventBus  FuseRuntimeBridge）|全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge）]]
-- [[_COMMUNITY_常见问题|常见问题]]
-- [[_COMMUNITY_事件 (Events)|事件 (Events)]]
-- [[_COMMUNITY_常见用例|常见用例]]
-- [[_COMMUNITY_常见用例|常见用例]]
-- [[_COMMUNITY_UI 系统使用指南|UI 系统使用指南]]
-- [[_COMMUNITY_Fuse user_docs 新增合并指南规格说明（NEW_DOCS_SPEC）|Fuse user_docs 新增/合并指南规格说明（NEW_DOCS_SPEC）]]
-- [[_COMMUNITY_合并项 A：全局变量管理指南（覆盖管理 + 持久化）|合并项 A：全局变量管理指南（覆盖管理 + 持久化）]]
-- [[_COMMUNITY_.run(context)|.run(context)]]
-- [[_COMMUNITY__detect_sync_capability|_detect_sync_capability]]
-- [[_COMMUNITY__get_items_to_iterate(context)|_get_items_to_iterate(context)]]
-- [[_COMMUNITY__check_condition(context)|_check_condition(context)]]
-- [[_COMMUNITY__check_condition_from_state(runtime_instance)|_check_condition_from_state(runtime_instance)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY_ErrorCode|ErrorCode]]
-- [[_COMMUNITY__refresh_time_ruler|_refresh_time_ruler]]
-- [[_COMMUNITY_.configure|.configure]]
-- [[_COMMUNITY_.recalculate_duration|.recalculate_duration]]
-- [[_COMMUNITY_CurvePresetCategory|CurvePresetCategory]]
-- [[_COMMUNITY_Fuse — Godot 可视化编程系统|Fuse — Godot 可视化编程系统]]
-- [[_COMMUNITY_可选实现的方法|可选实现的方法]]
-- [[_COMMUNITY_常用代码片段|常用代码片段]]
-- [[_COMMUNITY_可选实现的方法|可选实现的方法]]
-- [[_COMMUNITY_常用代码片段|常用代码片段]]
-- [[_COMMUNITY_7. 变量系统最佳实践|7. 变量系统最佳实践]]
-- [[_COMMUNITY_2. FuseEventBus —— 全局事件总线|2. FuseEventBus —— 全局事件总线]]
-- [[_COMMUNITY_3.2 RuntimeInstructionInstance|3.2 RuntimeInstructionInstance]]
-- [[_COMMUNITY_专家审查和关键修复|专家审查和关键修复]]
-- [[_COMMUNITY_变量操作方法|变量操作方法]]
-- [[_COMMUNITY_合并项 B：坐标系统概念 → 并入 transform-guide|合并项 B：坐标系统概念 → 并入 transform-guide.md]]
-- [[_COMMUNITY_日志消息（FUSE_LOG_）|日志消息（FUSE_LOG_）]]
-- [[_COMMUNITY_UI文本（FUSE_UI_）|UI文本（FUSE_UI_）]]
-- [[_COMMUNITY_.get_description|.get_description]]
-- [[_COMMUNITY__log_error_localized(message_key, )|_log_error_localized(message_key, )]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_InterruptionPolicy|InterruptionPolicy]]
-- [[_COMMUNITY__create_interpolation_icon(keyframe, is_selected)|_create_interpolation_icon(keyframe, is_selected)]]
-- [[_COMMUNITY__log_debug(message, )|_log_debug(message, )]]
-- [[_COMMUNITY_.execute(context, next)|.execute(context, next)]]
-- [[_COMMUNITY__refresh_cache_and_notify|_refresh_cache_and_notify]]
-- [[_COMMUNITY__update_property_type_info|_update_property_type_info]]
-- [[_COMMUNITY_命名规范|命名规范]]
-- [[_COMMUNITY_必需实现的方法|必需实现的方法]]
-- [[_COMMUNITY_创建步骤|创建步骤]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_常用代码片段|常用代码片段]]
-- [[_COMMUNITY_私有辅助方法|私有辅助方法]]
-- [[_COMMUNITY_7. 性能考虑|7. 性能考虑]]
-- [[_COMMUNITY_6. 架构关系：BaseVariable 与变量系统七类|6. 架构关系：BaseVariable 与变量系统七类]]
-- [[_COMMUNITY_3.1 RuntimeEventInstance|3.1 RuntimeEventInstance]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_基本步骤|基本步骤]]
-- [[_COMMUNITY_1.3 核心设计原则|1.3 核心设计原则]]
-- [[_COMMUNITY_自定义 Instruction 创建最佳实践指南|自定义 Instruction 创建最佳实践指南]]
-- [[_COMMUNITY_动画系统用户指南|动画系统用户指南]]
-- [[_COMMUNITY_常见用例|常见用例]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_常见用例|常见用例]]
-- [[_COMMUNITY_P0-A：Node Operations 指令指南|P0-A：Node Operations 指令指南]]
-- [[_COMMUNITY_指令清单|指令清单]]
-- [[_COMMUNITY_Comparison|Comparison]]
-- [[_COMMUNITY__get_array_size(context)|_get_array_size(context)]]
-- [[_COMMUNITY_.is_valid(context)|.is_valid(context)]]
-- [[_COMMUNITY__log_warning(message)|_log_warning(message)]]
-- [[_COMMUNITY_.greater_than(other_value)|.greater_than(other_value)]]
-- [[_COMMUNITY_.get_dependency_graph|.get_dependency_graph]]
-- [[_COMMUNITY_ExecutionState|ExecutionState]]
-- [[_COMMUNITY__create_ui|_create_ui]]
-- [[_COMMUNITY__populate_method_tree(search_text)|_populate_method_tree(search_text)]]
-- [[_COMMUNITY_property_selected|property_selected]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY_OperationType|OperationType]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY__get_property_list|_get_property_list]]
-- [[_COMMUNITY_PipelineState|PipelineState]]
-- [[_COMMUNITY_keyframe_moved|keyframe_moved]]
-- [[_COMMUNITY__setup_ui|_setup_ui]]
-- [[_COMMUNITY_.bake_curve_to_keyframes|.bake_curve_to_keyframes]]
-- [[_COMMUNITY_event_key|event_key]]
-- [[_COMMUNITY_event_rest|event_rest]]
-- [[_COMMUNITY_条件特性|条件特性]]
-- [[_COMMUNITY_创建步骤|创建步骤]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_常见陷阱|常见陷阱]]
-- [[_COMMUNITY_RuntimeInstructionInstance 最佳实践|RuntimeInstructionInstance 最佳实践]]
-- [[_COMMUNITY_常见问题 (FAQ)|常见问题 (FAQ)]]
-- [[_COMMUNITY_8. 子类实现模式|8. 子类实现模式]]
-- [[_COMMUNITY_9. 与其他系统的关系|9. 与其他系统的关系]]
-- [[_COMMUNITY_5. 变量系统（7 类，三层作用域）|5. 变量系统（7 类，三层作用域）]]
-- [[_COMMUNITY_1. Autoload 单例机制|1. Autoload 单例机制]]
-- [[_COMMUNITY_2.5 核心 API|2.5 核心 API]]
-- [[_COMMUNITY_4.5 编辑器侧（TCPServer 模式）|4.5 编辑器侧（TCPServer 模式）]]
-- [[_COMMUNITY_6. 设计意图与权衡|6. 设计意图与权衡]]
-- [[_COMMUNITY_7. 潜在问题与改进点|7. 潜在问题与改进点]]
-- [[_COMMUNITY_条件化属性显示设计|条件化属性显示设计]]
-- [[_COMMUNITY_3. 数据流和控制流设计|3. 数据流和控制流设计]]
-- [[_COMMUNITY_Instruction 架构基础|Instruction 架构基础]]
-- [[_COMMUNITY_OnAnimationBlend -- 动画混合权重变化事件|OnAnimationBlend -- 动画混合权重变化事件]]
-- [[_COMMUNITY_SetAnimationSpeed -- 设置播放速度|SetAnimationSpeed -- 设置播放速度]]
-- [[_COMMUNITY_核心功能|核心功能]]
-- [[_COMMUNITY_GlobalVariableManager 使用指南|GlobalVariableManager 使用指南]]
-- [[_COMMUNITY_P0-B：Lifecycle 事件指南|P0-B：Lifecycle 事件指南]]
-- [[_COMMUNITY_P1-A：Timing 事件指南|P1-A：Timing 事件指南]]
-- [[_COMMUNITY_P2-C：综合条件合集（9 小类合并）|P2-C：综合条件合集（9 小类合并）]]
-- [[_COMMUNITY_本地化规范|本地化规范]]
-- [[_COMMUNITY_使用示例|使用示例]]
-- [[_COMMUNITY__log_debug(message)|_log_debug(message)]]
-- [[_COMMUNITY_ExecutionStatus|ExecutionStatus]]
-- [[_COMMUNITY_.get_type_name|.get_type_name]]
-- [[_COMMUNITY__deserialize_legacy_format(data)|_deserialize_legacy_format(data)]]
-- [[_COMMUNITY_.execute(context)|.execute(context)]]
-- [[_COMMUNITY__perform_search(search_root)|_perform_search(search_root)]]
-- [[_COMMUNITY__apply_spawn_position(instance, context)|_apply_spawn_position(instance, context)]]
-- [[_COMMUNITY__draw_feedback_track_visual(track, track_rect)|_draw_feedback_track_visual(track, track_rect)]]
-- [[_COMMUNITY_.get_actual_duration|.get_actual_duration]]
-- [[_COMMUNITY_.trigger_method_with_target(target_node, context)|.trigger_method_with_target(target_node, context)]]
-- [[_COMMUNITY__sync_timeline_tracks_to_groups(tracks)|_sync_timeline_tracks_to_groups(tracks)]]
-- [[_COMMUNITY_reduce|reduce]]
-- [[_COMMUNITY_event_chordoff|event_chordoff]]
-- [[_COMMUNITY_Unreleased|[Unreleased]]]
-- [[_COMMUNITY_命名规范|命名规范]]
-- [[_COMMUNITY_创建步骤|创建步骤]]
-- [[_COMMUNITY_命名规范|命名规范]]
-- [[_COMMUNITY_核心 API|核心 API]]
-- [[_COMMUNITY_3.5 缓存系统方法|3.5 缓存系统方法]]
-- [[_COMMUNITY_2. 核心属性|2. 核心属性]]
-- [[_COMMUNITY_3.1 生命周期方法|3.1 生命周期方法]]
-- [[_COMMUNITY_3.3 运行时状态方法|3.3 运行时状态方法]]
-- [[_COMMUNITY_2. 核心属性|2. 核心属性]]
-- [[_COMMUNITY_5. 与 RuntimeEventInstance 的协作|5. 与 RuntimeEventInstance 的协作]]
-- [[_COMMUNITY_2. 核心属性|2. 核心属性]]
-- [[_COMMUNITY_11.2 统一变量系统|11.2 统一变量系统]]
-- [[_COMMUNITY_3. FuseEventBus 与 SendEvent  OnReceiveEvent 的协作|3. FuseEventBus 与 SendEvent / OnReceiveEvent 的协作]]
-- [[_COMMUNITY_2. 核心属性|2. 核心属性]]
-- [[_COMMUNITY_6. 自声明状态模式（Self-declaring State Pattern）|6. 自声明状态模式（Self-declaring State Pattern）]]
-- [[_COMMUNITY_按键监听和事件触发机制|按键监听和事件触发机制]]
-- [[_COMMUNITY_编辑器插件注册|编辑器插件注册]]
-- [[_COMMUNITY_🔴 严重问题（已修复）|🔴 严重问题（已修复）]]
-- [[_COMMUNITY_总结|总结]]
-- [[_COMMUNITY_版本历史|版本历史]]
-- [[_COMMUNITY_从旧 API 迁移到新 API|从旧 API 迁移到新 API]]
-- [[_COMMUNITY_资源管理最佳实践|资源管理最佳实践]]
-- [[_COMMUNITY_错误处理和日志|错误处理和日志]]
-- [[_COMMUNITY_OnAnimationLoop -- 动画循环事件|OnAnimationLoop -- 动画循环事件]]
-- [[_COMMUNITY_PlayAnimation -- 播放动画|PlayAnimation -- 播放动画]]
-- [[_COMMUNITY_StopAnimation -- 停止动画|StopAnimation -- 停止动画]]
-- [[_COMMUNITY_常见工作流|常见工作流]]
-- [[_COMMUNITY_P1-B：Node 事件指南|P1-B：Node 事件指南]]
-- [[_COMMUNITY_P1-C：Input 条件指南|P1-C：Input 条件指南]]
-- [[_COMMUNITY_P1-D：Node 条件指南|P1-D：Node 条件指南]]
-- [[_COMMUNITY_P1-E：Physics 条件指南|P1-E：Physics 条件指南]]
-- [[_COMMUNITY_P2-A：Animation 条件指南|P2-A：Animation 条件指南]]
-- [[_COMMUNITY_P2-B：Time 条件指南|P2-B：Time 条件指南]]
-- [[_COMMUNITY_Movement Demo 使用说明|Movement Demo 使用说明]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY__log_error(message)|_log_error(message)]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_Plane3D|Plane3D]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_.get_description|.get_description]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY_ScopeSource|ScopeSource]]
-- [[_COMMUNITY__exit_tree|_exit_tree]]
-- [[_COMMUNITY_execution_completed|execution_completed]]
-- [[_COMMUNITY_.handle_context_event(context, event)|.handle_context_event(context, event)]]
-- [[_COMMUNITY_.apply_parameter_mappings_to_sub_effect(context, sub_context_id)|.apply_parameter_mappings_to_sub_effect(context, sub_context_id)]]
-- [[_COMMUNITY_animation_track_editor.h|animation_track_editor.h]]
-- [[_COMMUNITY_main|main]]
-- [[_COMMUNITY_finishfile|finishfile]]
-- [[_COMMUNITY_图标规范|图标规范]]
-- [[_COMMUNITY_测试规范|测试规范]]
-- [[_COMMUNITY_完整事件模板|完整事件模板]]
-- [[_COMMUNITY_测试规范|测试规范]]
-- [[_COMMUNITY_与其他工具类的协作|与其他工具类的协作]]
-- [[_COMMUNITY_测试指南|测试指南]]
-- [[_COMMUNITY_错误处理|错误处理]]
-- [[_COMMUNITY_性能考虑|性能考虑]]
-- [[_COMMUNITY_3.11 序列化与克隆|3.11 序列化与克隆]]
-- [[_COMMUNITY_3.7 线程安全方法|3.7 线程安全方法]]
-- [[_COMMUNITY_4. 缓存系统架构|4. 缓存系统架构]]
-- [[_COMMUNITY_7. 序列化与克隆|7. 序列化与克隆]]
-- [[_COMMUNITY_3.6 错误处理方法|3.6 错误处理方法]]
-- [[_COMMUNITY_4. RuntimeEventInstance 集成方式|4. RuntimeEventInstance 集成方式]]
-- [[_COMMUNITY_5. 信号机制|5. 信号机制]]
-- [[_COMMUNITY_8. 子类实现模式总结|8. 子类实现模式总结]]
-- [[_COMMUNITY_4.1 生命周期|4.1 生命周期]]
-- [[_COMMUNITY_6. 子类实现模式|6. 子类实现模式]]
-- [[_COMMUNITY_3.4 重置与生命周期|3.4 重置与生命周期]]
-- [[_COMMUNITY_5. 信号机制|5. 信号机制]]
-- [[_COMMUNITY_4. 事件驱动架构|4. 事件驱动架构]]
-- [[_COMMUNITY_9. 性能优化与内存管理|9. 性能优化与内存管理]]
-- [[_COMMUNITY_4. 架构关系|4. 架构关系]]
-- [[_COMMUNITY_7. 信号转发机制|7. 信号转发机制]]
-- [[_COMMUNITY_完整实现示例|完整实现示例]]
-- [[_COMMUNITY_核心功能设计|核心功能设计]]
-- [[_COMMUNITY_使用示例|使用示例]]
-- [[_COMMUNITY_三层变量架构|三层变量架构]]
-- [[_COMMUNITY_作用域选择指南|作用域选择指南]]
-- [[_COMMUNITY_实际应用示例|实际应用示例]]
-- [[_COMMUNITY_Godot 4.x 可视化编程系统完整架构设计|Godot 4.x 可视化编程系统完整架构设计]]
-- [[_COMMUNITY_测试和验证|测试和验证]]
-- [[_COMMUNITY_性能优化|性能优化]]
-- [[_COMMUNITY_OnAnimationFrameReached -- 动画帧到达事件|OnAnimationFrameReached -- 动画帧到达事件]]
-- [[_COMMUNITY_OnAnimationMarker -- 动画标记事件|OnAnimationMarker -- 动画标记事件]]
-- [[_COMMUNITY_调试技巧|调试技巧]]
-- [[_COMMUNITY_常见问题|常见问题]]
-- [[_COMMUNITY_快速开始|快速开始]]
-- [[_COMMUNITY_API 参考|API 参考]]
-- [[_COMMUNITY_常见问题|常见问题]]
-- [[_COMMUNITY_SourceType|SourceType]]
-- [[_COMMUNITY_ComparisonOperator|ComparisonOperator]]
-- [[_COMMUNITY__get_source_node(context)|_get_source_node(context)]]
-- [[_COMMUNITY__get_target_node(context)|_get_target_node(context)]]
-- [[_COMMUNITY__convert_value(value, target_type)|_convert_value(value, target_type)]]
-- [[_COMMUNITY_ExecutionMode|ExecutionMode]]
-- [[_COMMUNITY_VariableScope|VariableScope]]
-- [[_COMMUNITY_SourceType|SourceType]]
-- [[_COMMUNITY_SourceType|SourceType]]
-- [[_COMMUNITY_SourceType|SourceType]]
-- [[_COMMUNITY_SourceType|SourceType]]
-- [[_COMMUNITY_SourceType|SourceType]]
-- [[_COMMUNITY_OperationType|OperationType]]
-- [[_COMMUNITY_ConditionType|ConditionType]]
-- [[_COMMUNITY__get_scope_source_string(source)|_get_scope_source_string(source)]]
-- [[_COMMUNITY__get_operator_string|_get_operator_string]]
-- [[_COMMUNITY_OriginMode|OriginMode]]
-- [[_COMMUNITY_ErrorHandling|ErrorHandling]]
-- [[_COMMUNITY__get_property_list|_get_property_list]]
-- [[_COMMUNITY_SearchScope|SearchScope]]
-- [[_COMMUNITY_SearchType|SearchType]]
-- [[_COMMUNITY__update_resource_name|_update_resource_name]]
-- [[_COMMUNITY__validate_function_arguments|_validate_function_arguments]]
-- [[_COMMUNITY_static _generate_unique_id|[static] _generate_unique_id]]
-- [[_COMMUNITY_RestorationMode|RestorationMode]]
-- [[_COMMUNITY__handle_left_release|_handle_left_release]]
-- [[_COMMUNITY__apply_time_transform(time)|_apply_time_transform(time)]]
-- [[_COMMUNITY_BlendMode|BlendMode]]
-- [[_COMMUNITY_LoopMode|LoopMode]]
-- [[_COMMUNITY_template_builders.py|template_builders.py]]
-- [[_COMMUNITY_update_document|update_document]]
-- [[_COMMUNITY_update_test_file|update_test_file]]
-- [[_COMMUNITY_最佳实践|最佳实践]]
-- [[_COMMUNITY_三层变量体系|三层变量体系]]
-- [[_COMMUNITY_概述|概述]]
-- [[_COMMUNITY_3.12 生命周期与状态重置|3.12 生命周期与状态重置]]
-- [[_COMMUNITY_3.1 条件评估主入口|3.1 条件评估主入口]]
-- [[_COMMUNITY_3.6 依赖图方法|3.6 依赖图方法]]
-- [[_COMMUNITY_3.8 结果回调方法（非信号）|3.8 结果回调方法（非信号）]]
-- [[_COMMUNITY_4.4 ActionRunner 信号桥接|4.4 ActionRunner 信号桥接]]
-- [[_COMMUNITY_4.6 池化支持|4.6 池化支持]]
-- [[_COMMUNITY_8. 性能考虑|8. 性能考虑]]
-- [[_COMMUNITY_10. 总体评估|10. 总体评估]]
-- [[_COMMUNITY_3.5 FuseError 集成|3.5 FuseError 集成]]
-- [[_COMMUNITY_3.7 序列化（轻量）|3.7 序列化（轻量）]]
-- [[_COMMUNITY_7. 已废弃与历史遗留|7. 已废弃与历史遗留]]
-- [[_COMMUNITY_11.4 线程系统（corethreading，4 个类）|11.4 线程系统（core/threading/，4 个类）]]
-- [[_COMMUNITY_11.8 顶层 Node 基础设施（Autoload 单例）|11.8 顶层 Node 基础设施（Autoload 单例）]]
-- [[_COMMUNITY_11.9 表达式系统|11.9 表达式系统]]
-- [[_COMMUNITY_1. 类概述和职责|1. 类概述和职责]]
-- [[_COMMUNITY_测试和验证|测试和验证]]
-- [[_COMMUNITY_按键选择界面设计|按键选择界面设计]]
-- [[_COMMUNITY_5.3 NodePath系统集成|5.3 NodePath系统集成]]
-- [[_COMMUNITY_资源操作方法|资源操作方法]]
-- [[_COMMUNITY__get_scope_source_string|_get_scope_source_string]]
-- [[_COMMUNITY_NodeSource|NodeSource]]
-- [[_COMMUNITY_ExecutionMode|ExecutionMode]]
-- [[_COMMUNITY_instruction_completed|instruction_completed]]
-- [[_COMMUNITY_CompletionSignalTiming|CompletionSignalTiming]]
-- [[_COMMUNITY_value_changed|value_changed]]
-- [[_COMMUNITY_VariableScope|VariableScope]]
-- [[_COMMUNITY_GenerateMode|GenerateMode]]
-- [[_COMMUNITY__update_property_info_display(prop)|_update_property_info_display(prop)]]
-- [[_COMMUNITY__save_array_to_variable(context, array_ref)|_save_array_to_variable(context, array_ref)]]
-- [[_COMMUNITY_RemoveMode|RemoveMode]]
-- [[_COMMUNITY_VectorType|VectorType]]
-- [[_COMMUNITY_VectorType|VectorType]]
-- [[_COMMUNITY_SortMode|SortMode]]
-- [[_COMMUNITY_VectorType|VectorType]]
-- [[_COMMUNITY_OperationType|OperationType]]
-- [[_COMMUNITY_SequenceMode|SequenceMode]]
-- [[_COMMUNITY_DimensionMode|DimensionMode]]
-- [[_COMMUNITY__get_save_scope_string|_get_save_scope_string]]
-- [[_COMMUNITY__get_scope_source_string|_get_scope_source_string]]
-- [[_COMMUNITY_PositionMode|PositionMode]]
-- [[_COMMUNITY_ContextType|ContextType]]
-- [[_COMMUNITY_middleware_activation_changed|middleware_activation_changed]]
-- [[_COMMUNITY_middleware_added|middleware_added]]
-- [[_COMMUNITY__process_scenetree_highlights|_process_scenetree_highlights]]
-- [[_COMMUNITY__get_property_list|_get_property_list]]
-- [[_COMMUNITY_EditMode|EditMode]]
-- [[_COMMUNITY__get_property_enum_string|_get_property_enum_string]]
-- [[_COMMUNITY_.validate_config|.validate_config]]
-- [[_COMMUNITY_test_char.gd|test_char.gd]]
-- [[_COMMUNITY_action_runner.gd|action_runner.gd]]
-- [[_COMMUNITY_execution_canceled|execution_canceled]]
-- [[_COMMUNITY_execution_failed|execution_failed]]
-- [[_COMMUNITY_execution_state_changed|execution_state_changed]]
-- [[_COMMUNITY_variable_container.gd|variable_container.gd]]
-- [[_COMMUNITY_.has_variables_batch(names, )|.has_variables_batch(names, )]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__get_array_variable(context)|_get_array_variable(context)]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__set(property, value)|_set(property, value)]]
-- [[_COMMUNITY__on_scene_changed|_on_scene_changed]]
-- [[_COMMUNITY_juicy_context.gd|juicy_context.gd]]
-- [[_COMMUNITY_.complete|.complete]]
-- [[_COMMUNITY_execution_started|execution_started]]
-- [[_COMMUNITY_pipeline_state_changed|pipeline_state_changed]]
-- [[_COMMUNITY_playback_time_changed|playback_time_changed]]
-- [[_COMMUNITY_playback_time_changed|playback_time_changed]]
-- [[_COMMUNITY_timeline_changed|timeline_changed]]
-- [[_COMMUNITY__edit|_edit]]
-- [[_COMMUNITY__setup_scenetree_highlight|_setup_scenetree_highlight]]
-- [[_COMMUNITY_.cleanup_track(context)|.cleanup_track(context)]]
-- [[_COMMUNITY__apply_curve_preset_smart(preset)|_apply_curve_preset_smart(preset)]]
-- [[_COMMUNITY_zoom_changed|zoom_changed]]
-- [[_COMMUNITY_static create_curve(preset)|[static] create_curve(preset)]]
-- [[_COMMUNITY_AnimationTreeNodeEditorPlugin|AnimationTreeNodeEditorPlugin]]
-- [[_COMMUNITY_创建步骤|创建步骤]]
-- [[_COMMUNITY_命名规范|命名规范]]
-- [[_COMMUNITY_流程控制类指令|流程控制类指令]]
-- [[_COMMUNITY_场景管理类指令|场景管理类指令]]
-- [[_COMMUNITY_音频控制类指令|音频控制类指令]]
-- [[_COMMUNITY_创建步骤|创建步骤]]
-- [[_COMMUNITY_命名规范|命名规范]]
-- [[_COMMUNITY_必须本地化的内容|必须本地化的内容]]
-- [[_COMMUNITY_步骤 3：修复本地化问题|步骤 3：修复本地化问题]]
-- [[_COMMUNITY_OnAnimationFrameReached -- 动画帧到达事件|OnAnimationFrameReached -- 动画帧到达事件]]
-- [[_COMMUNITY_OnAnimationMarker -- 动画标记事件|OnAnimationMarker -- 动画标记事件]]
-- [[_COMMUNITY_条件评估核心|条件评估核心]]
-- [[_COMMUNITY_动画控制类指令|动画控制类指令]]
-- [[_COMMUNITY_变量操作类指令|变量操作类指令]]
-- [[_COMMUNITY_数学运算类指令|数学运算类指令]]
-- [[_COMMUNITY_static create_global(name, val, )|[static] create_global(name, val, )]]
-- [[_COMMUNITY_1. 类概述和职责|1. 类概述和职责]]
-- [[_COMMUNITY_4.2 冷却检查|4.2 冷却检查]]
-- [[_COMMUNITY_图标规范|图标规范]]
+- store.c
+- juicy_timeline_canvas.gd
+- genmidi.c
+- ExecutionContext
+- EventEvaluator
+- JuicyMiddlewarePipeline
+- JuicyTimelineEditor
+- midi2abc.c
+- VariableContainer
+- RunTargetNodeFunction
+- JuicyPropertyTrack
+- BaseInstruction
+- matchsup.c
+- ActionRunner
+- BaseCondition
+- BaseVariable
+- JuicyCurveFactory
+- CheckVariable
+- GlobalVariableAssistant
+- WaitUntil
+- JuicyMiddleware
+- JuicyTimelineResource
+- midicopy.c
+- MethodSelectorDialog
+- ForEach
+- PropertyStateManager
+- RuntimeActionRunnerInstance
+- InstantiateScene
+- JuicyContext
+- shake_properties
+- CheckDistance
+- FindNode
+- GetRandomPointInRange
+- plugin.gd
+- BaseEvent
+- JuicyMixer
+- JuicyMethodTrack
+- JuicyContextPool
+- juicy_track_editor.gd
+- ArrayVectorSort
+- test_phase1_integration.gd
+- MusicPlayer
+- JuicyInterruptionManager
+- RuntimeInstructionInstance
+- CheckScopeVariable
+- ArrayVectorGetClosest
+- ArrayVectorGetFurthest
+- ForLoop
+- WhileLoop
+- CheckDirection
+- BaseTrigger
+- ArrayInsert
+- ArrayRemove
+- DictMathOp
+- JuicyObjectPool
+- JuicyFeedbackTrack
+- TweenPropertyInstruction
+- CheckArraySize
+- DictModifyNumber
+- MathOperation
+- MusicManager
+- VectorOperation
+- CreateVariable
+- PropertyInfo
+- AnimationPlayData
+- CheckChildCount
+- CheckIsChildOf
+- GlobalVariableManager
+- Runner
+- SetPropertyValue
+- InterruptionState
+- JuicyPoolManager
+- CheckGroupCount
+- CheckVector2VariableAxis
+- OnMouseButton
+- ArraySet
+- ArrayAdd
+- MathExpression
+- ActiveMusicState
+- JuicyTimeRuler
+- CheckArrayContains
+- GlobalVariableResource
+- MultiEventTrigger
+- PropertyManager
+- juicy_timeline_inspector.gd
+- JuicyAudioEventHandler
+- system_integration_test.gd
+- MusicTrackResource
+- DebugVisualizer
+- ArrayNumericSort
+- DictGetByPath
+- test_runner.gd
+- JuicyTimelineDriver
+- JuicyEvent
+- test_music_player_ui.gd
+- CompareVariable
+- OnTargetSignalEmit
+- DictGetValue
+- DictSetKeyValue
+- RunRunner
+- Lerp
+- JuicyFeedbackResource
+- test_middleware_integration.gd
+- test_lod_middleware.gd
+- CheckNodeActive
+- FuseObjectPool
+- OnInterval
+- ArrayGet
+- ArrayNumericGetLargest
+- ArrayNumericGetSmallest
+- JuicyMethodInfo
+- CheckNodeProperty
+- ArrayContains
+- ArrayFind
+- ArrayRandom
+- JuicyPoolItem
+- animated_sprite2d_play_with_variable.gd
+- CheckDictContainsKey
+- CheckDictSize
+- ExecutionTracker
+- ArraySize
+- JuicySequenceDriver
+- CheckVelocity
+- OnInputKey
+- ArrayClear
+- ArrayReverse
+- ArrayShuffle
+- StateRestorationMiddleware
+- JuicyEventTrack
+- CheckAnimationTreeState
+- CheckFacingDirection
+- OnInputActionComposite
+- OnValueChanged
+- DictFromJson
+- Wait
+- FunctionInfo
+- JuicyPropertyBuffer
+- AudioMixingConfig
+- CheckAnimationFinished
+- CheckIsAnimation
+- CheckComposite
+- CheckNodeInGroup
+- ScopeVariableContainer
+- OnHealthChanged
+- OnTextChanged
+- LoadSceneBackground
+- JuicyParameterMapping
+- test_timeline_editor.gd
+- CheckIsPlaying
+- CheckNodeExists
+- CheckInAir
+- CheckIsFalling
+- CheckOnFloor
+- CheckOnWall
+- FuseTaskManager
+- OnVariableChanged
+- DictToggleBoolean
+- SetVariable
+- EditorToolsTest
+- FunctionManager
+- JuicyEventHandler
+- OnSoundListened
+- BreakpointInstruction
+- GetAllChildrenPosition
+- Raycast
+- SetIntVariable
+- translation_checker.gd
+- JuicyDirector
+- StateSnapshot
+- JuicyCompositeResource
+- JuicyKeyframe
+- test_property_track_phase1.gd
+- MiddlewareOptimizationValidation
+- editor_log.cpp
+- FuseError
+- SetCameraZoom
+- GetAllChildren
+- GetChildByIndex
+- test_variable_operations.gd
+- TypeConverter
+- JuicyDriver
+- JuicyTimelineResourceCreator
+- ChannelInterruptionConfig
+- visual_tween_demo.gd
+- OnInputAction
+- OnShapeCast
+- OnCooldownFinished
+- DictRemoveKey
+- DictSetByPath
+- RunConditionCheck
+- PreloadSceneInstruction
+- JuicyLODMiddleware
+- EventHandlerEntry
+- MiddlewareEntry
+- printlib
+- MiddlewarePerformanceBenchmark
+- OnMouseMove
+- OnTouchSwipe
+- OnScreenEnteredExited
+- OnCountdown
+- PrintVariableValue
+- DictDuplicate
+- DictMerge
+- DictToJson
+- test_property_system_common_classes.gd
+- test_find_node.gd
+- ContextStateManager
+- RuntimeEventInstance
+- Trigger
+- StaticAnalysisPanel
+- OnNodePausedResumed
+- DictGetKeys
+- DictGetValues
+- ClampValue
+- QueueFreeNode
+- GetPosition
+- PlayJuicyMixerFeedback
+- FuseLocalization
+- JuicyPropertyManager
+- PlayMusic
+- DictSize
+- StringExpression
+- GetScopeVariable
+- JuicyCompositeDriver
+- JuicySpringDriver
+- JuicyTimeScaleMiddleware
+- AudioEventResource
+- test_timeline_runner.gd
+- CompareHealthThreshold
+- FusePoolManager
+- InstructionSelector
+- FuseMetadata
+- CrossfadeToMusic
+- DictClear
+- SetUIText
+- FuseNodeUtils
+- InterruptionMiddleware
+- JuicyTrack
+- RestorationConfig
+- test_performance_optimization.gd
+- test_property_track_phase2.gd
+- test_timeline_driver.gd
+- test_variant_system.gd
+- test_three_tier_demo.gd
+- test_juicy_shake_driver.gd
+- test_juicy_spring_driver.gd
+- test_comprehensive_performance.gd
+- ExpressionCondition
+- OnAnimationLoop
+- OnAnimationMarker
+- MoveCharacterBody2DComposite
+- RecyclePooledScene
+- WarmUpPool
+- GetScenePath
+- SetUITexture
+- SetScopeVariable
+- JuicySequenceResource
+- test_timeline_system.gd
+- JuicyMethodReflection
+- UndoRedoManager
+- CheckCountdownFinished
+- CheckHealthValue
+- OnGamepadAxis
+- OnArea2DEnter
+- BlendAnimation
+- PauseResumeAudio
+- test_composite_integration.gd
+- test_integration_event_handlers.gd
+- test_target_methods.gd
+- test_timeline_examples.gd
+- test_timeline_integration.gd
+- test_timeline_performance_optimization.gd
+- test_context_state_manager_node.gd
+- EditorToolsDemo
+- OnAnimationBlend
+- OnGamepadButton
+- OnPropertyChanged
+- OnArea3DEntered
+- OnRaycastHit
+- OnTimer
+- SetAudioVolume
+- CameraShake
+- GetLastChild
+- GetRandomChild
+- MoveBy
+- AudioMixingController
+- JuicyShakeDriver
+- JuicyEventBuffer
+- ChannelMiddleware
+- EventHandlingMiddleware
+- test_timeline_final_integration.gd
+- test_timeline_parameter_mapping.gd
+- ScopeVariableManager
+- OnAnimationStarted
+- OnIntervalWithVariable
+- StopAudio
+- IfElse
+- RandomNumber
+- GetChildCount
+- TweenMoveTo
+- TweenPulseAnimation
+- TweenRotateTo
+- TweenShakeAnimation
+- SaveGlobalVariables
+- run_localization_tests.gd
+- JuicyAnimationPlayDriver
+- DataOverride
+- JuicyAnimationPlayResource
+- MusicPriorityConfig
+- test_juicy_tween_driver.gd
+- CheckTimeReached
+- fuse_event_bus.gd
+- ParallelConditionEvaluator
+- VariableScopeUtils
+- OnAnimationFrameReached
+- OnAudioBusVolumeChanged
+- OnOverlappingBodies
+- OnFocus
+- IfThen
+- GetGroupCount
+- GetNodesInGroup
+- TransitionType
+- MemoryOptimizationTest
+- test_stage3_runtime_localization.gd
+- SignalInfo
+- MusicBusController
+- JuicyParticleEventHandler
+- JuicySequenceEventHandler
+- composite_system_usage_guide.gd
+- ValidationMiddleware
+- JuicySpringResource
+- test_sequence_debug.gd
+- test_timeline_tracks.gd
+- CheckAnyInput
+- CheckPreloadStatus
+- OnReceiveEvent
+- OnCollision
+- OnBackgroundLoadProgress
+- SetCameraLimit
+- ChangeScene
+- GetDeltaTime
+- SetPosition
+- test_set_position.gd
+- JuicyEventScheduler
+- JuicyResourceVariant
+- JuicyShakeResource
+- JuicyTweenResource
+- test_parameter_mapping_system.gd
+- test_channel_interruption_config.gd
+- TestPoolingPerformance
+- FuseLogger
+- InstructionInstancePool
+- ComponentRegistry
+- OnAudioStarted
+- OnMouseEnter
+- OnMouseExit
+- OnPhysicsProcess
+- OnArea2DExited
+- OnArea3DExited
+- OnRealtime
+- OnItemSelected
+- LookAt
+- RotateBy
+- TweenFadeIn
+- test_array_remove.gd
+- ReflectionCache
+- MusicEventHandler
+- test_condition_system.gd
+- test_state_restoration_middleware.gd
+- visual_spring_demo.gd
+- test_juicy_mixer_enums.gd
+- FusePoolItem
+- ComponentSelector
+- OnTouch
+- OnProcess
+- OnSignalFromGroup
+- SetRotation
+- TweenColorTransition
+- TweenFadeOut
+- TweenScaleTo
+- LoadGlobalVariables
+- test_array_contains.gd
+- test_array_find.gd
+- JuicyAudioPlayer
+- JuicyTweenDriver
+- TestMiddleware
+- test_juicy_composite_driver.gd
+- test_timeline_system_integration_verification.gd
+- get_animated_sprite2d_speed_scale.gd
+- FuseThreadingConfig
+- FuseIconManager
+- VariableOperations
+- OnMusicBeat
+- OnInputText
+- OnBodyEntered
+- CameraFollow
+- SetCollisionLayer
+- TweenBounceAnimation
+- test_run_target_node_function.gd
+- JuicyParameterCondition
+- AudioManager
+- AudioUtils
+- JuicyTimelineEditorPlugin
+- timeline_performance_benchmark.gd
+- basic_timeline_demo_controller.gd
+- TweenData
+- position_type_test.gd
+- test_juicy_particle_event_handler.gd
+- test_state_restoration_performance.gd
+- test_juicy_shake_resource.gd
+- test_juicy_spring_resource.gd
+- set_animated_sprite2d_speed_scale_with_variable.gd
+- CheckInputHeld
+- FuseIconLibrary
+- FuseContextMenuPlugin
+- OnAnimationFinished
+- OnAudioFinished
+- OnReady
+- OnNodeInstance
+- OnSceneAboutToChange
+- OnSceneLoaded
+- OnButtonPressed
+- EnableDisableNode
+- TweenPopAnimation
+- test_check_array_contains.gd
+- test_composite_conditions.gd
+- test_array_get.gd
+- test_array_random.gd
+- test_array_size.gd
+- test_stop_animation.gd
+- test_tween_property.gd
+- JuicyDriverRegistry
+- MusicTransitionScheduler
+- event_handler_example.gd
+- ShakeData
+- AudioCategory
+- AudioVariant
+- test_juicy_audio_event_handler.gd
+- test_runner_updated.gd
+- test_state_restoration_integration.gd
+- TestPlayerWithCustomSignals
+- test_juicy_tween_resource.gd
+- test_timeline_multi_play.gd
+- test_interruption_state.gd
+- JuicyParameterEditor
+- animated_sprite2d_is_playing.gd
+- TriggerSplitter
+- ApplyForce
+- ApplyImpulse
+- SetScale
+- test_event_bus.gd
+- test_stage2_integration.gd
+- test_math_expression.gd
+- test_vector_operation.gd
+- SignalSelectionDialog
+- timeline_examples.gd
+- test_juicy_property_buffer.gd
+- visual_shake_demo.gd
+- audio_demo_controller.gd
+- CheckAll
+- CheckAny
+- scope_variable_container_plugin.gd
+- TriggerMerger
+- InputKeyDialog
+- instructions_array_property.gd
+- OnEnterTree
+- OnTweenCompleted
+- PlayRandomSound
+- test_check_variable_condition.gd
+- test_runtime_instruction_instance.gd
+- TestVariableContainerPerformance
+- test_math_operation.gd
+- test_expression_helper.gd
+- FusePerformanceTracker
+- JuicyTimeCondition
+- TargetHighlightManager
+- SpringData
+- GlobalAudioLimitConfig
+- test_transition_cache_node.gd
+- CheckNot
+- InstructionGenerator
+- OnExitTree
+- PlaySound
+- PauseGame
+- SetVelocity
+- AddSceneAsChild
+- SetUIProgress
+- TestInstructionAsyncDetection
+- test_run_condition_check.gd
+- test_check_array_size.gd
+- test_expression_condition.gd
+- test_on_gamepad_axis.gd
+- test_string_expression.gd
+- test_movement_integration.gd
+- JuicyTimeGroupConfig
+- AudioComponent
+- MusicStateMap
+- test_property_state_manager.gd
+- CheckInputPressed
+- CheckInputReleased
+- CheckTimeRange
+- EventBinding
+- FuseAudioContainer
+- CompiledInstructionSequence
+- FuseRecycleTimer
+- InstructionValidator
+- PlayAnimation
+- ResumeGame
+- SetTimeScale
+- test_event_on_target_signal_emit.gd
+- test_lerp.gd
+- test_trigger_splitter.gd
+- JuicyCompositeCondition
+- condition_system_example.gd
+- ExampleMiddleware
+- JuicyLODConfig
+- AudioBinding
+- AudioRandomizationConfig
+- TestFeedbackResource
+- animated_sprite2d_play.gd
+- CheckGameTime
+- ReloadScene
+- test_event_condition_selector.gd
+- test_function_manager_enhancements.gd
+- test_instruction_concurrent_execution.gd
+- TestRunTargetNodeFunctionPerformance
+- test_clamp_value.gd
+- test_random_number.gd
+- test_tween_pulse_animation.gd
+- JuicyMixerManager
+- VirtualVoiceManager
+- DuckingRule
+- test_parameter_display.gd
+- test_audio_component.gd
+- test_juicy_audio_player.gd
+- test_driver_integration.gd
+- test_juicy_shake_driver_simple.gd
+- test_history_cleanup_optimization.gd
+- TestPoolingSystem
+- SendEvent
+- BreakLoop
+- ContinueLoop
+- ReparentNode
+- Quit
+- test_trigger_merger.gd
+- SignalManager
+- parameter_mapping_examples.gd
+- JuicyChannelConfig
+- JuicyCompositeItem
+- JuicyEventResource
+- test_event_handler_entry.gd
+- ExpressionHelper
+- InputKeySelector
+- PropertyInstructionGenerator
+- SetAnimationSpeed
+- StopAnimation
+- test_check_vector2_variable_axis.gd
+- test_if_else.gd
+- test_raycast.gd
+- generate_builtin_icons.gd
+- AudioVariationManager
+- AudioComponentInspector
+- event_scheduler_example.gd
+- test_inheritance_filter.gd
+- test_virtual_voice_manager.gd
+- test_event_state_separation.gd
+- InstructionSerializer
+- FuseThreadSafe
+- TestActionRunnerTimeout
+- test_complete_system_refactor.gd
+- test_variable_refactoring.gd
+- test_on_cooldown_finished.gd
+- test_on_focus.gd
+- test_on_overlapping_bodies.gd
+- test_move_by.gd
+- test_pause_game.gd
+- test_rotate_by.gd
+- test_tween_fade_out_instruction.gd
+- FuseButton
+- SignalDetector
+- MusicLayerResource
+- simple_particle_test.gd
+- test_integration.gd
+- test_juicy_driver_registry.gd
+- test_juicy_feedback_resource.gd
+- test_middleware_config.gd
+- fuse_inspector_plugin.gd
+- TypeMapper
+- ExecutionHint
+- ShowHideUI
+- TestConditionCacheHash
+- test_execution_modes.gd
+- test_object_pool_system.gd
+- test_variable_serialization.gd
+- variable_lookup_optimization_test.gd
+- test_on_interval.gd
+- test_on_realtime.gd
+- test_array_shuffle.gd
+- test_camera_follow.gd
+- test_for_loop.gd
+- test_set_velocity.gd
+- MockVariableInstruction
+- IconTestEvent
+- test_bricks_task_manager.gd
+- test_parallel_condition_evaluator.gd
+- test_thread_safety.gd
+- music_player_inspector.gd
+- event_scheduler_test_runner.gd
+- run_integration_tests.gd
+- test_juicy_context_parameters.gd
+- test_global_audio_limit_config.gd
+- test_global_integration.gd
+- test_spring_performance.gd
+- ConditionRegistry
+- EventRegistry
+- ConflictHandler
+- MethodFilter
+- InstructionRegistry
+- test_stage4_integration.gd
+- test_variable_refactor.gd
+- test_variable_storage_migration.gd
+- test_animation_conditions.gd
+- test_input_conditions.gd
+- test_on_area_2d_exited.gd
+- test_on_area_3d_exited.gd
+- test_on_countdown.gd
+- test_on_signal_from_group.gd
+- test_on_touch.gd
+- test_on_tree_changed.gd
+- test_array_add.gd
+- test_array_clear.gd
+- test_change_scene.gd
+- MockJumpInstruction
+- MockUseVariableInstruction
+- test_tween_rotate_to_instruction.gd
+- test_text_burn.gd
+- import_custom_icons.gd
+- ScopeSource
+- audio_test_scene.gd
+- test_condition_integration.gd
+- test_timeline_tracks_unified.gd
+- test_audio_mixing_config.gd
+- test_category_level_limiting.gd
+- test_signal_detector.gd
+- test_signal_selection_dialog.gd
+- performance_localization_benchmark.gd
+- verify_task_4_3.gd
+- test_editor_signal_dropdown.gd
+- TestExecutionContextCacheLimit
+- test_execution_context_cleanup.gd
+- test_conditions.gd
+- test_on_animation_blend.gd
+- test_on_animation_loop.gd
+- test_on_background_load_progress.gd
+- test_on_music_beat.gd
+- test_on_node_paused_resumed.gd
+- test_on_physics_process.gd
+- test_on_raycast_hit.gd
+- test_on_text_changed.gd
+- test_on_timer.gd
+- test_on_tween_completed.gd
+- test_on_value_changed.gd
+- test_check_any_input.gd
+- test_apply_force.gd
+- test_apply_impulse.gd
+- test_blend_animation.gd
+- test_crossfade_to_music.gd
+- test_for_each.gd
+- test_look_at.gd
+- test_pause_resume_audio.gd
+- test_play_music.gd
+- test_play_sound.gd
+- test_set_audio_volume.gd
+- test_set_camera_limit.gd
+- test_set_collision_layer.gd
+- test_set_scale.gd
+- test_stop_audio.gd
+- test_execution_context_scope_integration.gd
+- MockFileOperationInstruction
+- MockHeavyOperationInstruction
+- MockNormalInstruction
+- test_tween_move_to_instruction.gd
+- test_tween_scale_to_instruction.gd
+- update_condition_icon_decorators.gd
+- update_event_icon_decorators.gd
+- update_instruction_icon_decorators.gd
+- JuicyCondition
+- JuicyTimelinePlayer
+- JuicyAudioPlayerInspector
+- MusicPriorityEntry
+- simple_audio_test.gd
+- test_audio_binding.gd
+- test_audio_player_inspector.gd
+- test_audio_randomization_config.gd
+- test_ducking_rule.gd
+- test_event_category_integration.gd
+- test_juicy_context_events.gd
+- test_juicy_context_events_enabled.gd
+- test_juicy_event_fixed.gd
+- editor_builders.py
+- test_language_detection.gd
+- instructions_array_inspector_plugin.gd
+- test_backward_compat.gd
+- test_icon_system.gd
+- test_signal_system.gd
+- test_on_animation_frame_reached.gd
+- test_on_animation_marker.gd
+- test_on_animation_started.gd
+- test_on_area_3d_entered.gd
+- test_on_audio_bus_volume_changed.gd
+- test_on_audio_started.gd
+- test_on_body_entered.gd
+- test_on_gamepad_button.gd
+- test_on_item_selected.gd
+- test_on_mouse_move.gd
+- test_on_process.gd
+- test_on_scene_about_to_change.gd
+- test_on_screen_entered_exited.gd
+- test_on_sound_listened.gd
+- test_break_loop.gd
+- test_camera_shake.gd
+- test_continue_loop.gd
+- test_enable_disable_node.gd
+- test_get_delta_time.gd
+- test_instantiate_scene.gd
+- test_load_scene_background.gd
+- test_resume_game.gd
+- test_set_rotation.gd
+- test_set_ui_progress.gd
+- test_set_ui_text.gd
+- test_show_hide_ui.gd
+- test_wait_until.gd
+- test_while_loop.gd
+- quick_verification.gd
+- test_component_registry.gd
+- test_tween_bounce_animation_instruction.gd
+- test_tween_color_transition_instruction.gd
+- test_tween_fade_in_instruction.gd
+- test_tween_pop_animation_instruction.gd
+- final_verification_test.gd
+- test_example_safe.gd
+- time_management_refactor_test.gd
+- QuickAutoDetectTest
+- test_audio_category.gd
+- test_audio_manager_node.gd
+- test_audio_variant.gd
+- test_audio_variation_manager.gd
+- test_target_property.gd
+- test_juicy_mixer_event_api.gd
+- test_node_runner_validation.gd
+- test_bricks_error_localization.gd
+- TestAsyncAwaitInstruction
+- test_on_animation_finished.gd
+- test_on_audio_finished.gd
+- test_on_button_pressed.gd
+- test_on_collision.gd
+- test_on_health_changed.gd
+- test_on_input_text.gd
+- test_on_mouse_button.gd
+- test_on_mouse_enter.gd
+- test_on_mouse_exit.gd
+- test_on_node_instance.gd
+- test_on_property_changed.gd
+- test_on_shape_cast.gd
+- test_on_touch_swipe.gd
+- test_on_variable_changed.gd
+- test_add_scene_as_child.gd
+- test_get_scene_path.gd
+- test_move_character_body_2d_composite.gd
+- test_play_animation.gd
+- test_queue_free_node.gd
+- test_reload_scene.gd
+- test_reparent_node.gd
+- test_set_time_scale.gd
+- test_set_ui_texture.gd
+- test_scope_variable_basic.gd
+- test_performance_benchmark.gd
+- test_tween_shake_animation_instruction.gd
+- test_example.gd
+- test_audio_integration.gd
+- test_audio_mixing_controller.gd
+- test_audio_utils.gd
+- test_phase_protection.gd
+- test_transition_cache_optimization.gd
+- test_middleware_integration_node.gd
+- test_channel_interruption_config_node.gd
+- test_interruption_state_node.gd
+- test_juicy_mixer_enums_node.gd
+- test_music_track_resource.gd
+- input_map_example.gd
+- test_base_instruction_icon.gd
+- verify_phase2_batch3.gd
+- InstructionSearch
+- test_signal_cleanup.gd
+- test_animation_tree_state_condition.gd
+- test_node_conditions.gd
+- test_physics_conditions.gd
+- test_time_conditions.gd
+- test_on_enter_tree.gd
+- test_on_exit_tree.gd
+- test_on_scene_loaded.gd
+- verify_backward_compatibility.gd
+- test_event_scheduler.gd
+- movement_demo.gd
+- extract_class_name
+- test_base_event_localization.gd
+- test_localized_logging.gd
+- test_signal_manual.gd
+- input_key_inspector_plugin.gd
+- test_component_selector.gd
+- test_distance_conditions.gd
+- test_on_input_action_composite.gd
+- test_scene_to_instance.gd
+- test_audio_component_inspector.gd
+- test_auto_detect_signals.gd
+- test_spring_simple.gd
+- game_scene_performance.gd
+- FindBaseControl
+- performance_load_vs_preload.gd
+- verify_icon_system.gd
+- fix_backslashes_in_json
+- condition_metadata.gd
+- event_metadata.gd
+- juicy_feedback_data.gd
+- check_translations.gd
+- animation_track_editor.cpp
+- editor_data.cpp
+- commit_action
+- abc.h
+- animation_player_editor_plugin.cpp
+- drawtune.h
+- yapstree.c
+- midicopy.h
+- drawtune.c
+- get_singleton
+- toabc.c
+- queues.h
+- clear
+- editor_undo_redo_manager.h
+- register_editor_types.h
+- animation_track_editor_plugins.h
+- get_path
+- crack.c
+- abcmatch.c
+- genmidi.h
+- 一、✅ 已修问题（含附 commit）
+- midifile.h
+- parseabc.h
+- parser2.h
+- ExecutionContext 分析报告
+- sizes.h
+- structs.h
+- select
+- Fuse 对象池系统开发指南
+- parseabc.c
+- 自定义 Event 创建最佳实践指南
+- Tween 补间动画使用指南
+- GDScript Coding Patterns
+- FuseLogger 日志系统开发指南
+- 可视化编程系统完整设计总结
+- Fuse ActionRunner 开发指南
+- FuseComponentScanner 组件扫描器开发指南
+- FuseEventBus 事件总线开发指南
+- 编辑器工具模块
+- 坐标系统指南 - Global 与 Local
+- Fuse 图标管理器使用指南
+- Fuse 图标系统开发指南
+- Fuse 快速开始指南
+- 条件系统详细设计
+- Fuse 变量使用指南
+- CreateLocalVariableInstruction 动态 Inspector 插件设计方案
+- animation_bezier_editor.cpp
+- Godot 条件化属性显示实现指南
+- 调试系统用户指南
+- Fuse 对象池系统使用指南
+- 对象池体系分析报告
+- Fuse 阶段3运行时本地化集成测试报告
+- Fuse 线程系统分析报告
+- 指令系统详细设计
+- 属性系统通用类测试计划
+- midifile.c
+- 表达式系统使用指南
+- CreateLocalVariableInstruction 动态 Inspector 插件项目总结
+- Fuse RuntimeBridge 开发指南
+- 3. 逐篇详审
+- Variable System 分析报告
+- 数学/向量指令使用指南
+- Fuse 编辑器工具使用指南
+- 场景管理指令使用指南
+- Fuse 元数据系统 - 阶段 1 完成报告
+- Fuse 可视化编程系统 - 文档中心
+- MultiEventTrigger 分析
+- Fuse 编辑器工具快速入门指南
+- Fuse Visual Programming System - 核心架构分析报告
+- 数据流和控制流详细设计
+- mftext.c
+- 独特优势
+- CurvePreset
+- RuntimeInstructionInstance 开发指南
+- Godot特性集成设计方案
+- Fuse 移动系统用户指南
+- 1. InstructionSerializer
+- 指令生成器使用指南
+- user_docs 更新规格说明（UPDATE_SPEC）
+- CreateLocalVariableInstruction 动态 Inspector 插件实现指南
+- Movement Integration Tests
+- Fuse Visual Programming - AI 开发规范
+- Fuse 多线程系统 - 开发者指南
+- BaseInstruction 分析报告
+- system_docs/analysis 重写规格说明（UPDATE_SPEC）
+- OnTreeChanged
+- ActionRunner 分析报告
+- Runner 分析
+- 全局变量持久化系统
+- _log_debug(message, )
+- dev_docs 更新规格说明（UPDATE_SPEC）
+- 系统文档（system_docs）
+- 📖 使用指南（31 篇）
+- Fuse 本地化系统
+- Fuse 阶段3运行时本地化集成测试
+- 代码风格指南
+- BricksComponentChecker
+- CreateLocalVariableInstruction 动态 Inspector 插件技术规格
+- _log_debug(message)
+- printtrack_split_voice
+- 数组指令开发指南
+- ExecutionContext API
+- 🎯 任务导向入口
+- system_docs 更新规格说明（UPDATE_SPEC）
+- Event Bus 用户指南
+- 场景预加载系统
+- 触发器选型指南：Runner、Trigger 与 MultiEventTrigger
+- Fuse 阶段 2 本地化集成测试说明
+- Fuse 本地化系统测试
+- _time_to_screen(time)
+- 3. 关键方法
+- MultiEventTrigger 使用指南
+- _handle_right_click(pos)
+- _handle_left_click(pos)
+- _update_status_bar
+- 关键技术要点
+- Fuse 多线程优化 - 用户指南
+- _log_debug_localized(message_key, )
+- _log_debug(message)
+- _log_debug(message)
+- JuicySequenceItem
+- RuntimeInstructionInstance 架构支持
+- 常见陷阱
+- 11. 架构演进：2026 年新增系统
+- 断点指令使用指南
+- 事件总览
+- Fuse 翻译键参考文档
+- ComparisonOperator
+- _log_debug_localized(message_key, )
+- _log_debug(message)
+- JuicyMixerEnums
+- 变量操作（三层变量系统）
+- BaseCondition 分析报告
+- Fuse 可视化编程系统架构分析报告
+- ScopeSource 架构设计
+- .get_description
+- .get_name
+- Count
+- 创建 Fuse 指令指南
+- 5. 与Godot特性的集成方案
+- 指令总览
+- 指令总览
+- 指令总览
+- Runner 使用指南
+- _log_warning(message)
+- Print
+- _sample_from_curve(time, context)
+- process_command_line_arguments
+- Runtime 实例三件套分析报告
+- 已重构的指令列表
+- 4. 扩展点设计
+- Fuse 特性总结
+- 翻译键列表
+- 文字烧蚀效果 (Text Burn Effect)
+- IS_EMPTY
+- _log_debug(message)
+- _log_debug(message)
+- .execute(context)
+- _create_instance(context, state)
+- _enter_tree
+- .execute(context)
+- _handle_mouse_motion(event)
+- midi2abc
+- 创建 Fuse 条件指南
+- BaseEvent 分析报告
+- 4. FuseRuntimeBridge —— 运行时变量 TCP 桥
+- 3.3 RuntimeActionRunnerInstance
+- OnInputKey 事件设计文档
+- 2.1 核心资源组件
+- 1. 必须实现的抽象方法
+- 使用方式
+- 测试内容
+- .is_empty
+- _get_variable_data(name)
+- GET
+- .execute(context)
+- _execute_next_iteration_runtime(runtime_instance)
+- _update_context_actions(track)
+- free
+- addfeature
+- event_error
+- 最佳实践
+- 最佳实践
+- ExecutionDiagnostics API
+- VariableOperations 工具类架构文档
+- 3. 关键方法
+- 4. 关键方法
+- VariableScopeUtils（作用域工具类）
+- Fuse 变量系统设计文档
+- 常见实现模式
+- 2. 完成信号时机
+- API 参考
+- 在指令中使用本地化
+- _evaluate_condition(context)
+- _perform_comparison(actual_value, expected_value)
+- _log_warning_localized(message_key, )
+- _remove_variable_data(name)
+- .execute(context)
+- .execute(context)
+- .execute(context)
+- tween_properties
+- _on_draw
+- _update_time_display
+- rename_conditions.py
+- 常见陷阱
+- 创建 Fuse 事件指南
+- 常见陷阱
+- ExecutionContext 与 ExecutionDiagnostics 开发指南
+- 基本用法
+- 2. 核心属性
+- 3.5 元数据方法
+- BaseTrigger 分析报告
+- 3. 抽象方法（子类必须实现）
+- BaseVariable 分析报告
+- 3. 关键方法
+- 10. 设计模式分析
+- 2.4 Trigger - 触发器四兄弟 + 双 Runtime 实例
+- 全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge）
+- 常见问题
+- 事件 (Events)
+- 常见用例
+- 常见用例
+- UI 系统使用指南
+- Fuse user_docs 新增/合并指南规格说明（NEW_DOCS_SPEC）
+- 合并项 A：全局变量管理指南（覆盖管理 + 持久化）
+- .run(context)
+- _detect_sync_capability
+- _get_items_to_iterate(context)
+- _check_condition(context)
+- _check_condition_from_state(runtime_instance)
+- .execute(context)
+- _log_debug(message)
+- ErrorCode
+- _refresh_time_ruler
+- .configure
+- .recalculate_duration
+- CurvePresetCategory
+- Fuse — Godot 可视化编程系统
+- 可选实现的方法
+- 常用代码片段
+- 可选实现的方法
+- 常用代码片段
+- 7. 变量系统最佳实践
+- 2. FuseEventBus —— 全局事件总线
+- 3.2 RuntimeInstructionInstance
+- 专家审查和关键修复
+- 变量操作方法
+- 合并项 B：坐标系统概念 → 并入 transform-guide.md
+- 日志消息（FUSE_LOG_）
+- UI文本（FUSE_UI_）
+- .get_description
+- _log_error_localized(message_key, )
+- .execute(context)
+- .execute(context)
+- .execute(context)
+- InterruptionPolicy
+- _create_interpolation_icon(keyframe, is_selected)
+- _log_debug(message, )
+- .execute(context, next)
+- _refresh_cache_and_notify
+- _update_property_type_info
+- 命名规范
+- 必需实现的方法
+- 创建步骤
+- 最佳实践
+- 常用代码片段
+- 私有辅助方法
+- 7. 性能考虑
+- 6. 架构关系：BaseVariable 与变量系统七类
+- 3.1 RuntimeEventInstance
+- 最佳实践
+- 基本步骤
+- 1.3 核心设计原则
+- 自定义 Instruction 创建最佳实践指南
+- 动画系统用户指南
+- 常见用例
+- 最佳实践
+- 常见用例
+- P0-A：Node Operations 指令指南
+- 指令清单
+- Comparison
+- _get_array_size(context)
+- .is_valid(context)
+- _log_warning(message)
+- .greater_than(other_value)
+- .get_dependency_graph
+- ExecutionState
+- _create_ui
+- _populate_method_tree(search_text)
+- property_selected
+- .execute(context)
+- OperationType
+- .execute(context)
+- _get_property_list
+- PipelineState
+- keyframe_moved
+- _setup_ui
+- .bake_curve_to_keyframes
+- event_key
+- event_rest
+- 条件特性
+- 创建步骤
+- 最佳实践
+- 常见陷阱
+- RuntimeInstructionInstance 最佳实践
+- 常见问题 (FAQ)
+- 8. 子类实现模式
+- 9. 与其他系统的关系
+- 5. 变量系统（7 类，三层作用域）
+- 1. Autoload 单例机制
+- 2.5 核心 API
+- 4.5 编辑器侧（TCPServer 模式）
+- 6. 设计意图与权衡
+- 7. 潜在问题与改进点
+- 条件化属性显示设计
+- 3. 数据流和控制流设计
+- Instruction 架构基础
+- OnAnimationBlend -- 动画混合权重变化事件
+- SetAnimationSpeed -- 设置播放速度
+- 核心功能
+- GlobalVariableManager 使用指南
+- P0-B：Lifecycle 事件指南
+- P1-A：Timing 事件指南
+- P2-C：综合条件合集（9 小类合并）
+- 本地化规范
+- 使用示例
+- _log_debug(message)
+- ExecutionStatus
+- .get_type_name
+- _deserialize_legacy_format(data)
+- .execute(context)
+- _perform_search(search_root)
+- _apply_spawn_position(instance, context)
+- _draw_feedback_track_visual(track, track_rect)
+- .get_actual_duration
+- .trigger_method_with_target(target_node, context)
+- _sync_timeline_tracks_to_groups(tracks)
+- reduce
+- event_chordoff
+- [Unreleased]
+- 命名规范
+- 创建步骤
+- 命名规范
+- 核心 API
+- 3.5 缓存系统方法
+- 2. 核心属性
+- 3.1 生命周期方法
+- 3.3 运行时状态方法
+- 2. 核心属性
+- 5. 与 RuntimeEventInstance 的协作
+- 2. 核心属性
+- 11.2 统一变量系统
+- 3. FuseEventBus 与 SendEvent / OnReceiveEvent 的协作
+- 2. 核心属性
+- 6. 自声明状态模式（Self-declaring State Pattern）
+- 按键监听和事件触发机制
+- 编辑器插件注册
+- 🔴 严重问题（已修复）
+- 总结
+- 版本历史
+- 从旧 API 迁移到新 API
+- 资源管理最佳实践
+- 错误处理和日志
+- OnAnimationLoop -- 动画循环事件
+- PlayAnimation -- 播放动画
+- StopAnimation -- 停止动画
+- 常见工作流
+- P1-B：Node 事件指南
+- P1-C：Input 条件指南
+- P1-D：Node 条件指南
+- P1-E：Physics 条件指南
+- P2-A：Animation 条件指南
+- P2-B：Time 条件指南
+- Movement Demo 使用说明
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- _log_error(message)
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- Plane3D
+- ScopeSource
+- ScopeSource
+- ScopeSource
+- .get_description
+- ScopeSource
+- ScopeSource
+- _exit_tree
+- execution_completed
+- .handle_context_event(context, event)
+- .apply_parameter_mappings_to_sub_effect(context, sub_context_id)
+- animation_track_editor.h
+- main
+- finishfile
+- 图标规范
+- 测试规范
+- 完整事件模板
+- 测试规范
+- 与其他工具类的协作
+- 测试指南
+- 错误处理
+- 性能考虑
+- 3.11 序列化与克隆
+- 3.7 线程安全方法
+- 4. 缓存系统架构
+- 7. 序列化与克隆
+- 3.6 错误处理方法
+- 4. RuntimeEventInstance 集成方式
+- 5. 信号机制
+- 8. 子类实现模式总结
+- 4.1 生命周期
+- 6. 子类实现模式
+- 3.4 重置与生命周期
+- 5. 信号机制
+- 4. 事件驱动架构
+- 9. 性能优化与内存管理
+- 4. 架构关系
+- 7. 信号转发机制
+- 完整实现示例
+- 核心功能设计
+- 使用示例
+- 三层变量架构
+- 作用域选择指南
+- 实际应用示例
+- Godot 4.x 可视化编程系统完整架构设计
+- 测试和验证
+- 性能优化
+- OnAnimationFrameReached -- 动画帧到达事件
+- OnAnimationMarker -- 动画标记事件
+- 调试技巧
+- 常见问题
+- 快速开始
+- API 参考
+- 常见问题
+- SourceType
+- ComparisonOperator
+- _get_source_node(context)
+- _get_target_node(context)
+- _convert_value(value, target_type)
+- ExecutionMode
+- VariableScope
+- SourceType
+- SourceType
+- SourceType
+- SourceType
+- SourceType
+- OperationType
+- ConditionType
+- _get_scope_source_string(source)
+- _get_operator_string
+- OriginMode
+- ErrorHandling
+- _get_property_list
+- SearchScope
+- SearchType
+- _update_resource_name
+- _validate_function_arguments
+- [static] _generate_unique_id
+- RestorationMode
+- _handle_left_release
+- _apply_time_transform(time)
+- BlendMode
+- LoopMode
+- template_builders.py
+- update_document
+- update_test_file
+- 最佳实践
+- 三层变量体系
+- 概述
+- 3.12 生命周期与状态重置
+- 3.1 条件评估主入口
+- 3.6 依赖图方法
+- 3.8 结果回调方法（非信号）
+- 4.4 ActionRunner 信号桥接
+- 4.6 池化支持
+- 8. 性能考虑
+- 10. 总体评估
+- 3.5 FuseError 集成
+- 3.7 序列化（轻量）
+- 7. 已废弃与历史遗留
+- 11.4 线程系统（core/threading/，4 个类）
+- 11.8 顶层 Node 基础设施（Autoload 单例）
+- 11.9 表达式系统
+- 1. 类概述和职责
+- 测试和验证
+- 按键选择界面设计
+- 5.3 NodePath系统集成
+- 资源操作方法
+- _get_scope_source_string
+- NodeSource
+- ExecutionMode
+- instruction_completed
+- CompletionSignalTiming
+- value_changed
+- VariableScope
+- GenerateMode
+- _update_property_info_display(prop)
+- _save_array_to_variable(context, array_ref)
+- RemoveMode
+- VectorType
+- VectorType
+- SortMode
+- VectorType
+- OperationType
+- SequenceMode
+- DimensionMode
+- _get_save_scope_string
+- _get_scope_source_string
+- PositionMode
+- ContextType
+- middleware_activation_changed
+- middleware_added
+- _process_scenetree_highlights
+- _get_property_list
+- EditMode
+- _get_property_enum_string
+- .validate_config
+- test_char.gd
+- action_runner.gd
+- execution_canceled
+- execution_failed
+- execution_state_changed
+- variable_container.gd
+- .has_variables_batch(names, )
+- _set(property, value)
+- _set(property, value)
+- _set(property, value)
+- _set(property, value)
+- _get_array_variable(context)
+- _set(property, value)
+- _set(property, value)
+- _set(property, value)
+- _on_scene_changed
+- juicy_context.gd
+- .complete
+- execution_started
+- pipeline_state_changed
+- playback_time_changed
+- playback_time_changed
+- timeline_changed
+- _edit
+- _setup_scenetree_highlight
+- .cleanup_track(context)
+- _apply_curve_preset_smart(preset)
+- zoom_changed
+- [static] create_curve(preset)
+- AnimationTreeNodeEditorPlugin
+- 创建步骤
+- 命名规范
+- 流程控制类指令
+- 场景管理类指令
+- 音频控制类指令
+- 创建步骤
+- 命名规范
+- 必须本地化的内容
+- 步骤 3：修复本地化问题
+- OnAnimationFrameReached -- 动画帧到达事件
+- OnAnimationMarker -- 动画标记事件
+- 条件评估核心
+- 动画控制类指令
+- 变量操作类指令
+- 数学运算类指令
+- [static] create_global(name, val, )
+- 1. 类概述和职责
+- 4.2 冷却检查
+- 图标规范
+- 一张图看懂全场景逻辑：Fuse Topology 拓扑主屏与静态分析
+- 把 Fuse 用到生产级：预设复用、对象池、后台加载与多线程条件
+- README.md
+- 场景切换、后台加载、节点增删改：Fuse 管好你的游戏世界
+- 可视化逻辑也能单步调试：Fuse 的断点、执行追踪与实时变量监视
+- 把"触发"讲透:Fuse 的生命周期、时序事件与 Event Bus
+- 不写代码做出能跳能攀墙的角色:Fuse 输入与物理实战
+- 给游戏加满"手感":用 Fuse 搞定 UI、相机与音频反馈
+- _execute_next_iteration_runtime(runtime_instance)
+- 性能优化
+- _apply_blend_mode(raw_value, context)
+- CC0 1.0 Universal (CC0 1.0)
+- .get_dependency_status(context)
 
 ## God Nodes (most connected - your core abstractions)
 1. `ExecutionContext` - 129 edges
@@ -1441,7 +1454,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (1447 total, 205 thin omitted)
+## Communities (1460 total, 207 thin omitted)
 
 ### Community 1 - "store.c"
 Cohesion: 0.04
@@ -4536,8 +4549,8 @@ Cohesion: 0.14
 Nodes (9): .add_instructions_batch(new_instructions, ), _complete_execution(), _disconnect_all_signals(), _disconnect_instruction_signal(instruction), _log_debug_localized(message_key, ), _on_instruction_finished_wrapper(instruction), .run_batch(contexts), .set_skip_instruction_count(count) (+1 more)
 
 ### Community 987 - "_log_debug(message)"
-Cohesion: 0.20
-Nodes (16): .add_dependencies(depends_on), .check(context), .check_batch(contexts), .check_dependencies(context), .check_dependencies_batch(contexts), .clear_context_cache(context), _evaluate_condition(context), _generate_context_hash(context) (+8 more)
+Cohesion: 0.18
+Nodes (18): .add_dependencies(depends_on), .check(context), .check_batch(contexts), .check_dependencies(context), .check_dependencies_batch(contexts), .clear_context_cache(context), .deserialize(data), _evaluate_condition(context) (+10 more)
 
 ### Community 988 - "_log_debug(message)"
 Cohesion: 0.21
@@ -4603,10 +4616,6 @@ Nodes (14): 10.x 总结, 1.1 架构概览, 1.2 核心设计原则, 1. 系统整�
 Cohesion: 0.14
 Nodes (14): ScopeSource 与 VariableScope 的关系, ScopeSource 枚举定义, ScopeSource 架构设计, 什么是 ScopeSource？, 修复文档, 参考实现, 双作用域模式（SetVariable 示例）, 工具方法 (+6 more)
 
-### Community 1004 - ".get_description"
-Cohesion: 0.22
-Nodes (4): _compute_dependencies(), _create_fuse_error(message, , ), .get_dependency_status(context), .get_dependency_status_batch(contexts)
-
 ### Community 1005 - ".get_name"
 Cohesion: 0.20
 Nodes (11): .connect_finished_safe(callable), _log_debug_localized(message_key, ), _log_error(message), _log_error_localized(message_key, ), _log_info(message), _log_info_localized(message_key, ), _log_warning(message), _log_warning_localized(message_key, ) (+3 more)
@@ -4648,8 +4657,8 @@ Cohesion: 0.15
 Nodes (7): Print, .execute(context), _log_debug(message), _log_error(message), _log_info(message), _log_warning(message), message
 
 ### Community 1015 - "_sample_from_curve(time, context)"
-Cohesion: 0.22
-Nodes (13): _add_values(a, b), _apply_blend_mode(raw_value, context), _apply_easing_preset(t), _apply_time_parameter_mapping(time, context), _apply_value_parameter_mapping(value, context), _get_curve_value_at_time(time, context), .get_value_at_time(time, context), _get_zero_value_for_type(value) (+5 more)
+Cohesion: 0.21
+Nodes (11): _apply_easing_preset(t), _apply_time_parameter_mapping(time, context), _apply_time_transform(time), _apply_value_parameter_mapping(value, context), _apply_wrap_mode(time), _get_curve_value_at_time(time, context), .get_value_at_time(time, context), _sample_animation_curve(time) (+3 more)
 
 ### Community 1016 - "process_command_line_arguments"
 Cohesion: 0.17
@@ -4768,8 +4777,8 @@ Cohesion: 0.18
 Nodes (11): .execute(context), _get_dict_variable(context), _get_scope_name_for_log(), _get_type_name(type), _get_variable_value(context, var_name, scope, scope_source, custom_scope_id, target_node_path), _has_dict_variable(context), _is_numeric_type(value), _notify_global_variable_changed(var_name) (+3 more)
 
 ### Community 1045 - "_execute_next_iteration_runtime(runtime_instance)"
-Cohesion: 0.29
-Nodes (11): _complete_loop_runtime(runtime_instance), _execute_instruction_sequence_runtime(runtime_instance), _execute_loop_asynchronous(context, items), _execute_loop_synchronous_runtime(runtime_instance), _execute_next_instruction_runtime(runtime_instance), _execute_next_iteration_runtime(runtime_instance), .execute_with_runtime_instance(runtime_instance), _on_child_instruction_completed(runtime_instance) (+3 more)
+Cohesion: 0.24
+Nodes (10): _execute_instructions_asynchronous(context), _execute_instructions_synchronous(context), _execute_loop_asynchronous(context, items), _execute_loop_synchronous(context, items), _execute_loop_synchronous_runtime(runtime_instance), .execute_with_runtime_instance(runtime_instance), _get_scope_container(context, scope_source, custom_scope_id, target_node_path), _set_index_variable(context, index) (+2 more)
 
 ### Community 1046 - "_update_context_actions(track)"
 Cohesion: 0.22
@@ -4932,8 +4941,8 @@ Cohesion: 0.22
 Nodes (9): 2.1 BaseInstruction - 指令基类（base/base_instruction.gd）, 2.2 ExecutionContext - 执行上下文（base/execution_context.gd）, 2.3 ActionRunner - 资源定义 + Runtime 编排双层（base/action_runner.gd）, 2.4.1 BaseTrigger 抽象方法（base_trigger.gd:51-63）, 2.4.2 Trigger - 单事件触发器（trigger.gd）, 2.4.3 MultiEventTrigger - 多事件触发器（multi_event_trigger.gd）, 2.4.4 Runner - 信号自动绑定执行入口（runner.gd）, 2.4 Trigger - 触发器四兄弟 + 双 Runtime 实例 (+1 more)
 
 ### Community 1086 - "全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge）"
-Cohesion: 0.50
-Nodes (4): 5.1 直接调用关系：无, 5.2 职责对比, 5.3 共同的注册/清理宿主, 5. 两者协作关系
+Cohesion: 0.22
+Nodes (9): 5.1 直接调用关系：无, 5.2 职责对比, 5.3 共同的注册/清理宿主, 5. 两者协作关系, 8. 总体评估, 不足, 优点, 全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge） (+1 more)
 
 ### Community 1087 - "常见问题"
 Cohesion: 0.22
@@ -4972,8 +4981,8 @@ Cohesion: 0.22
 Nodes (5): _detect_sync_capability(), .execute(context), .execute_sync(context), .execute_with_runtime_instance(runtime_instance), _has_immediate_completion()
 
 ### Community 1096 - "_get_items_to_iterate(context)"
-Cohesion: 0.25
-Nodes (9): _get_items_to_iterate(context), _get_scope_container(context, scope_source, custom_scope_id, target_node_path), _get_variable_by_scope(context, var_name, scope, scope_source, custom_scope_id, target_node_path, ), _is_iterable(value), _is_packed_array(value), SourceType, ARRAY, NODE_GROUP (+1 more)
+Cohesion: 0.31
+Nodes (9): .execute(context), _get_items_to_iterate(context), _get_variable_by_scope(context, var_name, scope, scope_source, custom_scope_id, target_node_path, ), _is_iterable(value), _is_packed_array(value), SourceType, ARRAY, NODE_GROUP (+1 more)
 
 ### Community 1097 - "_check_condition(context)"
 Cohesion: 0.28
@@ -5152,8 +5161,8 @@ Cohesion: 0.29
 Nodes (7): 1.1 设计理念, 1.2 整体架构图, 1.3.1 资源与节点的分离设计, 1.3.2 异步优先的执行模型, 1.3.3 上下文驱动的参数传递, 1.3 核心设计原则, 1. 核心架构设计概述
 
 ### Community 1144 - "自定义 Instruction 创建最佳实践指南"
-Cohesion: 0.18
-Nodes (11): 1. 条件检查优化, 2. 资源复用, 3. 批量操作, 完整示例, 性能优化, 总结, 更新说明（2026-03）, 概述 (+3 more)
+Cohesion: 0.29
+Nodes (7): 完整示例, 总结, 更新说明（2026-03）, 概述, 目录, 自定义 Instruction 创建最佳实践指南, 自定义指令示例：MoveNodeInstruction
 
 ### Community 1145 - "动画系统用户指南"
 Cohesion: 0.22
@@ -5188,12 +5197,12 @@ Cohesion: 0.29
 Nodes (7): _evaluate_condition(context), _get_array_size(context), _get_node_children_count(context), _get_node_group_count(context), _get_variable_array_size(context), _is_packed_array(value), _perform_comparison(actual, expected)
 
 ### Community 1153 - ".is_valid(context)"
-Cohesion: 0.33
-Nodes (5): _create_fuse_error_localized(message_key, , , ), .get_status_info_batch(contexts), .is_valid(context), .needs_recheck(context), .validate_batch(contexts)
+Cohesion: 0.20
+Nodes (8): _create_fuse_error_localized(message_key, , , ), .get_status_info_batch(contexts), .is_valid(context), _log_warning(message), .needs_recheck(context), .on_condition_failed(context), .on_condition_met(context), .validate_batch(contexts)
 
 ### Community 1154 - "_log_warning(message)"
-Cohesion: 0.29
-Nodes (5): .deserialize(data), _log_warning(message), .on_condition_failed(context), .on_condition_met(context), .set_parameters(parameters)
+Cohesion: 0.08
+Nodes (25): 7.1 核心优势, 7.2 Preset 测试场景标准结构, 7.3 生成与验收流程, 7.4 与手搭场景的互补, Fuse 深度测试策略, 一、测试理念, 七、利用 Preset 系统批量生成测试场景, 三、测试阶段与外部资源需求 (+17 more)
 
 ### Community 1155 - ".greater_than(other_value)"
 Cohesion: 0.38
@@ -5304,8 +5313,8 @@ Cohesion: 0.33
 Nodes (6): 4.5 编辑器侧（TCPServer 模式）, 公开 API `get_cached_vars() -> Dictionary`, 监听启动, 粘包处理 `_read_json_lines()`, 缓存更新 `_update_cache()`, 轮询逻辑 `_server_poll()`
 
 ### Community 1183 - "6. 设计意图与权衡"
-Cohesion: 0.18
-Nodes (11): 6.1 选用 Autoload 而非 Resource 单例, 6.2 双模式 Autoload（FuseRuntimeBridge）, 6.3 消费方"降级访问"约定, 6.4 TCP 桥实时性 > 完整性, 6.5 历史记录限长（FIFO 100 条）, 6. 设计意图与权衡, 8. 总体评估, 不足 (+3 more)
+Cohesion: 0.33
+Nodes (6): 6.1 选用 Autoload 而非 Resource 单例, 6.2 双模式 Autoload（FuseRuntimeBridge）, 6.3 消费方"降级访问"约定, 6.4 TCP 桥实时性 > 完整性, 6.5 历史记录限长（FIFO 100 条）, 6. 设计意图与权衡
 
 ### Community 1184 - "7. 潜在问题与改进点"
 Cohesion: 0.33
@@ -5376,8 +5385,8 @@ Cohesion: 0.40
 Nodes (6): _add_to_indices(name, data), .deserialize(data), _deserialize_legacy_format(data), _deserialize_single_variable(data), _deserialize_unified_format(variables), _set_variable_data(name, data)
 
 ### Community 1201 - ".execute(context)"
-Cohesion: 0.47
-Nodes (4): .execute(context), _execute_instructions_asynchronous(context), _execute_instructions_synchronous(context), _execute_loop_synchronous(context, items)
+Cohesion: 0.17
+Nodes (11): 三种生成模式, 不想等官方出新指令？用 Fuse 生成器从节点方法一键生成指令, 与 RunTargetNodeFunction 的对比, 为什么这是护城河, 入口：右键场景树节点, 变量绑定：护城河里的护城河, 命名规则与文件存放, 实战：给你的角色生成 dash 指令 (+3 more)
 
 ### Community 1202 - "_perform_search(search_root)"
 Cohesion: 0.33
@@ -5923,6 +5932,10 @@ Nodes (6): 1. 规划事件, 2. 创建代码, 3. 添加本地化, 4. 创建测试
 Cohesion: 0.22
 Nodes (9): _delete_selected_keyframe(), _handle_clip_release(), _handle_key_input(event), _handle_left_release(), _handle_method_track_release(), _handle_mouse_button(event), _handle_time_range_release(), _on_gui_input(event) (+1 more)
 
+### Community 1339 - "_apply_time_transform(time)"
+Cohesion: 0.20
+Nodes (9): 四个复合条件：AND/OR/NOT 的可视化版本, 实战：一个会判断的敌人 AI, 小结, 嵌套：把判断搭成一棵树, 时间条件：让逻辑感知时序, 条件、事件、指令：三位一体的思考闭环, 条件系统全貌：55 个判断砖块, 综合条件：14 个专用传感器 (+1 more)
+
 ### Community 1340 - "BlendMode"
 Cohesion: 0.50
 Nodes (4): BlendMode, ADDITIVE, MULTIPLICATIVE, OVERRIDE_BASE
@@ -6215,22 +6228,66 @@ Nodes (3): 4.2 冷却检查, `_check_cooldown(index, context, cooldown_mode, coo
 Cohesion: 0.67
 Nodes (3): 图标规范, 图标配置步骤, 常用图标命名参考
 
+### Community 1447 - "一张图看懂全场景逻辑：Fuse Topology 拓扑主屏与静态分析"
+Cohesion: 0.20
+Nodes (9): Inspector 数据流卡片, Topology 主屏：全场景的上帝视角, 一张图看懂全场景逻辑：Fuse Topology 拓扑主屏与静态分析, 三档过滤与导出报告, 不用手动刷新的交互设计, 实战：把一个脏场景扫干净, 小结, 跨 Trigger 关联扫描（护城河加重） (+1 more)
+
+### Community 1448 - "把 Fuse 用到生产级：预设复用、对象池、后台加载与多线程条件"
+Cohesion: 0.20
+Nodes (9): NodePath 映射：跨场景复用的关键, RuntimeInstance：并发不互扰, 场景预加载：消灭切换卡顿, 多线程条件：上百个条件压到毫秒级（护城河加重）, 实战：上线前七步检查清单, 对象池：让高频实例化不再吃帧, 把 Fuse 用到生产级：预设复用、对象池、后台加载与多线程条件, 系列完结：Fuse 到底是什么 (+1 more)
+
+### Community 1449 - "README.md"
+Cohesion: 0.22
+Nodes (8): *A QOL Plugin for Godot 4.2+*, About / License, How to Use, <img width="48" height="48" alt="AutoKey_AnimatedSpriteFrames" src="addons/AutoKey_SpriteFrames/icon.svg" /> Auto-Keyframe `AnimatedSprite2D`'s `SpriteFrames`, Installation, Usage, What It Does, Why
+
+### Community 1450 - "场景切换、后台加载、节点增删改：Fuse 管好你的游戏世界"
+Cohesion: 0.22
+Nodes (8): 几个容易踩的坑, 场景切换、后台加载、节点增删改：Fuse 管好你的游戏世界, 场景管理：6 个指令撑起完整链路, 实战：敌人波次生成器, 小结, 节点操作：21 个指令，7 个分类, 节点通信：EmitSignal 与 RunTargetNodeFunction, 预加载：让大场景不再卡顿
+
+### Community 1451 - "可视化逻辑也能单步调试：Fuse 的断点、执行追踪与实时变量监视"
+Cohesion: 0.22
+Nodes (8): 变量监视器：实时面板才是真护城河, 可视化调试到底难在哪, 可视化逻辑也能单步调试：Fuse 的断点、执行追踪与实时变量监视, 实战：调一个"伤害结算不生效"的 bug, 小结, 执行追踪：DebugVisualizer + ExecutionTracker, 断点进阶：这才是护城河, 调试指令三件套
+
+### Community 1452 - "把"触发"讲透:Fuse 的生命周期、时序事件与 Event Bus"
+Cohesion: 0.29
+Nodes (6): Event Bus:Fuse 的护城河, 先建立全局观:四类事件各管一摊, 把"触发"讲透:Fuse 的生命周期、时序事件与 Event Bus, 时序事件:四把不同的"时钟", 生命周期事件:别让 OnProcess 拖垮你的帧率, 节点事件:把 Godot 信号接进可视化
+
+### Community 1453 - "不写代码做出能跳能攀墙的角色:Fuse 输入与物理实战"
+Cohesion: 0.33
+Nodes (5): 不写代码做出能跳能攀墙的角色:Fuse 输入与物理实战, 先理清楚:输入事件是怎么"流"进逻辑的, 实战:把跳跃、二段跳、攀墙、滑铲拼出来, 物理条件七件套:让角色"知道"自己在哪, 让角色动起来:三种移动模式怎么选
+
+### Community 1454 - "给游戏加满"手感":用 Fuse 搞定 UI、相机与音频反馈"
+Cohesion: 0.33
+Nodes (5): UI 反馈:让画面上的数字会自己动, 三连击主线:一次受击，三路同时反馈, 相机反馈:让镜头替你表达情绪, 给游戏加满"手感":用 Fuse 搞定 UI、相机与音频反馈, 音频反馈:让耳朵参与判断
+
+### Community 1455 - "_execute_next_iteration_runtime(runtime_instance)"
+Cohesion: 0.60
+Nodes (5): _complete_loop_runtime(runtime_instance), _execute_instruction_sequence_runtime(runtime_instance), _execute_next_instruction_runtime(runtime_instance), _execute_next_iteration_runtime(runtime_instance), _on_child_instruction_completed(runtime_instance)
+
+### Community 1456 - "性能优化"
+Cohesion: 0.50
+Nodes (4): 1. 条件检查优化, 2. 资源复用, 3. 批量操作, 性能优化
+
+### Community 1457 - "_apply_blend_mode(raw_value, context)"
+Cohesion: 0.67
+Nodes (4): _add_values(a, b), _apply_blend_mode(raw_value, context), _get_zero_value_for_type(value), _subtract_values(a, b)
+
 ## Knowledge Gaps
-- **10682 isolated node(s):** `快速开始`, `条件类型参考`, `命名规范`, `必需实现的方法`, `条件评估模式` (+10677 more)
+- **10768 isolated node(s):** `快速开始`, `条件类型参考`, `命名规范`, `必需实现的方法`, `条件评估模式` (+10763 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **205 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **207 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Godot 4.x 可视化编程系统完整架构设计` connect `Godot 4.x 可视化编程系统完整架构设计` to `3. 数据流和控制流设计`, `2.1 核心资源组件`, `5. 与Godot特性的集成方案`, `README.md`, `1.3 核心设计原则`, `4. 扩展点设计`?**
+- **Why does `Fuse 变量系统设计文档` connect `Fuse 变量系统设计文档` to `VariableScopeUtils（作用域工具类）`, `ScopeSource 架构设计`, `版本历史`, `从旧 API 迁移到新 API`, `README.md`, `三层变量架构`, `作用域选择指南`, `基本步骤`, `实际应用示例`, `最佳实践`, `已重构的指令列表`, `常见问题`?**
   _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **Why does `创建 Fuse 条件指南` connect `创建 Fuse 条件指南` to `变量操作（三层变量系统）`, `测试规范`, `命名规范`, `README.md`, `常见陷阱`, `可选实现的方法`, `创建步骤`, `常用代码片段`, `条件特性`, `图标规范`, `最佳实践`?**
   _High betweenness centrality (0.004) - this node is a cross-community bridge._
-- **Why does `Fuse 变量系统设计文档` connect `Fuse 变量系统设计文档` to `VariableScopeUtils（作用域工具类）`, `ScopeSource 架构设计`, `版本历史`, `从旧 API 迁移到新 API`, `README.md`, `三层变量架构`, `作用域选择指南`, `基本步骤`, `实际应用示例`, `最佳实践`, `已重构的指令列表`, `常见问题`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
+- **Why does `创建 Fuse 事件指南` connect `创建 Fuse 事件指南` to `最佳实践`, `必需实现的方法`, `创建步骤`, `完整事件模板`, `README.md`, `常见陷阱`, `可选实现的方法`, `常用代码片段`, `命名规范`, `测试规范`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
 - **What connects `快速开始`, `条件类型参考`, `命名规范` to the rest of the system?**
-  _10682 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _10768 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `editor_node.cpp` be split into smaller, more focused modules?**
   _Cohesion score 0.0935374149659864 - nodes in this community are weakly interconnected._
 - **Should `store.c` be split into smaller, more focused modules?**

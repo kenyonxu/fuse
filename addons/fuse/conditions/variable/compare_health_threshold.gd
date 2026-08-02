@@ -242,8 +242,7 @@ func validate() -> Array[String]:
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# 始终显示 variable_scope
 	properties.append({
 		name = "variable_scope",

@@ -34,6 +34,8 @@ file_logging/enable_file_logging=true
 
 [display]
 
+window/size/viewport_width=640
+window/size/viewport_height=320
 window/stretch/mode="canvas_items"
 
 [dotnet]
@@ -48,7 +50,7 @@ movie_writer/movie_file="res://recordings/record_test.avi"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/fuse/plugin.cfg")
+enabled=PackedStringArray("res://addons/AutoKey_SpriteFrames/plugin.cfg", "res://addons/fuse/plugin.cfg")
 
 [global_group]
 
@@ -58,6 +60,7 @@ player_projectile=""
 enemy_projectile=""
 boss=""
 wall=""
+player_spawn_point=""
 
 [input]
 

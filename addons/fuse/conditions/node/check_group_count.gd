@@ -102,8 +102,7 @@ var compare_value: int = 0:
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# ========== 组配置 ==========
 	properties.append({
 		name = "Group Configuration",

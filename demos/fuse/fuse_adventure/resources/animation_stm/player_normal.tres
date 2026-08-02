@@ -1,0 +1,76 @@
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://c8b16jwsdrrn5"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
+animation = &"player/double_jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_haqlu"]
+animation = &"player/fall"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yihwy"]
+animation = &"player/idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lrobt"]
+animation = &"player/jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_o0g48"]
+animation = &"player/run"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_kvs1w"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1yqi1"]
+advance_mode = 2
+advance_expression = "velocity.length() >= 0.2"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mw7hn"]
+advance_mode = 2
+advance_condition = &"jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mf6og"]
+advance_mode = 2
+advance_condition = &"jump"
+advance_expression = "not is_on_floor()"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ixdjt"]
+advance_mode = 2
+advance_condition = &"fall"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ds1tm"]
+advance_mode = 2
+advance_condition = &"land"
+advance_expression = "not is_on_floor()"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5bacu"]
+advance_mode = 2
+advance_condition = &"do_double_jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8gaye"]
+advance_mode = 2
+advance_condition = &"do_double_jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_47yx7"]
+advance_mode = 2
+advance_condition = &"land"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_iok25"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_phq6w"]
+advance_mode = 2
+advance_expression = "velocity.length() < 0.2"
+
+[resource]
+states/Start/position = Vector2(53.600006, 98.52801)
+states/player_double_jump/node = SubResource("AnimationNodeAnimation_wga5u")
+states/player_double_jump/position = Vector2(456.4, 389.15842)
+states/player_fall/node = SubResource("AnimationNodeAnimation_haqlu")
+states/player_fall/position = Vector2(306.80002, 254.75838)
+states/player_idle/node = SubResource("AnimationNodeAnimation_yihwy")
+states/player_idle/position = Vector2(312.4, 97.638405)
+states/player_jump/node = SubResource("AnimationNodeAnimation_lrobt")
+states/player_jump/position = Vector2(674.7999, 249.31839)
+states/player_run/node = SubResource("AnimationNodeAnimation_o0g48")
+states/player_run/position = Vector2(647.6, 96.5184)
+transitions = ["Start", "player_idle", SubResource("AnimationNodeStateMachineTransition_kvs1w"), "player_idle", "player_run", SubResource("AnimationNodeStateMachineTransition_1yqi1"), "player_idle", "player_jump", SubResource("AnimationNodeStateMachineTransition_mw7hn"), "player_run", "player_jump", SubResource("AnimationNodeStateMachineTransition_mf6og"), "player_jump", "player_fall", SubResource("AnimationNodeStateMachineTransition_ixdjt"), "player_fall", "player_idle", SubResource("AnimationNodeStateMachineTransition_ds1tm"), "player_jump", "player_double_jump", SubResource("AnimationNodeStateMachineTransition_5bacu"), "player_fall", "player_double_jump", SubResource("AnimationNodeStateMachineTransition_8gaye"), "player_double_jump", "player_idle", SubResource("AnimationNodeStateMachineTransition_47yx7"), "player_double_jump", "player_fall", SubResource("AnimationNodeStateMachineTransition_iok25"), "player_run", "player_idle", SubResource("AnimationNodeStateMachineTransition_phq6w")]
+graph_offset = Vector2(-340, 26)

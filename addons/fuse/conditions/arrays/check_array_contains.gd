@@ -95,8 +95,7 @@ var _last_contains_result: bool = false
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# ========== Source Configuration ==========
 	properties.append({
 		name = "Source Configuration",

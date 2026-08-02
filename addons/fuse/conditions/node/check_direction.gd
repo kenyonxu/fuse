@@ -145,8 +145,7 @@ var target_target_node_path: NodePath = NodePath(""):
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# ========== 源节点配置 ==========
 	properties.append({
 		name = "Source Node Configuration",

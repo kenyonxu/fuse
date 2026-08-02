@@ -3,6 +3,13 @@
 @abstract
 class_name BaseInstruction extends Resource
 
+## 动态属性列表
+##
+## 显式返回 Array[Dictionary]，避免 Godot 4.x 使用 Resource 基类的 Array 返回类型
+## 触发 "_get_property_list() should return Array[Dictionary]" 兼容性警告。
+func _get_property_list() -> Array[Dictionary]:
+	return []
+
 # 预加载本地化工具类
 const FuseLocalization = preload("res://addons/fuse/localization/fuse_localization.gd")
 

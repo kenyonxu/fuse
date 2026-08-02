@@ -44,8 +44,7 @@ static func _get_condition_metadata() -> ConditionMetadata:
 # 动态属性列表
 # =============================================
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# Node 分类
 	properties.append({
 		name = "Node",

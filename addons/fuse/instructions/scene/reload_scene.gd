@@ -27,8 +27,7 @@ func _setup_metadata():
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# Delay 分类
 	properties.append({
 		name = "Delay",

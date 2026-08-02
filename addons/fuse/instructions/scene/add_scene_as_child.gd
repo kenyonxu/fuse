@@ -43,8 +43,7 @@ static func _init_property_cache() -> void:
 func _get_property_list() -> Array[Dictionary]:
 	_init_property_cache()
 
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# Scene 分类
 	properties.append({
 		name = "Scene",

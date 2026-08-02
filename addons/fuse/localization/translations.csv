@@ -796,6 +796,17 @@ FUSE_INSTRUCTION_RESUME_GAME_DESC,恢复游戏逻辑（可选择关闭暂停菜�
 # Phase 4B - Set Camera Limit Instruction
 FUSE_INSTRUCTION_SET_CAMERA_LIMIT_NAME,设置相机边界,Set Camera Limit
 FUSE_INSTRUCTION_SET_CAMERA_LIMIT_DESC,设置 Camera2D 的移动边界限制（上、下、左、右）,Sets the movement boundary limits for Camera2D (top, bottom, left, right)
+# Phase 4B - Set Camera Limit From Area2D Instruction
+FUSE_INSTRUCTION_SET_CAMERA_LIMIT_FROM_AREA2D_NAME,根据 Area2D 设置相机边界,Set Camera Limit From Area2D
+FUSE_INSTRUCTION_SET_CAMERA_LIMIT_FROM_AREA2D_DESC,根据 Area2D 的矩形碰撞形状自动设置 Camera2D 的边界限制,Sets Camera2D limits from an Area2D's rectangular collision shape
+FUSE_INSTRUCTION_SET_CAMERA_LIMIT_FROM_AREA2D_RESOURCE_NAME,相机边界 ({camera} ← {area}),Camera Limit ({camera} ← {area})
+FUSE_INSTRUCTION_SET_CAMERA_LIMIT_FROM_AREA2D_DESC_FORMAT,设置 {camera} 的相机边界来自 {area}（边距: {margin}）,Set camera limits of {camera} from {area} (margin: {margin})
+FUSE_ERROR_BOUNDS_AREA_EMPTY,边界区域节点路径不能为空,Bounds area node path cannot be empty
+FUSE_ERROR_BOUNDS_AREA_NOT_FOUND,未找到边界区域节点,Bounds area node not found
+FUSE_ERROR_BOUNDS_AREA_NOT_AREA2D,节点 {node} 不是 Area2D 类型,Node {node} is not an Area2D
+FUSE_ERROR_BOUNDS_COLLISION_SHAPE_NOT_FOUND,未在区域 {area} 下找到 CollisionShape2D 子节点,No CollisionShape2D child found under area {area}
+FUSE_ERROR_BOUNDS_SHAPE_NOT_RECTANGLE,区域 {area} 的碰撞形状不是 RectangleShape2D（当前: {shape}）,Collision shape of area {area} is not RectangleShape2D (current: {shape})
+FUSE_LOG_SET_CAMERA_LIMIT_FROM_AREA2D,设置 {camera} 相机边界为 {area}: 左={left} 右={right} 上={top} 下={bottom},Set camera limits of {camera} from {area}: left={left} right={right} top={top} bottom={bottom}
 FUSE_ERROR_CAMERA_NODE_NOT_FOUND,未找到相机节点,Camera node not found
 FUSE_ERROR_CAMERA_NOT_CAMERA2D,节点不是 Camera2D 类型,Node is not a Camera2D type
 # Phase 4B - Camera Follow Instruction

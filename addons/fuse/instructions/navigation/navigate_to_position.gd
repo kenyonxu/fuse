@@ -78,8 +78,7 @@ func _setup_metadata():
 # 动态属性列表
 # =============================================
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# Agent 分类
 	properties.append({
 		name = "Agent",

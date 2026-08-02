@@ -48,8 +48,7 @@ func get_variable_modes() -> Array[Dictionary]:
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# Transform 分类
 	properties.append({
 		name = "Transform",

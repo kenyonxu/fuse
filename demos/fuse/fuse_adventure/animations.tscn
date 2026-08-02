@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://7d6bouq05ljr"]
+
+[ext_resource type="SpriteFrames" uid="uid://7t5upta3sbcv" path="res://demos/fuse/fuse_adventure/resources/animatedSprites/player.tres" id="1_nuqcw"]
+[ext_resource type="AnimationLibrary" uid="uid://xumr4l813imn" path="res://demos/fuse/fuse_adventure/resources/animationLibs/player.res" id="2_u82pe"]
+
+[node name="Node2D" type="Node2D" unique_id=1676598786]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1881897375]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1511269873]
+sprite_frames = ExtResource("1_nuqcw")
+animation = &"double_jump"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1773505410]
+root_node = NodePath("../AnimatedSprite2D")
+libraries/ = ExtResource("2_u82pe")

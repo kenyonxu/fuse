@@ -35,8 +35,7 @@ func _setup_metadata():
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# 初始化翻译缓存
 	_init_translation_cache()
 

@@ -90,8 +90,7 @@ var target_resource_path: String = ""
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	# 添加 ScopeSource 相关属性（仅当 variable_scope == SCOPE 时显示）
 	if variable_scope == BaseVariable.VariableScope.SCOPE:
 		properties.append({

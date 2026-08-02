@@ -2,6 +2,13 @@
 @tool
 class_name FuseIconLibrary extends Resource
 
+## 动态属性列表
+##
+## 显式返回 Array[Dictionary]，避免 Godot 4.x 使用 Resource 基类的 Array 返回类型
+## 触发 "_get_property_list() should return Array[Dictionary]" 兼容性警告。
+func _get_property_list() -> Array[Dictionary]:
+	return []
+
 ## Fuse 自定义图标库
 ##
 ## 集中管理所有自定义图标资源，提供统一的图标访问接口。

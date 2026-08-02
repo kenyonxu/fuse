@@ -74,8 +74,7 @@ static func _get_condition_metadata() -> ConditionMetadata:
 # =============================================
 
 func _get_property_list() -> Array[Dictionary]:
-	var properties := []
-
+	var properties: Array[Dictionary] = []
 	properties.append({
 		name = "Expression",
 		type = TYPE_NIL,

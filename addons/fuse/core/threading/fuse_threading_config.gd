@@ -3,6 +3,13 @@
 ## 用于全局配置多线程行为
 class_name FuseThreadingConfig extends Resource
 
+## 动态属性列表
+##
+## 显式返回 Array[Dictionary]，避免 Godot 4.x 使用 Resource 基类的 Array 返回类型
+## 触发 "_get_property_list() should return Array[Dictionary]" 兼容性警告。
+func _get_property_list() -> Array[Dictionary]:
+	return []
+
 ## 全局开关
 @export_group("General")
 @export var enable_multithreading: bool = true:
