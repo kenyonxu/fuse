@@ -3,6 +3,7 @@
 [ext_resource type="SpriteFrames" uid="uid://7t5upta3sbcv" path="res://demos/fuse/fuse_adventure/resources/animatedSprites/player.tres" id="1_yihwy"]
 [ext_resource type="AnimationLibrary" uid="uid://xumr4l813imn" path="res://demos/fuse/fuse_adventure/resources/animationLibs/player.res" id="2_wga5u"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://c8b16jwsdrrn5" path="res://demos/fuse/fuse_adventure/resources/animation_stm/player_normal.tres" id="3_wga5u"]
+[ext_resource type="Script" uid="uid://ndgmi2c0dsbv" path="res://demos/fuse/fuse_adventure/scripts/player_controller.gd" id="4_7t5up"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -31,6 +32,7 @@ radius = 7.0
 height = 24.0
 
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
+script = ExtResource("4_7t5up")
 
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")

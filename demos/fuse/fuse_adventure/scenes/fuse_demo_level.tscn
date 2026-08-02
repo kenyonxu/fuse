@@ -8,7 +8,10 @@
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="6_m0hyj"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="7_0u2nx"]
 [ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="8_io55n"]
+[ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="9_sqapb"]
 [ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="9_u5por"]
+[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="10_plqys"]
+[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="10_u5por"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 652)
@@ -26,10 +29,65 @@ instructions = Array[ExtResource("3_lwyyc")]([SubResource("Resource_0u2nx")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_io55n"]
+resource_name = "On Ready With Delay: 0.0"
 script = ExtResource("7_0u2nx")
 
+[sub_resource type="Resource" id="Resource_plqys"]
+resource_name = "获取组中节点 'player_spawn_point' → spawn_points [[本地]]"
+script = ExtResource("9_u5por")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+group_name = "player_spawn_point"
+result_variable = "spawn_points"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_scxm5"]
+resource_name = "Array Get 数组 spawn_points [0] → spawn_point"
+script = ExtResource("9_sqapb")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+source_type = 0
+array_variable = "spawn_points"
+array_scope = 0
+index_value = 0
+target_variable = "spawn_point"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_fovbj"]
+resource_name = "获取位置 spawn_point [LOCAL] → pos_spawn [LOCAL]"
+script = ExtResource("10_plqys")
+target = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = true
+target_variable = "spawn_point"
+target_scope = 0
+save_to_variable = "pos_spawn"
+save_to_scope = 0
+use_global_position = true
+
+[sub_resource type="Resource" id="Resource_4e7ko"]
+resource_name = "打印变量 'pos_spawn' [[本地]]"
+script = ExtResource("10_u5por")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+variable_name = "pos_spawn"
+variable_scope = 0
+
 [sub_resource type="Resource" id="Resource_sqapb"]
-resource_name = "实例化 未指定场景"
+resource_name = "实例化 'player.tscn' 从变量 [[本地]] pos_spawn"
 script = ExtResource("8_io55n")
 target_variable = "instance_id"
 save_to_scope = 0
@@ -40,31 +98,21 @@ spawn_position = Vector3(0, 0, 0)
 position_scope_source = 0
 position_custom_scope_id = ""
 position_target_node_path = NodePath("")
-scene_path = ""
+scene_path = "uid://d11yuj3gwya3x"
 parent_node = NodePath("")
 position_mode = 1
 spawn_position = Vector3(0, 0, 0)
 spawn_offset = Vector3(0, 0, 0)
-position_variable = ""
+position_variable = "pos_spawn"
 position_scope = 0
 save_instance_id = false
 target_variable = "instance_id"
 save_to_scope = 0
 use_object_pool = false
 
-[sub_resource type="Resource" id="Resource_plqys"]
-resource_name = "获取组中节点 'player_spawn_pont' → s [[本地]]"
-script = ExtResource("9_u5por")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-group_name = "player_spawn_pont"
-result_variable = "s"
-result_scope = 0
-
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("5_m0hyj")
-instructions = Array[ExtResource("3_lwyyc")]([SubResource("Resource_sqapb"), SubResource("Resource_plqys")])
+instructions = Array[ExtResource("3_lwyyc")]([SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_4e7ko"), SubResource("Resource_sqapb")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="FuseDemoLevel" type="Node2D" unique_id=1184444632]
@@ -78,6 +126,7 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Worlds/CameraFrame" unique_id=770821483]
 position = Vector2(8, 7)
 shape = SubResource("RectangleShape2D_rxgda")
+disabled = true
 
 [node name="PlayerSpawnPoint" type="Node2D" parent="Worlds" unique_id=1244849376 groups=["player_spawn_point"]]
 position = Vector2(0, -119)
