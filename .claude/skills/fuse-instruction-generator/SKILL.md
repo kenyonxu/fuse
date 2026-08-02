@@ -345,6 +345,7 @@ func on_runtime_resume(runtime_instance: RuntimeInstructionInstance) -> void: ..
 
 创建指令后，确认以下各项：
 
+- [ ] `_get_property_list()` 中的 `properties` 声明为 `Array[Dictionary]`
 - [ ] 文件命名符合规范（无 `_instruction` 后缀）
 - [ ] 类命名符合规范（无 `Instruction` 后缀）
 - [ ] 实现了所有必需方法（`execute`, `validate`, `get_description`, `_update_resource_name`）

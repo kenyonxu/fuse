@@ -326,8 +326,11 @@ func _setup_metadata():
     pass
 
 ## 获取属性列表
+##
+## 必须使用 Array[Dictionary] 类型声明 properties，避免 Godot 4.7 触发
+## "_get_property_list() should return Array[Dictionary]" 兼容性警告。
 func _get_property_list() -> Array[Dictionary]:
-    var properties := []
+    var properties: Array[Dictionary] = []
 
     # 分类
     properties.append({
