@@ -36,7 +36,9 @@ var target_node: NodePath = NodePath(""):
 		# 清除缓存
 		_cached_material_properties.clear()
 		_cached_material_node = null
-		_update_target_node_info()
+		# 仅在直接指定节点路径时更新编辑器节点实例
+		if not use_variable_for_target:
+			_update_target_node_info()
 		_update_resource_name()
 		notify_property_list_changed()
 
@@ -44,6 +46,16 @@ var target_node: NodePath = NodePath(""):
 var use_variable_for_target: bool = false:
 	set(value):
 		use_variable_for_target = value
+		if use_variable_for_target:
+			# 切换到变量模式：清空编辑器缓存，避免显示旧节点的属性
+			_target_node_instance = null
+			_cached_material_node = null
+			_cached_material_properties.clear()
+			_available_properties = []
+			_current_property_info = null
+		else:
+			# 切换回直接模式：重新解析节点
+			_update_target_node_info()
 		_update_resource_name()
 		notify_property_list_changed()
 
@@ -94,7 +106,7 @@ var property_path: String = "":
 	set(value):
 		property_path = value
 		# 如果在编辑器模式下且节点实例为 null，先尝试获取节点
-		if Engine.is_editor_hint() and _target_node_instance == null and not target_node.is_empty():
+		if Engine.is_editor_hint() and not use_variable_for_target and _target_node_instance == null and not target_node.is_empty():
 			_update_target_node_info()
 		_update_property_type_info()
 		_update_resource_name()
@@ -163,7 +175,7 @@ func _get_property_list() -> Array[Dictionary]:
 	var properties: Array[Dictionary] = []
 
 	# 在编辑器模式下，如果节点实例为 null 但 target_node 不为空，尝试重新获取节点
-	if Engine.is_editor_hint() and _target_node_instance == null and not target_node.is_empty():
+	if Engine.is_editor_hint() and not use_variable_for_target and _target_node_instance == null and not target_node.is_empty():
 		_update_target_node_info()
 
 	# 基础参数分类
@@ -330,7 +342,7 @@ func _update_target_node_info():
 	_available_properties = []
 	_current_property_info = null
 
-	if target_node.is_empty():
+	if target_node.is_empty() or use_variable_for_target:
 		return
 
 	# 尝试获取节点实例（编辑器模式下）

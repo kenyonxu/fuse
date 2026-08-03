@@ -1,16 +1,16 @@
-# Graph Report - fuse  (2026-08-02)
+# Graph Report - fuse  (2026-08-03)
 
 ## Corpus Check
-- 192 files · ~323,058 words
+- 192 files · ~323,082 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 23645 nodes · 30976 edges · 1460 communities (1253 shown, 207 thin omitted)
+- 23645 nodes · 30976 edges · 1459 communities (1252 shown, 207 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6258afb4`
+- Built from commit: `7337f5a8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1425,7 +1425,6 @@
 - 性能优化
 - _apply_blend_mode(raw_value, context)
 - CC0 1.0 Universal (CC0 1.0)
-- .get_dependency_status(context)
 
 ## God Nodes (most connected - your core abstractions)
 1. `ExecutionContext` - 129 edges
@@ -1454,7 +1453,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (1460 total, 207 thin omitted)
+## Communities (1459 total, 207 thin omitted)
 
 ### Community 1 - "store.c"
 Cohesion: 0.04
@@ -4517,8 +4516,8 @@ Cohesion: 0.16
 Nodes (18): _calculate_method_trigger_times(track), _draw_animation_curve(track, track_rect), _draw_event_track(track, track_rect), _draw_feedback_track(track, track_rect), _draw_feedback_track_traditional(track, track_rect), _draw_keyframe(keyframe, track_rect), _draw_keyframe_curve(track, track_rect), _draw_method_track(track, track_rect) (+10 more)
 
 ### Community 979 - "3. 关键方法"
-Cohesion: 0.12
-Nodes (17): 3.10 优化检查, 3.13 元数据接口, 3.14 FuseError 集成, 3.15 日志方法（委托 FuseLogger）, 3.16 资源名本地化拦截, 3.17 节点路径显示名解析, 3.2 抽象方法清单, 3.3 验证与描述方法 (+9 more)
+Cohesion: 0.10
+Nodes (20): 3.10 优化检查, 3.13 元数据接口, 3.14 FuseError 集成, 3.15 日志方法（委托 FuseLogger）, 3.16 资源名本地化拦截, 3.1 条件评估主入口, 3.2 抽象方法清单, 3.3 验证与描述方法 (+12 more)
 
 ### Community 980 - "MultiEventTrigger 使用指南"
 Cohesion: 0.14
@@ -4549,8 +4548,8 @@ Cohesion: 0.14
 Nodes (9): .add_instructions_batch(new_instructions, ), _complete_execution(), _disconnect_all_signals(), _disconnect_instruction_signal(instruction), _log_debug_localized(message_key, ), _on_instruction_finished_wrapper(instruction), .run_batch(contexts), .set_skip_instruction_count(count) (+1 more)
 
 ### Community 987 - "_log_debug(message)"
-Cohesion: 0.18
-Nodes (18): .add_dependencies(depends_on), .check(context), .check_batch(contexts), .check_dependencies(context), .check_dependencies_batch(contexts), .clear_context_cache(context), .deserialize(data), _evaluate_condition(context) (+10 more)
+Cohesion: 0.20
+Nodes (16): .add_dependencies(depends_on), .check(context), .check_batch(contexts), .check_dependencies(context), .check_dependencies_batch(contexts), .clear_context_cache(context), _evaluate_condition(context), _generate_context_hash(context) (+8 more)
 
 ### Community 988 - "_log_debug(message)"
 Cohesion: 0.21
@@ -4606,7 +4605,7 @@ Nodes (14): 1. 固定作用域的条件, 2. 多作用域条件（带作用域选
 
 ### Community 1001 - "BaseCondition 分析报告"
 Cohesion: 0.14
-Nodes (14): 10. 现状备注, 1. 类概述和职责, 5.1 依赖声明链, 5.2 get_dependency_graph() 输出结构, 5.3 可视化数据聚合, 5. 依赖图与可视化, 6.1 线程安全标记链, 6.2 ParallelConditionEvaluator 协作 (+6 more)
+Nodes (14): 10. 现状备注, 1. 类概述和职责, 6.1 线程安全标记链, 6.2 ParallelConditionEvaluator 协作, 6.3 与 FuseThreadSafe 的关系, 6. 线程安全与 ParallelConditionEvaluator, 7.1 serialize() 数据形态, 7.2 deserialize() 还原流程 (+6 more)
 
 ### Community 1002 - "Fuse 可视化编程系统架构分析报告"
 Cohesion: 0.14
@@ -4615,6 +4614,10 @@ Nodes (14): 10.x 总结, 1.1 架构概览, 1.2 核心设计原则, 1. 系统整�
 ### Community 1003 - "ScopeSource 架构设计"
 Cohesion: 0.14
 Nodes (14): ScopeSource 与 VariableScope 的关系, ScopeSource 枚举定义, ScopeSource 架构设计, 什么是 ScopeSource？, 修复文档, 参考实现, 双作用域模式（SetVariable 示例）, 工具方法 (+6 more)
+
+### Community 1004 - ".get_description"
+Cohesion: 0.22
+Nodes (4): _compute_dependencies(), _create_fuse_error(message, , ), .get_dependency_status(context), .get_dependency_status_batch(contexts)
 
 ### Community 1005 - ".get_name"
 Cohesion: 0.20
@@ -4657,8 +4660,8 @@ Cohesion: 0.15
 Nodes (7): Print, .execute(context), _log_debug(message), _log_error(message), _log_info(message), _log_warning(message), message
 
 ### Community 1015 - "_sample_from_curve(time, context)"
-Cohesion: 0.21
-Nodes (11): _apply_easing_preset(t), _apply_time_parameter_mapping(time, context), _apply_time_transform(time), _apply_value_parameter_mapping(value, context), _apply_wrap_mode(time), _get_curve_value_at_time(time, context), .get_value_at_time(time, context), _sample_animation_curve(time) (+3 more)
+Cohesion: 0.22
+Nodes (13): _add_values(a, b), _apply_blend_mode(raw_value, context), _apply_easing_preset(t), _apply_time_parameter_mapping(time, context), _apply_value_parameter_mapping(value, context), _get_curve_value_at_time(time, context), .get_value_at_time(time, context), _get_zero_value_for_type(value) (+5 more)
 
 ### Community 1016 - "process_command_line_arguments"
 Cohesion: 0.17
@@ -4777,8 +4780,8 @@ Cohesion: 0.18
 Nodes (11): .execute(context), _get_dict_variable(context), _get_scope_name_for_log(), _get_type_name(type), _get_variable_value(context, var_name, scope, scope_source, custom_scope_id, target_node_path), _has_dict_variable(context), _is_numeric_type(value), _notify_global_variable_changed(var_name) (+3 more)
 
 ### Community 1045 - "_execute_next_iteration_runtime(runtime_instance)"
-Cohesion: 0.24
-Nodes (10): _execute_instructions_asynchronous(context), _execute_instructions_synchronous(context), _execute_loop_asynchronous(context, items), _execute_loop_synchronous(context, items), _execute_loop_synchronous_runtime(runtime_instance), .execute_with_runtime_instance(runtime_instance), _get_scope_container(context, scope_source, custom_scope_id, target_node_path), _set_index_variable(context, index) (+2 more)
+Cohesion: 0.29
+Nodes (11): _complete_loop_runtime(runtime_instance), _execute_instruction_sequence_runtime(runtime_instance), _execute_loop_asynchronous(context, items), _execute_loop_synchronous_runtime(runtime_instance), _execute_next_instruction_runtime(runtime_instance), _execute_next_iteration_runtime(runtime_instance), .execute_with_runtime_instance(runtime_instance), _on_child_instruction_completed(runtime_instance) (+3 more)
 
 ### Community 1046 - "_update_context_actions(track)"
 Cohesion: 0.22
@@ -4818,7 +4821,7 @@ Nodes (10): 3.2 抽象方法, 3.4 信号触发方法, 3.7 资源名称自动更�
 
 ### Community 1055 - "4. 关键方法"
 Cohesion: 0.20
-Nodes (10): 4.3 执行上下文工厂, 4.4 ActionRunner 信号桥接, 4.5 引擎回调统一转发, 4.7 错误处理, 4.8 日志方法, 4. 关键方法, `_connect_action_runner_signals_at(index, callbacks) -> bool`, `_create_execution_context(target: Node, index: int = 0) -> ExecutionContext` (+2 more)
+Nodes (10): 4.2 冷却检查, 4.5 引擎回调统一转发, 4.6 池化支持, 4.7 错误处理, 4.8 日志方法, 4. 关键方法, `_check_cooldown(index, context, cooldown_mode, cooldown_time) -> bool`, `_clear_cooldown_state(index: int) -> void` (+2 more)
 
 ### Community 1056 - "VariableScopeUtils（作用域工具类）"
 Cohesion: 0.20
@@ -4855,10 +4858,6 @@ Nodes (10): _compare_contains(actual, expected), _compare_equals(actual, expecte
 ### Community 1064 - "_log_warning_localized(message_key, )"
 Cohesion: 0.24
 Nodes (6): _create_fuse_error(message, , ), .get_variable_by_index(index), _log_error(message), _log_warning_localized(message_key, ), .set_error_message(message, , ), .set_variable_by_index(index, value)
-
-### Community 1065 - "_remove_variable_data(name)"
-Cohesion: 0.24
-Nodes (6): _cleanup_unified_cache(), _get_variable_names_unified(scope), _invalidate_unified_cache(name), _remove_from_indices(name), _remove_variable_data(name), _remove_variable_unified(name)
 
 ### Community 1066 - ".execute(context)"
 Cohesion: 0.20
@@ -4917,8 +4916,8 @@ Cohesion: 0.22
 Nodes (9): 3.5 元数据方法, get_description() -> String -- 获取事件描述, get_detailed_info() -> Dictionary -- 获取事件详细信息, get_event_category() -> String -- 获取事件分类, get_event_icon() -> Texture2D -- 获取事件图标, _get_event_metadata() -> EventMetadata -- 获取事件元数据, get_event_type() -> String -- 获取事件类型, _get_node_display_name(path: NodePath) -> String -- 节点路径可读化 (+1 more)
 
 ### Community 1080 - "BaseTrigger 分析报告"
-Cohesion: 0.20
-Nodes (10): 6.1 Trigger (单事件触发器, `trigger.gd`, 335 行), 6.2 MultiEventTrigger (多事件触发器, `multi_event_trigger.gd`, 481 行), 6.3 EventBinding (绑定资源, `event_binding.gd`), 6. 子类实现模式, 7. 与 ActionRunner 体系的关系, 9. 总体评估, BaseTrigger 分析报告, 不足 (+2 more)
+Cohesion: 0.22
+Nodes (9): 1. 类概述和职责, 7. 与 ActionRunner 体系的关系, 9. 总体评估, BaseTrigger 分析报告, 不足, 优点, 文档概述, 核心职责 (+1 more)
 
 ### Community 1081 - "3. 抽象方法（子类必须实现）"
 Cohesion: 0.22
@@ -4981,8 +4980,8 @@ Cohesion: 0.22
 Nodes (5): _detect_sync_capability(), .execute(context), .execute_sync(context), .execute_with_runtime_instance(runtime_instance), _has_immediate_completion()
 
 ### Community 1096 - "_get_items_to_iterate(context)"
-Cohesion: 0.31
-Nodes (9): .execute(context), _get_items_to_iterate(context), _get_variable_by_scope(context, var_name, scope, scope_source, custom_scope_id, target_node_path, ), _is_iterable(value), _is_packed_array(value), SourceType, ARRAY, NODE_GROUP (+1 more)
+Cohesion: 0.25
+Nodes (9): _get_items_to_iterate(context), _get_scope_container(context, scope_source, custom_scope_id, target_node_path), _get_variable_by_scope(context, var_name, scope, scope_source, custom_scope_id, target_node_path, ), _is_iterable(value), _is_packed_array(value), SourceType, ARRAY, NODE_GROUP (+1 more)
 
 ### Community 1097 - "_check_condition(context)"
 Cohesion: 0.28
@@ -5166,7 +5165,7 @@ Nodes (7): 完整示例, 总结, 更新说明（2026-03）, 概述, 目录, 自�
 
 ### Community 1145 - "动画系统用户指南"
 Cohesion: 0.22
-Nodes (9): OnAnimationFinished -- 动画完成事件, OnAnimationStarted -- 动画开始事件, 事件 (Events), 传递的上下文参数, 传递的上下文参数, 属性, 属性, 常见用法 (+1 more)
+Nodes (9): OnAnimationFinished -- 动画完成事件, OnAnimationMarker -- 动画标记事件, 事件 (Events), 传递的上下文参数, 传递的上下文参数, 属性, 属性, 常见用法 (+1 more)
 
 ### Community 1146 - "常见用例"
 Cohesion: 0.22
@@ -5197,8 +5196,8 @@ Cohesion: 0.29
 Nodes (7): _evaluate_condition(context), _get_array_size(context), _get_node_children_count(context), _get_node_group_count(context), _get_variable_array_size(context), _is_packed_array(value), _perform_comparison(actual, expected)
 
 ### Community 1153 - ".is_valid(context)"
-Cohesion: 0.20
-Nodes (8): _create_fuse_error_localized(message_key, , , ), .get_status_info_batch(contexts), .is_valid(context), _log_warning(message), .needs_recheck(context), .on_condition_failed(context), .on_condition_met(context), .validate_batch(contexts)
+Cohesion: 0.33
+Nodes (5): _create_fuse_error_localized(message_key, , , ), .get_status_info_batch(contexts), .is_valid(context), .needs_recheck(context), .validate_batch(contexts)
 
 ### Community 1154 - "_log_warning(message)"
 Cohesion: 0.08
@@ -5381,8 +5380,8 @@ Cohesion: 0.25
 Nodes (8): 事件命名, 关键词命名, 分类命名, 命名模式, 指令命名, 日志消息命名, 条件命名, 错误消息命名
 
 ### Community 1200 - "_deserialize_legacy_format(data)"
-Cohesion: 0.40
-Nodes (6): _add_to_indices(name, data), .deserialize(data), _deserialize_legacy_format(data), _deserialize_single_variable(data), _deserialize_unified_format(variables), _set_variable_data(name, data)
+Cohesion: 0.24
+Nodes (10): _add_to_indices(name, data), _cleanup_unified_cache(), .deserialize(data), _deserialize_legacy_format(data), _deserialize_single_variable(data), _deserialize_unified_format(variables), _invalidate_unified_cache(name), _remove_from_indices(name) (+2 more)
 
 ### Community 1201 - ".execute(context)"
 Cohesion: 0.17
@@ -5713,8 +5712,8 @@ Cohesion: 0.50
 Nodes (4): 4.1 缓存写入与读取, 4.2 上下文哈希构成, 4.3 失效策略, 4. 缓存系统架构
 
 ### Community 1284 - "7. 序列化与克隆"
-Cohesion: 0.50
-Nodes (4): 7.1 serialize() 数据形态, 7.2 deserialize() 还原流程, 7.3 clone() 行为, 7. 序列化与克隆
+Cohesion: 0.29
+Nodes (5): .deserialize(data), _log_warning(message), .on_condition_failed(context), .on_condition_met(context), .set_parameters(parameters)
 
 ### Community 1285 - "3.6 错误处理方法"
 Cohesion: 0.50
@@ -5973,12 +5972,12 @@ Cohesion: 0.67
 Nodes (3): 3.12 生命周期与状态重置, `reset()`（396–404 行）, `set_enabled(value)`（412–414 行）
 
 ### Community 1349 - "3.1 条件评估主入口"
-Cohesion: 0.67
-Nodes (3): 3.1 条件评估主入口, `check(context: ExecutionContext) -> bool` — 评估入口（168–202 行）, `_evaluate_condition(context: ExecutionContext) -> bool` — 抽象评估（207–208 行）
+Cohesion: 0.47
+Nodes (4): .execute(context), _execute_instructions_asynchronous(context), _execute_instructions_synchronous(context), _execute_loop_synchronous(context, items)
 
 ### Community 1350 - "3.6 依赖图方法"
-Cohesion: 0.67
-Nodes (3): 3.6 依赖图方法, `get_dependencies() -> Array[String]`（357–361 行）, 依赖关系族
+Cohesion: 0.50
+Nodes (4): 5.1 依赖声明链, 5.2 get_dependency_graph() 输出结构, 5.3 可视化数据聚合, 5. 依赖图与可视化
 
 ### Community 1351 - "3.8 结果回调方法（非信号）"
 Cohesion: 0.67
@@ -5989,8 +5988,8 @@ Cohesion: 0.40
 Nodes (5): PlayAnimation -- 播放动画, 使用场景, 基本用法, 属性, 验证规则
 
 ### Community 1353 - "4.6 池化支持"
-Cohesion: 0.67
-Nodes (3): 4.6 池化支持, `_disable_processing() / _enable_processing() -> void`, `pool_reset() -> void`
+Cohesion: 0.50
+Nodes (4): 6.1 Trigger (单事件触发器, `trigger.gd`, 335 行), 6.2 MultiEventTrigger (多事件触发器, `multi_event_trigger.gd`, 481 行), 6.3 EventBinding (绑定资源, `event_binding.gd`), 6. 子类实现模式
 
 ### Community 1354 - "8. 性能考虑"
 Cohesion: 0.67
@@ -6194,7 +6193,7 @@ Nodes (4): OnAnimationFrameReached -- 动画帧到达事件, 传递的上下文�
 
 ### Community 1438 - "OnAnimationMarker -- 动画标记事件"
 Cohesion: 0.50
-Nodes (4): OnAnimationMarker -- 动画标记事件, 传递的上下文参数, 属性, 标记检测机制
+Nodes (4): OnAnimationStarted -- 动画开始事件, 传递的上下文参数, 属性, 检测机制
 
 ### Community 1439 - "条件评估核心"
 Cohesion: 0.50
@@ -6216,13 +6215,9 @@ Nodes (4): 常见模式, 数学运算类指令, 特点, 示例指令
 Cohesion: 0.50
 Nodes (4): [static] create_global(name, val, ), [static] create_player_health(), [static] create_player_level(), [static] create_player_score()
 
-### Community 1444 - "1. 类概述和职责"
-Cohesion: 0.67
-Nodes (3): 1. 类概述和职责, 核心职责, 设计特点
-
 ### Community 1445 - "4.2 冷却检查"
 Cohesion: 0.67
-Nodes (3): 4.2 冷却检查, `_check_cooldown(index, context, cooldown_mode, cooldown_time) -> bool`, `_clear_cooldown_state(index: int) -> void`
+Nodes (3): 3.17 节点路径显示名解析, `_get_node_display_name(path: NodePath) -> String`（95–110 行）, `static _get_parent_level_display(path_str) -> String`（113–127 行）
 
 ### Community 1446 - "图标规范"
 Cohesion: 0.67
@@ -6261,8 +6256,8 @@ Cohesion: 0.33
 Nodes (5): UI 反馈:让画面上的数字会自己动, 三连击主线:一次受击，三路同时反馈, 相机反馈:让镜头替你表达情绪, 给游戏加满"手感":用 Fuse 搞定 UI、相机与音频反馈, 音频反馈:让耳朵参与判断
 
 ### Community 1455 - "_execute_next_iteration_runtime(runtime_instance)"
-Cohesion: 0.60
-Nodes (5): _complete_loop_runtime(runtime_instance), _execute_instruction_sequence_runtime(runtime_instance), _execute_next_instruction_runtime(runtime_instance), _execute_next_iteration_runtime(runtime_instance), _on_child_instruction_completed(runtime_instance)
+Cohesion: 0.67
+Nodes (3): 4.3 执行上下文工厂, `_create_execution_context(target: Node, index: int = 0) -> ExecutionContext`, `_sync_event_args_to_context(context, index) -> void`
 
 ### Community 1456 - "性能优化"
 Cohesion: 0.50
@@ -6270,7 +6265,7 @@ Nodes (4): 1. 条件检查优化, 2. 资源复用, 3. 批量操作, 性能优化
 
 ### Community 1457 - "_apply_blend_mode(raw_value, context)"
 Cohesion: 0.67
-Nodes (4): _add_values(a, b), _apply_blend_mode(raw_value, context), _get_zero_value_for_type(value), _subtract_values(a, b)
+Nodes (3): 4.4 ActionRunner 信号桥接, `_connect_action_runner_signals_at(index, callbacks) -> bool`, `_disconnect_action_runner_signals_at(index, callbacks) -> void`
 
 ## Knowledge Gaps
 - **10768 isolated node(s):** `快速开始`, `条件类型参考`, `命名规范`, `必需实现的方法`, `条件评估模式` (+10763 more)
