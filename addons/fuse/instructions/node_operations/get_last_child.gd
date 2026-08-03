@@ -320,7 +320,7 @@ func _get_target_display() -> String:
 			var target_utils_scope_source = target_scope_source as VariableScopeUtils.ScopeSource
 			scope_str = VariableScopeUtils.get_scope_source_string(target_utils_scope_source, target_custom_scope_id, target_target_node_path)
 		return "%s [%s]" % [target_variable, scope_str]
-	return _get_target_display() if not target_node.is_empty() else FuseLocalization.translate("FUSE_COMMON_NO_NODE_SELECTED")
+	return _get_node_display_name(target_node) if not target_node.is_empty() else FuseLocalization.translate("FUSE_COMMON_NO_NODE_SELECTED")
 
 ## 更新资源名称
 func _update_resource_name():
