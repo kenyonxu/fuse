@@ -24,9 +24,9 @@ var target_node: NodePath = NodePath(""):
 		_update_resource_name()
 
 ## 是否使用变量获取目标节点
-var use_variable: bool = false:
+var use_variable_for_target: bool = false:
 	set(value):
-		use_variable = value
+		use_variable_for_target = value
 		_update_resource_name()
 		notify_property_list_changed()
 
@@ -127,14 +127,14 @@ func _get_property_list() -> Array[Dictionary]:
 
 	# 是否使用变量获取目标节点
 	properties.append({
-		name = "use_variable",
+		name = "use_variable_for_target",
 		type = TYPE_BOOL,
 		hint = PROPERTY_HINT_NONE,
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
 
-	# 根据 use_variable 显示不同的属性
-	if not use_variable:
+	# 根据 use_variable_for_target 显示不同的属性
+	if not use_variable_for_target:
 		# 直接指定节点路径
 		properties.append({
 			name = "target_node",
@@ -265,7 +265,7 @@ func _get_property_list() -> Array[Dictionary]:
 ## 验证属性可见性
 func _validate_property(property: Dictionary) -> void:
 	# 控制目标节点相关属性的可见性
-	if not use_variable:
+	if not use_variable_for_target:
 		if property.name in ["target_variable", "target_scope", "target_scope_source", "target_custom_scope_id", "target_target_node_path"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 	else:
@@ -290,7 +290,13 @@ func _validate_property(property: Dictionary) -> void:
 
 ## 动态属性设置
 func _set(property: StringName, value: Variant) -> bool:
-	if property in ["use_variable", "target_scope", "target_scope_source", "result_scope", "scope_source", "recursive"]:
+	# 向后兼容：旧 use_variable 开关
+	if property == "use_variable":
+		use_variable_for_target = value
+		notify_property_list_changed()
+		_update_resource_name()
+		return true
+	if property in ["use_variable_for_target", "target_scope", "target_scope_source", "result_scope", "scope_source", "recursive"]:
 		set(property, value)
 		notify_property_list_changed()
 		return true
@@ -303,7 +309,7 @@ func _update_resource_name():
 	parts.append(FuseLocalization.translate("FUSE_INSTRUCTION_GET_ALL_CHILDREN_RESOURCE_BASE"))
 
 	# 目标节点部分
-	if use_variable:
+	if use_variable_for_target:
 		if target_variable.is_empty():
 			parts.append(FuseLocalization.translate("FUSE_INSTRUCTION_GET_ALL_CHILDREN_NO_TARGET"))
 		else:
@@ -351,7 +357,7 @@ func execute(context: ExecutionContext):
 	# 获取目标节点
 	var target: Node = null
 
-	if use_variable:
+	if use_variable_for_target:
 		# 从变量获取节点
 		if target_variable.is_empty():
 			_log_error_localized("FUSE_ERROR_TARGET_VARIABLE_EMPTY", {})
@@ -503,7 +509,7 @@ func validate() -> Array[String]:
 		errors.append(FuseLocalization.translate("FUSE_ERROR_RESULT_VAR_EMPTY"))
 
 	# 验证目标节点设置
-	if not use_variable:
+	if not use_variable_for_target:
 		if target_node.is_empty():
 			errors.append(FuseLocalization.translate("FUSE_ERROR_TARGET_NODE_EMPTY"))
 	else:
@@ -542,7 +548,7 @@ func get_description() -> String:
 	var save_desc := ""
 
 	# 获取目标描述
-	if use_variable:
+	if use_variable_for_target:
 		if target_variable.is_empty():
 			target_desc = FuseLocalization.translate("FUSE_INSTRUCTION_GET_ALL_CHILDREN_TARGET_VARIABLE_EMPTY")
 		else:
