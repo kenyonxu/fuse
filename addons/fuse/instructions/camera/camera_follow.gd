@@ -495,24 +495,53 @@ func execute(context: ExecutionContext):
 	if enabled:
 		camera_2d.enabled = true
 
+		# 通过 RemoteTransform2D 让 Camera2D 每帧跟随 target
+		# （Godot 原生每帧同步 transform，解决一次性配置不持续跟随的问题）
+		_setup_follow_remote(camera_2d, target_2d)
+
 		match follow_mode:
 			FollowMode.LOCK:
-				# 锁定模式：直接设置位置
+				# 锁定模式：关闭平滑，瞬时跟随
 				camera_2d.position_smoothing_enabled = false
-				camera_2d.global_position = target_2d.global_position
 			FollowMode.SMOOTH:
-				# 平滑模式：设置平滑速度
+				# 平滑模式：Camera2D 内置平滑（position 由 RemoteTransform2D 每帧驱动）
 				camera_2d.position_smoothing_enabled = true
 				camera_2d.position_smoothing_speed = smooth_speed
 			FollowMode.DAMPED:
-				# 阻尼模式：使用阻尼
+				# 阻尼模式：使用阻尼开关
 				camera_2d.position_smoothing_enabled = damping
 	else:
 		# 禁用跟随
 		camera_2d.enabled = false
+		_remove_follow_remote(target_2d)
 
 	_log_info("设置相机跟随: %s → %s (模式: %s)" % [target_2d.name, camera_2d.name, FollowMode.keys()[follow_mode]])
 	_on_execution_completed()
+
+
+const _FOLLOW_REMOTE_NAME := "FuseCameraFollowRemote"
+
+## 在 target 下创建 RemoteTransform2D，remote_path 指向 camera。
+## Godot 每帧把 target 的 transform 同步给 camera，实现持续跟随。
+func _setup_follow_remote(camera: Camera2D, target: Node2D) -> void:
+	# 先移除旧的，保证幂等（重复执行不堆积）
+	_remove_follow_remote(target)
+	var remote := RemoteTransform2D.new()
+	remote.name = _FOLLOW_REMOTE_NAME
+	remote.update_position = true
+	remote.update_rotation = false
+	remote.update_scale = false
+	target.add_child(remote)
+	# add_child 后才能计算相对路径
+	remote.remote_path = remote.get_path_to(camera)
+
+## 移除 target 下的跟随用 RemoteTransform2D
+func _remove_follow_remote(target: Node2D) -> void:
+	if not is_instance_valid(target):
+		return
+	var existing := target.get_node_or_null(_FOLLOW_REMOTE_NAME)
+	if existing is RemoteTransform2D:
+		existing.queue_free()
 
 
 ## 从变量或节点路径解析节点

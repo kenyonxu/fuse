@@ -4846,6 +4846,19 @@ FUSE_INSTRUCTION_SET_VIEWPORT_SIZE_DESC,设置项目主视口的逻辑分辨率�
 FUSE_INSTRUCTION_SET_VIEWPORT_SIZE_DESC_FORMAT,视口尺寸 → {width}x{height},Viewport Size → {width}x{height}
 FUSE_ERROR_VIEWPORT_SIZE_INVALID,视口尺寸无效: {width}x{height}（必须大于 0）,Invalid viewport size: {width}x{height} (must be greater than 0)
 # =============================================
+# GetNode - 获取节点
+# =============================================
+FUSE_INSTRUCTION_GET_NODE_NAME,获取节点,Get Node
+FUSE_INSTRUCTION_GET_NODE_DESC,按节点路径获取节点对象并存入变量（存节点引用 跨作用域稳定）,Gets a node by path and stores the node object to a variable (stable across scopes)
+FUSE_INSTRUCTION_GET_NODE_DESC_FORMAT,获取节点 '{path}' → {var} [{scope}],Get Node '{path}' → {var} [{scope}]
+FUSE_INSTRUCTION_GET_NODE_RESOURCE_BASE,获取节点,Get Node
+FUSE_INSTRUCTION_GET_NODE_VAR_TEMPLATE,→ {var} [{var_type}],→ {var} [{var_type}]
+FUSE_INSTRUCTION_GET_NODE_NO_VARIABLE,(未指定变量),(no variable)
+FUSE_LOG_GET_NODE_SAVED,获取节点 '{node}' → {var} [{scope}],Got node '{node}' → {var} [{scope}]
+FUSE_LOG_GET_NODE_SAVE_FAILED,保存节点到变量失败: {var} [{scope}],Failed to save node to variable: {var} [{scope}]
+FUSE_ERROR_GET_NODE_PATH_EMPTY,节点路径不能为空,Node path cannot be empty
+FUSE_ERROR_GET_NODE_NOT_FOUND,找不到节点: {path},Node not found: {path}
+# =============================================
 # SwapVariables - 交换变量
 # =============================================
 FUSE_INSTRUCTION_SWAP_VARIABLES_NAME,交换变量,Swap Variables
