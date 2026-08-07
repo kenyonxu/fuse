@@ -4831,6 +4831,21 @@ FUSE_INSTRUCTION_GET_VIEWPORT_SIZE_DESC_FORMAT,视口尺寸 → X={var_x}, Y={va
 FUSE_LOG_VIEWPORT_SIZE,视口尺寸: {width}x{height},Viewport size: {width}x{height}
 FUSE_ERROR_VIEWPORT_VAR_EMPTY,至少需要指定一个保存变量,At least one save variable must be specified
 # =============================================
+# SetWindowSize - 设置窗口尺寸
+# =============================================
+FUSE_INSTRUCTION_SET_WINDOW_SIZE_NAME,设置窗口尺寸,Set Window Size
+FUSE_INSTRUCTION_SET_WINDOW_SIZE_DESC,设置游戏主窗口的尺寸（像素）,Sets the size of the main game window in pixels
+FUSE_INSTRUCTION_SET_WINDOW_SIZE_DESC_FORMAT,窗口尺寸 → {width}x{height},Window Size → {width}x{height}
+FUSE_LOG_WINDOW_SIZE_SET,窗口尺寸已设为: {width}x{height},Window size set to: {width}x{height}
+FUSE_ERROR_WINDOW_SIZE_INVALID,窗口尺寸无效: {width}x{height}（必须大于 0）,Invalid window size: {width}x{height} (must be greater than 0)
+# =============================================
+# SetViewportSize - 设置视口分辨率
+# =============================================
+FUSE_INSTRUCTION_SET_VIEWPORT_SIZE_NAME,设置视口尺寸,Set Viewport Size
+FUSE_INSTRUCTION_SET_VIEWPORT_SIZE_DESC,设置项目主视口的逻辑分辨率（影响 2D 摄像机可视范围）,Sets the logical resolution of the main viewport (affects 2D camera visible range)
+FUSE_INSTRUCTION_SET_VIEWPORT_SIZE_DESC_FORMAT,视口尺寸 → {width}x{height},Viewport Size → {width}x{height}
+FUSE_ERROR_VIEWPORT_SIZE_INVALID,视口尺寸无效: {width}x{height}（必须大于 0）,Invalid viewport size: {width}x{height} (must be greater than 0)
+# =============================================
 # SwapVariables - 交换变量
 # =============================================
 FUSE_INSTRUCTION_SWAP_VARIABLES_NAME,交换变量,Swap Variables
