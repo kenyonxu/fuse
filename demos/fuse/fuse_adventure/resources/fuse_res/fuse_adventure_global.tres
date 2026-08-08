@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="GlobalVariableResource" format=3 uid="uid://w5lglgbgw4q5"]
+
+[ext_resource type="Script" uid="uid://ck5tq1b4f5rl" path="res://addons/fuse/core/global_variable_resource.gd" id="1_0t8k8"]
+
+[resource]
+script = ExtResource("1_0t8k8")
+variables = {
+"score_list": {
+"description": "",
+"persistent": true,
+"scope": 2,
+"value": ""
+}
+}
+description = "全局变量存储（仅持久化）"
+created_time = 266.69
+last_modified = 266.69

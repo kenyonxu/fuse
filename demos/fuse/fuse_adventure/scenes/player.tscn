@@ -103,7 +103,7 @@ script = ExtResource("4_7t5up")
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 7
+frame = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
