@@ -1,0 +1,9 @@
+[gd_scene format=4 uid="uid://d3lode3uhqely"]
+
+[ext_resource type="TileSet" uid="uid://be2m5b4ne8ix7" path="res://demos/fuse/fuse_adventure/resources/tilesets/fuse_adventure_tile_set.tres" id="8_imxvr"]
+
+[node name="MovingPlatform" type="Node2D" unique_id=1630528275]
+
+[node name="Platform" type="TileMapLayer" parent="." unique_id=2113527258]
+tile_map_data = PackedByteArray("AAAEAAAAAAAOAAoAAAAEAP//AAAOAAkAAAADAAAAAAANAAoAAAADAP//AAANAAkAAAACAAAAAAAOAAoAAAACAP//AAAOAAkAAAABAAAAAAANAAoAAAABAP//AAANAAkAAAAAAAAAAAAOAAoAAAAAAP//AAAOAAkAAAD//wAAAAANAAoAAAD/////AAANAAkAAAD+/wAAAAAOAAoAAAD+////AAAOAAkAAAD9/wAAAAANAAoAAAD9////AAANAAkAAAAGAAAAAAAOAAoAAAAGAP//AAAOAAkAAAAFAAAAAAANAAoAAAAFAP//AAANAAkAAAD8/wAAAAAOAAoAAAD8////AAAOAAkAAAD7/wAAAAANAAoAAAD7////AAANAAkAAAD6/wAAAAAOAAoAAAD6////AAAOAAkAAAD5/wAAAAANAAoAAAD5////AAANAAkAAAA=")
+tile_set = ExtResource("8_imxvr")

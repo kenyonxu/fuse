@@ -1,30 +1,32 @@
-[gd_scene format=3 uid="uid://cxiwcx0w5nofb"]
+[gd_scene format=3 uid="uid://b18ilhox3hf0m"]
 
-[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="1_6q01c"]
-[ext_resource type="PackedScene" uid="uid://der7wpomdo217" path="res://demos/fuse/fuse_adventure/scenes/fuse_demo_map_01.tscn" id="2_tsr15"]
-[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="3_gdobu"]
-[ext_resource type="PackedScene" uid="uid://b824m1t7jmimt" path="res://demos/fuse/fuse_adventure/scenes/level_end_point.tscn" id="3_tsr15"]
-[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_ymh5n"]
-[ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="5_gmyrx"]
-[ext_resource type="Script" uid="uid://bftkcmpe2p35w" path="res://addons/fuse/instructions/camera/set_camera_limit_from_area2d.gd" id="6_yfhd5"]
-[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_cl5h0"]
-[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="8_pd7xt"]
-[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="9_j1tm6"]
-[ext_resource type="Script" uid="uid://4ob2qfha1jx1" path="res://addons/fuse/instructions/system/set_viewport_size.gd" id="10_jqnkt"]
-[ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="11_85fdw"]
-[ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="12_x7bj1"]
-[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="13_v2s6i"]
-[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="14_be36e"]
-[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="15_jrdnk"]
-[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="16_54h5u"]
-[ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="17_uh7fd"]
+[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="1_os8oo"]
+[ext_resource type="PackedScene" uid="uid://b824m1t7jmimt" path="res://demos/fuse/fuse_adventure/scenes/level_end_point.tscn" id="3_kqe04"]
+[ext_resource type="PackedScene" uid="uid://7jj1opqnrhii" path="res://demos/fuse/fuse_adventure/scenes/fuse_demo_map_02.tscn" id="3_os8oo"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="4_d4lio"]
+[ext_resource type="PackedScene" uid="uid://d3lode3uhqely" path="res://demos/fuse/fuse_adventure/scenes/moving_platform.tscn" id="4_kqe04"]
+[ext_resource type="PackedScene" uid="uid://dfej7i5056bf3" path="res://demos/fuse/fuse_adventure/scenes/saw.tscn" id="4_qe6p4"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_yyvwg"]
+[ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="6_wnpyd"]
+[ext_resource type="Script" uid="uid://bftkcmpe2p35w" path="res://addons/fuse/instructions/camera/set_camera_limit_from_area2d.gd" id="7_pf1ym"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_lj5vm"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="9_f8sk5"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="10_v5lb7"]
+[ext_resource type="Script" uid="uid://4ob2qfha1jx1" path="res://addons/fuse/instructions/system/set_viewport_size.gd" id="11_vvbtj"]
+[ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="12_kkifu"]
+[ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="13_n5feu"]
+[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="14_pyj0u"]
+[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="15_qyi66"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="16_r155i"]
+[ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="17_6kde4"]
+[ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="18_ehdw3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 719)
 
 [sub_resource type="Resource" id="Resource_ak1ug"]
 resource_name = "获取节点 '..' → camera [最近作用域]"
-script = ExtResource("5_gmyrx")
+script = ExtResource("6_wnpyd")
 custom_scope_id = ""
 target_node_path = NodePath("")
 node_path = NodePath("..")
@@ -34,7 +36,7 @@ scope_source = 0
 
 [sub_resource type="Resource" id="Resource_0u2nx"]
 resource_name = "相机边界 (Camera2D ← CameraFrame)"
-script = ExtResource("6_yfhd5")
+script = ExtResource("7_pf1ym")
 camera_variable = ""
 camera_scope = 0
 camera_scope_source = 0
@@ -52,23 +54,23 @@ bounds_area = NodePath("../../../Worlds/CameraFrame")
 margin = 0
 
 [sub_resource type="Resource" id="Resource_g28q7"]
-script = ExtResource("7_cl5h0")
-instructions = Array[ExtResource("4_ymh5n")]([SubResource("Resource_ak1ug"), SubResource("Resource_0u2nx")])
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_ak1ug"), SubResource("Resource_0u2nx")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_io55n"]
 resource_name = "On Ready With Delay: 0.0"
-script = ExtResource("9_j1tm6")
+script = ExtResource("10_v5lb7")
 
 [sub_resource type="Resource" id="Resource_3ucjy"]
 resource_name = "设置视口尺寸 640x360"
-script = ExtResource("10_jqnkt")
+script = ExtResource("11_vvbtj")
 width = 640
 height = 360
 
 [sub_resource type="Resource" id="Resource_plqys"]
 resource_name = "获取组中节点 'player_spawn_point' → spawn_points [[本地]]"
-script = ExtResource("11_85fdw")
+script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -78,7 +80,7 @@ result_scope = 0
 
 [sub_resource type="Resource" id="Resource_scxm5"]
 resource_name = "Array Get 数组 spawn_points [0] → spawn_point"
-script = ExtResource("12_x7bj1")
+script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
 array_target_node_path = NodePath("")
@@ -96,7 +98,7 @@ target_scope = 0
 
 [sub_resource type="Resource" id="Resource_fovbj"]
 resource_name = "获取位置 spawn_point [LOCAL] → pos_spawn [LOCAL]"
-script = ExtResource("13_v2s6i")
+script = ExtResource("14_pyj0u")
 target = NodePath("")
 target_scope_source = 0
 target_custom_scope_id = ""
@@ -113,7 +115,7 @@ use_global_position = true
 
 [sub_resource type="Resource" id="Resource_sqapb"]
 resource_name = "实例化 'player.tscn' 从变量 [[本地]] pos_spawn"
-script = ExtResource("14_be36e")
+script = ExtResource("15_qyi66")
 target_variable = "player"
 save_to_scope = 0
 scope_source = 0
@@ -137,7 +139,7 @@ use_object_pool = false
 
 [sub_resource type="Resource" id="Resource_o4ukh"]
 resource_name = "获取组中节点 'player' → grp_player [[本地]]"
-script = ExtResource("11_85fdw")
+script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -147,7 +149,7 @@ result_scope = 0
 
 [sub_resource type="Resource" id="Resource_5a3ub"]
 resource_name = "Array Get 数组 grp_player [0] → player"
-script = ExtResource("12_x7bj1")
+script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
 array_target_node_path = NodePath("")
@@ -165,7 +167,7 @@ target_scope = 0
 
 [sub_resource type="Resource" id="Resource_cb305"]
 resource_name = "等待 0.1 秒"
-script = ExtResource("15_jrdnk")
+script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -174,7 +176,7 @@ wait_time = 0.1
 
 [sub_resource type="Resource" id="Resource_3vddb"]
 resource_name = "打印变量 'player' [[本地]]"
-script = ExtResource("16_54h5u")
+script = ExtResource("17_6kde4")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -183,7 +185,7 @@ variable_scope = 0
 
 [sub_resource type="Resource" id="Resource_p1ubp"]
 resource_name = "打印变量 'camera' [最近作用域]"
-script = ExtResource("16_54h5u")
+script = ExtResource("17_6kde4")
 custom_scope_id = ""
 target_node_path = NodePath("")
 variable_name = "camera"
@@ -192,7 +194,7 @@ scope_source = 0
 
 [sub_resource type="Resource" id="Resource_mw75f"]
 resource_name = "相机跟随 player [LOCAL] → camera [SCOPE] 平滑 速度: 5.0"
-script = ExtResource("17_uh7fd")
+script = ExtResource("18_ehdw3")
 target_node = NodePath("")
 target_scope_source = 0
 target_custom_scope_id = ""
@@ -211,12 +213,12 @@ enabled = true
 log_level = 4
 
 [sub_resource type="Resource" id="Resource_rxgda"]
-script = ExtResource("7_cl5h0")
-instructions = Array[ExtResource("4_ymh5n")]([SubResource("Resource_3ucjy"), SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_sqapb"), SubResource("Resource_o4ukh"), SubResource("Resource_5a3ub"), SubResource("Resource_cb305"), SubResource("Resource_3vddb"), SubResource("Resource_p1ubp"), SubResource("Resource_mw75f")])
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_3ucjy"), SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_sqapb"), SubResource("Resource_o4ukh"), SubResource("Resource_5a3ub"), SubResource("Resource_cb305"), SubResource("Resource_3vddb"), SubResource("Resource_p1ubp"), SubResource("Resource_mw75f")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="FuseDemoLevel" type="Node" unique_id=1396739659]
-script = ExtResource("1_6q01c")
+script = ExtResource("1_os8oo")
 scope_id = "level_scope"
 variables = Dictionary[String, Variant]({
 "camera": null
@@ -224,8 +226,6 @@ variables = Dictionary[String, Variant]({
 metadata/_custom_type_script = "uid://b5up05i5u1nqd"
 
 [node name="Worlds" type="Node2D" parent="." unique_id=529313865]
-
-[node name="FuseDemoMap" parent="Worlds" unique_id=1630528275 instance=ExtResource("2_tsr15")]
 
 [node name="CameraFrame" type="Area2D" parent="Worlds" unique_id=2118858830]
 
@@ -237,8 +237,35 @@ disabled = true
 [node name="PlayerSpawnPoint" type="Node2D" parent="Worlds" unique_id=1244849376 groups=["player_spawn_point"]]
 position = Vector2(0, -119)
 
-[node name="LevelEndPoint" parent="Worlds" unique_id=2027725587 instance=ExtResource("3_tsr15")]
+[node name="LevelEndPoint" parent="Worlds" unique_id=2027725587 instance=ExtResource("3_kqe04")]
 position = Vector2(2, -304)
+
+[node name="FuseDemoMap" parent="Worlds" unique_id=1630528275 instance=ExtResource("3_os8oo")]
+
+[node name="Platforms" type="Node2D" parent="Worlds" unique_id=1934213410]
+
+[node name="MovingPlatform" parent="Worlds/Platforms" unique_id=44856654 instance=ExtResource("4_kqe04")]
+position = Vector2(-321, -14)
+
+[node name="MovingPlatform2" parent="Worlds/Platforms" unique_id=1104359027 instance=ExtResource("4_kqe04")]
+position = Vector2(-58, -224)
+
+[node name="Traps" type="Node2D" parent="Worlds" unique_id=1534044258]
+
+[node name="Saw" parent="Worlds/Traps" unique_id=1307205982 instance=ExtResource("4_qe6p4")]
+position = Vector2(62, 3)
+
+[node name="Saw2" parent="Worlds/Traps" unique_id=2089521650 instance=ExtResource("4_qe6p4")]
+position = Vector2(62, 252)
+
+[node name="Saw3" parent="Worlds/Traps" unique_id=2066469145 instance=ExtResource("4_qe6p4")]
+position = Vector2(-268, 204)
+
+[node name="Saw4" parent="Worlds/Traps" unique_id=1670102979 instance=ExtResource("4_qe6p4")]
+position = Vector2(-413, 141)
+
+[node name="LevelEndPoint2" parent="Worlds" unique_id=976728178 instance=ExtResource("3_kqe04")]
+position = Vector2(498, -96)
 
 [node name="Cameras" type="Node2D" parent="." unique_id=1335137927]
 
@@ -246,7 +273,7 @@ position = Vector2(2, -304)
 unique_name_in_owner = true
 
 [node name="Runner" type="Node" parent="Cameras/Camera2D" unique_id=473733610]
-script = ExtResource("3_gdobu")
+script = ExtResource("4_d4lio")
 action_runner = SubResource("Resource_g28q7")
 target_node = NodePath("..")
 signal_name = "ready"
@@ -258,7 +285,7 @@ metadata/_custom_type_script = "uid://parouyd882ij"
 [node name="GameManager" type="Node2D" parent="." unique_id=528914670]
 
 [node name="OnReady" type="Node" parent="GameManager" unique_id=203994227]
-script = ExtResource("8_pd7xt")
+script = ExtResource("9_f8sk5")
 event_definition = SubResource("Resource_io55n")
 action_runner = SubResource("Resource_rxgda")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
