@@ -64,9 +64,9 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_ax8le"]
-resource_name = "预加载场景 'game_scene.tscn' (等待完成)"
+resource_name = "预加载场景 'fuse_demo_level_01.tscn' (等待完成)"
 script = ExtResource("11_0spe3")
-scene_path = "uid://ll1b03u7xdqo"
+scene_path = "uid://cxiwcx0w5nofb"
 preload_mode = 0
 timeout = 5.0
 status_variable = "preload_scene_status"
@@ -238,6 +238,7 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 [node name="GlobalVariableAssistant" type="Node" parent="GameManager" unique_id=1873685317]
 script = ExtResource("1_83oxh")
 current_resource = ExtResource("2_83oxh")
+resource_path = "res://demos/fuse/fuse_adventure/resources/fuse_res/fuse_adventure_global.tres"
 log_level = 0
 metadata/_custom_type_script = "uid://banshq4o4dxat"
 
