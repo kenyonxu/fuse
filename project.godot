@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Fuse Visual Programming"
-run/main_scene="uid://dc20u5mk1dlln"
+run/main_scene="uid://d1hc0i6nwulkd"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
