@@ -35,8 +35,10 @@ recordings/
 *.bak
 *.old
 
-# Third party resources
-third_party_resources/
+# Third party resources (默认不提交第三方资源)
+# 例外：Pixel Adventure 1 — demo 需要的美术资源
+third_party_resources/*
+!third_party_resources/Pixel Adventure 1/
 
 # Test output files
 test_*.log
