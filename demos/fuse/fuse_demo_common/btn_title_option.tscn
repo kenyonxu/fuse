@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://8t04qxutobxm"]
 
-[ext_resource type="Theme" uid="uid://bb4hsnkvv6itc" path="res://demos/fuse/brick_demo_theme.tres" id="1_vqo5q"]
-[ext_resource type="Script" uid="uid://ctmy6y11nksie" path="res://addons/fuse/utils/brick_button.gd" id="2_ddvh2"]
+[ext_resource type="Theme" uid="uid://bb4hsnkvv6itc" path="res://demos/fuse/fuse_demo_common/brick_demo_theme.tres" id="1_vqo5q"]
+[ext_resource type="Script" uid="uid://ctmy6y11nksie" path="res://addons/fuse/utils/fuse_button.gd" id="2_ddvh2"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_6bgyd"]
 [ext_resource type="Script" uid="uid://cg88npkpvssm6" path="res://addons/fuse/instructions/audio/play_sound.gd" id="6_3fkbo"]
 [ext_resource type="Script" uid="uid://daiogj0pr3eah" path="res://addons/fuse/instructions/tween/tween_scale_to.gd" id="6_43ph2"]

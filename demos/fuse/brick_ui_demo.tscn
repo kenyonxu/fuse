@@ -10,9 +10,9 @@
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_a7pdx"]
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="9_qha6h"]
 [ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="9_unseh"]
-[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/btn_title_option.tscn" id="9_wbnan"]
+[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/fuse_demo_common/btn_title_option.tscn" id="9_wbnan"]
 [ext_resource type="Script" uid="uid://cqhqfchyyqctl" path="res://addons/fuse/conditions/input/check_any_input.gd" id="10_d62fi"]
-[ext_resource type="Resource" uid="uid://da0754pwaa2kr" path="res://demos/fuse/brick_demo_basic.tres" id="10_fknqa"]
+[ext_resource type="Resource" uid="uid://cgo2p1jbpdbjm" path="res://demos/fuse/brick_demo_basic.tres" id="10_fknqa"]
 [ext_resource type="Material" uid="uid://uyj8uartsnj0" path="res://addons/fuse/texture/text_burn_material.tres" id="13_unseh"]
 [ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="15_d62fi"]
 

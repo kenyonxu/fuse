@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://by1u5566ur36d"]
 
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="1_ha6o6"]
-[ext_resource type="Resource" uid="uid://ca68xldxuxct8" path="res://demos/fuse/brick_demo_basic.tres" id="2_24aq8"]
+[ext_resource type="Resource" uid="uid://cgo2p1jbpdbjm" path="res://demos/fuse/brick_demo_basic.tres" id="2_24aq8"]
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_i5ugf"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="4_ma2x7"]
 [ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="4_r4ibc"]
@@ -14,7 +14,7 @@
 [ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="9_0a2a6"]
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="9_tqj2j"]
 [ext_resource type="Script" uid="uid://btqvw0a03xqcx" path="res://addons/fuse/instructions/ui/show_hide_ui.gd" id="11_ax8le"]
-[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/btn_title_option.tscn" id="12_lh002"]
+[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/fuse_demo_common/btn_title_option.tscn" id="12_lh002"]
 [ext_resource type="Material" uid="uid://uyj8uartsnj0" path="res://addons/fuse/texture/text_burn_material.tres" id="13_rt6no"]
 [ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="14_i5ugf"]
 [ext_resource type="Script" uid="uid://bpgyrl1kelnm0" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="14_r4ibc"]

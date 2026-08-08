@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d1hc0i6nwulkd"]
 
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="1_83oxh"]
-[ext_resource type="Resource" uid="uid://w5lglgbgw4q5" path="res://demos/fuse/fuse_adventure/resources/fuse_res/fuse_adventure_global.tres" id="2_83oxh"]
+[ext_resource type="Resource" uid="uid://dct104jk6u5ew" path="res://demos/fuse/fuse_adventure/resources/fuse_res/fuse_adventure_global.tres" id="2_83oxh"]
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_lonpl"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="4_adcf2"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_fv8b1"]
@@ -14,7 +14,7 @@
 [ext_resource type="Script" uid="uid://cqhqfchyyqctl" path="res://addons/fuse/conditions/input/check_any_input.gd" id="12_5nq0w"]
 [ext_resource type="Script" uid="uid://cx6ba54wjdawh" path="res://addons/fuse/instructions/tween/tween_fade_in.gd" id="13_kx4qc"]
 [ext_resource type="Script" uid="uid://im3nor20tka0" path="res://addons/fuse/instructions/tween/tween_fade_out.gd" id="14_gewe2"]
-[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/btn_title_option.tscn" id="15_ips7i"]
+[ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/fuse_demo_common/btn_title_option.tscn" id="15_ips7i"]
 [ext_resource type="Script" uid="uid://bpgyrl1kelnm0" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="16_ttd6d"]
 [ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="17_1g7tc"]
 [ext_resource type="Script" uid="uid://bhy8o7uexju0b" path="res://addons/fuse/instructions/flow_control/if_then.gd" id="18_dso8t"]
@@ -139,14 +139,14 @@ script = ExtResource("17_1g7tc")
 message = "loaded"
 
 [sub_resource type="Resource" id="Resource_08rkf"]
-resource_name = "If/Then 检查场景 game_scene.tscn 的预加载状态是否为 LOADED [1 个指令] [异步]"
+resource_name = "If/Then 检查场景 fuse_demo_level_01.tscn 的预加载状态是否为 LOADED [1 个指令] [异步]"
 script = ExtResource("18_dso8t")
 condition = SubResource("Resource_rt6no")
 instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_xa4at")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_vuhxv"]
-resource_name = "切换场景 'game_scene.tscn' (延迟 1.0 秒)"
+resource_name = "切换场景 'fuse_demo_level_01.tscn' (延迟 1.0 秒)"
 script = ExtResource("19_fuljr")
 scene_path = "uid://cxiwcx0w5nofb"
 delay = 1.0
