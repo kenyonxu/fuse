@@ -28,10 +28,10 @@ resource_name = "On Ready With Delay: 0.0"
 script = ExtResource("4_adcf2")
 
 [sub_resource type="Resource" id="Resource_chg11"]
-resource_name = "设置视口尺寸 640x360"
+resource_name = "设置视口尺寸 640x648"
 script = ExtResource("6_pq6vj")
 width = 640
-height = 360
+height = 648
 
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("7_45fck")
@@ -128,9 +128,9 @@ instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_qcapw"), Sub
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_rt6no"]
-resource_name = "game_scene.tscn 预加载: LOADED"
+resource_name = "fuse_demo_level_01.tscn 预加载: LOADED"
 script = ExtResource("16_ttd6d")
-scene_path = "uid://ll1b03u7xdqo"
+scene_path = "uid://cxiwcx0w5nofb"
 expected_status = 0
 
 [sub_resource type="Resource" id="Resource_xa4at"]
@@ -148,7 +148,7 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_vuhxv"]
 resource_name = "切换场景 'game_scene.tscn' (延迟 1.0 秒)"
 script = ExtResource("19_fuljr")
-scene_path = "uid://ll1b03u7xdqo"
+scene_path = "uid://cxiwcx0w5nofb"
 delay = 1.0
 
 [sub_resource type="Resource" id="Resource_3nc64"]
