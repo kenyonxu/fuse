@@ -7,6 +7,12 @@
 [sub_resource type="Resource" id="Resource_ucofn"]
 resource_name = "移动到 [[上级]] (0.0, 900.0) (本地) (50.00s)"
 script = ExtResource("2_h0ugv")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 target_position = Vector2(0, 900)
 duration = 50.0

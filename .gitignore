@@ -84,6 +84,7 @@ music21/
 # Local-only dev plugins (本地开发依赖，不提交远程)
 # 方案 Y 约束：Fuse 发布零 ast-flow 痕迹。gdscript_ast 仅开发期 codegen 用。
 addons/gdscript_ast/
+addons/AutoKey_SpriteFrames/
 
 # 本地图标素材（仅开发期用，不提交）
 addons/at-icons/

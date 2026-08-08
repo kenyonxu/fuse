@@ -18,6 +18,13 @@ extends CharacterBody2D
 @onready var _sprite: AnimatedSprite2D = $PlayerSprites
 @onready var _anim_tree: AnimationTree = $AnimationTree
 
+# 由 fuse trigger 注入的输入意图：
+#   OnInputCompositeAction 每帧把 input_vector 写入 move_input
+#   OnInputAction(Jump) 按下时把 jump_requested 置 true（_physics_process 消费后复位）
+# @export_storage：进入 get_property_list 供 fuse SetPropertyValue 枚举/写入，但不在 Inspector 显示
+@export_storage var move_input: Vector2 = Vector2.ZERO
+@export_storage var jump_requested: bool = false
+
 var _jump_count: int = 0
 var _was_on_floor: bool = false
 var _was_falling: bool = false
@@ -25,6 +32,8 @@ var _was_falling: bool = false
 # 待触发的一次性动画条件标志（本帧设置、下一帧清除，确保 AnimationTree 能读到）
 var _pending_jump: bool = false
 var _pending_double_jump: bool = false
+
+
 
 
 func _ready() -> void:
@@ -53,18 +62,18 @@ func _apply_gravity(delta: float) -> void:
 		velocity.y = minf(velocity.y, max_fall_velocity)
 
 
-## 处理左右移动输入
+## 处理左右移动输入（输入由 fuse trigger 注入到 move_input）
 func _handle_movement() -> void:
-	var direction := Input.get_axis("ui_left", "ui_right")
-	velocity.x = direction * speed
+	velocity.x = move_input.x * speed
 
 
-## 处理跳跃与二段跳
+## 处理跳跃与二段跳（跳跃请求由 fuse trigger 注入到 jump_requested）
 func _handle_jump() -> void:
 	if is_on_floor():
 		_jump_count = 0
 
-	if Input.is_action_just_pressed("ui_accept"):
+	if jump_requested:
+		jump_requested = false  # 消费请求
 		if is_on_floor():
 			velocity.y = jump_force
 			_jump_count = 1
@@ -93,8 +102,9 @@ func _update_animation() -> void:
 		_set_anim_condition("do_double_jump", true)
 		_pending_double_jump = false
 
-	# 进入下落阶段（起跳到最高点之后 velocity.y 转正是触发时机）
-	if not on_floor_now and velocity.y > 0.0 and not _was_falling:
+	# 进入下落阶段：在空中且非上升（velocity.y >= 0）
+	# 含跳跃顶点 velocity.y==0，以及平台边缘走出首帧（此时重力尚未累积，velocity.y 仍为 0）
+	if not on_floor_now and velocity.y >= 0.0 and not _was_falling:
 		_set_anim_condition("fall", true)
 		_was_falling = true
 

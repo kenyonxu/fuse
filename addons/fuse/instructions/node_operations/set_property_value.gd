@@ -328,7 +328,7 @@ func execute(context: ExecutionContext):
 		return
 
 	# 获取目标节点
-	var target = _get_target_node()
+	var target = _get_target_node(context)
 	if target == null:
 		_log_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": str(target_node)})
 		set_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"node": str(target_node)})
@@ -360,12 +360,18 @@ func execute(context: ExecutionContext):
 	_on_execution_completed()
 
 ## 获取目标节点
-func _get_target_node() -> Node:
-	# 获取场景根节点
+func _get_target_node(context: ExecutionContext) -> Node:
+	if target_node.is_empty():
+		return null
+	# 优先从 context.target 解析（与编辑器节点选择器基准一致，支持 ../.. 等相对 trigger 的路径）
+	var node = context.get_node(target_node)
+	if node:
+		return node
+	# 回退：从场景根解析（兼容历史行为 / 绝对路径）
 	var scene_root = Engine.get_main_loop().current_scene
-
-	# 使用 FuseNodeUtils 工具类查找节点
-	return FuseNodeUtils.find_node_at_runtime(scene_root, target_node)
+	if scene_root:
+		return FuseNodeUtils.find_node_at_runtime(scene_root, target_node)
+	return null
 
 ## 获取要设置的值
 func _get_value_to_set(context: ExecutionContext) -> Variant:

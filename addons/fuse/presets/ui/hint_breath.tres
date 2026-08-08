@@ -8,6 +8,12 @@
 [sub_resource type="Resource" id="Resource_6n6s1"]
 resource_name = "淡入 [[上级]] alpha: 0.0→1.0 (0.50s)"
 script = ExtResource("2_iconv")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 duration = 0.5
 from_alpha = 0.0
@@ -18,6 +24,12 @@ trans_type = 1
 [sub_resource type="Resource" id="Resource_iconv"]
 resource_name = "淡出 [[上级]] (0.50s)"
 script = ExtResource("3_aif6g")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 duration = 0.5
 auto_free = false

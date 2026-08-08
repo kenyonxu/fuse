@@ -4,6 +4,12 @@
 [ext_resource type="AnimationLibrary" uid="uid://xumr4l813imn" path="res://demos/fuse/fuse_adventure/resources/animationLibs/player.res" id="2_wga5u"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://c8b16jwsdrrn5" path="res://demos/fuse/fuse_adventure/resources/animation_stm/player_normal.tres" id="3_wga5u"]
 [ext_resource type="Script" uid="uid://ndgmi2c0dsbv" path="res://demos/fuse/fuse_adventure/scripts/player_controller.gd" id="4_7t5up"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="5_kvs1w"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_input_action_composite.gd" id="6_1yqi1"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="7_mw7hn"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_mf6og"]
+[ext_resource type="Script" uid="uid://bk5xvyc2mqs4o" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="8_mw7hn"]
+[ext_resource type="Script" uid="uid://cgl60422nwy0k" path="res://addons/fuse/events/input/on_input_action.gd" id="9_1yqi1"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -31,13 +37,73 @@ graph_offset = Vector2(-235, -203)
 radius = 7.0
 height = 24.0
 
+[sub_resource type="Resource" id="Resource_ixdjt"]
+resource_name = "当指定的任意输入动作被按下时触发。发出合并后的输入向量。 [上, 下, 左, 右] (60 FPS)"
+script = ExtResource("6_1yqi1")
+_usage_hint = "📖 可用的 LOCAL 变量：input_vector (当前输入，启用归零时触发事件时始终可用，否则仅非零时可用)、last_input_vector (上次输入，永远可用)。访问方法：使用 SetVariable 指令，开启从另一个变量获取值，源变量名填 input_vector 或 last_input_vector，源作用域选 LOCAL。判断方向：向右 (x>0)、向左 (x<0)、向上 (y<0)、向下 (y>0)、静止 (==Vector2ZERO)。"
+action_up = "Up"
+action_down = "Down"
+action_left = "Left"
+action_right = "Right"
+trigger_on_zero = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_mf6og"]
+resource_name = "设置属性 [player] .move_input = [input_vector]"
+script = ExtResource("8_mw7hn")
+new_value = "Select a property type first"
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../..")
+target_property = "move_input"
+set_with_variable = true
+new_value = "Select a property type first"
+variable_name = "input_vector"
+variable_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_rxgda"]
+script = ExtResource("8_mf6og")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_mf6og")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_mw7hn"]
+resource_name = "输入动作: Jump [刚按下时]"
+script = ExtResource("9_1yqi1")
+target_input_action = "Jump"
+trigger_mode = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ds1tm"]
+resource_name = "设置属性 [player] .jump_requested = true"
+script = ExtResource("8_mw7hn")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../..")
+target_property = "jump_requested"
+set_with_variable = false
+new_value = true
+variable_name = ""
+variable_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_phq6w"]
+script = ExtResource("8_mf6og")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_ds1tm")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
 script = ExtResource("4_7t5up")
 
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 10
+frame = 7
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
@@ -56,3 +122,17 @@ parameters/PlayerNormal/conditions/land = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=432326056]
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_rxgda")
+
+[node name="PlayerController" type="Node2D" parent="." unique_id=681370264]
+
+[node name="OnInputCompositeAction" type="Node" parent="PlayerController" unique_id=684465951]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_ixdjt")
+action_runner = SubResource("Resource_rxgda")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnInputAction" type="Node" parent="PlayerController" unique_id=1624013137]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_mw7hn")
+action_runner = SubResource("Resource_phq6w")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

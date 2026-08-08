@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://by1u5566ur36d"]
 
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="1_ha6o6"]
-[ext_resource type="Resource" uid="uid://c6ghtc46t7rqf" path="res://demos/fuse/brick_demo_basic.tres" id="2_24aq8"]
+[ext_resource type="Resource" uid="uid://ca68xldxuxct8" path="res://demos/fuse/brick_demo_basic.tres" id="2_24aq8"]
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_i5ugf"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="4_ma2x7"]
 [ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="4_r4ibc"]
 [ext_resource type="Script" uid="uid://cqhqfchyyqctl" path="res://addons/fuse/conditions/input/check_any_input.gd" id="5_0a2a6"]
 [ext_resource type="Script" uid="uid://dgk6lyr4260ad" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="6_2f70v"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="6_cm44k"]
+[ext_resource type="Script" uid="uid://4ob2qfha1jx1" path="res://addons/fuse/instructions/system/set_viewport_size.gd" id="6_vkr5e"]
 [ext_resource type="Script" uid="uid://cx6ba54wjdawh" path="res://addons/fuse/instructions/tween/tween_fade_in.gd" id="7_2f70v"]
 [ext_resource type="Script" uid="uid://im3nor20tka0" path="res://addons/fuse/instructions/tween/tween_fade_out.gd" id="8_tb65y"]
 [ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="9_0a2a6"]
@@ -20,6 +22,20 @@
 [ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="15_08rkf"]
 [ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="15_cm44k"]
 [ext_resource type="Script" uid="uid://koqcwgwlg15a" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="17_cm44k"]
+
+[sub_resource type="Resource" id="Resource_8vwsa"]
+script = ExtResource("4_ma2x7")
+
+[sub_resource type="Resource" id="Resource_chg11"]
+resource_name = "设置视口尺寸 1152x648"
+script = ExtResource("6_vkr5e")
+width = 1152
+height = 648
+
+[sub_resource type="Resource" id="Resource_rxgda"]
+script = ExtResource("9_tqj2j")
+instructions = Array[ExtResource("6_cm44k")]([SubResource("Resource_chg11")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_0a2a6"]
 resource_name = "间隔执行: 98.0s - 自动开始 立即触发 无限重复"
@@ -75,6 +91,12 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_qcapw"]
 resource_name = "淡入 [TitleHint] alpha: 0.0→1.0 (0.50s)"
 script = ExtResource("7_2f70v")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 duration = 0.5
 from_alpha = 0.0
@@ -86,6 +108,12 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_mtd1c"]
 resource_name = "淡出 [TitleHint] (0.50s)"
 script = ExtResource("8_tb65y")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 duration = 0.5
 auto_free = false
@@ -130,12 +158,24 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 [sub_resource type="Resource" id="Resource_r4ibc"]
 resource_name = "显示 UI → Panel"
 script = ExtResource("11_ax8le")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 action = 0
 
 [sub_resource type="Resource" id="Resource_cm44k"]
 resource_name = "淡入 [Panel] alpha: 0.0→1.0 (0.50s)"
 script = ExtResource("7_2f70v")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 duration = 0.5
 from_alpha = 0.0
@@ -155,6 +195,12 @@ font_color = Color(0.17768212, 0.808988, 0.960966, 1)
 [sub_resource type="Resource" id="Resource_tb65y"]
 resource_name = "显示 UI → Title"
 script = ExtResource("11_ax8le")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 action = 0
 log_level = 0
@@ -162,6 +208,12 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_tqj2j"]
 resource_name = "属性动画 [Title] [Material] .shader_parameter/burn_progress = 0.0 (1.00s)"
 script = ExtResource("15_08rkf")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 property_source = 1
 property_path = "shader_parameter/burn_progress"
@@ -188,6 +240,12 @@ current_resource = ExtResource("2_24aq8")
 resource_path = "res://demos/fuse/brick_demo_basic.tres"
 log_level = 0
 metadata/_custom_type_script = "uid://banshq4o4dxat"
+
+[node name="Trigger" type="Node" parent="GameManager" unique_id=639190247]
+script = ExtResource("3_i5ugf")
+event_definition = SubResource("Resource_8vwsa")
+action_runner = SubResource("Resource_rxgda")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="SceneLogics" type="Node" parent="." unique_id=1770029596]
 

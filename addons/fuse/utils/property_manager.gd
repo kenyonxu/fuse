@@ -190,8 +190,8 @@ static func validate_property_value(node: Node, property_name: String, value: Va
 
 ## 安全设置属性值
 static func set_property_safe(node: Node, property_name: String, value: Variant) -> Dictionary:
-	# 调试信息
-	print("[PropertyManager] 尝试设置属性: 节点=%s, 属性名='%s', 值=%s" % [node.name, property_name, str(value)])
+	# 调试信息（已关闭：每帧 trigger 调用会刷屏；需要排查时取消注释）
+	# print("[PropertyManager] 尝试设置属性: 节点=%s, 属性名='%s', 值=%s" % [node.name, property_name, str(value)])
 	
 	# 检查属性名是否为空
 	if property_name.is_empty():
@@ -212,7 +212,7 @@ static func set_property_safe(node: Node, property_name: String, value: Variant)
 	
 	# node.set() 不返回布尔值，直接调用并假设成功
 	node.set(property_name, converted_value)
-	print("[PropertyManager] 属性设置成功: %s = %s" % [property_name, str(converted_value)])
+	# print("[PropertyManager] 属性设置成功: %s = %s" % [property_name, str(converted_value)])
 	return {"success": true, "value": converted_value}
 
 ## 批量设置属性
