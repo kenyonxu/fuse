@@ -223,7 +223,8 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 script = ExtResource("1_os8oo")
 scope_id = "level_scope"
 variables = Dictionary[String, Variant]({
-"camera": null
+"camera": null,
+"current_level": 2
 })
 metadata/_custom_type_script = "uid://b5up05i5u1nqd"
 
