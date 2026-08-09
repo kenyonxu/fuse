@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://btvvb2xxi6lol"]
+
+[ext_resource type="Texture2D" uid="uid://cv3u4olptfpae" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="1_qeb7a"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxx2f"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w13fy"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d4o23"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3kmg8"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxx6r"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfwol"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxueb"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dcqs5"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_akqpe"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psw7l"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(256, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1e6n"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(288, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8oeil"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(320, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tm7jg"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(352, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y0y7j"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(384, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yvrvr"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(416, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7w1bw"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(448, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pf5x"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(480, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_thiqn"]
+atlas = ExtResource("1_qeb7a")
+region = Rect2(512, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rxgda"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxx2f")
+}],
+"loop": 0,
+"name": &"Ide",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w13fy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d4o23")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3kmg8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yxx6r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bfwol")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxueb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dcqs5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akqpe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psw7l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d1e6n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8oeil")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tm7jg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y0y7j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yvrvr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7w1bw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pf5x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_thiqn")
+}],
+"loop": 0,
+"name": &"get",
+"speed": 15.0
+}]
+
+[node name="UI_Collectables" type="Control" unique_id=571755204]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1271445193]
+layout_mode = 0
+offset_left = 576.0
+offset_top = 12.0
+offset_right = 622.0
+offset_bottom = 52.0
+
+[node name="Control" type="Control" parent="HBoxContainer" unique_id=2116608329]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="HBoxContainer/Control" unique_id=1826593101]
+position = Vector2(22, 21)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_rxgda")
+animation = &"Ide"
+autoplay = "Ide"
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=625334763]
+layout_mode = 2
+text = "0"
