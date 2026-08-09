@@ -20,7 +20,7 @@
 [ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="16_r155i"]
 [ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="17_6kde4"]
 [ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="18_ehdw3"]
-[ext_resource type="PackedScene" uid="uid://j5c0denjtf2x" path="res://demos/fuse/fuse_adventure/scenes/level_end_ui.tscn" id="21_d4lio"]
+[ext_resource type="PackedScene" uid="uid://drf83gp3l1112" path="res://demos/fuse/fuse_adventure/scenes/canvas_layer.tscn" id="21_d4lio"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 719)
@@ -291,13 +291,4 @@ event_definition = SubResource("Resource_io55n")
 action_runner = SubResource("Resource_rxgda")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
-[node name="Control" type="Control" parent="." unique_id=540404313]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="LevelEndUI" parent="Control" unique_id=328373904 instance=ExtResource("21_d4lio")]
-layout_mode = 1
+[node name="CanvasLayer" parent="." unique_id=746731906 instance=ExtResource("21_d4lio")]

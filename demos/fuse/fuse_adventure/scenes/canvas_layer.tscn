@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://drf83gp3l1112"]
+
+[ext_resource type="PackedScene" uid="uid://j5c0denjtf2x" path="res://demos/fuse/fuse_adventure/scenes/level_end_ui.tscn" id="1_ltr2c"]
+[ext_resource type="PackedScene" uid="uid://do8aehgff4imu" path="res://demos/fuse/fuse_adventure/scenes/ui_life.tscn" id="2_rpmrn"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=746731906]
+
+[node name="LevelEndUI" parent="." unique_id=328373904 instance=ExtResource("1_ltr2c")]
+
+[node name="UI_Life" parent="." unique_id=225107553 instance=ExtResource("2_rpmrn")]

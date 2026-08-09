@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://do8aehgff4imu"]
+
+[ext_resource type="Texture2D" uid="uid://dl1lbfdtbikrp" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Other/hearts/hearts_96x128.png" id="1_eh2d5"]
+[ext_resource type="Texture2D" uid="uid://dfxf0tubv5x3e" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Main Characters/Mask Dude/Fall (32x32).png" id="1_uugg1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uugg1"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 5
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fgjoy"]
+atlas = ExtResource("1_eh2d5")
+region = Rect2(0, 0, 32, 32)
+
+[node name="UI_Life" type="Control" unique_id=225107553]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=641551276]
+custom_minimum_size = Vector2(96, 32)
+layout_mode = 0
+offset_left = 15.0
+offset_top = 12.0
+offset_right = 121.0
+offset_bottom = 52.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1802484355]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HeadIcon" type="Panel" parent="MarginContainer/HBoxContainer" unique_id=1344801905]
+custom_minimum_size = Vector2(32, 32)
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_uugg1")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/HeadIcon" unique_id=1036296330]
+layout_mode = 0
+offset_left = -4.0
+offset_top = -2.0
+offset_right = 33.0
+offset_bottom = 40.395836
+texture = ExtResource("1_uugg1")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HeartsContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=271763154]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 10)
+theme_override_constants/separation = -11
+
+[node name="heart01" type="TextureRect" parent="MarginContainer/HBoxContainer/HeartsContainer" unique_id=73842997]
+texture_filter = 1
+layout_mode = 2
+texture = SubResource("AtlasTexture_fgjoy")
+stretch_mode = 5
+
+[node name="heart02" type="TextureRect" parent="MarginContainer/HBoxContainer/HeartsContainer" unique_id=2014685156]
+texture_filter = 1
+layout_mode = 2
+texture = SubResource("AtlasTexture_fgjoy")
+stretch_mode = 5
+
+[node name="heart03" type="TextureRect" parent="MarginContainer/HBoxContainer/HeartsContainer" unique_id=176369630]
+texture_filter = 1
+layout_mode = 2
+texture = SubResource("AtlasTexture_fgjoy")
+stretch_mode = 5
