@@ -36,6 +36,26 @@ func _ready():
 
 项目中未配置 GDScript 的 linter。
 
+### 组件清单同步（dump 上下文）⚠️ 新增组件后必做
+
+`addons/fuse/preset_ai_context/` 下的 3 个 JSON（components/schemas/enums）是 AI 写 preset 时的组件清单，**新增或修改组件后必须重新 dump**，否则 AI 上下文过期（2026-08-09 曾漏 5 个组件）。
+
+```bash
+# 1. 首次需先初始化项目（生成 .godot 全局类缓存，否则 class_name 解析失败）
+Godot --headless --import --path <项目路径>
+
+# 2. 重新 dump（会重写 3 个 JSON）
+Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/dump_context.tscn
+```
+
+- Godot 4.7 路径示例：`/home/kai-remote/godot/Godot_v4.7-stable_mono_linux_x86_64/Godot_v4.7-stable_mono_linux.x86_64`
+- dump 完成后用 git diff 确认：组件数应只增不减，旧条目字段不应变化
+
+**组件 metadata 要求**：Event / Instruction / Condition 组件必须实现对应静态 metadata 方法，否则 dump 会静默跳过（CheckScopeVariable 曾因此漏掉）：
+- 指令：`static func _get_instruction_metadata() -> InstructionMetadata`
+- 事件：`static func _get_event_metadata() -> EventMetadata`
+- 条件：`static func _get_condition_metadata() -> ConditionMetadata`
+
 ## 代码风格指南
 
 ### 文件命名
