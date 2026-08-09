@@ -31,7 +31,11 @@
       },
       {
         "type": "ShowHideUI",
-        "target_node": "../../CanvasLayer/LevelEndUI",
+        "use_variable_for_target": true,
+        "target_variable": "ui_level_end",
+        "target_scope": 1,
+        "target_scope_source": 1,
+        "target_custom_scope_id": "level_scope",
         "action": 0
       },
       {
