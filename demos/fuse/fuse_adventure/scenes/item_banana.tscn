@@ -180,8 +180,8 @@ animations = [{
 [node name="Item_Banana" type="Node2D" unique_id=293041126]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1243303412]
+texture_filter = 1
+scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rxgda")
-animation = &"collect"
+animation = &"idle"
 autoplay = "idle"
-frame = 5
-frame_progress = 1.0
