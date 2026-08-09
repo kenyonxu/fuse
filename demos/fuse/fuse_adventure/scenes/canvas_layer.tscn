@@ -2,11 +2,40 @@
 
 [ext_resource type="PackedScene" uid="uid://j5c0denjtf2x" path="res://demos/fuse/fuse_adventure/scenes/level_end_ui.tscn" id="1_ltr2c"]
 [ext_resource type="PackedScene" uid="uid://do8aehgff4imu" path="res://demos/fuse/fuse_adventure/scenes/ui_life.tscn" id="2_rpmrn"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_td05q"]
 [ext_resource type="PackedScene" uid="uid://btvvb2xxi6lol" path="res://demos/fuse/fuse_adventure/scenes/ui_collectables.tscn" id="3_cwhix"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="3_dvj4o"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_td05q"]
+[ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="4_dvj4o"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="5_qnvbn"]
+
+[sub_resource type="Resource" id="Resource_qnvbn"]
+script = ExtResource("3_dvj4o")
+
+[sub_resource type="Resource" id="Resource_i3ixu"]
+resource_name = "获取节点 '..' → ui_level_end [ID:level_scope]"
+script = ExtResource("4_dvj4o")
+target_node_path = NodePath("")
+node_path = NodePath("..")
+result_variable = "ui_level_end"
+result_scope = 1
+scope_source = 1
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_fgjoy"]
+script = ExtResource("5_qnvbn")
+instructions = Array[ExtResource("3_td05q")]([SubResource("Resource_i3ixu")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=746731906]
 
 [node name="LevelEndUI" parent="." unique_id=328373904 instance=ExtResource("1_ltr2c")]
+
+[node name="Trigger" type="Node" parent="LevelEndUI" unique_id=1498324713]
+script = ExtResource("2_td05q")
+event_definition = SubResource("Resource_qnvbn")
+action_runner = SubResource("Resource_fgjoy")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="UI_Life" parent="." unique_id=225107553 instance=ExtResource("2_rpmrn")]
 
