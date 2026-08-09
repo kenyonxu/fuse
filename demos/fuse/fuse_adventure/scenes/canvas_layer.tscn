@@ -11,3 +11,5 @@
 [node name="UI_Life" parent="." unique_id=225107553 instance=ExtResource("2_rpmrn")]
 
 [node name="UI_Collectables" parent="." unique_id=571755204 instance=ExtResource("3_cwhix")]
+offset_top = -2.0
+offset_bottom = -2.0
