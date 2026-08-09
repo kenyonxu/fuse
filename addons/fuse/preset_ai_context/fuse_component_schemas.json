@@ -116,6 +116,60 @@
   "ApplyForce": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "RigidBody2D,RigidBody3D",
       "is_nested_instructions": false,
@@ -152,6 +206,60 @@
     }
   ],
   "ApplyImpulse": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -447,15 +555,6 @@
       "type_name": "NodePath"
     },
     {
-      "default": null,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "search_value",
-      "type": 0,
-      "type_name": "type_0"
-    },
-    {
       "default": 0,
       "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
@@ -582,15 +681,6 @@
       "name": "target_node_path",
       "type": 22,
       "type_name": "NodePath"
-    },
-    {
-      "default": null,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "search_value",
-      "type": 0,
-      "type_name": "type_0"
     },
     {
       "default": 0,
@@ -2554,6 +2644,51 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "blend_variable",
       "type": 4,
       "type_name": "String"
@@ -2593,6 +2728,15 @@
       "name": "target_node_path",
       "type": 22,
       "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -2779,7 +2923,43 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "target_node",
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2787,6 +2967,78 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "camera_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "camera_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "camera_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "camera_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "camera_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_camera",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Camera2D",
       "is_nested_instructions": false,
       "name": "camera_node",
       "type": 22,
@@ -2821,6 +3073,60 @@
     }
   ],
   "CameraShake": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -3951,15 +4257,6 @@
       "name": "start_time_variable",
       "type": 4,
       "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "variable_scope",
-      "type": 2,
-      "type_name": "int"
     },
     {
       "default": 0,
@@ -5157,15 +5454,6 @@
       "name": "health_variable",
       "type": 4,
       "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "variable_scope",
-      "type": 2,
-      "type_name": "int"
     },
     {
       "default": 0,
@@ -6753,24 +7041,6 @@
       "name": "node_target_node_path",
       "type": 22,
       "type_name": "NodePath"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "property_name",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": null,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "property_value",
-      "type": 0,
-      "type_name": "type_0"
     },
     {
       "default": 0,
@@ -8413,24 +8683,6 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "value_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "save_to_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
@@ -8552,15 +8804,6 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "variable_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
@@ -8673,15 +8916,6 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "variable_name",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
       "name": "custom_scope_id",
       "type": 4,
       "type_name": "String"
@@ -8788,6 +9022,60 @@
   ],
   "ContinueLoop": [],
   "ControlParticles": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -9783,15 +10071,6 @@
       "type_name": "NodePath"
     },
     {
-      "default": null,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "key_value",
-      "type": 0,
-      "type_name": "type_0"
-    },
-    {
       "default": "",
       "hint": 0,
       "hint_string": "",
@@ -9835,15 +10114,6 @@
       "name": "operand_target_node_path",
       "type": 22,
       "type_name": "NodePath"
-    },
-    {
-      "default": 1.0,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "operand",
-      "type": 3,
-      "type_name": "float"
     },
     {
       "default": "",
@@ -9965,15 +10235,6 @@
       "type_name": "NodePath"
     },
     {
-      "default": true,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "overwrite_existing",
-      "type": 1,
-      "type_name": "bool"
-    },
-    {
       "default": "",
       "hint": 0,
       "hint_string": "",
@@ -10093,15 +10354,6 @@
       "type_name": "NodePath"
     },
     {
-      "default": null,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "key_value",
-      "type": 0,
-      "type_name": "type_0"
-    },
-    {
       "default": "",
       "hint": 0,
       "hint_string": "",
@@ -10145,15 +10397,6 @@
       "name": "amount_target_node_path",
       "type": 22,
       "type_name": "NodePath"
-    },
-    {
-      "default": 0.0,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "amount",
-      "type": 3,
-      "type_name": "float"
     },
     {
       "default": "",
@@ -10948,6 +11191,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -10974,6 +11271,60 @@
   "EnableDisableCollision": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "CollisionShape2D,CollisionShape3D,CollisionPolygon2D,CollisionPolygon3D,Area2D,Area3D",
       "is_nested_instructions": false,
@@ -10996,6 +11347,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -11462,15 +11867,6 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "index_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "index_scope_source",
@@ -11646,7 +12042,7 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "use_variable",
+      "name": "use_variable_for_target",
       "type": 1,
       "type_name": "bool"
     },
@@ -11765,7 +12161,7 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "use_variable",
+      "name": "use_variable_for_target",
       "type": 1,
       "type_name": "bool"
     },
@@ -11821,6 +12217,51 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "index_variable",
       "type": 4,
       "type_name": "String"
@@ -11860,6 +12301,15 @@
       "name": "scope_target_node_path",
       "type": 22,
       "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -11918,6 +12368,51 @@
   ],
   "GetChildCount": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": 0,
       "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
@@ -11943,6 +12438,15 @@
       "name": "scope_target_node_path",
       "type": 22,
       "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -12086,6 +12590,51 @@
   ],
   "GetLastChild": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": 0,
       "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
@@ -12111,6 +12660,15 @@
       "name": "scope_target_node_path",
       "type": 22,
       "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -12149,15 +12707,42 @@
       "type_name": "int"
     }
   ],
-  "GetNodesInGroup": [
+  "GetNode": [
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
     {
       "default": "",
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "group_name",
+      "name": "custom_scope_id",
       "type": 4,
       "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "node_path",
+      "type": 22,
+      "type_name": "NodePath"
     },
     {
       "default": "",
@@ -12171,12 +12756,14 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
+      "hint_string": "Local,Scope,Global",
       "is_nested_instructions": false,
       "name": "result_scope",
       "type": 2,
       "type_name": "int"
-    },
+    }
+  ],
+  "GetNodesInGroup": [
     {
       "default": 0,
       "hint": 2,
@@ -12353,6 +12940,51 @@
   ],
   "GetRandomChild": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": 0,
       "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
@@ -12378,6 +13010,15 @@
       "name": "scope_target_node_path",
       "type": 22,
       "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -12629,15 +13270,6 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "save_to_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
@@ -12767,6 +13399,60 @@
     }
   ],
   "GroundSnap": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -13039,42 +13725,6 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "from_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "to_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "weight_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "save_to_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
@@ -13277,15 +13927,6 @@
       "name": "look_at_node",
       "type": 22,
       "type_name": "NodePath"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "position_scope",
-      "type": 2,
-      "type_name": "int"
     },
     {
       "default": "(0.0, 1.0, 0.0)",
@@ -13624,6 +14265,51 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "offset_variable",
       "type": 4,
       "type_name": "String"
@@ -13654,6 +14340,15 @@
       "name": "target_node_path",
       "type": 22,
       "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -14784,15 +15479,6 @@
   ],
   "OnInputAction": [
     {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Just Pressed:0,Just Released:1,Hold:2,Pressed Or Released:3",
-      "is_nested_instructions": false,
-      "name": "trigger_mode",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
       "default": "",
       "hint": 2,
       "hint_string": "Down,Jump,Left,Right,Up",
@@ -14820,15 +15506,6 @@
       "name": "trigger_rate",
       "type": 2,
       "type_name": "int"
-    },
-    {
-      "default": false,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "trigger_on_zero",
-      "type": 1,
-      "type_name": "bool"
     },
     {
       "default": "",
@@ -15261,24 +15938,6 @@
   ],
   "OnMouseButton": [
     {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Left:0,Right:1,Middle:2,Wheel Up:3,Wheel Down:4",
-      "is_nested_instructions": false,
-      "name": "mouse_button",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Pressed:0,Released:1,Double Clicked:2",
-      "is_nested_instructions": false,
-      "name": "trigger_mode",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
       "default": false,
       "hint": 0,
       "hint_string": "",
@@ -15356,15 +16015,6 @@
     }
   ],
   "OnMouseMove": [
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Continuous:0,On Threshold:1",
-      "is_nested_instructions": false,
-      "name": "trigger_mode",
-      "type": 2,
-      "type_name": "int"
-    },
     {
       "default": 10.0,
       "hint": 0,
@@ -16004,7 +16654,44 @@
       "type_name": "int"
     }
   ],
-  "OnTargetSignalEmit": [],
+  "OnTargetSignalEmit": [
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 20,
+      "hint_string": "FUSE_EVENT_TARGET_SIGNAL_PLACEHOLDER_SELECT_NODE",
+      "is_nested_instructions": false,
+      "name": "target_signal",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "trigger_once",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "filter_signal_args",
+      "type": 1,
+      "type_name": "bool"
+    }
+  ],
   "OnTextChanged": [
     {
       "default": "",
@@ -16414,6 +17101,60 @@
       "type_name": "NodePath"
     },
     {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": "Master",
       "hint": 0,
       "hint_string": "",
@@ -16450,11 +17191,65 @@
       "type_name": "int"
     },
     {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
       "default": "",
       "hint": 26,
       "hint_string": "AudioStreamPlayer,AudioStreamPlayer2D,AudioStreamPlayer3D",
       "is_nested_instructions": false,
       "name": "target_player",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
       "type": 22,
       "type_name": "NodePath"
     },
@@ -16478,6 +17273,60 @@
     }
   ],
   "PlayAnimation": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -16785,7 +17634,7 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "target_node_variable",
+      "name": "target_variable",
       "type": 4,
       "type_name": "String"
     },
@@ -16794,7 +17643,7 @@
       "hint": 2,
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
-      "name": "target_node_scope",
+      "name": "target_scope",
       "type": 2,
       "type_name": "int"
     },
@@ -16803,7 +17652,7 @@
       "hint": 2,
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
-      "name": "target_node_scope_source",
+      "name": "target_scope_source",
       "type": 2,
       "type_name": "int"
     },
@@ -16812,7 +17661,7 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "target_node_custom_scope_id",
+      "name": "target_custom_scope_id",
       "type": 4,
       "type_name": "String"
     },
@@ -16821,18 +17670,18 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "target_node_target_node_path",
+      "name": "target_target_node_path",
       "type": 22,
       "type_name": "NodePath"
     },
     {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Direct,Variable",
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
       "is_nested_instructions": false,
-      "name": "node_source",
-      "type": 2,
-      "type_name": "int"
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -16855,15 +17704,6 @@
   ],
   "Quit": [],
   "RandomNumber": [
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "save_to_scope",
-      "type": 2,
-      "type_name": "int"
-    },
     {
       "default": 0,
       "hint": 2,
@@ -17174,6 +18014,51 @@
   ],
   "RotateBy": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": "(0.0, 0.0, 0.0)",
       "hint": 0,
       "hint_string": "",
@@ -17183,13 +18068,13 @@
       "type_name": "Vector3"
     },
     {
-      "default": 1,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
       "is_nested_instructions": false,
-      "name": "rotation_scope",
-      "type": 2,
-      "type_name": "int"
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -17504,6 +18389,60 @@
   "SetAnimationBlendPosition": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "AnimationTree",
       "is_nested_instructions": false,
@@ -17542,6 +18481,60 @@
   "SetAnimationSpeed": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "AnimationPlayer",
       "is_nested_instructions": false,
@@ -17560,6 +18553,51 @@
     }
   ],
   "SetAnimationTreeParameter": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
     {
       "default": 0,
       "hint": 0,
@@ -17586,6 +18624,15 @@
       "name": "string_value",
       "type": 4,
       "type_name": "String"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -17626,6 +18673,51 @@
   ],
   "SetAudioVolume": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": "Master",
       "hint": 0,
       "hint_string": "",
@@ -17662,11 +18754,65 @@
       "type_name": "int"
     },
     {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
       "default": "",
       "hint": 26,
       "hint_string": "AudioStreamPlayer,AudioStreamPlayer2D,AudioStreamPlayer3D",
       "is_nested_instructions": false,
       "name": "target_player",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
       "type": 22,
       "type_name": "NodePath"
     },
@@ -17719,6 +18865,60 @@
   "SetCameraLimit": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "Camera2D",
       "is_nested_instructions": false,
@@ -17745,7 +18945,189 @@
       "type_name": "int"
     }
   ],
+  "SetCameraLimitFromArea2D": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "camera_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "camera_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "camera_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "camera_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "camera_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "bounds_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "bounds_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "bounds_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "bounds_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "bounds_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_camera",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Camera2D",
+      "is_nested_instructions": false,
+      "name": "camera_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_bounds",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Area2D",
+      "is_nested_instructions": false,
+      "name": "bounds_area",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 1,
+      "hint_string": "-1000,1000,1",
+      "is_nested_instructions": false,
+      "name": "margin",
+      "type": 2,
+      "type_name": "int"
+    }
+  ],
   "SetCameraZoom": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
     {
       "default": "",
       "hint": 0,
@@ -17792,6 +19174,15 @@
       "type_name": "NodePath"
     },
     {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
       "default": "",
       "hint": 26,
       "hint_string": "Camera2D",
@@ -17829,6 +19220,60 @@
     }
   ],
   "SetCollisionLayer": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -17878,6 +19323,60 @@
   "SetCollisionMask": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "Area2D,Area3D,RigidBody2D,RigidBody3D,CharacterBody2D,CharacterBody3D",
       "is_nested_instructions": false,
@@ -17897,6 +19396,51 @@
   ],
   "SetGlobalPosition": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": "(0.0, 0.0, 0.0)",
       "hint": 0,
       "hint_string": "",
@@ -17904,6 +19448,15 @@
       "name": "position_3d",
       "type": 9,
       "type_name": "Vector3"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -17935,6 +19488,51 @@
   ],
   "SetGravityDirection": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": 0.0,
       "hint": 0,
       "hint_string": "",
@@ -17942,6 +19540,15 @@
       "name": "direction_z",
       "type": 3,
       "type_name": "float"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -17981,6 +19588,60 @@
     }
   ],
   "SetGravityScale": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -18113,6 +19774,60 @@
   "SetLight": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "Light2D,Light3D",
       "is_nested_instructions": false,
@@ -18149,6 +19864,51 @@
     }
   ],
   "SetMaterialProperty": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
     {
       "default": "(1.0, 1.0, 1.0, 1.0)",
       "hint": 0,
@@ -18193,6 +19953,15 @@
       "name": "int_value",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -18246,6 +20015,51 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "position_variable",
       "type": 4,
       "type_name": "String"
@@ -18258,6 +20072,15 @@
       "name": "position_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -18315,6 +20138,60 @@
     }
   ],
   "SetProcessMode": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -18437,13 +20314,58 @@
   ],
   "SetRotation": [
     {
-      "default": 1,
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
       "hint": 2,
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
-      "name": "rotation_scope",
+      "name": "target_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -18488,6 +20410,51 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "scale_variable",
       "type": 4,
       "type_name": "String"
@@ -18500,6 +20467,15 @@
       "name": "scale_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -18597,6 +20573,60 @@
   "SetSpriteFlip": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "Sprite2D,AnimatedSprite2D",
       "is_nested_instructions": false,
@@ -18633,6 +20663,60 @@
     }
   ],
   "SetSpriteFrame": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -18678,9 +20762,63 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "color_variable",
       "type": 4,
       "type_name": "String"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
     },
     {
       "default": "",
@@ -18721,11 +20859,29 @@
   ],
   "SetUIProgress": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
       "default": 0,
       "hint": 2,
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
-      "name": "value_scope",
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
       "type": 2,
       "type_name": "int"
     },
@@ -18733,6 +20889,33 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Control",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -18758,6 +20941,51 @@
     }
   ],
   "SetUIText": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
     {
       "default": "",
       "hint": 0,
@@ -18804,6 +21032,15 @@
       "type_name": "NodePath"
     },
     {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
       "default": "",
       "hint": 26,
       "hint_string": "Label,RichTextLabel",
@@ -18832,6 +21069,51 @@
     }
   ],
   "SetUITexture": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
     {
       "default": 0,
       "hint": 2,
@@ -18869,9 +21151,18 @@
       "type_name": "NodePath"
     },
     {
-      "default": "",
+      "default": false,
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Control",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -18964,6 +21255,60 @@
   "SetVelocity": [
     {
       "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
       "hint": 26,
       "hint_string": "CharacterBody2D,CharacterBody3D,RigidBody2D,RigidBody3D",
       "is_nested_instructions": false,
@@ -18999,7 +21344,101 @@
       "type_name": "bool"
     }
   ],
+  "SetViewportSize": [
+    {
+      "default": 1280,
+      "hint": 1,
+      "hint_string": "1,7680,1",
+      "is_nested_instructions": false,
+      "name": "width",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 720,
+      "hint": 1,
+      "hint_string": "1,4320,1",
+      "is_nested_instructions": false,
+      "name": "height",
+      "type": 2,
+      "type_name": "int"
+    }
+  ],
+  "SetWindowSize": [
+    {
+      "default": 1280,
+      "hint": 1,
+      "hint_string": "1,7680,1",
+      "is_nested_instructions": false,
+      "name": "width",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 720,
+      "hint": 1,
+      "hint_string": "1,4320,1",
+      "is_nested_instructions": false,
+      "name": "height",
+      "type": 2,
+      "type_name": "int"
+    }
+  ],
   "SetZIndex": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -19034,6 +21473,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Control",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19049,6 +21542,60 @@
     }
   ],
   "StopAnimation": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -19445,6 +21992,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19482,6 +22083,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -19529,6 +22184,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -19586,6 +22295,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19632,6 +22395,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Node3D",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -19689,6 +22506,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19699,6 +22570,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -19724,6 +22649,60 @@
     }
   ],
   "TweenPropertyInstruction": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
     {
       "default": "",
       "hint": 26,
@@ -19803,6 +22782,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19850,6 +22883,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19860,6 +22947,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Node3D",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -19917,6 +23058,60 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Node3D",
+      "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
       "type_name": "NodePath"
@@ -19963,6 +23158,60 @@
       "default": "",
       "hint": 0,
       "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node2D,Control",
       "is_nested_instructions": false,
       "name": "target_node",
       "type": 22,
@@ -20605,15 +23854,6 @@
       "hint_string": "Synchronous:0,Asynchronous:1",
       "is_nested_instructions": false,
       "name": "sequence_mode",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local:0,Scope:1,Global:2",
-      "is_nested_instructions": false,
-      "name": "variable_scope",
       "type": 2,
       "type_name": "int"
     },

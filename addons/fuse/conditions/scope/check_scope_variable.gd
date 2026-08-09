@@ -114,6 +114,15 @@ func _validate_property(property: Dictionary) -> void:
 func _setup_metadata():
 	pass
 
+static func _get_condition_metadata() -> ConditionMetadata:
+	var metadata = ConditionMetadata.new()
+	metadata.name_key = "FUSE_CONDITION_CHECK_SCOPE_VARIABLE"
+	metadata.category_key = "FUSE_CATEGORY_SCOPE_VARIABLES"
+	metadata.description_key = "FUSE_CONDITION_CHECK_SCOPE_VARIABLE_DESC"
+	metadata.keywords = ["作用域", "变量", "检查", "比较", "scope", "variable", "check", "compare", "条件", "condition"]
+	metadata.builtin_icon = "LocalVariable"
+	return metadata
+
 func _update_resource_name():
 	var operator_name = ComparisonOperator.keys()[comparison_operator]
 	var scope_str = _get_scope_source_string()
