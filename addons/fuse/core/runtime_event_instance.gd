@@ -105,7 +105,11 @@ func _on_event_triggered(context: Node):
 	# 🔧 检查 Trigger 是否匹配
 	# 只有当事件来自对应的 Trigger 时才转发
 	# 这解决了多个 Trigger 共享同一个 Event 资源时的信号干扰问题
-	if context and context.has_meta("trigger"):
+	# 修复：owner_trigger 可能已被释放（例如切换场景），先校验有效性。
+	if owner_trigger == null or not is_instance_valid(owner_trigger):
+		return
+
+	if context and is_instance_valid(context) and context.has_meta("trigger"):
 		var event_trigger = context.get_meta("trigger")
 		if event_trigger != owner_trigger:
 			# 不是我们触发器的事件，忽略
