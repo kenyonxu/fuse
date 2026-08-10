@@ -22,7 +22,7 @@ var _folder_path: String = "res://addons/fuse/presets/"
 func _init(source: Variant) -> void:
 	title = "导出为预设"
 	ok_button_text = "导出"
-	min_size = Vector2i(800, 0)
+	min_size = Vector2i(840, 520)
 	if source is Node:
 		_source_node = source
 		_level = FusePresetSerializer.detect_level(source)
@@ -69,10 +69,17 @@ func _extract_instructions_from_data() -> Array[BaseInstruction]:
 
 
 func _build_ui() -> void:
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.custom_minimum_size = Vector2(840, 520)
+	add_child(scroll)
+
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(grid)
+	grid.custom_minimum_size = Vector2(800, 0)
+	scroll.add_child(grid)
 
 	# Level 标签
 	grid.add_child(_make_label("层级:"))
