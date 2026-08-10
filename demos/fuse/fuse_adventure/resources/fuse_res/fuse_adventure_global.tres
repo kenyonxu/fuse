@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="GlobalVariableResource" format=3]
+[gd_resource type="Resource" script_class="GlobalVariableResource" format=3 uid="uid://b0vgsbn6swsve"]
 
-[ext_resource type="Script" path="res://addons/fuse/core/global_variable_resource.gd" id="1_0t8k8"]
+[ext_resource type="Script" uid="uid://ck5tq1b4f5rl" path="res://addons/fuse/core/global_variable_resource.gd" id="1_0t8k8"]
 
 [resource]
 script = ExtResource("1_0t8k8")
@@ -13,5 +13,5 @@ variables = {
 }
 }
 description = "全局变量存储（仅持久化）"
-created_time = 0.742
-last_modified = 0.742
+created_time = 9.375
+last_modified = 9.375

@@ -6,50 +6,50 @@
   "description": "NextLevel 按钮按 current_level 域变量分派：1→level_02，否则→level_01（两关循环）",
   "icon_name": "",
   "event": {
-    "type": "OnButtonPressed",
-    "target_button": ".",
-    "require_enabled": true,
-    "emit_button": true
+	"type": "OnButtonPressed",
+	"target_button": ".",
+	"require_enabled": true,
+	"emit_button": true
   },
   "action_runner": {
-    "execution_mode": 0,
-    "instructions": [
-      {
-        "type": "IfElse",
-        "sequence_mode": 1,
-        "condition": {
-          "type": "CheckScopeVariable",
-          "variable_name": "current_level",
-          "scope_source": 1,
-          "custom_scope_id": "level_scope",
-          "comparison_operator": 0,
-          "expected_value": 1
-        },
-        "true_instructions": [
-          {
-            "type": "ChangeScene",
-            "scene_path": "res://demos/fuse/fuse_adventure/scenes/level_02.tscn",
-            "delay": 0.0
-          }
-        ],
-        "false_instructions": [
-          {
-            "type": "ChangeScene",
-            "scene_path": "res://demos/fuse/fuse_adventure/scenes/level_01.tscn",
-            "delay": 0.0
-          }
-        ]
-      }
-    ]
+	"execution_mode": 0,
+	"instructions": [
+	  {
+		"type": "IfElse",
+		"sequence_mode": 1,
+		"condition": {
+		  "type": "CheckScopeVariable",
+		  "variable_name": "current_level",
+		  "scope_source": 1,
+		  "custom_scope_id": "level_scope",
+		  "comparison_operator": 0,
+		  "expected_value": 1
+		},
+		"true_instructions": [
+		  {
+			"type": "ChangeScene",
+			"scene_path": "res://demos/fuse/fuse_adventure/scenes/level_02.tscn",
+			"delay": 0.0
+		  }
+		],
+		"false_instructions": [
+		  {
+			"type": "ChangeScene",
+			"scene_path": "res://demos/fuse/fuse_adventure/scenes/level_01.tscn",
+			"delay": 0.0
+		  }
+		]
+	  }
+	]
   },
   "variables": {
-    "global": [],
-    "local": [],
-    "scope": ["current_level"]
+	"global": [],
+	"local": [],
+	"scope": ["current_level"]
   },
   "trigger_config": {
-    "trigger_once": false,
-    "cooldown_mode": 0,
-    "cooldown_time": 0.0
+	"trigger_once": false,
+	"cooldown_mode": 0,
+	"cooldown_time": 0.0
   }
 }

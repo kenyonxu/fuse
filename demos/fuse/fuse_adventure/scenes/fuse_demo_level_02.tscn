@@ -22,6 +22,7 @@
 [ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="17_6kde4"]
 [ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="18_ehdw3"]
 [ext_resource type="PackedScene" uid="uid://drf83gp3l1112" path="res://demos/fuse/fuse_adventure/scenes/canvas_layer.tscn" id="21_d4lio"]
+[ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="22_wnpyd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 719)
@@ -219,6 +220,28 @@ script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_3ucjy"), SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_sqapb"), SubResource("Resource_o4ukh"), SubResource("Resource_5a3ub"), SubResource("Resource_cb305"), SubResource("Resource_3vddb"), SubResource("Resource_p1ubp"), SubResource("Resource_mw75f")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
+[sub_resource type="Resource" id="Resource_pf1ym"]
+resource_name = "预加载场景 'title_scene.tscn' (等待完成)"
+script = ExtResource("22_wnpyd")
+scene_path = "uid://d1hc0i6nwulkd"
+preload_mode = 0
+timeout = 5.0
+status_variable = "preload_scene_status"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_lj5vm"]
+resource_name = "预加载场景 'fuse_demo_level_01.tscn' (等待完成)"
+script = ExtResource("22_wnpyd")
+scene_path = "uid://cxiwcx0w5nofb"
+preload_mode = 0
+timeout = 5.0
+status_variable = "preload_scene_status"
+
+[sub_resource type="Resource" id="Resource_f8sk5"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_pf1ym"), SubResource("Resource_lj5vm")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [node name="FuseDemoLevel" type="Node" unique_id=1396739659]
 script = ExtResource("1_os8oo")
 scope_id = "level_scope"
@@ -241,10 +264,10 @@ disabled = true
 [node name="PlayerSpawnPoint" type="Node2D" parent="Worlds" unique_id=1244849376 groups=["player_spawn_point"]]
 position = Vector2(0, -119)
 
-[node name="LevelEndPoint" parent="Worlds" unique_id=2027725587 instance=ExtResource("3_kqe04")]
-position = Vector2(2, -304)
-
 [node name="FuseDemoMap" parent="Worlds" unique_id=1630528275 instance=ExtResource("3_os8oo")]
+
+[node name="LevelEndPoint" parent="Worlds/FuseDemoMap" unique_id=2027725587 instance=ExtResource("3_kqe04")]
+position = Vector2(484, -96)
 
 [node name="Platforms" type="Node2D" parent="Worlds" unique_id=1934213410]
 
@@ -267,9 +290,6 @@ position = Vector2(-268, 204)
 
 [node name="Saw4" parent="Worlds/Traps" unique_id=1670102979 instance=ExtResource("4_qe6p4")]
 position = Vector2(-413, 141)
-
-[node name="LevelEndPoint2" parent="Worlds" unique_id=976728178 instance=ExtResource("3_kqe04")]
-position = Vector2(498, -96)
 
 [node name="Collectables" type="Node2D" parent="Worlds" unique_id=1053577137]
 
@@ -304,6 +324,16 @@ script = ExtResource("9_f8sk5")
 event_definition = SubResource("Resource_io55n")
 action_runner = SubResource("Resource_rxgda")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnSceneReady" type="Node" parent="GameManager" unique_id=38929785]
+script = ExtResource("4_d4lio")
+action_runner = SubResource("Resource_f8sk5")
+target_node = NodePath("../..")
+signal_name = "ready"
+action_runner = SubResource("Resource_f8sk5")
+target_node = NodePath("../..")
+signal_name = "ready"
+metadata/_custom_type_script = "uid://parouyd882ij"
 
 [node name="CanvasLayer" parent="." unique_id=746731906 instance=ExtResource("21_d4lio")]
 visible = false

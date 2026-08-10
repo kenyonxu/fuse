@@ -6,86 +6,86 @@
   "description": "终点旗统一触发（8/10 合并版）：current_level==1 无条件过关；否则检查 banana_count==3 才过关（IfElse 条件门 + RunConditionCheck 中断）",
   "icon_name": "",
   "event": {
-    "type": "OnArea2DEnter",
-    "area_node_path": "../Area2D",
-    "target_group": "player",
-    "trigger_once_per_body": true
+	"type": "OnArea2DEnter",
+	"area_node_path": "../Area2D",
+	"target_group": "player",
+	"trigger_once_per_body": true
   },
   "action_runner": {
-    "execution_mode": 0,
-    "instructions": [
-      {
-        "type": "GetNodesInGroup",
-        "group_name": "player",
-        "result_variable": "grp_player",
-        "result_scope": 0
-      },
-      {
-        "type": "ArrayGet",
-        "source_type": 0,
-        "array_variable": "grp_player",
-        "array_scope": 0,
-        "index_value": 0,
-        "target_variable": "player",
-        "target_scope": 0
-      },
-      {
-        "type": "IfElse",
-        "sequence_mode": 1,
-        "condition": {
-          "type": "CheckScopeVariable",
-          "variable_name": "current_level",
-          "scope_source": 1,
-          "custom_scope_id": "level_scope",
-          "comparison_operator": 0,
-          "expected_value": 1
-        },
-        "true_instructions": [],
-        "false_instructions": [
-          {
-            "type": "RunConditionCheck",
-            "condition": {
-              "type": "CheckScopeVariable",
-              "variable_name": "banana_count",
-              "scope_source": 1,
-              "custom_scope_id": "level_scope",
-              "comparison_operator": 0,
-              "expected_value": 3
-            }
-          }
-        ]
-      },
-      {
-        "type": "ShowHideUI",
-        "use_variable_for_target": true,
-        "target_variable": "ui_level_end",
-        "target_scope": 1,
-        "target_scope_source": 1,
-        "target_custom_scope_id": "level_scope",
-        "action": 0
-      },
-      {
-        "type": "SetProcessMode",
-        "use_variable_for_target": true,
-        "target_variable": "player",
-        "process_mode": 4
-      },
-      {
-        "type": "SendEvent",
-        "event_name": "LevelFinished",
-        "event_args": {},
-        "deferred": false
-      }
-    ]
+	"execution_mode": 0,
+	"instructions": [
+	  {
+		"type": "GetNodesInGroup",
+		"group_name": "player",
+		"result_variable": "grp_player",
+		"result_scope": 0
+	  },
+	  {
+		"type": "ArrayGet",
+		"source_type": 0,
+		"array_variable": "grp_player",
+		"array_scope": 0,
+		"index_value": 0,
+		"target_variable": "player",
+		"target_scope": 0
+	  },
+	  {
+		"type": "IfElse",
+		"sequence_mode": 1,
+		"condition": {
+		  "type": "CheckScopeVariable",
+		  "variable_name": "current_level",
+		  "scope_source": 1,
+		  "custom_scope_id": "level_scope",
+		  "comparison_operator": 0,
+		  "expected_value": 1
+		},
+		"true_instructions": [],
+		"false_instructions": [
+		  {
+			"type": "RunConditionCheck",
+			"condition": {
+			  "type": "CheckScopeVariable",
+			  "variable_name": "banana_count",
+			  "scope_source": 1,
+			  "custom_scope_id": "level_scope",
+			  "comparison_operator": 0,
+			  "expected_value": 3
+			}
+		  }
+		]
+	  },
+	  {
+		"type": "ShowHideUI",
+		"use_variable_for_target": true,
+		"target_variable": "ui_level_end",
+		"target_scope": 1,
+		"target_scope_source": 1,
+		"target_custom_scope_id": "level_scope",
+		"action": 0
+	  },
+	  {
+		"type": "SetProcessMode",
+		"use_variable_for_target": true,
+		"target_variable": "player",
+		"process_mode": 4
+	  },
+	  {
+		"type": "SendEvent",
+		"event_name": "LevelFinished",
+		"event_args": {},
+		"deferred": false
+	  }
+	]
   },
   "variables": {
-    "global": [],
-    "local": ["grp_player", "player"],
-    "scope": ["current_level", "banana_count"]
+	"global": [],
+	"local": ["grp_player", "player"],
+	"scope": ["current_level", "banana_count"]
   },
   "trigger_config": {
-    "trigger_once": true,
-    "cooldown_mode": 0,
-    "cooldown_time": 1.0
+	"trigger_once": true,
+	"cooldown_mode": 0,
+	"cooldown_time": 1.0
   }
 }
