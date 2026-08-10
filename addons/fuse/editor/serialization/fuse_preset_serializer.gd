@@ -164,44 +164,11 @@ static func serialize_binding(binding: EventBinding) -> Dictionary:
 # ---- 底层序列化 ----
 
 static func _serialize_instructions(instructions: Array[BaseInstruction]) -> Array:
-	var result: Array = []
-	for inst in instructions:
-		var script = inst.get_script()
-		var entry := {"type": script.get_global_name() if script else inst.get_class()}
-		for prop in inst.get_property_list():
-			var pname: String = prop.name
-			if pname.begins_with("_") or (prop.usage & PROPERTY_USAGE_STORAGE) == 0:
-				continue
-			if pname in _BASE_PROPERTIES:
-				continue
-			var val = inst.get(pname)
-			if val is NodePath:
-				entry[pname] = str(val)
-			elif val is Resource and val.resource_path != "":
-				entry[pname] = val.resource_path
-			elif not (val is Resource):
-				entry[pname] = val
-		result.append(entry)
-	return result
+	return PresetValueCodec.serialize_instructions(instructions)
 
 
 static func _serialize_resource_properties(res: Resource) -> Dictionary:
-	var script = res.get_script()
-	var entry := {"type": script.get_global_name() if script else res.get_class()}
-	for prop in res.get_property_list():
-		var pname: String = prop.name
-		if pname.begins_with("_") or (prop.usage & PROPERTY_USAGE_STORAGE) == 0:
-			continue
-		if pname in _BASE_PROPERTIES:
-			continue
-		var val = res.get(pname)
-		if val is NodePath:
-			entry[pname] = str(val)
-		elif val is Resource and val.resource_path != "":
-			entry[pname] = val.resource_path
-		elif not (val is Resource):
-			entry[pname] = val
-	return entry
+	return PresetValueCodec._serialize_resource(res)
 
 
 # ---- 变量收集 ----
