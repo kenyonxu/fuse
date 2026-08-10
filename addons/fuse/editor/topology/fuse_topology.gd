@@ -191,7 +191,11 @@ func _restore_selection(key: String) -> void:
 		return
 	var trigger_item := root.get_first_child()
 	while trigger_item != null:
-		var trigger_name: String = trigger_item.get_metadata(0).get("report", {}).get("trigger_name", "")
+		var meta: Variant = trigger_item.get_metadata(0)
+		if meta == null or not meta is Dictionary:
+			trigger_item = trigger_item.get_next()
+			continue
+		var trigger_name: String = meta.get("report", {}).get("trigger_name", "")
 		if type == "trigger" and info == trigger_name:
 			trigger_item.select(0)
 			_on_item_selected()
