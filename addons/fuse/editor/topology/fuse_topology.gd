@@ -1005,7 +1005,17 @@ func _on_export_problems() -> void:
 			_detail.append_text("\n[color=red]无法创建目录 '%s' (错误码 %d)[/color]" % [report_dir, err])
 			return
 
-	var lines := ["Fuse 问题报告 %s" % Time.get_time_string_from_system(), "=".repeat(50), ""]
+	var lines := ["Fuse 问题报告 %s" % Time.get_time_string_from_system(), "=".repeat(50)]
+
+	var scene_path := ""
+	if ClassDB.class_exists("EditorInterface"):
+		var scene_root := EditorInterface.get_edited_scene_root()
+		if scene_root != null:
+			scene_path = scene_root.scene_file_path
+	if not scene_path.is_empty():
+		lines.append("场景: %s" % scene_path)
+	lines.append("")
+
 	var total_err := 0
 	var total_warn := 0
 	var total_suggest := 0
