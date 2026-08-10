@@ -31,6 +31,8 @@ func _get_property_list() -> Array[Dictionary]:
 ## 预设层级: "L1"|"L2"|"L3"|"L4"
 @export var level: String = "L1"
 
+const _PRESET_VALUE_CODEC := preload("res://addons/fuse/core/serialization/preset_value_codec.gd")
+
 ## L2/L4: BaseEvent 的序列化数据
 @export var event_json: Dictionary = {}
 
@@ -86,7 +88,7 @@ func to_json() -> Dictionary:
 
 
 func _serialize_instructions() -> Array:
-	return PresetValueCodec.serialize_instructions(instructions)
+	return _PRESET_VALUE_CODEC.serialize_instructions(instructions)
 
 
 # ---- 反序列化 ----
@@ -104,7 +106,7 @@ static func from_json(data: Dictionary) -> FusePreset:
 	var ar_data: Dictionary = data.get("action_runner", {})
 	match preset.level:
 		"L1", "L2", "L3":
-			preset.instructions = PresetValueCodec.deserialize_instructions(ar_data.get("instructions", []))
+			preset.instructions = _PRESET_VALUE_CODEC.deserialize_instructions(ar_data.get("instructions", []))
 		"L4":
 			pass
 
