@@ -992,11 +992,19 @@ func _find_problems_for_inst(inst, report: Dictionary) -> Array:
 	return by_inst.get(inst.get_instance_id(), [])
 
 
-## 导出全场景问题报告到 user://fuse_problems_report_*.txt
+## 导出全场景问题报告到 res://fuse_reports/fuse_problems_report_*.txt
 func _on_export_problems() -> void:
 	if _last_topology.is_empty():
 		_detail.append_text("\n[color=yellow]无分析数据，先刷新[/color]")
 		return
+
+	var report_dir := "res://fuse_reports"
+	if not DirAccess.dir_exists_absolute(report_dir):
+		var err := DirAccess.make_dir_recursive_absolute(report_dir)
+		if err != OK:
+			_detail.append_text("\n[color=red]无法创建目录 '%s' (错误码 %d)[/color]" % [report_dir, err])
+			return
+
 	var lines := ["Fuse 问题报告 %s" % Time.get_time_string_from_system(), "=".repeat(50), ""]
 	var total_err := 0
 	var total_warn := 0
@@ -1009,7 +1017,7 @@ func _on_export_problems() -> void:
 		total_warn += s.get("warnings", 0)
 	lines.append("")
 	lines.append("合计: %d 错误, %d 警告" % [total_err, total_warn])
-	var path := "user://fuse_problems_report_%s.txt" % Time.get_time_string_from_system().replace(":", "-")
+	var path := "%s/fuse_problems_report_%s.txt" % [report_dir, Time.get_time_string_from_system().replace(":", "-")]
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f:
 		f.store_string("\n".join(lines))
