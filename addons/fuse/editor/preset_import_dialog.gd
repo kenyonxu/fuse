@@ -13,12 +13,20 @@ func _init(preset: FusePreset) -> void:
 	_preset = preset
 	title = "应用预设: %s [%s]" % [preset.display_name, preset.level]
 	ok_button_text = "创建节点"
+	min_size = Vector2i(760, 480)
 	confirmed.connect(_on_create_node)
 	_build_ui()
 
 func _build_ui() -> void:
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.custom_minimum_size = Vector2(760, 480)
+	add_child(scroll)
+
 	var vbox := VBoxContainer.new()
-	add_child(vbox)
+	vbox.custom_minimum_size = Vector2(720, 0)
+	scroll.add_child(vbox)
 
 	# Level 信息
 	var level_label := Label.new()

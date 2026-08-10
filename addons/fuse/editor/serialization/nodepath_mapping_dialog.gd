@@ -20,13 +20,20 @@ func _init(p_mapping: Dictionary, p_target: Node) -> void:
 	_target_node = p_target
 	title = "NodePath 映射"
 	ok_button_text = "确认导入"
+	min_size = Vector2i(760, 480)
 	_build_ui()
 
 
 func _build_ui() -> void:
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.custom_minimum_size = Vector2(760, 480)
+	add_child(scroll)
+
 	var vbox := VBoxContainer.new()
-	vbox.custom_minimum_size = Vector2(520, 0)
-	add_child(vbox)
+	vbox.custom_minimum_size = Vector2(720, 0)
+	scroll.add_child(vbox)
 
 	# 说明
 	var header := Label.new()

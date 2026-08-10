@@ -1457,5 +1457,7 @@
   "1455": "_execute_next_iteration_runtime(runtime_instance)",
   "1456": "性能优化",
   "1457": "_apply_blend_mode(raw_value, context)",
-  "1458": "CC0 1.0 Universal (CC0 1.0)"
+  "1458": "CC0 1.0 Universal (CC0 1.0)",
+  "1459": "4.2 冷却检查",
+  "1460": "4.6 池化支持"
 }
