@@ -20,6 +20,7 @@ func _ready() -> void:
 	_test_condition_read_undefined()
 	_test_condition_read_defined()
 	_test_condition_read_scope_not_undefined()
+	_test_condition_scope_source_not_undefined()
 	_test_condition_does_not_define()
 	# E7: predefined_locals 白名单（事件提供的 local 变量）
 	_test_predefined_locals_empty_still_reports()
@@ -101,6 +102,14 @@ class MockInst extends Resource:
 class MockCondition extends Resource:
 	@export var variable_name: String = ""
 	@export var variable_scope: int = 0
+
+
+## 最小 mock 条件（scope_source 枚举版）：模拟 CheckScopeVariable / CompareVariable
+## 这类组件没有 *_scope 属性，只用 scope_source + custom_scope_id
+class MockScopeCondition extends Resource:
+	@export var variable_name: String = ""
+	@export var scope_source: int = 0
+	@export var custom_scope_id: String = ""
 
 
 ## 构造伪指令：target_variable（write）+ from_variable（read）+ value_variable（read_write）
@@ -188,6 +197,20 @@ func _test_condition_read_scope_not_undefined() -> void:
 	var r := InstructionAnalyzer.analyze_problems([inst])
 	_check(r.valid == true, "scope 变量不报未声明 valid=true")
 	_check(r.problems.is_empty(), "0 problem（scope 不在 local 未声明检测范围）")
+
+
+## E8: 条件使用 scope_source 枚举（无 variable_scope 属性）也应视为 scope 变量
+func _test_condition_scope_source_not_undefined() -> void:
+	print("\n--- 条件读 scope 变量（scope_source=1，无 variable_scope）→ 不报未声明 ---")
+	var cond := MockScopeCondition.new()
+	cond.variable_name = "current_level"
+	cond.scope_source = 1    # SCOPE source，模拟 CheckScopeVariable
+	cond.custom_scope_id = "level_scope"
+	var inst := _make_inst("", "", "")
+	inst.condition = cond
+	var r := InstructionAnalyzer.analyze_problems([inst])
+	_check(r.valid == true, "scope_source=1 条件不报未声明 valid=true")
+	_check(r.problems.is_empty(), "0 problem（scope_source 组件视为 SCOPE）")
 
 
 func _test_condition_does_not_define() -> void:

@@ -44,6 +44,9 @@ third_party_resources/*
 test_*.log
 test_*.txt
 
+# Fuse topology problem reports (auto-generated)
+fuse_reports/
+
 # Graphify - local state (machine-specific, not meaningful to share)
 graphify-out/cache/
 graphify-out/.graphify_python

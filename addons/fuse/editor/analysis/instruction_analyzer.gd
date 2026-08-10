@@ -243,6 +243,10 @@ static func _extract_variables(inst, report: Dictionary) -> void:
 			scope_val = inst.get(pname.substr(0, pname.length() - 5) + "_scope")
 		if scope_val == null and pname.ends_with("_variable"):
 			scope_val = inst.get(pname.substr(0, pname.length() - 9) + "_scope")
+		# 回退：部分组件（如 CheckScopeVariable / CompareVariable）用 scope_source 枚举
+		# 而不是 *_scope 属性，这类组件的变量统一视为 SCOPE 变量。
+		if scope_val == null and "scope_source" in inst:
+			scope_val = BaseVariable.VariableScope.SCOPE
 		var scope: int = 0
 		if scope_val != null:
 			scope = int(scope_val)
