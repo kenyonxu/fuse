@@ -50,7 +50,7 @@ static func serialize_l2(trigger: Trigger) -> Dictionary:
 	return {
 		"level": "L2",
 		"action_runner": {
-			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else ExecutionMode.SEQUENTIAL,
+			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else ActionRunner.ExecutionMode.SEQUENTIAL,
 			"instructions": _serialize_instructions(
 				trigger.action_runner.instructions if trigger.action_runner else []
 			)
