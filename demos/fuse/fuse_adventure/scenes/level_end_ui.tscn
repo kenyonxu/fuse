@@ -1,6 +1,14 @@
 [gd_scene format=3 uid="uid://j5c0denjtf2x"]
 
 [ext_resource type="PackedScene" uid="uid://8t04qxutobxm" path="res://demos/fuse/fuse_demo_common/btn_title_option.tscn" id="1_ewarr"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_fcejv"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="2_ho7ck"]
+[ext_resource type="Script" uid="uid://cblgw6vvkfvam" path="res://addons/fuse/events/ui/on_button_pressed.gd" id="3_ho7ck"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_864qw"]
+[ext_resource type="Script" uid="uid://d8mtbpkgixln" path="res://addons/fuse/conditions/scope/check_scope_variable.gd" id="5_c2tox"]
+[ext_resource type="Script" uid="uid://koqcwgwlg15a" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="6_eb7mr"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_aulto"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_xqnt3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgjoy"]
 bg_color = Color(0.6, 0.6, 0.6, 0.14117648)
@@ -8,6 +16,53 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="Resource" id="Resource_864qw"]
+resource_name = "切换场景 'title_scene.tscn'"
+script = ExtResource("6_eb7mr")
+scene_path = "uid://d1hc0i6nwulkd"
+delay = 0.0
+
+[sub_resource type="Resource" id="Resource_rxgda"]
+script = ExtResource("8_xqnt3")
+instructions = Array[ExtResource("4_864qw")]([SubResource("Resource_864qw")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_pj8pp"]
+resource_name = "按钮按下: ..(要求可用)"
+script = ExtResource("3_ho7ck")
+target_button = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_bf6gi"]
+resource_name = "检查作用域变量 [ID:level_scope] 'current_level' EQUALS 1.0"
+script = ExtResource("5_c2tox")
+variable_name = "current_level"
+scope_source = 1
+expected_value = 1.0
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_amomb"]
+resource_name = "切换场景 'level_01.tscn'"
+script = ExtResource("6_eb7mr")
+scene_path = "res://demos/fuse/fuse_adventure/scenes/level_01.tscn"
+delay = 0.0
+
+[sub_resource type="Resource" id="Resource_cqyy6"]
+resource_name = "切换场景 'level_02.tscn'"
+script = ExtResource("6_eb7mr")
+scene_path = "res://demos/fuse/fuse_adventure/scenes/level_02.tscn"
+delay = 0.0
+
+[sub_resource type="Resource" id="Resource_fvxts"]
+resource_name = "If/Else 检查作用域变量 [ID:level_scope] 'current_level' EQUALS 1.0 [真:1 [异步]"
+script = ExtResource("7_aulto")
+condition = SubResource("Resource_bf6gi")
+true_instructions = Array[ExtResource("4_864qw")]([SubResource("Resource_cqyy6")])
+false_instructions = Array[ExtResource("4_864qw")]([SubResource("Resource_amomb")])
+
+[sub_resource type="Resource" id="Resource_245we"]
+script = ExtResource("8_xqnt3")
+instructions = Array[ExtResource("4_864qw")]([SubResource("Resource_fvxts")])
 
 [node name="LevelEndUI" type="Control" unique_id=328373904]
 layout_mode = 3
@@ -77,6 +132,20 @@ alignment = 1
 layout_mode = 2
 text = "Return To Title"
 
+[node name="Runner" type="Node" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/ReturnToTitle" unique_id=2048170962]
+script = ExtResource("2_ho7ck")
+action_runner = SubResource("Resource_rxgda")
+target_node = NodePath("..")
+signal_name = "pressed"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
 [node name="NextLevel" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=854124636 instance=ExtResource("1_ewarr")]
 layout_mode = 2
 text = "Next Level"
+
+[node name="ChangeNextScene" type="Node" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/NextLevel" unique_id=1755621500]
+script = ExtResource("2_fcejv")
+event_definition = SubResource("Resource_pj8pp")
+action_runner = SubResource("Resource_245we")
+cooldown_time = 0.0
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

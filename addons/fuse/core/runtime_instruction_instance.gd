@@ -149,9 +149,14 @@ func execute_sync() -> bool:
 
 		result = instruction.execute_with_runtime_instance(self)
 
+		# 修复：切换场景等操作会立即释放旧场景及其指令资源。
+		# 如果指令已经自完成、或已被释放，则不再访问它，避免 Nil 崩溃。
+		if _is_completed or instruction == null or not is_instance_valid(instruction):
+			return result
+
 		# 修复：如果指令同步完成了（execute_sync 返回 true），直接完成
 		# 注意：如果信号已经触发，_is_completed 可能已经被设置为 true
-		if result and instruction.is_completed() and not _is_completed:
+		if result and instruction.is_completed():
 			# 断开信号（因为指令已完成但信号回调可能还没执行）
 			if instruction.finished.is_connected(_on_instruction_finished):
 				instruction.finished.disconnect(_on_instruction_finished)
