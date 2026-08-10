@@ -1,0 +1,101 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "level_end_check",
+  "category": "gameplay",
+  "description": "终点旗：香蕉集齐 AND 生命>0 才过关（CheckAll 复合条件），否则发 BananaMissing 事件",
+  "icon_name": "",
+  "event": {
+    "type": "OnArea2DEnter",
+    "area_node_path": "Area2D",
+    "target_group": "player",
+    "trigger_once_per_body": true
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "IfElse",
+        "sequence_mode": 1,
+        "condition": {
+          "type": "CheckAll",
+          "short_circuit": true,
+          "conditions": [
+            {
+              "type": "CheckScopeVariable",
+              "variable_name": "banana_count",
+              "scope_source": 1,
+              "custom_scope_id": "level_scope",
+              "comparison_operator": 0,
+              "expected_value": 3
+            },
+            {
+              "type": "CheckScopeVariable",
+              "variable_name": "life",
+              "scope_source": 1,
+              "custom_scope_id": "player",
+              "comparison_operator": 2,
+              "expected_value": 0
+            }
+          ]
+        },
+        "true_instructions": [
+          {
+            "type": "GetNodesInGroup",
+            "group_name": "player",
+            "result_variable": "grp_player",
+            "result_scope": 0
+          },
+          {
+            "type": "ArrayGet",
+            "source_type": 0,
+            "array_variable": "grp_player",
+            "array_scope": 0,
+            "index_value": 0,
+            "target_variable": "player",
+            "target_scope": 0
+          },
+          {
+            "type": "ShowHideUI",
+            "use_variable_for_target": true,
+            "target_variable": "ui_level_end",
+            "target_scope": 1,
+            "target_scope_source": 1,
+            "target_custom_scope_id": "level_scope",
+            "action": 0
+          },
+          {
+            "type": "SetProcessMode",
+            "use_variable_for_target": true,
+            "target_variable": "player",
+            "process_mode": 4
+          },
+          {
+            "type": "SendEvent",
+            "event_name": "LevelFinished",
+            "event_args": {},
+            "deferred": false
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "SendEvent",
+            "event_name": "BananaMissing",
+            "event_args": {},
+            "deferred": false
+          }
+        ]
+      }
+    ]
+  },
+  "variables": {
+    "global": [],
+    "local": ["grp_player", "player"],
+    "scope": ["banana_count"]
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}
