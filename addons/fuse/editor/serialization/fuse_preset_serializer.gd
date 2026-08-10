@@ -5,9 +5,6 @@ extends RefCounted
 
 ## 序列化管道 — 将 Godot 节点/资源序列化为预设 JSON 结构
 
-const _BASE_PROPERTIES := ["log_level", "completion_timing", "execution_mode",
-	"script", "resource_local_to_scene", "resource_name", "metadata"]
-
 
 # ---- 层级检测 ----
 
@@ -53,7 +50,7 @@ static func serialize_l2(trigger: Trigger) -> Dictionary:
 	return {
 		"level": "L2",
 		"action_runner": {
-			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else 0,
+			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else ExecutionMode.SEQUENTIAL,
 			"instructions": _serialize_instructions(
 				trigger.action_runner.instructions if trigger.action_runner else []
 			)
@@ -104,11 +101,11 @@ static func serialize_action_runner(runner: ActionRunner) -> Dictionary:
 
 
 static func serialize_event(event: BaseEvent) -> Dictionary:
-	return _serialize_resource_properties(event)
+	return PresetValueCodec.serialize_event(event)
 
 
 static func serialize_condition(cond: BaseCondition) -> Dictionary:
-	return _serialize_resource_properties(cond)
+	return PresetValueCodec.serialize_condition(cond)
 
 
 static func serialize_trigger_config(node: Node) -> Dictionary:
@@ -165,10 +162,6 @@ static func serialize_binding(binding: EventBinding) -> Dictionary:
 
 static func _serialize_instructions(instructions: Array[BaseInstruction]) -> Array:
 	return PresetValueCodec.serialize_instructions(instructions)
-
-
-static func _serialize_resource_properties(res: Resource) -> Dictionary:
-	return PresetValueCodec._serialize_resource(res)
 
 
 # ---- 变量收集 ----

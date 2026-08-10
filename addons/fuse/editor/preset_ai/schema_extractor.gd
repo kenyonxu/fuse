@@ -12,7 +12,7 @@ extends RefCounted
 ## 与 FusePresetSerializer._serialize_instructions 的过滤规则一致，
 ## 确保 LLM 生成的 schema 能直接反序列化为运行时组件。
 
-# 基类属性过滤（与 fuse_preset_serializer._BASE_PROPERTIES 一致）
+# 基类属性过滤（与 PresetValueCodec._BASE_PROPERTIES 一致）
 const _BASE_PROPS := [
 	"log_level",
 	"completion_timing",
