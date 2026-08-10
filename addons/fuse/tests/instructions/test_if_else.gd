@@ -25,20 +25,21 @@ func _ready():
 	test_type_comparison()
 
 	print("\n=== If/Else 指令测试完成 ===")
+	get_tree().quit()
 
 ## 测试 1: 变量比较 - 等于
 func test_variable_comparison_equal():
 	print("\n--- 测试 1: 变量比较 - 等于 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+	var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 	var condition = condition_script.new()
 	condition.variable_name = "test_value"
 	condition.comparison_operator = condition.ComparisonOperator.EQUAL
 	condition.compare_value = 100
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -69,14 +70,14 @@ func test_variable_comparison_greater_than():
 	print("\n--- 测试 2: 变量比较 - 大于 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+	var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 	var condition = condition_script.new()
 	condition.variable_name = "score"
 	condition.comparison_operator = condition.ComparisonOperator.GREATER_THAN
 	condition.compare_value = 50
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -106,14 +107,14 @@ func test_variable_comparison_less_than():
 	print("\n--- 测试 3: 变量比较 - 小于 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+	var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 	var condition = condition_script.new()
 	condition.variable_name = "health"
 	condition.comparison_operator = condition.ComparisonOperator.LESS_THAN
 	condition.compare_value = 30
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -143,14 +144,14 @@ func test_node_property_check():
 	print("\n--- 测试 4: 节点属性检查 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/check_node_property.gd")
+	var condition_script = load("res://addons/fuse/conditions/node/check_node_property.gd")
 	var condition = condition_script.new()
 	condition.target_node_path = NodePath(".")
 	condition.property_name = "name"
 	condition.property_value = "TestIfElseInstruction"
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -180,12 +181,12 @@ func test_node_exists_check():
 	print("\n--- 测试 5: 节点存在性检查 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/check_node_exists.gd")
+	var condition_script = load("res://addons/fuse/conditions/node/check_node_exists.gd")
 	var condition = condition_script.new()
 	condition.check_node_path = NodePath(".")
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -214,14 +215,14 @@ func test_true_branch_execution():
 	print("\n--- 测试 6: True 分支执行 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+	var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 	var condition = condition_script.new()
 	condition.variable_name = "enabled"
 	condition.comparison_operator = condition.ComparisonOperator.EQUAL
 	condition.compare_value = true
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -260,14 +261,14 @@ func test_false_branch_execution():
 	print("\n--- 测试 7: False 分支执行 ---")
 
 	# 创建条件
-	var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+	var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 	var condition = condition_script.new()
 	condition.variable_name = "is_admin"
 	condition.comparison_operator = condition.ComparisonOperator.EQUAL
 	condition.compare_value = true
 
 	# 创建 If/Else 指令
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 	if_else.condition = condition
 
@@ -301,7 +302,7 @@ func test_false_branch_execution():
 func test_validation():
 	print("\n--- 测试 8: 验证指令参数 ---")
 
-	var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+	var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 	var if_else = if_else_script.new()
 
 	# 测试条件为空
@@ -311,7 +312,7 @@ func test_validation():
 	print("✓ 空条件验证通过")
 
 	# 测试条件存在但配置不完整
-	var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+	var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 	var condition = condition_script.new()
 	condition.variable_name = ""  # 空变量名
 	if_else.condition = condition
@@ -356,14 +357,14 @@ func test_type_comparison():
 
 	for test_case in test_cases:
 		# 创建条件
-		var condition_script = load("res://addons/fuse/conditions/compare_variable.gd")
+		var condition_script = load("res://addons/fuse/conditions/variable/compare_variable.gd")
 		var condition = condition_script.new()
 		condition.variable_name = "test_var"
 		condition.comparison_operator = condition.ComparisonOperator.EQUAL
 		condition.compare_value = test_case.compare
 
 		# 创建 If/Else 指令
-		var if_else_script = load("res://addons/fuse/instructions/if_else.gd")
+		var if_else_script = load("res://addons/fuse/instructions/flow_control/if_else.gd")
 		var if_else = if_else_script.new()
 		if_else.condition = condition
 

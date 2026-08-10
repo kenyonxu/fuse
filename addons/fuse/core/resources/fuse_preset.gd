@@ -31,6 +31,8 @@ func _get_property_list() -> Array[Dictionary]:
 ## 预设层级: "L1"|"L2"|"L3"|"L4"
 @export var level: String = "L1"
 
+const _PRESET_VALUE_CODEC := preload("res://addons/fuse/core/serialization/preset_value_codec.gd")
+
 ## L2/L4: BaseEvent 的序列化数据
 @export var event_json: Dictionary = {}
 
@@ -85,28 +87,8 @@ func to_json() -> Dictionary:
 	return data
 
 
-const _BASE_PROPERTIES := ["log_level", "completion_timing", "execution_mode", "script", "resource_local_to_scene", "resource_name", "metadata"]
-
 func _serialize_instructions() -> Array:
-	var result: Array = []
-	for inst in instructions:
-		var script = inst.get_script()
-		var entry := {"type": script.get_global_name() if script else inst.get_class()}
-		for prop in inst.get_property_list():
-			var pname: String = prop.name
-			if pname.begins_with("_") or (prop.usage & PROPERTY_USAGE_STORAGE) == 0:
-				continue
-			if pname in _BASE_PROPERTIES:
-				continue
-			var val = inst.get(pname)
-			if val is NodePath:
-				entry[pname] = str(val)
-			elif val is Resource and val.resource_path != "":
-				entry[pname] = val.resource_path
-			elif not (val is Resource):
-				entry[pname] = val
-		result.append(entry)
-	return result
+	return _PRESET_VALUE_CODEC.serialize_instructions(instructions)
 
 
 # ---- 反序列化 ----
@@ -121,13 +103,11 @@ static func from_json(data: Dictionary) -> FusePreset:
 	preset.icon_name = data.get("icon_name", "")
 	preset.variables = data.get("variables", {})
 
-	# 按 level 解析
 	var ar_data: Dictionary = data.get("action_runner", {})
 	match preset.level:
 		"L1", "L2", "L3":
-			preset.instructions = _deserialize_instructions(ar_data.get("instructions", []))
+			preset.instructions = _PRESET_VALUE_CODEC.deserialize_instructions(ar_data.get("instructions", []))
 		"L4":
-			# L4 不存顶层 instructions，event_bindings 内各自包含
 			pass
 
 	if preset.level == "L2":
@@ -140,40 +120,6 @@ static func from_json(data: Dictionary) -> FusePreset:
 		preset.event_bindings_json = data.get("event_bindings", [])
 
 	return preset
-
-
-static func _cache_type_script(type_name: String) -> GDScript:
-	var instructions = InstructionRegistry.get_all_instructions()
-	for info in instructions:
-		var cls: GDScript = info.get("class")
-		if cls and cls.get_global_name() == type_name:
-			return cls
-	return null
-
-
-static func _deserialize_instructions(raw: Array) -> Array[BaseInstruction]:
-	var result: Array[BaseInstruction] = []
-	for entry in raw:
-		var type_name: String = entry.get("type", "")
-		var script: GDScript = _cache_type_script(type_name)
-		if script == null:
-			push_warning("FusePreset: 无法找到指令类型 '%s'" % type_name)
-			continue
-		var inst: BaseInstruction = script.new()
-		for key in entry:
-			if key == "type":
-				continue
-			var val = entry[key]
-			if val is String and (val.begins_with("uid://") or val.begins_with("res://")):
-				var res = load(val)
-				if res != null:
-					inst.set(key, res)
-				else:
-					inst.set(key, val)  # 可能是 NodePath 字符串,保留
-			else:
-				inst.set(key, val)
-		result.append(inst)
-	return result
 
 
 # ---- NodePath 映射 ----

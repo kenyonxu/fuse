@@ -22,6 +22,7 @@ func _ready():
 	test_composite_dependencies()
 	test_composite_description()
 	print("复合条件测试完成")
+	get_tree().quit()
 
 ## 测试 NOT 条件
 func test_not_condition():

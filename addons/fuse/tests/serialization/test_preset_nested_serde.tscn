@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/serialization/test_preset_nested_serde.gd" id="1_abcdef"]
+
+[node name="TestPresetNestedSerde" type="Node"]
+script = ExtResource("1_abcdef")

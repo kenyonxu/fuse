@@ -12,6 +12,7 @@ func _ready():
 	test_validation()
 	test_edge_cases()
 	print("=== All OnInterval tests passed! ===")
+	get_tree().quit()
 
 ## 测试基本功能
 func test_basic_functionality():

@@ -5,9 +5,6 @@ extends RefCounted
 
 ## 序列化管道 — 将 Godot 节点/资源序列化为预设 JSON 结构
 
-const _BASE_PROPERTIES := ["log_level", "completion_timing", "execution_mode",
-	"script", "resource_local_to_scene", "resource_name", "metadata"]
-
 
 # ---- 层级检测 ----
 
@@ -53,7 +50,7 @@ static func serialize_l2(trigger: Trigger) -> Dictionary:
 	return {
 		"level": "L2",
 		"action_runner": {
-			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else 0,
+			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else ActionRunner.ExecutionMode.SEQUENTIAL,
 			"instructions": _serialize_instructions(
 				trigger.action_runner.instructions if trigger.action_runner else []
 			)
@@ -104,11 +101,11 @@ static func serialize_action_runner(runner: ActionRunner) -> Dictionary:
 
 
 static func serialize_event(event: BaseEvent) -> Dictionary:
-	return _serialize_resource_properties(event)
+	return PresetValueCodec.serialize_event(event)
 
 
 static func serialize_condition(cond: BaseCondition) -> Dictionary:
-	return _serialize_resource_properties(cond)
+	return PresetValueCodec.serialize_condition(cond)
 
 
 static func serialize_trigger_config(node: Node) -> Dictionary:
@@ -164,44 +161,7 @@ static func serialize_binding(binding: EventBinding) -> Dictionary:
 # ---- 底层序列化 ----
 
 static func _serialize_instructions(instructions: Array[BaseInstruction]) -> Array:
-	var result: Array = []
-	for inst in instructions:
-		var script = inst.get_script()
-		var entry := {"type": script.get_global_name() if script else inst.get_class()}
-		for prop in inst.get_property_list():
-			var pname: String = prop.name
-			if pname.begins_with("_") or (prop.usage & PROPERTY_USAGE_STORAGE) == 0:
-				continue
-			if pname in _BASE_PROPERTIES:
-				continue
-			var val = inst.get(pname)
-			if val is NodePath:
-				entry[pname] = str(val)
-			elif val is Resource and val.resource_path != "":
-				entry[pname] = val.resource_path
-			elif not (val is Resource):
-				entry[pname] = val
-		result.append(entry)
-	return result
-
-
-static func _serialize_resource_properties(res: Resource) -> Dictionary:
-	var script = res.get_script()
-	var entry := {"type": script.get_global_name() if script else res.get_class()}
-	for prop in res.get_property_list():
-		var pname: String = prop.name
-		if pname.begins_with("_") or (prop.usage & PROPERTY_USAGE_STORAGE) == 0:
-			continue
-		if pname in _BASE_PROPERTIES:
-			continue
-		var val = res.get(pname)
-		if val is NodePath:
-			entry[pname] = str(val)
-		elif val is Resource and val.resource_path != "":
-			entry[pname] = val.resource_path
-		elif not (val is Resource):
-			entry[pname] = val
-	return entry
+	return PresetValueCodec.serialize_instructions(instructions)
 
 
 # ---- 变量收集 ----

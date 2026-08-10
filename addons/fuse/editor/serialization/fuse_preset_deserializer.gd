@@ -6,13 +6,6 @@ extends RefCounted
 ## 反序列化管道 — 从预设 JSON 创建 Godot 节点/资源
 
 
-# ---- 类型脚本缓存 ----
-
-static var _instruction_cache: Dictionary = {}
-static var _event_cache: Dictionary = {}
-static var _condition_cache: Dictionary = {}
-
-
 # ---- 顶层入口 ----
 
 static func deserialize(preset: FusePreset, mapping: Dictionary) -> Object:
@@ -25,6 +18,7 @@ static func deserialize(preset: FusePreset, mapping: Dictionary) -> Object:
 			return _import_l3(preset, mapping)
 		"L4":
 			return _import_l4(preset, mapping)
+	push_warning("FusePresetDeserializer: 未知 preset level '%s'" % preset.level)
 	return null
 
 
@@ -124,51 +118,27 @@ static func _import_l4(preset: FusePreset, mapping: Dictionary) -> MultiEventTri
 # ---- 子反序列化器 ----
 
 static func _deserialize_event(data: Dictionary) -> BaseEvent:
-	var type_name: String = data.get("type", "")
-	var script := _cache_event_script(type_name)
-	if script == null:
-		push_warning("FusePresetDeserializer: 无法找到事件类型 '%s'" % type_name)
-		return null
-	var inst: BaseEvent = script.new()
-	for key in data:
-		if key == "type":
-			continue
-		_set_property_value(inst, key, data[key])
-	return inst
-
-
-static func _deserialize_condition(data: Dictionary) -> BaseCondition:
-	var type_name: String = data.get("type", "")
-	var script := _cache_condition_script(type_name)
-	if script == null:
-		push_warning("FusePresetDeserializer: 无法找到条件类型 '%s'" % type_name)
-		return null
-	var inst: BaseCondition = script.new()
-	for key in data:
-		if key == "type":
-			continue
-		_set_property_value(inst, key, data[key])
-	return inst
+	return PresetValueCodec.deserialize_event(data)
 
 
 static func _deserialize_binding(data: Dictionary) -> EventBinding:
 	var binding := EventBinding.new()
 
 	if data.has("event"):
-		binding.event = _deserialize_event(data["event"])
+		binding.event = PresetValueCodec.deserialize_event(data["event"])
 
 	if data.has("action_runner"):
 		var ar_data: Dictionary = data["action_runner"]
 		var ar := ActionRunner.new()
 		if ar_data.has("execution_mode"):
 			ar.execution_mode = ar_data["execution_mode"]
-		ar.instructions = _deserialize_instructions(ar_data.get("instructions", []))
+		ar.instructions = PresetValueCodec.deserialize_instructions(ar_data.get("instructions", []))
 		binding.action_runner = ar
 
 	if data.has("conditions"):
 		var conds: Array[BaseCondition] = []
 		for cdata in data["conditions"]:
-			var cond := _deserialize_condition(cdata)
+			var cond := PresetValueCodec.deserialize_condition(cdata)
 			if cond:
 				conds.append(cond)
 		binding.conditions = conds
@@ -181,74 +151,6 @@ static func _deserialize_binding(data: Dictionary) -> EventBinding:
 		binding.cooldown_time = bc.get("cooldown_time", 0.0)
 
 	return binding
-
-
-# ---- 指令反序列化（复用 FusePreset 现有逻辑） ----
-
-static func _deserialize_instructions(raw: Array) -> Array[BaseInstruction]:
-	var result: Array[BaseInstruction] = []
-	for entry in raw:
-		var type_name: String = entry.get("type", "")
-		var script: GDScript = _cache_instruction_script(type_name)
-		if script == null:
-			push_warning("FusePresetDeserializer: 无法找到指令类型 '%s'" % type_name)
-			continue
-		var inst: BaseInstruction = script.new()
-		for key in entry:
-			if key == "type":
-				continue
-			_set_property_value(inst, key, entry[key])
-		result.append(inst)
-	return result
-
-
-# ---- 脚本缓存 ----
-
-static func _cache_instruction_script(type_name: String) -> GDScript:
-	if _instruction_cache.has(type_name):
-		return _instruction_cache[type_name]
-	var instructions = InstructionRegistry.get_all_instructions()
-	for info in instructions:
-		var cls: GDScript = info.get("class")
-		if cls and cls.get_global_name() == type_name:
-			_instruction_cache[type_name] = cls
-			return cls
-	return null
-
-
-static func _cache_event_script(type_name: String) -> GDScript:
-	if _event_cache.has(type_name):
-		return _event_cache[type_name]
-	var events = EventRegistry.get_all_events()
-	for info in events:
-		var cls: GDScript = info.get("class")
-		if cls and cls.get_global_name() == type_name:
-			_event_cache[type_name] = cls
-			return cls
-	return null
-
-
-static func _cache_condition_script(type_name: String) -> GDScript:
-	if _condition_cache.has(type_name):
-		return _condition_cache[type_name]
-	var conditions = ConditionRegistry.get_all_conditions()
-	for info in conditions:
-		var cls: GDScript = info.get("class")
-		if cls and cls.get_global_name() == type_name:
-			_condition_cache[type_name] = cls
-			return cls
-	return null
-
-
-# ---- 属性设置辅助 ----
-
-static func _set_property_value(obj: Object, key: String, val) -> void:
-	if val is String and (val.begins_with("uid://") or val.begins_with("res://")):
-		var res = load(val)
-		if res != null:
-			obj.set(key, res)
-			return
-	obj.set(key, val)
 
 
 # ---- NodePath 映射 ----
