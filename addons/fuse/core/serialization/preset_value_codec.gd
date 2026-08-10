@@ -82,13 +82,24 @@ static func deserialize_event(data: Dictionary) -> BaseEvent:
 # ============================================================
 
 static func deserialize_value(obj: Object, key: String, raw_value: Variant) -> Variant:
-	# 资源引用字符串直接加载
-	if raw_value is String and (raw_value.begins_with("uid://") or raw_value.begins_with("res://")):
+	var prop := _find_property(obj, key)
+
+	# 仅当目标属性是 Object（资源）或嵌套资源数组时，才把 res:// / uid:// 字符串加载为 Resource
+	var should_load_resource_path := false
+	if not prop.is_empty():
+		var prop_type: int = prop.get("type", TYPE_NIL)
+		if prop_type == TYPE_OBJECT:
+			should_load_resource_path = true
+		elif prop_type == TYPE_ARRAY:
+			var hint := _property_to_hint(prop)
+			if hint.class != "" and _is_nested_resource_class(hint.class):
+				should_load_resource_path = true
+
+	if should_load_resource_path and raw_value is String and (raw_value.begins_with("uid://") or raw_value.begins_with("res://")):
 		var res := load(raw_value)
 		if res != null:
 			return res
 
-	var prop := _find_property(obj, key)
 	if prop.is_empty():
 		return raw_value
 
