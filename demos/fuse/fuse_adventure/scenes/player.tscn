@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_mf6og"]
 [ext_resource type="Script" uid="uid://bk5xvyc2mqs4o" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="8_mw7hn"]
 [ext_resource type="Script" uid="uid://cgl60422nwy0k" path="res://addons/fuse/events/input/on_input_action.gd" id="9_1yqi1"]
+[ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="11_mf6og"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -103,7 +104,7 @@ script = ExtResource("4_7t5up")
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 5
+frame = 10
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
@@ -136,3 +137,11 @@ script = ExtResource("5_kvs1w")
 event_definition = SubResource("Resource_mw7hn")
 action_runner = SubResource("Resource_phq6w")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="PlayerVariables" type="Node" parent="." unique_id=541579564]
+script = ExtResource("11_mf6og")
+scope_id = "player"
+variables = Dictionary[String, Variant]({
+"life": 3
+})
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"

@@ -1,6 +1,18 @@
 [gd_scene format=3 uid="uid://b824m1t7jmimt"]
 
 [ext_resource type="Texture2D" uid="uid://22nisqj046m3" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png" id="1_7h3pv"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_uk16k"]
+[ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="3_kxut0"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_ys84k"]
+[ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="5_pyupu"]
+[ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="6_wgsx0"]
+[ext_resource type="Script" uid="uid://btqvw0a03xqcx" path="res://addons/fuse/instructions/ui/show_hide_ui.gd" id="7_eqk6o"]
+[ext_resource type="Script" uid="uid://d8mtbpkgixln" path="res://addons/fuse/conditions/scope/check_scope_variable.gd" id="7_pyupu"]
+[ext_resource type="Script" uid="uid://e4b0a4c8ef0c" path="res://addons/fuse/instructions/node_operations/set_process_mode.gd" id="8_fai7v"]
+[ext_resource type="Script" uid="uid://bjducirfbgpcq" path="res://addons/fuse/instructions/flow_control/run_condition_check.gd" id="8_wgsx0"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="9_80isn"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_eqk6o"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="10_y7bcu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5bmql"]
 atlas = ExtResource("1_7h3pv")
@@ -83,6 +95,101 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(39, 47)
 
+[sub_resource type="Resource" id="Resource_5rlci"]
+resource_name = "当 player 首次进入 ../Area2D 时触发"
+script = ExtResource("3_kxut0")
+area_node_path = NodePath("../Area2D")
+target_group = "player"
+trigger_once_per_body = true
+
+[sub_resource type="Resource" id="Resource_jc4q3"]
+resource_name = "获取组中节点 'player' → grp_player [[本地]]"
+script = ExtResource("5_pyupu")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+group_name = "player"
+result_variable = "grp_player"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_ywqoh"]
+resource_name = "Array Get 数组 grp_player [0] → player"
+script = ExtResource("6_wgsx0")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+source_type = 0
+array_variable = "grp_player"
+array_scope = 0
+index_value = 0
+target_variable = "player"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_fai7v"]
+resource_name = "检查作用域变量 [ID:level_scope] 'current_level' EQUALS 1"
+script = ExtResource("7_pyupu")
+variable_name = "current_level"
+scope_source = 1
+expected_value = 1
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_80isn"]
+resource_name = "检查作用域变量 [ID:level_scope] 'banana_count' EQUALS 3"
+script = ExtResource("7_pyupu")
+variable_name = "banana_count"
+scope_source = 1
+expected_value = 3
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_y7bcu"]
+resource_name = "条件检查:  (真:继续执行"
+script = ExtResource("8_wgsx0")
+condition = SubResource("Resource_80isn")
+
+[sub_resource type="Resource" id="Resource_084om"]
+resource_name = "If/Else 检查作用域变量 [ID:level_scope] 'current_level' EQUALS 1 [真:0 [异步]"
+script = ExtResource("9_eqk6o")
+condition = SubResource("Resource_fai7v")
+true_instructions = Array[ExtResource("4_ys84k")]([])
+false_instructions = Array[ExtResource("4_ys84k")]([SubResource("Resource_y7bcu")])
+
+[sub_resource type="Resource" id="Resource_bt146"]
+resource_name = "显示 UI → ui_level_end [ID:level_scope]"
+script = ExtResource("7_eqk6o")
+target_node = NodePath("")
+use_variable_for_target = true
+target_variable = "ui_level_end"
+target_scope = 1
+target_scope_source = 1
+target_custom_scope_id = "level_scope"
+action = 0
+
+[sub_resource type="Resource" id="Resource_rifvj"]
+resource_name = "处理模式: player [LOCAL] → 禁用"
+script = ExtResource("8_fai7v")
+target_node = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = true
+target_variable = "player"
+target_scope = 0
+process_mode = 4
+
+[sub_resource type="Resource" id="Resource_34ja0"]
+resource_name = "发送事件: LevelFinished"
+script = ExtResource("9_80isn")
+event_name = "LevelFinished"
+
+[sub_resource type="Resource" id="Resource_a1vi7"]
+script = ExtResource("10_y7bcu")
+instructions = Array[ExtResource("4_ys84k")]([SubResource("Resource_jc4q3"), SubResource("Resource_ywqoh"), SubResource("Resource_084om"), SubResource("Resource_bt146"), SubResource("Resource_rifvj"), SubResource("Resource_34ja0")])
+
 [node name="LevelEndPoint" type="Node2D" unique_id=2027725587]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=144448334]
@@ -96,3 +203,10 @@ frame_progress = 0.5502894
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1915790585]
 position = Vector2(-1.5, 8.5)
 shape = SubResource("RectangleShape2D_rxgda")
+
+[node name="Trigger" type="Node" parent="." unique_id=1089188231]
+script = ExtResource("2_uk16k")
+event_definition = SubResource("Resource_5rlci")
+action_runner = SubResource("Resource_a1vi7")
+trigger_once = true
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

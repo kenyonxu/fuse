@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="5_qnvbn"]
 
 [sub_resource type="Resource" id="Resource_qnvbn"]
+resource_name = "On Ready With Delay: 0.0"
 script = ExtResource("3_dvj4o")
 
 [sub_resource type="Resource" id="Resource_i3ixu"]
@@ -29,16 +30,17 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=746731906]
 
+[node name="UI_Life" parent="." unique_id=225107553 instance=ExtResource("2_rpmrn")]
+
+[node name="UI_Collectables" parent="." unique_id=571755204 instance=ExtResource("3_cwhix")]
+offset_top = -2.0
+offset_bottom = -2.0
+
 [node name="LevelEndUI" parent="." unique_id=328373904 instance=ExtResource("1_ltr2c")]
+visible = false
 
 [node name="Trigger" type="Node" parent="LevelEndUI" unique_id=1498324713]
 script = ExtResource("2_td05q")
 event_definition = SubResource("Resource_qnvbn")
 action_runner = SubResource("Resource_fgjoy")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
-
-[node name="UI_Life" parent="." unique_id=225107553 instance=ExtResource("2_rpmrn")]
-
-[node name="UI_Collectables" parent="." unique_id=571755204 instance=ExtResource("3_cwhix")]
-offset_top = -2.0
-offset_bottom = -2.0
