@@ -1008,15 +1008,48 @@ func _on_export_problems() -> void:
 	var lines := ["Fuse 问题报告 %s" % Time.get_time_string_from_system(), "=".repeat(50), ""]
 	var total_err := 0
 	var total_warn := 0
+	var total_suggest := 0
+
 	for t in _last_topology.get("triggers", []):
-		var s: Dictionary = t.get("problems", {}).get("summary", {"errors": 0, "warnings": 0})
-		if s.get("errors", 0) == 0 and s.get("warnings", 0) == 0:
+		var problems_data: Dictionary = t.get("problems", {})
+		var summary: Dictionary = problems_data.get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
+		var by_inst: Dictionary = problems_data.get("by_inst", {})
+		if by_inst.is_empty():
 			continue
-		lines.append("%s (%s): %d %s, %d %s" % [t.get("trigger_name", "?"), t.get("trigger_type", "?"), s.get("errors", 0), _severity_label("error"), s.get("warnings", 0), _severity_label("warning")])
-		total_err += s.get("errors", 0)
-		total_warn += s.get("warnings", 0)
-	lines.append("")
-	lines.append("合计: %d 错误, %d 警告" % [total_err, total_warn])
+
+		var trigger_name: String = t.get("trigger_name", "?")
+		var trigger_type: String = t.get("trigger_type", "?")
+		lines.append("[%s] %s" % [trigger_type, trigger_name])
+		lines.append("-".repeat(40))
+
+		for key in by_inst:
+			var inst_problems: Array = by_inst[key]
+			for p in inst_problems:
+				var severity: String = p.get("severity", "info")
+				var message: String = p.get("message", "")
+				var idx: int = p.get("instruction_index", -1)
+				var inst = p.get("inst", null)
+				var inst_name := "?"
+				if inst != null:
+					var script := inst.get_script() as GDScript
+					inst_name = script.get_global_name() if script and not script.get_global_name().is_empty() else inst.get_class()
+
+				match severity:
+					"error": total_err += 1
+					"warning": total_warn += 1
+					"suggestion": total_suggest += 1
+
+				var label := "建议"
+				match severity:
+					"error": label = "错误"
+					"warning": label = "警告"
+					"suggestion": label = "建议"
+				lines.append("  [%s] 指令#%d (%s): %s" % [label, idx, inst_name, message])
+		lines.append("")
+
+	lines.append("=".repeat(50))
+	lines.append("合计: %d 错误, %d 警告, %d 建议" % [total_err, total_warn, total_suggest])
+
 	var path := "%s/fuse_problems_report_%s.txt" % [report_dir, Time.get_time_string_from_system().replace(":", "-")]
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f:
