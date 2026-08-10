@@ -18,6 +18,7 @@ static func deserialize(preset: FusePreset, mapping: Dictionary) -> Object:
 			return _import_l3(preset, mapping)
 		"L4":
 			return _import_l4(preset, mapping)
+	push_warning("FusePresetDeserializer: 未知 preset level '%s'" % preset.level)
 	return null
 
 
@@ -120,10 +121,6 @@ static func _deserialize_event(data: Dictionary) -> BaseEvent:
 	return PresetValueCodec.deserialize_event(data)
 
 
-static func _deserialize_condition(data: Dictionary) -> BaseCondition:
-	return PresetValueCodec.deserialize_condition(data)
-
-
 static func _deserialize_binding(data: Dictionary) -> EventBinding:
 	var binding := EventBinding.new()
 
@@ -154,24 +151,6 @@ static func _deserialize_binding(data: Dictionary) -> EventBinding:
 		binding.cooldown_time = bc.get("cooldown_time", 0.0)
 
 	return binding
-
-
-# ---- 指令反序列化（复用 FusePreset 现有逻辑） ----
-
-static func _deserialize_instructions(raw: Array) -> Array[BaseInstruction]:
-	return PresetValueCodec.deserialize_instructions(raw)
-
-
-# ---- 属性设置辅助 ----
-
-static func _set_property_value(obj: Object, key: String, val) -> void:
-	# 保留原有的 uid/res 资源引用加载行为（仅资源/Object 属性需要）
-	if val is String and (val.begins_with("uid://") or val.begins_with("res://")):
-		var res = load(val)
-		if res != null:
-			obj.set(key, res)
-			return
-	obj.set(key, PresetValueCodec.deserialize_value(obj, key, val))
 
 
 # ---- NodePath 映射 ----
