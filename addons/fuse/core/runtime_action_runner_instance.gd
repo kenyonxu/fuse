@@ -287,6 +287,13 @@ func _get_cached_description(index: int) -> String:
 		return cache.get_cached_description(index)
 	return ""
 
+## 安全校验对象是否仍有效
+##
+## 结合 null 检查与 is_instance_valid，避免访问已释放对象。
+static func _is_object_valid(obj: Object) -> bool:
+	return obj != null and is_instance_valid(obj)
+
+
 ## 顺序执行指令
 func _execute_instructions_sequential(context: ExecutionContext, instructions: Array):
 	_log_debug_localized("FUSE_LOG_STARTING_SEQUENTIAL_EXECUTION")
@@ -333,23 +340,26 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 
 		# 修复：切换场景等操作可能释放旧场景的指令资源。
 		# 后续不要再访问已被释放的 instruction 引用，避免 Nil / 已释放实例崩溃。
-		var instruction_valid = instruction != null and is_instance_valid(instruction)
-		var action_runner_valid = action_runner != null and is_instance_valid(action_runner)
+		var action_runner_valid = _is_object_valid(action_runner)
 
 		if sync_completed:
 			# 同步完成，继续下一个指令
 			# 检查错误
-			if action_runner_valid and action_runner.stop_on_error and runtime_instruction.has_error():
-				_create_fuse_error_localized("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", FuseError.ErrorType.EXECUTION_ERROR, {
-					"instruction_index": i,
-					"instruction_description": _safe_instruction_description(instruction)
-				}, {"error": runtime_instruction.get_error_message()})
-				execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
-				return
+			if runtime_instruction.has_error():
+				if not action_runner_valid:
+					_log_warning_localized("FUSE_WARNING_ACTION_RUNNER_RELEASED", {"error": runtime_instruction.get_error_message()})
+					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					return
+				if action_runner.stop_on_error:
+					_create_fuse_error_localized("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", FuseError.ErrorType.EXECUTION_ERROR, {
+						"instruction_index": i,
+						"instruction_description": _safe_instruction_description(instruction)
+					}, {"error": runtime_instruction.get_error_message()})
+					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					return
 
 			# Phase 2.5 优化：使用批量信号发射方法
-			if instruction_valid:
-				_emit_instruction_completed(instruction)
+			_emit_instruction_completed(instruction)
 			continue  # 继续下一个指令
 		else:
 			# 异步执行，等待完成
@@ -358,28 +368,31 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 			if not runtime_instruction.is_completed() and not runtime_instruction.has_error():
 				await runtime_instruction.finished
 
-			# 等待后再次校验指令资源是否仍有效
-			instruction_valid = instruction != null and is_instance_valid(instruction)
-			action_runner_valid = action_runner != null and is_instance_valid(action_runner)
+			# 等待后再次校验 action_runner 是否仍有效
+			action_runner_valid = _is_object_valid(action_runner)
 
 			var instruction_end_time = Time.get_ticks_msec() / 1000.0
 			var instruction_time = instruction_end_time - instruction_start_time
 			if should_log_debug:
 				_log_debug_localized("FUSE_LOG_ASYNC_INSTRUCTION_COMPLETED", {"time": str(instruction_time)})
 
-			# 发出运行时实例的信号
-			if instruction_valid:
-				instruction_completed.emit(instruction)
+			# 发出运行时实例的信号（Phase 2.5 优化：使用批量信号发射方法）
+			_emit_instruction_completed(instruction)
 
 			# 检查错误
-			if action_runner_valid and action_runner.stop_on_error and runtime_instruction.has_error():
-				_log_debug_localized("FUSE_LOG_STOPPING_DUE_TO_ERROR", {"error": runtime_instruction.get_error_message()})
-				_create_fuse_error_localized("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", FuseError.ErrorType.EXECUTION_ERROR, {
-					"instruction_index": i,
-					"instruction_description": _safe_instruction_description(instruction)
-				}, {"error": runtime_instruction.get_error_message()})
-				execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
-				return
+			if runtime_instruction.has_error():
+				if not action_runner_valid:
+					_log_warning_localized("FUSE_WARNING_ACTION_RUNNER_RELEASED", {"error": runtime_instruction.get_error_message()})
+					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					return
+				if action_runner.stop_on_error:
+					_log_debug_localized("FUSE_LOG_STOPPING_DUE_TO_ERROR", {"error": runtime_instruction.get_error_message()})
+					_create_fuse_error_localized("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", FuseError.ErrorType.EXECUTION_ERROR, {
+						"instruction_index": i,
+						"instruction_description": _safe_instruction_description(instruction)
+					}, {"error": runtime_instruction.get_error_message()})
+					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					return
 
 	_complete_execution()
 
@@ -558,9 +571,9 @@ class _ParallelSignalAggregator extends RefCounted:
 ## 安全获取指令描述
 ## 切换场景等操作可能释放指令资源，访问前先校验有效性。
 func _safe_instruction_description(instruction: BaseInstruction) -> String:
-	if instruction and is_instance_valid(instruction):
+	if _is_object_valid(instruction):
 		return instruction.get_description()
-	return "<已释放/无效指令>"
+	return FuseLocalization.translate("FUSE_ERROR_INSTRUCTION_FREED_OR_INVALID")
 
 
 ## 执行指令（统一接口）

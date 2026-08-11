@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://mh76nrrf2u5" path="res://addons/fuse/instructions/variables/create_variable.gd" id="7_fph2t"]
 [ext_resource type="Script" uid="uid://bkx5ffnpungby" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="7_q5ss5"]
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="8_b3ivw"]
-[ext_resource type="Resource" uid="uid://da0754pwaa2kr" path="res://demos/fuse/brick_demo_basic.tres" id="10_cm8dd"]
+[ext_resource type="Resource" uid="uid://cgo2p1jbpdbjm" path="res://demos/fuse/brick_demo_basic.tres" id="10_cm8dd"]
 [ext_resource type="Script" uid="uid://j1t15og6khun" path="res://addons/fuse/events/input/on_input_key.gd" id="12_fph2t"]
 [ext_resource type="Texture2D" uid="uid://1m0j5giawk4f" path="res://icon.svg" id="15_pkdtu"]
 

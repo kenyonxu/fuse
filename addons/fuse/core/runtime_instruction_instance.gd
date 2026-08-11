@@ -151,8 +151,14 @@ func execute_sync() -> bool:
 
 		# 修复：切换场景等操作会立即释放旧场景及其指令资源。
 		# 如果指令已经自完成、或已被释放，则不再访问它，避免 Nil 崩溃。
-		if _is_completed or instruction == null or not is_instance_valid(instruction):
+		if _is_completed:
 			return result
+
+		if instruction == null or not is_instance_valid(instruction):
+			# 资源已释放时异步等待没有意义；标记完成并返回 true，
+			# 防止调用方 await runtime_instruction.finished 永远挂起。
+			_complete_execution()
+			return true
 
 		# 修复：如果指令同步完成了（execute_sync 返回 true），直接完成
 		# 注意：如果信号已经触发，_is_completed 可能已经被设置为 true

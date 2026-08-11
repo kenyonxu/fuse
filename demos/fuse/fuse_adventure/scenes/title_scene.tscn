@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d1hc0i6nwulkd"]
 
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="1_83oxh"]
-[ext_resource type="Resource" uid="uid://dct104jk6u5ew" path="res://demos/fuse/fuse_adventure/resources/fuse_res/fuse_adventure_global.tres" id="2_83oxh"]
+[ext_resource type="Resource" uid="uid://b0vgsbn6swsve" path="res://demos/fuse/fuse_adventure/resources/fuse_res/fuse_adventure_global.tres" id="2_83oxh"]
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_lonpl"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="4_adcf2"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_fv8b1"]

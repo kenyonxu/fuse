@@ -238,6 +238,7 @@ FUSE_ERROR_PROPERTY_NOT_FOUND,未找到属性：{name},Property not found: {name
 FUSE_ERROR_PROPERTY_READ_ONLY,属性是只读的,Property is read-only
 FUSE_ERROR_INVALID_PARAMETER,无效参数：{name},Invalid parameter: {name}
 FUSE_ERROR_INDEX_OUT_OF_RANGE,索引超出范围,Index out of range
+FUSE_ERROR_INSTRUCTION_FREED_OR_INVALID,<已释放/无效指令>,<Freed/Invalid Instruction>
 
 # UI 文本 - 指令选择器
 FUSE_UI_INSTRUCTION_SELECTOR_TITLE,指令选择器,Instruction Selector
@@ -3373,6 +3374,7 @@ FUSE_LOG_TARGET_NODE_SET,目标节点已设置: {name},Target node set: {name}
 FUSE_LOG_TRIGGER_NODE_SET,触发器节点已设置: {name},Trigger node set: {name}
 FUSE_WARNING_TARGET_NODE_RELEASED,目标节点已被释放,Target node has been released
 FUSE_WARNING_TRIGGER_NODE_RELEASED,触发器节点已被释放,Trigger node has been released
+FUSE_WARNING_ACTION_RUNNER_RELEASED,ActionRunner 已释放，直接上报错误：{error},"ActionRunner released, emitting execution_failed: {error}"
 FUSE_LOG_SETTING_BREAK_LOOP_FLAG,设置循环中断标志 (break),Setting break loop flag
 FUSE_LOG_SETTING_CONTINUE_LOOP_FLAG,设置循环继续标志 (continue),Setting continue loop flag
 FUSE_LOG_CLEARING_LOOP_FLAGS,清除循环控制标志,Clearing loop control flags

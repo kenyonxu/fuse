@@ -107,6 +107,7 @@ func _on_event_triggered(context: Node):
 	# 这解决了多个 Trigger 共享同一个 Event 资源时的信号干扰问题
 	# 修复：owner_trigger 可能已被释放（例如切换场景），先校验有效性。
 	if owner_trigger == null or not is_instance_valid(owner_trigger):
+		cleanup()
 		return
 
 	if context and is_instance_valid(context) and context.has_meta("trigger"):
