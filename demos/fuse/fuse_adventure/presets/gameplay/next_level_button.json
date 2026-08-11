@@ -3,7 +3,7 @@
   "level": "L2",
   "display_name": "next_level_button",
   "category": "gameplay",
-  "description": "NextLevel 按钮按 current_level 域变量分派：1→level_02，否则→level_01（两关循环）",
+  "description": "NextLevel 按钮按 current_level 域变量分派：1→fuse_demo_level_02，否则→fuse_demo_level_01（两关循环）",
   "icon_name": "",
   "event": {
 	"type": "OnButtonPressed",
@@ -28,14 +28,14 @@
 		"true_instructions": [
 		  {
 			"type": "ChangeScene",
-			"scene_path": "res://demos/fuse/fuse_adventure/scenes/level_02.tscn",
+			"scene_path": "res://demos/fuse/fuse_adventure/scenes/fuse_demo_level_02.tscn",
 			"delay": 0.0
 		  }
 		],
 		"false_instructions": [
 		  {
 			"type": "ChangeScene",
-			"scene_path": "res://demos/fuse/fuse_adventure/scenes/level_01.tscn",
+			"scene_path": "res://demos/fuse/fuse_adventure/scenes/fuse_demo_level_01.tscn",
 			"delay": 0.0
 		  }
 		]

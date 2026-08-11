@@ -6,10 +6,16 @@ class_name ChangeScene
 ## 切换场景
 
 # 目标场景路径
-var scene_path: String = ""
+var scene_path: String = "":
+	set(value):
+		scene_path = value
+		_update_resource_name()
 
 # 延迟切换时间（秒）
-var delay: float = 0.0
+var delay: float = 0.0:
+	set(value):
+		delay = value
+		_update_resource_name()
 
 # 定时器
 var _timer: SceneTreeTimer = null

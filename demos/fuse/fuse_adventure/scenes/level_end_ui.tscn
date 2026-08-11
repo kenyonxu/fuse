@@ -42,15 +42,15 @@ expected_value = 1.0
 custom_scope_id = "level_scope"
 
 [sub_resource type="Resource" id="Resource_amomb"]
-resource_name = "切换场景 'level_01.tscn'"
+resource_name = "切换场景 'fuse_demo_level_01.tscn'"
 script = ExtResource("6_eb7mr")
-scene_path = "res://demos/fuse/fuse_adventure/scenes/level_01.tscn"
+scene_path = "uid://cxiwcx0w5nofb"
 delay = 0.0
 
 [sub_resource type="Resource" id="Resource_cqyy6"]
-resource_name = "切换场景 'level_02.tscn'"
+resource_name = "切换场景 'fuse_demo_level_02.tscn'"
 script = ExtResource("6_eb7mr")
-scene_path = "res://demos/fuse/fuse_adventure/scenes/level_02.tscn"
+scene_path = "uid://b18ilhox3hf0m"
 delay = 0.0
 
 [sub_resource type="Resource" id="Resource_fvxts"]
