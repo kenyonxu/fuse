@@ -5105,3 +5105,13 @@ FUSE_LOG_SET_ANIMATED_SPRITE_2D_SPEED_SCALE,[{node}] 速度已设为 {speed},[{n
 FUSE_ERROR_SPEED_VAR_NAME_EMPTY,速度变量名不能为空,Speed variable name cannot be empty
 FUSE_ERROR_SPEED_VAR_NOT_FOUND,未找到速度变量：{variable},Speed variable not found: {variable}
 FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_BOTH_MODE,处理和可见性,Processing and Visibility
+
+FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_NAME,PathFollow2D 进度比到达,PathFollow2D Progress Ratio Reached
+FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_DESC,当 PathFollow2D 的 progress_ratio 到达指定值时触发,Triggers when a PathFollow2D progress_ratio reaches the specified value
+FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_RESOURCE_NAME,"{node} 进度比 {ratio} (±{tolerance})","{node} progress ratio {ratio} (±{tolerance})"
+FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_DESC,"监听 {node}，当 progress_ratio 接近 {ratio} (容差 {tolerance}) 时触发","Monitor {node} and trigger when progress_ratio approaches {ratio} (tolerance {tolerance})"
+FUSE_ERROR_NOT_PATH_FOLLOW_2D,"节点 {node} 必须是 PathFollow2D 类型，实际为 {actual_type}","Node {node} must be PathFollow2D got {actual_type}"
+FUSE_ERROR_RATIO_VARIABLE_EMPTY,目标进度比变量名不能为空,Target progress ratio variable name cannot be empty
+FUSE_ERROR_RATIO_VAR_NOT_FOUND,未找到目标进度比变量：{variable},Target progress ratio variable not found: {variable}
+FUSE_LOG_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_REACHED,"[{node}] progress_ratio 已到达 {target} (当前 {current})","[{node}] progress_ratio reached {target} (current {current})"
+FUSE_WARNING_TARGET_NODE_INVALID,目标节点已失效，停止监听,Target node is invalid; stopping monitoring
