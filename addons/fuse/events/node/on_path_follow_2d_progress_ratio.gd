@@ -190,7 +190,7 @@ func reset() -> void:
 	_log_debug_localized("FUSE_LOG_EVENT_RESET", {"event_type": get_event_type()})
 
 ## 每帧处理（由 Trigger 调用）
-func on_process(delta: float) -> void:
+func on_process(delta: float, runtime_instance: RuntimeEventInstance = null) -> void:
 	if not _runtime_instance_ref:
 		return
 
