@@ -336,4 +336,3 @@ signal_name = "ready"
 metadata/_custom_type_script = "uid://parouyd882ij"
 
 [node name="CanvasLayer" parent="." unique_id=746731906 instance=ExtResource("21_d4lio")]
-visible = false

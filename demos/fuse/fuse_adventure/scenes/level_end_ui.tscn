@@ -137,6 +137,9 @@ script = ExtResource("2_ho7ck")
 action_runner = SubResource("Resource_rxgda")
 target_node = NodePath("..")
 signal_name = "pressed"
+action_runner = SubResource("Resource_rxgda")
+target_node = NodePath("..")
+signal_name = "pressed"
 metadata/_custom_type_script = "uid://parouyd882ij"
 
 [node name="NextLevel" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=854124636 instance=ExtResource("1_ewarr")]
