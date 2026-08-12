@@ -5067,3 +5067,40 @@ FUSE_LOG_COMBO_TRIGGERED,连招触发: [{sequence}],Combo triggered: [{sequence}
 FUSE_INSTRUCTION_IF_ELSE_MODE_ASYNC,异步,Async
 FUSE_INSTRUCTION_IF_ELSE_MODE_SYNC,同步,Sync
 FUSE_TEXT_UNLIMITED,无限,Unlimited
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_NAME,播放 AnimatedSprite2D 动画,Play AnimatedSprite2D Animation
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_DESC,播放 AnimatedSprite2D 节点的指定动画，支持从变量读取动画名称,Plays a specified animation on an AnimatedSprite2D node; supports reading animation name from a variable
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_SHORT,播放动画,Play Animation
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_NO_TARGET,未选择,Not Selected
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_NO_ANIMATION,未指定,Unspecified
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_WITH_SPEED,(速度 {speed}x),(Speed {speed}x)
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_FROM_END,(从结尾反向),(From End)
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_SPEED,速度 {speed}x,Speed {speed}x
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_REVERSE,反向,Reverse
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_PLAY_DESC_FORMAT,播放动画 '{animation}'{options},Play animation '{animation}'{options}
+FUSE_ERROR_NOT_ANIMATED_SPRITE_2D,节点 {node} 必须是 AnimatedSprite2D 类型，实际为 {actual_type},Node '{node}' must be AnimatedSprite2D got {actual_type}
+FUSE_ERROR_ANIMATION_NAME_VAR_NAME_EMPTY,动画名称变量名不能为空,Animation name variable name cannot be empty
+FUSE_ERROR_ANIMATION_NAME_VAR_NOT_FOUND,未找到动画名称变量：{variable},Animation name variable not found: {variable}
+FUSE_ERROR_RESULT_VARIABLE_EMPTY,保存结果变量名不能为空,Result variable name cannot be empty
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_IS_PLAYING_NAME,获取 AnimatedSprite2D 播放状态,Get AnimatedSprite2D Playing State
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_IS_PLAYING_DESC,获取 AnimatedSprite2D 是否正在播放，并将结果保存到变量,Gets whether an AnimatedSprite2D is playing and saves the result to a variable
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_IS_PLAYING_SHORT,是否正在播放,Is Playing
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_IS_PLAYING_NO_TARGET,未选择,Not Selected
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_IS_PLAYING_RESOURCE_NAME,是否播放 {target} → {variable},{target} is playing → {variable}
+FUSE_INSTRUCTION_ANIMATED_SPRITE_2D_IS_PLAYING_DESC_FORMAT,获取 {target} 是否正在播放并保存到 {variable},Get whether {target} is playing and save to {variable}
+FUSE_LOG_ANIMATED_SPRITE_2D_IS_PLAYING,[{node}] 播放状态：{value},[{node}] playing state: {value}
+FUSE_INSTRUCTION_GET_ANIMATED_SPRITE_2D_SPEED_SCALE_NAME,获取 AnimatedSprite2D 速度,Get AnimatedSprite2D Speed
+FUSE_INSTRUCTION_GET_ANIMATED_SPRITE_2D_SPEED_SCALE_DESC,获取 AnimatedSprite2D 的 speed_scale 并保存到变量,Gets the speed_scale of an AnimatedSprite2D and saves it to a variable
+FUSE_INSTRUCTION_GET_ANIMATED_SPRITE_2D_SPEED_SCALE_SHORT,获取速度,Get Speed
+FUSE_INSTRUCTION_GET_ANIMATED_SPRITE_2D_SPEED_SCALE_NO_TARGET,未选择,Not Selected
+FUSE_INSTRUCTION_GET_ANIMATED_SPRITE_2D_SPEED_SCALE_RESOURCE_NAME,获取 {target} 速度 → {variable},Get {target} speed → {variable}
+FUSE_INSTRUCTION_GET_ANIMATED_SPRITE_2D_SPEED_SCALE_DESC_FORMAT,获取 {target} 的速度并保存到 {variable},Get {target} speed and save to {variable}
+FUSE_LOG_GET_ANIMATED_SPRITE_2D_SPEED_SCALE,[{node}] 速度已获取：{value},[{node}] speed obtained: {value}
+FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_NAME,设置 AnimatedSprite2D 速度,Set AnimatedSprite2D Speed
+FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_DESC,设置 AnimatedSprite2D 的 speed_scale，支持从变量读取速度值,Sets the speed_scale of an AnimatedSprite2D; supports reading speed from a variable
+FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_SHORT,设置速度,Set Speed
+FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_NO_TARGET,未选择,Not Selected
+FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_VALUE,({speed}x),({speed}x)
+FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_DESC_FORMAT,设置 {target} 速度为 {speed}x,Set {target} speed to {speed}x
+FUSE_LOG_SET_ANIMATED_SPRITE_2D_SPEED_SCALE,[{node}] 速度已设为 {speed},[{node}] speed set to {speed}
+FUSE_ERROR_SPEED_VAR_NAME_EMPTY,速度变量名不能为空,Speed variable name cannot be empty
+FUSE_ERROR_SPEED_VAR_NOT_FOUND,未找到速度变量：{variable},Speed variable not found: {variable}
