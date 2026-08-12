@@ -39,7 +39,7 @@ offset_bottom = -2.0
 [node name="LevelEndUI" parent="." unique_id=328373904 instance=ExtResource("1_ltr2c")]
 visible = false
 
-[node name="Trigger" type="Node" parent="LevelEndUI" unique_id=1498324713]
+[node name="OnReady" type="Node" parent="LevelEndUI" unique_id=1498324713]
 script = ExtResource("2_td05q")
 event_definition = SubResource("Resource_qnvbn")
 action_runner = SubResource("Resource_fgjoy")

@@ -6,8 +6,8 @@
 [ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="4_wikf6"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_uqe6k"]
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_bqeww"]
-[ext_resource type="Script" uid="uid://duus2a1c3hfdu" path="res://addons/fuse/instructions/math/math_operation.gd" id="6_wikf6"]
 [ext_resource type="Script" uid="uid://bxi20p1anvc7o" path="res://addons/fuse/instructions/animation/animated_sprite_2d_play.gd" id="7_uqe6k"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="8_odqfd"]
 [ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="9_tjybd"]
 [ext_resource type="Script" uid="uid://dpsqlhclw051d" path="res://addons/fuse/instructions/node_operations/enable_disable_node.gd" id="10_tjybd"]
 
@@ -195,26 +195,10 @@ area_node_path = NodePath("../Area2D")
 target_group = "player"
 trigger_once_per_body = true
 
-[sub_resource type="Resource" id="Resource_uqe6k"]
-resource_name = "banana_count [SCOPE] + 1.0"
-script = ExtResource("6_wikf6")
-operand_a_target_node_path = NodePath("")
-operand_b_scope_source = 0
-operand_b_custom_scope_id = ""
-operand_b_target_node_path = NodePath("")
-target_node_path = NodePath("")
-operation_type = 0
-operand_a_source = 1
-operand_a_variable = "banana_count"
-operand_a_scope = 1
-operand_a_scope_source = 1
-operand_a_custom_scope_id = "level_scope"
-operand_b_source = 0
-operand_b_value = 1.0
-save_to_variable = "banana_count"
-save_to_scope = 1
-scope_source = 1
-custom_scope_id = "level_scope"
+[sub_resource type="Resource" id="Resource_qgy2h"]
+resource_name = "发送事件: banana_get"
+script = ExtResource("8_odqfd")
+event_name = "banana_get"
 
 [sub_resource type="Resource" id="Resource_bqeww"]
 resource_name = "播放动画 → AnimatedSprite2D 'collect'"
@@ -238,11 +222,11 @@ from_end = false
 
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("6_bqeww")
-instructions = Array[ExtResource("5_uqe6k")]([SubResource("Resource_uqe6k"), SubResource("Resource_bqeww")])
+instructions = Array[ExtResource("5_uqe6k")]([SubResource("Resource_qgy2h"), SubResource("Resource_bqeww")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_odqfd"]
-resource_name = "禁用 可见性 '..'"
+resource_name = "禁用 FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_BOTH_MODE '..'"
 script = ExtResource("10_tjybd")
 target_variable = ""
 target_scope = 0

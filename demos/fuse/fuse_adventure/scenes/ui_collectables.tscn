@@ -1,6 +1,12 @@
 [gd_scene format=3 uid="uid://btvvb2xxi6lol"]
 
 [ext_resource type="Texture2D" uid="uid://cv3u4olptfpae" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="1_qeb7a"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="2_yxx6r"]
+[ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="3_bfwol"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_kxueb"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="5_dcqs5"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_akqpe"]
+[ext_resource type="Script" uid="uid://c8mdxr1c48cha" path="res://addons/fuse/instructions/ui/set_ui_text.gd" id="6_bfwol"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kxx2f"]
 atlas = ExtResource("1_qeb7a")
@@ -141,6 +147,42 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="Resource" id="Resource_psw7l"]
+resource_name = "接收事件: banana_get"
+script = ExtResource("3_bfwol")
+event_name = "banana_get"
+
+[sub_resource type="Resource" id="Resource_v3nxf"]
+resource_name = "等待 0.1 秒"
+script = ExtResource("5_dcqs5")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.1
+
+[sub_resource type="Resource" id="Resource_kxueb"]
+resource_name = "设置文本 → Label (banana_count [ID:level_scope])"
+script = ExtResource("6_bfwol")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+text = ""
+use_variable_for_target = false
+target_node = NodePath("../HBoxContainer/Label")
+use_variable = true
+text_variable = "banana_count"
+text_scope = 1
+scope_source = 1
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_d1e6n"]
+script = ExtResource("6_akqpe")
+instructions = Array[ExtResource("4_kxueb")]([SubResource("Resource_v3nxf"), SubResource("Resource_kxueb")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [node name="UI_Collectables" type="Control" unique_id=571755204]
 layout_mode = 3
 anchors_preset = 15
@@ -170,3 +212,9 @@ autoplay = "Ide"
 [node name="Label" type="Label" parent="HBoxContainer" unique_id=625334763]
 layout_mode = 2
 text = "0"
+
+[node name="OnBananaGet" type="Node" parent="." unique_id=735504119]
+script = ExtResource("2_yxx6r")
+event_definition = SubResource("Resource_psw7l")
+action_runner = SubResource("Resource_d1e6n")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

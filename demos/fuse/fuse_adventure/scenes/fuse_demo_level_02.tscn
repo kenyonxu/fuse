@@ -23,6 +23,8 @@
 [ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="18_ehdw3"]
 [ext_resource type="PackedScene" uid="uid://drf83gp3l1112" path="res://demos/fuse/fuse_adventure/scenes/canvas_layer.tscn" id="21_d4lio"]
 [ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="22_wnpyd"]
+[ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="23_lj5vm"]
+[ext_resource type="Script" uid="uid://duus2a1c3hfdu" path="res://addons/fuse/instructions/math/math_operation.gd" id="24_f8sk5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 719)
@@ -242,6 +244,37 @@ script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_pf1ym"), SubResource("Resource_lj5vm")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
+[sub_resource type="Resource" id="Resource_v5lb7"]
+resource_name = "接收事件: banana_get"
+script = ExtResource("23_lj5vm")
+event_name = "banana_get"
+
+[sub_resource type="Resource" id="Resource_vvbtj"]
+resource_name = "banana_count [SCOPE] + 1.0"
+script = ExtResource("24_f8sk5")
+operand_a_target_node_path = NodePath("")
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+target_node_path = NodePath("")
+operation_type = 0
+operand_a_source = 1
+operand_a_variable = "banana_count"
+operand_a_scope = 1
+operand_a_scope_source = 1
+operand_a_custom_scope_id = "level_scope"
+operand_b_source = 0
+operand_b_value = 1.0
+save_to_variable = "banana_count"
+save_to_scope = 1
+scope_source = 1
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_fgjoy"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_vvbtj")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [node name="FuseDemoLevel" type="Node" unique_id=1396739659]
 script = ExtResource("1_os8oo")
 scope_id = "level_scope"
@@ -334,5 +367,11 @@ action_runner = SubResource("Resource_f8sk5")
 target_node = NodePath("../..")
 signal_name = "ready"
 metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="OnBananaGet" type="Node" parent="GameManager" unique_id=1245993995]
+script = ExtResource("9_f8sk5")
+event_definition = SubResource("Resource_v5lb7")
+action_runner = SubResource("Resource_fgjoy")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="CanvasLayer" parent="." unique_id=746731906 instance=ExtResource("21_d4lio")]
