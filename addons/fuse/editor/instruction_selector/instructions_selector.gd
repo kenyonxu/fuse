@@ -98,7 +98,8 @@ func _create_ui() -> void:
     category_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
     category_tree.item_selected.connect(_on_category_selected)
     category_tree.button_clicked.connect(_on_tree_button_clicked)
-    
+    category_tree.item_activated.connect(_on_item_activated)
+
     # 设置列宽：第一列占据大部分空间，第二列固定宽度
     category_tree.set_column_expand(0, true)  # 第一列可扩展
     category_tree.set_column_expand(1, false) # 第二列固定宽度
@@ -151,6 +152,22 @@ func _on_tree_button_clicked(item: TreeItem, column: int, id: int, mouse_button_
         var instruction_info = item.get_metadata(0)
         if instruction_info:
             _add_instruction_to_array(instruction_info)
+
+func _on_item_activated() -> void:
+    # 处理树项目双击或Enter键事件
+    var selected = category_tree.get_selected()
+    if not selected:
+        return
+
+    # 获取指令信息
+    var instruction_info = selected.get_metadata(0)
+    if not instruction_info:
+        # 如果是分类项目，展开/折叠
+        selected.set_collapsed(not selected.is_collapsed())
+        return
+
+    # 添加指令到数组（与点击加号按钮行为一致）
+    _add_instruction_to_array(instruction_info)
 
 func _on_instruction_selected(index: int = -1) -> void:
     # 简化版 - 不需要处理右侧列表选择
