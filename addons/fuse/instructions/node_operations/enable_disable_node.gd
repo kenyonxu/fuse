@@ -17,7 +17,8 @@ enum ScopeSource {
 # 控制模式
 enum ControlMode {
 	PROCESSING,  # 控制处理模式
-	VISIBLE      # 控制可见性
+	VISIBLE,     # 控制可见性
+	BOTH         # 同时控制处理模式和可见性
 }
 
 # 目标节点路径
@@ -175,7 +176,7 @@ func _get_property_list() -> Array[Dictionary]:
 		name = "mode",
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
-		hint_string = "Processing,Visible",
+		hint_string = "Processing,Visible,Both",
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
 
@@ -203,6 +204,8 @@ func _get_mode_string() -> String:
 			return FuseLocalization.translate("FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_PROCESSING_MODE")
 		ControlMode.VISIBLE:
 			return FuseLocalization.translate("FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_VISIBILITY")
+		ControlMode.BOTH:
+			return FuseLocalization.translate("FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_BOTH_MODE")
 		_:
 			return FuseLocalization.translate("FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_UNKNOWN")
 
@@ -234,6 +237,9 @@ func execute(context: ExecutionContext):
 		ControlMode.PROCESSING:
 			_set_processing_mode(node, enable)
 		ControlMode.VISIBLE:
+			_set_visible(node, enable)
+		ControlMode.BOTH:
+			_set_processing_mode(node, enable)
 			_set_visible(node, enable)
 
 	var action_key = "FUSE_LOG_NODE_ENABLED" if enable else "FUSE_LOG_NODE_DISABLED"

@@ -5104,3 +5104,4 @@ FUSE_INSTRUCTION_SET_ANIMATED_SPRITE_2D_SPEED_SCALE_DESC_FORMAT,设置 {target} 
 FUSE_LOG_SET_ANIMATED_SPRITE_2D_SPEED_SCALE,[{node}] 速度已设为 {speed},[{node}] speed set to {speed}
 FUSE_ERROR_SPEED_VAR_NAME_EMPTY,速度变量名不能为空,Speed variable name cannot be empty
 FUSE_ERROR_SPEED_VAR_NOT_FOUND,未找到速度变量：{variable},Speed variable not found: {variable}
+FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_BOTH_MODE,处理和可见性,Processing and Visibility
