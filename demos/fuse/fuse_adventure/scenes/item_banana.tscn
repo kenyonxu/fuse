@@ -2,6 +2,14 @@
 
 [ext_resource type="Texture2D" uid="uid://cv3u4olptfpae" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="1_kmh1s"]
 [ext_resource type="Texture2D" uid="uid://bd6iwvaprywty" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Collected.png" id="1_xbk4m"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_lc6oi"]
+[ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="4_wikf6"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_uqe6k"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_bqeww"]
+[ext_resource type="Script" uid="uid://duus2a1c3hfdu" path="res://addons/fuse/instructions/math/math_operation.gd" id="6_wikf6"]
+[ext_resource type="Script" uid="uid://bxi20p1anvc7o" path="res://addons/fuse/instructions/animation/animated_sprite_2d_play.gd" id="7_uqe6k"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="9_tjybd"]
+[ext_resource type="Script" uid="uid://dpsqlhclw051d" path="res://addons/fuse/instructions/node_operations/enable_disable_node.gd" id="10_tjybd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sj5wo"]
 atlas = ExtResource("1_xbk4m")
@@ -177,11 +185,107 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_rxgda"]
+radius = 14.0
+
+[sub_resource type="Resource" id="Resource_tjybd"]
+resource_name = "当 player 首次进入 ../Area2D 时触发"
+script = ExtResource("4_wikf6")
+area_node_path = NodePath("../Area2D")
+target_group = "player"
+trigger_once_per_body = true
+
+[sub_resource type="Resource" id="Resource_uqe6k"]
+resource_name = "banana_count [SCOPE] + 1.0"
+script = ExtResource("6_wikf6")
+operand_a_target_node_path = NodePath("")
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+target_node_path = NodePath("")
+operation_type = 0
+operand_a_source = 1
+operand_a_variable = "banana_count"
+operand_a_scope = 1
+operand_a_scope_source = 1
+operand_a_custom_scope_id = "level_scope"
+operand_b_source = 0
+operand_b_value = 1.0
+save_to_variable = "banana_count"
+save_to_scope = 1
+scope_source = 1
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_bqeww"]
+resource_name = "播放动画 → AnimatedSprite2D 'collect'"
+script = ExtResource("7_uqe6k")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+name_variable = ""
+name_scope = 0
+name_scope_source = 0
+name_custom_scope_id = ""
+name_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../AnimatedSprite2D")
+use_variable_for_name = false
+animation_name = "collect"
+custom_speed = 1.0
+from_end = false
+
+[sub_resource type="Resource" id="Resource_rxgda"]
+script = ExtResource("6_bqeww")
+instructions = Array[ExtResource("5_uqe6k")]([SubResource("Resource_uqe6k"), SubResource("Resource_bqeww")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_odqfd"]
+resource_name = "禁用 处理模式 '..'"
+script = ExtResource("10_tjybd")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+enable = false
+mode = 1
+
+[sub_resource type="Resource" id="Resource_fgjoy"]
+script = ExtResource("6_bqeww")
+instructions = Array[ExtResource("5_uqe6k")]([SubResource("Resource_odqfd")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [node name="Item_Banana" type="Node2D" unique_id=293041126]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1243303412]
 texture_filter = 1
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rxgda")
-animation = &"idle"
+animation = &"collect"
 autoplay = "idle"
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1124593215]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1336706926]
+shape = SubResource("CircleShape2D_rxgda")
+
+[node name="OnArea2DEnter" type="Node" parent="." unique_id=378685072]
+script = ExtResource("3_lc6oi")
+event_definition = SubResource("Resource_tjybd")
+action_runner = SubResource("Resource_rxgda")
+trigger_once = true
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Runner" type="Node" parent="." unique_id=460769775]
+script = ExtResource("9_tjybd")
+action_runner = SubResource("Resource_fgjoy")
+target_node = NodePath("../AnimatedSprite2D")
+signal_name = "animation_finished"
+action_runner = SubResource("Resource_fgjoy")
+target_node = NodePath("../AnimatedSprite2D")
+signal_name = "animation_finished"
+metadata/_custom_type_script = "uid://parouyd882ij"
