@@ -59,7 +59,7 @@
     {
       "default": "",
       "hint": 20,
-      "hint_string": "FUSE_PLACEHOLDER_LEAVE_EMPTY_FOR_DEFAULT",
+      "hint_string": "留空使用默认名称",
       "is_nested_instructions": false,
       "name": "new_node_name",
       "type": 4,
@@ -111,6 +111,262 @@
       "name": "add_value",
       "type": 3,
       "type_name": "float"
+    }
+  ],
+  "AnimatedSprite2DIsPlaying": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "save_to_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "AnimatedSprite2D",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "save_to_scope",
+      "type": 2,
+      "type_name": "int"
+    }
+  ],
+  "AnimatedSprite2DPlay": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "name_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "name_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "name_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "name_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "name_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "AnimatedSprite2D",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_name",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "animation_name",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 1.0,
+      "hint": 1,
+      "hint_string": "0.01,10,0.01,or_greater",
+      "is_nested_instructions": false,
+      "name": "custom_speed",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "from_end",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "ApplyForce": [
@@ -11418,7 +11674,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Processing,Visible",
+      "hint_string": "Processing,Visible,Both",
       "is_nested_instructions": false,
       "name": "mode",
       "type": 2,
@@ -11548,7 +11804,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_SEARCH_TYPE_BY_NAME,FUSE_SEARCH_TYPE_BY_TYPE,FUSE_SEARCH_TYPE_BY_GROUP",
+      "hint_string": "按名称,按类型,按组",
       "is_nested_instructions": false,
       "name": "search_type",
       "type": 2,
@@ -11557,7 +11813,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_SEARCH_SCOPE_CHILDREN,FUSE_SEARCH_SCOPE_SCENE,FUSE_SEARCH_SCOPE_GLOBAL",
+      "hint_string": "子节点中,场景中,全局",
       "is_nested_instructions": false,
       "name": "search_scope",
       "type": 2,
@@ -11611,7 +11867,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_ERROR_HANDLING_STRICT,FUSE_ERROR_HANDLING_SILENT,FUSE_ERROR_HANDLING_WARNING",
+      "hint_string": "严格模式,静默模式,警告模式",
       "is_nested_instructions": false,
       "name": "error_handling",
       "type": 2,
@@ -12207,6 +12463,116 @@
       "hint_string": "Local,Scope,Global",
       "is_nested_instructions": false,
       "name": "result_scope",
+      "type": 2,
+      "type_name": "int"
+    }
+  ],
+  "GetAnimatedSprite2DSpeedScale": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "save_to_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "AnimatedSprite2D",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "save_to_scope",
       "type": 2,
       "type_name": "int"
     }
@@ -15490,7 +15856,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_TRIGGER_MODE_JUST_PRESSED,FUSE_TRIGGER_MODE_JUST_RELEASED,FUSE_TRIGGER_MODE_HOLD,FUSE_TRIGGER_MODE_PRESSED_OR_RELEASED",
+      "hint_string": "刚按下时,刚释放时,按住时,按下或释放时",
       "is_nested_instructions": false,
       "name": "trigger_mode",
       "type": 2,
@@ -15510,7 +15876,7 @@
     {
       "default": "",
       "hint": 2,
-      "hint_string": "FUSE_INPUT_ACTION_NONE,,Down,Jump,Left,Right,Up",
+      "hint_string": "无,,Down,Jump,Left,Right,Up",
       "is_nested_instructions": false,
       "name": "action_up",
       "type": 4,
@@ -15519,7 +15885,7 @@
     {
       "default": "",
       "hint": 2,
-      "hint_string": "FUSE_INPUT_ACTION_NONE,,Down,Jump,Left,Right,Up",
+      "hint_string": "无,,Down,Jump,Left,Right,Up",
       "is_nested_instructions": false,
       "name": "action_down",
       "type": 4,
@@ -15528,7 +15894,7 @@
     {
       "default": "",
       "hint": 2,
-      "hint_string": "FUSE_INPUT_ACTION_NONE,,Down,Jump,Left,Right,Up",
+      "hint_string": "无,,Down,Jump,Left,Right,Up",
       "is_nested_instructions": false,
       "name": "action_left",
       "type": 4,
@@ -15537,7 +15903,7 @@
     {
       "default": "",
       "hint": 2,
-      "hint_string": "FUSE_INPUT_ACTION_NONE,,Down,Jump,Left,Right,Up",
+      "hint_string": "无,,Down,Jump,Left,Right,Up",
       "is_nested_instructions": false,
       "name": "action_right",
       "type": 4,
@@ -15546,7 +15912,7 @@
     {
       "default": false,
       "hint": 0,
-      "hint_string": "FUSE_EVENT_INPUT_ACTION_COMPOSITE_TRIGGER_ON_ZERO_DESC",
+      "hint_string": "启用后，当用户释放所有方向键时会触发一次事件，指令可以获取零向量",
       "is_nested_instructions": false,
       "name": "trigger_on_zero",
       "type": 1,
@@ -15660,7 +16026,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_ENUM_KEY_TRIGGER_MODE",
+      "hint_string": "按下:0",
       "is_nested_instructions": false,
       "name": "key_event_type",
       "type": 2,
@@ -15958,7 +16324,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_EVENT_MOUSE_BUTTON_LEFT,FUSE_EVENT_MOUSE_BUTTON_RIGHT,FUSE_EVENT_MOUSE_BUTTON_MIDDLE,FUSE_EVENT_MOUSE_BUTTON_WHEEL_UP,FUSE_EVENT_MOUSE_BUTTON_WHEEL_DOWN",
+      "hint_string": "左键,右键,中键,滚轮上,滚轮下",
       "is_nested_instructions": false,
       "name": "mouse_button",
       "type": 2,
@@ -15967,7 +16333,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_EVENT_MOUSE_BUTTON_MODE_PRESSED,FUSE_EVENT_MOUSE_BUTTON_MODE_RELEASED,FUSE_EVENT_MOUSE_BUTTON_MODE_DOUBLE_CLICK",
+      "hint_string": "按下,释放,双击",
       "is_nested_instructions": false,
       "name": "trigger_mode",
       "type": 2,
@@ -16045,7 +16411,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "FUSE_EVENT_MOUSE_MOVE_CONTINUOUS,FUSE_EVENT_MOUSE_MOVE_THRESHOLD",
+      "hint_string": "持续触发,阈值触发",
       "is_nested_instructions": false,
       "name": "trigger_mode",
       "type": 2,
@@ -16197,6 +16563,107 @@
     },
     {
       "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "trigger_once",
+      "type": 1,
+      "type_name": "bool"
+    }
+  ],
+  "OnPathFollow2DProgressRatio": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "ratio_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "ratio_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "ratio_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "ratio_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "ratio_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "PathFollow2D",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_ratio",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": 0.5,
+      "hint": 1,
+      "hint_string": "0.0,1.0,0.001",
+      "is_nested_instructions": false,
+      "name": "target_ratio",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
+      "default": 0.01,
+      "hint": 1,
+      "hint_string": "0.0,0.5,0.001,or_greater",
+      "is_nested_instructions": false,
+      "name": "tolerance",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
+      "default": 0.05,
+      "hint": 1,
+      "hint_string": "0.001,1.0,0.001,or_greater",
+      "is_nested_instructions": false,
+      "name": "check_interval",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
+      "default": true,
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
@@ -16667,7 +17134,7 @@
     {
       "default": "",
       "hint": 20,
-      "hint_string": "FUSE_EVENT_TARGET_SIGNAL_PLACEHOLDER_SELECT_NODE",
+      "hint_string": "请先选择目标节点",
       "is_nested_instructions": false,
       "name": "target_signal",
       "type": 4,
@@ -18384,6 +18851,134 @@
       "name": "deferred",
       "type": 1,
       "type_name": "bool"
+    }
+  ],
+  "SetAnimatedSprite2DSpeedScale": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "speed_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "speed_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "speed_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "speed_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "speed_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "AnimatedSprite2D",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_speed",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": 1.0,
+      "hint": 1,
+      "hint_string": "0.01,10,0.01,or_greater",
+      "is_nested_instructions": false,
+      "name": "speed_scale",
+      "type": 3,
+      "type_name": "float"
     }
   ],
   "SetAnimationBlendPosition": [
@@ -20269,7 +20864,7 @@
     {
       "default": "",
       "hint": 2,
-      "hint_string": "FUSE_INSTRUCTION_SET_PROPERTY_VALUE_SELECT_NODE_FIRST",
+      "hint_string": "请先选择目标节点",
       "is_nested_instructions": false,
       "name": "target_property",
       "type": 4,
@@ -22724,7 +23319,7 @@
     {
       "default": "",
       "hint": 2,
-      "hint_string": "FUSE_TWEEN_PROPERTY_SELECT_NODE_FIRST",
+      "hint_string": "请先选择目标节点",
       "is_nested_instructions": false,
       "name": "property_path",
       "type": 4,
