@@ -82,7 +82,7 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/valida
 | code | severity | 条件 |
 |------|----------|------|
 | `E_UNKNOWN_COMPONENT` | error | 组件 `type` 不在 schemas dump 的键集合中 |
-| `E_UNKNOWN_PARAM` | error | 参数键既非 `type` 也不在该组件 schema 参数列表中（即 A/B 测试中发现的幻觉参数名类错误） |
+| `E_UNKNOWN_PARAM` | error | 参数键既非 `type`、不在 schema 静态参数列表中、也非该状态下经 STORAGE 注册的动态属性（2026-08-21 执行中修订：schema dump 以默认状态实例化，缺 `operand_a_source==VARIABLE` 等条件注册的动态属性，校验器已增加动态属性复核；真幻觉例证为 patrol without_skill 的 `time_scope`——DIRECT 状态下未注册。当年 A/B 报的 attack `operand_a_variable` 系 dump 缺失导致的误报，AI 实际写对了参数名） |
 | `E_ENUM_RANGE` | error | 枚举参数（`hint_string` 含 `"Name:Value,..."` 对）的值不在声明范围内 |
 | `E_TYPE_MISMATCH` | error | JSON 值类型与 schema `type_name` 不兼容，按兼容表判定（见下） |
 | `W_MISSING_PARAM` | warning | 参数缺失但 schema 有默认值兜底（AI 可依赖默认值，但显式写出更稳） |
@@ -234,7 +234,7 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/eval_r
 }
 ```
 
-runner 对照 baseline：任何产物的实际结果低于基线（应过实败）→ 退出码 1，报告中高亮回归项。基线初始值按 iteration-1 回放实测结果录入。计划阶段核实代码后的预判：attack with_skill 通过、attack without_skill 失败（幻觉参数名 `operand_a_variable`/`operand_a_scope`）；patrol with_skill **失败**（Vector2 用了数组形式，实为不可导入——A/B 结论反转）、patrol without_skill 失败（幻觉参数 `time_scope`）；countdown 两版待实测。多数产物飘红正是闭环价值的即时演示。
+runner 对照 baseline：任何产物的实际结果低于基线（应过实败）→ 退出码 1，报告中高亮回归项。基线初始值按 iteration-1 回放实测结果录入（实测定案：3 过 3 败——attack with_skill ✅、countdown 双版 ✅；attack without_skill 首跑判失败，2026-08-21 动态属性复核后实为 0 error——其当年"幻觉参数"是 schema dump 缺条件注册属性的误报；patrol with_skill ❌ Vector2 数组形式、patrol without_skill ❌ `time_scope` 真幻觉。AI 生成质量的真实差异证据：patrol 的表示法错误与 scope 声明，而非参数名幻觉）。
 
 ### 5.5 live 模式（可选，标记 experimental）
 
