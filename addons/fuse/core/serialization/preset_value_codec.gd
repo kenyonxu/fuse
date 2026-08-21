@@ -165,7 +165,8 @@ static func _serialize_value(value: Variant) -> Variant:
 	if value is NodePath:
 		return str(value)
 	if value is Resource:
-		if value.resource_path != "":
+		# 场景内嵌 sub-resource（resource_path 含 ::）的引用离开源场景无意义，序列化为 inline dict
+		if value.resource_path != "" and not value.resource_path.contains("::"):
 			return value.resource_path
 		return _serialize_resource(value)
 	return value
