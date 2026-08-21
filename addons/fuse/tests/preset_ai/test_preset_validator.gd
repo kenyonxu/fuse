@@ -24,6 +24,7 @@ func _ready():
 	_test_unknown_param()
 	_test_enum_range()
 	_test_enum_implicit_index_ok()
+	_test_enum_json_roundtrip()
 	_test_type_mismatch()
 	_test_missing_param_warning()
 	print("=== 结果: %d 失败 ===" % _fail)
@@ -92,6 +93,15 @@ func _test_enum_implicit_index_ok() -> void:
 	# Wait.value_source 的 hint_string 为 "Direct,Variable"（无冒号 → 隐式索引 Direct=0, Variable=1）
 	var codes: Array = _codes({"type": "Wait", "wait_time": 1.0, "value_source": 1})
 	_check("E_ENUM_RANGE" not in codes, "无冒号枚举隐式索引：value_source=1（Variable）合法 → 无 E_ENUM_RANGE")
+
+func _test_enum_json_roundtrip() -> void:
+	# 真实 preset 文件经 JSON.parse_string 解析后数字均为 float（0 → 0.0，str() 为 "0.0"）
+	var d := _l1_with({"type": "Wait", "wait_time": 1.0, "value_source": 1})
+	var roundtrip: Variant = JSON.parse_string(JSON.stringify(d))
+	var r := PresetValidator.validate_data(roundtrip)
+	var codes: Array = r.findings.map(func(f): return f.code)
+	_check("E_ENUM_RANGE" not in codes and r.errors == 0,
+		"JSON 往返后枚举值 1.0 归一化为 1 → 无 E_ENUM_RANGE、无 error（实际: %s）" % JSON.stringify(r.findings))
 
 func _test_type_mismatch() -> void:
 	_check("E_TYPE_MISMATCH" in _codes({"type": "Wait", "wait_time": "1.0"}),

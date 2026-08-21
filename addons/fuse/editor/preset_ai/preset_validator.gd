@@ -150,7 +150,11 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 					# 仅名称格式 "Name" → Godot 按出现顺序隐式索引（0 起）
 					allowed[str(implicit_index)] = true
 				implicit_index += 1
-			if not allowed.has(str(comp[key])):
+			# JSON.parse_string 把数字解析为 float（0 → 0.0，str() 为 "0.0"），比对前归一化整值 float 为 int 字符串
+			var val_str := str(comp[key])
+			if comp[key] is float and comp[key] == floor(comp[key]):
+				val_str = str(int(comp[key]))
+			if not allowed.has(val_str):
 				findings.append(_finding("E_ENUM_RANGE", "error", path + "." + key,
 					"枚举参数 %s.%s 值 %s 不在 %s 中" % [type_name, key, str(comp[key]), p.get("hint_string")]))
 		else:
@@ -174,7 +178,7 @@ static func _check_json_type(value: Variant, p: Dictionary, path: String, type_n
 	var ok := true
 	match tn:
 		"String": ok = value is String
-		"int": ok = value is float and float(value) == floor(float(value))
+		"int": ok = (value is float or value is int) and float(value) == floor(float(value))
 		"float": ok = value is float
 		"bool": ok = value is bool
 		"NodePath": ok = value is String
