@@ -2,6 +2,9 @@
 	"attack-sequence-l2": {
 		"attack-l2/with_skill/outputs/attack.json": {
 			"pass": true
+		},
+		"attack-l2/without_skill/outputs/attack.json": {
+			"pass": true
 		}
 	},
 	"countdown-l2": {
