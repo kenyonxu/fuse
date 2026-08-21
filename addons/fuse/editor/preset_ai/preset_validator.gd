@@ -195,10 +195,14 @@ static func _check_json_type(value: Variant, p: Dictionary, path: String, type_n
 		"Object": ok = value is Dictionary or value is String
 		_:
 			if tn in _ENGINE_VALUE_TYPES:
-				if value is String: return  # 规范形式，Task 5 细化
-				ok = false
-			else:
-				return  # 未知类型名：放行，交给 codec 实测层
+				# 唯一规范形式是字符串（Task 5 实测裁定 + codec 方案 A 显式解析；
+				# StringName 虽可隐式转换，统一按字符串放行，无需特判）
+				if value is String: return
+				findings.append(_finding("E_REPR_NONCANONICAL", "error", path,
+					"引擎值类型参数 %s.%s 必须用字符串形式（如 \"(100.0, 0.0)\"），数组/字典形式无法导入"
+					% [type_name, p.get("name", "")]))
+				return
+			return  # 未知类型名：放行，交给 codec 实测层
 	if not ok:
 		findings.append(_finding("E_TYPE_MISMATCH", "error", path,
 			"参数 %s.%s 期望 %s，得到 %s" % [type_name, p.get("name", ""), tn, type_string(typeof(value))]))

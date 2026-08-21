@@ -37,6 +37,7 @@ func _ready():
 	print("=== test_preset_validator: 裁定实验 ===")
 	_test_vector2_adjudication()
 	_test_engine_value_color_roundtrip()
+	_test_repr_noncanonical()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -203,3 +204,8 @@ func _test_engine_value_color_roundtrip() -> void:
 	print("Color 泛化用例: ", str(got))
 	_check(got is Color and got == Color(1, 0.5, 0, 1),
 		"CameraFadeIn.color 字符串形式 → Color(1, 0.5, 0, 1)")
+
+func _test_repr_noncanonical() -> void:
+	var codes := _codes({"type": "TweenMoveTo", "target_node": "..",
+		"target_position": [100.0, 0.0], "duration": 1.0})
+	_check("E_REPR_NONCANONICAL" in codes, "Vector2 数组形式 → E_REPR_NONCANONICAL")
