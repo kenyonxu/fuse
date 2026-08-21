@@ -47,6 +47,8 @@ func _ready():
 	print("=== test_preset_validator: validate_path ===")
 	_test_validate_path_single_file()
 	_test_validate_path_dir_recursion()
+	print("=== test_preset_validator: 真实样本断言（M1 收尾） ===")
+	_test_real_samples()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -325,3 +327,23 @@ func _remove_dir_recursive(dir_path: String) -> void:
 		else:
 			DirAccess.remove_absolute(full)
 	DirAccess.remove_absolute(dir_path)
+
+
+# ---- 真实样本断言（Task 7，M1 收尾；M3 重导后翻转项见 Task 14）----
+
+func _codes_of_file(path: String) -> Array:
+	return PresetValidator.validate_preset(path).findings.map(func(f): return f.code)
+
+func _test_real_samples() -> void:
+	_check(PresetValidator.validate_preset("res://addons/fuse/presets/gameplay/red_planet.json").errors == 0,
+		"red_planet.json 0 error")
+	_check("E_SCENE_PRIVATE_REF" in _codes_of_file("res://addons/fuse/presets/ui/hint_breath.json"),
+		"hint_breath.json 报 E_SCENE_PRIVATE_REF（M3 重导后本断言翻转，见 Task 14）")
+	_check("E_ROUNDTRIP_LOSS" in _codes_of_file("res://addons/fuse/presets/gameplay/game_flow.json"),
+		"game_flow.json 报 E_ROUNDTRIP_LOSS（M3 重导后翻转）")
+	_check("E_ROUNDTRIP_LOSS" in _codes_of_file("res://addons/fuse/presets/gameplay/spawn_enemy.json"),
+		"spawn_enemy.json 报 E_ROUNDTRIP_LOSS（M3 重导后翻转）")
+	_check("E_UNKNOWN_PARAM" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/attack-l2/without_skill/outputs/attack.json"),
+		"attack without_skill 报幻觉参数")
+	_check("E_REPR_NONCANONICAL" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/with_skill/outputs/patrol_a_wait_b_wait.json"),
+		"patrol with_skill 报 Vector2 数组形式")
