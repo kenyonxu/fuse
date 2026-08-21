@@ -27,6 +27,10 @@ func _ready():
 	_test_enum_json_roundtrip()
 	_test_type_mismatch()
 	_test_missing_param_warning()
+	print("=== test_preset_validator: codec 实测层 ===")
+	_test_roundtrip_loss()
+	_test_event_null()
+	_test_condition_null()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -111,3 +115,27 @@ func _test_missing_param_warning() -> void:
 	var r := PresetValidator.validate_data(_l1_with({"type": "Wait"}))
 	var has_w: bool = r.findings.any(func(f): return f.code == "W_MISSING_PARAM")
 	_check(has_w and r.errors == 0, "缺参数但有默认值 → 仅 W_MISSING_PARAM，无 error")
+
+# ---- codec 实测层（Task 3）----
+
+func _test_roundtrip_loss() -> void:
+	var inst := {"type": "ForEach", "loop_instructions": ["等待 2.0 秒 (res://x.tscn::Resource_a):<Resource#1>"]}
+	var codes := _codes(inst)
+	_check("E_ROUNDTRIP_LOSS" in codes, "字符串化嵌套指令 → E_ROUNDTRIP_LOSS")
+
+func _test_event_null() -> void:
+	var d := _valid_l1()
+	d["level"] = "L2"
+	d["event"] = {"type": "NoSuchEvent"}
+	d["trigger_config"] = {"trigger_once": false, "cooldown_mode": 0, "cooldown_time": 1.0}
+	var codes: Array = PresetValidator.validate_data(d).findings.map(func(f): return f.code)
+	_check("E_EVENT_NULL" in codes and "E_UNKNOWN_COMPONENT" in codes,
+		"L2 event 未知类型 → E_EVENT_NULL + E_UNKNOWN_COMPONENT")
+
+func _test_condition_null() -> void:
+	var inst := {"type": "IfThen", "sequence_mode": 0,
+		"condition": {"type": "NoSuchCondition"},
+		"instructions": []}
+	var codes := _codes(inst)
+	_check("E_CONDITION_NULL" in codes and "E_UNKNOWN_COMPONENT" in codes,
+		"condition inline dict 未知类型 → E_CONDITION_NULL + E_UNKNOWN_COMPONENT")

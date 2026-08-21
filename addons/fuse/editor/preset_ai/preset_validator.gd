@@ -13,6 +13,12 @@ const _ENGINE_VALUE_TYPES := ["Vector2", "Vector2i", "Vector3", "Vector3i", "Vec
 	"Color", "Rect2", "Rect2i", "Quaternion", "Transform2D", "Transform3D", "Basis",
 	"AABB", "Plane", "Projection", "StringName"]
 
+# 嵌套指令字段名（codec 实测层 / 语义层递归使用；schema 层走参数驱动递归，不依赖此表）
+const _NESTED_FIELDS := ["instructions", "true_instructions", "false_instructions", "else_instructions", "loop_instructions"]
+
+const PresetValueCodecScript := preload("res://addons/fuse/core/serialization/preset_value_codec.gd")
+const FusePresetScript := preload("res://addons/fuse/core/resources/fuse_preset.gd")
+
 static var _schemas_cache: Dictionary = {}
 
 static func _finding(code: String, severity: String, json_path: String, message: String) -> Dictionary:
@@ -46,9 +52,9 @@ static func validate_data(data: Dictionary, src: String = "<inline>") -> Diction
 	var findings: Array = []
 	_validate_structure(data, findings)
 	if not findings.any(func(f): return f.code in ["E_PARSE"]):
-		_validate_schema(data, findings)      # Task 2-3 实现
-		_validate_codec(data, findings)       # Task 3 实现
-	_validate_semantics(data, findings)      # Task 4 实现
+		_validate_schema(data, findings)
+		_validate_codec(data, findings)
+	_validate_semantics(data, findings)
 	return _report_for(src, findings)
 
 
@@ -81,7 +87,7 @@ static func _validate_structure(data: Dictionary, findings: Array) -> void:
 			"声明 %s 但字段集合推断为 %s" % [declared, inferred if inferred != "" else "<无法推断>"]))
 
 
-# ---- 第 2/3/4 层占位（后续任务实现）----
+# ---- 第 2 层：schema 比对 ----
 
 static func _load_schemas() -> Dictionary:
 	if _schemas_cache.is_empty():
@@ -90,8 +96,6 @@ static func _load_schemas() -> Dictionary:
 		_schemas_cache = parsed if parsed is Dictionary else {}
 	return _schemas_cache
 
-
-# ---- 第 2 层：schema 比对 ----
 
 static func _validate_schema(data: Dictionary, findings: Array) -> void:
 	var level := _infer_level(data)
@@ -196,9 +200,85 @@ static func _check_json_type(value: Variant, p: Dictionary, path: String, type_n
 			"参数 %s.%s 期望 %s，得到 %s" % [type_name, p.get("name", ""), tn, type_string(typeof(value))]))
 
 
-static func _validate_codec(data: Dictionary, findings: Array) -> void:
-	pass
+# ---- 第 3 层：codec 实测 ----
 
+# 用真实 codec 反序列化并比对指令数量，捕获「源 JSON 里有、对象里没有」的静默丢弃
+static func _validate_codec(data: Dictionary, findings: Array) -> void:
+	var level := _infer_level(data)
+	if level in ["L1", "L2", "L3"]:
+		var src: Array = data.get("action_runner", {}).get("instructions", [])
+		var preset := FusePresetScript.from_json(data.duplicate(true))
+		var src_n := _count_instruction_dicts(src)
+		var dst_n := _count_instruction_objects(preset.instructions)
+		if src_n > dst_n:
+			findings.append(_finding("E_ROUNDTRIP_LOSS", "error", "$.action_runner.instructions",
+				"源 JSON 含 %d 条指令，反序列化仅剩 %d 条（静默丢弃）" % [src_n, dst_n]))
+		_check_conditions_restore(src, "$.action_runner.instructions", findings)
+		if level == "L2" and data.get("event", {}) is Dictionary and not (data["event"] as Dictionary).is_empty():
+			if PresetValueCodecScript.deserialize_event(data["event"]) == null:
+				findings.append(_finding("E_EVENT_NULL", "error", "$.event", "event 无法反序列化"))
+	elif level == "L4":
+		var bindings: Array = data.get("event_bindings", [])
+		for b in bindings.size():
+			var binding: Dictionary = bindings[b] if bindings[b] is Dictionary else {}
+			var ar: Dictionary = binding.get("action_runner", {})
+			var src: Array = ar.get("instructions", [])
+			var insts := PresetValueCodecScript.deserialize_instructions(src)
+			if _count_instruction_dicts(src) > _count_instruction_objects(insts):
+				findings.append(_finding("E_ROUNDTRIP_LOSS", "error",
+					"$.event_bindings[%d].action_runner.instructions" % b, "L4 binding 指令静默丢弃"))
+			_check_conditions_restore(src, "$.event_bindings[%d].action_runner.instructions" % b, findings)
+			if binding.has("event") and PresetValueCodecScript.deserialize_event(binding["event"]) == null:
+				findings.append(_finding("E_EVENT_NULL", "error", "$.event_bindings[%d].event" % b,
+					"L4 binding event 无法反序列化"))
+
+
+# 统计源 JSON 指令数组中的条目数：dict 条目计数并递归嵌套字段；
+# 非 dict 条目（字符串化的指令、null 等）反序列化必然被丢弃，同样计入以捕获丢失
+static func _count_instruction_dicts(arr: Array) -> int:
+	var n := 0
+	for item in arr:
+		n += 1
+		if item is Dictionary:
+			for field in _NESTED_FIELDS:
+				if item.get(field, null) is Array:
+					n += _count_instruction_dicts(item[field])
+	return n
+
+
+# 统计反序列化后对象树中实际保留的指令数（null 项 = 已被丢弃，不计）
+static func _count_instruction_objects(insts: Array) -> int:
+	var n := 0
+	for inst in insts:
+		if inst == null:
+			continue
+		n += 1
+		for field in _NESTED_FIELDS:
+			if field in inst:
+				var sub: Variant = inst.get(field)
+				if sub is Array:
+					n += _count_instruction_objects(sub)
+	return n
+
+
+# 与 schema 层 condition 递归对齐：dict 形式的 condition 若反序列化为 null → E_CONDITION_NULL
+static func _check_conditions_restore(arr: Array, base_path: String, findings: Array) -> void:
+	for i in arr.size():
+		var item: Variant = arr[i]
+		if not (item is Dictionary) or not item.has("type"):
+			continue
+		for field in ["condition"]:
+			var cond: Variant = item.get(field, null)
+			if cond is Dictionary and cond.has("type"):
+				if PresetValueCodecScript.deserialize_condition(cond) == null:
+					findings.append(_finding("E_CONDITION_NULL", "error",
+						"%s[%d].%s" % [base_path, i, field], "condition 无法反序列化"))
+		for field in _NESTED_FIELDS:
+			if item.get(field, null) is Array:
+				_check_conditions_restore(item[field], "%s[%d].%s" % [base_path, i, field], findings)
+
+
+# ---- 第 4 层：语义（Task 4 实现）----
 
 static func _validate_semantics(data: Dictionary, findings: Array) -> void:
 	pass
