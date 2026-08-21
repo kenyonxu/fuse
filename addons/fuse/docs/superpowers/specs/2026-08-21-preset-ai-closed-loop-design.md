@@ -240,6 +240,8 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 
 `--live` 时：读 case prompt，用 `HTTPRequest` POST 到 OpenAI 兼容端点（env：`FUSE_EVAL_API_BASE` / `FUSE_EVAL_API_KEY` / `FUSE_EVAL_MODEL`），system prompt 由可配置的文件列表拼接（SKILL.md + cheatsheet + brief + 3 个 schema JSON），产物落盘到新 iteration 目录再走回放评分。网络失败计入报告并使退出码为 1。明确标注：live 模式的 prompt 组装是近似，不等价于任何特定 agent harness 的真实上下文组装。
 
+> 执行中修订（2026-08-21，T12 裁定）：live 模式退出码恒为 0，网络失败计入报告与 fail 计数，**不**复用回归门禁的退出码 1——避免 live（experimental）的偶发网络问题污染 CI 回归门禁语义；未来需要时为 live 引入独立退出码。
+
 ## 6. 模块 C：L3/L4 + IfThen 条件构造覆盖扩展
 
 1. **修导出器场景内嵌资源序列化（T13 已落地，2026-08-21 执行中机理修正）。** 嵌套指令序列化自 commit 4452091 起已正确；且 `_serialize_value` 的 Base* 分支（BaseInstruction/BaseCondition/BaseEvent）先于通用 Resource 分支命中——condition/event/instruction 即使带 `::` resource_path 本就走 inline dict。存量 `::` 字符串（hint_breath 的 stop_condition 等）纯是 2026-07-08 旧导出产物，重导即净。T13 实际修复的是**通用引擎资源分支**（如 Curve）：`resource_path` 含 `::` 时改序列化 inline dict（此前输出必失效的引用字符串），已知权衡——引擎资源的私有属性（如 Curve 的 `_data`）不参与序列化，往返后为类型正确的空壳。随后从源场景重导被污染的样例：`addons/fuse/presets/gameplay/game_flow.json`（源：`demos/fuse/brickian/game_scene.tscn` 的 `GameManager/GameFlow`）、`spawn_enemy.json`（同场景 `GameManager/SpawnEnemy`）、`addons/fuse/presets/ui/hint_breath.json`（`demos/fuse/brickian/title_scene.tscn` 的 `Control/TitleHint/HintBreath`）及 `preset_ai_context/sample_presets/` 中的副本——修复后的验收标准是这四个样例全部通过模块 A 校验。
@@ -256,7 +258,7 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 
 - 校验器对任何畸形输入不 crash：JSON 解析失败、文件不存在、字段类型整体错误，全部转为 finding（`E_PARSE` / `E_TYPE_MISMATCH` 等），继续处理后续文件。
 - eval runner 对缺失产物文件标记 `missing` 计入报告，不中断其余 case。
-- live 模式网络/鉴权失败按 case 记入报告，退出码 1。
+- live 模式网络/鉴权失败按 case 记入报告，退出码 1。（执行中修订 2026-08-21，见 §5.5：live 恒 exit 0，不复用回归退出码 1，避免污染门禁语义；未来需要时引入独立退出码）
 
 ## 8. 测试计划（遵循 AGENTS.md：测试场景 + `_ready()` 运行，无外部框架）
 

@@ -56,6 +56,22 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/dump_c
 - 事件：`static func _get_event_metadata() -> EventMetadata`
 - 条件：`static func _get_condition_metadata() -> ConditionMetadata`
 
+### Preset AI 工具链（validate / eval）
+
+```bash
+# 离线校验 preset JSON（文件或目录，可多个；改 preset 结构/校验器后必跑）
+Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/validate_preset.tscn -- <file-or-dir>... [--report <out.json>]
+# 退出码：0 = 无 error；1 = 有 error finding；2 = 参数/IO 错误
+
+# eval 回放评分 + baseline 回归门禁（workspace 相对 res://）
+Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/eval_runner.tscn -- --workspace fuse-preset-generator-workspace --iteration <name> [--report <dir>]
+# 退出码：0 = 无回归；1 = 有回归（baseline 应过实败）；2 = 参数错误；live 模式恒 0（网络失败只计入报告）
+```
+
+惯例：
+- 测试场景结尾用 `get_tree().quit(1 if _fail > 0 else 0)` 约定退出码，headless 运行可直接做门禁判断
+- 触及 `preset_value_codec` 的任务须例行跑 `res://addons/fuse/tests/serialization/test_preset_nested_serde.tscn`（全量序列化往返较慢，需 `--quit-after 600`）
+
 ## 代码风格指南
 
 ### 文件命名
