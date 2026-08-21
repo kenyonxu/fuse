@@ -19,6 +19,7 @@ func _ready():
 	_test_variable_assertion()
 	_test_must_not()
 	_test_replay()
+	_test_baseline_regression_gate()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -94,6 +95,27 @@ func _test_replay() -> void:
 	_check(r.summary.get("total", -1) == 2 and r.summary.get("pass", -1) == 1 and r.summary.get("fail", -1) == 1,
 		"summary total/pass/fail = 2/1/1（实际: %s）" % JSON.stringify(r.summary))
 	_check(r.regressions.is_empty(), "无 baseline → 无回归")
+
+# ---- baseline 回归门禁（终审 I3：M2 验收项「抬高 baseline 触发退出码 1」此前零测试覆盖）----
+
+# 抬高 baseline 实验：把实败产物（bad/b.json）在基线中标成应过 → 重跑回放，
+# 门禁必须抓到「应过实败」（即 CLI 退出码 1 的判定输入 summary.regressions>0）。
+# 复用 _test_replay 建好的 mini_ws（good 过 / bad 败）；结尾删掉实验 baseline 还原。
+func _test_baseline_regression_gate() -> void:
+	var root := "res://addons/fuse/tests/preset_ai/fixtures/mini_ws"
+	var baseline_path := root + "/eval_baseline.json"
+	var f := FileAccess.open(baseline_path, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"mini": {"mini/bad/outputs/b.json": {"pass": true}}}))
+	f.close()
+	var r: Dictionary = EvalRunner.run_replay(root, "iter-x")
+	_check(r.regressions.size() == 1, "抬高 baseline 后回归门禁抓到 1 条（实际: %d）" % r.regressions.size())
+	var reg_path := str(r.regressions[0].get("path", "")) if r.regressions.size() == 1 else "<无回归>"
+	var hit_bad: bool = r.regressions.size() == 1 and reg_path.contains("bad")
+	_check(hit_bad, "回归命中 bad 条目（应过实败，实际 path: %s），非误伤 good" % reg_path)
+	_check(r.summary.get("regressions", -1) == 1, "summary.regressions = 1（CLI 退出码 1 的判定输入）")
+	DirAccess.remove_absolute(baseline_path)
+	var r2: Dictionary = EvalRunner.run_replay(root, "iter-x")
+	_check(r2.regressions.is_empty(), "清理实验 baseline 后回归归零（还原现场）")
 
 # Godot 4.7 的 DirAccess.remove_recursive 非静态，测试内自实现（前批先例）
 func _remove_dir_recursive(dir_path: String) -> void:
