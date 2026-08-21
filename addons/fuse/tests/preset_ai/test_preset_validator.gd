@@ -344,6 +344,8 @@ func _test_real_samples() -> void:
 	_check(PresetValidator.validate_preset("res://addons/fuse/presets/gameplay/spawn_enemy.json").errors == 0,
 		"spawn_enemy.json 重导后 0 error（Task 14 翻转：E_ROUNDTRIP_LOSS 已消除）")
 	_check(PresetValidator.validate_preset("res://fuse-preset-generator-workspace/iteration-1/attack-l2/without_skill/outputs/attack.json").errors == 0,
-		"attack without_skill 0 error（Task 14 同步翻转：当年报的 E_UNKNOWN_PARAM 是 MathOperation.operand_a_variable/operand_a_scope 的 schema 误报，参数名真实存在；产物 JSON 未动）")
+		"attack without_skill 0 error（Task 14 裁决 A 翻转：当年报的 E_UNKNOWN_PARAM 是 schema dump 缺条件注册属性的历史误报——MathOperation.operand_a_variable/operand_a_scope 真实存在，2026-08-21 动态复核修复；产物 JSON 未动。真幻觉覆盖见 patrol without 的 Wait.time_scope）")
+	_check("E_UNKNOWN_PARAM" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/without_skill/outputs/patrol.json"),
+		"patrol without_skill 报真幻觉参数 Wait.time_scope（普通 var 永不序列化，动态复核不豁免）")
 	_check("E_REPR_NONCANONICAL" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/with_skill/outputs/patrol_a_wait_b_wait.json"),
 		"patrol with_skill 报 Vector2 数组形式")
