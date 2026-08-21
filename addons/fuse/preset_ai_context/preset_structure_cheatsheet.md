@@ -1,7 +1,7 @@
 # Fuse Preset JSON 结构速查（skill-creator 素材）
 
-> 本文档面向 **AI skill 作者**，描述 L1/L2 preset JSON 的真实结构（基于 `FusePreset.from_json` + 现有样例 dump）。
-> L3/L4 暂不在 MVP skill 范围内，仅末尾附简要说明。
+> 本文档面向 **AI skill 作者**，描述 L1-L4 preset JSON 的真实结构（基于 `FusePreset.from_json` + 现有样例 dump）。
+> L1-L4 均在 skill 支持范围内；L3/L4 结构见末尾专节。
 >
 > 数据源：`addons/fuse/core/resources/fuse_preset.gd`（`from_json` / `to_json`）、
 > `addons/fuse/presets/**/*.json`（现有样例）。
@@ -128,6 +128,9 @@ L2 = L1 + 事件触发器。挂在 `Trigger` 节点。
    - `hint` + `hint_string` — 枚举提示（如 `"Synchronous:0,Asynchronous:1"`）
    - `is_nested_instructions` — **是否为嵌套指令数组**（见 §8）
 
+> **引擎值类型（Vector2/Color 等）唯一规范表示为字符串**，如 `"(100.0, 0.0)"`。数组 `[100.0, 0.0]` 与字典 `{"x": ...}` 形式无法导入，校验器报 `E_REPR_NONCANONICAL`。
+> 参数清单以 schemas JSON + 组件源码为准：个别条件组件的动态参数（如 `operand_a_source == VARIABLE` 时注册的 `operand_a_variable`）未收录进 schema，拼写以组件源码为准。
+
 **示例**（`SendEvent` 的 schema → JSON）：
 
 schema:
@@ -148,7 +151,7 @@ schema:
 
 ---
 
-## 4. L1 vs L2 决策树
+## 4. level 决策树（L1-L4）
 
 ```
 用户描述的需求
@@ -158,12 +161,12 @@ schema:
     │     ├─ 否（纯动作序列，由调用方手动 run）  → L1
     │     │      例如：刷怪序列、伤害计算步骤、UI 刷新步骤
     │     │
-    │     └─ 是（由事件驱动：定时器 / 输入 / 碰撞 / 信号 / 自定义事件）
+    │     └─ 是（由事件驱动：定时器 / 输入 / 碰撞 / 自定义事件）
     │            → L2
     │            需要选 `event.type`（OnInterval / OnReady / OnReceiveEvent / OnButtonPressed / ...）
     │            例如：呼吸动画、周期攻击、按键响应、收到事件加分
     │
-    └─ L3 / L4 不在 MVP skill 范围（见末尾"超出范围"）
+    └─ L3（信号绑定）/ L4（多事件绑定）→ 生成对应结构（见末尾专节）
 ```
 
 **常见事件类型（`event.type`）速查**（完整列表见 `fuse_components.json` 中 `category == "event"` 的项）：
@@ -264,7 +267,7 @@ schema:
 {
     "type": "IfElse",
     "sequence_mode": 1,
-    "condition": "res://demos/.../game_scene.tscn::Resource_xxx",
+    "condition": { "type": "CheckScopeVariable", "variable_name": "is_paused", "comparison_operator": 0, "expected_value": false },
     "true_instructions": [
         { "type": "PauseGame", "show_pause_menu": false, "ui_node_path": "../../GameSceneCanvas" },
         { "type": "RunRunner", "target_runner": "../SpawnEnemy", "wait_for_completion": true }
@@ -275,20 +278,24 @@ schema:
 }
 ```
 
-> ⚠️ **条件字段注意**：`IfThen.condition` / `IfElse.condition` 在当前序列化中是**条件资源的 `res://` 引用字符串**（指向 `.tscn` 内嵌的 `BaseCondition` Resource），AI 生成时无法直接构造。MVP skill 推荐用 `ExpressionCondition`（直接持表达式字符串）或在导入后由用户在编辑器内绑定。
+> **条件字段写法**：`IfThen.condition` / `IfElse.condition` 支持 **inline dict** —— `"condition": {"type": "CheckScopeVariable", ...}`（参数按 `fuse_component_schemas.json` 中该条件的条目填）。复合条件的 `conditions` 数组同法嵌套。禁止输出 `".tscn::Resource_*"` 形式的引用字符串（校验器报 `E_SCENE_PRIVATE_REF`）。
 
 ---
 
-## 超出 MVP 范围（L3 / L4）
+## L3 / L4 结构（skill 支持范围）
 
-仅供了解，不在目标 skill 产出范围内：
+skill 可直接产出 L3 / L4 preset：
 
 | 层级 | 节点 | 额外字段 |
 |------|------|----------|
 | **L3** | `Runner` | `signal_binding`（信号→指令桥接） |
 | **L4** | `MultiEventTrigger` | `event_bindings`（多事件数组，每项含 `event` + `binding_config` + `action_runner`） |
 
-L4 示例参考 `sample_presets/game_flow.json`（多事件触发器，含 5 个事件绑定）。
+**字段说明**：
+
+- **L3** = L1 + `"signal_binding": {"signal_name": "<信号名>"}`；导入时通过 `__target_node__` 映射挂载信号源节点
+- **L4** = `"trigger_config": {"use_parallel_condition_evaluation": <bool>}` + `"event_bindings": [{"event": {...}, "binding_config": {"enabled": <bool>, "trigger_once": <bool>, "cooldown_mode": <int>, "cooldown_time": <float>}, "action_runner": {...}, "conditions": [...](可选)}]`
+- L4 干净样例：`sample_presets/game_flow.json`（多事件触发器，重导后无内嵌资源引用）
 
 ---
 
@@ -309,4 +316,12 @@ JSON 落盘后，用户在 Godot 编辑器内通过 Inspector → "导入预设"
 2. `validate_imported_node()` — 检查 NodePath 有效性、变量依赖、组件类型注册，以**警告**形式展示
 3. `NodePathResolver` 三级匹配 → `NodePathMappingDialog` 人工确认
 
-AI 不需要在生成时跑验证；只需保证 JSON 结构与 schema 对齐。
+**（可选）headless 校验**：落盘后可跑独立校验器自检（含 `E_REPR_NONCANONICAL` / `E_SCENE_PRIVATE_REF` 等错误码检查）：
+
+```bash
+Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/validate_preset.tscn -- <file-or-dir> [--report <out>]
+```
+
+退出码：`0` = 通过，`1` = 校验失败，`2` = 运行错误。
+
+AI 不强制在生成时跑验证（headless 校验可选）；只需保证 JSON 结构与 schema 对齐。
