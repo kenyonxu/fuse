@@ -31,7 +31,7 @@
 
 1. **Vector2 疑案（重要纠错）。** 价值评估文档 §3.1 的 A/B 对比称「with_skill 把 Vector2 写成数组 `[0.0, 0.0]` 是正确写法，无 skill 的字符串 `"(100.0, 0.0)"` 无效」。但阅读 `PresetValueCodec.deserialize_value()`（`addons/fuse/core/serialization/preset_value_codec.gd:94`）发现：Vector2 无特判，靠 `Object.set()` 的 Variant 隐式转换——**字符串形式可能可转，数组形式反而不行**。现有导出样例（`red_planet.json`）用的正是字符串形式。也就是说，当时的人工 A/B 评测从未真正回导过产物，可能把错误结论写进了评估文档。**教训：表示法的裁决权必须交给真实 codec 实测，这是模块 A 的验收门槛之一。** 本 spec 记录该纠错，cheatsheet 在模块 C 中改正，历史评估文档保持原样不动。
 
-2. **现有导出样例不可完全回导（语料污染）。** `game_flow.json` / `spawn_enemy.json` 中 `IfThen.instructions` 等嵌套指令被序列化成显示字符串（形如 `"发送事件: AllEnemyDied (res://...::Resource_5y4ic):<Resource#...>"`），反序列化时 `PresetValueCodec` 对非 dict 项只 `push_warning` 跳过——嵌套指令静默丢失。这既是 eval 语料污染，也是校验器的现成负例，更说明导出器有序列化 bug（模块 C 修复）。
+2. **现有导出样例不可完全回导（语料污染）。** `game_flow.json` / `spawn_enemy.json` 中 `IfThen.instructions` 等嵌套指令被序列化成显示字符串（形如 `"发送事件: AllEnemyDied (res://...::Resource_5y4ic):<Resource#...>"`），反序列化时 `PresetValueCodec` 对非 dict 项只 `push_warning` 跳过——嵌套指令静默丢失。git 考古（样例导出于 2026-07-08 commit 1fde87f，递归 serde codec 于 2026-08-10 commit 4452091 才引入）表明**导出器当前并无此 bug，样例只是早于 codec 的过期产物**。模块 C 真正要修的是另一处：`_serialize_value()` 对场景内嵌资源（`resource_path` 含 `::`）输出无意义的私有引用字符串（`hint_breath.json` 的 `stop_condition` 即此类），应改为 inline dict，再从源场景重导样例。
 
 3. **IfThen/IfElse 的 condition 构造其实已被 codec 支持。** `deserialize_value()` 第 120-122 行：目标属性为 object 且 raw 是 Dictionary 时递归 `_deserialize_resource()`；`tests/serialization/test_preset_nested_serde.gd` 已证明 inline dict 往返 + 执行通过。「AI 无法构造 condition」的真正障碍是：现有导出样例全是场景私有引用字符串（`xxx.tscn::Resource_xxx`），且 cheatsheet/brief 把整条路标为禁区。模块 C 的解禁是文档 + 样例 + 校验规则工作，不是序列化能力建设。
 
@@ -234,7 +234,7 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/eval_r
 }
 ```
 
-runner 对照 baseline：任何产物的实际结果低于基线（应过实败）→ 退出码 1，报告中高亮回归项。基线初始值按 iteration-1 回放实测结果录入（预期：with_skill 通过、without_skill 因幻觉参数名失败——这本身就是闭环价值的即时演示）。
+runner 对照 baseline：任何产物的实际结果低于基线（应过实败）→ 退出码 1，报告中高亮回归项。基线初始值按 iteration-1 回放实测结果录入。计划阶段核实代码后的预判：attack with_skill 通过、attack without_skill 失败（幻觉参数名 `operand_a_variable`/`operand_a_scope`）；patrol with_skill **失败**（Vector2 用了数组形式，实为不可导入——A/B 结论反转）、patrol without_skill 失败（幻觉参数 `time_scope`）；countdown 两版待实测。多数产物飘红正是闭环价值的即时演示。
 
 ### 5.5 live 模式（可选，标记 experimental）
 
@@ -242,11 +242,11 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 
 ## 6. 模块 C：L3/L4 + IfThen 条件构造覆盖扩展
 
-1. **修导出器嵌套指令序列化 bug。** `PresetValueCodec` 的数组序列化路径对 `Array[BaseInstruction]` 元素必须走 `_serialize_resource()` 产出 dict，不得产出显示字符串。修后用 roundtrip 测试固定（扩展 `test_preset_nested_serde.gd` 或新增导出侧测试）。重导或手工修复被污染的样例：`addons/fuse/presets/gameplay/game_flow.json`、`spawn_enemy.json` 及 `preset_ai_context/sample_presets/` 中的副本——修复后的验收标准是这四个样例全部通过模块 A 校验。
+1. **修导出器场景内嵌资源序列化。** 嵌套指令序列化自 commit 4452091 起已正确（现有样例的字符串化嵌套是 2026-07-08 的旧导出产物，非当前 bug）。真正要修的是 `PresetValueCodec._serialize_value()`：Resource 的 `resource_path` 含 `::`（`.tscn` 内嵌 sub-resource）时，输出的引用字符串离开源场景无意义——改为序列化 inline dict。用导出侧测试固定（给 condition 设置含 `::` 的 resource_path，断言序列化为 dict 而非字符串）。随后从源场景重导被污染的样例：`addons/fuse/presets/gameplay/game_flow.json`（源：`demos/fuse/brickian/game_scene.tscn` 的 `GameManager/GameFlow`）、`spawn_enemy.json`（同场景 `GameManager/SpawnEnemy`）、`addons/fuse/presets/ui/hint_breath.json`（`demos/fuse/brickian/title_scene.tscn` 的 `Control/TitleHint/HintBreath`）及 `preset_ai_context/sample_presets/` 中的副本——修复后的验收标准是这四个样例全部通过模块 A 校验。
 
 2. **文档解禁 condition 构造。** 改 `preset_structure_cheatsheet.md` 与 `skill_workflow_brief.md`：IfThen/IfElse 的 `condition` 字段从「禁区」改为支持 inline dict 形式——`"condition": {"type": "CheckScopeVariable", ...按 schema 填参}`；复合条件的嵌套条件数组同法。同时删除/更新「IfThen 条件无法构造」的已知限制条目。
 
-3. **补 L3/L4 文档与样例。** cheatsheet 补 L3（`signal_binding{signal_name}`，导入时 `__target_node__` 映射）与 L4（`trigger_config.use_parallel_parallel_condition_evaluation`、`event_bindings[]{event, binding_config{enabled, trigger_once, cooldown_mode, cooldown_time}, action_runner, conditions?}`）结构说明；手工各写一个 L3、L4 样例放入 `sample_presets/`，验收标准为通过模块 A 校验；相应更新 `fuse-preset-generator` SKILL.md 的 MVP 范围声明（✅L1-L4）。
+3. **补 L3/L4 文档与样例。** cheatsheet 补 L3（`signal_binding{signal_name}`，导入时 `__target_node__` 映射）与 L4（`trigger_config.use_parallel_condition_evaluation`、`event_bindings[]{event, binding_config{enabled, trigger_once, cooldown_mode, cooldown_time}, action_runner, conditions?}`）结构说明；手工各写一个 L3、L4 样例放入 `sample_presets/`，验收标准为通过模块 A 校验；相应更新 `fuse-preset-generator` SKILL.md 的 MVP 范围声明（✅L1-L4）。
 
 4. **校验器规则同步。** L3/L4 字段纳入第 1/2 层校验（signal_name 非空、event_bindings 结构、binding_config 枚举值合法）；condition inline dict 递归校验（4.3）随本模块的负例 fixture 一并落地。
 
@@ -263,8 +263,8 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 新增 `addons/fuse/tests/preset_ai/`：
 
 - `test_preset_validator.tscn/.gd`
-  - 正例（M1 阶段）：`hint_breath.json` 与 `red_planet.json` 通过；
-  - 正例（M3 阶段追加）：导出器修复并重导后的 `game_flow.json` / `spawn_enemy.json` 通过（M1 阶段它们必须正确报出 `E_ROUNDTRIP_LOSS`，这是校验器在工作的证据，不是测试失败）；
+  - 正例（M1 阶段）：`red_planet.json` 通过；`hint_breath.json` 正确报出 `E_SCENE_PRIVATE_REF`（其 `stop_condition` 是场景私有引用）；
+  - 正例（M3 阶段追加）：重导修复后的 `hint_breath.json` / `game_flow.json` / `spawn_enemy.json` 通过（M1 阶段后两者必须正确报出 `E_ROUNDTRIP_LOSS`，这是校验器在工作的证据，不是测试失败）；
   - 负例 fixture（埋入单一缺陷，断言触发特定 code）：未知组件 type → `E_UNKNOWN_COMPONENT`；幻觉参数名 → `E_UNKNOWN_PARAM`；枚举越界 → `E_ENUM_RANGE`；字符串化嵌套指令 → `E_ROUNDTRIP_LOSS`；场景私有 condition 引用 → `E_SCENE_PRIVATE_REF`；错误 level 声明 → `E_LEVEL_MISMATCH`；
   - Vector2 裁定断言（4.5 的实测结论固化为测试）。
 - `test_eval_runner.tscn/.gd`：迷你 fixture workspace（1 case + 2 产物，一过一败）→ 报告生成正确；抬高 baseline 后回归门禁触发退出码 1。
@@ -273,7 +273,7 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 
 | 里程碑 | 内容 | 验收 |
 |--------|------|------|
-| M1 | 模块 A 校验器 | 4 个现有样例 + iteration-1 全部 6 份产物完成校验并产出结构化报告；预期结果明确：`hint_breath` / `red_planet` 通过，`game_flow` / `spawn_enemy` 正确报出 `E_ROUNDTRIP_LOSS`（M3 修复后转绿），without_skill 产物正确报出幻觉参数名；Vector2 表示法裁定完成并写入测试；校验器测试场景通过 |
+| M1 | 模块 A 校验器 | 4 个现有样例 + iteration-1 全部 6 份产物完成校验并产出结构化报告；预期结果明确：`red_planet` 通过；`hint_breath` 正确报出 `E_SCENE_PRIVATE_REF`（其 `stop_condition` 是场景私有引用，M3 重导后转绿）；`game_flow` / `spawn_enemy` 正确报出 `E_ROUNDTRIP_LOSS`（M3 修复后转绿）；without_skill 产物正确报出幻觉参数名；Vector2 表示法裁定完成并写入测试；校验器测试场景通过 |
 | M2 | 模块 B runner | iteration-1 回放出 report.md/json；baseline 录入；抬高 baseline 实验触发退出码 1；runner 测试通过 |
 | M3 | 模块 C 覆盖 | 导出器修复 + 4 样例重导并校验通过；cheatsheet/brief/SKILL.md 更新（condition 解禁、L3/L4、296→306）；新 L3/L4 样例校验通过并各加 1 个 eval case |
 
@@ -282,21 +282,24 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 **新增：**
 
 - `addons/fuse/editor/preset_ai/preset_validator.gd`
-- `addons/fuse/editor/preset_ai/validate_preset.tscn`
+- `addons/fuse/editor/preset_ai/validate_preset.tscn`（含根脚本）
 - `addons/fuse/editor/preset_ai/eval_runner.gd`
-- `addons/fuse/editor/preset_ai/eval_runner.tscn`
-- `fuse-preset-generator-workspace/evals/cases/{patrol-sequence-l1,attack-sequence-l2,countdown-l2}.json`
+- `addons/fuse/editor/preset_ai/eval_runner.tscn`（含根脚本）
+- `addons/fuse/editor/preset_ai/regen_samples.tscn`（含根脚本，M3 样例重导）
+- `fuse-preset-generator-workspace/evals/cases/{patrol-sequence-l1,attack-sequence-l2,countdown-l2,l3-runner-sample,l4-multi-sample}.json`
 - `fuse-preset-generator-workspace/eval_baseline.json`
 - `addons/fuse/tests/preset_ai/test_preset_validator.{gd,tscn}`
 - `addons/fuse/tests/preset_ai/test_eval_runner.{gd,tscn}`（含迷你 fixture workspace）
+- `addons/fuse/tests/preset_ai/test_codec_inline_export.{gd,tscn}`
+- `addons/fuse/preset_ai_context/sample_presets/sample_l3_runner.json`、`sample_l4_multi.json`
 
 **修改：**
 
-- `addons/fuse/core/serialization/preset_value_codec.gd`（导出器嵌套指令修复）
-- `addons/fuse/presets/gameplay/{game_flow,spawn_enemy}.json` + `preset_ai_context/sample_presets/` 副本（重导）
-- `addons/fuse/preset_ai_context/preset_structure_cheatsheet.md`（Vector2 规范、condition 解禁、L3/L4）
-- `addons/fuse/preset_ai_context/skill_workflow_brief.md`（同上 + 296→306）
-- `.claude/skills/fuse-preset-generator/SKILL.md`（MVP 范围 L1-L4、condition 指引）
+- `addons/fuse/core/serialization/preset_value_codec.gd`（`_serialize_value`：场景内嵌资源改为 inline dict）
+- `addons/fuse/presets/gameplay/{game_flow,spawn_enemy}.json`、`addons/fuse/presets/ui/hint_breath.json` + `preset_ai_context/sample_presets/` 副本（从源场景重导）
+- `addons/fuse/preset_ai_context/preset_structure_cheatsheet.md`（Vector2 规范、condition 解禁、L3/L4 结构）
+- `addons/fuse/preset_ai_context/skill_workflow_brief.md`（同上 + 296→306 + MVP 范围 L1-L4）
+- `.claude/skills/fuse-preset-generator/SKILL.md`（MVP 范围 L1-L4、Vector2 规范、condition 指引）
 
 ## 11. 风险与开放问题
 
