@@ -129,7 +129,7 @@ L2 = L1 + 事件触发器。挂在 `Trigger` 节点。
    - `is_nested_instructions` — **是否为嵌套指令数组**（见 §8）
 
 > **引擎值类型（Vector2/Color 等）唯一规范表示为字符串**，如 `"(100.0, 0.0)"`。数组 `[100.0, 0.0]` 与字典 `{"x": ...}` 形式无法导入，校验器报 `E_REPR_NONCANONICAL`。
-> 参数清单以 schemas JSON + 组件源码为准：个别条件组件的动态参数（如 `operand_a_source == VARIABLE` 时注册的 `operand_a_variable`）未收录进 schema，拼写以组件源码为准。
+> 参数清单以 schemas JSON + 组件源码为准：个别组件按条件注册的动态参数（如 `MathOperation.operand_a_variable`，`operand_a_source == VARIABLE` 时注册）未收录进 schema，拼写以组件源码为准。
 
 **示例**（`SendEvent` 的 schema → JSON）：
 

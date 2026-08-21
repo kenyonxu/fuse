@@ -16,7 +16,7 @@ description: 生成 Fuse 可视化编程 preset JSON（L1-L4：指令序列 / �
 ### 2. 据用户描述决策
 - **选 level**：无触发 → L1（纯指令序列）；有触发 → L2（+ event + trigger_config）；需要挂信号触发 → L3（+ signal_binding）；多事件绑定 → L4（trigger_config + event_bindings）
 - **选组件**：读 `addons/fuse/preset_ai_context/fuse_components.json`（按 category/keywords 匹配用户意图）
-- **填参数**：读 `addons/fuse/preset_ai_context/fuse_component_schemas.json[<ClassName>]`（每组件参数 + 类型 + 默认值 + 嵌套标记；参数清单以 schemas JSON + 组件源码为准——个别条件组件的动态参数未收录进 schema）
+- **填参数**：读 `addons/fuse/preset_ai_context/fuse_component_schemas.json[<ClassName>]`（每组件参数 + 类型 + 默认值 + 嵌套标记；参数清单以 schemas JSON + 组件源码为准——个别组件按条件注册的动态参数如 `MathOperation.operand_a_variable` 未收录进 schema）
 - **选枚举**：读 `addons/fuse/preset_ai_context/fuse_enums.json`（VariableScope/ExecutionMode/SequenceMode/CooldownMode/ScopeSource 的 int 值）
 - **NodePath**：相对路径占位符（`../Player` / `../../HUD/Score`），import 时 NodePathResolver 三级匹配兜底
 - **不确定结构时**：参考 `addons/fuse/preset_ai_context/sample_presets/`（4 真实 preset few-shot）

@@ -50,7 +50,7 @@
    - 必填项优先（无默认值的）
    - 枚举值查 `fuse_enums.json` 或 schema 的 `hint_string`
    - 嵌套指令字段（schema 中 `is_nested_instructions: true`）递归填子指令
-   - 参数清单以 schemas JSON + 组件源码为准（个别条件组件的动态参数未收录进 schema）
+   - 参数清单以 schemas JSON + 组件源码为准（个别组件按条件注册的动态参数未收录进 schema，如 `MathOperation.operand_a_variable`）
 4. **NodePath 写相对占位**（见 cheatsheet §5）：`..` / `../Player` / `../../GameSceneCanvas` / `./HUD/Score`
 5. **变量声明**（`variables.local` / `scope` / `global`，见 cheatsheet §6）；不确定就留空数组让 import 时 collect
 
@@ -102,7 +102,7 @@
    - `<name>` — snake_case 文件名
 2. 提示用户：
    - 文件已落盘路径
-   - "在 Godot 编辑器内选中 Trigger（L2）或 ActionRunner（L1）节点，Inspector 底部 → 导入预设 → 选择此 .json"
+   - "在 Godot 编辑器内选中 ActionRunner（L1）/ Trigger（L2）/ Runner（L3）/ MultiEventTrigger（L4）节点，Inspector 底部 → 导入预设 → 选择此 .json"
    - 若包含 NodePath，提示用户在 `NodePathMappingDialog` 内确认映射
 3. （可选）跑 headless 校验自检（命令见 §5），失败则按错误码修正后重写
 
