@@ -337,13 +337,13 @@ func _codes_of_file(path: String) -> Array:
 func _test_real_samples() -> void:
 	_check(PresetValidator.validate_preset("res://addons/fuse/presets/gameplay/red_planet.json").errors == 0,
 		"red_planet.json 0 error")
-	_check("E_SCENE_PRIVATE_REF" in _codes_of_file("res://addons/fuse/presets/ui/hint_breath.json"),
-		"hint_breath.json 报 E_SCENE_PRIVATE_REF（M3 重导后本断言翻转，见 Task 14）")
-	_check("E_ROUNDTRIP_LOSS" in _codes_of_file("res://addons/fuse/presets/gameplay/game_flow.json"),
-		"game_flow.json 报 E_ROUNDTRIP_LOSS（M3 重导后翻转）")
-	_check("E_ROUNDTRIP_LOSS" in _codes_of_file("res://addons/fuse/presets/gameplay/spawn_enemy.json"),
-		"spawn_enemy.json 报 E_ROUNDTRIP_LOSS（M3 重导后翻转）")
-	_check("E_UNKNOWN_PARAM" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/attack-l2/without_skill/outputs/attack.json"),
-		"attack without_skill 报幻觉参数")
+	_check(PresetValidator.validate_preset("res://addons/fuse/presets/ui/hint_breath.json").errors == 0,
+		"hint_breath.json 重导后 0 error（Task 14 翻转：E_SCENE_PRIVATE_REF 已消除）")
+	_check(PresetValidator.validate_preset("res://addons/fuse/presets/gameplay/game_flow.json").errors == 0,
+		"game_flow.json 重导后 0 error（Task 14 翻转：E_ROUNDTRIP_LOSS 已消除）")
+	_check(PresetValidator.validate_preset("res://addons/fuse/presets/gameplay/spawn_enemy.json").errors == 0,
+		"spawn_enemy.json 重导后 0 error（Task 14 翻转：E_ROUNDTRIP_LOSS 已消除）")
+	_check(PresetValidator.validate_preset("res://fuse-preset-generator-workspace/iteration-1/attack-l2/without_skill/outputs/attack.json").errors == 0,
+		"attack without_skill 0 error（Task 14 同步翻转：当年报的 E_UNKNOWN_PARAM 是 MathOperation.operand_a_variable/operand_a_scope 的 schema 误报，参数名真实存在；产物 JSON 未动）")
 	_check("E_REPR_NONCANONICAL" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/with_skill/outputs/patrol_a_wait_b_wait.json"),
 		"patrol with_skill 报 Vector2 数组形式")

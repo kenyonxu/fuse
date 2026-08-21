@@ -100,7 +100,7 @@
 						"target_variable": "",
 						"type": "GetAllChildrenPosition",
 						"use_global_position": true,
-						"use_variable": false
+						"use_variable_for_target": false
 					},
 					{
 						"batch_delay": 0.1,
@@ -279,9 +279,38 @@
 						"type": "SendEvent"
 					},
 					{
-						"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_mcog3",
+						"condition": {
+							"auto_convert_types": true,
+							"cache_context_changes": true,
+							"cache_duration": 1.0,
+							"case_sensitive": true,
+							"check_with_another_variable": false,
+							"compare_custom_scope_id": "",
+							"compare_scope_source": 0,
+							"compare_target_node_path": "",
+							"compare_variable": "",
+							"compare_variable_scope": 0,
+							"comparison_operator": 3,
+							"custom_scope_id": "",
+							"enable_cache": false,
+							"enabled": true,
+							"expected_value": 1,
+							"hash_all_variables": false,
+							"negate_result": false,
+							"scope_source": 0,
+							"target_node_path": "",
+							"treat_empty_as_null": false,
+							"type": "CheckVariable",
+							"variable_name": "enemy_count",
+							"variable_scope": 1
+						},
 						"instructions": [
-							"发送事件: AllEnemyDied (res://demos/fuse/brickian/game_scene.tscn::Resource_5y4ic):<Resource#-9223369357650733775>"
+							{
+								"deferred": false,
+								"event_args": {},
+								"event_name": "AllEnemyDied",
+								"type": "SendEvent"
+							}
 						],
 						"sequence_mode": 1,
 						"type": "IfThen"
@@ -349,18 +378,138 @@
 						"wait_time": 0.1
 					},
 					{
-						"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_pj6tb",
+						"condition": {
+							"auto_convert_types": true,
+							"cache_context_changes": true,
+							"cache_duration": 1.0,
+							"case_sensitive": true,
+							"check_with_another_variable": false,
+							"compare_custom_scope_id": "",
+							"compare_scope_source": 0,
+							"compare_target_node_path": "",
+							"compare_variable": "",
+							"compare_variable_scope": 0,
+							"comparison_operator": 3,
+							"custom_scope_id": "",
+							"enable_cache": false,
+							"enabled": true,
+							"expected_value": 0,
+							"hash_all_variables": false,
+							"negate_result": false,
+							"scope_source": 0,
+							"target_node_path": "",
+							"treat_empty_as_null": false,
+							"type": "CheckVariable",
+							"variable_name": "player_life",
+							"variable_scope": 1
+						},
 						"false_instructions": [
-							"发送事件: StartCountDown (res://demos/fuse/brickian/game_scene.tscn::Resource_ejd0v):<Resource#-9223369357348743877>",
-							"等待 2.0 秒 (res://demos/fuse/brickian/game_scene.tscn::Resource_2y4y2):<Resource#-9223369357298412228>",
-							"实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos (res://demos/fuse/brickian/game_scene.tscn::Resource_ull3x):<Resource#-9223369357281635011>",
-							"等待 1.0 秒 (res://demos/fuse/brickian/game_scene.tscn::Resource_onugj):<Resource#-9223369357231303362>",
-							"恢复游戏 (res://demos/fuse/brickian/game_scene.tscn::Resource_j327c):<Resource#-9223369357214526145>"
+							{
+								"deferred": false,
+								"event_args": {},
+								"event_name": "StartCountDown",
+								"type": "SendEvent"
+							},
+							{
+								"custom_scope_id": "",
+								"scope_source": 0,
+								"target_node_path": "",
+								"type": "Wait",
+								"value_source": 0,
+								"wait_time": 2.0
+							},
+							{
+								"custom_scope_id": "",
+								"parent_node": "",
+								"position_mode": 1,
+								"position_scope": 1,
+								"position_scope_source": 0,
+								"position_variable": "start_pos",
+								"save_instance_id": false,
+								"save_to_scope": 0,
+								"scene_path": "uid://c37gfmeoqbajm",
+								"scope_source": 0,
+								"spawn_offset": "(0.0, 0.0, 0.0)",
+								"spawn_position": "(0.0, 0.0, 0.0)",
+								"target_node_path": "",
+								"target_variable": "instance_id",
+								"type": "InstantiateScene",
+								"use_object_pool": false
+							},
+							{
+								"custom_scope_id": "",
+								"scope_source": 0,
+								"target_node_path": "",
+								"type": "Wait",
+								"value_source": 0,
+								"wait_time": 1.0
+							},
+							{
+								"close_pause_menu": false,
+								"pause_menu_node": "",
+								"type": "ResumeGame",
+								"ui_node_path": "../../GameSceneCanvas"
+							}
 						],
 						"sequence_mode": 1,
 						"true_instructions": [
-							"If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [FUSE_INSTRUCTION_IF_ELSE_MODE_ASYNC] (res://demos/fuse/brickian/game_scene.tscn::Resource_52e3n):<Resource#-9223369357097085630>",
-							"发送事件: GameEnd (res://demos/fuse/brickian/game_scene.tscn::Resource_kpi76):<Resource#-9223369357046753981>"
+							{
+								"condition": {
+									"auto_convert_types": true,
+									"cache_context_changes": true,
+									"cache_duration": 1.0,
+									"case_sensitive": true,
+									"check_with_another_variable": false,
+									"compare_custom_scope_id": "",
+									"compare_scope_source": 0,
+									"compare_target_node_path": "",
+									"compare_variable": "",
+									"compare_variable_scope": 0,
+									"comparison_operator": 2,
+									"custom_scope_id": "",
+									"enable_cache": false,
+									"enabled": true,
+									"expected_value": 0,
+									"hash_all_variables": false,
+									"negate_result": false,
+									"scope_source": 0,
+									"target_node_path": "",
+									"treat_empty_as_null": false,
+									"type": "CheckVariable",
+									"variable_name": "current_score",
+									"variable_scope": 1
+								},
+								"instructions": [
+									{
+										"array_custom_scope_id": "",
+										"array_scope": 2,
+										"array_scope_source": 0,
+										"array_target_node_path": "",
+										"array_variable": "score_list",
+										"element_custom_scope_id": "",
+										"element_from_variable": "current_score",
+										"element_from_variable_scope": 1,
+										"element_scope_source": 0,
+										"element_target_node_path": "",
+										"element_value": null,
+										"group_name": "",
+										"source_type": 0,
+										"target_node_path": "",
+										"type": "ArrayAdd",
+										"use_element_from_variable": true
+									}
+								],
+								"sequence_mode": 1,
+								"type": "IfThen"
+							},
+							{
+								"deferred": false,
+								"event_args": {
+									"end": "loss"
+								},
+								"event_name": "GameEnd",
+								"type": "SendEvent"
+							}
 						],
 						"type": "IfElse"
 					}
@@ -404,14 +553,62 @@
 						"type": "MathOperation"
 					},
 					{
-						"condition": "res://demos/fuse/brickian/game_scene.tscn::Resource_8v20a",
+						"condition": {
+							"auto_convert_types": true,
+							"cache_context_changes": true,
+							"cache_duration": 1.0,
+							"case_sensitive": true,
+							"check_with_another_variable": false,
+							"compare_custom_scope_id": "",
+							"compare_scope_source": 0,
+							"compare_target_node_path": "",
+							"compare_variable": "",
+							"compare_variable_scope": 0,
+							"comparison_operator": 5,
+							"custom_scope_id": "",
+							"enable_cache": false,
+							"enabled": true,
+							"expected_value": 3,
+							"hash_all_variables": false,
+							"negate_result": false,
+							"scope_source": 0,
+							"target_node_path": "",
+							"treat_empty_as_null": false,
+							"type": "CheckVariable",
+							"variable_name": "current_wave",
+							"variable_scope": 1
+						},
 						"false_instructions": [
-							"发送事件: GameEnd (res://demos/fuse/brickian/game_scene.tscn::Resource_rimn6):<Resource#-9223369356828650166>"
+							{
+								"deferred": false,
+								"event_args": {
+									"end": "win"
+								},
+								"event_name": "GameEnd",
+								"type": "SendEvent"
+							}
 						],
 						"sequence_mode": 1,
 						"true_instructions": [
-							"暂停游戏 (仅暂停) (res://demos/fuse/brickian/game_scene.tscn::Resource_s2i3n):<Resource#-9223369356778318517>",
-							"运行 Runner '../SpawnEnemy' 立即返回 (res://demos/fuse/brickian/game_scene.tscn::Resource_7e0w5):<Resource#-9223369356727986868>"
+							{
+								"pause_menu_parent": "",
+								"pause_menu_scene": "",
+								"show_pause_menu": false,
+								"type": "PauseGame",
+								"ui_node_path": "../../GameSceneCanvas"
+							},
+							{
+								"context_node_path": "",
+								"custom_scope_id": "",
+								"result_variable_name": "",
+								"result_variable_scope": 0,
+								"scope_source": 0,
+								"store_result": false,
+								"target_node_path": "",
+								"target_runner": "../SpawnEnemy",
+								"type": "RunRunner",
+								"wait_for_completion": false
+							}
 						],
 						"type": "IfElse"
 					}

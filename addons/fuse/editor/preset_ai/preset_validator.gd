@@ -203,6 +203,31 @@ static func _load_schemas() -> Dictionary:
 	return _schemas_cache
 
 
+# 组件动态参数收集（E_UNKNOWN_PARAM 的动态属性豁免）。
+# schemas dump 基于默认状态实例；条件暴露的动态属性（如 MathOperation.operand_a_variable
+# 仅 operand_a_source==VARIABLE 时经 _get_property_list 注册，InstantiateScene.pool_* 仅
+# use_object_pool=true 时注册）不在其中，但组件真实拥有且序列化器会输出。
+# 探测方式：先按本 JSON 的键值恢复组件状态（与源场景实例状态等价），
+# 再收集带 STORAGE 的属性名——与 PresetValueCodec 的序列化输出条件完全一致。
+# 注意同名属性会出现两批（引擎静态视图 + 脚本动态注册），任一批带 STORAGE 即可序列化。
+static func _collect_dynamic_params(type_name: String, comp: Dictionary) -> Dictionary:
+	var names := {}
+	var script: GDScript = PresetValueCodecScript._resolve_script(type_name)
+	if script == null:
+		return names
+	var inst: Variant = script.new()
+	if not (inst is Object):
+		return names
+	for k in comp:
+		if k == "type":
+			continue
+		(inst as Object).set(k, PresetValueCodecScript.deserialize_value(inst, k, comp[k]))
+	for prop in (inst as Object).get_property_list():
+		if (int(prop.get("usage", 0)) & PROPERTY_USAGE_STORAGE) != 0:
+			names[String(prop.get("name", ""))] = true
+	return names
+
+
 static func _validate_schema(data: Dictionary, findings: Array) -> void:
 	var level := _infer_level(data)
 	if level in ["L1", "L2", "L3"]:
@@ -242,9 +267,15 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 	var known := {}
 	for p in params:
 		known[p["name"]] = p
+	# 懒探测：本组件按 JSON 状态恢复后可序列化、但 schema（默认状态快照）未收录的动态属性
+	var dynamic_params: Variant = null
 	for key in comp:
 		if key == "type": continue
 		if not known.has(key):
+			if dynamic_params == null:
+				dynamic_params = _collect_dynamic_params(type_name, comp)
+			if dynamic_params.has(key):
+				continue
 			findings.append(_finding("E_UNKNOWN_PARAM", "error", path + "." + key,
 				"组件 %s 无参数 '%s'（幻觉参数名）" % [type_name, key]))
 			continue

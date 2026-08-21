@@ -5,18 +5,30 @@
 				"duration": 0.5,
 				"easing_type": 1,
 				"from_alpha": 0.0,
+				"target_custom_scope_id": "",
 				"target_node": "..",
+				"target_scope": 0,
+				"target_scope_source": 0,
+				"target_target_node_path": "",
+				"target_variable": "",
 				"to_alpha": 1.0,
 				"trans_type": 1,
-				"type": "TweenFadeIn"
+				"type": "TweenFadeIn",
+				"use_variable_for_target": false
 			},
 			{
 				"auto_free": false,
 				"duration": 0.5,
 				"easing_type": 1,
+				"target_custom_scope_id": "",
 				"target_node": "..",
+				"target_scope": 0,
+				"target_scope_source": 0,
+				"target_target_node_path": "",
+				"target_variable": "",
 				"trans_type": 3,
-				"type": "TweenFadeOut"
+				"type": "TweenFadeOut",
+				"use_variable_for_target": false
 			}
 		]
 	},
@@ -30,7 +42,20 @@
 		"max_interval_seconds": 2.0,
 		"max_repeats": 0,
 		"min_interval_seconds": 0.5,
-		"stop_condition": "res://demos/fuse/brickian/title_scene.tscn::Resource_fknqa",
+		"stop_condition": {
+			"cache_context_changes": true,
+			"cache_duration": 1.0,
+			"check_input_map_actions": true,
+			"check_raw_gamepad": false,
+			"check_raw_keyboard": false,
+			"check_raw_mouse": false,
+			"enable_cache": false,
+			"enabled": true,
+			"gamepad_device": -1,
+			"hash_all_variables": false,
+			"negate_result": false,
+			"type": "CheckAnyInput"
+		},
 		"trigger_on_start": false,
 		"type": "OnInterval",
 		"use_random_interval": false
