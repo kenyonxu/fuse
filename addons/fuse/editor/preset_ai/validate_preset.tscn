@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/editor/preset_ai/validate_preset_cli.gd" id="1"]
+
+[node name="ValidatePreset" type="Node"]
+script = ExtResource("1")

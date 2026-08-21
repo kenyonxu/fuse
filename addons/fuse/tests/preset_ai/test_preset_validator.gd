@@ -19,6 +19,9 @@ func _ready():
 	_test_format_version()
 	_test_level_unknown()
 	_test_level_mismatch()
+	print("=== test_preset_validator: 畸形输入判型防护 ===")
+	_test_malformed_action_runner()
+	_test_malformed_event_bindings()
 	print("=== test_preset_validator: schema 层 ===")
 	_test_unknown_component()
 	_test_unknown_param()
@@ -38,6 +41,12 @@ func _ready():
 	_test_vector2_adjudication()
 	_test_engine_value_color_roundtrip()
 	_test_repr_noncanonical()
+	print("=== test_preset_validator: 真实语料首跑裁定 ===")
+	_test_string_enum_hint_not_range_checked()
+	_test_object_param_null_ok()
+	print("=== test_preset_validator: validate_path ===")
+	_test_validate_path_single_file()
+	_test_validate_path_dir_recursion()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -209,3 +218,110 @@ func _test_repr_noncanonical() -> void:
 	var codes := _codes({"type": "TweenMoveTo", "target_node": "..",
 		"target_position": [100.0, 0.0], "duration": 1.0})
 	_check("E_REPR_NONCANONICAL" in codes, "Vector2 数组形式 → E_REPR_NONCANONICAL")
+
+# ---- 真实语料首跑裁定（Task 6 Step 3，attack with_skill / red_planet 误报修复）----
+
+func _test_string_enum_hint_not_range_checked() -> void:
+	# OnInputAction.target_input_action 为 String 存储 + ENUM hint（InputMap 动态建议下拉，
+	# hint_string 是 dump 时项目输入表快照），运行时任意字符串合法 → 不做 E_ENUM_RANGE
+	var d := _valid_l1()
+	d["level"] = "L2"
+	d["event"] = {"type": "OnInputAction", "target_input_action": "attack", "trigger_mode": 0}
+	d["trigger_config"] = {"trigger_once": false, "cooldown_mode": 0, "cooldown_time": 1.0}
+	var codes: Array = PresetValidator.validate_data(d).findings.map(func(f): return f.code)
+	_check("E_ENUM_RANGE" not in codes, "String 枚举建议列表不触发 E_ENUM_RANGE（attack 首跑裁定）")
+
+func _test_object_param_null_ok() -> void:
+	# OnInterval.stop_condition 的 schema default 即 null，导出器规范输出显式 null，
+	# codec 反序列化无损 → 不算 E_TYPE_MISMATCH
+	var d := _valid_l1()
+	d["level"] = "L2"
+	d["event"] = {"type": "OnInterval", "interval_seconds": 50.0, "stop_condition": null}
+	d["trigger_config"] = {"trigger_once": false, "cooldown_mode": 0, "cooldown_time": 1.0}
+	var codes: Array = PresetValidator.validate_data(d).findings.map(func(f): return f.code)
+	_check("E_TYPE_MISMATCH" not in codes, "Object 参数显式 null → 无 E_TYPE_MISMATCH（red_planet 首跑裁定）")
+
+# ---- 畸形输入判型防护（Task 6，spec §7 不 crash 要求）----
+
+func _test_malformed_action_runner() -> void:
+	var d := _valid_l1()
+	d["action_runner"] = "跑起来"
+	var r := PresetValidator.validate_data(d)
+	var hit: bool = r.findings.any(func(f):
+		return f.code == "E_TYPE_MISMATCH" and f.json_path == "$.action_runner")
+	_check(hit and r.errors > 0, "action_runner 为字符串 → E_TYPE_MISMATCH（json_path $.action_runner，不崩溃）")
+
+func _test_malformed_event_bindings() -> void:
+	var d := _valid_l1()
+	d["level"] = "L4"
+	d["event_bindings"] = 42
+	var r := PresetValidator.validate_data(d)
+	var hit: bool = r.findings.any(func(f):
+		return f.code == "E_TYPE_MISMATCH" and f.json_path == "$.event_bindings")
+	_check(hit, "event_bindings 为数字 → E_TYPE_MISMATCH（json_path $.event_bindings，不崩溃）")
+
+# ---- validate_path（Task 6：单文件 + 目录递归 + 报告）----
+
+func _test_validate_path_single_file() -> void:
+	var dir := _make_path_fixture()
+	var r: Dictionary = PresetValidator.validate_path(dir + "/a.json")
+	_check(r.summary.get("total", -1) == 1 and r.summary.get("passed", -1) == 1,
+		"validate_path 单文件 → summary total=1 passed=1（实际: %s）" % JSON.stringify(r.summary))
+
+func _test_validate_path_dir_recursion() -> void:
+	var dir := _make_path_fixture()
+	var report_path := dir + "/report.json"
+	var r: Dictionary = PresetValidator.validate_path(dir, report_path)
+	var paths: Array = r.files.map(func(f): return f.path)
+	var no_noise: bool = not paths.any(func(p): return p.contains(".hidden") or not p.ends_with(".json") or p.ends_with("report.json"))
+	_check(r.summary.get("total", -1) == 2 and r.summary.get("passed", -1) == 1 and r.summary.get("failed", -1) == 1,
+		"目录递归 → total=2 passed=1 failed=1（实际: %s）" % JSON.stringify(r.summary))
+	_check(no_noise, "隐藏目录与非 json 文件被跳过，报告文件不参与本轮校验")
+	var saved: Variant = JSON.parse_string(FileAccess.get_file_as_string(report_path))
+	_check(saved is Dictionary and (saved as Dictionary).get("summary", {}).get("total", -1) == 2,
+		"--report 落盘的 JSON 含 files + summary")
+
+# user:// 下搭夹具：a.json（合法）/ sub/b.json（E_FORMAT_VERSION）/ .hidden/c.json（应跳过）/ readme.txt（应跳过）
+# 先清场重建（上一轮落盘的 report.json 不能计入本轮递归收集）
+func _make_path_fixture() -> String:
+	var base := "user://test_validate_path"
+	if DirAccess.dir_exists_absolute(base):
+		_remove_dir_recursive(base)
+	DirAccess.make_dir_recursive_absolute(base + "/sub")
+	DirAccess.make_dir_recursive_absolute(base + "/.hidden")
+	var bad := _valid_l1()
+	bad["format_version"] = "1.0"
+	var f := FileAccess.open(base + "/a.json", FileAccess.WRITE)
+	f.store_string(JSON.stringify(_valid_l1()))
+	f.close()
+	f = FileAccess.open(base + "/sub/b.json", FileAccess.WRITE)
+	f.store_string(JSON.stringify(bad))
+	f.close()
+	f = FileAccess.open(base + "/.hidden/c.json", FileAccess.WRITE)
+	f.store_string(JSON.stringify(_valid_l1()))
+	f.close()
+	f = FileAccess.open(base + "/readme.txt", FileAccess.WRITE)
+	f.store_string("not json")
+	f.close()
+	return base
+
+
+# Godot 4.7 的 DirAccess.remove_recursive 非静态，测试内自实现
+func _remove_dir_recursive(dir_path: String) -> void:
+	var d := DirAccess.open(dir_path)
+	if d == null:
+		return
+	var names: Array[String] = []
+	d.list_dir_begin()
+	var n := d.get_next()
+	while n != "":
+		names.append(n)
+		n = d.get_next()
+	d.list_dir_end()
+	for name in names:
+		var full := dir_path.path_join(name)
+		if DirAccess.dir_exists_absolute(full):
+			_remove_dir_recursive(full)
+		else:
+			DirAccess.remove_absolute(full)
+	DirAccess.remove_absolute(dir_path)

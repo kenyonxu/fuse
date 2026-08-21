@@ -29,6 +29,15 @@ static func _finding(code: String, severity: String, json_path: String, message:
 	return {"code": code, "severity": severity, "json_path": json_path, "message": message}
 
 
+# 安全取值：类型不符时给空值（入口判型层已产出 finding，这里保证直接调用也不崩溃）
+static func _as_array(v: Variant) -> Array:
+	return v if v is Array else []
+
+
+static func _as_dict(v: Variant) -> Dictionary:
+	return v if v is Dictionary else {}
+
+
 static func _report_for(src: String, findings: Array) -> Dictionary:
 	var errors := findings.filter(func(f): return f.severity == "error").size()
 	var warnings := findings.filter(func(f): return f.severity == "warning").size()
@@ -55,16 +64,109 @@ static func validate_preset(path: String) -> Dictionary:
 static func validate_data(data: Dictionary, src: String = "<inline>") -> Dictionary:
 	var findings: Array = []
 	_validate_structure(data, findings)
+	# 顶层判型防护：幻觉 JSON（action_runner 为字符串等）会让下游取值链/codec 崩溃，
+	# 此层产出 finding 并决定 schema/codec 层是否可安全运行
+	var types_ok := _validate_top_level_types(data, findings)
 	if not findings.any(func(f): return f.code in ["E_PARSE"]):
-		_validate_schema(data, findings)
-		_validate_codec(data, findings)
+		if types_ok:
+			_validate_schema(data, findings)
+			_validate_codec(data, findings)
 	_validate_semantics(data, findings)
 	return _report_for(src, findings)
 
 
-static func validate_path(target: String) -> Dictionary:
-	# Task 6 实现（目录递归）；本任务先支持单文件
-	return {"files": [validate_preset(target)], "summary": {}}
+# 顶层字段判型（spec §7：畸形输入不 crash）。
+# 返回 false 表示存在类型异常，schema/codec 层跳过（语义层纯递归扫描可安全处理任意 JSON）。
+static func _validate_top_level_types(data: Dictionary, findings: Array) -> bool:
+	var level := _infer_level(data)
+	if level in ["L1", "L2", "L3"]:
+		var ar_v: Variant = data.get("action_runner", null)
+		if ar_v != null and not (ar_v is Dictionary):
+			findings.append(_finding("E_TYPE_MISMATCH", "error", "$.action_runner",
+				"action_runner 应为对象，实际 %s" % type_string(typeof(ar_v))))
+			return false
+		if ar_v is Dictionary:
+			var insts_v: Variant = ar_v.get("instructions", null)
+			if insts_v != null and not (insts_v is Array):
+				findings.append(_finding("E_TYPE_MISMATCH", "error", "$.action_runner.instructions",
+					"instructions 应为数组，实际 %s" % type_string(typeof(insts_v))))
+				return false
+	elif level == "L4":
+		var eb_v: Variant = data.get("event_bindings", null)
+		if eb_v != null and not (eb_v is Array):
+			findings.append(_finding("E_TYPE_MISMATCH", "error", "$.event_bindings",
+				"event_bindings 应为数组，实际 %s" % type_string(typeof(eb_v))))
+			return false
+		if not (eb_v is Array):
+			return false
+		var ok := true
+		for b in (eb_v as Array).size():
+			var binding_v: Variant = (eb_v as Array)[b]
+			if not (binding_v is Dictionary):
+				findings.append(_finding("E_TYPE_MISMATCH", "error", "$.event_bindings[%d]" % b,
+					"binding 应为对象，实际 %s" % type_string(typeof(binding_v))))
+				ok = false
+				continue
+			var ar_v: Variant = (binding_v as Dictionary).get("action_runner", null)
+			if ar_v == null:
+				continue
+			if not (ar_v is Dictionary):
+				findings.append(_finding("E_TYPE_MISMATCH", "error",
+					"$.event_bindings[%d].action_runner" % b,
+					"action_runner 应为对象，实际 %s" % type_string(typeof(ar_v))))
+				ok = false
+				continue
+			var insts_v: Variant = (ar_v as Dictionary).get("instructions", null)
+			if insts_v != null and not (insts_v is Array):
+				findings.append(_finding("E_TYPE_MISMATCH", "error",
+					"$.event_bindings[%d].action_runner.instructions" % b,
+					"instructions 应为数组，实际 %s" % type_string(typeof(insts_v))))
+				ok = false
+		return ok
+	return true
+
+
+static func validate_path(target: String, report_path := "") -> Dictionary:
+	var files: Array[String] = []
+	if DirAccess.dir_exists_absolute(target):
+		_collect_json_files(target, files)
+	elif FileAccess.file_exists(target):
+		files.append(target)
+	else:
+		push_error("目标不存在: %s" % target)
+		return {"files": [], "summary": {"total": 0, "passed": 0, "failed": 0}}
+	files.sort()  # 目录递归时保证输出顺序稳定（跨平台 list_dir 顺序不保证）
+	var reports: Array = []
+	for f in files:
+		reports.append(validate_preset(f))
+	var failed := reports.filter(func(r): return r.errors > 0).size()
+	var summary := {"total": reports.size(), "passed": reports.size() - failed, "failed": failed}
+	if report_path != "":
+		var out := FileAccess.open(report_path, FileAccess.WRITE)
+		if out:
+			out.store_string(JSON.stringify({"files": reports, "summary": summary}, "\t"))
+			out.close()
+		else:
+			push_error("报告文件无法写入: %s" % report_path)
+	return {"files": reports, "summary": summary}
+
+
+# 递归收集目录下全部 .json（跳过 . 开头的隐藏目录/文件）
+static func _collect_json_files(dir_path: String, out: Array[String]) -> void:
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		var full := dir_path.path_join(name)
+		if dir.current_is_dir():
+			if not name.begins_with("."):
+				_collect_json_files(full, out)
+		elif name.ends_with(".json"):
+			out.append(full)
+		name = dir.get_next()
+	dir.list_dir_end()
 
 
 # ---- 第 1 层：结构 ----
@@ -104,21 +206,23 @@ static func _load_schemas() -> Dictionary:
 static func _validate_schema(data: Dictionary, findings: Array) -> void:
 	var level := _infer_level(data)
 	if level in ["L1", "L2", "L3"]:
-		var insts: Array = data.get("action_runner", {}).get("instructions", [])
+		var insts := _as_array(_as_dict(data.get("action_runner", {})).get("instructions", []))
 		for i in insts.size():
 			_validate_component(insts[i], "instruction", "$.action_runner.instructions[%d]" % i, findings)
 	elif level == "L4":
-		var bindings: Array = data.get("event_bindings", [])
+		var bindings := _as_array(data.get("event_bindings", []))
 		for b in bindings.size():
-			var binding: Dictionary = bindings[b] if bindings[b] is Dictionary else {}
-			var ar: Dictionary = binding.get("action_runner", {})
-			for i in ar.get("instructions", []).size():
-				_validate_component(ar["instructions"][i], "instruction",
+			var binding := _as_dict(bindings[b])
+			var ar := _as_dict(binding.get("action_runner", {}))
+			var b_insts := _as_array(ar.get("instructions", []))
+			for i in b_insts.size():
+				_validate_component(b_insts[i], "instruction",
 					"$.event_bindings[%d].action_runner.instructions[%d]" % [b, i], findings)
 			if binding.has("event"):
 				_validate_component(binding["event"], "event", "$.event_bindings[%d].event" % b, findings)
-			for c in binding.get("conditions", []).size():
-				_validate_component(binding["conditions"][c], "condition",
+			var conds := _as_array(binding.get("conditions", []))
+			for c in conds.size():
+				_validate_component(conds[c], "condition",
 					"$.event_bindings[%d].conditions[%d]" % [b, c], findings)
 	if level == "L2" and data.has("event"):
 		_validate_component(data["event"], "event", "$.event", findings)
@@ -146,7 +250,10 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 			continue
 		var p: Dictionary = known[key]
 		var hint: int = int(p.get("hint", 0))
-		if hint == 2:  # PROPERTY_HINT_ENUM
+		# 仅 int 存储的枚举是封闭值域；String + ENUM（如 OnInputAction.target_input_action 的
+		# InputMap 动态下拉、AudioServer bus 名单）是编辑器建议列表，随项目配置变化，
+		# 运行时任意字符串合法 → 不做 E_ENUM_RANGE（2026-08-21 真实语料首跑裁定）
+		if hint == 2 and String(p.get("type_name", "")) == "int":  # PROPERTY_HINT_ENUM
 			var allowed := {}
 			var implicit_index := 0
 			for pair in String(p.get("hint_string", "")).split(","):
@@ -192,7 +299,9 @@ static func _check_json_type(value: Variant, p: Dictionary, path: String, type_n
 		"NodePath": ok = value is String
 		"Dictionary": ok = value is Dictionary
 		"Array": ok = value is Array
-		"Object": ok = value is Dictionary or value is String
+		# Object 参数显式 null = 未设置（schema default 即 null，导出器规范输出 null，
+		# codec 反序列化无损），不算类型错误（2026-08-21 真实语料首跑裁定，red_planet.json）
+		"Object": ok = value is Dictionary or value is String or value == null
 		_:
 			if tn in _ENGINE_VALUE_TYPES:
 				# 唯一规范形式是字符串（Task 5 实测裁定 + codec 方案 A 显式解析；
@@ -214,7 +323,7 @@ static func _check_json_type(value: Variant, p: Dictionary, path: String, type_n
 static func _validate_codec(data: Dictionary, findings: Array) -> void:
 	var level := _infer_level(data)
 	if level in ["L1", "L2", "L3"]:
-		var src: Array = data.get("action_runner", {}).get("instructions", [])
+		var src := _as_array(_as_dict(data.get("action_runner", {})).get("instructions", []))
 		var preset := FusePresetScript.from_json(data.duplicate(true))
 		var src_n := _count_instruction_dicts(src)
 		var dst_n := _count_instruction_objects(preset.instructions)
@@ -226,15 +335,14 @@ static func _validate_codec(data: Dictionary, findings: Array) -> void:
 			if PresetValueCodecScript.deserialize_event(data["event"]) == null:
 				findings.append(_finding("E_EVENT_NULL", "error", "$.event", "event 无法反序列化"))
 	elif level == "L4":
-		var bindings: Array = data.get("event_bindings", [])
+		var bindings := _as_array(data.get("event_bindings", []))
 		for b in bindings.size():
-			var binding: Dictionary = bindings[b] if bindings[b] is Dictionary else {}
+			var binding := _as_dict(bindings[b])
 			var ar_v: Variant = binding.get("action_runner", null)
-			# action_runner / event 类型异常（幻觉 JSON）时跳过，避免反序列化调用被类型检查中断
+			# action_runner 类型异常（幻觉 JSON）时跳过（判型层已产出 finding），避免反序列化调用被类型检查中断
 			if ar_v != null and not (ar_v is Dictionary):
 				continue
-			var ar: Dictionary = ar_v if ar_v is Dictionary else {}
-			var src: Array = ar.get("instructions", [])
+			var src := _as_array(_as_dict(ar_v).get("instructions", []))
 			var insts := PresetValueCodecScript.deserialize_instructions(src)
 			if _count_instruction_dicts(src) > _count_instruction_objects(insts):
 				findings.append(_finding("E_ROUNDTRIP_LOSS", "error",
@@ -336,15 +444,12 @@ static func _scan_variable_declarations(data: Dictionary, findings: Array) -> vo
 	var level := _infer_level(data)
 	var inst_arrays: Array = []
 	if level in ["L1", "L2", "L3"]:
-		inst_arrays.append(data.get("action_runner", {}).get("instructions", []))
+		inst_arrays.append(_as_array(_as_dict(data.get("action_runner", {})).get("instructions", [])))
 	elif level == "L4":
-		var bindings: Array = data.get("event_bindings", [])
-		for b in bindings.size():
-			var binding: Dictionary = bindings[b] if bindings[b] is Dictionary else {}
-			var ar_v: Variant = binding.get("action_runner", null)
+		for b_v in _as_array(data.get("event_bindings", [])):
+			var ar_v: Variant = _as_dict(b_v).get("action_runner", null)
 			if ar_v is Dictionary:
-				var src: Array = (ar_v as Dictionary).get("instructions", [])
-				inst_arrays.append(src)
+				inst_arrays.append(_as_array(ar_v.get("instructions", [])))
 	for arr in inst_arrays:
 		_scan_writes(arr, declared, findings)
 
