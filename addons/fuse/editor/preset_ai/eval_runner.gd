@@ -99,3 +99,90 @@ static func _has_param(arr: Array, component: String, key: String) -> bool:
 				if item.get(field, null) is Array and _has_param(item[field], component, key):
 					return true
 	return false
+
+
+# ---- 回放编排 + 报告（Task 9）----
+
+# 回放一个 iteration 的全部产物：逐产物 validate + check_assertions，再对比 baseline。
+# 返回 {"results": [...], "summary": {...}, "regressions": [...]}
+# results 元素字段：{case, variant, path, errors, warnings, passed, total, pass, details, findings}
+static func run_replay(workspace: String, iteration: String, report_dir := "") -> Dictionary:
+	var results: Array = []
+	for case_data in load_cases(workspace):
+		for rel in case_data.get("outputs", {}).get(iteration, []):
+			var full := workspace.path_join(iteration).path_join(rel)
+			var entry := _evaluate_output(case_data, full, rel)
+			results.append(entry)
+	var regressions := _check_baseline(workspace, results)
+	var summary := {
+		"total": results.size(),
+		"pass": results.filter(func(x): return x["pass"]).size(),
+		"fail": results.filter(func(x): return not x["pass"]).size(),
+		"regressions": regressions.size(),
+	}
+	if report_dir != "":
+		_write_reports(report_dir, iteration, results, summary, regressions)
+	return {"results": results, "summary": summary, "regressions": regressions}
+
+# 单产物评分：validate 0 error 且断言全过才算过（产物本来就败但基线没要求过 → 只飘红不算回归）
+static func _evaluate_output(case_data: Dictionary, full_path: String, rel_path: String) -> Dictionary:
+	var variant := "unknown"
+	var parts := rel_path.split("/")
+	if parts.size() >= 3:
+		variant = parts[parts.size() - 3]  # <case>/<variant>/outputs/x.json → 倒数第三段
+	var validation: Dictionary = PresetValidator.validate_preset(full_path)
+	var assertions := {"passed": 0, "total": 0, "details": []}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(full_path))
+	if parsed is Dictionary:
+		assertions = check_assertions(case_data, parsed)
+	# pass 是 GDScript 保留字，变量用 is_pass（结果字典键仍为 "pass"，Task 10 依赖）
+	var is_pass: bool = validation.errors == 0 and assertions.passed == assertions.total
+	return {
+		"case": case_data.get("name", ""), "variant": variant, "path": rel_path,
+		"errors": validation.errors, "warnings": validation.warnings,
+		"passed": assertions.passed, "total": assertions.total,
+		"pass": is_pass, "details": assertions.details,
+		"findings": validation.findings,
+	}
+
+# baseline 不存在 → 空数组（无回归可言；baseline 文件由 Task 10 生成）
+static func _check_baseline(workspace: String, results: Array) -> Array:
+	var path := workspace.path_join("eval_baseline.json")
+	if not FileAccess.file_exists(path):
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary):
+		return []
+	var regressions: Array = []
+	for r in results:
+		var expected: Variant = parsed.get(r["case"], {}).get(r["path"], null)
+		if expected is Dictionary and expected.get("pass", false) and not r["pass"]:
+			regressions.append(r)
+	return regressions
+
+static func _write_reports(dir: String, iteration: String, results: Array, summary: Dictionary, regressions: Array) -> void:
+	DirAccess.make_dir_recursive_absolute(dir)
+	var f := FileAccess.open(dir.path_join("report.json"), FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify({"iteration": iteration, "results": results,
+			"summary": summary, "regressions": regressions}, "\t"))
+		f.close()
+	var lines: Array[String] = []
+	lines.append("# Eval report — %s" % iteration)
+	lines.append("")
+	lines.append("| case | variant | errors | warnings | assertions | pass |")
+	lines.append("|------|---------|--------|----------|------------|------|")
+	for r in results:
+		lines.append("| %s | %s | %d | %d | %d/%d | %s |" % [r["case"], r["variant"],
+			r["errors"], r["warnings"], r["passed"], r["total"], "✅" if r["pass"] else "❌"])
+	lines.append("")
+	lines.append("regressions: %d" % regressions.size())
+	var m := FileAccess.open(dir.path_join("report.md"), FileAccess.WRITE)
+	if m:
+		m.store_string("\n".join(lines))
+		m.close()
+
+# live 模式（Task 12 实现）：占位 stub，保证 CLI 代码可解析、可 await
+static func run_live(workspace: String, iteration: String, report_dir := "") -> Dictionary:
+	push_error("live 模式未实现（Task 12）")
+	return {"results": [], "summary": {"total": 0, "pass": 0, "fail": 0, "regressions": 0}, "regressions": []}
