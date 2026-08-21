@@ -1,0 +1,68 @@
+{
+    "format_version": "2.0",
+    "level": "L2",
+    "display_name": "Attack",
+    "category": "gameplay",
+    "description": "按键攻击：扣目标 25 血 → 播放攻击动画 → 发送 Hit 事件",
+    "icon_name": "",
+    "variables": {
+        "local": [],
+        "scope": [
+            {
+                "name": "hp",
+                "container": "../Target"
+            }
+        ],
+        "global": []
+    },
+    "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+            {
+                "type": "MathOperation",
+                "operation_type": 1,
+                "operand_a_source": 1,
+                "operand_a_value": 0.0,
+                "operand_a_scope_source": 2,
+                "operand_a_custom_scope_id": "",
+                "operand_a_target_node_path": "../Target",
+                "operand_b_source": 0,
+                "operand_b_value": 25.0,
+                "operand_b_scope_source": 0,
+                "operand_b_custom_scope_id": "",
+                "operand_b_target_node_path": "",
+                "scope_source": 2,
+                "custom_scope_id": "",
+                "target_node_path": "../Target",
+                "save_to_variable": "hp",
+                "save_to_scope": 1
+            },
+            {
+                "type": "PlayAnimation",
+                "target_player": "../Player/AnimationPlayer",
+                "animation_name": "attack",
+                "speed": 1.0,
+                "from_end": false,
+                "autoplay_only": false
+            },
+            {
+                "type": "SendEvent",
+                "event_name": "Hit",
+                "event_args": {
+                    "damage": 25
+                },
+                "deferred": false
+            }
+        ]
+    },
+    "event": {
+        "type": "OnInputAction",
+        "trigger_mode": 0,
+        "target_input_action": "attack"
+    },
+    "trigger_config": {
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+    }
+}

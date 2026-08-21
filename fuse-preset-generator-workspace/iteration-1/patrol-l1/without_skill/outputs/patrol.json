@@ -1,0 +1,54 @@
+{
+	"format_version": "2.0",
+	"level": "L1",
+	"display_name": "Patrol A→B",
+	"category": "gameplay",
+	"description": "巡逻指令序列：移动到点 A，等待 2 秒，移动到点 B，等待 2 秒",
+	"icon_name": "MoveRight",
+	"variables": {
+		"local": [],
+		"scope": [],
+		"global": []
+	},
+	"action_runner": {
+		"execution_mode": 0,
+		"instructions": [
+			{
+				"type": "TweenMoveTo",
+				"target_node": "..",
+				"target_position": "(100.0, 0.0)",
+				"duration": 2.0,
+				"space_mode": 1,
+				"easing_type": 2,
+				"trans_type": 1
+			},
+			{
+				"type": "Wait",
+				"value_source": 0,
+				"wait_time": 2.0,
+				"time_scope": 0,
+				"scope_source": 0,
+				"custom_scope_id": "",
+				"target_node_path": ""
+			},
+			{
+				"type": "TweenMoveTo",
+				"target_node": "..",
+				"target_position": "(-100.0, 0.0)",
+				"duration": 2.0,
+				"space_mode": 1,
+				"easing_type": 2,
+				"trans_type": 1
+			},
+			{
+				"type": "Wait",
+				"value_source": 0,
+				"wait_time": 2.0,
+				"time_scope": 0,
+				"scope_source": 0,
+				"custom_scope_id": "",
+				"target_node_path": ""
+			}
+		]
+	}
+}

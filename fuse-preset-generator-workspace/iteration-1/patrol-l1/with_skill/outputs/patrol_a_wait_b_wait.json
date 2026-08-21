@@ -1,0 +1,52 @@
+{
+	"format_version": "2.0",
+	"level": "L1",
+	"display_name": "PatrolAB",
+	"category": "gameplay",
+	"description": "巡逻序列：移动到点 A → 等待 2 秒 → 移动到点 B → 等待 2 秒",
+	"icon_name": "",
+	"variables": {
+		"local": [],
+		"scope": [],
+		"global": []
+	},
+	"action_runner": {
+		"execution_mode": 0,
+		"instructions": [
+			{
+				"type": "TweenMoveTo",
+				"target_node": "..",
+				"target_position": [0.0, 0.0],
+				"duration": 1.0,
+				"space_mode": 0,
+				"easing_type": 2,
+				"trans_type": 1
+			},
+			{
+				"type": "Wait",
+				"scope_source": 0,
+				"custom_scope_id": "",
+				"target_node_path": "",
+				"value_source": 0,
+				"wait_time": 2.0
+			},
+			{
+				"type": "TweenMoveTo",
+				"target_node": "..",
+				"target_position": [100.0, 0.0],
+				"duration": 1.0,
+				"space_mode": 0,
+				"easing_type": 2,
+				"trans_type": 1
+			},
+			{
+				"type": "Wait",
+				"scope_source": 0,
+				"custom_scope_id": "",
+				"target_node_path": "",
+				"value_source": 0,
+				"wait_time": 2.0
+			}
+		]
+	}
+}

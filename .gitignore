@@ -103,9 +103,19 @@ fuse-preset-generator-workspace/*
 !fuse-preset-generator-workspace/eval_baseline.json
 !fuse-preset-generator-workspace/iteration-1/
 # iteration-1 产物不进 git；例外：report.json/md（回归门禁证据入库）
+# + case/{with,without}_skill/outputs/*.json 共 6 份产物 JSON（2026-08-21 终审 C1：
+#   committed 测试断言与 eval_baseline.json 引用的版本化评测语料，fresh clone 回归必须可跑，
+#   对齐 evals/baseline/report 入库先例；逐层放行目录是因为 git 不深入被排除的目录）
 fuse-preset-generator-workspace/iteration-1/*
 !fuse-preset-generator-workspace/iteration-1/report.json
 !fuse-preset-generator-workspace/iteration-1/report.md
+!fuse-preset-generator-workspace/iteration-1/*/
+fuse-preset-generator-workspace/iteration-1/*/*
+!fuse-preset-generator-workspace/iteration-1/*/*_skill/
+fuse-preset-generator-workspace/iteration-1/*/*/*
+!fuse-preset-generator-workspace/iteration-1/*/*/outputs/
+fuse-preset-generator-workspace/iteration-1/*/*/*/*
+!fuse-preset-generator-workspace/iteration-1/*/*/outputs/*.json
 # iteration-2 产物不进 git；例外：report.json/md + handcrafted 样例副本（L3/L4 门禁证据入库）
 !fuse-preset-generator-workspace/iteration-2/
 fuse-preset-generator-workspace/iteration-2/*

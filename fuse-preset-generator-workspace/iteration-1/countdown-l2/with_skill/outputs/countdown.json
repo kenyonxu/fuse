@@ -1,0 +1,65 @@
+{
+	"format_version": "2.0",
+	"level": "L2",
+	"display_name": "Countdown",
+	"category": "ui",
+	"description": "3-2-1 倒计时：节点 ready 后每秒依次显示 3、2、1，最后隐藏 UI",
+	"icon_name": "",
+	"variables": {
+		"local": [],
+		"scope": [],
+		"global": []
+	},
+	"action_runner": {
+		"execution_mode": 0,
+		"instructions": [
+			{
+				"type": "SetUIText",
+				"target_node": "../CountdownLabel",
+				"text": "3",
+				"use_variable": false
+			},
+			{
+				"type": "Wait",
+				"value_source": 0,
+				"wait_time": 1.0
+			},
+			{
+				"type": "SetUIText",
+				"target_node": "../CountdownLabel",
+				"text": "2",
+				"use_variable": false
+			},
+			{
+				"type": "Wait",
+				"value_source": 0,
+				"wait_time": 1.0
+			},
+			{
+				"type": "SetUIText",
+				"target_node": "../CountdownLabel",
+				"text": "1",
+				"use_variable": false
+			},
+			{
+				"type": "Wait",
+				"value_source": 0,
+				"wait_time": 1.0
+			},
+			{
+				"type": "ShowHideUI",
+				"target_node": "..",
+				"action": 1
+			}
+		]
+	},
+	"event": {
+		"type": "OnReady",
+		"delay_seconds": 0.0
+	},
+	"trigger_config": {
+		"trigger_once": true,
+		"cooldown_mode": 0,
+		"cooldown_time": 1.0
+	}
+}

@@ -1,0 +1,64 @@
+{
+	"format_version": "2.0",
+	"level": "L2",
+	"display_name": "Attack",
+	"category": "gameplay",
+	"description": "按键攻击：对目标扣血 25、播放攻击动画、发送 Hit 事件。挂在玩家 Trigger 上，目标默认为 ../Target。",
+	"icon_name": "",
+	"variables": {
+		"local": [],
+		"scope": [
+			{
+				"name": "hp",
+				"container": "../Target"
+			}
+		],
+		"global": []
+	},
+	"event": {
+		"type": "OnInputAction",
+		"target_input_action": "attack",
+		"trigger_mode": 0
+	},
+	"trigger_config": {
+		"trigger_once": false,
+		"cooldown_mode": 0,
+		"cooldown_time": 0.5
+	},
+	"action_runner": {
+		"instructions": [
+			{
+				"type": "MathOperation",
+				"operation_type": 1,
+				"operand_a_source": 1,
+				"operand_a_variable": "hp",
+				"operand_a_scope": 1,
+				"operand_a_scope_source": 3,
+				"operand_a_target_node_path": "../Target",
+				"operand_b_source": 0,
+				"operand_b_value": 25.0,
+				"save_to_variable": "hp",
+				"save_to_scope": 1,
+				"scope_source": 3,
+				"target_node_path": "../Target"
+			},
+			{
+				"type": "PlayAnimation",
+				"target_player": "../AnimationPlayer",
+				"animation_name": "attack",
+				"speed": 1.0,
+				"from_end": false,
+				"autoplay_only": false
+			},
+			{
+				"type": "SendEvent",
+				"event_name": "Hit",
+				"event_args": {
+					"damage": 25,
+					"target": "../Target"
+				},
+				"deferred": false
+			}
+		]
+	}
+}

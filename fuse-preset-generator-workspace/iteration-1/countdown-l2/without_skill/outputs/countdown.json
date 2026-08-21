@@ -1,0 +1,70 @@
+{
+    "format_version": "2.0",
+    "level": "L2",
+    "display_name": "countdown",
+    "category": "ui",
+    "description": "倒计时序列：节点就绪后立即显示 UI，每隔 1 秒依次显示 3、2、1，最后隐藏 UI。挂载到含 Label 子节点（路径 ./CountdownLabel）的 Control 上。",
+    "icon_name": "Time",
+    "variables": {
+        "local": [],
+        "scope": [],
+        "global": []
+    },
+    "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+            {
+                "type": "ShowHideUI",
+                "target_node": "..",
+                "action": 0
+            },
+            {
+                "type": "SetUIText",
+                "target_node": "./CountdownLabel",
+                "use_variable": false,
+                "text": "3"
+            },
+            {
+                "type": "Wait",
+                "value_source": 0,
+                "wait_time": 1.0
+            },
+            {
+                "type": "SetUIText",
+                "target_node": "./CountdownLabel",
+                "use_variable": false,
+                "text": "2"
+            },
+            {
+                "type": "Wait",
+                "value_source": 0,
+                "wait_time": 1.0
+            },
+            {
+                "type": "SetUIText",
+                "target_node": "./CountdownLabel",
+                "use_variable": false,
+                "text": "1"
+            },
+            {
+                "type": "Wait",
+                "value_source": 0,
+                "wait_time": 1.0
+            },
+            {
+                "type": "ShowHideUI",
+                "target_node": "..",
+                "action": 1
+            }
+        ]
+    },
+    "event": {
+        "type": "OnReady",
+        "delay_seconds": 0.0
+    },
+    "trigger_config": {
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+    }
+}
