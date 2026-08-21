@@ -40,6 +40,7 @@ func _ready():
 	_test_missing_param_warning()
 	_test_missing_param_requires_aware()
 	_test_missing_param_aggregated()
+	_test_unknown_param_message_distinction()
 	print("=== test_preset_validator: codec 实测层 ===")
 	_test_roundtrip_loss()
 	_test_event_null()
@@ -476,3 +477,21 @@ func _test_real_samples() -> void:
 		"patrol without_skill 报真幻觉参数 Wait.time_scope（产物 value_source=DIRECT，该状态下 time_scope 未注册；VARIABLE 状态下它是合法序列化参数）")
 	_check("E_REPR_NONCANONICAL" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/with_skill/outputs/patrol_a_wait_b_wait.json"),
 		"patrol with_skill 报 Vector2 数组形式")
+
+func _test_unknown_param_message_distinction() -> void:
+	# 门控未满足：time_scope 在 schema（requires value_source:1）但产物 value_source=0
+	var gated: Array = PresetValidator.validate_data(_l1_with(
+		{"type": "Wait", "wait_time": 1.0, "value_source": 0, "time_scope": 0})).findings
+	var gated_msg := ""
+	for f in gated:
+		if f.code == "E_UNKNOWN_PARAM" and str(f.json_path).contains("time_scope"):
+			gated_msg = str(f.message)
+	_check(gated_msg.contains("门控未满足"), "门控未满足场景消息指向门控而非拼写")
+	# 纯幻觉：不存在的参数名
+	var halluc: Array = PresetValidator.validate_data(_l1_with(
+		{"type": "Wait", "wait_time": 1.0, "totally_made_up": 1})).findings
+	var halluc_msg := ""
+	for f in halluc:
+		if f.code == "E_UNKNOWN_PARAM" and str(f.json_path).contains("totally_made_up"):
+			halluc_msg = str(f.message)
+	_check(halluc_msg.contains("幻觉参数名"), "纯幻觉场景消息保持幻觉措辞")

@@ -183,7 +183,7 @@
 				{
 					"code": "E_UNKNOWN_PARAM",
 					"json_path": "$.action_runner.instructions[1].time_scope",
-					"message": "组件 Wait 无参数 'time_scope'（幻觉参数名）",
+					"message": "参数 'time_scope' 存在但 requires 门控未满足（当前状态下不注册）——调整门控参数或删除该键",
 					"severity": "error"
 				},
 				{
@@ -195,7 +195,7 @@
 				{
 					"code": "E_UNKNOWN_PARAM",
 					"json_path": "$.action_runner.instructions[3].time_scope",
-					"message": "组件 Wait 无参数 'time_scope'（幻觉参数名）",
+					"message": "参数 'time_scope' 存在但 requires 门控未满足（当前状态下不注册）——调整门控参数或删除该键",
 					"severity": "error"
 				}
 			],

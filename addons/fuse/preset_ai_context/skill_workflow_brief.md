@@ -112,8 +112,8 @@
 
 ```
 preset_ai_context/
-├── fuse_component_schemas.json   # 307 组件参数 schema（dict，键=ClassName）（以 fuse_components.json 实际条目数为准，dump 后同步本文件）
-├── fuse_components.json          # 307 组件元数据（list，含 category/keywords）（以实际条目数为准）
+├── fuse_component_schemas.json   # 307 组件参数 schema（dict，键=ClassName；含基类 BaseTweenInstruction）
+├── fuse_components.json          # 306 组件元数据（list，含 category/keywords；不含基类，以实际条目数为准）
 ├── fuse_enums.json               # 5 个枚举（VariableScope/ExecutionMode/SequenceMode/CooldownMode/ScopeSource）
 ├── preset_structure_cheatsheet.md # 本 skill 的 JSON 结构参考（L1-L4 决策树 + NodePath 约定）
 └── sample_presets/               # 4 个真实样例（few-shot）

@@ -349,8 +349,13 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 				if p == null:
 					continue  # 不在 schema 但该状态下真实注册的动态属性，放行
 			else:
-				findings.append(_finding("E_UNKNOWN_PARAM", "error", path + "." + key,
-					"组件 %s 无参数 '%s'（幻觉参数名）" % [type_name, key]))
+				if p != null:
+					# schema 收录的条件参数，但 requires 门控未满足且该状态下未注册
+					findings.append(_finding("E_UNKNOWN_PARAM", "error", path + "." + key,
+						"参数 '%s' 存在但 requires 门控未满足（当前状态下不注册）——调整门控参数或删除该键" % key))
+				else:
+					findings.append(_finding("E_UNKNOWN_PARAM", "error", path + "." + key,
+						"组件 %s 无参数 '%s'（幻觉参数名）" % [type_name, key]))
 				continue
 		var pd: Dictionary = known[key]
 		var hint: int = int(pd.get("hint", 0))
