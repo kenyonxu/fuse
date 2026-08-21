@@ -127,9 +127,10 @@ L2 = L1 + 事件触发器。挂在 `Trigger` 节点。
    - `default` — 默认值
    - `hint` + `hint_string` — 枚举提示（如 `"Synchronous:0,Asynchronous:1"`）
    - `is_nested_instructions` — **是否为嵌套指令数组**（见 §8）
+   - `requires` — （仅条件参数）生效门控 {参数名: 枚举值}，如 `{"operand_a_source": 1}`
 
 > **引擎值类型（Vector2/Color 等）唯一规范表示为字符串**，如 `"(100.0, 0.0)"`。数组 `[100.0, 0.0]` 与字典 `{"x": ...}` 形式无法导入，校验器报 `E_REPR_NONCANONICAL`。
-> 参数清单以 schemas JSON + 组件源码为准：个别组件按条件注册的动态参数（如 `MathOperation.operand_a_variable`，`operand_a_source == VARIABLE` 时注册）未收录进 schema，拼写以组件源码为准。
+> 参数清单以 schemas JSON 为准（含条件注册的动态参数，其 `requires` 字段标注生效门控，如 `operand_a_variable` 需 `operand_a_source: 1`）。门控不满足时不要写该参数。
 
 **示例**（`SendEvent` 的 schema → JSON）：
 

@@ -339,23 +339,28 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 	var dynamic_params: Variant = null
 	for key in comp:
 		if key == "type": continue
-		if not known.has(key):
+		var p: Variant = known.get(key, null)
+		# 条件参数（带 requires）门控未满足 → 该状态下未注册，schema 静态收录无法反映，
+		# 与"不在 schema"同样交动态复核实测裁决（schemas 收录条件参数后维持原状态感知检测）
+		if p == null or (p.has("requires") and not _requirements_met(p["requires"], comp, known)):
 			if dynamic_params == null:
 				dynamic_params = _collect_dynamic_params(type_name, comp)
 			if dynamic_params.has(key):
+				if p == null:
+					continue  # 不在 schema 但该状态下真实注册的动态属性，放行
+			else:
+				findings.append(_finding("E_UNKNOWN_PARAM", "error", path + "." + key,
+					"组件 %s 无参数 '%s'（幻觉参数名）" % [type_name, key]))
 				continue
-			findings.append(_finding("E_UNKNOWN_PARAM", "error", path + "." + key,
-				"组件 %s 无参数 '%s'（幻觉参数名）" % [type_name, key]))
-			continue
-		var p: Dictionary = known[key]
-		var hint: int = int(p.get("hint", 0))
+		var pd: Dictionary = known[key]
+		var hint: int = int(pd.get("hint", 0))
 		# 仅 int 存储的枚举是封闭值域；String + ENUM（如 OnInputAction.target_input_action 的
 		# InputMap 动态下拉、AudioServer bus 名单）是编辑器建议列表，随项目配置变化，
 		# 运行时任意字符串合法 → 不做 E_ENUM_RANGE（2026-08-21 真实语料首跑裁定）
-		if hint == 2 and String(p.get("type_name", "")) == "int":  # PROPERTY_HINT_ENUM
+		if hint == 2 and String(pd.get("type_name", "")) == "int":  # PROPERTY_HINT_ENUM
 			var allowed := {}
 			var implicit_index := 0
-			for pair in String(p.get("hint_string", "")).split(","):
+			for pair in String(pd.get("hint_string", "")).split(","):
 				var kv := pair.split(":")
 				if kv.size() == 2:
 					# 带值对格式 "Name:Value" → 用显式值
@@ -370,21 +375,43 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 				val_str = str(int(comp[key]))
 			if not allowed.has(val_str):
 				findings.append(_finding("E_ENUM_RANGE", "error", path + "." + key,
-					"枚举参数 %s.%s 值 %s 不在 %s 中" % [type_name, key, str(comp[key]), p.get("hint_string")]))
+					"枚举参数 %s.%s 值 %s 不在 %s 中" % [type_name, key, str(comp[key]), pd.get("hint_string")]))
 		else:
-			_check_json_type(comp[key], p, path + "." + key, type_name, findings)
+			_check_json_type(comp[key], pd, path + "." + key, type_name, findings)
 		# 递归：嵌套指令
-		if p.get("is_nested_instructions", false) and comp[key] is Array:
+		if pd.get("is_nested_instructions", false) and comp[key] is Array:
 			for i in comp[key].size():
 				_validate_component(comp[key][i], "instruction", path + "." + key + "[%d]" % i, findings)
 		# 递归：condition 字段（hint_string 为 BaseCondition 的 Object 参数）
-		if String(p.get("type_name", "")) == "Object" and String(p.get("hint_string", "")) == "BaseCondition" and comp[key] is Dictionary:
+		if String(pd.get("type_name", "")) == "Object" and String(pd.get("hint_string", "")) == "BaseCondition" and comp[key] is Dictionary:
 			_validate_component(comp[key], "condition", path + "." + key, findings)
-	# 缺参数提示
+	# 缺参数提示（requires 感知：门控未满足的条件参数该状态下本就不注册，缺是正常的）
+	var missing: Array[String] = []
 	for p in params:
-		if not comp.has(p["name"]):
-			findings.append(_finding("W_MISSING_PARAM", "warning", path,
-				"缺少参数 %s.%s，将用默认值 %s" % [type_name, p["name"], str(p.get("default"))]))
+		var pname: String = p["name"]
+		if comp.has(pname):
+			continue
+		if p.has("requires") and not _requirements_met(p["requires"], comp, known):
+			continue  # 该状态下本就不注册，缺是正常的
+		missing.append(pname)
+	for pname in missing:
+		findings.append(_finding("W_MISSING_PARAM", "warning", path,
+			"缺少参数 %s.%s，将用默认值 %s" % [type_name, pname, str(known[pname].get("default"))]))
+
+
+## 条件参数的门控判定：requires 的每个门在 comp 实际值（缺省回退 schema 默认）下满足
+static func _requirements_met(requires: Dictionary, comp: Dictionary, known: Dictionary) -> bool:
+	for gate in requires:
+		var actual: Variant = comp.get(gate, null)
+		if actual == null and known.has(gate):
+			actual = known[gate].get("default", null)
+		if actual == null:
+			return false
+		if actual is float and actual == floor(actual):
+			actual = int(actual)
+		if int(actual) != int(requires[gate]):
+			return false
+	return true
 
 
 static func _check_json_type(value: Variant, p: Dictionary, path: String, type_name: String, findings: Array) -> void:

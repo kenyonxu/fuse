@@ -50,7 +50,7 @@
    - 必填项优先（无默认值的）
    - 枚举值查 `fuse_enums.json` 或 schema 的 `hint_string`
    - 嵌套指令字段（schema 中 `is_nested_instructions: true`）递归填子指令
-   - 参数清单以 schemas JSON + 组件源码为准（个别组件按条件注册的动态参数未收录进 schema，如 `MathOperation.operand_a_variable`）
+   - 参数清单以 schemas JSON 为准（schemas 已含条件注册的动态参数，requires 字段标注生效条件）
 4. **NodePath 写相对占位**（见 cheatsheet §5）：`..` / `../Player` / `../../GameSceneCanvas` / `./HUD/Score`
 5. **变量声明**（`variables.local` / `scope` / `global`，见 cheatsheet §6）；不确定就留空数组让 import 时 collect
 

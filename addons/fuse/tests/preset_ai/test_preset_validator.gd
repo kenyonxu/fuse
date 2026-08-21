@@ -38,6 +38,7 @@ func _ready():
 	_test_enum_json_roundtrip()
 	_test_type_mismatch()
 	_test_missing_param_warning()
+	_test_missing_param_requires_aware()
 	print("=== test_preset_validator: codec 实测层 ===")
 	_test_roundtrip_loss()
 	_test_event_null()
@@ -232,6 +233,23 @@ func _test_missing_param_warning() -> void:
 	var r := PresetValidator.validate_data(_l1_with({"type": "Wait"}))
 	var has_w: bool = r.findings.any(func(f): return f.code == "W_MISSING_PARAM")
 	_check(has_w and r.errors == 0, "缺参数但有默认值 → 仅 W_MISSING_PARAM，无 error")
+
+# requires 感知的缺参（Task 2：schemas 重 dump 后条件参数带 requires 门控）
+func _test_missing_param_requires_aware() -> void:
+	# operand_a_source=1（VARIABLE）时：operand_a_scope_source（门控满足）应报缺；
+	# operand_b_variable（需 operand_b_source=1，本 JSON 缺省回退默认 0）门控未满足 → 不应报缺。
+	# 注：operand_a_value 不带 requires——提取器纪律是仅正向门控标注
+	# （默认状态注册的参数保持旧 dump 字节不变），反向门控（VARIABLE 态消失）不标注
+	var inst := {"type": "MathOperation", "operation_type": 1, "operand_a_source": 1,
+		"operand_a_variable": "hp", "operand_a_scope": 1}
+	var findings: Array = PresetValidator.validate_data(_l1_with(inst)).findings
+	var missing: Array = findings.filter(func(f): return f.code == "W_MISSING_PARAM")
+	var names := []
+	for f in missing:
+		names.append(str(f.message))
+	_check(missing.size() >= 1, "仍报缺参（operand_a_scope_source 等）")
+	_check(not names.any(func(m): return m.contains("operand_b_variable")),
+		"门控未满足的 operand_b_variable 不报缺")
 
 # ---- codec 实测层（Task 3）----
 

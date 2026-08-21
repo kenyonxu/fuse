@@ -6,6 +6,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "child_name",
+      "requires": {
+        "action": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -111,6 +114,44 @@
       "name": "add_value",
       "type": 3,
       "type_name": "float"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "is_nested_instructions": false,
+      "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
     }
   ],
   "AnimatedSprite2DIsPlaying": [
@@ -165,6 +206,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "save_to_scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -174,6 +218,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_to_custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "save_to_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -183,6 +231,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_to_target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "save_to_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -560,6 +612,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -569,6 +624,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -578,6 +637,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -587,6 +650,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -596,6 +662,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -697,6 +766,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -706,6 +778,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -715,6 +791,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -724,6 +804,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -733,6 +816,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -771,6 +857,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -780,6 +869,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -789,6 +882,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -798,6 +895,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -807,6 +907,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -816,6 +919,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -825,6 +931,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -834,6 +944,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -899,6 +1013,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -908,6 +1025,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -917,6 +1038,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -926,6 +1051,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -935,6 +1063,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -944,6 +1075,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -953,6 +1087,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -962,6 +1100,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1027,6 +1169,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1036,6 +1181,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1045,6 +1194,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1054,6 +1207,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1063,6 +1219,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1072,6 +1231,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1081,6 +1243,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1090,6 +1256,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1155,6 +1325,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1164,6 +1337,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1173,6 +1350,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1182,6 +1363,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1191,6 +1375,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1355,6 +1542,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1364,6 +1554,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1373,6 +1567,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1382,6 +1580,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1391,6 +1592,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1400,6 +1604,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1409,6 +1616,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1418,6 +1629,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1474,6 +1689,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1483,6 +1701,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1492,6 +1714,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1501,6 +1727,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1510,6 +1739,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1519,6 +1751,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1528,6 +1763,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1537,6 +1776,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1593,6 +1836,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1602,6 +1848,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1611,6 +1861,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1620,6 +1874,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1629,6 +1886,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1676,6 +1936,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1685,6 +1948,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1694,6 +1961,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1703,6 +1974,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1712,6 +1986,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1721,6 +1998,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1730,6 +2010,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1739,6 +2023,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1795,6 +2083,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1804,6 +2095,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1813,6 +2108,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1822,6 +2121,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1831,6 +2133,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1840,6 +2145,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "element_value",
+      "requires": {
+        "remove_mode": 1
+      },
       "type": 0,
       "type_name": "type_0"
     },
@@ -1849,6 +2157,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "use_element_from_variable",
+      "requires": {
+        "remove_mode": 1
+      },
       "type": 1,
       "type_name": "bool"
     },
@@ -1950,6 +2261,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -1959,6 +2273,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1968,6 +2286,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -1977,6 +2299,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -1986,6 +2311,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2024,6 +2352,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2033,6 +2364,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2042,6 +2377,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2051,6 +2390,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2060,6 +2402,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2170,6 +2515,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2179,6 +2527,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2188,6 +2540,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2197,6 +2553,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2206,6 +2565,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2244,6 +2606,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2253,6 +2618,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2262,6 +2631,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2271,6 +2644,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2280,6 +2656,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2289,6 +2668,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2298,6 +2680,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2307,6 +2693,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2363,6 +2753,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2372,6 +2765,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2381,6 +2778,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2390,6 +2791,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2399,6 +2803,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2462,6 +2869,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2471,6 +2881,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2480,6 +2894,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2554,6 +2972,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2563,6 +2984,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2572,6 +2997,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2581,6 +3010,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2590,6 +3022,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2653,6 +3088,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2662,6 +3100,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2671,6 +3113,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2745,6 +3191,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -2754,6 +3203,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2763,6 +3216,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -2772,6 +3229,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -2781,6 +3241,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -3075,6 +3538,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -3084,6 +3550,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -3326,6 +3795,18 @@
       "name": "enabled",
       "type": 1,
       "type_name": "bool"
+    },
+    {
+      "default": true,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "damping",
+      "requires": {
+        "follow_mode": 2
+      },
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "CameraShake": [
@@ -3512,6 +3993,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -3521,6 +4005,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -3530,6 +4017,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -3539,6 +4030,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -3548,6 +4044,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -3696,6 +4197,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -3705,6 +4209,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -3714,6 +4221,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -3723,6 +4234,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -3732,6 +4248,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4008,6 +4529,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4017,6 +4541,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4026,6 +4554,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4035,6 +4567,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4044,6 +4579,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4145,6 +4683,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4154,6 +4695,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4163,6 +4708,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4172,6 +4721,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4181,6 +4733,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4291,6 +4846,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_path_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4300,6 +4858,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_path_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4309,6 +4870,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_path_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4318,6 +4883,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_path_source": 1,
+        "node_scope_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4327,6 +4897,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_path_source": 1,
+        "node_scope_source": 3,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4520,6 +5095,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4529,6 +5107,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4538,6 +5120,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4621,6 +5207,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4630,6 +5219,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4639,6 +5232,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4785,6 +5382,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4794,6 +5394,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4803,6 +5407,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4904,6 +5512,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_variable_name",
+      "requires": {
+        "source_node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4913,6 +5524,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "source_variable_scope",
+      "requires": {
+        "source_node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4922,6 +5536,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "source_scope_source",
+      "requires": {
+        "source_node_source": 1,
+        "source_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4931,6 +5549,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_custom_scope_id",
+      "requires": {
+        "source_node_source": 1,
+        "source_scope_source": 1,
+        "source_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4940,6 +5563,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_target_node_path",
+      "requires": {
+        "source_node_source": 1,
+        "source_scope_source": 3,
+        "source_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -4949,6 +5577,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_variable_name",
+      "requires": {
+        "target_node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4958,6 +5589,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "target_variable_scope",
+      "requires": {
+        "target_node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4967,6 +5601,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_node_source": 1,
+        "target_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -4976,6 +5614,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_node_source": 1,
+        "target_scope_source": 1,
+        "target_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -4985,6 +5628,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_target_node_path",
+      "requires": {
+        "target_node_source": 1,
+        "target_scope_source": 3,
+        "target_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -5104,6 +5752,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_variable_name",
+      "requires": {
+        "source_node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5113,6 +5764,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "source_variable_scope",
+      "requires": {
+        "source_node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5122,6 +5776,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "source_scope_source",
+      "requires": {
+        "source_node_source": 1,
+        "source_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5131,6 +5789,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_custom_scope_id",
+      "requires": {
+        "source_node_source": 1,
+        "source_scope_source": 1,
+        "source_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5140,6 +5803,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_target_node_path",
+      "requires": {
+        "source_node_source": 1,
+        "source_scope_source": 3,
+        "source_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -5149,6 +5817,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_variable_name",
+      "requires": {
+        "target_node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5158,6 +5829,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "target_variable_scope",
+      "requires": {
+        "target_node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5167,6 +5841,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_node_source": 1,
+        "target_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5176,6 +5854,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_node_source": 1,
+        "target_scope_source": 1,
+        "target_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5185,6 +5868,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_target_node_path",
+      "requires": {
+        "target_node_source": 1,
+        "target_scope_source": 3,
+        "target_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -5322,6 +6010,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5331,6 +6022,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5340,6 +6034,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5349,6 +6047,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5358,6 +6061,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -5571,6 +6279,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_variable_name",
+      "requires": {
+        "group_name_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5580,6 +6291,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "group_variable_scope",
+      "requires": {
+        "group_name_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5589,6 +6303,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "group_scope_source",
+      "requires": {
+        "group_name_source": 1,
+        "group_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5598,6 +6316,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_custom_scope_id",
+      "requires": {
+        "group_name_source": 1,
+        "group_scope_source": 1,
+        "group_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5607,6 +6330,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_target_node_path",
+      "requires": {
+        "group_name_source": 1,
+        "group_scope_source": 3,
+        "group_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -5717,6 +6445,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5726,6 +6457,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5735,6 +6470,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -5818,6 +6557,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5827,6 +6569,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5836,6 +6581,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -5845,6 +6594,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -5854,6 +6608,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -6253,6 +7012,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6262,6 +7024,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6271,6 +7036,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6280,6 +7049,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6289,6 +7063,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -6381,6 +7160,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "child_variable_name",
+      "requires": {
+        "child_node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6390,6 +7172,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "child_variable_scope",
+      "requires": {
+        "child_node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6399,6 +7184,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "child_scope_source",
+      "requires": {
+        "child_node_source": 1,
+        "child_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6408,6 +7197,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "child_custom_scope_id",
+      "requires": {
+        "child_node_source": 1,
+        "child_scope_source": 1,
+        "child_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6417,6 +7211,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "child_target_node_path",
+      "requires": {
+        "child_node_source": 1,
+        "child_scope_source": 3,
+        "child_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -6426,6 +7225,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "parent_variable_name",
+      "requires": {
+        "parent_node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6435,6 +7237,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "parent_variable_scope",
+      "requires": {
+        "parent_node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6444,6 +7249,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "parent_scope_source",
+      "requires": {
+        "parent_node_source": 1,
+        "parent_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6453,6 +7262,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "parent_custom_scope_id",
+      "requires": {
+        "parent_node_source": 1,
+        "parent_scope_source": 1,
+        "parent_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6462,6 +7276,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "parent_target_node_path",
+      "requires": {
+        "parent_node_source": 1,
+        "parent_scope_source": 3,
+        "parent_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -6563,6 +7382,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6572,6 +7394,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6581,6 +7406,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6590,6 +7419,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6599,6 +7433,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -6765,6 +7604,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6774,6 +7616,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6783,6 +7628,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6792,6 +7641,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6801,6 +7655,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -6884,6 +7743,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6893,6 +7755,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6902,6 +7767,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -6911,6 +7780,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -6920,6 +7794,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -7012,6 +7891,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7021,6 +7903,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7030,6 +7915,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7039,6 +7928,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7048,6 +7942,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -7131,6 +8030,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7140,6 +8042,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7149,6 +8054,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7158,6 +8067,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7167,6 +8081,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -7259,6 +8178,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7268,6 +8190,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7277,6 +8202,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7286,6 +8215,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7295,6 +8229,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -7461,6 +8400,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7470,6 +8412,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7479,6 +8424,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7488,6 +8437,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7497,6 +8451,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -7580,6 +8539,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7589,6 +8551,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7598,6 +8563,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -7607,6 +8576,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -7616,6 +8590,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -8013,6 +8992,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -8022,6 +9004,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -8486,6 +9471,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -8495,6 +9483,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -8504,6 +9496,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -8677,6 +9673,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -8686,6 +9685,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -8695,6 +9698,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -8805,6 +9812,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_variable_name",
+      "requires": {
+        "node_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -8814,6 +9824,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "node_variable_scope",
+      "requires": {
+        "node_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -8823,6 +9836,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "node_scope_source",
+      "requires": {
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -8832,6 +9849,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_custom_scope_id",
+      "requires": {
+        "node_scope_source": 1,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -8841,6 +9863,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "node_target_node_path",
+      "requires": {
+        "node_scope_source": 3,
+        "node_source": 1,
+        "node_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -8942,6 +9969,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -8951,6 +9981,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -8960,6 +9994,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9016,6 +10054,30 @@
       "name": "save_to_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "value_variable",
+      "requires": {
+        "value_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "value_scope",
+      "requires": {
+        "value_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
     }
   ],
   "CloneNode": [
@@ -9063,6 +10125,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9072,6 +10137,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9081,6 +10150,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9173,6 +10246,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9182,6 +10258,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9416,6 +10495,68 @@
       "name": "variable_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "is_nested_instructions": false,
+      "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "persistent",
+      "requires": {
+        "variable_scope": 2
+      },
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "auto_detect_assistant",
+      "requires": {
+        "variable_scope": 2
+      },
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
     }
   ],
   "CrossfadeToMusic": [
@@ -9472,6 +10613,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9481,6 +10625,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9490,6 +10638,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9519,6 +10671,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9528,6 +10683,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9537,6 +10696,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9546,6 +10709,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9555,6 +10721,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9564,6 +10734,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9620,6 +10794,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9629,6 +10806,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9638,6 +10819,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9656,6 +10841,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "json_source_variable",
+      "requires": {
+        "json_source_type": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9665,6 +10853,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "json_source_scope",
+      "requires": {
+        "json_source_type": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9674,6 +10865,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "json_scope_source",
+      "requires": {
+        "json_source_scope": 1,
+        "json_source_type": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9683,6 +10878,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "json_custom_scope_id",
+      "requires": {
+        "json_scope_source": 1,
+        "json_source_scope": 1,
+        "json_source_type": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9692,6 +10892,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "json_target_node_path",
+      "requires": {
+        "json_scope_source": 3,
+        "json_source_scope": 1,
+        "json_source_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9721,15 +10926,6 @@
       "name": "json_source_type",
       "type": 2,
       "type_name": "int"
-    },
-    {
-      "default": "",
-      "hint": 18,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "json_string",
-      "type": 4,
-      "type_name": "String"
     }
   ],
   "DictGetByPath": [
@@ -9739,6 +10935,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9748,6 +10947,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9757,6 +10960,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9766,6 +10973,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "path_variable",
+      "requires": {
+        "path_source_type": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9775,6 +10985,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "path_variable_scope",
+      "requires": {
+        "path_source_type": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9784,6 +10997,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "path_scope_source",
+      "requires": {
+        "path_source_type": 1,
+        "path_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9793,6 +11010,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "path_custom_scope_id",
+      "requires": {
+        "path_scope_source": 1,
+        "path_source_type": 1,
+        "path_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9802,6 +11024,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "path_target_node_path_for_scope",
+      "requires": {
+        "path_scope_source": 3,
+        "path_source_type": 1,
+        "path_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9811,6 +11038,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9820,6 +11050,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9829,6 +11063,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9912,6 +11150,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9921,6 +11162,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9930,6 +11175,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -9939,6 +11188,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -9948,6 +11200,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -9957,6 +11213,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10004,6 +11264,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10013,6 +11276,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10022,6 +11289,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10031,6 +11302,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "key_variable",
+      "requires": {
+        "key_source_type": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10040,6 +11314,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "key_variable_scope",
+      "requires": {
+        "key_source_type": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10049,6 +11326,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "key_scope_source",
+      "requires": {
+        "key_source_type": 1,
+        "key_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10058,6 +11339,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "key_custom_scope_id",
+      "requires": {
+        "key_scope_source": 1,
+        "key_source_type": 1,
+        "key_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10067,6 +11353,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "key_target_node_path_for_scope",
+      "requires": {
+        "key_scope_source": 3,
+        "key_source_type": 1,
+        "key_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10076,6 +11367,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10085,6 +11379,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10094,6 +11392,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10168,6 +11470,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10177,6 +11482,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10186,6 +11495,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10195,6 +11508,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10204,6 +11520,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10213,6 +11533,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10260,6 +11584,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10269,6 +11596,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10278,6 +11609,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10442,6 +11777,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "source_scope_source",
+      "requires": {
+        "source_dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10451,6 +11789,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_custom_scope_id",
+      "requires": {
+        "source_dict_scope": 1,
+        "source_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10460,6 +11802,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "source_target_node_path",
+      "requires": {
+        "source_dict_scope": 1,
+        "source_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10469,6 +11815,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10478,6 +11827,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_dict_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10487,6 +11840,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_target_node_path",
+      "requires": {
+        "target_dict_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10543,6 +11900,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10552,6 +11912,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10561,6 +11925,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10725,6 +12093,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10734,6 +12105,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10743,6 +12118,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10835,6 +12214,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10844,6 +12226,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10853,6 +12239,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -10963,6 +12353,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -10972,6 +12365,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -10981,6 +12378,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11136,6 +12537,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11145,6 +12549,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11154,6 +12562,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11163,6 +12575,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11172,6 +12587,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11181,6 +12600,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11228,6 +12651,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11237,6 +12663,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11246,6 +12676,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11264,6 +12698,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "target_scope_source",
+      "requires": {
+        "target_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11273,6 +12710,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_custom_scope_id",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11282,6 +12723,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path_for_scope",
+      "requires": {
+        "target_scope": 1,
+        "target_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11338,6 +12783,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "dict_scope_source",
+      "requires": {
+        "dict_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11347,6 +12795,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_custom_scope_id",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11356,6 +12808,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "dict_target_node_path",
+      "requires": {
+        "dict_scope": 1,
+        "dict_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11688,6 +13144,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11697,6 +13156,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11780,6 +13242,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11789,6 +13254,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11798,6 +13267,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11890,6 +13363,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "array_scope_source",
+      "requires": {
+        "array_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11899,6 +13375,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_custom_scope_id",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11908,6 +13388,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "array_target_node_path",
+      "requires": {
+        "array_scope": 1,
+        "array_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11917,6 +13401,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "group_name",
+      "requires": {
+        "source_type": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11926,6 +13413,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "index_scope_source",
+      "requires": {
+        "index_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11935,6 +13425,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "index_custom_scope_id",
+      "requires": {
+        "index_scope": 1,
+        "index_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11944,6 +13438,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "index_target_node_path",
+      "requires": {
+        "index_scope": 1,
+        "index_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -11953,6 +13451,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "item_scope_source",
+      "requires": {
+        "item_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -11962,6 +13463,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "item_custom_scope_id",
+      "requires": {
+        "item_scope": 1,
+        "item_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -11971,6 +13476,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "item_target_node_path",
+      "requires": {
+        "item_scope": 1,
+        "item_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12000,15 +13509,6 @@
       "name": "array_scope",
       "type": 2,
       "type_name": "int"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "group_name",
-      "type": 4,
-      "type_name": "String"
     },
     {
       "default": "item",
@@ -12126,6 +13626,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "index_scope_source",
+      "requires": {
+        "index_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12135,6 +13638,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "index_custom_scope_id",
+      "requires": {
+        "index_scope": 1,
+        "index_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12144,6 +13651,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "index_target_node_path",
+      "requires": {
+        "index_scope": 1,
+        "index_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12164,24 +13675,6 @@
       "name": "use_variable_count",
       "type": 1,
       "type_name": "bool"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "loop_count_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "loop_count_scope",
-      "type": 2,
-      "type_name": "int"
     },
     {
       "default": true,
@@ -12272,6 +13765,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12281,6 +13777,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12290,6 +13790,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12391,6 +13895,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12400,6 +13907,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12409,6 +13920,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12519,6 +14034,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "save_to_scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12528,6 +14046,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_to_custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "save_to_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12537,6 +14059,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_to_target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "save_to_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12629,6 +14155,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "index_variable",
+      "requires": {
+        "index_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12638,6 +14167,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "index_scope",
+      "requires": {
+        "index_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12647,6 +14179,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12656,6 +14191,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12665,6 +14204,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scope_target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12784,6 +14327,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12793,6 +14339,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12802,6 +14352,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scope_target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12858,6 +14412,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12867,6 +14424,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12876,6 +14437,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -12905,6 +14470,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -12914,6 +14482,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -12923,6 +14495,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13006,6 +14582,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13015,6 +14594,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13024,6 +14607,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scope_target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13080,6 +14667,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13089,6 +14679,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13098,6 +14692,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13136,6 +14734,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13145,6 +14746,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13154,6 +14759,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13237,6 +14846,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13246,6 +14858,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13255,6 +14871,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13356,6 +14976,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "result_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13365,6 +14988,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13374,6 +15001,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scope_target_node_path",
+      "requires": {
+        "result_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13430,6 +15061,9 @@
       "hint_string": "Xy:0,Xz:1,Yz:2,Full 3d:3",
       "is_nested_instructions": false,
       "name": "plane_3d",
+      "requires": {
+        "dimension_mode": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13439,6 +15073,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "origin_direct_3d",
+      "requires": {
+        "dimension_mode": 1
+      },
       "type": 9,
       "type_name": "Vector3"
     },
@@ -13448,6 +15085,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "origin_variable",
+      "requires": {
+        "origin_mode": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13457,6 +15097,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "origin_scope",
+      "requires": {
+        "origin_mode": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13466,6 +15109,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "origin_scope_source",
+      "requires": {
+        "origin_mode": 1,
+        "origin_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13475,6 +15122,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "origin_custom_scope_id",
+      "requires": {
+        "origin_mode": 1,
+        "origin_scope": 1,
+        "origin_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13484,6 +15136,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "origin_target_node_path",
+      "requires": {
+        "origin_mode": 1,
+        "origin_scope": 1,
+        "origin_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13493,6 +15150,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "range_direct_3d",
+      "requires": {
+        "dimension_mode": 1
+      },
       "type": 9,
       "type_name": "Vector3"
     },
@@ -13502,6 +15162,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "range_variable",
+      "requires": {
+        "range_mode": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13511,6 +15174,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "range_scope",
+      "requires": {
+        "range_mode": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13520,6 +15186,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "range_scope_source",
+      "requires": {
+        "range_mode": 1,
+        "range_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13529,6 +15199,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "range_custom_scope_id",
+      "requires": {
+        "range_mode": 1,
+        "range_scope": 1,
+        "range_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13538,6 +15213,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "range_target_node_path",
+      "requires": {
+        "range_mode": 1,
+        "range_scope": 1,
+        "range_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13547,6 +15227,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "save_scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13556,6 +15239,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_custom_scope_id",
+      "requires": {
+        "save_scope_source": 1,
+        "save_to_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13565,6 +15252,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_target_node_path",
+      "requires": {
+        "save_scope_source": 3,
+        "save_to_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13639,6 +15330,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13648,6 +15342,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13657,6 +15355,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13713,6 +15415,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13722,6 +15427,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -13948,6 +15656,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "position_variable",
+      "requires": {
+        "position_mode": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13957,6 +15668,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "position_scope",
+      "requires": {
+        "position_mode": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13966,6 +15680,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "position_scope_source",
+      "requires": {
+        "position_mode": 1,
+        "position_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -13975,6 +15693,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "position_custom_scope_id",
+      "requires": {
+        "position_mode": 1,
+        "position_scope": 1,
+        "position_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -13984,6 +15707,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "position_target_node_path",
+      "requires": {
+        "position_mode": 1,
+        "position_scope": 1,
+        "position_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14033,24 +15761,6 @@
       "type_name": "Vector3"
     },
     {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "position_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "position_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
       "default": false,
       "hint": 0,
       "hint_string": "",
@@ -14058,24 +15768,6 @@
       "name": "save_instance_id",
       "type": 1,
       "type_name": "bool"
-    },
-    {
-      "default": "instance_id",
-      "hint": 20,
-      "hint_string": "instance_id",
-      "is_nested_instructions": false,
-      "name": "target_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "save_to_scope",
-      "type": 2,
-      "type_name": "int"
     },
     {
       "default": false,
@@ -14094,6 +15786,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -14103,6 +15798,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14112,6 +15811,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14186,6 +15889,78 @@
       "name": "save_to_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "from_variable",
+      "requires": {
+        "from_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "from_scope",
+      "requires": {
+        "from_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "to_variable",
+      "requires": {
+        "to_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "to_scope",
+      "requires": {
+        "to_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "weight_variable",
+      "requires": {
+        "weight_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "weight_scope",
+      "requires": {
+        "weight_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
     }
   ],
   "LoadGlobalVariables": [
@@ -14195,6 +15970,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_path",
+      "requires": {
+        "load_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14235,6 +16013,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -14244,6 +16025,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14253,6 +16038,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14291,6 +16080,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "look_at_node",
+      "requires": {
+        "target_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14340,15 +16132,6 @@
       "type_name": "int"
     },
     {
-      "default": "",
-      "hint": 26,
-      "hint_string": "Node2D,Node3D",
-      "is_nested_instructions": false,
-      "name": "look_at_node",
-      "type": 22,
-      "type_name": "NodePath"
-    },
-    {
       "default": false,
       "hint": 0,
       "hint_string": "",
@@ -14356,15 +16139,6 @@
       "name": "use_custom_up",
       "type": 1,
       "type_name": "bool"
-    },
-    {
-      "default": "(0.0, 1.0, 0.0)",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "up_vector",
-      "type": 9,
-      "type_name": "Vector3"
     }
   ],
   "MathExpression": [
@@ -14374,6 +16148,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14383,6 +16160,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14392,6 +16172,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "save_scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -14401,6 +16184,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_custom_scope_id",
+      "requires": {
+        "save_scope_source": 1,
+        "save_to_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14410,6 +16197,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_target_node_path",
+      "requires": {
+        "save_scope_source": 3,
+        "save_to_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14466,6 +16257,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "operand_a_scope_source",
+      "requires": {
+        "operand_a_scope": 1,
+        "operand_a_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -14475,6 +16270,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "operand_a_custom_scope_id",
+      "requires": {
+        "operand_a_scope": 1,
+        "operand_a_scope_source": 1,
+        "operand_a_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14484,6 +16284,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "operand_a_target_node_path",
+      "requires": {
+        "operand_a_scope": 1,
+        "operand_a_scope_source": 3,
+        "operand_a_source": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14493,6 +16298,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "operand_b_scope_source",
+      "requires": {
+        "operand_b_scope": 1,
+        "operand_b_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -14502,6 +16311,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "operand_b_custom_scope_id",
+      "requires": {
+        "operand_b_scope": 1,
+        "operand_b_scope_source": 1,
+        "operand_b_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14511,6 +16325,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "operand_b_target_node_path",
+      "requires": {
+        "operand_b_scope": 1,
+        "operand_b_scope_source": 3,
+        "operand_b_source": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14520,6 +16339,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -14529,6 +16351,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -14538,6 +16364,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -14601,6 +16431,54 @@
       "hint_string": "Local,Scope,Global",
       "is_nested_instructions": false,
       "name": "save_to_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "operand_a_variable",
+      "requires": {
+        "operand_a_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "operand_a_scope",
+      "requires": {
+        "operand_a_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "operand_b_variable",
+      "requires": {
+        "operand_b_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "operand_b_scope",
+      "requires": {
+        "operand_b_source": 1
+      },
       "type": 2,
       "type_name": "int"
     }
@@ -14760,6 +16638,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "smooth_factor",
+      "requires": {
+        "move_mode": 1
+      },
       "type": 3,
       "type_name": "float"
     },
@@ -14769,6 +16650,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "acceleration",
+      "requires": {
+        "move_mode": 2
+      },
       "type": 3,
       "type_name": "float"
     },
@@ -14778,6 +16662,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "friction",
+      "requires": {
+        "move_mode": 2
+      },
       "type": 3,
       "type_name": "float"
     },
@@ -17564,6 +19451,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_player",
+      "requires": {
+        "target_mode": 0
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -17573,6 +19463,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "use_variable_for_target",
+      "requires": {
+        "target_mode": 0
+      },
       "type": 1,
       "type_name": "bool"
     },
@@ -17627,6 +19520,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "bus",
+      "requires": {
+        "target_mode": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -17636,6 +19532,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "name_pattern",
+      "requires": {
+        "target_mode": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -17656,87 +19555,6 @@
       "name": "target_mode",
       "type": 2,
       "type_name": "int"
-    },
-    {
-      "default": false,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "use_variable_for_target",
-      "type": 1,
-      "type_name": "bool"
-    },
-    {
-      "default": "",
-      "hint": 26,
-      "hint_string": "AudioStreamPlayer,AudioStreamPlayer2D,AudioStreamPlayer3D",
-      "is_nested_instructions": false,
-      "name": "target_player",
-      "type": 22,
-      "type_name": "NodePath"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "target_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "target_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
-      "is_nested_instructions": false,
-      "name": "target_scope_source",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "target_custom_scope_id",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "target_target_node_path",
-      "type": 22,
-      "type_name": "NodePath"
-    },
-    {
-      "default": "Master",
-      "hint": 2,
-      "hint_string": "Master,SFX,Music,Voice,Ambient,ClefMaster,clef_ch_0,clef_ch_1,clef_ch_2,clef_ch_3,clef_ch_4,clef_ch_5,clef_ch_6,clef_ch_7,clef_ch_8,clef_ch_9,clef_ch_10,clef_ch_11,clef_ch_12,clef_ch_13,clef_ch_14,clef_ch_15",
-      "is_nested_instructions": false,
-      "name": "bus",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "Fuse_AudioPlayer_*",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "name_pattern",
-      "type": 4,
-      "type_name": "String"
     }
   ],
   "PlayAnimation": [
@@ -17894,15 +19712,6 @@
       "name": "fade_in",
       "type": 1,
       "type_name": "bool"
-    },
-    {
-      "default": 2.0,
-      "hint": 1,
-      "hint_string": "0,10,0.1,or_greater",
-      "is_nested_instructions": false,
-      "name": "fade_duration",
-      "type": 3,
-      "type_name": "float"
     }
   ],
   "PlayRandomSound": [
@@ -18055,6 +19864,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -18064,6 +19876,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -18073,6 +19889,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -18177,6 +19997,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -18186,6 +20009,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -18195,6 +20022,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -18352,6 +20183,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -18361,6 +20195,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -18370,6 +20208,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scope_target_node",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -18408,6 +20250,18 @@
       "name": "variable_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "requires": {
+        "recycle_mode": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
     }
   ],
   "ReloadScene": [
@@ -18773,6 +20627,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_path",
+      "requires": {
+        "save_target": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -19199,6 +21056,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "int_value",
+      "requires": {
+        "parameter_type": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -19208,6 +21068,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "bool_value",
+      "requires": {
+        "parameter_type": 2
+      },
       "type": 1,
       "type_name": "bool"
     },
@@ -19217,6 +21080,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "string_value",
+      "requires": {
+        "parameter_type": 3
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -19318,6 +21184,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "bus",
+      "requires": {
+        "target_mode": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -19327,6 +21196,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "name_pattern",
+      "requires": {
+        "target_mode": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -19367,69 +21239,6 @@
       "type_name": "NodePath"
     },
     {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "target_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "target_scope",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
-      "is_nested_instructions": false,
-      "name": "target_scope_source",
-      "type": 2,
-      "type_name": "int"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "target_custom_scope_id",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "target_target_node_path",
-      "type": 22,
-      "type_name": "NodePath"
-    },
-    {
-      "default": "Master",
-      "hint": 2,
-      "hint_string": "Master,SFX,Music,Voice,Ambient,ClefMaster,clef_ch_0,clef_ch_1,clef_ch_2,clef_ch_3,clef_ch_4,clef_ch_5,clef_ch_6,clef_ch_7,clef_ch_8,clef_ch_9,clef_ch_10,clef_ch_11,clef_ch_12,clef_ch_13,clef_ch_14,clef_ch_15",
-      "is_nested_instructions": false,
-      "name": "bus",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "Fuse_AudioPlayer_*",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "name_pattern",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
       "default": 1.0,
       "hint": 1,
       "hint_string": "0,1,0.01",
@@ -19446,15 +21255,6 @@
       "name": "fade",
       "type": 1,
       "type_name": "bool"
-    },
-    {
-      "default": 0.5,
-      "hint": 1,
-      "hint_string": "0,5,0.1,or_greater",
-      "is_nested_instructions": false,
-      "name": "fade_duration",
-      "type": 3,
-      "type_name": "float"
     }
   ],
   "SetCameraLimit": [
@@ -19729,6 +21529,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "zoom_variable",
+      "requires": {
+        "zoom_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -19738,6 +21541,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "zoom_scope",
+      "requires": {
+        "zoom_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -19747,6 +21553,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "zoom_scope": 1,
+        "zoom_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -19756,6 +21566,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "zoom_scope": 1,
+        "zoom_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -19765,6 +21580,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "zoom_scope": 1,
+        "zoom_source": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -20510,6 +22330,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "color_value",
+      "requires": {
+        "parameter_type": 1
+      },
       "type": 20,
       "type_name": "Color"
     },
@@ -20519,6 +22342,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "vec2_value",
+      "requires": {
+        "parameter_type": 2
+      },
       "type": 5,
       "type_name": "Vector2"
     },
@@ -20528,6 +22354,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "vec3_value",
+      "requires": {
+        "parameter_type": 3
+      },
       "type": 9,
       "type_name": "Vector3"
     },
@@ -20537,6 +22366,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "bool_value",
+      "requires": {
+        "parameter_type": 4
+      },
       "type": 1,
       "type_name": "bool"
     },
@@ -20546,6 +22378,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "int_value",
+      "requires": {
+        "parameter_type": 5
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -20712,24 +22547,6 @@
       "name": "position",
       "type": 9,
       "type_name": "Vector3"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "position_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "position_scope",
-      "type": 2,
-      "type_name": "int"
     }
   ],
   "SetProcessMode": [
@@ -20887,24 +22704,6 @@
       "name": "new_value",
       "type": 0,
       "type_name": "type_0"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "variable_name",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "variable_scope",
-      "type": 2,
-      "type_name": "int"
     }
   ],
   "SetRotation": [
@@ -21098,24 +22897,6 @@
       "name": "scale",
       "type": 9,
       "type_name": "Vector3"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "scale_variable",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": 0,
-      "hint": 2,
-      "hint_string": "Local,Scope,Global",
-      "is_nested_instructions": false,
-      "name": "scale_scope",
-      "type": 2,
-      "type_name": "int"
     }
   ],
   "SetScopeVariable": [
@@ -21143,6 +22924,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -21152,6 +22936,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -21715,6 +23502,9 @@
       "hint_string": "Local:0,Scope:1,Global:2",
       "is_nested_instructions": false,
       "name": "texture_scope",
+      "requires": {
+        "texture_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -21724,6 +23514,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "texture_scope": 1,
+        "texture_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -21733,6 +23527,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "texture_scope": 1,
+        "texture_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -21742,6 +23541,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "texture_scope": 1,
+        "texture_source": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -21780,6 +23584,18 @@
       "name": "texture_path",
       "type": 4,
       "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "texture_variable",
+      "requires": {
+        "texture_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
     }
   ],
   "SetVariable": [
@@ -21798,6 +23614,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "target_variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -21807,6 +23626,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "target_variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -21816,6 +23639,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "target_variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -22217,6 +24044,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "bus",
+      "requires": {
+        "stop_mode": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -22226,6 +24056,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "name_pattern",
+      "requires": {
+        "stop_mode": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -22248,24 +24081,6 @@
       "type_name": "int"
     },
     {
-      "default": "Master",
-      "hint": 2,
-      "hint_string": "Master,SFX,Music,Voice,Ambient,ClefMaster,clef_ch_0,clef_ch_1,clef_ch_2,clef_ch_3,clef_ch_4,clef_ch_5,clef_ch_6,clef_ch_7,clef_ch_8,clef_ch_9,clef_ch_10,clef_ch_11,clef_ch_12,clef_ch_13,clef_ch_14,clef_ch_15",
-      "is_nested_instructions": false,
-      "name": "bus",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "Fuse_AudioPlayer_*",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "name_pattern",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
       "default": false,
       "hint": 0,
       "hint_string": "",
@@ -22273,15 +24088,6 @@
       "name": "fade_out",
       "type": 1,
       "type_name": "bool"
-    },
-    {
-      "default": 0.5,
-      "hint": 1,
-      "hint_string": "0,5,0.1,or_greater",
-      "is_nested_instructions": false,
-      "name": "fade_duration",
-      "type": 3,
-      "type_name": "float"
     }
   ],
   "StringContainsInstruction": [
@@ -22329,6 +24135,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -22338,6 +24147,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -22347,6 +24159,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "save_scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -22356,6 +24171,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_custom_scope_id",
+      "requires": {
+        "save_scope_source": 1,
+        "save_to_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -22365,6 +24184,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "save_target_node_path",
+      "requires": {
+        "save_scope_source": 3,
+        "save_to_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -22559,6 +24382,44 @@
       "name": "variable_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "is_nested_instructions": false,
+      "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
     }
   ],
   "ToggleVariable": [
@@ -22579,6 +24440,44 @@
       "name": "variable_scope",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "is_nested_instructions": false,
+      "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
     }
   ],
   "TweenBounceAnimation": [
@@ -23892,6 +25791,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scalar_value",
+      "requires": {
+        "operation_type": 2
+      },
       "type": 3,
       "type_name": "float"
     },
@@ -23901,6 +25803,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scalar_use_variable",
+      "requires": {
+        "operation_type": 2
+      },
       "type": 1,
       "type_name": "bool"
     },
@@ -23946,6 +25851,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -23955,6 +25863,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24013,24 +25925,6 @@
       "type_name": "Vector2"
     },
     {
-      "default": false,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "scalar_use_variable",
-      "type": 1,
-      "type_name": "bool"
-    },
-    {
-      "default": 1.0,
-      "hint": 1,
-      "hint_string": "-99999,99999,0.1,or_less,or_greater",
-      "is_nested_instructions": false,
-      "name": "scalar_value",
-      "type": 3,
-      "type_name": "float"
-    },
-    {
       "default": "vector_result",
       "hint": 0,
       "hint_string": "",
@@ -24053,7 +25947,10 @@
       "hint": 2,
       "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
       "is_nested_instructions": false,
-      "name": "scope_source",
+      "name": "vector_a_scope_source",
+      "requires": {
+        "vector_a_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -24062,7 +25959,10 @@
       "hint": 0,
       "hint_string": "",
       "is_nested_instructions": false,
-      "name": "scope_id",
+      "name": "vector_a_scope_id",
+      "requires": {
+        "vector_a_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     }
@@ -24074,6 +25974,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "time_scope": 1,
+        "value_source": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -24083,6 +25987,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "time_scope": 1,
+        "value_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24092,6 +26001,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "time_scope": 1,
+        "value_source": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -24112,6 +26026,30 @@
       "name": "wait_time",
       "type": 3,
       "type_name": "float"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "wait_time_variable",
+      "requires": {
+        "value_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "time_scope",
+      "requires": {
+        "value_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
     }
   ],
   "WaitUntil": [
@@ -24130,6 +26068,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "variable_a_scope_source",
+      "requires": {
+        "variable_a_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -24139,6 +26080,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "variable_a_custom_scope_id",
+      "requires": {
+        "variable_a_scope": 1,
+        "variable_a_scope_source": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24148,6 +26093,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "variable_a_target_node_path",
+      "requires": {
+        "variable_a_scope": 1,
+        "variable_a_scope_source": 3
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -24202,6 +26151,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node",
+      "requires": {
+        "condition_type": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -24211,6 +26163,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "property_name",
+      "requires": {
+        "condition_type": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24220,6 +26175,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "property_value",
+      "requires": {
+        "condition_type": 1
+      },
       "type": 0,
       "type_name": "type_0"
     },
@@ -24229,6 +26187,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "check_variable_name",
+      "requires": {
+        "condition_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24247,6 +26208,10 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "check_variable_scope_source",
+      "requires": {
+        "check_variable_scope": 1,
+        "condition_type": 2
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -24256,6 +26221,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "check_variable_custom_scope_id",
+      "requires": {
+        "check_variable_scope": 1,
+        "check_variable_scope_source": 1,
+        "condition_type": 2
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24265,6 +26235,11 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "check_variable_target_node_path",
+      "requires": {
+        "check_variable_scope": 1,
+        "check_variable_scope_source": 3,
+        "condition_type": 2
+      },
       "type": 22,
       "type_name": "NodePath"
     },
@@ -24314,51 +26289,6 @@
       "type_name": "type_0"
     },
     {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "variable_b",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": "",
-      "hint": 26,
-      "hint_string": "Node",
-      "is_nested_instructions": false,
-      "name": "target_node",
-      "type": 22,
-      "type_name": "NodePath"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "property_name",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
-      "default": null,
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "property_value",
-      "type": 0,
-      "type_name": "type_0"
-    },
-    {
-      "default": "",
-      "hint": 0,
-      "hint_string": "",
-      "is_nested_instructions": false,
-      "name": "check_variable_name",
-      "type": 4,
-      "type_name": "String"
-    },
-    {
       "default": 0.1,
       "hint": 1,
       "hint_string": "0.01,10,0.01,or_greater",
@@ -24384,6 +26314,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "batch_size",
+      "requires": {
+        "warm_up_mode": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -24393,6 +26326,9 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "batch_delay",
+      "requires": {
+        "warm_up_mode": 1
+      },
       "type": 3,
       "type_name": "float"
     },
@@ -24458,6 +26394,9 @@
       "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
       "is_nested_instructions": false,
       "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
       "type": 2,
       "type_name": "int"
     },
@@ -24467,6 +26406,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
       "type": 4,
       "type_name": "String"
     },
@@ -24476,6 +26419,10 @@
       "hint_string": "",
       "is_nested_instructions": false,
       "name": "target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
       "type": 22,
       "type_name": "NodePath"
     },
