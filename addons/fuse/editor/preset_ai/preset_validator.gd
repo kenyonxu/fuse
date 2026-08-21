@@ -64,6 +64,7 @@ static func validate_preset(path: String) -> Dictionary:
 static func validate_data(data: Dictionary, src: String = "<inline>") -> Dictionary:
 	var findings: Array = []
 	_validate_structure(data, findings)
+	_validate_l3_l4_toplevel(data, findings)
 	# 顶层判型防护：幻觉 JSON（action_runner 为字符串等）会让下游取值链/codec 崩溃，
 	# 此层产出 finding 并决定 schema/codec 层是否可安全运行
 	var types_ok := _validate_top_level_types(data, findings)
@@ -191,6 +192,55 @@ static func _validate_structure(data: Dictionary, findings: Array) -> void:
 	if inferred != declared:
 		findings.append(_finding("E_LEVEL_MISMATCH", "error", "$.level",
 			"声明 %s 但字段集合推断为 %s" % [declared, inferred if inferred != "" else "<无法推断>"]))
+
+
+# L3/L4 顶层字段校验（spec §6.4「校验器规则同步」，2026-08-21 终审 I1 补齐）：
+# L3 signal_binding.signal_name 非空字符串；L4 每个 binding 的 binding_config 四键类型。
+# 基于推断 level（与其余各层一致）；畸形输入（signal_binding/binding 非 dict）由 _as_dict 归空跳过，
+# 判型层（_validate_top_level_types）负责报顶层结构类型错，此处不重复。
+static func _validate_l3_l4_toplevel(data: Dictionary, findings: Array) -> void:
+	var level := _infer_level(data)
+	if level == "L3":
+		var sb: Variant = data.get("signal_binding", null)
+		if not (sb is Dictionary):
+			return  # 判型职责；缺失/类型错不在本函数范围
+		var sn: Variant = (sb as Dictionary).get("signal_name", null)
+		if sn == null or (sn is String and (sn as String).is_empty()):
+			findings.append(_finding("E_SIGNAL_NAME_EMPTY", "error", "$.signal_binding.signal_name",
+				"signal_binding.signal_name 必须为非空字符串（缺失或为空）"))
+		elif not (sn is String):
+			findings.append(_finding("E_TYPE_MISMATCH", "error", "$.signal_binding.signal_name",
+				"signal_name 应为非空字符串，实际 %s" % type_string(typeof(sn))))
+	elif level == "L4":
+		var bindings := _as_array(data.get("event_bindings", []))
+		for b in bindings.size():
+			var binding := _as_dict(bindings[b])
+			var bc: Variant = binding.get("binding_config", null)
+			if bc == null:
+				continue  # 可选字段：缺省用运行时默认
+			if not (bc is Dictionary):
+				findings.append(_finding("E_TYPE_MISMATCH", "error",
+					"$.event_bindings[%d].binding_config" % b,
+					"binding_config 应为对象，实际 %s" % type_string(typeof(bc))))
+				continue
+			var cfg: Dictionary = bc
+			var path := "$.event_bindings[%d].binding_config" % b
+			for bool_key in ["enabled", "trigger_once"]:
+				if cfg.has(bool_key) and not (cfg[bool_key] is bool):
+					findings.append(_finding("E_TYPE_MISMATCH", "error", path + "." + bool_key,
+						"binding_config.%s 应为 bool，实际 %s" % [bool_key, type_string(typeof(cfg[bool_key]))]))
+			if cfg.has("cooldown_mode"):
+				var cm: Variant = cfg["cooldown_mode"]
+				# CooldownMode { NONE=0, GLOBAL_COOLDOWN=1, PER_OBJECT_COOLDOWN=2 }；
+				# JSON.parse_string 数字为 float，先归一化整值再判值域（与枚举层处理一致）
+				if not ((cm is float or cm is int) and float(cm) == floor(float(cm)) and int(cm) in [0, 1, 2]):
+					findings.append(_finding("E_ENUM_RANGE", "error", path + ".cooldown_mode",
+						"cooldown_mode 应为 0-2（NONE/GLOBAL_COOLDOWN/PER_OBJECT_COOLDOWN），实际 %s" % str(cm)))
+			if cfg.has("cooldown_time"):
+				var ct: Variant = cfg["cooldown_time"]
+				if not (ct is float or ct is int):
+					findings.append(_finding("E_TYPE_MISMATCH", "error", path + ".cooldown_time",
+						"cooldown_time 应为 float，实际 %s" % type_string(typeof(ct))))
 
 
 # ---- 第 2 层：schema 比对 ----

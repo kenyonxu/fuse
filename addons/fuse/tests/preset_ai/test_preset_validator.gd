@@ -19,6 +19,13 @@ func _ready():
 	_test_format_version()
 	_test_level_unknown()
 	_test_level_mismatch()
+	print("=== test_preset_validator: L3/L4 顶层字段（spec §6.4，终审 I1）===")
+	_test_l3_signal_name_empty()
+	_test_l3_signal_name_type_error()
+	_test_l3_valid_no_false_positive()
+	_test_l4_binding_config_enum_range()
+	_test_l4_binding_config_type_mismatch()
+	_test_l4_valid_no_false_positive()
 	print("=== test_preset_validator: 畸形输入判型防护 ===")
 	_test_malformed_action_runner()
 	_test_malformed_event_bindings()
@@ -88,6 +95,83 @@ func _test_level_mismatch() -> void:
 	d["level"] = "L2"  # 声明 L2 但没有 event
 	var codes: Array = PresetValidator.validate_data(d).findings.map(func(f): return f.code)
 	_check("E_LEVEL_MISMATCH" in codes, "声明 L2 无 event → E_LEVEL_MISMATCH")
+
+# ---- L3/L4 顶层字段（spec §6.4 承诺、终审 I1 补齐）----
+
+func _valid_l3() -> Dictionary:
+	return {
+		"format_version": "2.0", "level": "L3", "display_name": "t3",
+		"variables": {"local": [], "scope": [], "global": []},
+		"action_runner": {"execution_mode": 0, "instructions": []},
+		"signal_binding": {"signal_name": "player_died"},
+	}
+
+func _valid_l4() -> Dictionary:
+	return {
+		"format_version": "2.0", "level": "L4", "display_name": "t4",
+		"variables": {"local": [], "scope": [], "global": []},
+		"event_bindings": [{
+			"event": {"type": "OnReady", "delay_seconds": 0.0},
+			"binding_config": {"enabled": true, "trigger_once": false,
+				"cooldown_mode": 0, "cooldown_time": 1.0},
+			"action_runner": {"execution_mode": 0, "instructions": []},
+		}],
+	}
+
+func _test_l3_signal_name_empty() -> void:
+	var d := _valid_l3()
+	d["signal_binding"]["signal_name"] = ""
+	var findings: Array = PresetValidator.validate_data(d).findings
+	var hit: bool = findings.any(func(f):
+		return f.code == "E_SIGNAL_NAME_EMPTY" and f.json_path == "$.signal_binding.signal_name")
+	_check(hit, "L3 signal_name 空字符串 → E_SIGNAL_NAME_EMPTY（$.signal_binding.signal_name）")
+	# 缺失同样视为空（spec：非空字符串）
+	var d2 := _valid_l3()
+	d2["signal_binding"].erase("signal_name")
+	var codes: Array = PresetValidator.validate_data(d2).findings.map(func(f): return f.code)
+	_check("E_SIGNAL_NAME_EMPTY" in codes, "L3 signal_name 缺失 → E_SIGNAL_NAME_EMPTY")
+
+func _test_l3_signal_name_type_error() -> void:
+	var d := _valid_l3()
+	d["signal_binding"]["signal_name"] = 42
+	var findings: Array = PresetValidator.validate_data(d).findings
+	var hit: bool = findings.any(func(f):
+		return f.code == "E_TYPE_MISMATCH" and f.json_path == "$.signal_binding.signal_name")
+	_check(hit, "L3 signal_name 为数字 → E_TYPE_MISMATCH（$.signal_binding.signal_name）")
+
+func _test_l3_valid_no_false_positive() -> void:
+	var r := PresetValidator.validate_data(_valid_l3())
+	_check(r.errors == 0, "合法 L3 无 error（实际 findings: %s）" % JSON.stringify(r.findings))
+
+func _test_l4_binding_config_enum_range() -> void:
+	var d := _valid_l4()
+	d["event_bindings"][0]["binding_config"]["cooldown_mode"] = 99
+	var findings: Array = PresetValidator.validate_data(d).findings
+	var hit: bool = findings.any(func(f):
+		return (f.code == "E_ENUM_RANGE"
+			and f.json_path == "$.event_bindings[0].binding_config.cooldown_mode"))
+	_check(hit, "L4 binding_config.cooldown_mode=99 越界 → E_ENUM_RANGE（$.event_bindings[0].binding_config.cooldown_mode）")
+	# 0-2 全部合法（NONE/GLOBAL_COOLDOWN/PER_OBJECT_COOLDOWN）
+	for v in [0, 1, 2]:
+		var ok_d := _valid_l4()
+		ok_d["event_bindings"][0]["binding_config"]["cooldown_mode"] = v
+		var codes: Array = PresetValidator.validate_data(ok_d).findings.map(func(f): return f.code)
+		_check("E_ENUM_RANGE" not in codes, "L4 cooldown_mode=%d（合法枚举）无 E_ENUM_RANGE" % v)
+
+func _test_l4_binding_config_type_mismatch() -> void:
+	var cases := {"enabled": "yes", "trigger_once": 1, "cooldown_time": "1.0"}
+	for key in cases:
+		var d := _valid_l4()
+		d["event_bindings"][0]["binding_config"][key] = cases[key]
+		var findings: Array = PresetValidator.validate_data(d).findings
+		var hit: bool = findings.any(func(f):
+			return (f.code == "E_TYPE_MISMATCH"
+				and f.json_path == "$.event_bindings[0].binding_config." + key))
+		_check(hit, "L4 binding_config.%s 类型错（%s）→ E_TYPE_MISMATCH" % [key, str(cases[key])])
+
+func _test_l4_valid_no_false_positive() -> void:
+	var r := PresetValidator.validate_data(_valid_l4())
+	_check(r.errors == 0, "合法 L4 无 error（实际 findings: %s）" % JSON.stringify(r.findings))
 
 # ---- schema 层（Task 2）----
 
