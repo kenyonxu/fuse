@@ -306,21 +306,12 @@ static func _scan_storable_props(inst: Object) -> Dictionary:
 
 ## 扫描注册档属性（STORAGE ∧ SCRIPT_VARIABLE）
 ## 幽灵条目（仅 STORAGE，NO_EDITOR 残留）任何状态都在，不可作为门控证据
+## 复用 _scan_storable_props（含同名取首个口径），仅追加注册档过滤
 static func _scan_registered_props(inst: Object) -> Dictionary:
-	var props := {}
-	for prop in inst.get_property_list():
-		var pname: String = prop.get("name", "")
-		if pname.begins_with("_"):
-			continue
-		var usage: int = prop.get("usage", 0)
-		if (usage & PROPERTY_USAGE_STORAGE) == 0:
-			continue
-		if (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
-			continue
-		if pname in _BASE_PROPS:
-			continue
-		if not props.has(pname):
-			props[pname] = prop
+	var props: Dictionary = _scan_storable_props(inst)
+	for pname in props.keys():
+		if not _is_registered_prop(props[pname]):
+			props.erase(pname)
 	return props
 
 
@@ -369,6 +360,22 @@ static func _state_signature(assigns: Dictionary) -> String:
 
 ## 判定 next_assigns 相对当前状态是否解锁新的注册档属性
 ## （剪枝依据：注册集无增量的状态不产生新参数/新门控证据）
+##
+## ⚠️ 约定依赖：本剪枝假设组件的条件注册遵循"逐级注册的选择器嵌套"约定——
+## 每个前缀门组合态会解锁下一级选择器/参数（如 MathOperation 的
+## operand_a_source → operand_a_scope → operand_a_scope_source 三级链），
+## 因此合取门的每个前缀态相对其父态都有注册增量，不会被剪，深层合取态可达。
+##
+## 失效形态：若未来组件出现"两个根态常驻门的合取才注册参数"
+## （`if a == 1 and b == 1`，且 a==1 单独不解锁任何新注册属性），
+## 则跳板态 {a:1} 相对根态无注册增量被剪 → {a:1, b:1} 不可达 → 该参数静默漏收录
+## （schema 条目缺失，AI 侧不可见，无报错）。
+##
+## 观测方法：重新 dump 后对比上一版 JSON——组件参数数突降/该组件新增参数远低于
+## 手数 _get_property_list 中条件分支的预期；或对可疑组件跑无剪枝状态计数比对收录数。
+##
+## 加固方向（暂不实施，终审分诊）：两段式 BFS——第一阶段（当前剪枝队列）排空且
+## _MAX_PROBE_STATES 预算有余时，用剩余预算对未达状态跑第二段无剪枝遍历兜底。
 static func _unlocks_registered(inst: Object, defaults: Dictionary, next_assigns: Dictionary, current_registered: Dictionary) -> bool:
 	_reset_to_defaults(inst, defaults)
 	_apply_assignments(inst, next_assigns)
