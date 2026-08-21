@@ -394,9 +394,11 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 		if p.has("requires") and not _requirements_met(p["requires"], comp, known):
 			continue  # 该状态下本就不注册，缺是正常的
 		missing.append(pname)
-	for pname in missing:
+	# 按组件聚合为单条（Task 3 降噪：一条指令缺 N 参数只出一条 finding；
+	# message 格式为 CLI/报告消费方契约，勿改）
+	if not missing.is_empty():
 		findings.append(_finding("W_MISSING_PARAM", "warning", path,
-			"缺少参数 %s.%s，将用默认值 %s" % [type_name, pname, str(known[pname].get("default"))]))
+			"缺少 %d 个参数（将用默认值）：%s" % [missing.size(), "、".join(missing)]))
 
 
 ## 条件参数的门控判定：requires 的每个门在 comp 实际值（缺省回退 schema 默认）下满足

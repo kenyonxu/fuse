@@ -39,6 +39,7 @@ func _ready():
 	_test_type_mismatch()
 	_test_missing_param_warning()
 	_test_missing_param_requires_aware()
+	_test_missing_param_aggregated()
 	print("=== test_preset_validator: codec 实测层 ===")
 	_test_roundtrip_loss()
 	_test_event_null()
@@ -250,6 +251,15 @@ func _test_missing_param_requires_aware() -> void:
 	_check(missing.size() >= 1, "仍报缺参（operand_a_scope_source 等）")
 	_check(not names.any(func(m): return m.contains("operand_b_variable")),
 		"门控未满足的 operand_b_variable 不报缺")
+
+# W_MISSING_PARAM 按组件聚合（Task 3：每组件单条，message 固定格式供 CLI/报告消费）
+func _test_missing_param_aggregated() -> void:
+	var findings: Array = PresetValidator.validate_data(_l1_with({"type": "Wait"})).findings
+	var w: Array = findings.filter(func(f): return f.code == "W_MISSING_PARAM")
+	_check(w.size() == 1, "缺参聚合为单条 finding（实际 %d）" % w.size())
+	if w.size() == 1:
+		_check(str(w[0].message).contains("、") and str(w[0].message).begins_with("缺少"),
+			"聚合 message 列出参数名")
 
 # ---- codec 实测层（Task 3）----
 
