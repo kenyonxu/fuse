@@ -1,0 +1,36 @@
+{
+	"iteration": "iteration-2",
+	"regressions": [],
+	"results": [
+		{
+			"case": "l3-runner-sample",
+			"details": [],
+			"errors": 0,
+			"findings": [],
+			"pass": true,
+			"passed": 2,
+			"path": "handcrafted/outputs/sample_l3_runner.json",
+			"total": 2,
+			"variant": "handcrafted",
+			"warnings": 0
+		},
+		{
+			"case": "l4-multi-sample",
+			"details": [],
+			"errors": 0,
+			"findings": [],
+			"pass": true,
+			"passed": 3,
+			"path": "handcrafted/outputs/sample_l4_multi.json",
+			"total": 3,
+			"variant": "handcrafted",
+			"warnings": 0
+		}
+	],
+	"summary": {
+		"fail": 0,
+		"pass": 2,
+		"regressions": 0,
+		"total": 2
+	}
+}

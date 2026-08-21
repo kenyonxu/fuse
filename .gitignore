@@ -106,6 +106,17 @@ fuse-preset-generator-workspace/*
 fuse-preset-generator-workspace/iteration-1/*
 !fuse-preset-generator-workspace/iteration-1/report.json
 !fuse-preset-generator-workspace/iteration-1/report.md
+# iteration-2 产物不进 git；例外：report.json/md + handcrafted 样例副本（L3/L4 门禁证据入库）
+!fuse-preset-generator-workspace/iteration-2/
+fuse-preset-generator-workspace/iteration-2/*
+!fuse-preset-generator-workspace/iteration-2/report.json
+!fuse-preset-generator-workspace/iteration-2/report.md
+!fuse-preset-generator-workspace/iteration-2/handcrafted/
+fuse-preset-generator-workspace/iteration-2/handcrafted/*
+!fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/
+fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/*
+!fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/sample_l3_runner.json
+!fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/sample_l4_multi.json
 
 # 测试运行期生成的迷你 fixture workspace（test_eval_runner 自建自清）
 addons/fuse/tests/preset_ai/fixtures/

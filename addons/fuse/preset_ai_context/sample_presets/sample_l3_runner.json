@@ -1,0 +1,25 @@
+{
+	"action_runner": {
+		"execution_mode": 0,
+		"instructions": [
+			{
+				"message": "runner fired",
+				"type": "Print"
+			}
+		]
+	},
+	"category": "gameplay",
+	"description": "L3 结构样例：信号触发时打印消息",
+	"display_name": "SampleL3Runner",
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L3",
+	"signal_binding": {
+		"signal_name": "player_died"
+	},
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}

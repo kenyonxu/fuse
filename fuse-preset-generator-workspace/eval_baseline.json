@@ -12,5 +12,15 @@
 			"pass": true
 		}
 	},
+	"l3-runner-sample": {
+		"handcrafted/outputs/sample_l3_runner.json": {
+			"pass": true
+		}
+	},
+	"l4-multi-sample": {
+		"handcrafted/outputs/sample_l4_multi.json": {
+			"pass": true
+		}
+	},
 	"patrol-sequence-l1": {}
 }

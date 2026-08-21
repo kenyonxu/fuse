@@ -1,0 +1,16 @@
+{
+	"name": "l3-runner-sample",
+	"level": "L3",
+	"prompt": "样例：信号 player_died 触发时打印 runner fired（L3 Runner）",
+	"must_include": [
+		{"kind": "component", "type": "Print"},
+		{"kind": "param", "component": "Print", "key": "message"}
+	],
+	"must_not_include": [],
+	"variables_required": [],
+	"outputs": {
+		"iteration-2": [
+			"handcrafted/outputs/sample_l3_runner.json"
+		]
+	}
+}

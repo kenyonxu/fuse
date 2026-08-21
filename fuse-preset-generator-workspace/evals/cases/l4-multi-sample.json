@@ -1,0 +1,17 @@
+{
+	"name": "l4-multi-sample",
+	"level": "L4",
+	"prompt": "样例：就绪打印 ready + 每秒打印 tick（L4 MultiEventTrigger）",
+	"must_include": [
+		{"kind": "event", "type": "OnReady"},
+		{"kind": "event", "type": "OnInterval"},
+		{"kind": "component", "type": "Print"}
+	],
+	"must_not_include": [],
+	"variables_required": [],
+	"outputs": {
+		"iteration-2": [
+			"handcrafted/outputs/sample_l4_multi.json"
+		]
+	}
+}

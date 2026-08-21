@@ -1,0 +1,68 @@
+{
+	"category": "gameplay",
+	"description": "L4 结构样例：就绪打印一次 + 每秒打印心跳",
+	"display_name": "SampleL4Multi",
+	"event_bindings": [
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"message": "ready",
+						"type": "Print"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": true
+			},
+			"event": {
+				"delay_seconds": 0.0,
+				"type": "OnReady"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"message": "tick",
+						"type": "Print"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"auto_start": true,
+				"emit_repeat_count": false,
+				"interval_seconds": 1.0,
+				"max_interval_seconds": 2.0,
+				"max_repeats": 0,
+				"min_interval_seconds": 0.5,
+				"stop_condition": null,
+				"trigger_on_start": false,
+				"type": "OnInterval",
+				"use_random_interval": false
+			}
+		}
+	],
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L4",
+	"trigger_config": {
+		"use_parallel_condition_evaluation": false
+	},
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}

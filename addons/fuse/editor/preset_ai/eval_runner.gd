@@ -61,8 +61,11 @@ static func _assertion_holds(a: Dictionary, preset_data: Dictionary) -> bool:
 				_collect_types(arr, found)
 			return found.has(a.get("type", ""))
 		"event":
-			if preset_data.get("event", {}) is Dictionary:
-				if preset_data["event"].get("type", "") == a.get("type", ""): return true
+			# L4 只有 event_bindings、无顶层 event 键；用 get 的返回值判键，
+			# 避免 preset_data["event"] 对缺失键直接索引抛 "Invalid access to key"
+			var top_event: Variant = preset_data.get("event", null)
+			if top_event is Dictionary and top_event.get("type", "") == a.get("type", ""):
+				return true
 			for b in preset_data.get("event_bindings", []):
 				if b.get("event", {}).get("type", "") == a.get("type", ""): return true
 			return false
