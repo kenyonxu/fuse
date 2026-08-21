@@ -1,0 +1,21 @@
+{
+	"name": "attack-sequence-l2",
+	"level": "L2",
+	"prompt": "按键攻击 preset：按 attack 键时对 ../Target 扣 25 血（scope 变量 hp），播放攻击动画，发送 Hit 事件",
+	"must_include": [
+		{"kind": "component", "type": "MathOperation"},
+		{"kind": "component", "type": "PlayAnimation"},
+		{"kind": "component", "type": "SendEvent"},
+		{"kind": "event", "type": "OnInputAction"}
+	],
+	"must_not_include": [],
+	"variables_required": [
+		{"name": "hp", "scope": "scope"}
+	],
+	"outputs": {
+		"iteration-1": [
+			"attack-l2/with_skill/outputs/attack.json",
+			"attack-l2/without_skill/outputs/attack.json"
+		]
+	}
+}

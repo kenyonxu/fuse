@@ -97,4 +97,6 @@ addons/at-icons/
 
 # Archived fuse docs (historical, kept locally, not published with plugin)
 /addons/fuse/docs/archive/
-fuse-preset-generator-workspace/
+# AI 生成工作区不进 git；例外：evals/（seed case + baseline 是版本化的评测语料）
+fuse-preset-generator-workspace/*
+!fuse-preset-generator-workspace/evals/

@@ -1,0 +1,19 @@
+{
+	"name": "patrol-sequence-l1",
+	"level": "L1",
+	"prompt": "帮我做一个巡逻 preset：移动到点 A (0,0)，等待 2 秒，移动到点 B (100,0)，再等待 2 秒，循环往复",
+	"must_include": [
+		{"kind": "component", "type": "TweenMoveTo"},
+		{"kind": "param", "component": "Wait", "key": "wait_time"}
+	],
+	"must_not_include": [
+		{"kind": "component", "type": "SendEvent"}
+	],
+	"variables_required": [],
+	"outputs": {
+		"iteration-1": [
+			"patrol-l1/with_skill/outputs/patrol_a_wait_b_wait.json",
+			"patrol-l1/without_skill/outputs/patrol.json"
+		]
+	}
+}

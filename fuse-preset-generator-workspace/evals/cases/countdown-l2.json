@@ -1,0 +1,19 @@
+{
+	"name": "countdown-l2",
+	"level": "L2",
+	"prompt": "3-2-1 倒计时 preset：节点 ready 后每秒依次显示 3、2、1，最后隐藏 UI",
+	"must_include": [
+		{"kind": "component", "type": "SetUIText"},
+		{"kind": "component", "type": "Wait"},
+		{"kind": "component", "type": "ShowHideUI"},
+		{"kind": "event", "type": "OnReady"}
+	],
+	"must_not_include": [],
+	"variables_required": [],
+	"outputs": {
+		"iteration-1": [
+			"countdown-l2/with_skill/outputs/countdown.json",
+			"countdown-l2/without_skill/outputs/countdown.json"
+		]
+	}
+}
