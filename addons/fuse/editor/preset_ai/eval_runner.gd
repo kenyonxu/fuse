@@ -182,7 +182,85 @@ static func _write_reports(dir: String, iteration: String, results: Array, summa
 		m.store_string("\n".join(lines))
 		m.close()
 
-# live 模式（Task 12 实现）：占位 stub，保证 CLI 代码可解析、可 await
+# ---- live 模式（Task 12，experimental）----
+
+# system prompt 素材：skill 文档 + 上下文清单（与 fuse-preset-generator skill 一致）
+const _PROMPT_FILES := [
+	"res://.claude/skills/fuse-preset-generator/SKILL.md",
+	"res://addons/fuse/preset_ai_context/preset_structure_cheatsheet.md",
+	"res://addons/fuse/preset_ai_context/skill_workflow_brief.md",
+	"res://addons/fuse/preset_ai_context/fuse_components.json",
+	"res://addons/fuse/preset_ai_context/fuse_component_schemas.json",
+	"res://addons/fuse/preset_ai_context/fuse_enums.json",
+]
+
+# live 真实生成（OpenAI 兼容 /chat/completions，experimental）：
+# 逐 case 调 API 生成 preset → 落盘 <workspace>/<iteration>/<case>/live/outputs/<case>.json → 评分。
+# 配置来自 FUSE_EVAL_API_BASE / FUSE_EVAL_API_KEY / FUSE_EVAL_MODEL 三个环境变量，缺一即优雅失败。
+# live 结果不参与 baseline 门禁（regressions 恒空）。
 static func run_live(workspace: String, iteration: String, report_dir := "") -> Dictionary:
-	push_error("live 模式未实现（Task 12）")
-	return {"results": [], "summary": {"total": 0, "pass": 0, "fail": 0, "regressions": 0}, "regressions": []}
+	var base := OS.get_environment("FUSE_EVAL_API_BASE")
+	var key := OS.get_environment("FUSE_EVAL_API_KEY")
+	var model := OS.get_environment("FUSE_EVAL_MODEL")
+	if base == "" or key == "" or model == "":
+		push_error("live 模式需要 FUSE_EVAL_API_BASE / FUSE_EVAL_API_KEY / FUSE_EVAL_MODEL 环境变量")
+		return {"results": [], "summary": {"total": 0, "pass": 0, "fail": 0, "regressions": 0}, "regressions": []}
+	var system_prompt := ""
+	for p in _PROMPT_FILES:
+		var chunk := FileAccess.get_file_as_string(p)
+		if chunk == "":
+			push_warning("live system prompt 素材读取为空: %s" % p)
+		system_prompt += chunk + "\n\n"
+	var results: Array = []
+	for case_data in load_cases(workspace):
+		var case_name := str(case_data.get("name", ""))
+		var http := HTTPRequest.new()
+		http.timeout = 120
+		Engine.get_main_loop().root.add_child(http)
+		var body := JSON.stringify({
+			"model": model,
+			"messages": [
+				{"role": "system", "content": system_prompt},
+				{"role": "user", "content": str(case_data.get("prompt", ""))},
+			],
+			"temperature": 0.2,
+		})
+		var headers := PackedStringArray(["Content-Type: application/json",
+			"Authorization: Bearer " + key])
+		# request() 立即失败（如 URL 非法）时不会发 request_completed，直接走失败分支避免永久挂起
+		var response: Array = []
+		if http.request(base.trim_suffix("/") + "/chat/completions", headers, HTTPClient.METHOD_POST, body) == OK:
+			response = await http.request_completed
+		http.queue_free()
+		var variant_dir := workspace.path_join(iteration).path_join(case_name).path_join("live/outputs")
+		DirAccess.make_dir_recursive_absolute(variant_dir)
+		var out_path := variant_dir.path_join(case_name + ".json")
+		var parsed_preset: Variant = null
+		if response.size() == 4 and response[1] == 200:
+			var resp: Variant = JSON.parse_string(response[3].get_string_from_utf8())
+			if resp is Dictionary:
+				var choices: Array = resp.get("choices", [])
+				if choices.size() > 0 and choices[0] is Dictionary:
+					var content := str(choices[0].get("message", {}).get("content", ""))
+					var start := content.find("{")
+					var end := content.rfind("}")
+					if start >= 0 and end > start:
+						parsed_preset = JSON.parse_string(content.substr(start, end - start + 1))
+		if parsed_preset is Dictionary:
+			var f := FileAccess.open(out_path, FileAccess.WRITE)
+			if f:
+				f.store_string(JSON.stringify(parsed_preset, "\t"))
+				f.close()
+			results.append(_evaluate_output(case_data, out_path,
+				case_name + "/live/outputs/" + out_path.get_file()))
+		else:
+			results.append({"case": case_data.get("name", ""), "variant": "live",
+				"path": out_path, "errors": -1, "warnings": 0, "passed": 0, "total": 0,
+				"pass": false, "details": ["live 生成/解析失败"], "findings": []})
+	var summary := {"total": results.size(),
+		"pass": results.filter(func(x): return x["pass"]).size(),
+		"fail": results.filter(func(x): return not x["pass"]).size(),
+		"regressions": 0}
+	if report_dir != "":
+		_write_reports(report_dir, iteration, results, summary, [])
+	return {"results": results, "summary": summary, "regressions": []}
