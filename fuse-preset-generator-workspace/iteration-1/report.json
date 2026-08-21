@@ -54,20 +54,8 @@
 		{
 			"case": "attack-sequence-l2",
 			"details": [],
-			"errors": 2,
+			"errors": 0,
 			"findings": [
-				{
-					"code": "E_UNKNOWN_PARAM",
-					"json_path": "$.action_runner.instructions[0].operand_a_variable",
-					"message": "组件 MathOperation 无参数 'operand_a_variable'（幻觉参数名）",
-					"severity": "error"
-				},
-				{
-					"code": "E_UNKNOWN_PARAM",
-					"json_path": "$.action_runner.instructions[0].operand_a_scope",
-					"message": "组件 MathOperation 无参数 'operand_a_scope'（幻觉参数名）",
-					"severity": "error"
-				},
 				{
 					"code": "W_MISSING_PARAM",
 					"json_path": "$.action_runner.instructions[0]",
@@ -141,7 +129,7 @@
 					"severity": "warning"
 				}
 			],
-			"pass": false,
+			"pass": true,
 			"passed": 5,
 			"path": "attack-l2/without_skill/outputs/attack.json",
 			"total": 5,
@@ -982,8 +970,8 @@
 		}
 	],
 	"summary": {
-		"fail": 3,
-		"pass": 3,
+		"fail": 2,
+		"pass": 4,
 		"regressions": 0,
 		"total": 6
 	}
