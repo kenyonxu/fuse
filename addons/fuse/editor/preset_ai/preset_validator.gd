@@ -19,6 +19,10 @@ const _NESTED_FIELDS := ["instructions", "true_instructions", "false_instruction
 const PresetValueCodecScript := preload("res://addons/fuse/core/serialization/preset_value_codec.gd")
 const FusePresetScript := preload("res://addons/fuse/core/resources/fuse_preset.gd")
 
+# 写入变量的指令字段（以真实组件 schema 为准）：
+# SetVariable.target_variable / getter 类指令 save_to_variable / ForEach 的 item_variable + index_variable
+const _WRITE_VARIABLE_KEYS := ["target_variable", "save_to_variable", "item_variable", "index_variable"]
+
 static var _schemas_cache: Dictionary = {}
 
 static func _finding(code: String, severity: String, json_path: String, message: String) -> Dictionary:
@@ -221,14 +225,19 @@ static func _validate_codec(data: Dictionary, findings: Array) -> void:
 		var bindings: Array = data.get("event_bindings", [])
 		for b in bindings.size():
 			var binding: Dictionary = bindings[b] if bindings[b] is Dictionary else {}
-			var ar: Dictionary = binding.get("action_runner", {})
+			var ar_v: Variant = binding.get("action_runner", null)
+			# action_runner / event 类型异常（幻觉 JSON）时跳过，避免反序列化调用被类型检查中断
+			if ar_v != null and not (ar_v is Dictionary):
+				continue
+			var ar: Dictionary = ar_v if ar_v is Dictionary else {}
 			var src: Array = ar.get("instructions", [])
 			var insts := PresetValueCodecScript.deserialize_instructions(src)
 			if _count_instruction_dicts(src) > _count_instruction_objects(insts):
 				findings.append(_finding("E_ROUNDTRIP_LOSS", "error",
 					"$.event_bindings[%d].action_runner.instructions" % b, "L4 binding 指令静默丢弃"))
 			_check_conditions_restore(src, "$.event_bindings[%d].action_runner.instructions" % b, findings)
-			if binding.has("event") and PresetValueCodecScript.deserialize_event(binding["event"]) == null:
+			if binding.get("event", null) is Dictionary \
+					and PresetValueCodecScript.deserialize_event(binding["event"]) == null:
 				findings.append(_finding("E_EVENT_NULL", "error", "$.event_bindings[%d].event" % b,
 					"L4 binding event 无法反序列化"))
 
@@ -278,7 +287,75 @@ static func _check_conditions_restore(arr: Array, base_path: String, findings: A
 				_check_conditions_restore(item[field], "%s[%d].%s" % [base_path, i, field], findings)
 
 
-# ---- 第 4 层：语义（Task 4 实现）----
+# ---- 第 4 层：语义 ----
+# W_NODEPATH_UNRESOLVED：离线无法验证目标节点存在性，格式层面任何字符串都是合法 NodePath；
+# 该 code 保留给未来的节点感知模式，本层不实现。
 
 static func _validate_semantics(data: Dictionary, findings: Array) -> void:
-	pass
+	_scan_private_refs(data, "$", findings)
+	_scan_variable_declarations(data, findings)
+
+
+# 递归扫描全部字符串值：场景私有资源引用 / 资源存在性
+static func _scan_private_refs(value: Variant, path: String, findings: Array) -> void:
+	if value is String:
+		var s: String = value
+		if s.contains("::Resource_"):
+			findings.append(_finding("E_SCENE_PRIVATE_REF", "error", path,
+				"场景私有资源引用离开源场景无意义: %s" % s.substr(0, 80)))
+		elif (s.begins_with("res://") or s.begins_with("uid://")) and not s.contains("::"):
+			if not ResourceLoader.exists(s):
+				findings.append(_finding("E_RESOURCE_NOT_FOUND", "error", path, "资源不存在: %s" % s))
+	elif value is Dictionary:
+		for k in value:
+			_scan_private_refs(value[k], path + "." + str(k), findings)
+	elif value is Array:
+		for i in value.size():
+			_scan_private_refs(value[i], path + "[%d]" % i, findings)
+
+
+# 收集 variables 中声明的变量名，再扫描所有指令的写变量字段
+static func _scan_variable_declarations(data: Dictionary, findings: Array) -> void:
+	var declared := {}
+	var vars_v: Variant = data.get("variables", {})
+	var vars: Dictionary = vars_v if vars_v is Dictionary else {}
+	var local_arr: Array = vars.get("local", []) if vars.get("local", []) is Array else []
+	var global_arr: Array = vars.get("global", []) if vars.get("global", []) is Array else []
+	var scope_arr: Array = vars.get("scope", []) if vars.get("scope", []) is Array else []
+	for n in local_arr:
+		declared[n] = true
+	for n in global_arr:
+		declared[n] = true
+	for e in scope_arr:
+		if e is Dictionary:
+			declared[e.get("name", "")] = true
+	var level := _infer_level(data)
+	var inst_arrays: Array = []
+	if level in ["L1", "L2", "L3"]:
+		inst_arrays.append(data.get("action_runner", {}).get("instructions", []))
+	elif level == "L4":
+		var bindings: Array = data.get("event_bindings", [])
+		for b in bindings.size():
+			var binding: Dictionary = bindings[b] if bindings[b] is Dictionary else {}
+			var ar_v: Variant = binding.get("action_runner", null)
+			if ar_v is Dictionary:
+				var src: Array = (ar_v as Dictionary).get("instructions", [])
+				inst_arrays.append(src)
+	for arr in inst_arrays:
+		_scan_writes(arr, declared, findings)
+
+
+# 指令树中写变量但未声明 → W_VARIABLE_UNDECLARED（warning：运行时可能动态创建，不阻断）
+static func _scan_writes(arr: Array, declared: Dictionary, findings: Array) -> void:
+	for i in arr.size():
+		var item: Variant = arr[i]
+		if not (item is Dictionary) or not item.has("type"):
+			continue
+		for key in _WRITE_VARIABLE_KEYS:
+			var n: Variant = item.get(key, null)
+			if n is String and n != "" and not declared.has(n):
+				findings.append(_finding("W_VARIABLE_UNDECLARED", "warning",
+					"", "变量 '%s' 被写入但未在 variables 中声明" % n))
+		for field in _NESTED_FIELDS:
+			if item.get(field, null) is Array:
+				_scan_writes(item[field], declared, findings)

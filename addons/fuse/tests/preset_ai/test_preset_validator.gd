@@ -31,6 +31,9 @@ func _ready():
 	_test_roundtrip_loss()
 	_test_event_null()
 	_test_condition_null()
+	print("=== test_preset_validator: 语义层 ===")
+	_test_scene_private_ref()
+	_test_variable_undeclared()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -139,3 +142,25 @@ func _test_condition_null() -> void:
 	var codes := _codes(inst)
 	_check("E_CONDITION_NULL" in codes and "E_UNKNOWN_COMPONENT" in codes,
 		"condition inline dict 未知类型 → E_CONDITION_NULL + E_UNKNOWN_COMPONENT")
+
+# ---- 语义层（Task 4）----
+
+func _test_scene_private_ref() -> void:
+	var inst := {"type": "OnInterval", "interval_seconds": 1.0,
+		"stop_condition": "res://demos/x.tscn::Resource_fknqa"}
+	var d := _valid_l1()
+	d["level"] = "L2"
+	d["event"] = inst
+	d["trigger_config"] = {"trigger_once": false, "cooldown_mode": 0, "cooldown_time": 1.0}
+	var findings: Array = PresetValidator.validate_data(d).findings
+	_check(findings.any(func(f): return f.code == "E_SCENE_PRIVATE_REF"),
+		"场景私有引用 → E_SCENE_PRIVATE_REF")
+
+func _test_variable_undeclared() -> void:
+	# SetVariable 真实参数名为 target_variable / new_value（brief 中的 variable_name/value 为幻觉名）
+	var inst := {"type": "SetVariable", "target_variable": "score", "new_value": 1}
+	var d := _valid_l1()
+	d["action_runner"]["instructions"] = [inst]
+	var findings: Array = PresetValidator.validate_data(d).findings
+	_check(findings.any(func(f): return f.code == "W_VARIABLE_UNDECLARED"),
+		"写未声明变量 → W_VARIABLE_UNDECLARED")
