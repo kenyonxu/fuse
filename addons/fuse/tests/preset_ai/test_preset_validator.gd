@@ -25,6 +25,7 @@ func _ready():
 	print("=== test_preset_validator: schema 层 ===")
 	_test_unknown_component()
 	_test_unknown_param()
+	_test_base_property_hallucination()
 	_test_enum_range()
 	_test_enum_implicit_index_ok()
 	_test_enum_json_roundtrip()
@@ -105,6 +106,20 @@ func _test_unknown_component() -> void:
 func _test_unknown_param() -> void:
 	_check("E_UNKNOWN_PARAM" in _codes({"type": "Wait", "wait_time": 1.0, "time_scope": 0}),
 		"幻觉参数 time_scope → E_UNKNOWN_PARAM")
+
+func _test_base_property_hallucination() -> void:
+	# _collect_dynamic_params 的豁免集必须与序列化器输出集一致：_ 前缀属性与
+	# 基类属性（codec _BASE_PROPERTIES：log_level/metadata/script/resource_name 等）
+	# 永不出现在合法 preset JSON 中，幻觉即报错（2026-08-21 动态复核豁免集审查修复）
+	_check("E_UNKNOWN_PARAM" in _codes({"type": "Wait", "wait_time": 1.0, "log_level": 2}),
+		"基类属性 log_level 幻觉键 → E_UNKNOWN_PARAM（动态复核不豁免）")
+	_check("E_UNKNOWN_PARAM" in _codes({"type": "Wait", "wait_time": 1.0, "metadata": {"x": 1}}),
+		"基类属性 metadata 幻觉键 → E_UNKNOWN_PARAM")
+	_check("E_UNKNOWN_PARAM" in _codes({"type": "Wait", "wait_time": 1.0, "resource_name": "hack"}),
+		"基类属性 resource_name 幻觉键 → E_UNKNOWN_PARAM")
+	_check("E_UNKNOWN_PARAM" in _codes({"type": "Wait", "wait_time": 1.0,
+			"script": "res://addons/fuse/core/base/base_instruction.gd"}),
+		"基类属性 script 幻觉键 → E_UNKNOWN_PARAM（且不得触发脚本加载/替换）")
 
 func _test_enum_range() -> void:
 	# Wait.value_source 是枚举 Direct:0,Variable:1
@@ -346,6 +361,6 @@ func _test_real_samples() -> void:
 	_check(PresetValidator.validate_preset("res://fuse-preset-generator-workspace/iteration-1/attack-l2/without_skill/outputs/attack.json").errors == 0,
 		"attack without_skill 0 error（Task 14 裁决 A 翻转：当年报的 E_UNKNOWN_PARAM 是 schema dump 缺条件注册属性的历史误报——MathOperation.operand_a_variable/operand_a_scope 真实存在，2026-08-21 动态复核修复；产物 JSON 未动。真幻觉覆盖见 patrol without 的 Wait.time_scope）")
 	_check("E_UNKNOWN_PARAM" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/without_skill/outputs/patrol.json"),
-		"patrol without_skill 报真幻觉参数 Wait.time_scope（普通 var 永不序列化，动态复核不豁免）")
+		"patrol without_skill 报真幻觉参数 Wait.time_scope（产物 value_source=DIRECT，该状态下 time_scope 未注册；VARIABLE 状态下它是合法序列化参数）")
 	_check("E_REPR_NONCANONICAL" in _codes_of_file("res://fuse-preset-generator-workspace/iteration-1/patrol-l1/with_skill/outputs/patrol_a_wait_b_wait.json"),
 		"patrol with_skill 报 Vector2 数组形式")

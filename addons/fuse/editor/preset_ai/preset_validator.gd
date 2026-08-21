@@ -203,12 +203,27 @@ static func _load_schemas() -> Dictionary:
 	return _schemas_cache
 
 
+# 基类属性排除表（与 PresetValueCodec._BASE_PROPERTIES / SchemaExtractor._BASE_PROPS 同步维护）：
+# 这些属性属于组件基类而非 preset 参数，序列化器与 schema dump 均不输出，
+# 出现在 preset JSON 中即为幻觉键；_collect_dynamic_params 的豁免集同样必须排除，
+# 否则 AI 产物的 "script"/"metadata"/"log_level" 等幻觉键会被静默放行
+const _BASE_PARAM_EXCLUDES := [
+	"log_level",
+	"completion_timing",
+	"execution_mode",
+	"script",
+	"resource_local_to_scene",
+	"resource_name",
+	"metadata",
+]
+
 # 组件动态参数收集（E_UNKNOWN_PARAM 的动态属性豁免）。
 # schemas dump 基于默认状态实例；条件暴露的动态属性（如 MathOperation.operand_a_variable
 # 仅 operand_a_source==VARIABLE 时经 _get_property_list 注册，InstantiateScene.pool_* 仅
 # use_object_pool=true 时注册）不在其中，但组件真实拥有且序列化器会输出。
 # 探测方式：先按本 JSON 的键值恢复组件状态（与源场景实例状态等价），
-# 再收集带 STORAGE 的属性名——与 PresetValueCodec 的序列化输出条件完全一致。
+# 再收集带 STORAGE 的属性名——与 PresetValueCodec 的序列化输出条件完全一致
+# （同样排除 _ 前缀属性与基类属性）。
 # 注意同名属性会出现两批（引擎静态视图 + 脚本动态注册），任一批带 STORAGE 即可序列化。
 static func _collect_dynamic_params(type_name: String, comp: Dictionary) -> Dictionary:
 	var names := {}
@@ -219,12 +234,15 @@ static func _collect_dynamic_params(type_name: String, comp: Dictionary) -> Dict
 	if not (inst is Object):
 		return names
 	for k in comp:
-		if k == "type":
+		if k == "type" or k.begins_with("_") or k in _BASE_PARAM_EXCLUDES:
 			continue
 		(inst as Object).set(k, PresetValueCodecScript.deserialize_value(inst, k, comp[k]))
 	for prop in (inst as Object).get_property_list():
+		var pname := String(prop.get("name", ""))
+		if pname.begins_with("_") or pname in _BASE_PARAM_EXCLUDES:
+			continue
 		if (int(prop.get("usage", 0)) & PROPERTY_USAGE_STORAGE) != 0:
-			names[String(prop.get("name", ""))] = true
+			names[pname] = true
 	return names
 
 
