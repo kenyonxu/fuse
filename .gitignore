@@ -100,6 +100,12 @@ addons/at-icons/
 # AI 生成工作区不进 git；例外：evals/（seed case + baseline 是版本化的评测语料）
 fuse-preset-generator-workspace/*
 !fuse-preset-generator-workspace/evals/
+!fuse-preset-generator-workspace/eval_baseline.json
+!fuse-preset-generator-workspace/iteration-1/
+# iteration-1 产物不进 git；例外：report.json/md（回归门禁证据入库）
+fuse-preset-generator-workspace/iteration-1/*
+!fuse-preset-generator-workspace/iteration-1/report.json
+!fuse-preset-generator-workspace/iteration-1/report.md
 
 # 测试运行期生成的迷你 fixture workspace（test_eval_runner 自建自清）
 addons/fuse/tests/preset_ai/fixtures/

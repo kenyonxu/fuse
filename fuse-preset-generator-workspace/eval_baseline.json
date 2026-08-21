@@ -1,0 +1,16 @@
+{
+	"attack-sequence-l2": {
+		"attack-l2/with_skill/outputs/attack.json": {
+			"pass": true
+		}
+	},
+	"countdown-l2": {
+		"countdown-l2/with_skill/outputs/countdown.json": {
+			"pass": true
+		},
+		"countdown-l2/without_skill/outputs/countdown.json": {
+			"pass": true
+		}
+	},
+	"patrol-sequence-l1": {}
+}
