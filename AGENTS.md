@@ -38,7 +38,7 @@ func _ready():
 
 ### 组件清单同步（dump 上下文）⚠️ 新增组件后必做
 
-`addons/fuse/preset_ai_context/` 下的 3 个 JSON（components/schemas/enums）是 AI 写 preset 时的组件清单，**新增或修改组件后必须重新 dump**，否则 AI 上下文过期（2026-08-09 曾漏 5 个组件）。
+`addons/fuse/preset_ai_context/` 下的 3 个 JSON（components/schemas/enums）是 AI 写 preset 时的组件清单，**新增或修改组件后必须重新 dump**，否则 AI 上下文过期（2026-08-09 曾漏 5 个组件）。修改组件参数或 `_get_property_list` 条件门控后同样必须重 dump——schemas 现收录条件注册的动态参数及其 `requires` 门控。
 
 ```bash
 # 1. 首次需先初始化项目（生成 .godot 全局类缓存，否则 class_name 解析失败）
@@ -55,6 +55,8 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/dump_c
 - 指令：`static func _get_instruction_metadata() -> InstructionMetadata`
 - 事件：`static func _get_event_metadata() -> EventMetadata`
 - 条件：`static func _get_condition_metadata() -> ConditionMetadata`
+
+**提取器约定**：条件注册的参数须逐级嵌套（每个门控前缀态解锁下一级选择器），否则 BFS 探测可能静默漏收录（详见 schema_extractor.gd `_unlocks_registered` 注释）。
 
 ### Preset AI 工具链（validate / eval）
 

@@ -50,7 +50,7 @@
    - 必填项优先（无默认值的）
    - 枚举值查 `fuse_enums.json` 或 schema 的 `hint_string`
    - 嵌套指令字段（schema 中 `is_nested_instructions: true`）递归填子指令
-   - 参数清单以 schemas JSON 为准（schemas 已含条件注册的动态参数，requires 字段标注生效条件）
+   - 参数清单以 schemas JSON 为准（schemas 已含条件注册的动态参数，requires 字段标注生效条件；门控不满足时勿写该参数）
 4. **NodePath 写相对占位**（见 cheatsheet §5）：`..` / `../Player` / `../../GameSceneCanvas` / `./HUD/Score`
 5. **变量声明**（`variables.local` / `scope` / `global`，见 cheatsheet §6）；不确定就留空数组让 import 时 collect
 
@@ -112,8 +112,8 @@
 
 ```
 preset_ai_context/
-├── fuse_component_schemas.json   # 306 组件参数 schema（dict，键=ClassName）（以 fuse_components.json 实际条目数为准，dump 后同步本文件）
-├── fuse_components.json          # 306 组件元数据（list，含 category/keywords）（以实际条目数为准）
+├── fuse_component_schemas.json   # 307 组件参数 schema（dict，键=ClassName）（以 fuse_components.json 实际条目数为准，dump 后同步本文件）
+├── fuse_components.json          # 307 组件元数据（list，含 category/keywords）（以实际条目数为准）
 ├── fuse_enums.json               # 5 个枚举（VariableScope/ExecutionMode/SequenceMode/CooldownMode/ScopeSource）
 ├── preset_structure_cheatsheet.md # 本 skill 的 JSON 结构参考（L1-L4 决策树 + NodePath 约定）
 └── sample_presets/               # 4 个真实样例（few-shot）
@@ -155,7 +155,7 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/valida
 因此 skill **不强制跑验证**；只需保证：
 - JSON 结构对齐 cheatsheet §1 / §2
 - 每个组件的 `type` 是合法 class_name（来自 `fuse_components.json`）
-- 每个组件的参数键名来自 `fuse_component_schemas.json`（多余键不会报错，但应避免）
+- 每个组件的参数键名来自 `fuse_component_schemas.json`（仅写 requires 门控满足的参数——幻觉参数名或门控未满足的参数会被校验器报 E_UNKNOWN_PARAM）
 - 枚举整数来自 `fuse_enums.json`
 
 ---
