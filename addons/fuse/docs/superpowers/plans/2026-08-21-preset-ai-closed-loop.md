@@ -18,12 +18,13 @@
 - 测试：`.tscn` 场景 + 根脚本 `_ready()` 运行，`print("✓ ...")` + `assert(cond, msg)`；**测试脚本结尾必须 `get_tree().quit(fail_count > 0 ? 1 : 0)`**（本计划新增的退出码约定，服务于闭环门禁）。
 - 本计划**不新增组件**（无 Event/Instruction/Condition 新类），无需重新 dump `preset_ai_context/`。
 - 提交风格：`feat:`/`fix:`/`docs:`/`chore:` + 中文描述；每个任务至少一次提交。
-- 运行时事实（已核实，勿再质疑，直接依赖）：
-  - `PresetValueCodec.deserialize_value()`（`addons/fuse/core/serialization/preset_value_codec.gd:94`）对 Vector2 属性无特判，`Object.set()` 的 Variant 隐式转换 **String→Vector2 可转、Array→Vector2 不可转**；schema default 也是字符串 `"(0.0, 0.0)"`。
+- 运行时事实（**2026-08-21 裁定实验修正版**，勿再质疑，直接依赖）：
+  - Godot 4.7 Variant 隐式转换矩阵：String→NodePath / String→StringName **存在**；String→Vector2 / Vector3 / Color **不存在**，`Object.set()` 静默失败（属性停留默认值，无引擎报错）。`str_to_var` 不认裸 `"(x, y)"`，认 `Vector2(x, y)` 带类型前缀格式。
+  - 因此修复前三种 Vector2 JSON 子形式（字符串/数组/字典）全部不可导入——含 `red_planet.json` 的存量字符串形式（其 `target_position` 加载即静默回退默认值）。**Task 5 裁定修订：随任务在 `PresetValueCodec.deserialize_value()` 落地引擎值类型字符串显式解析分支（NodePath 先例推广：`str_to_var(type_name + 裸字符串)`，覆盖 Vector2/2i/3/3i/4/Color/Rect2/2i/Quaternion/Plane/AABB/Transform2D/Transform3D/Basis/Projection），字符串成为唯一规范形式；校验器对数组/字典报 `E_REPR_NONCANONICAL`（error），对字符串放行。**
   - `FusePreset.from_json()`（`addons/fuse/core/resources/fuse_preset.gd:96`）L4 分支不反序列化指令（`event_bindings_json` 原样存 Dictionary 数组），校验器 codec 层须对 L4 手动逐 binding 调 `PresetValueCodec.deserialize_instructions/ deserialize_event`。
   - 嵌套指令字段全集：`instructions / true_instructions / false_instructions / else_instructions / loop_instructions`。
-  - `game_flow.json`（L4，5 个 binding）与 `spawn_enemy.json`（L1，ForEach+loop_instructions）的嵌套指令是 2026-07-08 旧导出的字符串化产物；`hint_breath.json`（L2）的 `event.stop_condition` 是场景私有引用 `title_scene.tscn::Resource_fknqa`；`red_planet.json`（L2，Vector2 用字符串形式）当前干净。
-  - iteration-1 产物预期：attack with_skill 通过 / without_skill 失败（幻觉参数 `operand_a_variable`、`operand_a_scope`、缺 `operand_a_custom_scope_id` 等）；patrol with_skill 失败（2 处 `target_position` 数组形式）/ without_skill 失败（幻觉参数 `time_scope`）；countdown 两版待实测。
+  - `game_flow.json`（L4，5 个 binding）与 `spawn_enemy.json`（L1，ForEach+loop_instructions）的嵌套指令是 2026-07-08 旧导出的字符串化产物；`hint_breath.json`（L2）的 `event.stop_condition` 是场景私有引用 `title_scene.tscn::Resource_fknqa`；`red_planet.json`（L2）validator 视角干净，Vector2 字符串形式在 T5 codec 修复后真正可往返。
+  - iteration-1 产物预期：attack with_skill 通过 / without_skill 失败（幻觉参数 `operand_a_variable`、`operand_a_scope`、缺 `operand_a_custom_scope_id` 等）；patrol with_skill 失败（2 处 `target_position` 数组形式）/ without_skill 失败（幻觉参数 `time_scope`，其字符串 Vector2 在 codec 修复后可导入）；countdown 两版待实测。
 
 ---
 

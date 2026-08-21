@@ -29,7 +29,7 @@
 
 探索确认了四个直接影响设计的事实：
 
-1. **Vector2 疑案（重要纠错）。** 价值评估文档 §3.1 的 A/B 对比称「with_skill 把 Vector2 写成数组 `[0.0, 0.0]` 是正确写法，无 skill 的字符串 `"(100.0, 0.0)"` 无效」。但阅读 `PresetValueCodec.deserialize_value()`（`addons/fuse/core/serialization/preset_value_codec.gd:94`）发现：Vector2 无特判，靠 `Object.set()` 的 Variant 隐式转换——**字符串形式可能可转，数组形式反而不行**。现有导出样例（`red_planet.json`）用的正是字符串形式。也就是说，当时的人工 A/B 评测从未真正回导过产物，可能把错误结论写进了评估文档。**教训：表示法的裁决权必须交给真实 codec 实测，这是模块 A 的验收门槛之一。** 本 spec 记录该纠错，cheatsheet 在模块 C 中改正，历史评估文档保持原样不动。
+1. **Vector2 疑案（重要纠错，裁定实验已定案）。** 价值评估文档 §3.1 的 A/B 对比称「with_skill 把 Vector2 写成数组 `[0.0, 0.0]` 是正确写法，无 skill 的字符串 `"(100.0, 0.0)"` 无效」。2026-08-21 的裁定实验（M1 Task 5）实测证明**两头都错**：Godot 4.7 的 Variant 隐式转换矩阵不含 String→Vector2/Vector3/Color（仅含 String→NodePath/StringName），`Object.set()` 对三种 JSON 子形式（字符串/数组/字典）全部静默失败——`red_planet.json` 的 `target_position` 当前也是有损 roundtrip（加载回退默认值）。根源是 `PresetValueCodec.deserialize_value()` 有 NodePath 显式转换分支（`preset_value_codec.gd:117-118`）却没有引擎值类型的对应分支。**修复方向：在 `deserialize_value()` 增加引擎值类型字符串显式解析（NodePath 先例的推广），字符串形式成为规范形式**（它是 `JSON.stringify` 保存端的唯一产出形式，修加载端即兼容全部存量文件）。本 spec 记录该纠错，cheatsheet 在模块 C 中改正，历史评估文档保持原样不动。
 
 2. **现有导出样例不可完全回导（语料污染）。** `game_flow.json` / `spawn_enemy.json` 中 `IfThen.instructions` 等嵌套指令被序列化成显示字符串（形如 `"发送事件: AllEnemyDied (res://...::Resource_5y4ic):<Resource#...>"`），反序列化时 `PresetValueCodec` 对非 dict 项只 `push_warning` 跳过——嵌套指令静默丢失。git 考古（样例导出于 2026-07-08 commit 1fde87f，递归 serde codec 于 2026-08-10 commit 4452091 才引入）表明**导出器当前并无此 bug，样例只是早于 codec 的过期产物**。模块 C 真正要修的是另一处：`_serialize_value()` 对场景内嵌资源（`resource_path` 含 `::`）输出无意义的私有引用字符串（`hint_breath.json` 的 `stop_condition` 即此类），应改为 inline dict，再从源场景重导样例。
 
@@ -151,9 +151,9 @@ stdout 打印人类可读摘要；`--report` 输出机读 JSON：
 }
 ```
 
-### 4.5 Vector2 等值类型表示法裁定实验（M1 验收门槛）
+### 4.5 Vector2 等值类型表示法裁定实验（M1 验收门槛；2026-08-21 定案）
 
-实现校验器时，用真实 codec 对 Vector2 的三种候选表示做往返实测：字符串 `"(1.0, 2.0)"` / 数组 `[1.0, 2.0]` / 字典 `{"x": 1.0, "y": 2.0}`。**能往返的形式成为规范**，写为测试断言固定下来，并在模块 C 中同步：cheatsheet 改为规范形式、`fuse-preset-generator` skill 文档改为规范形式。Vector3/Color 同法裁定。裁定前校验器对非字符串形式只发 `W_REPR_NONCANONICAL`（warning），裁定为 error 级规则留出 code `E_REPR_NONCANONICAL`。
+裁定实验实测结论：三种候选表示（字符串 `"(1.0, 2.0)"` / 数组 `[1.0, 2.0]` / 字典 `{"x": 1.0, "y": 2.0}`）在修复前的 codec 下**全部无法还原**——Variant 隐式转换矩阵不含 String→Vector2/Vector3/Color，`Object.set()` 静默失败。修复（随 Task 5 落地）：`PresetValueCodec.deserialize_value()` 增加引擎值类型显式解析分支（NodePath 先例的推广，`str_to_var(类型名 + 裸字符串)` 解析 Vector2/Vector2i/Vector3/Vector3i/Vector4/Color/Rect2/Rect2i/Quaternion/Plane/AABB/Transform2D/Transform3D/Basis/Projection）。修复后：**字符串形式为唯一规范形式**（保存端 `JSON.stringify` 的天然产出，兼容存量文件），数组/字典形式仍不可导入。校验规则：非字符串形式 → `E_REPR_NONCANONICAL`（error）。裁定断言固化为测试；cheatsheet / skill 文档在模块 C 同步为字符串规范。附带影响：`red_planet.json` 的 `target_position` 从"validator 干净但加载有损"变为真正可往返。
 
 ## 5. 模块 B：eval runner + 回归门禁
 
@@ -295,7 +295,7 @@ runner 对照 baseline：任何产物的实际结果低于基线（应过实败�
 
 **修改：**
 
-- `addons/fuse/core/serialization/preset_value_codec.gd`（`_serialize_value`：场景内嵌资源改为 inline dict）
+- `addons/fuse/core/serialization/preset_value_codec.gd`（`deserialize_value`：引擎值类型字符串显式解析——T5 已落地；`_serialize_value`：场景内嵌资源改为 inline dict——T13）
 - `addons/fuse/presets/gameplay/{game_flow,spawn_enemy}.json`、`addons/fuse/presets/ui/hint_breath.json` + `preset_ai_context/sample_presets/` 副本（从源场景重导）
 - `addons/fuse/preset_ai_context/preset_structure_cheatsheet.md`（Vector2 规范、condition 解禁、L3/L4 结构）
 - `addons/fuse/preset_ai_context/skill_workflow_brief.md`（同上 + 296→306 + MVP 范围 L1-L4）
