@@ -140,10 +140,16 @@ static func _validate_component(comp: Variant, kind: String, path: String, findi
 		var hint: int = int(p.get("hint", 0))
 		if hint == 2:  # PROPERTY_HINT_ENUM
 			var allowed := {}
+			var implicit_index := 0
 			for pair in String(p.get("hint_string", "")).split(","):
 				var kv := pair.split(":")
 				if kv.size() == 2:
+					# 带值对格式 "Name:Value" → 用显式值
 					allowed[kv[1].strip_edges()] = true
+				else:
+					# 仅名称格式 "Name" → Godot 按出现顺序隐式索引（0 起）
+					allowed[str(implicit_index)] = true
+				implicit_index += 1
 			if not allowed.has(str(comp[key])):
 				findings.append(_finding("E_ENUM_RANGE", "error", path + "." + key,
 					"枚举参数 %s.%s 值 %s 不在 %s 中" % [type_name, key, str(comp[key]), p.get("hint_string")]))
