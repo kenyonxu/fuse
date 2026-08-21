@@ -34,6 +34,9 @@ func _ready():
 	print("=== test_preset_validator: 语义层 ===")
 	_test_scene_private_ref()
 	_test_variable_undeclared()
+	print("=== test_preset_validator: 裁定实验 ===")
+	_test_vector2_adjudication()
+	_test_engine_value_color_roundtrip()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -164,3 +167,39 @@ func _test_variable_undeclared() -> void:
 	var findings: Array = PresetValidator.validate_data(d).findings
 	_check(findings.any(func(f): return f.code == "W_VARIABLE_UNDECLARED"),
 		"写未声明变量 → W_VARIABLE_UNDECLARED")
+
+# ---- 裁定实验（Task 5）----
+
+func _test_vector2_adjudication() -> void:
+	var forms := {
+		"string": "(100.0, 0.0)",
+		"array": [100.0, 0.0],
+		"dict": {"x": 100.0, "y": 0.0},
+	}
+	var results := {}
+	for form in forms:
+		var d := _valid_l1()
+		d["action_runner"]["instructions"] = [
+			{"type": "TweenMoveTo", "target_node": "..", "target_position": forms[form], "duration": 1.0}]
+		var preset := PresetValidator.FusePresetScript.from_json(d)
+		var tween: Variant = preset.instructions[0]
+		results[form] = str(tween.get("target_position"))
+	print("Vector2 裁定结果: ", JSON.stringify(results))
+	# 断言（方案 A 修订后，controller b94ba41）：codec 显式解析字符串 → Vector2（唯一规范形式）；
+	# Variant 隐式转换矩阵不含 String→Vector2 / Array→Vector2，数组/字典形式 set 静默失败、停留默认值
+	# （Godot 4.7 实测，str 格式为 "(x.0, y.0)"）
+	_check(results["string"] == "(100.0, 0.0)", "字符串形式可转（唯一规范形式，codec 方案 A）")
+	_check(results["array"] == "(0.0, 0.0)", "数组形式不可转，属性停留默认值")
+	_check(results["dict"] == "(0.0, 0.0)", "字典形式不可转，属性停留默认值")
+
+func _test_engine_value_color_roundtrip() -> void:
+	# 引擎值类型分支泛化证明：CameraFadeIn.color（Color 类型）字符串 → 显式解析导入
+	var d := _valid_l1()
+	d["action_runner"]["instructions"] = [
+		{"type": "CameraFadeIn", "color": "(1.0, 0.5, 0.0, 1.0)"}]
+	var preset := PresetValidator.FusePresetScript.from_json(d)
+	var inst: Variant = preset.instructions[0]
+	var got: Variant = inst.get("color")
+	print("Color 泛化用例: ", str(got))
+	_check(got is Color and got == Color(1, 0.5, 0, 1),
+		"CameraFadeIn.color 字符串形式 → Color(1, 0.5, 0, 1)")

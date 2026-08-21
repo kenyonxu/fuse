@@ -117,6 +117,13 @@ static func deserialize_value(obj: Object, key: String, raw_value: Variant) -> V
 	if prop.get("type", TYPE_NIL) == TYPE_NODE_PATH and raw_value is String:
 		return NodePath(raw_value)
 
+	# 引擎值类型（Vector2/Color 等）：Variant 隐式转换矩阵不含 String→这些类型，
+	# 显式解析（序列化产物是裸 "(x, y)" 形式，str_to_var 需要类型前缀）
+	if prop.get("type", TYPE_NIL) in [TYPE_VECTOR2, TYPE_VECTOR2I, TYPE_VECTOR3, TYPE_VECTOR3I, TYPE_VECTOR4, TYPE_COLOR, TYPE_RECT2, TYPE_RECT2I, TYPE_QUATERNION, TYPE_PLANE, TYPE_AABB, TYPE_TRANSFORM2D, TYPE_TRANSFORM3D, TYPE_BASIS, TYPE_PROJECTION] and raw_value is String:
+		var parsed: Variant = str_to_var(type_string(prop.get("type", TYPE_NIL)) + raw_value)
+		if parsed != null:
+			return parsed
+
 	var hint := _property_to_hint(prop)
 	if hint.kind == "object" and raw_value is Dictionary:
 		return _deserialize_resource(raw_value, hint.class)
