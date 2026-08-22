@@ -53,6 +53,15 @@ static func can_merge(nodes: Array[Node]) -> bool:
 
 	return true
 
+## 解析新节点应使用的 owner
+## 场景根节点的 owner 恒为 null：若 Trigger 直接挂在场景根下（如 saw.tscn 的 Saw 根），
+## 直接取 parent.owner 会把新节点 owner 设成 null，导致它不出现在场景面板、保存时被丢弃。
+## 此时回落为 parent 本身，与"节点 owner 指向所属场景根"的语义一致。
+static func _resolve_owner(parent: Node) -> Node:
+	if parent.owner != null:
+		return parent.owner
+	return parent
+
 ## ==================== 合并操作 ====================
 
 ## 执行合并操作
@@ -221,7 +230,7 @@ func _create_backup(triggers: Array[Node]) -> Array[Dictionary]:
 func _do_merge(parent: Node, multi_trigger: MultiEventTrigger, triggers: Array[Node], first_index: int) -> void:
 	# 添加 MultiEventTrigger 到父节点
 	parent.add_child(multi_trigger)
-	multi_trigger.owner = parent.owner
+	multi_trigger.owner = _resolve_owner(parent)
 
 	# 移动到正确位置
 	parent.move_child(multi_trigger, first_index)
@@ -250,7 +259,7 @@ func _undo_merge(parent: Node, multi_trigger: MultiEventTrigger, backup: Array[D
 
 		# 添加回父节点
 		parent.add_child(trigger)
-		trigger.owner = parent.owner
+		trigger.owner = _resolve_owner(parent)
 
 		# 移动到原始位置
 		parent.move_child(trigger, data.index)

@@ -42,6 +42,14 @@ static func can_split(node: Node) -> bool:
 
 	return true
 
+## 解析新节点应使用的 owner
+## 场景根节点的 owner 恒为 null：若节点直接挂在场景根下，直接取 parent.owner 会把
+## 新节点 owner 设成 null，导致它不出现在场景面板、保存时被丢弃。此时回落为 parent 本身。
+static func _resolve_owner(parent: Node) -> Node:
+	if parent.owner != null:
+		return parent.owner
+	return parent
+
 ## ==================== 拆分操作 ====================
 
 ## 执行拆分操作
@@ -192,7 +200,7 @@ func _do_split(parent: Node, triggers: Array[Node], multi_trigger: MultiEventTri
 		var base_name: String = _get_event_name(trigger.event_definition)
 		trigger.name = _generate_unique_name(base_name, used_names)
 		parent.add_child(trigger)
-		trigger.owner = parent.owner
+		trigger.owner = _resolve_owner(parent)
 		parent.move_child(trigger, start_index + i)
 
 ## Undo 操作：撤销拆分
@@ -215,7 +223,7 @@ func _undo_split(parent: Node, triggers: Array[Node], backup: Dictionary, start_
 
 	# 添加回父节点
 	parent.add_child(multi_trigger)
-	multi_trigger.owner = parent.owner
+	multi_trigger.owner = _resolve_owner(parent)
 	parent.move_child(multi_trigger, start_index)
 
 ## 选中多个节点

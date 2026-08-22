@@ -30,6 +30,8 @@ func _ready() -> void:
 	test_can_split_rejects_single_binding()
 	test_can_split_rejects_regular_trigger()
 	test_can_split_rejects_regular_node()
+	test_resolve_owner_returns_parent_owner()
+	test_resolve_owner_falls_back_to_scene_root()
 
 	# 输出测试报告
 	_print_test_report()
@@ -136,6 +138,61 @@ func test_can_split_rejects_regular_node() -> void:
 	else:
 		_fail_count += 1
 		print("[FAIL] %s: 期望返回 false，实际返回 %s" % [test_name, result])
+
+## 测试：父节点 owner 非空时 _resolve_owner 返回该 owner
+func test_resolve_owner_returns_parent_owner() -> void:
+	_test_count += 1
+	var test_name: String = "test_resolve_owner_returns_parent_owner"
+	print("\n[%s] 开始测试..." % test_name)
+
+	# 构造 root / parent 两层，parent.owner 指向 root（深层节点的常见情况）
+	var root := Node.new()
+	root.name = "SceneRoot"
+	add_child(root)
+
+	var parent := Node.new()
+	parent.name = "Parent"
+	root.add_child(parent)
+	parent.owner = root
+
+	var resolved: Node = TriggerSplitterClass._resolve_owner(parent)
+
+	# 清理
+	root.queue_free()
+
+	# 验证结果
+	if resolved == root:
+		_pass_count += 1
+		print("[PASS] %s: owner 非空时返回 parent.owner" % test_name)
+	else:
+		_fail_count += 1
+		print("[FAIL] %s: 期望返回 root，实际返回 %s" % [test_name, resolved])
+
+## 测试：父节点即场景根（owner 为 null）时 _resolve_owner 回落为父节点本身
+## 回归用例：MultiEventTrigger 直接挂在场景根下时，parent.owner 为 null，
+## 新节点 owner 若被设为 null 将不出现在场景面板且保存时被丢弃
+func test_resolve_owner_falls_back_to_scene_root() -> void:
+	_test_count += 1
+	var test_name: String = "test_resolve_owner_falls_back_to_scene_root"
+	print("\n[%s] 开始测试..." % test_name)
+
+	# 场景根的 owner 恒为 null（headless 下 add_child 也不会设置 owner）
+	var parent := Node.new()
+	parent.name = "SceneRoot"
+	add_child(parent)
+
+	var resolved: Node = TriggerSplitterClass._resolve_owner(parent)
+
+	# 清理
+	parent.queue_free()
+
+	# 验证结果
+	if resolved == parent:
+		_pass_count += 1
+		print("[PASS] %s: owner 为 null 时回落为父节点本身" % test_name)
+	else:
+		_fail_count += 1
+		print("[FAIL] %s: 期望返回 parent 本身，实际返回 %s" % [test_name, resolved])
 
 ## ==================== 辅助方法 ====================
 
