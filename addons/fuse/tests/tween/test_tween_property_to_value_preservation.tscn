@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtesttweenpropkeep"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/tween/test_tween_property_to_value_preservation.gd" id="1"]
+
+[node name="TestTweenPropertyValuePreservation" type="Node"]
+script = ExtResource("1")

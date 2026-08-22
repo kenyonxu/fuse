@@ -406,8 +406,14 @@ func _update_property_type_info():
 		_log_warning("无法找到属性信息: " + property_path)
 
 ## 根据属性类型设置默认值
+## 仅当当前值与新属性类型不匹配时才重置，避免编辑器重新解析目标节点时
+## 把已保存的 to_value 抹成类型默认值（如 float 属性的 1.0 被重置为 0.0）
 func _set_default_value_for_type():
 	if _current_property_info == null:
+		return
+
+	# 类型已匹配，保留当前值
+	if typeof(to_value) == _current_property_info.type:
 		return
 
 	match _current_property_info.type:
