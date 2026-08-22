@@ -478,7 +478,7 @@ func _on_import_preset_pressed() -> void:
 	fd.add_filter("*.json", "Fuse Preset JSON (.json)")
 	fd.file_selected.connect(_on_import_file_selected.bind(fd))
 	EditorInterface.get_base_control().add_child(fd)
-	fd.popup_centered()
+	fd.popup_centered(Vector2i(800, 500))
 
 
 func _on_import_file_selected(path: String, fd: FileDialog) -> void:

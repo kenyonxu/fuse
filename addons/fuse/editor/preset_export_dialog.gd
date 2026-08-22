@@ -149,7 +149,7 @@ func _on_browse_folder() -> void:
 		dialog.current_dir = "res://addons/fuse/presets/"
 	dialog.dir_selected.connect(_on_dir_selected.bind(dialog))
 	EditorInterface.get_base_control().add_child(dialog)
-	dialog.popup_centered()
+	dialog.popup_centered(Vector2i(800, 500))
 
 
 func _on_dir_selected(dir: String, dialog: FileDialog) -> void:
