@@ -1,0 +1,102 @@
+[gd_resource type="Resource" script_class="FusePreset" format=3 uid="uid://cb8dniniwa4kp"]
+
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="1_yevja"]
+[ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="2_j03h4"]
+
+[resource]
+script = ExtResource("2_j03h4")
+display_name = "MultiTriggerSaw"
+category = "gameplay"
+version = "2.0"
+variables = {
+"global": [],
+"local": [],
+"scope": []
+}
+level = "L4"
+trigger_config = {
+"use_parallel_condition_evaluation": true
+}
+event_bindings_json = [{
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"auto_free": false,
+"duration": 4.0,
+"easing_type": 2,
+"property_path": "progress_ratio",
+"property_source": 0,
+"target_custom_scope_id": "",
+"target_node": "..",
+"target_scope": 0,
+"target_scope_source": 0,
+"target_target_node_path": "",
+"target_variable": "",
+"to_value": 1.0,
+"trans_type": 1,
+"type": &"TweenPropertyInstruction",
+"use_variable_for_target": false
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 0.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"check_interval": 0.5,
+"ratio_custom_scope_id": "",
+"ratio_scope": 0,
+"ratio_scope_source": 0,
+"ratio_target_node_path": "",
+"ratio_variable": "",
+"target_node": "..",
+"target_ratio": 0.0,
+"tolerance": 0.1,
+"trigger_once": false,
+"type": &"OnPathFollow2DProgressRatio",
+"use_variable_for_ratio": false
+}
+}, {
+"action_runner": {
+"execution_mode": 0,
+"instructions": [{
+"auto_free": false,
+"duration": 4.0,
+"easing_type": 2,
+"property_path": "progress_ratio",
+"property_source": 0,
+"target_custom_scope_id": "",
+"target_node": "..",
+"target_scope": 0,
+"target_scope_source": 0,
+"target_target_node_path": "",
+"target_variable": "",
+"to_value": 0.0,
+"trans_type": 1,
+"type": &"TweenPropertyInstruction",
+"use_variable_for_target": false
+}]
+},
+"binding_config": {
+"cooldown_mode": 0,
+"cooldown_time": 0.0,
+"enabled": true,
+"trigger_once": false
+},
+"event": {
+"check_interval": 0.5,
+"ratio_custom_scope_id": "",
+"ratio_scope": 0,
+"ratio_scope_source": 0,
+"ratio_target_node_path": "",
+"ratio_variable": "",
+"target_node": "..",
+"target_ratio": 1.0,
+"tolerance": 0.1,
+"trigger_once": false,
+"type": &"OnPathFollow2DProgressRatio",
+"use_variable_for_ratio": false
+}
+}]
