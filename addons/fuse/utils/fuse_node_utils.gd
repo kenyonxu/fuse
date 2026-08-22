@@ -234,6 +234,25 @@ static func _find_resource_owner(root: Node, resource: Resource, use_cache: bool
 	var all_nodes = _get_all_nodes_recursive(root)
 
 	for node in all_nodes:
+		# 检查节点是否是 MultiEventTrigger 类型
+		# MultiEventTrigger 的资源存储在 event_bindings 数组的各 EventBinding 中
+		# （binding.event / binding.action_runner.instructions），没有直接的
+		# event_definition / action_runner 属性
+		if "event_bindings" in node:
+			var event_bindings = node.get("event_bindings")
+			if event_bindings:
+				for binding in event_bindings:
+					if binding == resource:
+						return node
+					if not binding is Resource:
+						continue
+					if "event" in binding and binding.get("event") == resource:
+						return node
+					if "action_runner" in binding:
+						var binding_runner = binding.get("action_runner")
+						if binding_runner and _check_action_runner_ownership(binding_runner, resource):
+							return node
+
 		# 检查节点是否是 Trigger 类型
 		# Trigger 类有 event_definition 和 action_runner 两个 @export 属性
 		if "event_definition" in node and "action_runner" in node:
