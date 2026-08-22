@@ -7,15 +7,16 @@
 [ext_resource type="PackedScene" uid="uid://d3lode3uhqely" path="res://demos/fuse/fuse_adventure/scenes/moving_platform.tscn" id="4_kqe04"]
 [ext_resource type="PackedScene" uid="uid://dfej7i5056bf3" path="res://demos/fuse/fuse_adventure/scenes/saw.tscn" id="4_qe6p4"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_yyvwg"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="6_vvbtj"]
 [ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="6_wnpyd"]
 [ext_resource type="PackedScene" uid="uid://t6wfletnf316" path="res://demos/fuse/fuse_adventure/scenes/item_banana.tscn" id="6_yyvwg"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="7_kkifu"]
 [ext_resource type="Script" uid="uid://bftkcmpe2p35w" path="res://addons/fuse/instructions/camera/set_camera_limit_from_area2d.gd" id="7_pf1ym"]
-[ext_resource type="Script" uid="uid://cxgqov24kvfsv" path="res://addons/fuse/events/node/on_path_follow_2d_progress_ratio.gd" id="7_vvbtj"]
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_lj5vm"]
 [ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="9_f8sk5"]
-[ext_resource type="Script" uid="uid://b152yfncggvas" path="res://addons/fuse/instructions/variables/set_variable.gd" id="9_vvbtj"]
+[ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="9_kkifu"]
+[ext_resource type="Script" uid="uid://cxgqov24kvfsv" path="res://addons/fuse/events/node/on_path_follow_2d_progress_ratio.gd" id="10_n5feu"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="10_v5lb7"]
-[ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="10_vvbtj"]
 [ext_resource type="Script" uid="uid://4ob2qfha1jx1" path="res://addons/fuse/instructions/system/set_viewport_size.gd" id="11_vvbtj"]
 [ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="12_kkifu"]
 [ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="13_n5feu"]
@@ -38,53 +39,371 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="Resource" id="Resource_kkifu"]
-resource_name = "PathFollow2D 进度比 0.0 (±0.01)"
-script = ExtResource("7_vvbtj")
-ratio_variable = ""
-ratio_scope = 0
-ratio_scope_source = 0
-ratio_custom_scope_id = ""
-ratio_target_node_path = NodePath("")
-target_node = NodePath("../PathFollow2D")
-use_variable_for_ratio = false
-target_ratio = 0.0
-tolerance = 0.01
-check_interval = 0.1
-trigger_once = false
-
 [sub_resource type="Resource" id="Resource_n5feu"]
-resource_name = "设置变量 [[本地]] 'direction' = true"
-script = ExtResource("9_vvbtj")
-target_variable = "direction"
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-new_value = true
-target_variable_scope = 0
-
-[sub_resource type="Resource" id="Resource_pyj0u"]
-resource_name = "属性动画 [PathFollow2D] [Node] .progress_ratio = 1.0 (4.00s)"
-script = ExtResource("10_vvbtj")
+resource_name = "属性动画 [Saw] [Node] .progress_ratio = 1.0 (4.00s)"
+script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
 target_custom_scope_id = ""
 target_target_node_path = NodePath("")
 use_variable_for_target = false
-target_node = NodePath("../PathFollow2D")
+target_node = NodePath("..")
 property_source = 0
 property_path = "progress_ratio"
 to_value = 1.0
 duration = 4.0
 auto_free = false
 easing_type = 2
-trans_type = 0
+trans_type = 1
 
-[sub_resource type="Resource" id="Resource_7nek4"]
+[sub_resource type="Resource" id="Resource_pyj0u"]
 script = ExtResource("8_lj5vm")
-instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_n5feu"), SubResource("Resource_pyj0u")])
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_n5feu")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_6kde4"]
+resource_name = "Saw 进度比 0.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 0.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_ehdw3"]
+resource_name = "监听 Saw，当 progress_ratio 接近 0.0 (容差 0.01) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_6kde4")
+action_runner = SubResource("Resource_pyj0u")
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[sub_resource type="Resource" id="Resource_kkifu"]
+resource_name = "属性动画 [Saw] [Node] .progress_ratio = 0.0 (4.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 0.0
+duration = 4.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_3swal"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_kkifu")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_r07d2"]
+resource_name = "@SubViewport@9904 进度比 1.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 1.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_sfv2b"]
+resource_name = "监听 Saw，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_r07d2")
+action_runner = SubResource("Resource_3swal")
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[sub_resource type="Curve2D" id="Curve2D_kkifu"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 61, 251, 0, 0, 0, 0, 61, 168)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_j8xdb"]
+resource_name = "属性动画 [Saw2] [Node] .progress_ratio = 1.0 (2.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 1.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_q3gy3"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_j8xdb")])
+
+[sub_resource type="Resource" id="Resource_yjpbx"]
+resource_name = "Saw2 进度比 0.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 0.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_wwi5u"]
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_yjpbx")
+action_runner = SubResource("Resource_q3gy3")
+
+[sub_resource type="Resource" id="Resource_mgphg"]
+resource_name = "属性动画 [Saw2] [Node] .progress_ratio = 0.0 (2.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 0.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_vloxp"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_mgphg")])
+
+[sub_resource type="Resource" id="Resource_0ltaa"]
+resource_name = "@SubViewport@9904 进度比 1.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 1.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_mlmyh"]
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_0ltaa")
+action_runner = SubResource("Resource_vloxp")
+
+[sub_resource type="Curve2D" id="Curve2D_n5feu"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -268, 204, 0, 0, 0, 0, -159, 204)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_b4iir"]
+resource_name = "属性动画 [Saw3] [Node] .progress_ratio = 1.0 (2.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 1.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_4upqs"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_b4iir")])
+
+[sub_resource type="Resource" id="Resource_203w8"]
+resource_name = "@SubViewport@9904 进度比 0.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 0.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_t5iq0"]
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_203w8")
+action_runner = SubResource("Resource_4upqs")
+
+[sub_resource type="Resource" id="Resource_1axvd"]
+resource_name = "属性动画 [Saw3] [Node] .progress_ratio = 0.0 (2.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 0.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_ofjia"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_1axvd")])
+
+[sub_resource type="Resource" id="Resource_0qrpp"]
+resource_name = "@SubViewport@9904 进度比 1.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 1.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_3b1bd"]
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_0qrpp")
+action_runner = SubResource("Resource_ofjia")
+
+[sub_resource type="Curve2D" id="Curve2D_pyj0u"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -413, 141, 0, 0, 0, 0, -305, 141)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_sruw6"]
+resource_name = "属性动画 [Saw4] [Node] .progress_ratio = 1.0 (2.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 1.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_fasb1"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_sruw6")])
+
+[sub_resource type="Resource" id="Resource_nv0p3"]
+resource_name = "@SubViewport@9904 进度比 0.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 0.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_fujmj"]
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_nv0p3")
+action_runner = SubResource("Resource_fasb1")
+
+[sub_resource type="Resource" id="Resource_vu5q1"]
+resource_name = "属性动画 [Saw4] [Node] .progress_ratio = 0.0 (2.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 0.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_db3cc"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_vu5q1")])
+
+[sub_resource type="Resource" id="Resource_fat61"]
+resource_name = "@SubViewport@9904 进度比 1.0 (±0.1)"
+script = ExtResource("10_n5feu")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("..")
+use_variable_for_ratio = false
+target_ratio = 1.0
+tolerance = 0.1
+check_interval = 0.5
+trigger_once = false
+
+[sub_resource type="Resource" id="Resource_xfg3l"]
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+script = ExtResource("7_kkifu")
+event = SubResource("Resource_fat61")
+action_runner = SubResource("Resource_db3cc")
 
 [sub_resource type="Resource" id="Resource_ak1ug"]
 resource_name = "获取节点 '..' → camera [最近作用域]"
@@ -274,7 +593,7 @@ smooth_speed = 5.0
 enabled = true
 log_level = 4
 
-[sub_resource type="Resource" id="Resource_rxgda"]
+[sub_resource type="Resource" id="Resource_qyi66"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_3ucjy"), SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_sqapb"), SubResource("Resource_o4ukh"), SubResource("Resource_5a3ub"), SubResource("Resource_cb305"), SubResource("Resource_3vddb"), SubResource("Resource_p1ubp"), SubResource("Resource_mw75f")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
@@ -327,7 +646,7 @@ save_to_scope = 1
 scope_source = 1
 custom_scope_id = "level_scope"
 
-[sub_resource type="Resource" id="Resource_fgjoy"]
+[sub_resource type="Resource" id="Resource_r155i"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_vvbtj")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
@@ -367,32 +686,56 @@ position = Vector2(-321, -14)
 [node name="MovingPlatform2" parent="Worlds/Platforms" unique_id=1104359027 instance=ExtResource("4_kqe04")]
 position = Vector2(-58, -224)
 
-[node name="Traps" type="Node2D" parent="Worlds" unique_id=1534044258]
-
-[node name="Saw2" parent="Worlds/Traps" unique_id=2089521650 instance=ExtResource("4_qe6p4")]
-position = Vector2(62, 252)
-
-[node name="Saw3" parent="Worlds/Traps" unique_id=2066469145 instance=ExtResource("4_qe6p4")]
-position = Vector2(-268, 204)
-
-[node name="Saw4" parent="Worlds/Traps" unique_id=1670102979 instance=ExtResource("4_qe6p4")]
-position = Vector2(-413, 141)
+[node name="Traps" type="Node" parent="Worlds" unique_id=1190718704]
+script = ExtResource("1_os8oo")
+scope_id = "traps"
+metadata/_custom_type_script = "uid://b5up05i5u1nqd"
 
 [node name="SawPath01" type="Path2D" parent="Worlds/Traps" unique_id=991776104]
 curve = SubResource("Curve2D_lj5vm")
 
-[node name="PathFollow2D" type="PathFollow2D" parent="Worlds/Traps/SawPath01" unique_id=219815660]
+[node name="Saw" parent="Worlds/Traps/SawPath01" unique_id=1307205982 instance=ExtResource("4_qe6p4")]
 position = Vector2(60, 131)
 rotation = -1.5707964
 
-[node name="Saw" parent="Worlds/Traps/SawPath01/PathFollow2D" unique_id=1307205982 instance=ExtResource("4_qe6p4")]
-rotation = 1.5707964
+[node name="MultiTriggerSaw01" type="Node" parent="Worlds/Traps/SawPath01/Saw" unique_id=1647100090]
+script = ExtResource("6_vvbtj")
+event_bindings = Array[ExtResource("7_kkifu")]([SubResource("Resource_ehdw3"), SubResource("Resource_sfv2b")])
+metadata/_custom_type_script = "uid://dfknwkmutjhpg"
 
-[node name="OnPathFollow2DRation0" type="Node" parent="Worlds/Traps/SawPath01" unique_id=1069204268]
-script = ExtResource("9_f8sk5")
-event_definition = SubResource("Resource_kkifu")
-action_runner = SubResource("Resource_7nek4")
-metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+[node name="SawPath02" type="Path2D" parent="Worlds/Traps" unique_id=2078341823]
+curve = SubResource("Curve2D_kkifu")
+
+[node name="Saw2" parent="Worlds/Traps/SawPath02" unique_id=2089521650 instance=ExtResource("4_qe6p4")]
+position = Vector2(61, 251)
+rotation = -1.5707964
+
+[node name="MultiEventTrigger" type="Node" parent="Worlds/Traps/SawPath02/Saw2" unique_id=2017904347]
+script = ExtResource("6_vvbtj")
+event_bindings = Array[ExtResource("7_kkifu")]([SubResource("Resource_wwi5u"), SubResource("Resource_mlmyh")])
+metadata/_custom_type_script = "uid://dfknwkmutjhpg"
+
+[node name="SawPath03" type="Path2D" parent="Worlds/Traps" unique_id=870307015]
+curve = SubResource("Curve2D_n5feu")
+
+[node name="Saw3" parent="Worlds/Traps/SawPath03" unique_id=2066469145 instance=ExtResource("4_qe6p4")]
+position = Vector2(-268, 204)
+
+[node name="MultiEventTrigger" type="Node" parent="Worlds/Traps/SawPath03/Saw3" unique_id=1447530489]
+script = ExtResource("6_vvbtj")
+event_bindings = Array[ExtResource("7_kkifu")]([SubResource("Resource_t5iq0"), SubResource("Resource_3b1bd")])
+metadata/_custom_type_script = "uid://dfknwkmutjhpg"
+
+[node name="SawPath04" type="Path2D" parent="Worlds/Traps" unique_id=416338049]
+curve = SubResource("Curve2D_pyj0u")
+
+[node name="Saw4" parent="Worlds/Traps/SawPath04" unique_id=1670102979 instance=ExtResource("4_qe6p4")]
+position = Vector2(-413, 141)
+
+[node name="MultiEventTrigger" type="Node" parent="Worlds/Traps/SawPath04/Saw4" unique_id=1161534147]
+script = ExtResource("6_vvbtj")
+event_bindings = Array[ExtResource("7_kkifu")]([SubResource("Resource_fujmj"), SubResource("Resource_xfg3l")])
+metadata/_custom_type_script = "uid://dfknwkmutjhpg"
 
 [node name="Collectables" type="Node2D" parent="Worlds" unique_id=1053577137]
 
@@ -425,7 +768,7 @@ metadata/_custom_type_script = "uid://parouyd882ij"
 [node name="OnReady" type="Node" parent="GameManager" unique_id=203994227]
 script = ExtResource("9_f8sk5")
 event_definition = SubResource("Resource_io55n")
-action_runner = SubResource("Resource_rxgda")
+action_runner = SubResource("Resource_qyi66")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="OnSceneReady" type="Node" parent="GameManager" unique_id=38929785]
@@ -441,7 +784,7 @@ metadata/_custom_type_script = "uid://parouyd882ij"
 [node name="OnBananaGet" type="Node" parent="GameManager" unique_id=1245993995]
 script = ExtResource("9_f8sk5")
 event_definition = SubResource("Resource_v5lb7")
-action_runner = SubResource("Resource_fgjoy")
+action_runner = SubResource("Resource_r155i")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="CanvasLayer" parent="." unique_id=746731906 instance=ExtResource("21_d4lio")]

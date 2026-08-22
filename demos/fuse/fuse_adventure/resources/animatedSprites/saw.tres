@@ -1,0 +1,67 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://c5rl053yeyr53"]
+
+[ext_resource type="Texture2D" uid="uid://cc6ocgsjkv6y5" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Traps/Saw/On (38x38).png" id="1_hqdnk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u0ufx"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(0, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ry0jv"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(38, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gitbv"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(76, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dlb4d"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(114, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wbgdb"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(152, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wu6af"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(190, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pda7d"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(228, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_388jc"]
+atlas = ExtResource("1_hqdnk")
+region = Rect2(266, 0, 38, 38)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u0ufx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ry0jv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gitbv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dlb4d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wbgdb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wu6af")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pda7d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_388jc")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 15.0
+}]
