@@ -196,6 +196,17 @@ func _editor_refresh_signals() -> void:
 
 func _get_property_list() -> Array[Dictionary]:
 	var properties: Array[Dictionary] = []
+	# target_node：无条件声明（PresetValueCodec 按 STORAGE usage 序列化，
+	# 缺声明会导致 preset 保存丢失该配置；声明方式参照 runner.gd）
+	properties.append({
+		"name": "target_node",
+		"type": TYPE_NODE_PATH,
+		"hint": PROPERTY_HINT_NODE_PATH_VALID_TYPES,
+		"hint_string": "Node",
+		"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	# target_signal：双态（同 runner.gd signal_name 模式）——编辑器有信号
+	# 缓存时下拉选择；否则文本输入。两态均带 STORAGE usage 保证可序列化。
 	var signal_names: Array[String] = []
 	for sig_info in _editor_available_signals:
 		signal_names.append(sig_info.name)
@@ -205,6 +216,14 @@ func _get_property_list() -> Array[Dictionary]:
 			"type": TYPE_STRING,
 			"hint": PROPERTY_HINT_ENUM,
 			"hint_string": ",".join(signal_names),
+			"usage": PROPERTY_USAGE_DEFAULT
+		})
+	else:
+		properties.append({
+			"name": "target_signal",
+			"type": TYPE_STRING,
+			"hint": PROPERTY_HINT_NONE,
+			"hint_string": "",
 			"usage": PROPERTY_USAGE_DEFAULT
 		})
 	properties.append({

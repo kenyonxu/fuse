@@ -40,6 +40,7 @@ func _ready() -> void:
 	await _test_missing_signal_fails()
 	await _test_runtime_path()
 	await _test_runtime_path_cancel()
+	await _test_serialization_roundtrip()
 	print("=== WaitForSignal 测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -244,3 +245,27 @@ func _test_runtime_path_cancel() -> void:
 		"取消后信号连接断开")
 	ri.cleanup()
 	trigger.queue_free()
+
+## 序列化 round-trip：PresetValueCodec 保存/还原配置不丢失
+func _test_serialization_roundtrip() -> void:
+	print("\n--- 序列化 round-trip ---")
+	var wait_inst := WaitForSignal.new()
+	wait_inst.target_node = NodePath("Emitter")
+	wait_inst.target_signal = "custom_signal"
+	wait_inst.timeout = 3.5
+
+	var data := PresetValueCodec.serialize_instruction(wait_inst)
+	_check(data.has("target_node") and str(data["target_node"]) == "Emitter",
+		"序列化含 target_node 且值正确（实际 %s）" % str(data.get("target_node", "<缺失>")))
+	_check(data.has("target_signal") and data["target_signal"] == "custom_signal",
+		"序列化含 target_signal 且值正确（实际 %s）" % str(data.get("target_signal", "<缺失>")))
+	_check(data.has("timeout") and is_equal_approx(float(data["timeout"]), 3.5),
+		"序列化含 timeout 且值正确（实际 %s）" % str(data.get("timeout", "<缺失>")))
+
+	var restored: BaseInstruction = PresetValueCodec.deserialize_instruction(data)
+	_check(restored is WaitForSignal, "反序列化还原为 WaitForSignal")
+	if restored is WaitForSignal:
+		var restored_wait := restored as WaitForSignal
+		_check(str(restored_wait.target_node) == "Emitter", "round-trip target_node 一致")
+		_check(restored_wait.target_signal == "custom_signal", "round-trip target_signal 一致")
+		_check(is_equal_approx(restored_wait.timeout, 3.5), "round-trip timeout 一致")

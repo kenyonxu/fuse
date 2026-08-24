@@ -26074,6 +26074,24 @@
   ],
   "WaitForSignal": [
     {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Node",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_signal",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
       "default": 10.0,
       "hint": 1,
       "hint_string": "0,120,0.1",
