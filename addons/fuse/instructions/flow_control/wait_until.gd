@@ -820,6 +820,11 @@ func _start_runtime_polling(runtime_instance: RuntimeInstructionInstance) -> voi
 	var scene_tree = Engine.get_main_loop()
 	if not scene_tree:
 		_log_error_localized("FUSE_ERROR_CANNOT_GET_SCENETREE", {})
+		set_error_localized("FUSE_ERROR_CANNOT_GET_SCENETREE", FuseError.ErrorType.RUNTIME_ERROR, {})
+		# 错误同步到实例（runner 层 stop_on_error 据此发 execution_failed 并
+		# 阻断后续指令），对齐 wait_for_signal 的同步模式
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return
 
@@ -880,6 +885,10 @@ func _on_runtime_timeout_reached(runtime_instance: RuntimeInstructionInstance) -
 
 	_log_warning_localized("FUSE_INSTRUCTION_WAIT_UNTIL_TIMEOUT_REACHED", {"timeout": "%.1f" % timeout})
 	set_error_localized("FUSE_INSTRUCTION_WAIT_UNTIL_ERROR_TIMEOUT", FuseError.ErrorType.RUNTIME_ERROR, {})
+	# 超时错误同步到实例，保证 runner 层 stop_on_error 生效：
+	# 发 execution_failed 且不执行后续指令
+	runtime_instance._has_error = true
+	runtime_instance._error_message = get_error_message()
 
 	_cleanup_runtime_timers(runtime_instance)
 	runtime_instance._complete_execution()

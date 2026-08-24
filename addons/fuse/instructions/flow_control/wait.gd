@@ -408,6 +408,10 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	if actual_wait_time < 0:
 		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"parameter": "wait_time", "value": str(actual_wait_time)})
 		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"parameter": "wait_time", "value": str(actual_wait_time)})
+		# 错误同步到实例（runner 层 stop_on_error 据此发 execution_failed 并
+		# 阻断后续指令），对齐 wait_for_signal 的同步模式
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return true
 
@@ -436,6 +440,10 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	else:
 		_log_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": "SceneTree"})
 		set_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"node": "SceneTree"})
+		# 错误同步到实例（runner 层 stop_on_error 据此发 execution_failed 并
+		# 阻断后续指令），对齐 wait_for_signal 的同步模式
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return true
 

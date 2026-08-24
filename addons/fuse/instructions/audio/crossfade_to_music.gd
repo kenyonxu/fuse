@@ -396,6 +396,10 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	if music_path.is_empty():
 		_log_error_localized("FUSE_ERROR_MUSIC_PATH_EMPTY", {})
 		set_error_localized("FUSE_ERROR_MUSIC_PATH_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
+		# 错误同步到实例（runner 层 stop_on_error 据此发 execution_failed 并
+		# 阻断后续指令），对齐 wait_for_signal 的同步模式
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return true
 
@@ -404,12 +408,18 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	if not loaded_resource:
 		_log_error_localized("FUSE_ERROR_FAILED_LOAD_MUSIC", {"music_path": music_path})
 		set_error_localized("FUSE_ERROR_FAILED_LOAD_MUSIC", FuseError.ErrorType.RUNTIME_ERROR, {"music_path": music_path})
+		# 错误同步到实例（同上）
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return true
 
 	if not loaded_resource is AudioStream:
 		_log_error_localized("FUSE_ERROR_NOT_AUDIO_STREAM", {"music_path": music_path})
 		set_error_localized("FUSE_ERROR_NOT_AUDIO_STREAM", FuseError.ErrorType.RUNTIME_ERROR, {"music_path": music_path})
+		# 错误同步到实例（同上）
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return true
 
@@ -442,6 +452,9 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	if not scene_tree or not scene_tree.current_scene:
 		_log_error_localized("FUSE_ERROR_CANNOT_GET_CURRENT_SCENE", {})
 		set_error_localized("FUSE_ERROR_CANNOT_GET_CURRENT_SCENE", FuseError.ErrorType.RUNTIME_ERROR, {})
+		# 错误同步到实例（同上）
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return true
 
@@ -465,6 +478,10 @@ func _perform_crossfade_runtime(runtime_instance: RuntimeInstructionInstance, ol
 
 	if not scene_tree:
 		_log_error_localized("FUSE_ERROR_CANNOT_CREATE_TWEEN", {})
+		set_error_localized("FUSE_ERROR_CANNOT_CREATE_TWEEN", FuseError.ErrorType.RUNTIME_ERROR, {})
+		# 错误同步到实例（同上）
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
 		runtime_instance._complete_execution()
 		return
 
