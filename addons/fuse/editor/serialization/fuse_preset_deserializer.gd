@@ -43,6 +43,15 @@ static func _import_l2(preset: FusePreset, mapping: Dictionary) -> Trigger:
 		trigger.cooldown_mode = preset.trigger_config.get("cooldown_mode", 0)
 		trigger.cooldown_time = preset.trigger_config.get("cooldown_time", 0.0)
 
+	# Step 1.5: conditions（无依赖）
+	if not preset.conditions_json.is_empty():
+		var conds: Array[BaseCondition] = []
+		for cdata in preset.conditions_json:
+			var cond := PresetValueCodec.deserialize_condition(cdata)
+			if cond:
+				conds.append(cond)
+		trigger.conditions = conds
+
 	# Step 2: event_definition
 	if not preset.event_json.is_empty():
 		trigger.event_definition = _deserialize_event(preset.event_json)

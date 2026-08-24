@@ -47,18 +47,28 @@ static func serialize_l2(trigger: Trigger) -> Dictionary:
 	var event_data: Dictionary = {}
 	if trigger.event_definition:
 		event_data = serialize_event(trigger.event_definition)
-	return {
+	# 空 action_runner 分支必须用同类型空数组（无类型 [] 传给 typed 参数会中断整个函数）
+	var instructions: Array[BaseInstruction] = []
+	if trigger.action_runner:
+		instructions = trigger.action_runner.instructions
+	var data: Dictionary = {
 		"level": "L2",
 		"action_runner": {
 			"execution_mode": trigger.action_runner.execution_mode if trigger.action_runner else ActionRunner.ExecutionMode.SEQUENTIAL,
-			"instructions": _serialize_instructions(
-				trigger.action_runner.instructions if trigger.action_runner else []
-			)
+			"instructions": _serialize_instructions(instructions)
 		},
 		"event": event_data,
 		"trigger_config": serialize_trigger_config(trigger),
 		"variables": variables
 	}
+	if not trigger.conditions.is_empty():
+		var conds: Array = []
+		for cond in trigger.conditions:
+			if cond != null:
+				conds.append(serialize_condition(cond))
+		if not conds.is_empty():
+			data["conditions"] = conds
+	return data
 
 
 static func serialize_l3(runner: Runner) -> Dictionary:

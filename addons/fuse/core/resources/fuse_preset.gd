@@ -39,6 +39,9 @@ const _PRESET_VALUE_CODEC := preload("res://addons/fuse/core/serialization/prese
 ## L2/L4: trigger_once, cooldown_mode, cooldown_time
 @export var trigger_config: Dictionary = {}
 
+## L2: Trigger.conditions 的序列化数据
+@export var conditions_json: Array = []
+
 ## L3: signal_name
 @export var signal_binding: Dictionary = {}
 
@@ -73,6 +76,8 @@ func to_json() -> Dictionary:
 			}
 			data["event"] = event_json
 			data["trigger_config"] = trigger_config
+			if not conditions_json.is_empty():
+				data["conditions"] = conditions_json
 		"L3":
 			data["action_runner"] = {
 				"instructions": _serialize_instructions()
@@ -113,6 +118,7 @@ static func from_json(data: Dictionary) -> FusePreset:
 	if preset.level == "L2":
 		preset.event_json = data.get("event", {})
 		preset.trigger_config = data.get("trigger_config", {})
+		preset.conditions_json = data.get("conditions", [])
 	elif preset.level == "L3":
 		preset.signal_binding = data.get("signal_binding", {})
 	elif preset.level == "L4":

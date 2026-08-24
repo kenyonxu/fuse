@@ -319,6 +319,10 @@ static func _validate_schema(data: Dictionary, findings: Array) -> void:
 					"$.event_bindings[%d].conditions[%d]" % [b, c], findings)
 	if level == "L2" and data.has("event"):
 		_validate_component(data["event"], "event", "$.event", findings)
+	if level == "L2" and data.has("conditions"):
+		var l2_conds := _as_array(data["conditions"])
+		for c in l2_conds.size():
+			_validate_component(l2_conds[c], "condition", "$.conditions[%d]" % c, findings)
 
 
 static func _validate_component(comp: Variant, kind: String, path: String, findings: Array) -> void:
