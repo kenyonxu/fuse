@@ -46,10 +46,24 @@ class SyncOkProbe:
 	func get_description() -> String:
 		return "同步成功探针"
 
+## 同步自取消探针：execute 内调用自身 cancel()（RUNNING → CANCELLED + finished.emit）
+class SyncCancelProbe:
+	extends BaseInstruction
+	func _setup_metadata() -> void:
+		pass
+	func _update_resource_name() -> void:
+		resource_name = "SyncCancelProbe"
+	func execute(context: ExecutionContext) -> void:
+		_start_execution(context)
+		cancel()
+	func get_description() -> String:
+		return "同步自取消探针"
+
 func _ready() -> void:
 	print("=== execute_sync 终态判定测试开始 ===")
 	# 注意：测试函数含 await（协程），必须逐个 await，否则 _ready 立即 quit 断言不执行
 	await _test_sync_failure_returns_true()
+	await _test_sync_cancel_returns_true()
 	await _test_legacy_sync_failure_branch()
 	await _test_rari_sync_failure_branch()
 	await _test_sync_success_unchanged()
@@ -71,6 +85,15 @@ func _test_sync_failure_returns_true() -> void:
 	var result := probe.execute_sync(context)
 	_check(result == true, "同步失败指令 execute_sync 返回 true（被当异步是缺陷）")
 	_check(probe.has_error(), "同步失败后 has_error 保持（不被状态恢复抹掉）")
+
+## 直接层：同步自取消指令 execute_sync 返回 true 且状态为 CANCELLED
+func _test_sync_cancel_returns_true() -> void:
+	print("\n--- 同步自取消返回 true ---")
+	var probe := SyncCancelProbe.new()
+	var context := ExecutionContext.new(self, null)
+	var result := probe.execute_sync(context)
+	_check(result == true, "同步自取消指令 execute_sync 返回 true（CANCELLED 终态）")
+	_check(probe.execution_status == BaseInstruction.ExecutionStatus.CANCELLED, "取消后状态 CANCELLED")
 
 ## 遗留层：同步失败分支（action_runner.gd:279-287）可达且恰一次 execution_failed
 func _test_legacy_sync_failure_branch() -> void:

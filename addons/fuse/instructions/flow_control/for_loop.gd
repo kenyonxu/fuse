@@ -918,8 +918,12 @@ func _execute_next_instruction_runtime(runtime_instance: RuntimeInstructionInsta
 	# 执行子指令
 	var is_sync = child_instance.execute_sync()
 
-	# 如果同步完成，直接继续下一个指令
-	if is_sync:
+	# 如果同步完成，直接继续下一个指令。
+	# 守卫：同步子指令的 finished 在 execute_sync 内同步发射时，信号路径
+	# （实例 finished → _on_child_instruction_completed）已推进过一次——
+	# state 中的 child_instance 已被清理或换成后续子指令，此时直调是第二次
+	# 调用，会断开在途异步兄弟的完成回调并使指令索引双前进（迭代提前结束）
+	if is_sync and state.get("child_instance") == child_instance:
 		_on_child_instruction_completed(runtime_instance)
 
 ## 子指令完成回调
