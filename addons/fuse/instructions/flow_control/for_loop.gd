@@ -1042,6 +1042,25 @@ func on_runtime_resume(runtime_instance: RuntimeInstructionInstance) -> void:
 
 	_log_debug_localized("FUSE_LOG_DEBUG_FOR_LOOP_RESUMED", {})
 
+## 取消通知
+##
+## 取消链路传播：对在途子实例递归取消并清理回调引用。
+## 调用时机由 RuntimeInstructionInstance.cancel_and_notify 保证——本实例
+## 已先占终态，子实例取消触发的迟到 finished 会被完成回调首行守卫拦截
+func on_runtime_cancel(runtime_instance: RuntimeInstructionInstance) -> void:
+	var state = runtime_instance.runtime_state
+	var child_instance = state.get("child_instance")
+	if child_instance and child_instance is RuntimeInstructionInstance:
+		# 先断开完成回调再取消：子实例的迟到 finished 不再进入本容器
+		var callback = state.get("current_child_callback")
+		if callback and child_instance.finished.is_connected(callback):
+			child_instance.finished.disconnect(callback)
+		if not child_instance.is_completed():
+			child_instance.cancel_and_notify()
+	state["child_instance"] = null
+	state["current_child_callback"] = null
+	_log_debug("ForLoop: 取消传播完成")
+
 ## 获取当前循环索引
 ## 参数：
 ## - context: ExecutionContext - 执行上下文（可选）

@@ -302,11 +302,16 @@ func cancel():
 ##
 ## 在 cancel()（既有语义：状态置 CANCELLED + 资源清理，不发 finished）之外：
 ## 1. 调用指令的 cancel() 触发指令侧清理（重写的 disconnect）；
-## 2. 补发一次实例 finished，唤醒 await 本实例的执行协程。
+## 2. 调用取消传播钩子 on_runtime_cancel（容器类对在途子实例递归取消）；
+## 3. 补发一次实例 finished，唤醒 await 本实例的执行协程。
 ##
 ## 顺序关键：先 cancel() 占终态（_is_completed=true），使指令 finished 的
 ## 转发链 _on_instruction_finished → _complete_execution 被其
 ## "if _is_completed: return" 保护挡住——保证实例 finished 恰好发出一次。
+## 钩子同样位于占终态之后：钩子内子实例取消触发的迟到 finished 经容器
+## lambda 进入 _on_child_instruction_completed，被其首行 is_completed()
+## 守卫早退，不复活循环；钩子先于本实例 finished 执行，保证外界收到
+## finished 时子树已全部清理。
 func cancel_and_notify() -> void:
 	if not _is_executing:
 		return
@@ -315,6 +320,12 @@ func cancel_and_notify() -> void:
 
 	if instruction != null and is_instance_valid(instruction) and not instruction.is_completed():
 		instruction.cancel()
+
+	# 容器类指令的取消传播钩子：对在途子实例递归取消（协议已被
+	# tween_pulse_animation 单方面实现，此处为机制侧首次接线）
+	if instruction != null and is_instance_valid(instruction) \
+			and instruction.has_method("on_runtime_cancel"):
+		instruction.on_runtime_cancel(self)
 
 	finished.emit()
 
