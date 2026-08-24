@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_error_state_sync"]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_error_state_sync.gd" id="1"]
 

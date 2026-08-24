@@ -610,7 +610,11 @@ func _execute_instruction(instruction: BaseInstruction, context: ExecutionContex
 ## 失败统一出口：emit execution_failed 并复位运行状态（不经过 _complete_execution，
 ## 避免失败后又发 execution_completed；保证失败后可重新 run）
 func _fail_execution(error_message: String) -> void:
+	# 失败前冲刷批量信号：Trigger 生产路径启用 batch 模式，跳过会丢弃本次
+	# run 的指令生命周期信号，且 pending 残留会污染下一次 run 的 flush
+	_flush_pending_signals()
 	_is_running_cached = false
+	_is_canceling_cached = false
 	runtime_state["is_running"] = false
 	execution_failed.emit(error_message)
 

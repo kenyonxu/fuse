@@ -6,6 +6,12 @@ var signal_event = null
 var test_button = null
 var test_timer = null
 
+# 最小真断言：SCRIPT ERROR 类 bug 在 headless 下退出码可能仍为 0，
+# 靠回调计数断言保证属性名/场景损坏复发时门禁生效
+var _fail: int = 0
+var _button_fired: int = 0
+var _timer_fired: int = 0
+
 func _ready():
 	print("=== OnTargetSignalEmit 测试开始 ===")
 
@@ -25,9 +31,7 @@ func _ready():
 	await _test_error_handling()
 
 	print("=== OnTargetSignalEmit 测试完成 ===")
-	# TODO: 断言增强（如按钮触发计数 >= 1）留终审裁量；当前为最小门禁骨架，
-	# 无 SCRIPT ERROR 即退出码 0，失败需人工看输出
-	get_tree().quit(0)
+	get_tree().quit(1 if _fail > 0 else 0)
 
 func _create_test_nodes():
 	# 创建测试按钮
@@ -66,7 +70,7 @@ func _test_button_signal():
 	
 	# 验证事件触发
 	await get_tree().create_timer(0.1).timeout
-	print("✓ 按钮信号测试完成")
+	_check(_button_fired >= 1, "按钮 pressed 应触发 triggered 至少一次")
 
 func _test_timer_signal():
 	print("\n--- 测试定时器信号 ---")
@@ -95,7 +99,7 @@ func _test_timer_signal():
 	
 	# 清理
 	timer_event.terminate(self)
-	print("✓ 定时器信号测试完成")
+	_check(_timer_fired >= 1, "定时器 timeout 应触发 triggered 至少一次")
 
 func _test_parameter_filtering():
 	print("\n--- 测试参数过滤 ---")
@@ -122,7 +126,6 @@ func _test_parameter_filtering():
 	
 	# 清理
 	area_event.terminate(self)
-	print("✓ 参数过滤测试完成")
 
 func _test_error_handling():
 	print("\n--- 测试错误处理 ---")
@@ -142,18 +145,26 @@ func _test_error_handling():
 	
 	# 应该产生错误
 	invalid_signal_event.initialize(self)
-	
-	print("✓ 错误处理测试完成")
 
 # 事件处理函数
 func _on_button_pressed(context):
+	_button_fired += 1
 	print("✓ 按钮按下事件触发！上下文: ", context)
 
 func _on_timer_timeout(context):
+	_timer_fired += 1
 	print("✓ 定时器超时事件触发！上下文: ", context)
 
 func _on_filtered_signal(context):
 	print("✓ 过滤信号事件触发！上下文: ", context)
+
+# 断言辅助：通过打印 ✓，失败 push_error 并累计失败数（驱动退出码）
+func _check(condition: bool, message: String) -> void:
+	if condition:
+		print("  ✓ %s" % message)
+	else:
+		push_error("✗ %s" % message)
+		_fail += 1
 
 # 辅助测试函数
 func _get_test_context():
