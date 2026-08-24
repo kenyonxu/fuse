@@ -8,6 +8,14 @@ const InstructionGenerator = preload("res://addons/fuse/editor/instruction_gener
 const InstructionRegistry = preload("res://addons/fuse/editor/instruction_selector/instruction_registry.gd")
 const PropertyInstructionGenerator = preload("res://addons/fuse/editor/instruction_generator/property_instruction_generator.gd")
 
+## 输出级别子菜单的级别顺序（不含 ERROR：阈值语义下与 NONE 等价，均为只放行 ERROR）
+const _LOG_LEVEL_MENU_ITEMS: Array[FuseLogger.LogLevel] = [
+	FuseLogger.LogLevel.NONE,
+	FuseLogger.LogLevel.WARNING,
+	FuseLogger.LogLevel.INFO,
+	FuseLogger.LogLevel.DEBUG,
+]
+
 ## FuseContextMenuPlugin - Fuse 上下文菜单插件
 ##
 ## 监听场景树右键菜单事件，为选中的 Trigger 节点提供合并功能。
@@ -24,6 +32,9 @@ var _trigger_merger: TriggerMerger = null
 ## TriggerSplitter 实例
 var _trigger_splitter: TriggerSplitter = null
 
+## LogLevelBatchSetter 实例
+var _log_level_setter: LogLevelBatchSetter = null
+
 ## 保存当前选中的路径（用于回调）
 var _pending_paths: PackedStringArray = []
 
@@ -39,6 +50,10 @@ func set_editor_plugin(plugin: EditorPlugin) -> void:
 			plugin.get_undo_redo()
 		)
 		_trigger_splitter = TriggerSplitter.new(
+			plugin.get_editor_interface(),
+			plugin.get_undo_redo()
+		)
+		_log_level_setter = LogLevelBatchSetter.new(
 			plugin.get_editor_interface(),
 			plugin.get_undo_redo()
 		)
@@ -78,6 +93,17 @@ func _popup_menu(paths: PackedStringArray) -> void:
 	if nodes.size() == 1:
 		_pending_paths = paths
 		add_context_menu_item("生成指令...", Callable(self, "_on_generate_instruction"))
+
+	# 批量设置输出级别 - 选中节点子树内存在可修改的 Fuse 组件时显示
+	# 子菜单 PopupMenu 每次 popup 后会被编辑器释放，必须在 _popup_menu 里新建
+	var collected: Dictionary = LogLevelBatchSetter.collect_components(nodes, edited_scene_root)
+	if not (collected["applicable"] as Array).is_empty():
+		_pending_paths = paths
+		var level_menu := PopupMenu.new()
+		for level: int in _LOG_LEVEL_MENU_ITEMS:
+			level_menu.add_item(FuseLogger.LogLevel.keys()[level])
+		level_menu.index_pressed.connect(_on_log_level_menu_id)
+		add_context_submenu_item("Fuse: 输出级别", level_menu)
 
 ## ==================== 信号处理 ====================
 
@@ -132,6 +158,35 @@ func _on_split_trigger(_paths: PackedStringArray) -> void:
 
 	# 执行拆分
 	_trigger_splitter.split(node)
+
+## 输出级别子菜单回调
+## @param index 子菜单项索引（对应 _LOG_LEVEL_MENU_ITEMS）
+func _on_log_level_menu_id(index: int) -> void:
+	if _editor_plugin == null or _log_level_setter == null:
+		push_error("[FuseContextMenuPlugin] _editor_plugin or _log_level_setter is null!")
+		return
+
+	if index < 0 or index >= _LOG_LEVEL_MENU_ITEMS.size():
+		return
+
+	var edited_scene_root := _editor_plugin.get_editor_interface().get_edited_scene_root()
+	if edited_scene_root == null:
+		push_error("[FuseContextMenuPlugin] edited_scene_root is null!")
+		return
+
+	# 使用保存的路径（_pending_paths），因为子菜单信号不带节点信息
+	var nodes: Array[Node] = []
+	for path in _pending_paths:
+		if path.is_empty():
+			continue
+		var node := edited_scene_root.get_node_or_null(path)
+		if node != null:
+			nodes.append(node)
+
+	if nodes.is_empty():
+		return
+
+	_log_level_setter.apply(nodes, edited_scene_root, _LOG_LEVEL_MENU_ITEMS[index])
 
 ## 生成指令回调
 ## @param _paths 选中的节点路径数组（注意：Godot 传递的格式不是标准路径，使用 _pending_paths 替代）

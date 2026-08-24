@@ -115,15 +115,27 @@ static func _translate_message(message_key: String, args: Dictionary = {}) -> St
 	else:
 		return _fuse_localization_class.translate_format(message_key, args)
 
-## 判断是否应该输出日志
+## 消息详细度排名（阈值式过滤用；NONE 不进表、单独处理）
+const _LEVEL_RANK := {
+	LogLevel.ERROR: 1,
+	LogLevel.WARNING: 2,
+	LogLevel.INFO: 3,
+	LogLevel.DEBUG: 4,
+}
+
+## 判断是否应该输出日志（阈值式）
+##
+## 组件级别 = 想看到的最低详细度，输出所有排名不高于它的消息：
+## - NONE    → 仅 ERROR（静音组件仍能看到真错误）
+## - ERROR   → 仅 ERROR
+## - WARNING → ERROR + WARNING
+## - INFO    → ERROR + WARNING + INFO
+## - DEBUG   → 全部
 static func should_log(component_level: LogLevel, message_level: LogLevel) -> bool:
-	# 使用更简单的逻辑判断
+	# NONE 只放行 ERROR：避免批量静音后真错误被吞掉
 	if component_level == LogLevel.NONE:
-		return false
-	if component_level == LogLevel.DEBUG:
-		return true
-	# 简化其他级别的判断逻辑 - 精确匹配
-	return message_level == component_level
+		return message_level == LogLevel.ERROR
+	return _LEVEL_RANK.get(message_level, 0) <= _LEVEL_RANK.get(component_level, 0)
 
 ## 格式化日志消息
 static func format_message(level: LogLevel, component_name: String, message: String, context: String = "") -> String:
