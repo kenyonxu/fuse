@@ -394,7 +394,9 @@ func _get_node_group_array(context: ExecutionContext) -> Variant:
 		_log_error("Group name is empty")
 		return null
 
-	var node_tree = context.get_node_tree()
+	# 获取节点树（context.get_tree()：tree 属性访问器，未设置时从当前场景回退，
+	# 同构参照 get_nodes_in_group.gd；旧 get_node_tree() 在 ExecutionContext 上不存在）
+	var node_tree = context.get_tree()
 	if not node_tree:
 		_log_error("Cannot get scene tree")
 		return null

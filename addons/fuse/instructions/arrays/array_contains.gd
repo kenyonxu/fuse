@@ -494,7 +494,9 @@ func _get_node_children_array(context: ExecutionContext) -> Variant:
 
 ## 获取节点组数组
 func _get_node_group_array(context: ExecutionContext) -> Variant:
-	var node_tree = context.get_node_tree()
+	# 获取节点树（context.get_tree()：tree 属性访问器，未设置时从当前场景回退，
+	# 同构参照 get_nodes_in_group.gd；旧 get_node_tree() 在 ExecutionContext 上不存在）
+	var node_tree = context.get_tree()
 	if not node_tree:
 		_log_error_localized("FUSE_ERROR_NO_SCENE_TREE", {})
 		return null
