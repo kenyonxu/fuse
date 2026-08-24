@@ -40,6 +40,8 @@ func _ready() -> void:
 	await _test_missing_signal_fails()
 	await _test_runtime_path()
 	await _test_runtime_path_cancel()
+	await _test_rapid_rerun_no_stale_timeout()
+	await _test_pause_freezes_timeout()
 	await _test_serialization_roundtrip()
 	print("=== WaitForSignal 测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
@@ -243,6 +245,76 @@ func _test_runtime_path_cancel() -> void:
 	_check(_finished_count == 1, "cancel_and_notify 后 finished 恰好一次")
 	_check(not emitter.is_connected("custom_signal", wait_inst._on_target_signal_emitted),
 		"取消后信号连接断开")
+	ri.cleanup()
+	trigger.queue_free()
+
+## 快速两轮执行无伪超时（容器 IfElse/ForLoop/ForEach 的 reset+execute 复用模式）：
+## 第 1 轮正常完成后，其陈旧计时器在第 2 轮等待期内触发不得杀掉第 2 轮
+func _test_rapid_rerun_no_stale_timeout() -> void:
+	print("\n--- 快速两轮执行无伪超时 ---")
+	var emitter := SignalEmitter.new()
+	emitter.name = "Emitter"
+	add_child(emitter)
+
+	var wait_inst := WaitForSignal.new()
+	wait_inst.target_node = NodePath(".")  # 相对 trigger（emitter）解析到自身
+	wait_inst.target_signal = "custom_signal"
+	wait_inst.timeout = 0.3
+
+	# 第 1 轮：0.05s 时信号到达正常完成（0.3s 计时器未到即完成，成为陈旧计时器）
+	var ctx1 := ExecutionContext.new(emitter, emitter)
+	wait_inst.execute(ctx1)
+	await get_tree().create_timer(0.05).timeout
+	emitter.emit_signal("custom_signal", 1, "a")
+	await get_tree().process_frame
+	_check(wait_inst.execution_status == BaseInstruction.ExecutionStatus.COMPLETED,
+		"第 1 轮信号到达正常完成")
+
+	# 立即 reset 后第 2 轮执行（timeout=0：第 2 轮无自身计时器，
+	# 0.5s 观察窗内唯一的触发源是第 1 轮的陈旧计时器）
+	wait_inst.reset()
+	wait_inst.timeout = 0.0
+	var ctx2 := ExecutionContext.new(emitter, emitter)
+	wait_inst.execute(ctx2)
+	await get_tree().create_timer(0.5).timeout  # 跨过第 1 轮计时器 0.3s 触发点
+	_check(wait_inst.execution_status == BaseInstruction.ExecutionStatus.RUNNING,
+		"第 2 轮未被陈旧计时器伪超时（仍在等待）")
+	_check(not wait_inst.has_error(), "第 2 轮无超时错误")
+
+	# 清理第 2 轮
+	wait_inst.cancel()
+	emitter.queue_free()
+
+## 暂停停表（runtime 路径）：pause 断开超时计时器并记录剩余，resume 按剩余续走
+func _test_pause_freezes_timeout() -> void:
+	print("\n--- 暂停停表 ---")
+	var emitter := SignalEmitter.new()
+	emitter.name = "Emitter"
+	var trigger := Node.new()
+	trigger.name = "FakeTrigger3"
+	add_child(trigger)
+	trigger.add_child(emitter)
+
+	var wait_inst := WaitForSignal.new()
+	wait_inst.target_node = NodePath("Emitter")
+	wait_inst.target_signal = "custom_signal"
+	wait_inst.timeout = 0.3
+
+	var context := ExecutionContext.new(trigger, trigger)
+	var ri := RuntimeInstructionInstance.new(wait_inst, context, null)
+	ri.execute_sync()
+
+	ri.pause()  # elapsed≈0，剩余超时≈0.3；计时器回调已断开
+	await get_tree().create_timer(0.4).timeout  # 超过原 0.3s 超时
+	_check(not ri.is_completed(), "暂停期间超时不触发（停表生效）")
+
+	ri.resume()  # 为剩余时间重建计时器
+	for i in range(50):
+		await get_tree().process_frame
+		if ri.is_completed():
+			break
+	_check(ri.is_completed(), "恢复后按剩余超时完成")
+	_check(wait_inst.has_error(), "恢复后以超时错误完成")
 	ri.cleanup()
 	trigger.queue_free()
 

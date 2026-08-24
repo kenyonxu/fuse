@@ -6,6 +6,23 @@ var _completed_count: int = 0
 var _failed_count: int = 0
 var _canceled_count: int = 0
 
+## 同步记录指令（间隙取消用例：记录自己被执行到）
+class RecordingInstruction:
+	extends BaseInstruction
+	var records: Array
+	func _init(records: Array) -> void:
+		self.records = records
+	func _setup_metadata() -> void:
+		pass
+	func _update_resource_name() -> void:
+		resource_name = "RecordingInstruction"
+	func execute(context: ExecutionContext) -> void:
+		_start_execution(context)
+		records.append(1)
+		_on_execution_completed()
+	func get_description() -> String:
+		return "记录执行的测试指令"
+
 func _ready() -> void:
 	print("=== 取消传播测试开始 ===")
 	await _test_cancel_during_wait()
@@ -13,6 +30,8 @@ func _ready() -> void:
 	_test_cancel_when_idle()
 	await _test_normal_completion_unchanged()
 	await _test_legacy_action_runner_cancel()
+	await _test_parallel_cancel()
+	await _test_cancel_between_sync_instructions()
 	print("=== 取消传播测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -65,7 +84,8 @@ func _test_cancel_during_wait() -> void:
 func _test_cancel_then_rerun() -> void:
 	print("\n--- 取消后重新执行 ---")
 	_reset_counters()
-	var runner := _build_runner(0.05)
+	# 0.5s 保证 cancel 前的 1 帧等待不会让 Wait 提前完成（消除慢机时序抖动）
+	var runner := _build_runner(0.5)
 	runner.run()
 	await get_tree().process_frame
 	runner.cancel("第一次取消")
@@ -128,6 +148,87 @@ func _test_legacy_action_runner_cancel() -> void:
 		if _canceled_count > 0:
 			break
 	_check(_canceled_count == 1, "遗留路径协程唤醒、execution_canceled 一次（实际 %d）" % _canceled_count)
+
+## 用例 6：并行模式取消（PARALLEL + 2×Wait，逐实例 cancel_and_notify 清理）
+func _test_parallel_cancel() -> void:
+	print("\n--- 并行取消 ---")
+	_reset_counters()
+	var runner := Runner.new()
+	var instructions: Array[BaseInstruction] = []
+	for i in range(2):
+		var wait_inst := Wait.new()
+		wait_inst.wait_time = 30.0
+		instructions.append(wait_inst)
+	var ar := ActionRunner.new()
+	ar.instructions = instructions
+	ar.execution_mode = ActionRunner.ExecutionMode.PARALLEL  # Runner 的 runtime 实例透传读取此模式
+	add_child(runner)
+	runner.action_runner = ar
+	runner.execution_completed.connect(func(_t): _completed_count += 1)
+	runner.execution_failed.connect(func(_e): _failed_count += 1)
+	runner.execution_canceled.connect(func(_r): _canceled_count += 1)
+	runner._ready()
+
+	runner.run()
+	await get_tree().process_frame  # 让两条 Wait 都进入等待
+	_check(runner.is_running(), "并行执行中（两条 Wait 在途）")
+
+	runner.cancel("并行取消")
+	for i in range(10):
+		await get_tree().process_frame
+		if _canceled_count > 0:
+			break
+	_check(_canceled_count == 1, "并行取消 execution_canceled 恰好一次（实际 %d）" % _canceled_count)
+	_check(not runner.is_running(), "并行取消后 runner 不再运行")
+
+	# 取消后可重新 run：换短 Wait 指令正常完成
+	var rerun_instructions: Array[BaseInstruction] = []
+	for i in range(2):
+		var wait_inst := Wait.new()
+		wait_inst.wait_time = 0.05
+		rerun_instructions.append(wait_inst)
+	ar.instructions = rerun_instructions
+	runner.run()
+	await runner.wait_completed()
+	await get_tree().process_frame  # 补一帧等 Runner.execution_completed 转发
+	_check(_completed_count == 1 and _canceled_count == 1,
+		"并行取消后可重 run 且正常完成（completed=%d canceled=%d）" % [_completed_count, _canceled_count])
+	runner.queue_free()
+
+## 用例 7：同步间隙取消——卡在 Wait 时取消，后续同步指令不再执行
+func _test_cancel_between_sync_instructions() -> void:
+	print("\n--- 同步间隙取消 ---")
+	_reset_counters()
+	var records: Array = []
+	var runner := Runner.new()
+	var instructions: Array[BaseInstruction] = []
+	instructions.append(RecordingInstruction.new(records))
+	var wait_inst := Wait.new()
+	wait_inst.wait_time = 30.0
+	instructions.append(wait_inst)
+	instructions.append(RecordingInstruction.new(records))
+	var ar := ActionRunner.new()
+	ar.instructions = instructions
+	ar.execution_mode = ActionRunner.ExecutionMode.SEQUENTIAL
+	add_child(runner)
+	runner.action_runner = ar
+	runner.execution_completed.connect(func(_t): _completed_count += 1)
+	runner.execution_failed.connect(func(_e): _failed_count += 1)
+	runner.execution_canceled.connect(func(_r): _canceled_count += 1)
+	runner._ready()
+
+	runner.run()
+	await get_tree().process_frame  # 第 1 条同步完成，此刻卡在 Wait
+	_check(records.size() == 1, "取消前恰执行第 1 条（records=%d）" % records.size())
+
+	runner.cancel("同步间隙取消")
+	for i in range(10):
+		await get_tree().process_frame
+		if _canceled_count > 0:
+			break
+	_check(_canceled_count == 1, "间隙取消 execution_canceled 一次（实际 %d）" % _canceled_count)
+	_check(records.size() == 1, "取消后第 3 条指令不执行（records=%d）" % records.size())
+	runner.queue_free()
 
 func _reset_counters() -> void:
 	_completed_count = 0

@@ -48,6 +48,7 @@ func _setup_metadata() -> void:
 ## ==================== 执行：遗留路径 ====================
 
 func execute(context: ExecutionContext) -> void:
+	_runtime_instance_ref = null  # 跨路径复用资源时防止完成投递给旧 runtime 实例
 	_start_execution(context)
 	_execution_context = context
 
@@ -75,14 +76,7 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 
 	_bound_node.connect(target_signal, _on_target_signal_emitted, CONNECT_ONE_SHOT)
 
-	# 超时回调注册到实例（实例 cancel 时自动断开 SceneTreeTimer 回调）
-	if timeout > 0.0:
-		var scene_tree = Engine.get_main_loop()
-		if scene_tree:
-			var callback = func(): _on_runtime_timeout(runtime_instance)
-			_wait_timeout_timer = scene_tree.create_timer(timeout)
-			_wait_timeout_timer.timeout.connect(callback)
-			runtime_instance.register_timer_callback(callback)
+	_start_runtime_timeout_timer(runtime_instance, timeout)
 
 	return false  # 异步
 
@@ -110,8 +104,16 @@ func _start_timeout_timer() -> void:
 		return
 	var scene_tree = Engine.get_main_loop()
 	if scene_tree:
-		_wait_timeout_timer = scene_tree.create_timer(timeout)
-		_wait_timeout_timer.timeout.connect(_on_timeout)
+		# 身份守卫：容器（IfElse/ForLoop/ForEach）以 reset+execute 复用本资源时，
+		# 第 1 轮的陈旧计时器会在第 2 轮 RUNNING 期间触发，仅凭状态检查
+		# （_on_timeout 的 RUNNING 守卫）无法区分轮次而伪超时；闭包捕获自身，
+		# 仅当本计时器仍是当前一轮的计时器时才允许触发
+		var t: SceneTreeTimer = scene_tree.create_timer(timeout)
+		_wait_timeout_timer = t
+		t.timeout.connect(func():
+			if _wait_timeout_timer == t:
+				_on_timeout()
+		)
 
 func _on_timeout() -> void:
 	if execution_status != BaseInstruction.ExecutionStatus.RUNNING:
@@ -131,6 +133,53 @@ func _on_runtime_timeout(runtime_instance: RuntimeInstructionInstance) -> void:
 	runtime_instance._has_error = true
 	runtime_instance._error_message = get_error_message()
 	runtime_instance._complete_execution()
+
+## 创建 runtime 路径超时计时器（duration 允许传剩余时间，暂停恢复复用）
+##
+## 注：实例 cancel 侧的自动断开（_cleanup_runtime_resources）只作用于
+## runtime_state["timer"] 键的计时器，本指令未写该键——超时回调的实际安全性
+## 来自 _on_runtime_timeout 开头的 is_completed 守卫（实例进入终态后陈旧触发
+## 无害），register_timer_callback 仅作连接追踪，不提供清理保证。
+func _start_runtime_timeout_timer(runtime_instance: RuntimeInstructionInstance, duration: float) -> void:
+	if duration <= 0.0:
+		return
+	var scene_tree = Engine.get_main_loop()
+	if scene_tree == null:
+		return
+	var state = runtime_instance.runtime_state
+	var callback = func(): _on_runtime_timeout(runtime_instance)
+	var t: SceneTreeTimer = scene_tree.create_timer(duration)
+	_wait_timeout_timer = t
+	state["wait_timeout_timer"] = t
+	state["current_timeout_callback"] = callback
+	state["timeout_start_time"] = Time.get_ticks_msec() / 1000.0
+	t.timeout.connect(callback)
+	runtime_instance.register_timer_callback(callback)
+
+## ==================== 暂停/恢复（runtime 路径停表）====================
+
+## 暂停：SceneTreeTimer 无法暂停，记录剩余超时并断开计时器回调
+func on_runtime_pause(runtime_instance: RuntimeInstructionInstance) -> void:
+	var state = runtime_instance.runtime_state
+	var timer = state.get("wait_timeout_timer")
+	if timer is SceneTreeTimer:
+		var elapsed: float = Time.get_ticks_msec() / 1000.0 - state.get("timeout_start_time", 0.0)
+		state["pause_remaining_timeout"] = max(0.0, timeout - elapsed)
+		var callback = state.get("current_timeout_callback")
+		if callback and timer.timeout.is_connected(callback):
+			timer.timeout.disconnect(callback)
+		state["wait_timeout_timer"] = null
+		state["current_timeout_callback"] = null
+		_wait_timeout_timer = null
+
+## 恢复：为暂停时的剩余超时重建计时器（复用身份安全路径：新计时器经
+## state["wait_timeout_timer"] 重新登记，旧计时器已断开不再触发）
+func on_runtime_resume(runtime_instance: RuntimeInstructionInstance) -> void:
+	var state = runtime_instance.runtime_state
+	var remaining: float = state.get("pause_remaining_timeout", 0.0)
+	if remaining > 0.0:
+		_start_runtime_timeout_timer(runtime_instance, remaining)
+	state["pause_remaining_timeout"] = 0.0
 
 ## ==================== 目标解析 ===================
 
