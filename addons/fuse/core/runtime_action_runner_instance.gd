@@ -626,6 +626,9 @@ func _complete_execution():
 		# 在此补发，保证 execution_canceled 恰好一次（对齐遗留 ActionRunner
 		# _complete_execution 的 is_canceling 分支）
 		if _is_canceling_cached:
+			# 取消同样冲刷批量信号（与 _fail_execution 同构）：被取消 run 已缓存的
+			# 指令生命周期信号在此发出，避免残留到下一次 run 的 flush 造成跨 run 重放
+			_flush_pending_signals()
 			execution_canceled.emit(runtime_state.get("cancellation_reason", ""))
 		return
 	# Phase 2.5 优化：刷新待发射的信号

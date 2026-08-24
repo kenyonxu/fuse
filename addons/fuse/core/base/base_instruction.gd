@@ -1124,7 +1124,7 @@ func _has_immediate_completion() -> bool:
 ## 同步执行包装器
 ##
 ## 同步执行指令的包装器，用于优化同步指令的执行性能。
-## 返回 true 表示指令已完成，false 表示需要异步等待。
+## 返回 true 表示指令已完成（含同步失败/取消——终态即完成），false 表示需要异步等待。
 ##
 ## 参数：
 ## - context: ExecutionContext - 执行上下文
