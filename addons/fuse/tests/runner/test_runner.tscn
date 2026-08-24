@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgu3s0dx5f231-be83-4d59-99bc-e6cb5dc713949e"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://addons/fuse/tests/runner/test_runner.gd" id="test_runner"]
-[ext_resource type="PackedScene" uid="uid://djvoyqhx547q666v84yfv8p7a5f5g4" path="res://addons/fuse/tests/runner/test_runner.tscn" id="1_yqgf5"]
+[ext_resource type="Script" path="res://addons/fuse/tests/runner/test_runner.gd" id="1"]
 
-[node name="test_runner" type="test_runner" parent="." index="0"]
+[node name="TestRunner" type="Node"]
+script = ExtResource("1")

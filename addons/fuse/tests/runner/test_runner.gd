@@ -16,11 +16,22 @@ var _execution_completed_count: int = 0
 var _execution_failed_count: int = 0
 var _execution_canceled_count: int = 0
 var _last_completed_time: float = 0.0
+var _fail: int = 0
 
 func _ready() -> void:
 	print("=== Runner 测试开始 ===")
-	_run_all_tests()
+	await _run_all_tests()
 	print("=== Runner 测试完成 ===")
+	# 退出码门禁：headless 运行时非 0 即失败
+	get_tree().quit(1 if _fail > 0 else 0)
+
+## 断言门禁：通过打印 ✓，失败 push_error 并计数
+func _check(condition: bool, message: String) -> void:
+	if condition:
+		print("  ✓ %s" % message)
+	else:
+		push_error("✗ %s" % message)
+		_fail += 1
 
 func _run_all_tests() -> void:
 	test_runner_creation()
@@ -89,8 +100,8 @@ func test_runner_creation() -> void:
 	print("\n[测试] Runner 创建...")
 	_setup()
 
-	assert(_runner != null, "Runner 应该被创建")
-	assert(_runner.is_running() == false, "Runner 初始状态应该不在运行")
+	_check(_runner != null, "Runner 应该被创建")
+	_check(_runner.is_running() == false, "Runner 初始状态应该不在运行")
 
 	_teardown()
 	print("  ✓ 通过")
@@ -103,7 +114,7 @@ func test_runner_run_without_action_runner() -> void:
 	await get_tree().process_frame
 
 	# 应该不会有执行完成信号
-	assert(_execution_completed_count == 0, "无 ActionRunner 时不应该有完成信号")
+	_check(_execution_completed_count == 0, "无 ActionRunner 时不应该有完成信号")
 
 	_teardown()
 	print("  ✓ 通过")
@@ -126,9 +137,12 @@ func test_runner_run_with_action_runner() -> void:
 
 	# 等待执行完成
 	await _runner.wait_completed()
+	# wait_completed 的唤醒（Runner._internal_completed）早于对外
+	# execution_completed 信号一拍，补等一帧让计数回调落地后再断言
+	await get_tree().process_frame
 
-	assert(_execution_completed_count == 1, "应该有执行完成信号")
-	assert(_runner.is_running() == false, "执行完成后不应该在运行")
+	_check(_execution_completed_count == 1, "应该有执行完成信号")
+	_check(_runner.is_running() == false, "执行完成后不应该在运行")
 
 	_teardown()
 	print("  ✓ 通过")
@@ -151,12 +165,12 @@ func test_runner_cancel() -> void:
 	_runner.run()
 
 	await get_tree().process_frame
-	assert(_runner.is_running() == true, "Runner 应该在运行")
+	_check(_runner.is_running() == true, "Runner 应该在运行")
 
 	_runner.cancel("测试取消")
 
 	await get_tree().process_frame
-	assert(_execution_canceled_count == 1, "应该有取消信号")
+	_check(_execution_canceled_count == 1, "应该有取消信号")
 
 	_teardown()
 	print("  ✓ 通过")
@@ -177,7 +191,7 @@ func test_runner_reset() -> void:
 
 	_runner.reset()
 
-	assert(_runner.is_running() == false, "重置后不应该在运行")
+	_check(_runner.is_running() == false, "重置后不应该在运行")
 
 	_teardown()
 	print("  ✓ 通过")
@@ -209,7 +223,7 @@ func test_runner_signal_binding() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	assert(_execution_completed_count == 1, "信号绑定应该触发执行")
+	_check(_execution_completed_count == 1, "信号绑定应该触发执行")
 
 	button.queue_free()
 	_teardown()
@@ -219,7 +233,7 @@ func test_runner_is_running() -> void:
 	print("\n[测试] Runner is_running 状态...")
 	_setup()
 
-	assert(_runner.is_running() == false, "初始状态不在运行")
+	_check(_runner.is_running() == false, "初始状态不在运行")
 
 	_action_runner = ActionRunner.new()
 	var wait_instruction = Wait.new()
@@ -231,10 +245,10 @@ func test_runner_is_running() -> void:
 	_runner._ready()
 
 	_runner.run()
-	assert(_runner.is_running() == true, "执行中应该在运行")
+	_check(_runner.is_running() == true, "执行中应该在运行")
 
 	await _runner.wait_completed()
-	assert(_runner.is_running() == false, "完成后不在运行")
+	_check(_runner.is_running() == false, "完成后不在运行")
 
 	_teardown()
 	print("  ✓ 通过")

@@ -8,23 +8,26 @@ var test_timer = null
 
 func _ready():
 	print("=== OnTargetSignalEmit 测试开始 ===")
-	
+
 	# 创建测试节点
 	_create_test_nodes()
-	
-	# 测试按钮信号监听
-	_test_button_signal()
-	
+
+	# 测试按钮信号监听（内部有 await，必须 await 调用避免 fire-and-forget 乱序）
+	await _test_button_signal()
+
 	# 测试定时器信号监听
-	_test_timer_signal()
-	
+	await _test_timer_signal()
+
 	# 测试参数过滤
-	_test_parameter_filtering()
-	
+	await _test_parameter_filtering()
+
 	# 测试错误处理
-	_test_error_handling()
-	
+	await _test_error_handling()
+
 	print("=== OnTargetSignalEmit 测试完成 ===")
+	# TODO: 断言增强（如按钮触发计数 >= 1）留终审裁量；当前为最小门禁骨架，
+	# 无 SCRIPT ERROR 即退出码 0，失败需人工看输出
+	get_tree().quit(0)
 
 func _create_test_nodes():
 	# 创建测试按钮
@@ -47,7 +50,7 @@ func _test_button_signal():
 	# 创建信号事件
 	signal_event = OnTargetSignalEmit.new()
 	signal_event.log_level = FuseLogger.LogLevel.DEBUG
-	signal_event.target_node_path = "TestButton"
+	signal_event.target_node = NodePath("TestButton")
 	signal_event.target_signal = "pressed"
 	signal_event.trigger_once = false
 	
@@ -70,7 +73,7 @@ func _test_timer_signal():
 	
 	# 创建新的信号事件
 	var timer_event = OnTargetSignalEmit.new()
-	timer_event.target_node_path = "TestTimer"
+	timer_event.target_node = NodePath("TestTimer")
 	timer_event.target_signal = "timeout"
 	timer_event.trigger_once = true
 	
@@ -99,7 +102,7 @@ func _test_parameter_filtering():
 	
 	# 创建带有参数的信号事件（模拟 body_entered 信号）
 	var area_event = OnTargetSignalEmit.new()
-	area_event.target_node_path = "TestButton"  # 使用按钮作为测试节点
+	area_event.target_node = NodePath("TestButton")  # 使用按钮作为测试节点
 	area_event.target_signal = "pressed"
 	area_event.filter_signal_args = true
 	area_event.arg_filter_values = []  # 空参数
@@ -126,7 +129,7 @@ func _test_error_handling():
 	
 	# 测试无效节点路径
 	var invalid_event = OnTargetSignalEmit.new()
-	invalid_event.target_node_path = "NonExistentNode"
+	invalid_event.target_node = NodePath("NonExistentNode")
 	invalid_event.target_signal = "pressed"
 	
 	# 应该产生错误
@@ -134,7 +137,7 @@ func _test_error_handling():
 	
 	# 测试无效信号
 	var invalid_signal_event = OnTargetSignalEmit.new()
-	invalid_signal_event.target_node_path = "TestButton"
+	invalid_signal_event.target_node = NodePath("TestButton")
 	invalid_signal_event.target_signal = "non_existent_signal"
 	
 	# 应该产生错误

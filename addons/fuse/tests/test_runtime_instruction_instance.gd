@@ -18,8 +18,20 @@ extends Node
 var _test_passed: int = 0
 var _test_failed: int = 0
 
+# GDScript lambda 按值捕获局部变量——计数/标志必须用成员变量（lambda 内经 self 读写）
+var _completed_a: bool = false
+var _completed_b: bool = false
+var _finished_emit_count: int = 0
+var _timeout_triggered: bool = false
+var _error_triggered: bool = false
+
 func _ready():
 	print("=== 测试 RuntimeInstructionInstance 状态隔离 ===")
+	# headless 首帧 delta 异常大：_ready 同步链上创建的首个 SceneTreeTimer 会被
+	# 立即判定超时（曾致 Test 2 顺序执行两个 0.1s Wait 实测仅 0.10s）。
+	# 先等两帧让引擎帧时间稳定再启动测试。
+	await get_tree().process_frame
+	await get_tree().process_frame
 	await run_all_tests()
 	_print_summary()
 
@@ -82,7 +94,9 @@ func test_sequential_execution_with_runtime_instance():
 	wait2.wait_time = 0.1
 
 	var runner = ActionRunner.new()
-	runner.instructions = [wait1, wait2]
+	# instructions 是 Array[BaseInstruction] 类型化数组，直接赋普通 Array 字面量会报错
+	runner.instructions.append(wait1)
+	runner.instructions.append(wait2)
 	runner.execution_mode = ActionRunner.ExecutionMode.SEQUENTIAL
 
 	var runtime_instance = RuntimeActionRunnerInstance.new(runner, self)
@@ -115,7 +129,9 @@ func test_parallel_execution_with_runtime_instance():
 	wait2.wait_time = 0.3
 
 	var runner = ActionRunner.new()
-	runner.instructions = [wait1, wait2]
+	# instructions 是 Array[BaseInstruction] 类型化数组，直接赋普通 Array 字面量会报错
+	runner.instructions.append(wait1)
+	runner.instructions.append(wait2)
 	runner.execution_mode = ActionRunner.ExecutionMode.PARALLEL
 
 	var runtime_instance = RuntimeActionRunnerInstance.new(runner, self)
@@ -145,7 +161,8 @@ func test_multiple_triggers_isolation():
 	shared_wait.wait_time = 0.2
 
 	var runner = ActionRunner.new()
-	runner.instructions = [shared_wait]
+	# instructions 是 Array[BaseInstruction] 类型化数组，直接赋普通 Array 字面量会报错
+	runner.instructions.append(shared_wait)
 
 	var runtime_instance_a = RuntimeActionRunnerInstance.new(runner, self)
 	var runtime_instance_b = RuntimeActionRunnerInstance.new(runner, self)
@@ -155,26 +172,30 @@ func test_multiple_triggers_isolation():
 
 	var start_time = Time.get_ticks_msec() / 1000.0
 
+	# 先连接信号再启动，防止信号先于连接发射
+	# 注意：lambda 内必须写成员变量（局部变量按值捕获，赋值不回传）
+	runtime_instance_a.execution_completed.connect(func(_time): _completed_a = true)
+	runtime_instance_b.execution_completed.connect(func(_time): _completed_b = true)
+	_completed_a = false
+	_completed_b = false
+
 	runtime_instance_a.run(context_a)
 	runtime_instance_b.run(context_b)
 
-	var completed_a = false
-	var completed_b = false
-
-	runtime_instance_a.execution_completed.connect(func(_time): completed_a = true)
-	runtime_instance_b.execution_completed.connect(func(_time): completed_b = true)
-
-	while not (completed_a and completed_b):
+	# 轮询等待两个实例完成（帧数上限防挂死）
+	var waited_frames: int = 0
+	while not (_completed_a and _completed_b) and waited_frames < 300:
 		await get_tree().process_frame
+		waited_frames += 1
 
 	var end_time = Time.get_ticks_msec() / 1000.0
 	var total_time = end_time - start_time
 
-	if completed_a and completed_b:
+	if _completed_a and _completed_b:
 		print("  ✓ 两个实例都完成执行")
 		_test_passed += 1
 	else:
-		print("  ✗ 实例未完成")
+		print("  ✗ 实例未完成（a=%s b=%s，等待 %d 帧）" % [_completed_a, _completed_b, waited_frames])
 		_test_failed += 1
 
 ## 测试5：Wait 指令运行时状态
@@ -228,8 +249,9 @@ func test_signal_multiple_emit_protection():
 	var context = ExecutionContext.new(self, self)
 	var runtime_inst = RuntimeInstructionInstance.new(wait_inst, context, null)
 
-	var emit_count = 0
-	runtime_inst.finished.connect(func(): emit_count += 1)
+	_finished_emit_count = 0
+	# lambda 内必须写成员变量（局部变量按值捕获，自增不回传）
+	runtime_inst.finished.connect(func(): _finished_emit_count += 1)
 
 	# 执行并等待完成
 	runtime_inst.execute_sync()
@@ -239,11 +261,11 @@ func test_signal_multiple_emit_protection():
 	runtime_inst._complete_execution()
 	await get_tree().create_timer(0.1).timeout
 
-	if emit_count == 1:
+	if _finished_emit_count == 1:
 		print("  ✓ finished 信号只触发一次")
 		_test_passed += 1
 	else:
-		print("  ✗ finished 信号触发 %d 次" % emit_count)
+		print("  ✗ finished 信号触发 %d 次" % _finished_emit_count)
 		_test_failed += 1
 
 ## 测试7：执行超时
@@ -257,15 +279,16 @@ func test_execution_timeout():
 	var runtime_inst = RuntimeInstructionInstance.new(wait_inst, context, null)
 	runtime_inst.execution_timeout = 0.1  # 短超时
 
-	var timeout_triggered = false
-	runtime_inst.timeout.connect(func(): timeout_triggered = true)
+	_timeout_triggered = false
+	# lambda 内必须写成员变量（局部变量按值捕获，赋值不回传）
+	runtime_inst.timeout.connect(func(): _timeout_triggered = true)
 
 	var start_time = Time.get_ticks_msec() / 1000.0
 	runtime_inst.execute_sync()
 	await runtime_inst.finished
 	var end_time = Time.get_ticks_msec() / 1000.0
 
-	if timeout_triggered:
+	if _timeout_triggered:
 		print("  ✓ 超时信号正确触发")
 		_test_passed += 1
 	else:
@@ -369,11 +392,24 @@ func test_error_handling():
 	var context = ExecutionContext.new(self, self)
 	var runtime_inst = RuntimeInstructionInstance.new(wait_inst, context, null)
 
-	var error_triggered = false
-	runtime_inst.error_occurred.connect(func(_msg): error_triggered = true)
+	_error_triggered = false
+	# lambda 内必须写成员变量（局部变量按值捕获，赋值不回传）
+	runtime_inst.error_occurred.connect(func(_msg): _error_triggered = true)
 
 	runtime_inst.execute_sync()
-	await runtime_inst.finished
+	# Wait(-1) 走同步完成路径：finished 在 execute_sync 内已发射，再 await 会永久挂起
+	# 改为轮询成员标志（帧数上限防挂死；此路径 error_occurred 不发射，用 is_completed 兜底）
+	var waited_frames: int = 0
+	while not (_error_triggered or runtime_inst.is_completed()) and waited_frames < 60:
+		await get_tree().process_frame
+		waited_frames += 1
+
+	if _error_triggered or runtime_inst.is_completed():
+		print("  ✓ 执行已结束（错误路径）")
+		_test_passed += 1
+	else:
+		print("  ✗ 执行未在限期内结束")
+		_test_failed += 1
 
 	if runtime_inst.has_error():
 		print("  ✓ 错误被正确检测")
@@ -397,3 +433,5 @@ func _print_summary():
 		print("✓ 所有测试通过!")
 	else:
 		print("✗ 有测试失败!")
+	# 退出码门禁：headless 运行时非 0 即失败
+	get_tree().quit(1 if _test_failed > 0 else 0)
