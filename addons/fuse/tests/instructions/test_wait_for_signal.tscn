@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_wait_for_signal"]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_wait_for_signal.gd" id="1"]
+
+[node name="TestWaitForSignal" type="Node"]
+script = ExtResource("1")

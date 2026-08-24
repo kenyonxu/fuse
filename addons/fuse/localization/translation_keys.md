@@ -84,6 +84,8 @@ static func get_metadata() -> Dictionary:
 | FUSE_INSTRUCTION_CREATE_VARIABLE_DESC | 创建一个新变量并设置初始值 | Creates a new variable and sets its initial value | 创建变量指令描述 |
 | FUSE_INSTRUCTION_WAIT_NAME | 等待 | Wait | 等待指令名称 |
 | FUSE_INSTRUCTION_WAIT_DESC | 等待指定时间（秒） | Waits for a specified duration (seconds) | 等待指令描述 |
+| FUSE_INSTRUCTION_WAIT_FOR_SIGNAL_NAME | 等待信号 | Wait For Signal | 等待信号指令名称 |
+| FUSE_INSTRUCTION_WAIT_FOR_SIGNAL_DESC | 暂停执行直到目标节点发出指定信号，信号参数以 event_ 前缀局部变量暴露；超时失败终止 | Pauses execution until the target node emits the specified signal; signal args exposed as event_* local variables; fails on timeout | 等待信号指令描述 |
 | FUSE_INSTRUCTION_COUNT_NAME | 计数 | Count | 计数指令名称 |
 | FUSE_INSTRUCTION_COUNT_DESC | 一个计数指令，用于演示如何维护状态和多次执行 | A counting instruction to demonstrate state maintenance and multiple execution | 计数指令描述 |
 | FUSE_INSTRUCTION_QUIT_NAME | 退出应用程序 | Quit Application | 退出指令名称 |
@@ -164,6 +166,7 @@ static func get_metadata() -> Dictionary:
 | FUSE_ERROR_PROPERTY_NOT_WRITABLE | 属性不可写 | Property is not writable | 属性不可写 |
 | FUSE_ERROR_FUNCTION_CALL_FAILED | 函数调用失败 | Function call failed | 函数调用失败 |
 | FUSE_ERROR_SIGNAL_NOT_FOUND | 未找到信号 | Signal not found | 信号不存在 |
+| FUSE_ERROR_WAIT_FOR_SIGNAL_TIMEOUT | 等待信号超时 | Wait for signal timed out | 等待信号超时错误 |
 
 ### UI文本（FUSE_UI_）
 
