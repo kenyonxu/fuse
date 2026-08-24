@@ -218,8 +218,11 @@ static func _get_scope_variable(
 	var container = get_scope_container(context)
 
 	if container == null:
-		_log_debug("未找到作用域容器，回退到默认值: %s" % variable_name)
-		return default_value
+		# 对齐 B7 契约（variable_context.gd _get_scope_variable）：
+		# 无 scope 容器时回退读取 local 变量，
+		# 使 event_* 等局部变量在裸场景下也能被条件（如 CompareVariable NEAREST）读取
+		_log_debug("未找到作用域容器，回退到局部变量: %s" % variable_name)
+		return _get_local_variable(context, variable_name, default_value)
 
 	if container.has_variable(variable_name):
 		var value = container.get_variable(variable_name, default_value)
