@@ -27,6 +27,17 @@ class_name Trigger extends BaseTrigger
 ## 冷却时间（秒）- 在 cooldown_mode 不为 NONE 时生效
 @export_range(0.0, 60.0, 0.1) var cooldown_time: float = 1.0
 
+@export_group("Conditions")
+
+## 是否启用条件检查（仅控制编辑器 UI 中 conditions 属性显隐，运行时只看 conditions 是否为空）
+@export var use_conditions: bool = false:
+	set(value):
+		use_conditions = value
+		notify_property_list_changed()
+
+## 条件列表（触发时全部满足才执行 ActionRunner；空列表视为无条件）
+var conditions: Array[BaseCondition] = []
+
 ## ==================== 内部状态 ====================
 
 var has_triggered: bool = false
@@ -139,6 +150,17 @@ func _on_trigger_exit_tree() -> void:
 		_runtime_action_runner_instance = null
 		_log_debug_localized("FUSE_LOG_RUNTIME_ACTION_RUNNER_CLEANUP")
 
+## 动态属性列表：use_conditions 门控 conditions 显隐（模式同 EventBinding）
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	if use_conditions:
+		properties.append({
+			"name": "conditions",
+			"type": TYPE_ARRAY,
+			"usage": PROPERTY_USAGE_DEFAULT
+		})
+	return properties
+
 ## ==================== 事件处理 ====================
 
 func _on_event_fired(context: Node) -> void:
@@ -154,8 +176,6 @@ func _on_event_fired(context: Node) -> void:
 	# 冷却检查 - 使用基类方法，参数顺序：index, context, cooldown_mode, cooldown_time
 	if not _check_cooldown(0, context, cooldown_mode, cooldown_time):
 		return
-
-	has_triggered = true
 
 	if action_runner:
 		_log_debug_localized("FUSE_LOG_TRIGGER_FIRED", {"description": get_description()})
@@ -179,6 +199,22 @@ func _on_event_fired(context: Node) -> void:
 
 		# 同步额外事件参数
 		_sync_additional_event_args(execution_context)
+
+		# 条件检查（在事件参数同步之后，条件可引用 event_* 局部变量）
+		if not conditions.is_empty():
+			var conditions_passed := true
+			for condition in conditions:
+				if condition == null or not condition.enabled:
+					continue
+				if not condition.check(execution_context):
+					conditions_passed = false
+					break
+			if not conditions_passed:
+				_log_debug("Trigger: 条件检查未通过，跳过执行")
+				return
+
+		# 条件通过才消耗 trigger_once（语义对齐 MultiEventTrigger）
+		has_triggered = true
 
 		# 执行 ActionRunner
 		if _runtime_action_runner_instance:
