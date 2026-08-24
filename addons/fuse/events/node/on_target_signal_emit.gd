@@ -58,6 +58,9 @@ var arg_filter_values: Array = []:
 		arg_filter_values = value
 		_update_resource_name()
 
+# signal_info 缺失的 fail-open 警告只提示一次，避免高频信号刷屏
+var _signal_info_warned: bool = false
+
 # 编辑器专用临时变量（不序列化，仅用于编辑器会话）
 var _editor_available_signals: Array = []  # 编辑器中缓存的可用信号列表
 var _editor_signals_loaded: bool = false  # 编辑器中信号是否已加载
@@ -507,13 +510,17 @@ func _create_test_scene() -> Node:
 ## 检查信号参数
 func _check_signal_args(args):
 	var signal_info = null
-	var arg_filter_values = []
-
 	if _runtime_instance_ref:
 		signal_info = _runtime_instance_ref.runtime_state.get("signal_info", null)
-		arg_filter_values = arg_filter_values  # 这是配置变量，直接使用
 
-	if not signal_info or args.size() != arg_filter_values.size():
+	# signal_info 不可用（运行时状态异常）时放行，避免静默丢弃全部触发
+	if not signal_info:
+		if not _signal_info_warned:
+			push_warning("OnTargetSignalEmit: filter_signal_args 已启用但 signal_info 不可用，跳过参数过滤")
+			_signal_info_warned = true
+		return true
+
+	if args.size() != arg_filter_values.size():
 		return false
 
 	for i in range(args.size()):
