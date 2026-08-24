@@ -298,6 +298,26 @@ func cancel():
 
 	_log_debug("指令执行已取消: %s" % get_description())
 
+## 取消并通知等待者
+##
+## 在 cancel()（既有语义：状态置 CANCELLED + 资源清理，不发 finished）之外：
+## 1. 调用指令的 cancel() 触发指令侧清理（重写的 disconnect）；
+## 2. 补发一次实例 finished，唤醒 await 本实例的执行协程。
+##
+## 顺序关键：先 cancel() 占终态（_is_completed=true），使指令 finished 的
+## 转发链 _on_instruction_finished → _complete_execution 被其
+## "if _is_completed: return" 保护挡住——保证实例 finished 恰好发出一次。
+func cancel_and_notify() -> void:
+	if not _is_executing:
+		return
+
+	cancel()
+
+	if instruction != null and is_instance_valid(instruction) and not instruction.is_completed():
+		instruction.cancel()
+
+	finished.emit()
+
 ## 新增：启动超时计时器
 func _start_timeout_timer():
 	if execution_timeout <= 0:

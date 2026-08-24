@@ -54,6 +54,9 @@ var _debug_enabled: bool = true  ## 是否启用调试模式
 ## 信号跟踪（用于防止内存泄漏）
 var _instruction_callback_cache: Dictionary = {}  ## instruction -> cached callback
 
+## 顺序执行中当前正被 await 的指令（取消传播目标）
+var _awaiting_instruction: BaseInstruction = null
+
 ## 条件检查支持
 var _skip_instruction_count: int = 0  ## 需要跳过的指令数量
 var _stop_execution: bool = false  ## 是否停止执行
@@ -156,9 +159,16 @@ func cancel_execution(reason: String = ""):
 	is_canceling = true
 	cancellation_reason = reason
 	_log_debug_localized("FUSE_LOG_CANCELLING_EXECUTION", {"reason": reason})
-	
+
 	# 设置运行状态为 false，让执行循环自然退出
 	is_running = false
+
+	# 唤醒正卡在 await instruction.finished 的顺序协程
+	# （BaseInstruction.cancel 自带 finished.emit()）
+	if _awaiting_instruction != null and is_instance_valid(_awaiting_instruction) \
+			and not _awaiting_instruction.is_completed():
+		_awaiting_instruction.cancel()
+	_awaiting_instruction = null
 
 ## 检查是否正在取消
 ## returns: bool - 是否正在取消执行
@@ -277,7 +287,9 @@ func _run_sequential(context: ExecutionContext):
 		else:
 			# 异步执行，等待完成
 			if not instruction.is_completed() and not instruction.has_error():
+				_awaiting_instruction = instruction
 				await instruction.finished
+				_awaiting_instruction = null
 
 			var instruction_end_time = Time.get_ticks_msec() / 1000.0
 			var instruction_time = instruction_end_time - instruction_start_time

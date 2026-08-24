@@ -30,6 +30,9 @@ var log_level: FuseLogger.LogLevel = FuseLogger.LogLevel.INFO  ## 日志输出�
 ## 运行时指令实例数组（用于状态隔离）
 var _instruction_instances: Array[RuntimeInstructionInstance] = []
 
+## 顺序模式当前正被 await 的指令实例（取消传播目标）
+var _awaiting_instruction: RuntimeInstructionInstance = null
+
 ## 性能优化：验证缓存（Phase 2.5 优化）
 ## 避免每帧重复验证相同的指令数组
 var _instructions_validated: bool = false
@@ -155,6 +158,17 @@ func cancel_execution(reason: String = ""):
 
 	# 设置运行状态为 false，让执行循环自然退出
 	runtime_state["is_running"] = false
+
+	# 唤醒正卡在 await 指令实例 finished 的顺序协程（并触发指令侧资源清理）
+	if _awaiting_instruction != null:
+		_awaiting_instruction.cancel_and_notify()
+		_awaiting_instruction = null
+
+	# 并行模式：等待循环为帧轮询（不卡协程），但在途实例的计时器/回调
+	# 需逐个取消清理（cancel_and_notify 幂等，与上面的顺序目标重复调用安全）
+	for runtime_instruction in _instruction_instances:
+		if not runtime_instruction.is_completed():
+			runtime_instruction.cancel_and_notify()
 
 ## 设置停止执行标志（API 兼容性方法）
 ##
@@ -366,7 +380,9 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 			# 修复：如果指令已完成，不需要 await（兼容 RuntimeInstructionInstance 架构）
 			# 这修复了引入 RuntimeInstructionInstance 后的 "ActionRunner 已经在运行" 错误
 			if not runtime_instruction.is_completed() and not runtime_instruction.has_error():
+				_awaiting_instruction = runtime_instruction
 				await runtime_instruction.finished
+				_awaiting_instruction = null
 
 			# 等待后再次校验 action_runner 是否仍有效
 			action_runner_valid = _is_object_valid(action_runner)
@@ -590,6 +606,12 @@ func _execute_instruction(instruction: BaseInstruction, context: ExecutionContex
 ## 完成执行
 func _complete_execution():
 	if not _is_running_cached:
+		# 取消路径补发：最后一个在途指令被 cancel_and_notify 唤醒后（或并行
+		# 等待循环 break 后）直接落到此处，不会经过循环顶部的取消 emit 点——
+		# 在此补发，保证 execution_canceled 恰好一次（对齐遗留 ActionRunner
+		# _complete_execution 的 is_canceling 分支）
+		if _is_canceling_cached:
+			execution_canceled.emit(runtime_state.get("cancellation_reason", ""))
 		return
 	# Phase 2.5 优化：刷新待发射的信号
 	_flush_pending_signals()
