@@ -572,6 +572,10 @@ func _store_signal_context(args):
 	var context = _create_signal_context(args)
 	if _runtime_instance_ref:
 		_runtime_instance_ref.set_runtime_state("last_signal_context", context)
+		# 桥接：named_args 同步写入 last_event_args，
+		# 宿主 Trigger 会把它逐键同步为 event_<参数名> 局部变量
+		if context.has("named_args"):
+			_runtime_instance_ref.set_runtime_state("last_event_args", context["named_args"])
 
 ## 获取最后一次信号的上下文信息
 func get_last_signal_context() -> Dictionary:
@@ -645,6 +649,13 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		if connect_result != OK:
 			_create_fuse_error_localized("FUSE_ERROR_EVENT_INITIALIZATION", FuseError.ErrorType.RUNTIME_ERROR, {"signal_name": target_signal, "error_code": connect_result})
 			return
+
+	# 运行时解析 SignalInfo（参数过滤与 named_args 桥接都依赖它；历史上运行时从不构建，属修复）
+	if _runtime_instance_ref:
+		for sig_info in SignalManager.get_node_signals(target):
+			if sig_info.name == target_signal:
+				_runtime_instance_ref.set_runtime_state("signal_info", sig_info)
+				break
 
 	var source_name = target.name if target.name else "Unknown"
 	_log_info_localized("FUSE_LOG_EVENT_SIGNAL_SOURCE", {"source": source_name, "signal": target_signal})
