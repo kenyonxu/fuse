@@ -10294,7 +10294,7 @@
     {
       "default": 0,
       "hint": 2,
-      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node",
+      "hint_string": "Nearest,Custom ID,Trigger Scope,Target Node,Local",
       "is_nested_instructions": false,
       "name": "scope_source",
       "type": 2,

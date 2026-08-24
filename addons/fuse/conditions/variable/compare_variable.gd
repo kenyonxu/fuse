@@ -14,7 +14,8 @@ enum ScopeSource {
 	NEAREST,        ## 最近的作用域容器（默认）
 	CUSTOM_ID,      ## 指定 scope_id
 	TRIGGER_SCOPE,  ## Trigger 节点上的作用域
-	TARGET_NODE     ## Target 节点上的作用域
+	TARGET_NODE,    ## Target 节点上的作用域
+	LOCAL           ## 执行上下文局部变量（不经作用域容器，可读 event_* 等局部变量）
 }
 
 ## 变量名
@@ -76,7 +77,7 @@ func _get_property_list() -> Array[Dictionary]:
 		name = "scope_source",
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
-		hint_string = "Nearest,Custom ID,Trigger Scope,Target Node",
+		hint_string = "Nearest,Custom ID,Trigger Scope,Target Node,Local",
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
 
@@ -133,7 +134,10 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 	# 获取变量值
 	var var_value: Variant
-	if scope_source == ScopeSource.NEAREST:
+	if scope_source == ScopeSource.LOCAL:
+		# LOCAL 模式：直接读执行上下文局部变量（不经作用域容器，可读 event_* 等参数）
+		var_value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.LOCAL, null)
+	elif scope_source == ScopeSource.NEAREST:
 		# NEAREST 模式：从最近的作用域容器读取
 		var_value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.SCOPE, null)
 	else:
@@ -161,24 +165,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 		var_value = scope_container.get_variable(variable_name)
 
-	# 执行比较
-	match comparison_operator:
-		ComparisonOperator.EQUAL:
-			return var_value == compare_value
-		ComparisonOperator.NOT_EQUAL:
-			return var_value != compare_value
-		ComparisonOperator.GREATER_THAN:
-			return var_value > compare_value if var_value is float or var_value is int else false
-		ComparisonOperator.LESS_THAN:
-			return var_value < compare_value if var_value is float or var_value is int else false
-		ComparisonOperator.GREATER_EQUAL:
-			return var_value >= compare_value if var_value is float or var_value is int else false
-		ComparisonOperator.LESS_EQUAL:
-			return var_value <= compare_value if var_value is float or var_value is int else false
-		_:
-			return false
-
-	# 执行比较
+	# 执行比较（带类型分派，跨类型族安全）
 	var result := false
 
 	match comparison_operator:
@@ -282,6 +269,9 @@ func _compare_equal(a: Variant, b: Variant) -> bool:
 	if _is_numeric(a) and b is String:
 		return _to_number(a) == _to_number(b)
 
+	# Object 与非 Object 混合会使原生 == 抛运行时错误，跨类型族视为不相等
+	if (a is Object) != (b is Object):
+		return false
 	return a == b
 
 ## 比较函数：不等于
@@ -323,9 +313,9 @@ func _to_number(value: Variant) -> float:
 	elif value is float:
 		return value
 	elif value is String:
-		var num = float(value)
-		if not num.is_nan():
-			return num
+		# 仅合法数字字符串参与转换，其余按 0.0 处理（基础类型 float 无 is_nan 方法）
+		if value.is_valid_float():
+			return value.to_float()
 	return 0.0
 
 ## 验证条件
@@ -368,6 +358,9 @@ static func _get_condition_metadata() -> ConditionMetadata:
 
 ## 获取作用域来源字符串
 func _get_scope_source_string() -> String:
+	# LOCAL 不在 VariableScopeUtils.ScopeSource（容器来源体系）中，前置拦截避免显示 Unknown
+	if scope_source == ScopeSource.LOCAL:
+		return "Local"
 	return VariableScopeUtils.get_scope_source_string(
 		scope_source as VariableScopeUtils.ScopeSource,
 		custom_scope_id,
