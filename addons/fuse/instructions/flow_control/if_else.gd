@@ -39,6 +39,10 @@ var false_instructions: Array[BaseInstruction] = []:
 		false_instructions = value
 		_update_resource_name()
 
+# 当前在途子指令（遗留协程取消传播用；单执行假设——共享资源并发执行
+# 同一容器属既有未支持场景，参照 RunRunner 先例）
+var _current_child_instruction: BaseInstruction = null
+
 # 获取指令元数据（用于指令选择器）
 static func _get_instruction_metadata() -> InstructionMetadata:
 	var metadata = InstructionMetadata.new()
@@ -194,6 +198,10 @@ func _execute_synchronous(context: ExecutionContext, instructions: Array[BaseIns
 ## 异步执行指令序列
 func _execute_asynchronous(context: ExecutionContext, instructions: Array[BaseInstruction]):
 	for instruction in instructions:
+		# 取消检查点（循环推进）：唤醒或推进时若已取消，立即退出（杜绝取消后复活）
+		if execution_status == ExecutionStatus.CANCELLED:
+			_current_child_instruction = null
+			return
 		if not instruction:
 			_log_warning_localized("FUSE_INSTRUCTION_IF_ELSE_SKIP_NULL", {})
 			continue
@@ -204,15 +212,33 @@ func _execute_asynchronous(context: ExecutionContext, instructions: Array[BaseIn
 		instruction.reset()
 
 		# 执行指令
+		_current_child_instruction = instruction
 		instruction.execute(context)
+		_current_child_instruction = null
 
 		# 等待指令完成
 		if not instruction.is_completed():
 			_log_debug_localized("FUSE_INSTRUCTION_IF_ELSE_WAITING_FOR_INSTRUCTION", {"instruction": instruction.get_description()})
+			_current_child_instruction = instruction
 			await instruction.finished
+			_current_child_instruction = null
+			# 取消检查点（唤醒后）：取消引发的唤醒不得继续循环
+			if execution_status == ExecutionStatus.CANCELLED:
+				return
 
 	_log_info_localized("FUSE_INSTRUCTION_IF_ELSE_EXECUTION_COMPLETE", {})
 	_on_execution_completed()
+
+## 取消执行：先走基类取消占 CANCELLED 终态，再取消在途子指令——其 finished
+## 在 emit 调用栈内同步唤醒本协程（GDScript await 信号为同步恢复语义），
+## 醒后经循环检查点看到 CANCELLED 立即退出，杜绝取消后复活。
+## 子指令的 finished 连接保持不断开：它是协程的 await 唤醒源，断开将永久悬置。
+func cancel() -> void:
+	super.cancel()
+	if _current_child_instruction != null and is_instance_valid(_current_child_instruction) \
+			and not _current_child_instruction.is_completed():
+		_current_child_instruction.cancel()
+	_current_child_instruction = null
 
 ## 验证指令参数
 func validate() -> Array[String]:
