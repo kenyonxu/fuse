@@ -86,6 +86,8 @@ static func get_metadata() -> Dictionary:
 | FUSE_INSTRUCTION_WAIT_DESC | 等待指定时间（秒） | Waits for a specified duration (seconds) | 等待指令描述 |
 | FUSE_INSTRUCTION_WAIT_FOR_SIGNAL_NAME | 等待信号 | Wait For Signal | 等待信号指令名称 |
 | FUSE_INSTRUCTION_WAIT_FOR_SIGNAL_DESC | 暂停执行直到目标节点发出指定信号，信号参数以 event_ 前缀局部变量暴露；超时失败终止 | Pauses execution until the target node emits the specified signal; signal args exposed as event_* local variables; fails on timeout | 等待信号指令描述 |
+| FUSE_INSTRUCTION_WAIT_FOR_EVENT_NAME | 等待事件 | Wait For Event | 等待事件指令名称 |
+| FUSE_INSTRUCTION_WAIT_FOR_EVENT_DESC | 暂停执行直到事件总线上发出指定事件，事件参数以 event_ 前缀局部变量暴露；超时失败终止 | Pauses execution until the named event is sent on the event bus; args exposed as event_* local variables; fails on timeout | 等待事件指令描述 |
 | FUSE_INSTRUCTION_COUNT_NAME | 计数 | Count | 计数指令名称 |
 | FUSE_INSTRUCTION_COUNT_DESC | 一个计数指令，用于演示如何维护状态和多次执行 | A counting instruction to demonstrate state maintenance and multiple execution | 计数指令描述 |
 | FUSE_INSTRUCTION_QUIT_NAME | 退出应用程序 | Quit Application | 退出指令名称 |
@@ -167,6 +169,7 @@ static func get_metadata() -> Dictionary:
 | FUSE_ERROR_FUNCTION_CALL_FAILED | 函数调用失败 | Function call failed | 函数调用失败 |
 | FUSE_ERROR_SIGNAL_NOT_FOUND | 未找到信号 | Signal not found | 信号不存在 |
 | FUSE_ERROR_WAIT_FOR_SIGNAL_TIMEOUT | 等待信号超时 | Wait for signal timed out | 等待信号超时错误 |
+| FUSE_ERROR_WAIT_FOR_EVENT_TIMEOUT | 等待事件超时 | Wait for event timed out | 等待事件超时错误 |
 
 ### UI文本（FUSE_UI_）
 

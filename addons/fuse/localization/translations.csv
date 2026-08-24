@@ -5118,3 +5118,6 @@ FUSE_WARNING_TARGET_NODE_INVALID,目标节点已失效，停止监听,Target nod
 FUSE_INSTRUCTION_WAIT_FOR_SIGNAL_NAME,等待信号,Wait For Signal
 FUSE_INSTRUCTION_WAIT_FOR_SIGNAL_DESC,暂停执行直到目标节点发出指定信号，信号参数以 event_ 前缀局部变量暴露；超时失败终止,Pauses execution until the target node emits the specified signal; signal args exposed as event_* local variables; fails on timeout
 FUSE_ERROR_WAIT_FOR_SIGNAL_TIMEOUT,等待信号超时,Wait for signal timed out
+FUSE_INSTRUCTION_WAIT_FOR_EVENT_NAME,等待事件,Wait For Event
+FUSE_INSTRUCTION_WAIT_FOR_EVENT_DESC,暂停执行直到事件总线上发出指定事件，事件参数以 event_ 前缀局部变量暴露；超时失败终止,Pauses execution until the named event is sent on the event bus; args exposed as event_* local variables; fails on timeout
+FUSE_ERROR_WAIT_FOR_EVENT_TIMEOUT,等待事件超时,Wait for event timed out
