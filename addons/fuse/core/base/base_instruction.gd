@@ -1134,42 +1134,28 @@ func _has_immediate_completion() -> bool:
 func execute_sync(context: ExecutionContext) -> bool:
 	"""
 	同步执行指令的包装器
-	返回 true 表示指令已完成，false 表示需要异步等待
+	返回 true 表示指令已完成（含同步失败/取消——终态即完成，错误传播
+	由调用方的 has_error() 检查路径接管），false 表示需要异步等待
 	"""
 	if not can_execute_sync():
 		execute(context)
 		return false
-	
+
 	# 重置执行状态，确保干净的开始状态
 	var original_status = execution_status
 	execution_status = ExecutionStatus.PENDING
-	
-	# 创建临时信号监听器来检测同步完成
-	var completed_sync = false
-	
-	# 使用类成员变量来避免闭包作用域问题
-	var self_ref = self
-	var sync_callback = func():
-		completed_sync = true
-	
-	var temp_connection = finished.connect(sync_callback)
-	
+
 	# 执行指令
 	execute(context)
-	
-	# 立即检查执行状态，因为同步指令应该在 execute() 返回前完成
-	# 如果指令是同步的，execution_status 应该已经是 COMPLETED
-	if execution_status == ExecutionStatus.COMPLETED:
-		completed_sync = true
-	
-	# 检查是否立即完成
-	var result = completed_sync
-	
-	# 断开临时连接
-	if temp_connection == OK:
-		# 使用保存的回调函数引用来断开连接
-		finished.disconnect(sync_callback)
-	
+
+	# 同步指令应在 execute() 返回前到达终态（COMPLETED/ERROR/CANCELLED）。
+	# 早期实现用 lambda 监听 finished 检测同步完成，但 GDScript 闭包对局部
+	# 变量按值捕获使赋值永不生效（死代码），实际一直靠此处的状态检查兜底
+	# ——且旧判定只认 COMPLETED，同步失败被误判为异步（finished 已发，
+	# 调用方 await 挂死）。改为纯终态判定。
+	var result: bool = execution_status != ExecutionStatus.PENDING \
+		and execution_status != ExecutionStatus.RUNNING
+
 	# 如果没有同步完成，恢复原始状态
 	if not result:
 		execution_status = original_status
