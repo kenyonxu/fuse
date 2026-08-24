@@ -362,14 +362,14 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 			if runtime_instruction.has_error():
 				if not action_runner_valid:
 					_log_warning_localized("FUSE_WARNING_ACTION_RUNNER_RELEASED", {"error": runtime_instruction.get_error_message()})
-					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					_fail_execution(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
 					return
 				if action_runner.stop_on_error:
 					_create_fuse_error_localized("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", FuseError.ErrorType.EXECUTION_ERROR, {
 						"instruction_index": i,
 						"instruction_description": _safe_instruction_description(instruction)
 					}, {"error": runtime_instruction.get_error_message()})
-					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					_fail_execution(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
 					return
 
 			# Phase 2.5 优化：使用批量信号发射方法
@@ -399,7 +399,7 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 			if runtime_instruction.has_error():
 				if not action_runner_valid:
 					_log_warning_localized("FUSE_WARNING_ACTION_RUNNER_RELEASED", {"error": runtime_instruction.get_error_message()})
-					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					_fail_execution(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
 					return
 				if action_runner.stop_on_error:
 					_log_debug_localized("FUSE_LOG_STOPPING_DUE_TO_ERROR", {"error": runtime_instruction.get_error_message()})
@@ -407,7 +407,7 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 						"instruction_index": i,
 						"instruction_description": _safe_instruction_description(instruction)
 					}, {"error": runtime_instruction.get_error_message()})
-					execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
+					_fail_execution(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": runtime_instruction.get_error_message()}))
 					return
 
 	_complete_execution()
@@ -498,7 +498,11 @@ func _execute_instructions_parallel(context: ExecutionContext, instructions: Arr
 			errors.append("Instruction %d failed: %s" % [i, runtime_instruction.get_error_message()])
 
 	if not errors.is_empty():
-		execution_failed.emit("并行执行失败: " + ", ".join(errors))
+		# 统一失败出口：emit failed 并复位运行状态，不再走 _complete_execution
+		# （其 608 前置分支外的路径会 emit execution_completed，失败后双发），
+		# emit+return 结构与顺序路径失败点对齐
+		_fail_execution("并行执行失败: " + ", ".join(errors))
+		return
 
 	_complete_execution()
 
@@ -602,6 +606,13 @@ func _execute_instruction(instruction: BaseInstruction, context: ExecutionContex
 	var sync_completed = instruction.execute_sync(context)
 
 	return sync_completed
+
+## 失败统一出口：emit execution_failed 并复位运行状态（不经过 _complete_execution，
+## 避免失败后又发 execution_completed；保证失败后可重新 run）
+func _fail_execution(error_message: String) -> void:
+	_is_running_cached = false
+	runtime_state["is_running"] = false
+	execution_failed.emit(error_message)
 
 ## 完成执行
 func _complete_execution():

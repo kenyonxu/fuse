@@ -57,6 +57,10 @@ var _instruction_callback_cache: Dictionary = {}  ## instruction -> cached callb
 ## 顺序执行中当前正被 await 的指令（取消传播目标）
 var _awaiting_instruction: BaseInstruction = null
 
+## 终态信号已发出标志（run 完成时据此跳过 _complete_execution 的重复 emit，
+## 保证 canceled/failed/completed 各恰好一次）
+var _terminal_emitted: bool = false
+
 ## 条件检查支持
 var _skip_instruction_count: int = 0  ## 需要跳过的指令数量
 var _stop_execution: bool = false  ## 是否停止执行
@@ -137,6 +141,8 @@ func run(context: ExecutionContext):
 		_execution_tracker.stop_tracking()
 	
 	_complete_execution()
+	# 复位终态标志，保证下次 run 干净（取消/失败 emit 点在循环内已置位）
+	_terminal_emitted = false
 
 ## 停止执行
 func stop():
@@ -240,6 +246,7 @@ func _run_sequential(context: ExecutionContext):
 			if is_canceling:
 				_log_debug_localized("FUSE_LOG_EXECUTION_CANCELLED", {"reason": cancellation_reason})
 				execution_canceled.emit(cancellation_reason)
+				_terminal_emitted = true
 
 			else:
 				_log_debug_localized("FUSE_LOG_EXECUTION_STOP")
@@ -275,6 +282,7 @@ func _run_sequential(context: ExecutionContext):
 					"instruction_description": instruction.get_description()
 				}, {"error": instruction.get_error_message()})
 				execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": instruction.get_error_message()}))
+				_terminal_emitted = true
 				_disconnect_instruction_signal(instruction)
 				return
 
@@ -302,7 +310,9 @@ func _run_sequential(context: ExecutionContext):
 			# 断开信号连接
 			_disconnect_instruction_signal(instruction)
 
-			instruction_completed.emit(instruction)
+			# 终态互斥：被取消唤醒的指令（status=CANCELLED，非真完成）不发完成信号
+			if not (is_canceling and not instruction.is_completed()):
+				instruction_completed.emit(instruction)
 
 			# 检查错误
 			if stop_on_error and instruction.has_error():
@@ -312,6 +322,7 @@ func _run_sequential(context: ExecutionContext):
 					"instruction_description": instruction.get_description()
 				}, {"error": instruction.get_error_message()})
 				execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_INSTRUCTION_EXECUTION_FAILED", {"error": instruction.get_error_message()}))
+				_terminal_emitted = true
 				return
 
 			# 检查超时
@@ -363,6 +374,7 @@ func _run_parallel(context: ExecutionContext):
 			if is_canceling:
 				_log_debug("并行执行被取消: %s" % cancellation_reason)
 				execution_canceled.emit(cancellation_reason)
+				_terminal_emitted = true
 			else:
 				_log_debug("并行执行停止")
 			return
@@ -404,6 +416,7 @@ func _run_parallel(context: ExecutionContext):
 			"errors": errors
 		}, {"count": errors.size()})
 		execution_failed.emit(error_message)
+		_terminal_emitted = true
 		_log_error(error_message)
 
 	_log_debug_localized("FUSE_LOG_PARALLEL_EXECUTION_COMPLETED")
@@ -430,6 +443,7 @@ func _check_timeout(context: ExecutionContext) -> bool:
 			"instruction_count": instructions.size()
 		}, {"timeout": str(effective_timeout)})
 		execution_failed.emit(FuseLocalization.translate_format("FUSE_ERROR_EXECUTION_TIMEOUT_AFTER", {"timeout": str(effective_timeout)}))
+		_terminal_emitted = true
 		return true
 	return false
 
@@ -511,10 +525,13 @@ func _complete_execution():
 				note = FuseLocalization.translate("FUSE_LOG_EXECUTION_TIME_NOTE")
 			current_context.print_message(FuseLocalization.translate_format("FUSE_LOG_EXECUTION_COMPLETED_TIME", {"time": str(total_time)}) + note)
 
-	if is_canceling:
-		execution_canceled.emit(cancellation_reason)
-	else:
-		execution_completed.emit()
+	# 终态互斥：循环内已 emit 过 canceled/failed 时不重复发终态信号
+	# （清理逻辑照常执行——is_running 复位、信号断开、上下文与指令清理）
+	if not _terminal_emitted:
+		if is_canceling:
+			execution_canceled.emit(cancellation_reason)
+		else:
+			execution_completed.emit()
 
 	# 重置取消状态
 	is_canceling = false
