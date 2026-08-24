@@ -26052,6 +26052,37 @@
       "type_name": "int"
     }
   ],
+  "WaitForEvent": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "event_name",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 10.0,
+      "hint": 1,
+      "hint_string": "0,120,0.1",
+      "is_nested_instructions": false,
+      "name": "timeout",
+      "type": 3,
+      "type_name": "float"
+    }
+  ],
+  "WaitForSignal": [
+    {
+      "default": 10.0,
+      "hint": 1,
+      "hint_string": "0,120,0.1",
+      "is_nested_instructions": false,
+      "name": "timeout",
+      "type": 3,
+      "type_name": "float"
+    }
+  ],
   "WaitUntil": [
     {
       "default": 0,
