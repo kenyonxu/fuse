@@ -324,6 +324,10 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 		if not _is_running_cached:
 			if _is_canceling_cached:
 				_log_debug_localized("FUSE_LOG_EXECUTION_CANCELLED", {"reason": runtime_state["cancellation_reason"]})
+				# 取消同样冲刷批量信号（与 _fail_execution/_complete_execution 补发分支
+				# 同构，先指令级后终态）：被取消 run 已缓存的指令生命周期信号在此发出，
+				# 避免残留到下一次 run 的 flush 造成跨 run 重放
+				_flush_pending_signals()
 				execution_canceled.emit(runtime_state["cancellation_reason"])
 			else:
 				_log_debug_localized("FUSE_LOG_EXECUTION_STOP")
@@ -373,7 +377,9 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 					return
 
 			# Phase 2.5 优化：使用批量信号发射方法
-			_emit_instruction_completed(instruction)
+			# 终态互斥：被取消唤醒的指令（status=CANCELLED，非真完成）不发完成信号（对齐遗留 ActionRunner）
+			if not (_is_canceling_cached and not instruction.is_completed()):
+				_emit_instruction_completed(instruction)
 			continue  # 继续下一个指令
 		else:
 			# 异步执行，等待完成
@@ -393,7 +399,9 @@ func _execute_instructions_sequential(context: ExecutionContext, instructions: A
 				_log_debug_localized("FUSE_LOG_ASYNC_INSTRUCTION_COMPLETED", {"time": str(instruction_time)})
 
 			# 发出运行时实例的信号（Phase 2.5 优化：使用批量信号发射方法）
-			_emit_instruction_completed(instruction)
+			# 终态互斥：被取消唤醒的指令（status=CANCELLED，非真完成）不发完成信号（对齐遗留 ActionRunner）
+			if not (_is_canceling_cached and not instruction.is_completed()):
+				_emit_instruction_completed(instruction)
 
 			# 检查错误
 			if runtime_instruction.has_error():
@@ -462,6 +470,10 @@ func _execute_instructions_parallel(context: ExecutionContext, instructions: Arr
 		if not _is_running_cached:
 			if _is_canceling_cached:
 				_log_debug_localized("FUSE_LOG_EXECUTION_CANCELLED", {"reason": runtime_state["cancellation_reason"]})
+				# 取消同样冲刷批量信号（与 _fail_execution/_complete_execution 补发分支
+				# 同构，先指令级后终态）：被取消 run 已缓存的指令生命周期信号在此发出，
+				# 避免残留到下一次 run 的 flush 造成跨 run 重放
+				_flush_pending_signals()
 				execution_canceled.emit(runtime_state["cancellation_reason"])
 			else:
 				_log_debug("并行执行停止")
@@ -595,17 +607,6 @@ func _safe_instruction_description(instruction: BaseInstruction) -> String:
 		return instruction.get_description()
 	return FuseLocalization.translate("FUSE_ERROR_INSTRUCTION_FREED_OR_INVALID")
 
-
-## 执行指令（统一接口）
-func _execute_instruction(instruction: BaseInstruction, context: ExecutionContext) -> bool:
-	if not instruction:
-		_log_error("指令为空")
-		return true  # 同步完成（失败）
-
-	# 使用指令的同步执行包装器
-	var sync_completed = instruction.execute_sync(context)
-
-	return sync_completed
 
 ## 失败统一出口：emit execution_failed 并复位运行状态（不经过 _complete_execution，
 ## 避免失败后又发 execution_completed；保证失败后可重新 run）

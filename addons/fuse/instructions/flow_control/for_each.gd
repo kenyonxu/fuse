@@ -498,8 +498,9 @@ func execute(context: ExecutionContext):
 				finished.emit()
 				return
 
-			# 获取节点树
-			var node_tree = context.get_node_tree()
+			# 获取节点树（context.get_tree()：tree 属性访问器，未设置时从当前场景回退，
+			# 同构参照 get_nodes_in_group.gd；旧 get_node_tree() 在 ExecutionContext 上不存在）
+			var node_tree = context.get_tree()
 			if not node_tree:
 				_log_error_localized("FUSE_ERROR_NO_SCENE_TREE", {})
 				set_error_localized("FUSE_ERROR_NO_SCENE_TREE", FuseError.ErrorType.RUNTIME_ERROR, {})
@@ -1082,8 +1083,9 @@ func _get_items_to_iterate(context: ExecutionContext) -> Variant:
 				set_error_localized("FUSE_ERROR_GROUP_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
 				return null
 
-			# 获取节点树
-			var node_tree = context.get_node_tree()
+			# 获取节点树（context.get_tree()：tree 属性访问器，未设置时从当前场景回退，
+			# 同构参照 get_nodes_in_group.gd；旧 get_node_tree() 在 ExecutionContext 上不存在）
+			var node_tree = context.get_tree()
 			if not node_tree:
 				_log_error_localized("FUSE_ERROR_NO_SCENE_TREE", {})
 				set_error_localized("FUSE_ERROR_NO_SCENE_TREE", FuseError.ErrorType.RUNTIME_ERROR, {})

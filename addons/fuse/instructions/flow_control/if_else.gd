@@ -236,7 +236,7 @@ func _execute_asynchronous(context: ExecutionContext, instructions: Array[BaseIn
 func cancel() -> void:
 	super.cancel()
 	if _current_child_instruction != null and is_instance_valid(_current_child_instruction) \
-			and not _current_child_instruction.is_completed():
+			and _current_child_instruction.is_running():
 		_current_child_instruction.cancel()
 	_current_child_instruction = null
 
@@ -279,6 +279,7 @@ func get_description() -> String:
 ## 重置指令状态
 func reset():
 	super.reset()
+	_current_child_instruction = null
 	_log_debug_localized("FUSE_INSTRUCTION_IF_ELSE_RESET_COMPLETE", {})
 
 ## 统一日志方法
