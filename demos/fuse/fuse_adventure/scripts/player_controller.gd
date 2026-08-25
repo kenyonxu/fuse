@@ -18,6 +18,9 @@ extends CharacterBody2D
 ## 是否锁物理型位置变化
 @export var lock_movement: bool = false
 
+## 受击锁移动期间的水平冲量摩擦衰减（px/s²，越大停得越快）
+@export var knockback_friction: float = 600.0
+
 @onready var _sprite: AnimatedSprite2D = $PlayerSprites
 @onready var _anim_tree: AnimationTree = $AnimationTree
 
@@ -49,8 +52,9 @@ func _physics_process(delta: float) -> void:
 		_handle_movement()
 		_handle_jump()
 	else:
-		# 锁定移动时清水平速度：受击瞬间的移动残留会让角色恒速滑出
-		velocity.x = 0.0
+		# 锁定移动 = 禁止输入，不冻结物理：冲量（击退）按摩擦自然衰减，
+		# 而非清零——受击滑行/空中受击轨迹由物理驱动
+		velocity.x = move_toward(velocity.x, 0.0, knockback_friction * delta)
 	move_and_slide()
 
 	_update_animation()

@@ -5128,3 +5128,12 @@ FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_RESOURCE_NAME,动画时长 {animation} →
 FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_NO_TARGET,未选择动画节点,No animation node selected
 FUSE_LOG_GET_ANIMATION_LENGTH,动画 {animation} 时长为 {length} 秒,Animation {animation} length is {length} seconds
 FUSE_ERROR_NOT_ANIMATION_PLAYER,目标节点不是 AnimationPlayer,Target node is not an AnimationPlayer
+FUSE_INSTRUCTION_ADD_VELOCITY_NAME,叠加速度冲量,Add Velocity
+FUSE_INSTRUCTION_ADD_VELOCITY_DESC,向物理体叠加速度冲量（加法保留现有速度）——受击击退、弹板、击飞等场景,Adds a velocity impulse to a physics body (additive, preserving existing velocity) — knockback, bounce pads, launches
+FUSE_INSTRUCTION_ADD_VELOCITY_DESC_FORMAT,对 {target} 叠加冲量 {impulse},Add impulse {impulse} to {target}
+FUSE_INSTRUCTION_ADD_VELOCITY_RESOURCE_NAME,冲量 {impulse} → {target},Impulse {impulse} → {target}
+FUSE_INSTRUCTION_ADD_VELOCITY_NO_TARGET,未选择目标节点,No target node selected
+FUSE_LOG_ADD_VELOCITY,{node} 速度 {from} + {impulse} = {to},{node} velocity {from} + {impulse} = {to}
+FUSE_ERROR_NO_VELOCITY_PROPERTY,目标节点没有 velocity 属性（需为 CharacterBody2D/RigidBody2D 等物理体）,Target node has no velocity property (must be a physics body like CharacterBody2D/RigidBody2D)
+FUSE_ERROR_IMPULSE_NOT_VECTOR2,冲量变量 '{variable}' 的值不是 Vector2（实际 {actual_type}）,Impulse variable '{variable}' value is not Vector2 (got {actual_type})
+FUSE_ERROR_IMPULSE_ZERO,冲量值不能为零,Impulse cannot be zero

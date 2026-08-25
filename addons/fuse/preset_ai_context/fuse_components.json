@@ -2175,6 +2175,25 @@
     "type": "WarmUpPool"
   },
   {
+    "builtin_icon": "ViewportSpeed",
+    "category": "instruction",
+    "category_key": "FUSE_CATEGORY_PHYSICS",
+    "description_key": "FUSE_INSTRUCTION_ADD_VELOCITY_DESC",
+    "icon_name": "",
+    "keywords": [
+      "velocity",
+      "impulse",
+      "knockback",
+      "击退",
+      "冲量",
+      "速度",
+      "弹跳",
+      "物理"
+    ],
+    "name_key": "FUSE_INSTRUCTION_ADD_VELOCITY_NAME",
+    "type": "AddVelocity"
+  },
+  {
     "builtin_icon": "ToolPan",
     "category": "instruction",
     "category_key": "FUSE_CATEGORY_PHYSICS",

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_add_velocity.gd" id="1"]
+
+[node name="TestAddVelocity" type="Node"]
+script = ExtResource("1")
