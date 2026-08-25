@@ -124,6 +124,9 @@ func _update_animation() -> void:
 
 ## 根据移动方向翻转精灵
 func _update_facing() -> void:
+	# 锁移动（受击）期间保持面向：击退冲量反向不代表转身
+	if lock_movement:
+		return
 	if velocity.x > 0.0:
 		_sprite.flip_h = false
 	elif velocity.x < 0.0:
