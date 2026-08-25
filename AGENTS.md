@@ -6,6 +6,21 @@
   总是用中文回复
 </CRITICAL>
 
+## 配套生成 skill（创建组件前必读）⚠️
+
+`.claude/skills/` 下有本工程的组件生成规范（Claude Code 目录格式，ZCode 的 Skill 工具注册表不含它们）。**创建/修改以下内容前，必须先读对应 SKILL.md 并遵循其模板、命名规范与验证清单**：
+
+| 任务 | 必读 |
+|------|------|
+| 新建/修改指令（Instruction） | `.claude/skills/fuse-instruction-generator/SKILL.md` |
+| 新建/修改事件（Event） | `.claude/skills/fuse-event-generator/SKILL.md` |
+| 新建/修改条件（Condition） | `.claude/skills/fuse-condition-generator/SKILL.md` |
+| 本地化改动 | `.claude/skills/fuse-localization-fixer/SKILL.md` |
+| 生成 preset | `.claude/skills/fuse-preset-generator/SKILL.md` |
+| 事件迁移 RuntimeInstance | `.claude/skills/fuse_event_runtime_instance_migration/SKILL.md` |
+
+即使 Skill 工具无法直接调用，也应以"Read 该 SKILL.md 并遵循"的方式使用——规范中的必需方法、命名禁则（如类名不加 Instruction 后缀）、双执行路径要求与验证清单是硬约束。
+
 ## 构建/测试命令
 
 ### 运行测试
