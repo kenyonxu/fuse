@@ -15,6 +15,7 @@ func _ready() -> void:
 	await _test_variable_duration()
 	await _test_variable_missing_error()
 	await _test_roundtrip()
+	await _test_axis_lock()
 	print("=== TweenMoveTo duration 变量源测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -121,3 +122,58 @@ func _test_roundtrip() -> void:
 		_check(restored.duration_source == TweenMoveTo.DurationSource.VARIABLE, "还原 duration_source")
 		_check(restored.duration_variable == "dur_int", "还原 duration_variable")
 	host.queue_free()
+
+## 轴锁定：X_ONLY 时 tween 期间外部改 y 不被覆写（重力自由）
+func _test_axis_lock() -> void:
+	print("\n--- 轴锁定 X_ONLY ---")
+	var host := Node2D.new()
+	host.name = "Host5"
+	add_child(host)
+	await get_tree().process_frame
+
+	var mv := TweenMoveTo.new()
+	mv.target_node = NodePath("../Host5")
+	mv.target_position = Vector2(10, 0)
+	mv.duration = 0.3
+	mv.move_axis = TweenMoveTo.MoveAxis.X_ONLY
+	var context := ExecutionContext.new(host, host)
+	_sig_finished = false
+	mv.finished.connect(func(): _sig_finished = true)
+	mv.execute(context)
+
+	# tween 进行期间模拟重力改 y（物理帧的外部位移）
+	for i in range(6):
+		await get_tree().process_frame
+		host.position.y += 1.0  # 模拟每帧下落
+
+	for i in range(60):
+		await get_tree().process_frame
+		if _sig_finished:
+			break
+	_check(_sig_finished, "X_ONLY 模式完成")
+	_check(absf(host.position.x - 10.0) < 0.5, "x 到位（tween 控制）")
+	_check(absf(host.position.y - 6.0) < 1.5, "y 保留外部位移（%d 帧下落未被覆写，y=%.2f）" % [6, host.position.y])
+
+	# BOTH 模式对照：y 被钉死
+	var host2 := Node2D.new()
+	host2.name = "Host6"
+	add_child(host2)
+	await get_tree().process_frame
+	var mv2 := TweenMoveTo.new()
+	mv2.target_node = NodePath("../Host6")
+	mv2.target_position = Vector2(10, 0)
+	mv2.duration = 0.3
+	var ctx2 := ExecutionContext.new(host2, host2)
+	_sig_finished = false
+	mv2.finished.connect(func(): _sig_finished = true)
+	mv2.execute(context)
+	for i in range(6):
+		await get_tree().process_frame
+		host2.position.y += 1.0
+	for i in range(60):
+		await get_tree().process_frame
+		if _sig_finished:
+			break
+	_check(absf(host2.position.y) < 0.5, "BOTH 模式 y 被钉回 0（对照，y=%.2f）" % host2.position.y)
+	host.queue_free()
+	host2.queue_free()

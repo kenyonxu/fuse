@@ -125,6 +125,19 @@ var space_mode: SpaceMode = SpaceMode.GLOBAL:
 	set(value):
 		space_mode = value
 		_update_resource_name()
+
+## 位移轴（X/Y_ONLY 时另一轴留给物理引擎——击退场景典型用法）
+enum MoveAxis {
+	BOTH,     ## 两轴都 tween
+	X_ONLY,   ## 仅 X（Y 留给重力/物理）
+	Y_ONLY    ## 仅 Y
+}
+
+## tween 的位移轴
+var move_axis: MoveAxis = MoveAxis.BOTH:
+	set(value):
+		move_axis = value
+		_update_resource_name()
 		notify_property_list_changed()
 
 var easing_type: EasingType = EasingType.EASE_IN_OUT:
@@ -332,6 +345,14 @@ func _get_property_list() -> Array[Dictionary]:
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
 
+	properties.append({
+		name = "move_axis",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Both,X Only,Y Only",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+
 	# 缓动类型
 	properties.append({
 		name = "easing_type",
@@ -511,11 +532,19 @@ func execute(context: ExecutionContext) -> void:
 		# 计算相对偏移后的目标位置
 		final_position = current_position + target_position
 
-	# 根据坐标空间选择属性
+	# 根据坐标空间与位移轴选择属性（X/Y_ONLY 时另一轴不被 tween 钉死，留给物理）
 	var property_name = "global_position" if space_mode == SpaceMode.GLOBAL else "position"
+	var tween_target: Variant = final_position
+	match move_axis:
+		MoveAxis.X_ONLY:
+			property_name += ":x"
+			tween_target = final_position.x
+		MoveAxis.Y_ONLY:
+			property_name += ":y"
+			tween_target = final_position.y
 
 	# 播放移动动画到相对偏移后的位置
-	tween.tween_property(target, property_name, final_position, actual_duration)
+	tween.tween_property(target, property_name, tween_target, actual_duration)
 
 	_log_info_localized("FUSE_LOG_TWEEN_MOVE_TO", {
 		"node": target.name,
@@ -660,11 +689,19 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 		current_position = target.position
 		final_position = current_position + target_position
 
-	# 根据坐标空间选择属性
+	# 根据坐标空间与位移轴选择属性（X/Y_ONLY 时另一轴不被 tween 钉死，留给物理）
 	var property_name = "global_position" if space_mode == SpaceMode.GLOBAL else "position"
+	var tween_target: Variant = final_position
+	match move_axis:
+		MoveAxis.X_ONLY:
+			property_name += ":x"
+			tween_target = final_position.x
+		MoveAxis.Y_ONLY:
+			property_name += ":y"
+			tween_target = final_position.y
 
 	# 播放移动动画
-	tween.tween_property(target, property_name, final_position, actual_duration)
+	tween.tween_property(target, property_name, tween_target, actual_duration)
 
 	_log_info_localized("FUSE_LOG_TWEEN_MOVE_TO", {
 		"node": target.name,

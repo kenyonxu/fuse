@@ -25189,6 +25189,15 @@
       "type_name": "int"
     },
     {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Both,X Only,Y Only",
+      "is_nested_instructions": false,
+      "name": "move_axis",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
       "default": 2,
       "hint": 2,
       "hint_string": "In,Out,InOut,OutIn",
