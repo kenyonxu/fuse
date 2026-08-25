@@ -3,6 +3,8 @@ extends Node
 
 var _fail: int = 0
 var _triggered_count: int = 0
+# WaitForSignal 完成标志（GDScript lambda 按值捕获局部变量，须用成员变量传递）
+var _wfs_finished: bool = false
 
 ## 4 参异构模拟信号（body_shape_entered 同构）
 class MultiArgEmitter:
@@ -19,6 +21,7 @@ func _ready() -> void:
 	_test_matches_arg_unit()
 	await _test_otsa_dict_partial_filter()
 	await _test_otsa_gate_off_regression()
+	await _test_otsa_empty_dict_no_match()
 	await _test_wait_for_signal_filter()
 	print("=== 参数过滤升级测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
@@ -44,6 +47,8 @@ func _test_matches_arg_unit() -> void:
 	_check(not SignalInfo.matches_arg("1", 1), "跨类型族 → false")
 	_check(SignalInfo.matches_arg(null, null), "null == null")
 	_check(not SignalInfo.matches_arg(null, 1), "null vs 非 null → false")
+	_check(SignalInfo.matches_arg(Vector2(1, 2), Vector2i(1, 2)), "Vector2 期望 vs Vector2i 实际（互转相等）")
+	_check(not SignalInfo.matches_arg(Vector2(1, 2), Vector2i(1, 3)), "Vector2 期望 vs Vector2i 实际（互转不等）")
 	n.queue_free()
 
 ## OnTargetSignalEmit：4 参信号 dict 只过滤 1 键（按名部分过滤）
@@ -93,7 +98,78 @@ func _test_otsa_gate_off_regression() -> void:
 	_check(_triggered_count == 1, "门控关闭：任意参数触发（存量行为）")
 	ev.terminate(self)
 
-## WaitForSignal 过滤（Task 2 填充；占位不算断言）
+## OnTargetSignalEmit：门控开启但空 dict → 明确不匹配（暴露配置缺失而非静默全过）
+func _test_otsa_empty_dict_no_match() -> void:
+	print("\n--- 空 dict 不匹配 ---")
+	_triggered_count = 0
+	var emitter := AnimEmitter.new()
+	emitter.name = "EmptyDictEmitter"
+	add_child(emitter)
+
+	var ev := OnTargetSignalEmit.new()
+	ev.target_node = NodePath("../EmptyDictEmitter")
+	ev.target_signal = "animation_finished"
+	ev.filter_signal_args = true
+	ev.arg_filter_values = {}  # 门控开但未配置任何键
+	ev.triggered.connect(func(_n): _triggered_count += 1)
+	ev.initialize(self)
+
+	emitter.emit_signal("animation_finished", "anything")
+	_check(_triggered_count == 0, "空 dict：信号发出但不触发")
+	ev.terminate(self)
+	emitter.queue_free()
+
+## WaitForSignal：单参动画式过滤（匹配完成/不匹配继续等）+ 4 参部分过滤 + 类型安全
 func _test_wait_for_signal_filter() -> void:
-	print("\n--- WaitForSignal 过滤（Task 2 填充）---")
-	print("（占位：Task 2 实现后替换）")
+	print("\n--- WaitForSignal 过滤 ---")
+	var emitter := AnimEmitter.new()
+	emitter.name = "WfsEmitter"
+	add_child(emitter)
+
+	var wfs := WaitForSignal.new()
+	wfs.target_node = NodePath("../WfsEmitter")
+	wfs.target_signal = "animation_finished"
+	wfs.timeout = 3.0
+	wfs.filter_signal_args = true
+	wfs.arg_filter_values = {"anim_name": "attack"}
+
+	var context := ExecutionContext.new(emitter, emitter)
+	_wfs_finished = false
+	wfs.finished.connect(func(): _wfs_finished = true)
+	var sync_done: bool = wfs.execute_sync(context)
+	_check(sync_done == false, "进入异步等待")
+
+	# 不匹配的动画结束 → 继续等
+	emitter.emit_signal("animation_finished", "idle")
+	await get_tree().process_frame
+	_check(not _wfs_finished, "idle 结束不结束等待（继续等）")
+
+	# 匹配的动画结束 → 完成且捕获 event_*
+	emitter.emit_signal("animation_finished", "attack")
+	await get_tree().process_frame
+	_check(_wfs_finished, "attack 结束完成等待")
+	_check(context.get_variable("event_anim_name") == "attack", "event_anim_name 捕获")
+
+	# 4 参部分过滤 + 类型安全（复用 MultiArgEmitter）
+	var m := MultiArgEmitter.new()
+	m.name = "MultiEmitter"
+	add_child(m)
+	var wfs2 := WaitForSignal.new()
+	wfs2.target_node = NodePath("../MultiEmitter")
+	wfs2.target_signal = "shape_entered"
+	wfs2.timeout = 3.0
+	wfs2.filter_signal_args = true
+	wfs2.arg_filter_values = {"body_shape": 2, "body_id": self}  # body_id 期望 Object=self，实际 int → 不匹配
+	var ctx2 := ExecutionContext.new(m, m)
+	_wfs_finished = false
+	wfs2.finished.connect(func(): _wfs_finished = true)
+	wfs2.execute_sync(ctx2)
+	m.emit_signal("shape_entered", 1, self, 2, 0)  # body_id=1(int) vs 期望 self(Object)
+	await get_tree().process_frame
+	_check(not _wfs_finished, "Object 期望 vs int 实际 → 不匹配不抛错（继续等）")
+	wfs2.arg_filter_values = {"body_shape": 2}
+	m.emit_signal("shape_entered", 1, self, 2, 0)
+	await get_tree().process_frame
+	_check(_wfs_finished, "部分过滤（仅 body_shape）匹配完成")
+	emitter.queue_free()
+	m.queue_free()

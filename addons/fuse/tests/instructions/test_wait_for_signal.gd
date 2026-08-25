@@ -42,6 +42,7 @@ func _ready() -> void:
 	await _test_runtime_path_cancel()
 	await _test_rapid_rerun_no_stale_timeout()
 	await _test_pause_freezes_timeout()
+	await _test_sibling_path_resolution()
 	await _test_serialization_roundtrip()
 	print("=== WaitForSignal 测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
@@ -318,6 +319,40 @@ func _test_pause_freezes_timeout() -> void:
 	ri.cleanup()
 	trigger.queue_free()
 
+## 解析回归：编辑器资源上下文形态（target_node 相对 Runner 宿主为 "../Emitter"）
+## 既有用例的 target_node 均为 Runner 直属子节点（"Emitter"）——未覆盖 "../兄弟"
+## 形态；编辑器信号下拉修复（find_node_from_resource_context）与此同源，直接验证
+func _test_sibling_path_resolution() -> void:
+	print("\n--- 兄弟节点路径解析（../ 形态）---")
+	var root := Node.new()
+	root.name = "SimSceneRoot"
+	add_child(root)
+	var runner := Runner.new()
+	root.add_child(runner)  # action_runner 未赋值先入树（对齐 _run_with_runner 顺序注释）
+	var emitter := SignalEmitter.new()
+	emitter.name = "Emitter"
+	root.add_child(emitter)
+
+	var wait_inst := WaitForSignal.new()
+	wait_inst.target_node = NodePath("../Emitter")
+	wait_inst.target_signal = "custom_signal"
+	var instructions: Array[BaseInstruction] = []
+	instructions.append(wait_inst)
+	var ar := ActionRunner.new()
+	ar.instructions = instructions
+	runner.action_runner = ar
+
+	# 编辑器同款资源上下文解析：资源宿主（Runner）基准的 "../Emitter" → 兄弟节点
+	var found = FuseNodeUtils.find_node_from_resource_context(root, wait_inst, wait_inst.target_node)
+	_check(found == emitter, "资源上下文解析 ../Emitter 命中 Runner 兄弟节点")
+
+	# 运行时路径：以 trigger（Runner）为基准 _setup_target 成功解析同一形态
+	var context := ExecutionContext.new(runner, runner)
+	_check(wait_inst._setup_target(context), "_setup_target 以 Runner 为基准解析成功")
+	_check(wait_inst._bound_node == emitter, "_bound_node 解析为兄弟 Emitter")
+	wait_inst.cancel()
+	root.queue_free()
+
 ## 序列化 round-trip：PresetValueCodec 保存/还原配置不丢失
 func _test_serialization_roundtrip() -> void:
 	print("\n--- 序列化 round-trip ---")
@@ -325,6 +360,8 @@ func _test_serialization_roundtrip() -> void:
 	wait_inst.target_node = NodePath("Emitter")
 	wait_inst.target_signal = "custom_signal"
 	wait_inst.timeout = 3.5
+	wait_inst.filter_signal_args = true
+	wait_inst.arg_filter_values = {"value": 42}
 
 	var data := PresetValueCodec.serialize_instruction(wait_inst)
 	_check(data.has("target_node") and str(data["target_node"]) == "Emitter",
@@ -333,6 +370,10 @@ func _test_serialization_roundtrip() -> void:
 		"序列化含 target_signal 且值正确（实际 %s）" % str(data.get("target_signal", "<缺失>")))
 	_check(data.has("timeout") and is_equal_approx(float(data["timeout"]), 3.5),
 		"序列化含 timeout 且值正确（实际 %s）" % str(data.get("timeout", "<缺失>")))
+	_check(data.has("filter_signal_args") and data["filter_signal_args"] == true,
+		"序列化含 filter_signal_args 且值正确（实际 %s）" % str(data.get("filter_signal_args", "<缺失>")))
+	_check(data.has("arg_filter_values") and data["arg_filter_values"].get("value") == 42,
+		"序列化含 arg_filter_values 且值正确（实际 %s）" % str(data.get("arg_filter_values", "<缺失>")))
 
 	var restored: BaseInstruction = PresetValueCodec.deserialize_instruction(data)
 	_check(restored is WaitForSignal, "反序列化还原为 WaitForSignal")
@@ -341,3 +382,5 @@ func _test_serialization_roundtrip() -> void:
 		_check(str(restored_wait.target_node) == "Emitter", "round-trip target_node 一致")
 		_check(restored_wait.target_signal == "custom_signal", "round-trip target_signal 一致")
 		_check(is_equal_approx(restored_wait.timeout, 3.5), "round-trip timeout 一致")
+		_check(restored_wait.filter_signal_args == true, "round-trip filter_signal_args 一致")
+		_check(restored_wait.arg_filter_values.get("value") == 42, "round-trip arg_filter_values 一致")

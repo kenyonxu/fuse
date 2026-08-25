@@ -26,6 +26,18 @@ var target_signal: String = "":
 ## 超时秒数（0 = 无限等待）
 var timeout: float = 10.0
 
+## 是否启用信号参数过滤（true 时仅匹配过滤条件的信号才结束等待）
+var filter_signal_args: bool = false:
+	set(value):
+		filter_signal_args = value
+		notify_property_list_changed()
+
+## 参数过滤期望值（{参数名: 期望值}——键存在即参与过滤，按名匹配）
+var arg_filter_values: Dictionary = {}:
+	set(value):
+		arg_filter_values = value
+		_update_resource_name()
+
 # 运行时状态
 var _bound_node: Node = null
 var _signal_info: SignalInfo = null
@@ -55,7 +67,9 @@ func execute(context: ExecutionContext) -> void:
 	if not _setup_target(context):
 		return  # _setup_target 内部已 set_error + finished
 
-	_bound_node.connect(target_signal, _on_target_signal_emitted, CONNECT_ONE_SHOT)
+	# 非 ONE_SHOT：参数过滤下不匹配的信号须保持连接继续等待，
+	# 匹配路径由 _on_target_signal_emitted 内 _disconnect_signal() 手动断开
+	_bound_node.connect(target_signal, _on_target_signal_emitted)
 	_start_timeout_timer()
 	_log_debug("WaitForSignal: 等待信号 %s" % target_signal)
 
@@ -74,7 +88,8 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 		runtime_instance._complete_execution()
 		return true
 
-	_bound_node.connect(target_signal, _on_target_signal_emitted, CONNECT_ONE_SHOT)
+	# 同 execute 路径：非 ONE_SHOT，匹配才断开（见 _on_target_signal_emitted）
+	_bound_node.connect(target_signal, _on_target_signal_emitted)
 
 	_start_runtime_timeout_timer(runtime_instance, timeout)
 
@@ -83,6 +98,11 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 ## ==================== 完成回调 ===================
 
 func _on_target_signal_emitted(...args) -> void:
+	# 参数过滤：不匹配则保持连接继续等待（SignalInfo.matches_arg 类型安全）
+	if filter_signal_args and not _check_signal_args(args):
+		_log_debug("WaitForSignal: 信号 %s 参数不匹配，继续等待" % target_signal)
+		return
+
 	_disconnect_signal()
 	_stop_timeout_timer()
 
@@ -96,6 +116,20 @@ func _on_target_signal_emitted(...args) -> void:
 		_runtime_instance_ref._complete_execution()
 	else:
 		_on_execution_completed()
+
+## 检查信号参数（与 OnTargetSignalEmit 同款 dict 按名语义；signal_info 取运行时缓存成员 _signal_info）
+func _check_signal_args(args) -> bool:
+	if _signal_info == null:
+		return true  # 元数据缺失放行（fail-open，避免永久等待）
+	if arg_filter_values.is_empty():
+		return false
+	var named: Dictionary = _signal_info.create_arg_context(args)
+	for key in arg_filter_values:
+		if not named.has(str(key)):
+			return false
+		if not SignalInfo.matches_arg(arg_filter_values[key], named[str(key)]):
+			return false
+	return true
 
 ## ==================== 超时 ===================
 
@@ -190,7 +224,9 @@ func _setup_target(context: ExecutionContext) -> bool:
 		finished.emit()
 		return false
 
-	_bound_node = base_node.get_node_or_null(target_node)
+	# 多策略解析（相对路径兜底：起始节点失败时从场景根/按名递归查找），
+	# 对齐 OnTargetSignalEmit 的运行时解析语义
+	_bound_node = FuseNodeUtils.find_node_at_runtime(base_node, target_node)
 	if _bound_node == null:
 		set_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node)})
 		finished.emit()
@@ -238,10 +274,21 @@ func _editor_refresh_signals() -> void:
 	if edited_root == null:
 		notify_property_list_changed()
 		return
-	var target = edited_root.get_node_or_null(target_node)
+	# 资源上下文解析：target_node 相对资源宿主（Trigger/Runner），直接从场景根
+	# 解析 "../Sibling" 形态必然失败——这正是编辑器信号下拉不出现的根因
+	var target = FuseNodeUtils.find_node_from_resource_context(edited_root, self, target_node)
 	if target:
 		_editor_available_signals = SignalManager.get_node_signals(target)
 	notify_property_list_changed()
+
+## 获取编辑器当前选中信号的信息（供 per-arg 过滤字段生成；运行时该缓存为空，运行时过滤走 _signal_info 成员）
+func _get_editor_signal_info():
+	if target_signal.is_empty():
+		return null
+	for sig_info in _editor_available_signals:
+		if sig_info.name == target_signal:
+			return sig_info
+	return null
 
 func _get_property_list() -> Array[Dictionary]:
 	var properties: Array[Dictionary] = []
@@ -282,7 +329,29 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint_string": "0,120,0.1",
 		"usage": PROPERTY_USAGE_DEFAULT
 	})
+	# 过滤开关与期望值字典：无条件声明（DEFAULT 含 STORAGE，保证 preset 序列化不丢失）
+	properties.append({
+		"name": "filter_signal_args",
+		"type": TYPE_BOOL,
+		"usage": PROPERTY_USAGE_DEFAULT
+	})
+	properties.append({
+		"name": "arg_filter_values",
+		"type": TYPE_DICTIONARY,
+		"usage": PROPERTY_USAGE_DEFAULT
+	})
+	# 门控开启且编辑器有选中信号信息时，按参数名生成 per-arg 过滤字段
+	if filter_signal_args:
+		var sig_info = _get_editor_signal_info()
+		if sig_info:
+			properties.append_array(sig_info.get_arg_property_list())
 	return properties
+
+## 属性验证和显示控制（对齐 OnTargetSignalEmit 模式）
+func _validate_property(property: Dictionary) -> void:
+	# 门控关闭时隐藏 arg_filter_values（含 per-arg 子字段——它们仅门控开启时声明）
+	if not filter_signal_args and property.name == "arg_filter_values":
+		property.usage = PROPERTY_USAGE_NONE
 
 ## ==================== 元数据与校验 ===================
 
