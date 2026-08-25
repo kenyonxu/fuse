@@ -706,15 +706,15 @@ func duplicate(p_deep: bool = true) -> Resource:
 ##
 ## 注意：子类通常不需要直接调用此方法，除非在自定义执行逻辑中
 func _on_execution_completed():
+	# 重入保护：ON_START 模式在启动时即完成（_start_execution 调用本方法），
+	# 指令后台真正结束时不再重复迁移状态/发信号——消费方只收到一次 finished
+	if execution_status == ExecutionStatus.COMPLETED:
+		_log_debug("跳过重复完成处理（已完成）")
+		return
 	execution_status = ExecutionStatus.COMPLETED
 	_cleanup_timeout_timer()
 	_cleanup_resources()
-
-	# 只有在 ON_FINISH 模式下才需要发出信号，ON_START 模式下已经在 execute 中发出
-	if completion_timing == CompletionSignalTiming.ON_FINISH:
-		finished.emit()
-	else:
-		_log_debug("跳过重复发送完成信号 (ON_START 模式)")
+	finished.emit()
 
 ## 指令执行出错
 ##
