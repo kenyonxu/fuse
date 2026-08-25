@@ -41,6 +41,8 @@ var target_node_path: NodePath = NodePath(""):
 	set(value):
 		target_node_path = value
 		_update_resource_name()
+		if Engine.is_editor_hint() and not target_node_path.is_empty():
+			call_deferred("_editor_refresh_properties")
 
 ## 节点变量名（当 node_source == VARIABLE 时使用）
 var node_variable_name: String = "":
@@ -79,6 +81,11 @@ var property_name: String = "":
 	set(value):
 		property_name = value
 		_update_resource_name()
+		_refresh_selected_property_type()
+
+# 编辑器属性缓存（仅编辑器会话，不序列化）
+var _editor_available_properties: Array = []
+var _editor_selected_property_type: int = TYPE_NIL
 
 ## 期望的属性值
 var property_value: Variant = null:
@@ -171,23 +178,59 @@ func _get_property_list() -> Array[Dictionary]:
 		usage = PROPERTY_USAGE_CATEGORY
 	})
 
-	# 属性名
-	properties.append({
-		name = "property_name",
-		type = TYPE_STRING,
-		hint = PROPERTY_HINT_NONE,
-		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
-	})
+	# 属性名（有节点属性缓存时下拉，否则文本输入）
+	var prop_names: Array[String] = []
+	for prop_info in _editor_available_properties:
+		prop_names.append(prop_info.name)
+	if not prop_names.is_empty():
+		properties.append({
+			name = "property_name",
+			type = TYPE_STRING,
+			hint = PROPERTY_HINT_ENUM,
+			hint_string = ",".join(prop_names),
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+	else:
+		properties.append({
+			name = "property_name",
+			type = TYPE_STRING,
+			hint = PROPERTY_HINT_NONE,
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
 
-	# 属性值
+	# 属性值（类型跟随选中属性；未选中时无类型 Variant 兜底）
 	properties.append({
 		name = "property_value",
-		type = TYPE_NIL,
+		type = _editor_selected_property_type,
 		hint = PROPERTY_HINT_NONE,
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
 
 	return properties
+
+## 编辑器：刷新目标节点的可写属性缓存（选择节点后触发）
+func _editor_refresh_properties() -> void:
+	_editor_available_properties.clear()
+	_editor_selected_property_type = TYPE_NIL
+	var edited_root = EditorInterface.get_edited_scene_root() if Engine.is_editor_hint() else null
+	if edited_root:
+		var target = FuseNodeUtils.find_node_from_resource_context(edited_root, self, target_node_path)
+		if target:
+			_editor_available_properties = PropertyManager.get_writable_properties(target)
+	_refresh_selected_property_type()
+	notify_property_list_changed()
+
+## 根据当前 property_name 更新选中属性的类型（供 property_value 声明）
+func _refresh_selected_property_type() -> void:
+	var new_type := TYPE_NIL
+	for prop_info in _editor_available_properties:
+		if prop_info.name == property_name:
+			new_type = prop_info.type
+			break
+	if new_type != _editor_selected_property_type:
+		_editor_selected_property_type = new_type
+		if Engine.is_editor_hint():
+			notify_property_list_changed()
 
 ## 验证属性可见性
 func _validate_property(property: Dictionary) -> void:
@@ -306,14 +349,16 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 	# 比较属性值
 	var result = _compare_equal(actual_value, property_value)
 
-	var log_msg = FuseLocalization.translate("FUSE_LOG_NODE_PROPERTY_CHECK")
-	_log_debug(log_msg % [
-		_get_node_source_string(),
-		property_name,
-		str(actual_value),
-		str(property_value),
-		result
-	])
+	# 模板是花括号占位符（{node} 等），GDScript 的 % 只认 C 风格 %s——
+	# 必须走 translate_format（历史上 % 传 Array/Dict 都会运行时错误中断求值，
+	# 真值也返回 false）
+	_log_debug(FuseLocalization.translate_format("FUSE_LOG_NODE_PROPERTY_CHECK", {
+		"node": _get_node_source_string(),
+		"property": property_name,
+		"value": str(actual_value),
+		"expected": str(property_value),
+		"result": str(result)
+	}))
 
 	return result
 
