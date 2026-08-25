@@ -158,7 +158,7 @@ func terminate(owner_node: Node) -> void:
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
 ## 每帧处理（由 Trigger 调用）
-func on_process(delta: float) -> void:
+func on_process(delta: float, event_instance: RuntimeEventInstance = null) -> void:
 	# 🔧 使用 RuntimeEventInstance 的状态
 	var is_monitoring = false
 	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("is_monitoring"):
@@ -167,6 +167,7 @@ func on_process(delta: float) -> void:
 	if not is_monitoring:
 		return
 
+	# 每帧写回累计值——历史上只在到点时写回，未到点时累计结果丢失，永不触发
 	var check_timer = 0.0
 	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("check_timer"):
 		check_timer = _runtime_instance_ref.get_runtime_state("check_timer")
@@ -178,6 +179,8 @@ func on_process(delta: float) -> void:
 		if _runtime_instance_ref:
 			_runtime_instance_ref.set_runtime_state("check_timer", check_timer)
 		_check_property()
+	elif _runtime_instance_ref:
+		_runtime_instance_ref.set_runtime_state("check_timer", check_timer)
 
 ## 检查属性变化
 func _check_property():
@@ -222,6 +225,14 @@ func _check_property():
 		context_node.set_meta("property_name", property_name)
 		context_node.set_meta("target_node", _target_node_ref)
 		context_node.set_meta("trigger", _owner_node_ref)
+
+		# 桥接 last_event_args（宿主 Trigger 同步为 event_<参数名> 局部变量）
+		if _runtime_instance_ref:
+			var event_args: Dictionary = {"property_name": property_name}
+			if emit_old_and_new:
+				event_args["old_value"] = old_val
+				event_args["new_value"] = current_value
+			_runtime_instance_ref.set_runtime_state("last_event_args", event_args)
 
 		if _runtime_instance_ref:
 			_runtime_instance_ref.update_trigger_stats()

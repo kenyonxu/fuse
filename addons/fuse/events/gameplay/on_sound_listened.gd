@@ -170,7 +170,7 @@ func terminate(owner_node: Node) -> void:
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
 ## 每帧处理（由 Trigger 调用）
-func on_process(delta: float) -> void:
+func on_process(delta: float, event_instance: RuntimeEventInstance = null) -> void:
 	if not _is_monitoring:
 		return
 

@@ -168,7 +168,7 @@ func terminate(owner_node: Node) -> void:
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
 ## 每帧处理（用于轮询方式）
-func on_process(delta: float) -> void:
+func on_process(delta: float, event_instance: RuntimeEventInstance = null) -> void:
 	if not _anim_player_ref or not is_instance_valid(_anim_player_ref):
 		return
 
