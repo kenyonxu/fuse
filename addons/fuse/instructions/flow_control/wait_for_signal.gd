@@ -350,8 +350,10 @@ func _get_property_list() -> Array[Dictionary]:
 ## 属性验证和显示控制（对齐 OnTargetSignalEmit 模式）
 func _validate_property(property: Dictionary) -> void:
 	# 门控关闭时隐藏 arg_filter_values（含 per-arg 子字段——它们仅门控开启时声明）
+	# NO_EDITOR 而非 NONE：保留 STORAGE 位——preset AI schema 提取器与序列化
+	# 均以 STORAGE 位为口径，NONE 会让 arg_filter_values 在任何状态下都不可见
 	if not filter_signal_args and property.name == "arg_filter_values":
-		property.usage = PROPERTY_USAGE_NONE
+		property.usage = PROPERTY_USAGE_NO_EDITOR
 
 ## Inspector 子属性桥接（arg_filter_values/<参数名>）——引擎不支持 dict 子路径，手动分发
 func _set(property: StringName, value: Variant) -> bool:

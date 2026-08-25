@@ -192,8 +192,10 @@ func _get_property_list() -> Array[Dictionary]:
 ## 属性验证和显示控制
 func _validate_property(property: Dictionary) -> void:
 	# 当 filter_signal_args 为 false 时，隐藏 arg_filter_values 属性
+	# NO_EDITOR 而非 NONE：保留 STORAGE 位——preset AI schema 提取器与序列化
+	# 均以 STORAGE 位为口径，NONE 会让 arg_filter_values 在任何状态下都不可见
 	if not filter_signal_args and property.name == "arg_filter_values":
-		property.usage = PROPERTY_USAGE_NONE  # 完全隐藏属性
+		property.usage = PROPERTY_USAGE_NO_EDITOR  # Inspector 隐藏但保留可存储位
 	
 	# 当 filter_signal_args 为 true 时，显示 arg_filter_values 属性
 	# 这个逻辑是隐式的，因为默认情况下属性是显示的

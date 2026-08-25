@@ -19010,6 +19010,15 @@
   ],
   "OnTargetSignalEmit": [
     {
+      "default": {},
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "arg_filter_values",
+      "type": 27,
+      "type_name": "Dictionary"
+    },
+    {
       "default": "",
       "hint": 26,
       "hint_string": "Node",
@@ -26074,6 +26083,15 @@
   ],
   "WaitForSignal": [
     {
+      "default": {},
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "arg_filter_values",
+      "type": 27,
+      "type_name": "Dictionary"
+    },
+    {
       "default": "",
       "hint": 26,
       "hint_string": "Node",
@@ -26099,6 +26117,15 @@
       "name": "timeout",
       "type": 3,
       "type_name": "float"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "filter_signal_args",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "WaitUntil": [
