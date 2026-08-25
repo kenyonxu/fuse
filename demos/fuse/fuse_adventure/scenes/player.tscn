@@ -13,9 +13,12 @@
 [ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="11_mf6og"]
 [ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="12_ds1tm"]
 [ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="13_5bacu"]
-[ext_resource type="Script" uid="uid://cmu6yuufyy78a" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="13_iok25"]
+[ext_resource type="Script" uid="uid://dlny0ndt7nshk" path="res://addons/fuse/instructions/animation/get_animation_length.gd" id="13_47yx7"]
 [ext_resource type="Script" uid="uid://cga028a3a8dd" path="res://addons/fuse/instructions/animation/set_animation_tree_parameter.gd" id="14_5bacu"]
-[ext_resource type="Script" uid="uid://lavknbtj1ssn" path="res://addons/fuse/instructions/flow_control/wait_for_signal.gd" id="16_47yx7"]
+[ext_resource type="Script" uid="uid://t183q8wo17g1" path="res://addons/fuse/instructions/physics/add_velocity.gd" id="15_47yx7"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="17_iok25"]
+[ext_resource type="Script" uid="uid://ciok2e7h5waqe" path="res://addons/fuse/conditions/node/check_node_property.gd" id="18_e7e1d"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="19_un7io"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -107,6 +110,25 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 resource_name = "接收事件: playerhurt"
 script = ExtResource("12_ds1tm")
 event_name = "playerhurt"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_cg1nb"]
+resource_name = "动画时长 player/hit → hit_time [LOCAL]"
+script = ExtResource("13_47yx7")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+save_to_scope_source = 0
+save_to_custom_scope_id = ""
+save_to_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/hit"
+save_to_variable = "hit_time"
+save_to_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_nelp3"]
 resource_name = "设置属性 [player] .lock_movement = true"
@@ -122,6 +144,7 @@ set_with_variable = false
 new_value = true
 variable_name = ""
 variable_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_47yx7"]
 resource_name = "'{scope:life} - 1' → life [Int]"
@@ -136,6 +159,7 @@ save_to_variable = "life"
 save_to_scope = 1
 save_scope_source = 1
 save_custom_scope_id = "player"
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_iok25"]
 resource_name = "动画参数: conditions/hit = true"
@@ -153,35 +177,80 @@ target_node = NodePath("../AnimationTree")
 parameter_name = "conditions/hit"
 parameter_type = 2
 bool_value = true
+log_level = 0
 
-[sub_resource type="Resource" id="Resource_wnts0"]
-resource_name = "移动到 [player] (-40.0, 0.0) (本地) (0.50s)"
-script = ExtResource("13_iok25")
+[sub_resource type="Resource" id="Resource_3ayao"]
+resource_name = "PlayerSprites.flip_h == false"
+script = ExtResource("18_e7e1d")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../PlayerSprites")
+property_name = "flip_h"
+property_value = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_un7io"]
+resource_name = "冲量 (300.0, 0.0) → @SubViewport@9904"
+script = ExtResource("15_47yx7")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
 target_custom_scope_id = ""
 target_target_node_path = NodePath("")
+impulse_variable = ""
+impulse_variable_scope = 0
+impulse_scope_source = 0
+impulse_custom_scope_id = ""
+impulse_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("..")
-target_position = Vector2(-40, 0)
-duration = 0.5
-space_mode = 1
-easing_type = 1
-trans_type = 3
-completion_timing = 0
+replace_mode = 1
+impulse_source = 0
+impulse = Vector2(300, 0)
+log_level = 0
 
-[sub_resource type="Resource" id="Resource_un7io"]
-resource_name = "等待信号 ../AnimationTree::animation_finished"
-script = ExtResource("16_47yx7")
-target_node = NodePath("../AnimationTree")
-target_signal = "animation_finished"
-timeout = 10.0
-filter_signal_args = true
-arg_filter_values = {
-"anim_name": &"player/hit"
-}
-log_level = 4
+[sub_resource type="Resource" id="Resource_mbt1i"]
+resource_name = "冲量 (-300.0, 0.0) → @SubViewport@9904"
+script = ExtResource("15_47yx7")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+impulse_variable = ""
+impulse_variable_scope = 0
+impulse_scope_source = 0
+impulse_custom_scope_id = ""
+impulse_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+replace_mode = 1
+impulse_source = 0
+impulse = Vector2(-300, 0)
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_7xii8"]
+resource_name = "If/Else PlayerSprites.flip_h == false [真:1 [异步]"
+script = ExtResource("19_un7io")
+condition = SubResource("Resource_3ayao")
+true_instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_mbt1i")])
+false_instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_un7io")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_wnts0"]
+resource_name = "等待 从变量 'hit_time' [[本地]]"
+script = ExtResource("17_iok25")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 1
+wait_time_variable = "hit_time"
+time_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_e7e1d"]
 resource_name = "动画参数: conditions/hit = false"
@@ -199,6 +268,8 @@ target_node = NodePath("../AnimationTree")
 parameter_name = "conditions/hit"
 parameter_type = 2
 bool_value = false
+log_level = 0
+completion_timing = 0
 
 [sub_resource type="Resource" id="Resource_4aelh"]
 resource_name = "设置属性 [player] .lock_movement = false"
@@ -214,10 +285,13 @@ set_with_variable = false
 new_value = false
 variable_name = ""
 variable_scope = 0
+log_level = 0
+completion_timing = 0
 
 [sub_resource type="Resource" id="Resource_fgjoy"]
 script = ExtResource("8_mf6og")
-instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_wnts0"), SubResource("Resource_un7io"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh")])
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_cg1nb"), SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_7xii8"), SubResource("Resource_wnts0"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
@@ -226,6 +300,7 @@ script = ExtResource("4_7t5up")
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
+frame = 9
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
