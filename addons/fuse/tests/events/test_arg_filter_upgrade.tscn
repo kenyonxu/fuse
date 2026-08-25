@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/events/test_arg_filter_upgrade.gd" id="1"]
+
+[node name="TestArgFilterUpgrade" type="Node"]
+script = ExtResource("1")

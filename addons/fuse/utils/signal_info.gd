@@ -92,31 +92,59 @@ func validate_args(values):
 	
 	return true
 
-## 获取参数的属性列表（用于编辑器）
+## 获取参数过滤属性（用于编辑器；按参数名生成，Object 类型参数不生成——期望值无从表达）
 func get_arg_property_list():
 	var properties = []
-	
 	for i in range(args.size()):
 		var arg = args[i]
+		if arg.type == TYPE_OBJECT:
+			continue
+		var arg_name = arg.name if arg.has("name") else "arg%d" % i
 		var property = {
-			"name": "arg_%d" % i,
+			"name": "arg_filter_values/%s" % arg_name,
 			"type": arg.type,
 			"usage": PROPERTY_USAGE_DEFAULT
 		}
-		
-		# 添加提示信息
 		if arg.has("hint"):
 			property["hint"] = arg.hint
 		if arg.has("hint_string"):
 			property["hint_string"] = arg.hint_string
-		
-		# 添加显示名称
-		var arg_name = arg.name if arg.has("name") else "参数 %d" % i
-		property["name"] = "arg_filter_values/%d_%s" % [i, arg_name]
-		
 		properties.append(property)
-	
 	return properties
+
+## 类型安全的参数匹配（过滤比较共用）
+##
+## Object 与非 Object 混合、跨类型族一律视为不匹配（不执行原生比较，
+## 避免运行时硬错误——CompareVariable 同款教训）；数值互转与
+## String/StringName 兼容对齐 _are_types_compatible 的既有分派。
+static func matches_arg(expected: Variant, actual: Variant) -> bool:
+	# Object 只与 Object（引用比较）或 null 比较
+	if (expected is Object) or (actual is Object):
+		if (expected is Object) and (actual is Object):
+			return expected == actual
+		return expected == null and actual == null
+	if expected == null or actual == null:
+		return expected == null and actual == null
+	var et := typeof(expected)
+	var at := typeof(actual)
+	if et == at:
+		return expected == actual
+	# 数值互转
+	if (et == TYPE_INT or et == TYPE_FLOAT) and (at == TYPE_INT or at == TYPE_FLOAT):
+		return float(expected) == float(actual)
+	# 字符串族
+	if (et == TYPE_STRING and at == TYPE_STRING_NAME) or (et == TYPE_STRING_NAME and at == TYPE_STRING):
+		return String(expected) == String(actual)
+	# 向量族（对齐 _are_types_compatible）
+	if et == TYPE_VECTOR2 and at == TYPE_VECTOR2I:
+		return Vector2(expected) == Vector2(actual)
+	if et == TYPE_VECTOR2I and at == TYPE_VECTOR2:
+		return Vector2(expected) == Vector2(actual)
+	if et == TYPE_VECTOR3 and at == TYPE_VECTOR3I:
+		return Vector3(expected) == Vector3(actual)
+	if et == TYPE_VECTOR3I and at == TYPE_VECTOR3:
+		return Vector3(expected) == Vector3(actual)
+	return false
 
 ## 创建参数上下文字典
 func create_arg_context(values):

@@ -30,7 +30,7 @@ func _test_failopen() -> void:
 	event.target_node = NodePath("Emitter")
 	event.target_signal = "custom_signal"
 	event.filter_signal_args = true
-	event.arg_filter_values = [7]
+	event.arg_filter_values = {"value": 7}  # Task 1 起为 Dictionary（按参数名，信号签名为 custom_signal(value: int)）
 	event.triggered.connect(_on_triggered)
 
 	# 走旧初始化 API（内部自建 RuntimeEventInstance 并 connect）

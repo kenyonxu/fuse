@@ -52,8 +52,8 @@ var filter_signal_args: bool = false:
 		_update_resource_name()
 		notify_property_list_changed()
 
-## 参数过滤值（当 filter_signal_args 为 true 时使用）
-var arg_filter_values: Array = []:
+## 参数过滤值（当 filter_signal_args 为 true 时使用；键为参数名，只配部分键即部分过滤）
+var arg_filter_values: Dictionary = {}:
 	set(value):
 		arg_filter_values = value
 		_update_resource_name()
@@ -174,7 +174,7 @@ func _get_property_list() -> Array[Dictionary]:
 
 	properties.append({
 		"name": "arg_filter_values",
-		"type": TYPE_ARRAY
+		"type": TYPE_DICTIONARY
 	})
 	
 	# 如果启用参数过滤，添加过滤值配置
@@ -507,7 +507,7 @@ func _create_test_scene() -> Node:
 	
 	return scene
 
-## 检查信号参数
+## 检查信号参数（Dictionary 按名过滤：键存在即参与，全部通过才匹配）
 func _check_signal_args(args):
 	var signal_info = null
 	if _runtime_instance_ref:
@@ -520,13 +520,16 @@ func _check_signal_args(args):
 			_signal_info_warned = true
 		return true
 
-	if args.size() != arg_filter_values.size():
+	# 门控开启但未配置任何键：明确不匹配（暴露配置缺失而非静默全过）
+	if arg_filter_values.is_empty():
 		return false
 
-	for i in range(args.size()):
-		if args[i] != arg_filter_values[i]:
+	var named: Dictionary = signal_info.create_arg_context(args)
+	for key in arg_filter_values:
+		if not named.has(str(key)):
 			return false
-
+		if not SignalInfo.matches_arg(arg_filter_values[key], named[str(key)]):
+			return false
 	return true
 
 ## 创建信号上下文
