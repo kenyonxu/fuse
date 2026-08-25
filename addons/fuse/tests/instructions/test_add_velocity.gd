@@ -98,8 +98,7 @@ func _test_roundtrip() -> void:
 
 ## 半覆盖模式：REPLACE_X 覆盖 x 保留 y / REPLACE_Y 反之
 func _test_replace_modes() -> void:
-	print("
---- 半覆盖模式 ---")
+	print("\n--- 半覆盖模式 ---")
 	var body := CharacterBody2D.new()
 	body.name = "BodyR"
 	add_child(body)
