@@ -209,6 +209,8 @@ func _set(property: StringName, value: Variant) -> bool:
 			arg_filter_values.erase(key)
 		else:
 			arg_filter_values[key] = value
+		# dict 原位修改不触发 arg_filter_values setter，补偿 resource_name 刷新
+		_update_resource_name()
 		return true
 	return super._set(property, value)
 

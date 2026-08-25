@@ -24,6 +24,7 @@ func _ready() -> void:
 	await _test_otsa_empty_dict_no_match()
 	await _test_wait_for_signal_filter()
 	_test_arg_filter_subproperty_bridge()
+	_test_otsa_roundtrip()
 	print("=== 参数过滤升级测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -229,3 +230,33 @@ func _test_arg_filter_subproperty_bridge() -> void:
 	_check(not ev_has_sub, "OTSA serialize 不产出 arg_filter_values/ 冗余子键")
 	ev2.terminate(self)
 	emitter.queue_free()
+
+## OTSA 参数过滤 PresetValueCodec round-trip：门控开启正向断言 + 门控关闭 serialize 保留
+func _test_otsa_roundtrip() -> void:
+	print("\n--- OTSA round-trip ---")
+	# 正向：门控开启 + int 期望值 → serialize 输出含键且 int 类型保持
+	var ev := OnTargetSignalEmit.new()
+	ev.target_node = NodePath("../RtNode")
+	ev.target_signal = "value_changed"
+	ev.filter_signal_args = true
+	ev.arg_filter_values = {"value": 42}
+	var data: Dictionary = PresetValueCodec.serialize_event(ev)
+	_check(data.has("arg_filter_values"), "serialize 输出含 arg_filter_values 键")
+	_check(data.get("arg_filter_values", {}).get("value") == 42, "serialize 值 == 42")
+	_check(typeof(data.get("arg_filter_values", {}).get("value")) == TYPE_INT, "serialize int 类型保持")
+
+	# 反向：deserialize 还原（OTSA 是 BaseEvent，走 serialize_event/deserialize_event 通道）
+	var restored: BaseEvent = PresetValueCodec.deserialize_event(data)
+	_check(restored is OnTargetSignalEmit, "deserialize 还原为 OnTargetSignalEmit")
+	var restored_val: Variant = restored.arg_filter_values.get("value")
+	_check(restored_val == 42, "还原后 arg_filter_values.value == 42")
+	_check(typeof(restored_val) == TYPE_INT, "还原后 int 类型保持")
+	_check(restored.filter_signal_args == true, "还原后门控开启")
+
+	# 门控关闭 + 非空 dict → serialize 仍输出该键
+	# （_validate_property 的 NO_EDITOR 保留 STORAGE 位，行为锁定）
+	ev.filter_signal_args = false
+	ev.arg_filter_values = {"value": 7}
+	var data_off: Dictionary = PresetValueCodec.serialize_event(ev)
+	_check(data_off.has("arg_filter_values") and data_off["arg_filter_values"].get("value") == 7,
+		"门控关闭：serialize 仍保留 arg_filter_values（NO_EDITOR 保留 STORAGE）")
