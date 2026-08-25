@@ -73,6 +73,19 @@ var target_target_node_path: NodePath = NodePath(""):
 		target_target_node_path = value
 		_update_resource_name()
 
+## 应用模式
+enum ReplaceMode {
+	ADDITIVE,    ## 叠加（保留现有速度）
+	REPLACE_X,   ## 覆盖 X 分量（Y 保留——击退：设定水平击退速度，重力/下落不受影响）
+	REPLACE_Y    ## 覆盖 Y 分量（X 保留——弹板/击飞：设定垂直速度，水平移动不受影响）
+}
+
+## 冲量应用模式
+var replace_mode: ReplaceMode = ReplaceMode.ADDITIVE:
+	set(value):
+		replace_mode = value
+		_update_resource_name()
+
 ## 冲量值来源模式
 var impulse_source: ImpulseSource = ImpulseSource.DIRECT:
 	set(value):
@@ -215,6 +228,14 @@ func _get_property_list() -> Array[Dictionary]:
 	})
 
 	properties.append({
+		name = "replace_mode",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Additive,Replace X Only,Replace Y Only",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+
+	properties.append({
 		name = "impulse_source",
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
@@ -301,7 +322,7 @@ func _validate_property(property: Dictionary) -> void:
 
 ## 动态属性设置
 func _set(property: StringName, value: Variant) -> bool:
-	if property in ["use_variable_for_target", "target_scope", "target_scope_source", "impulse_source", "impulse_variable_scope", "impulse_scope_source"]:
+	if property in ["use_variable_for_target", "target_scope", "target_scope_source", "impulse_source", "impulse_variable_scope", "impulse_scope_source", "replace_mode"]:
 		set(property, value)
 		notify_property_list_changed()
 		return true
@@ -382,15 +403,23 @@ func execute(context: ExecutionContext):
 		finished.emit()
 		return
 
-	# 叠加冲量（加法保留现有速度）
+	# 按应用模式写入速度（ADDITIVE 叠加；REPLACE_X/Y 半覆盖——另一轴留给物理）
 	var current: Vector2 = node.get("velocity")
-	node.set("velocity", current + impulse_value)
+	var new_velocity: Vector2
+	match replace_mode:
+		ReplaceMode.ADDITIVE:
+			new_velocity = current + impulse_value
+		ReplaceMode.REPLACE_X:
+			new_velocity = Vector2(impulse_value.x, current.y)
+		ReplaceMode.REPLACE_Y:
+			new_velocity = Vector2(current.x, impulse_value.y)
+	node.set("velocity", new_velocity)
 
 	_log_info_localized("FUSE_LOG_ADD_VELOCITY", {
 		"node": node.name,
 		"impulse": str(impulse_value),
 		"from": str(current),
-		"to": str(current + impulse_value)
+		"to": str(new_velocity)
 	})
 	_on_execution_completed()
 

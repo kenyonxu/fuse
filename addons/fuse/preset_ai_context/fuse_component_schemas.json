@@ -286,6 +286,15 @@
     {
       "default": 0,
       "hint": 2,
+      "hint_string": "Additive,Replace X Only,Replace Y Only",
+      "is_nested_instructions": false,
+      "name": "replace_mode",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
       "hint_string": "Direct,Variable",
       "is_nested_instructions": false,
       "name": "impulse_source",

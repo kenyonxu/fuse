@@ -9,6 +9,7 @@ func _ready() -> void:
 	_test_variable_source()
 	_test_non_physics_error()
 	_test_roundtrip()
+	_test_replace_modes()
 	print("=== AddVelocity 测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -93,3 +94,42 @@ func _test_roundtrip() -> void:
 	_check(data.has("impulse") and data.has("impulse_source") and data.has("impulse_variable"), "序列化含全部新键")
 	var restored := PresetValueCodec.deserialize_instruction(data)
 	_check(restored is AddVelocity and restored.impulse_variable == "kb_vec", "还原正确")
+
+
+## 半覆盖模式：REPLACE_X 覆盖 x 保留 y / REPLACE_Y 反之
+func _test_replace_modes() -> void:
+	print("
+--- 半覆盖模式 ---")
+	var body := CharacterBody2D.new()
+	body.name = "BodyR"
+	add_child(body)
+
+	# REPLACE_X：移动中受击 (+200, 下落 +150) → x 覆盖为 -300，y 保留
+	body.velocity = Vector2(200, 150)
+	var inst := AddVelocity.new()
+	inst.target_node = NodePath("../BodyR")
+	inst.impulse = Vector2(-300, 0)
+	inst.replace_mode = AddVelocity.ReplaceMode.REPLACE_X
+	var context := ExecutionContext.new(body, body)
+	inst.execute(context)
+	_check(body.velocity == Vector2(-300, 150), "REPLACE_X：x 覆盖 -300，y 保留 150（实际 %s）" % str(body.velocity))
+
+	# REPLACE_Y：弹板场景 (水平 +100, 下落 +200) → y 覆盖为 -400，x 保留
+	body.velocity = Vector2(100, 200)
+	var inst2 := AddVelocity.new()
+	inst2.target_node = NodePath("../BodyR")
+	inst2.impulse = Vector2(0, -400)
+	inst2.replace_mode = AddVelocity.ReplaceMode.REPLACE_Y
+	inst2.execute(context)
+	_check(body.velocity == Vector2(100, -400), "REPLACE_Y：y 覆盖 -400，x 保留 100（实际 %s）" % str(body.velocity))
+
+	# round-trip 含 replace_mode
+	var inst3 := AddVelocity.new()
+	inst3.target_node = NodePath("../BodyR")
+	inst3.impulse = Vector2(-300, 0)
+	inst3.replace_mode = AddVelocity.ReplaceMode.REPLACE_X
+	var data := PresetValueCodec.serialize_instruction(inst3)
+	_check(data.has("replace_mode") and data.get("replace_mode") == 1, "序列化含 replace_mode")
+	var restored := PresetValueCodec.deserialize_instruction(data)
+	_check(restored is AddVelocity and restored.replace_mode == AddVelocity.ReplaceMode.REPLACE_X, "还原 replace_mode")
+	body.queue_free()
