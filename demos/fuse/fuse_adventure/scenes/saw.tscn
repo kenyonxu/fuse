@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_388jc"]
 [ext_resource type="Script" uid="uid://260cc13a6ga3" path="res://addons/fuse/instructions/animation/set_sprite_flip.gd" id="6_pda7d"]
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_uuras"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="8_388jc"]
+[ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="8_pda7d"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rxgda"]
 radius = 17.0
@@ -25,10 +27,12 @@ target_node = NodePath("../AnimatedSprite2D")
 flip_mode = 0
 flip_h = true
 flip_v = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_gitbv"]
 script = ExtResource("7_uuras")
 instructions = Array[ExtResource("4_388jc")]([SubResource("Resource_wu6af")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_pda7d"]
@@ -45,9 +49,10 @@ target_ratio = 0.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_rxgda"]
-resource_name = "监听 Saw2，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
 script = ExtResource("3_388jc")
 event = SubResource("Resource_pda7d")
 action_runner = SubResource("Resource_gitbv")
@@ -67,10 +72,12 @@ target_node = NodePath("../AnimatedSprite2D")
 flip_mode = 0
 flip_h = false
 flip_v = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_388jc"]
 script = ExtResource("7_uuras")
 instructions = Array[ExtResource("4_388jc")]([SubResource("Resource_8s47l")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_miin1"]
@@ -87,12 +94,37 @@ target_ratio = 1.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fgjoy"]
-resource_name = "监听 Saw2，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
 script = ExtResource("3_388jc")
 event = SubResource("Resource_miin1")
 action_runner = SubResource("Resource_388jc")
+metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
+
+[sub_resource type="Resource" id="Resource_e1vev"]
+resource_name = "发送事件: playerhurt"
+script = ExtResource("8_388jc")
+event_name = "playerhurt"
+
+[sub_resource type="Resource" id="Resource_uuras"]
+script = ExtResource("7_uuras")
+instructions = Array[ExtResource("4_388jc")]([SubResource("Resource_e1vev")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_p5x0g"]
+resource_name = "当 任何物体 进入 ../Area2D 时触发"
+script = ExtResource("8_pda7d")
+area_node_path = NodePath("../Area2D")
+target_group = "player"
+trigger_once_per_body = true
+
+[sub_resource type="Resource" id="Resource_poe6l"]
+resource_name = "当 任何物体 进入 未指定 时触发"
+script = ExtResource("3_388jc")
+event = SubResource("Resource_p5x0g")
+action_runner = SubResource("Resource_uuras")
 metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
 
 [node name="Saw" type="PathFollow2D" unique_id=769030364]
@@ -107,7 +139,7 @@ frame_progress = 0.9561773
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1092839222]
 shape = SubResource("CircleShape2D_rxgda")
 
-[node name="FilpSpriteOnProgress" type="Node" parent="." unique_id=172103945]
+[node name="SawMultiTrigger" type="Node" parent="." unique_id=172103945]
 script = ExtResource("2_pda7d")
-event_bindings = Array[ExtResource("3_388jc")]([SubResource("Resource_rxgda"), SubResource("Resource_fgjoy")])
+event_bindings = Array[ExtResource("3_388jc")]([SubResource("Resource_rxgda"), SubResource("Resource_fgjoy"), SubResource("Resource_poe6l")])
 metadata/_custom_type_script = "uid://dfknwkmutjhpg"

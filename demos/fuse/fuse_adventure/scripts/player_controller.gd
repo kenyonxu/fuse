@@ -15,6 +15,9 @@ extends CharacterBody2D
 ## 是否启用二段跳
 @export var enable_double_jump: bool = true
 
+## 是否锁物理型位置变化
+@export var lock_movement: bool = false
+
 @onready var _sprite: AnimatedSprite2D = $PlayerSprites
 @onready var _anim_tree: AnimationTree = $AnimationTree
 
@@ -42,9 +45,12 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
-	_handle_movement()
-	_handle_jump()
-
+	if not lock_movement:
+		_handle_movement()
+		_handle_jump()
+	else:
+		# 锁定移动时清水平速度：受击瞬间的移动残留会让角色恒速滑出
+		velocity.x = 0.0
 	move_and_slide()
 
 	_update_animation()

@@ -56,10 +56,12 @@ duration = 4.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_pyj0u"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_n5feu")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_6kde4"]
@@ -76,6 +78,7 @@ target_ratio = 0.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_ehdw3"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
@@ -101,10 +104,12 @@ duration = 4.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_3swal"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_kkifu")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_r07d2"]
@@ -121,6 +126,7 @@ target_ratio = 1.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_sfv2b"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
@@ -152,10 +158,12 @@ duration = 2.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_q3gy3"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_j8xdb")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_yjpbx"]
 resource_name = "[上级] 进度比 0.0 (±0.1)"
@@ -171,6 +179,7 @@ target_ratio = 0.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_wwi5u"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
@@ -195,10 +204,12 @@ duration = 2.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_vloxp"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_mgphg")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_0ltaa"]
 resource_name = "[上级] 进度比 1.0 (±0.1)"
@@ -214,6 +225,7 @@ target_ratio = 1.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_mlmyh"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
@@ -244,10 +256,12 @@ duration = 2.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_4upqs"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_b4iir")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_203w8"]
 resource_name = "[上级] 进度比 0.0 (±0.1)"
@@ -263,6 +277,7 @@ target_ratio = 0.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_t5iq0"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
@@ -287,10 +302,12 @@ duration = 2.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_ofjia"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_1axvd")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_0qrpp"]
 resource_name = "[上级] 进度比 1.0 (±0.1)"
@@ -306,6 +323,7 @@ target_ratio = 1.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_3b1bd"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
@@ -336,10 +354,12 @@ duration = 2.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fasb1"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_sruw6")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_nv0p3"]
 resource_name = "[上级] 进度比 0.0 (±0.1)"
@@ -355,6 +375,7 @@ target_ratio = 0.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fujmj"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
@@ -379,10 +400,12 @@ duration = 2.0
 auto_free = false
 easing_type = 2
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_db3cc"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_vu5q1")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fat61"]
 resource_name = "[上级] 进度比 1.0 (±0.1)"
@@ -398,6 +421,7 @@ target_ratio = 1.0
 tolerance = 0.1
 check_interval = 0.5
 trigger_once = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_xfg3l"]
 resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"

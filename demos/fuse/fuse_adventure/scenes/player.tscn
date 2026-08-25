@@ -11,6 +11,11 @@
 [ext_resource type="Script" uid="uid://bk5xvyc2mqs4o" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="8_mw7hn"]
 [ext_resource type="Script" uid="uid://cgl60422nwy0k" path="res://addons/fuse/events/input/on_input_action.gd" id="9_1yqi1"]
 [ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="11_mf6og"]
+[ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="12_ds1tm"]
+[ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="13_5bacu"]
+[ext_resource type="Script" uid="uid://cga028a3a8dd" path="res://addons/fuse/instructions/animation/set_animation_tree_parameter.gd" id="14_5bacu"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="15_8gaye"]
+[ext_resource type="Script" uid="uid://lavknbtj1ssn" path="res://addons/fuse/instructions/flow_control/wait_for_signal.gd" id="16_47yx7"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -98,13 +103,122 @@ script = ExtResource("8_mf6og")
 instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_ds1tm")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
+[sub_resource type="Resource" id="Resource_8gaye"]
+resource_name = "接收事件: playerhurt"
+script = ExtResource("12_ds1tm")
+event_name = "playerhurt"
+
+[sub_resource type="Resource" id="Resource_nelp3"]
+resource_name = "设置属性 [player] .lock_movement = true"
+script = ExtResource("8_mw7hn")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("..")
+target_property = "lock_movement"
+set_with_variable = false
+new_value = true
+variable_name = ""
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_47yx7"]
+resource_name = "'{scope:life} - 1' → life [Int]"
+script = ExtResource("13_5bacu")
+target_node_path = NodePath("")
+save_target_node_path = NodePath("")
+expression = "{scope:life} - 1"
+output_type = 1
+scope_source = 1
+custom_scope_id = "player"
+save_to_variable = "life"
+save_to_scope = 1
+save_scope_source = 1
+save_custom_scope_id = "player"
+
+[sub_resource type="Resource" id="Resource_iok25"]
+resource_name = "动画参数: conditions/hit = true"
+script = ExtResource("14_5bacu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+float_value = 0.0
+int_value = 0
+string_value = ""
+use_variable_for_target = false
+target_node = NodePath("../AnimationTree")
+parameter_name = "conditions/hit"
+parameter_type = 2
+bool_value = true
+
+[sub_resource type="Resource" id="Resource_cg1nb"]
+resource_name = "等待 0.1 秒"
+script = ExtResource("15_8gaye")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.1
+
+[sub_resource type="Resource" id="Resource_un7io"]
+resource_name = "等待信号 ../AnimationTree::animation_finished"
+script = ExtResource("16_47yx7")
+target_node = NodePath("../AnimationTree")
+target_signal = "animation_finished"
+timeout = 10.0
+filter_signal_args = true
+arg_filter_values = {
+"anim_name": &"player/hit"
+}
+log_level = 4
+
+[sub_resource type="Resource" id="Resource_e7e1d"]
+resource_name = "动画参数: conditions/hit = false"
+script = ExtResource("14_5bacu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+float_value = 0.0
+int_value = 0
+string_value = ""
+use_variable_for_target = false
+target_node = NodePath("../AnimationTree")
+parameter_name = "conditions/hit"
+parameter_type = 2
+bool_value = false
+
+[sub_resource type="Resource" id="Resource_4aelh"]
+resource_name = "设置属性 [player] .lock_movement = false"
+script = ExtResource("8_mw7hn")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("..")
+target_property = "lock_movement"
+set_with_variable = false
+new_value = false
+variable_name = ""
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_fgjoy"]
+script = ExtResource("8_mf6og")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_cg1nb"), SubResource("Resource_un7io"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
 script = ExtResource("4_7t5up")
 
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 10
+frame = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
@@ -145,3 +259,9 @@ variables = Dictionary[String, Variant]({
 "life": 3
 })
 metadata/_custom_type_script = "uid://b5up05i5u1nqd"
+
+[node name="OnPlayerHurt" type="Node" parent="." unique_id=329523553]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_8gaye")
+action_runner = SubResource("Resource_fgjoy")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
