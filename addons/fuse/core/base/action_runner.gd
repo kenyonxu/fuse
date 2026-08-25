@@ -106,15 +106,15 @@ func run(context: ExecutionContext):
 		context.print_warning("ActionRunner is already running")
 		_create_fuse_error_localized("FUSE_ERROR_ACTION_RUNNER_ALREADY_RUNNING", FuseError.ErrorType.EXECUTION_ERROR)
 		return
-	
+
 	if not validate_instructions():
 		context.print_error("Instruction validation failed")
 		execution_failed.emit("Instruction validation failed")
 		return
-	
+
 	# 设置 ActionRunner 引用到上下文，供条件检查指令使用
 	context.set_action_runner(self)
-	
+
 	is_running = true
 	current_context = context
 	current_instruction_index = 0
@@ -125,21 +125,21 @@ func run(context: ExecutionContext):
 	context.print_message(FuseLocalization.translate_format("FUSE_LOG_STARTING_EXECUTION", {"count": instructions.size()}))
 
 	execution_started.emit()
-	
+
 	# 启动调试跟踪（如果启用）
 	if _debug_enabled and _execution_tracker:
 		_execution_tracker.start_tracking(context)
-	
+
 	match execution_mode:
 		ExecutionMode.SEQUENTIAL:
 			await _run_sequential(context)
 		ExecutionMode.PARALLEL:
 			await _run_parallel(context)
-	
+
 	# 停止调试跟踪
 	if _debug_enabled and _execution_tracker:
 		_execution_tracker.stop_tracking()
-	
+
 	_complete_execution()
 	# 复位终态标志，保证下次 run 干净（取消/失败 emit 点在循环内已置位）
 	_terminal_emitted = false
@@ -157,11 +157,11 @@ func cancel_execution(reason: String = ""):
 	if not is_running:
 		_log_debug_localized("FUSE_LOG_CANNOT_CANCEL_NOT_RUNNING")
 		return
-	
+
 	if is_canceling:
 		_log_debug_localized("FUSE_LOG_ALREADY_CANCELLING")
 		return
-	
+
 	is_canceling = true
 	cancellation_reason = reason
 	_log_debug_localized("FUSE_LOG_CANCELLING_EXECUTION", {"reason": reason})
@@ -220,7 +220,7 @@ func validate_instructions() -> bool:
 			_log_error_localized("FUSE_ERROR_INSTRUCTION_VALIDATION_FAILED", {"index": i, "errors": ", ".join(errors)})
 			_create_fuse_error_localized("FUSE_ERROR_INSTRUCTION_VALIDATION_FAILED", FuseError.ErrorType.VALIDATION_ERROR, {}, {"index": i, "errors": ", ".join(errors)})
 			return false
-	
+
 	return true
 
 ## 顺序执行模式
@@ -345,14 +345,14 @@ func _run_sequential(context: ExecutionContext):
 func _execute_instruction(instruction: BaseInstruction, context: ExecutionContext) -> bool:
 	# 记录指令开始时间（用于超时检查）
 	var instruction_start_time = Time.get_ticks_msec() / 1000.0
-	
+
 	# 设置指令超时（如果启用）
 	if enable_instruction_timeout:
 		instruction.set_timeout(instruction_timeout)
-	
+
 	# 使用指令的同步执行包装器
 	var sync_completed = instruction.execute_sync(context)
-	
+
 	return sync_completed
 
 ## 并行执行模式
@@ -546,16 +546,16 @@ func add_instruction(instruction: BaseInstruction, position: int = -1):
 	if not instruction:
 		_log_error("Cannot add null instruction")
 		return
-	
+
 	if instructions.size() >= MAX_INSTRUCTIONS:
 		_log_error("Cannot add instruction: maximum limit reached")
 		return
-	
+
 	if position < 0 or position >= instructions.size():
 		instructions.append(instruction)
 	else:
 		instructions.insert(position, instruction)
-	
+
 	# 清除验证缓存（新指令可能影响验证结果）
 	_validation_cache.clear()
 
@@ -567,9 +567,9 @@ func remove_instruction(position: int):
 	if position < 0 or position >= instructions.size():
 		_log_error("Invalid instruction position: %d" % position)
 		return
-	
+
 	var removed = instructions.pop_at(position)
-	
+
 	# 清除验证缓存（移除指令可能影响验证结果）
 	_validation_cache.clear()
 
@@ -588,7 +588,7 @@ func get_instruction(position: int) -> BaseInstruction:
 	if position < 0 or position >= instructions.size():
 		_log_error("Invalid instruction position: %d" % position)
 		return null
-	
+
 	var instruction = instructions[position]
 	if instruction is BaseInstruction:
 		return instruction
@@ -664,10 +664,10 @@ func _serialize_instructions() -> Array[Dictionary]:
 func deserialize(data: Dictionary):
 	if data.has("execution_mode"):
 		execution_mode = data["execution_mode"]
-	
+
 	if data.has("stop_on_error"):
 		stop_on_error = data["stop_on_error"]
-	
+
 	if data.has("instructions"):
 		instructions.clear()
 		for instruction_data in data["instructions"]:
@@ -726,23 +726,23 @@ func reset():
 	cancellation_reason = ""
 	_fuse_error = null
 	_validation_cache.clear()  # 清除验证缓存
-	
+
 	# 重置条件检查相关状态
 	_skip_instruction_count = 0
 	_stop_execution = false
 	_stop_reason = ""
-	
+
 	# 强制清理所有上下文引用
 	if current_context:
 		current_context.cleanup()
 		# 确保上下文被垃圾回收
 		current_context = null
-	
+
 	# 清理指令引用
 	for instruction in instructions:
 		if instruction.has_method("cleanup"):
 			instruction.cleanup()
-	
+
 	current_instruction_index = 0
 	execution_start_time = 0.0
 	execution_end_time = 0.0
@@ -768,21 +768,21 @@ func run_batch(contexts: Array[ExecutionContext]) -> Dictionary:
 		"failed_count": 0,
 		"execution_times": []
 	}
-	
+
 	var start_time = Time.get_ticks_msec() / 1000.0
-	
+
 	for i in range(contexts.size()):
 		var context = contexts[i]
 		var context_start_time = Time.get_ticks_msec() / 1000.0
-		
+
 		# 使用条件检查代替 try/except
 		if not is_running:
 			run(context)
 			await execution_completed
-			
+
 			var context_end_time = Time.get_ticks_msec() / 1000.0
 			var execution_time = context_end_time - context_start_time
-			
+
 			results["success"].append({
 				"context_index": i,
 				"execution_time": execution_time,
@@ -797,7 +797,7 @@ func run_batch(contexts: Array[ExecutionContext]) -> Dictionary:
 				"context_id": context.execution_id
 			})
 			results["failed_count"] += 1
-	
+
 	var end_time = Time.get_ticks_msec() / 1000.0
 	var total_time = end_time - start_time
 	var avg_time = total_time / contexts.size() if contexts.size() > 0 else 0.0
@@ -824,11 +824,11 @@ func validate_instructions_batch() -> Dictionary:
 		"valid_count": 0,
 		"invalid_count": 0
 	}
-	
+
 	for i in range(instructions.size()):
 		var instruction = instructions[i]
 		var errors = instruction.validate()
-		
+
 		if errors.is_empty():
 			results["valid"].append({
 				"index": i,
@@ -856,7 +856,7 @@ func validate_instructions_batch() -> Dictionary:
 ## returns: Array[Dictionary] - 指令信息数组
 func get_instructions_info_batch() -> Array[Dictionary]:
 	var results: Array[Dictionary] = []
-	
+
 	for i in range(instructions.size()):
 		var instruction = instructions[i]
 		var info = instruction.get_debug_info()
@@ -878,10 +878,10 @@ func add_instructions_batch(new_instructions: Array[BaseInstruction], position: 
 		"added_count": 0,
 		"failed_count": 0
 	}
-	
+
 	for i in range(new_instructions.size()):
 		var instruction = new_instructions[i]
-		
+
 		if instructions.size() >= MAX_INSTRUCTIONS:
 			results["failed"].append({
 				"index": i,
@@ -890,7 +890,7 @@ func add_instructions_batch(new_instructions: Array[BaseInstruction], position: 
 			})
 			results["failed_count"] += 1
 			continue
-		
+
 		if not instruction:
 			results["failed"].append({
 				"index": i,
@@ -899,7 +899,7 @@ func add_instructions_batch(new_instructions: Array[BaseInstruction], position: 
 			})
 			results["failed_count"] += 1
 			continue
-		
+
 		var actual_position = position
 		if position < 0 or position >= instructions.size():
 			instructions.append(instruction)

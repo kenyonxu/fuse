@@ -465,7 +465,7 @@ func get_description() -> String:
 ## ```
 func validate() -> Array[String]:
 	var errors: Array[String] = []
-	
+
 	return errors
 
 ## 取消指令执行
@@ -733,7 +733,7 @@ func _on_execution_error(error: String, error_type: FuseError.ErrorType = FuseEr
 	set_error(error, error_type, context)
 	_cleanup_timeout_timer()
 	_cleanup_resources()
-	
+
 	# 即使在 ON_START 模式下，出错时也需要发出信号
 	finished.emit()
 
@@ -774,11 +774,11 @@ func get_debug_info() -> Dictionary:
 		"version": metadata.version,
 		"error": error_message if has_error() else "None"
 	}
-	
+
 	# 如果有 FuseError，添加详细信息
 	if _fuse_error:
 		debug_info["fuse_error"] = _fuse_error.get_error_details()
-	
+
 	return debug_info
 
 ## 安全连接 finished 信号
@@ -794,14 +794,14 @@ func connect_finished_safe(callable: Callable) -> bool:
 	if _is_finished_connected:
 		_log_warning("finished 信号已连接，跳过重复连接")
 		return false
-	
+
 	var result = finished.connect(callable)
 	if result == OK:
 		_is_finished_connected = true
 		_log_debug("成功连接 finished 信号到 %s" % callable)
 	else:
 		_log_error("连接 finished 信号失败: %s" % result)
-	
+
 	return result == OK
 
 ## 断开 finished 信号
@@ -945,9 +945,9 @@ func get_execution_time() -> float:
 func _setup_timeout_timer():
 	if not has_timeout():
 		return
-	
+
 	_cleanup_timeout_timer()
-	
+
 	# 创建超时计时器
 	var scene_tree = Engine.get_main_loop()
 	if scene_tree:
@@ -969,7 +969,7 @@ func _on_timeout():
 		var elapsed_time = get_execution_time()
 		var error_msg = "指令执行超时 (%.2f 秒 > %.2f 秒)" % [elapsed_time, _timeout_duration]
 		_log_error(error_msg)
-		
+
 		# 使用超时错误类型
 		var timeout_context = {
 			"execution_time": elapsed_time,
@@ -1001,7 +1001,7 @@ func can_execute_sync() -> bool:
 			result = _detect_sync_capability()
 		_:
 			result = _detect_sync_capability()  # 默认使用自动检测
-	
+
 	return result
 
 ## 自动检测同步执行能力
@@ -1014,17 +1014,17 @@ func can_execute_sync() -> bool:
 func _detect_sync_capability() -> bool:
 	# 检查指令是否有异步操作的特征
 	var has_async = _has_async_operations()
-	
+
 	if has_async:
 		return false
-	
+
 	# 检查指令是否在 execute 方法中直接调用 finished.emit()
 	# 这类指令通常是同步的
 	var immediate = _has_immediate_completion()
-	
+
 	if immediate:
 		return true
-	
+
 	# 默认情况下，假设指令是同步的
 	return true
 
@@ -1113,11 +1113,11 @@ func _has_immediate_completion() -> bool:
 	var script = get_script()
 	if not script:
 		return false
-	
+
 	var source_code = script.source_code
 	if not source_code:
 		return false
-	
+
 	# 检查是否在 execute 方法中直接调用 finished.emit()
 	return "finished.emit()" in source_code and "execute(" in source_code
 

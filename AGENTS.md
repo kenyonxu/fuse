@@ -47,9 +47,20 @@ func _ready():
 
 这是 Godot 项目 - 无需构建步骤。"构建"就是 Godot 引擎本身。
 
-### 无 Lint 命令
+### Lint（gdlint）
 
-项目中未配置 GDScript 的 linter。
+GDScript 静态检查使用 [gdtoolkit](https://github.com/Scony/godot-gdscript-toolkit) 的 `gdlint`（配置见根目录 `gdlintrc`——风格偏好类规则已按项目基线关闭/放宽，卫生类规则保持开启）：
+
+```bash
+# 全量检查（addons 与 demos 均应零违规，退出码 0）
+pip install gdtoolkit   # 首次
+gdlint addons/fuse demos
+
+# 单文件
+gdlint <file.gd>
+```
+
+触碰 .gd 文件的任务提交前应跑 lint 零违规；新代码行长建议守 120（硬限 250）。
 
 ### 组件清单同步（dump 上下文）⚠️ 新增组件后必做
 

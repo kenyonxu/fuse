@@ -41,23 +41,23 @@ static func _setup_compatibility_matrix():
         "INT_FLOAT": true, "FLOAT_INT": true,
         "INT_BOOL": true, "FLOAT_BOOL": true,
         "BOOL_INT": true, "BOOL_FLOAT": true,
-        
+
         # 字符串与基础类型兼容
         "STRING_INT": true, "STRING_FLOAT": true,
         "STRING_BOOL": true, "STRING_VECTOR2": true,
         "STRING_VECTOR3": true, "STRING_COLOR": true,
-        
+
         # 向量类型部分兼容
         "VECTOR2_VECTOR3": true, "VECTOR3_VECTOR2": true,
         "VECTOR2I_VECTOR2": true, "VECTOR3I_VECTOR3": true,
-        
+
         # 数组与容器兼容
         "ARRAY_ARRAY": true, "STRING_ARRAY": true,
         "DICTIONARY_STRING": true, "STRING_DICTIONARY": true,
-        
+
         # NodePath 与字符串兼容
         "NODE_PATH_STRING": true, "STRING_NODE_PATH": true,
-        
+
         # 所有类型都可以转换为字符串（避免重复）
         "INT_STRING": true, "FLOAT_STRING": true,
         "BOOL_STRING": true, "VECTOR2_STRING": true,
@@ -121,10 +121,10 @@ static func _setup_type_descriptions():
 ## 安全转换为指定类型
 static func safe_convert(value: Variant, target_type: int) -> Variant:
     _static_init()
-    
+
     if typeof(value) == target_type:
         return value
-    
+
     match target_type:
         TYPE_BOOL:
             return safe_convert_to_bool(value)
@@ -347,7 +347,7 @@ static func _parse_vector2_string(str_val: String) -> Vector2:
     var parts = str_val.split(",")
     if parts.size() != 2:
         return Vector2.ZERO
-    
+
     var x = safe_convert_to_float(parts[0].strip_edges())
     var y = safe_convert_to_float(parts[1].strip_edges())
     return Vector2(x, y)
@@ -357,23 +357,23 @@ static func _parse_vector3_string(str_val: String) -> Vector3:
     var parts = str_val.split(",")
     if parts.size() < 2:
         return Vector3.ZERO
-    
+
     var x = safe_convert_to_float(parts[0].strip_edges())
     var y = safe_convert_to_float(parts[1].strip_edges())
     var z = 0.0
     if parts.size() >= 3:
         z = safe_convert_to_float(parts[2].strip_edges())
-    
+
     return Vector3(x, y, z)
 
 ## 解析颜色字符串
 static func _parse_color_string(str_val: String) -> Color:
     var clean_str = str_val.strip_edges()
-    
+
     # 处理十六进制颜色
     if clean_str.begins_with("#"):
         return Color.from_string(clean_str, Color.WHITE)
-    
+
     # 处理 HTML 颜色名
     var named_colors = {
         "white": Color.WHITE, "black": Color.BLACK, "red": Color.RED,
@@ -381,11 +381,11 @@ static func _parse_color_string(str_val: String) -> Color:
         "cyan": Color.CYAN, "magenta": Color.MAGENTA, "gray": Color.GRAY,
         "grey": Color.GRAY
     }
-    
+
     var lower_str = clean_str.to_lower()
     if named_colors.has(lower_str):
         return named_colors[lower_str]
-    
+
     # 处理 RGB 字符串 "r,g,b"
     var parts = clean_str.split(",")
     if parts.size() >= 3:
@@ -396,16 +396,16 @@ static func _parse_color_string(str_val: String) -> Color:
         if parts.size() >= 4:
             a = clamp(safe_convert_to_float(parts[3]), 0.0, 1.0)
         return Color(r, g, b, a)
-    
+
     return Color.WHITE
 
 ## 检查类型兼容性
 static func is_compatible(source_type: int, target_type: int) -> bool:
     _static_init()
-    
+
     if source_type == target_type:
         return true
-    
+
     # 检查兼容性矩阵
     var source_name = get_type_name(source_type)
     var target_name = get_type_name(target_type)
@@ -415,7 +415,7 @@ static func is_compatible(source_type: int, target_type: int) -> bool:
 ## 获取类型名称
 static func get_type_name(type: int) -> String:
     _static_init()
-    
+
     if _type_names.has(type):
         return _type_names[type]
     return "UNKNOWN"
@@ -423,7 +423,7 @@ static func get_type_name(type: int) -> String:
 ## 获取类型描述
 static func get_type_description(type: int) -> String:
     _static_init()
-    
+
     if _type_descriptions.has(type):
         return _type_descriptions[type]
     return "未知类型"
@@ -447,10 +447,10 @@ static func try_convert(value: Variant, target_type: int, default_value: Variant
 static func get_conversion_suggestions(source_type: int, target_type: int) -> String:
     if is_compatible(source_type, target_type):
         return "可以直接转换"
-    
+
     var source_name = get_type_name(source_type)
     var target_name = get_type_name(target_type)
-    
+
     match source_name + "_" + target_name:
         "STRING_VECTOR2":
             return "字符串格式应为 'x,y'，例如 '1.0,2.0'"

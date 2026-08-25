@@ -356,7 +356,6 @@ func _set(property: StringName, value: Variant) -> bool:
 
 ## 属性验证
 func _validate_property(property: Dictionary) -> void:
-	pass
 	# 控制目标节点相关属性可见性
 	if not use_variable_for_target:
 		if property.name in ["target_variable", "target_scope", "target_scope_source", "target_custom_scope_id", "target_target_node_path"]:

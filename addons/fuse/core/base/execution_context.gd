@@ -106,7 +106,7 @@ func _init(target_node: Node = null, trigger_node: Node = null, global_vars: Var
 		_global_variable_assistant = GlobalVariableAssistant.get_instance()
 
 	tree = scene_tree
-	
+
 	# 设置弱引用
 	if target_node:
 		_target_weakref = weakref(target_node)
@@ -724,7 +724,7 @@ func _log_error_localized(message_key: String, args: Dictionary = {}) -> void:
 func _create_fuse_error(message: String, error_type: FuseError.ErrorType = FuseError.ErrorType.RUNTIME_ERROR, context: Dictionary = {}):
 	var error_context = context.duplicate()
 	error_context["execution_id"] = execution_id
-	
+
 	_fuse_error = FuseError.create_with_context(error_type, "ExecutionContext", message, error_context)
 
 ## 获取 FuseError 实例
@@ -759,7 +759,7 @@ func get_target_node() -> Node:
 			_log_warning_localized("FUSE_WARNING_TARGET_NODE_RELEASED")
 			target = null
 			_target_weakref = null
-	
+
 	# 回退到直接引用
 	return target
 
@@ -782,6 +782,6 @@ func get_trigger_node() -> Node:
 			_log_warning_localized("FUSE_WARNING_TRIGGER_NODE_RELEASED")
 			trigger = null
 			_trigger_weakref = null
-	
+
 	# 回退到直接引用
 	return trigger

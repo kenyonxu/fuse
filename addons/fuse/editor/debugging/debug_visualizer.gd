@@ -73,17 +73,17 @@ func _setup_ui() -> void:
 	main_split.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	main_split.split_offset = 300
 	add_child(main_split)
-	
+
 	# 创建左侧面板
 	left_panel = VBoxContainer.new()
 	left_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	main_split.add_child(left_panel)
-	
+
 	# 创建控制面板
 	control_panel = HBoxContainer.new()
 	control_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	left_panel.add_child(control_panel)
-	
+
 	# 创建刷新按钮
 	refresh_button = Button.new()
 	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
@@ -119,32 +119,32 @@ func _setup_ui() -> void:
 		auto_refresh_check.text = "自动刷新"  # 回退文本
 	auto_refresh_check.toggled.connect(_on_auto_refresh_toggled)
 	control_panel.add_child(auto_refresh_check)
-	
+
 	# 创建执行树滚动容器
 	tree_scroll = ScrollContainer.new()
 	tree_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	tree_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	left_panel.add_child(tree_scroll)
-	
+
 	# 创建执行树
 	execution_tree = Tree.new()
 	execution_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	execution_tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	execution_tree.item_selected.connect(_on_tree_item_selected)
 	tree_scroll.add_child(execution_tree)
-	
+
 	# 创建右侧面板
 	right_panel = VBoxContainer.new()
 	right_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	main_split.add_child(right_panel)
-	
+
 	# 创建详情滚动容器
 	detail_scroll = ScrollContainer.new()
 	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_panel.add_child(detail_scroll)
-	
+
 	# 创建详情面板
 	detail_panel = RichTextLabel.new()
 	detail_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -152,14 +152,14 @@ func _setup_ui() -> void:
 	detail_panel.fit_content = true
 	detail_panel.scroll_active = true
 	detail_scroll.add_child(detail_panel)
-	
+
 	# 创建性能图表占位符
 	performance_chart = Control.new()
 	performance_chart.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	performance_chart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	performance_chart.custom_minimum_size = Vector2(0, 200)
 	right_panel.add_child(performance_chart)
-	
+
 	# 设置初始文本
 	_display_welcome_message()
 
@@ -202,7 +202,7 @@ func _update_display() -> void:
 ## 更新执行树
 func _update_execution_tree() -> void:
 	execution_tree.clear()
-	
+
 	var history = execution_tracker.get_execution_history()
 	if history.is_empty():
 		var root = execution_tree.create_item()
@@ -217,7 +217,7 @@ func _update_execution_tree() -> void:
 		root.set_text(0, _fuse_localization_class.translate("FUSE_UI_DEBUG_HISTORY_TITLE"))
 	else:
 		root.set_text(0, "执行历史")  # 回退文本
-	
+
 	for i in range(history.size()):
 		var execution = history[i]
 		var exec_item = execution_tree.create_item(root)
@@ -237,7 +237,7 @@ func _update_execution_tree() -> void:
 				exec_text += " - 指令: %d, 错误: %d" % [stats.instruction_count, stats.error_count]
 
 		exec_item.set_text(0, exec_text)
-		
+
 		# 根据执行结果设置颜色
 		if execution.has("stats"):
 			var stats = execution.stats
@@ -247,7 +247,7 @@ func _update_execution_tree() -> void:
 				exec_item.set_custom_color(0, Color(1.0, 0.8, 0.2))  # 黄色表示有性能问题
 			else:
 				exec_item.set_custom_color(0, Color(0.2, 1.0, 0.2))  # 绿色表示成功
-		
+
 		# 添加步骤
 		if execution.has("steps"):
 			for j in range(execution.steps.size()):
@@ -298,7 +298,7 @@ func _update_execution_tree() -> void:
 
 				step_item.set_text(0, step_text)
 				step_item.set_custom_color(0, step_color)
-				
+
 				# 存储索引信息用于详情显示
 				step_item.set_metadata(0, {"execution_index": i, "step_index": j})
 
@@ -307,20 +307,20 @@ func _update_detail_panel() -> void:
 	if selected_execution_index < 0:
 		_display_welcome_message()
 		return
-	
+
 	var history = execution_tracker.get_execution_history()
 	if selected_execution_index >= history.size():
 		return
-	
+
 	var execution = history[selected_execution_index]
 	var text = _format_execution_details(execution)
-	
+
 	# 如果有选中的步骤，添加步骤详情
 	if selected_step_index >= 0 and execution.has("steps"):
 		if selected_step_index < execution.steps.size():
 			var step = execution.steps[selected_step_index]
 			text += "\n\n" + _format_step_details(step)
-	
+
 	detail_panel.text = text
 
 ## 格式化执行详情

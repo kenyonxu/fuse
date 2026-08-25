@@ -145,14 +145,14 @@ func remove_variable(name: String) -> bool:
 	if name.is_empty():
 		_log_error("变量名称不能为空")
 		return false
-	
+
 	if not variables.has(name):
 		_log_warning("尝试移除不存在的变量: %s" % name)
 		return false
-	
+
 	variables.erase(name)
 	update_timestamp()
-	
+
 	_log_info("变量移除成功: %s" % name)
 	return true
 
@@ -206,8 +206,8 @@ func update_timestamp() -> void:
 ## returns: String - 资源的字符串表示
 func _to_string() -> String:
 	return "GlobalVariableResource(%d variables, v%s, modified: %s)" % [
-		variables.size(), 
-		version, 
+		variables.size(),
+		version,
 		_format_timestamp(last_modified)
 	]
 
@@ -230,82 +230,82 @@ func _to_dict() -> Dictionary:
 ## returns: GlobalVariableResource - 新的资源实例
 static func from_dict(data: Dictionary) -> GlobalVariableResource:
 	var resource = GlobalVariableResource.new()
-	
+
 	if data.has("variables") and data["variables"] is Dictionary:
 		resource.variables = _deep_copy_dict(data["variables"])
-	
+
 	if data.has("description"):
 		resource.description = str(data["description"])
-	
+
 	if data.has("created_time"):
 		resource.created_time = float(data["created_time"])
 	else:
 		resource.created_time = Time.get_ticks_msec() / 1000.0
-	
+
 	if data.has("last_modified"):
 		resource.last_modified = float(data["last_modified"])
 	else:
 		resource.last_modified = resource.created_time
-	
+
 	if data.has("version"):
 		resource.version = str(data["version"])
-	
+
 	if data.has("author"):
 		resource.author = str(data["author"])
-	
+
 	if data.has("tags") and data["tags"] is Array:
 		resource.tags = data["tags"].duplicate()
-	
+
 	return resource
 
 ## 验证资源状态
 ## returns: Array[String] - 错误信息数组
 func validate() -> Array[String]:
 	var errors: Array[String] = []
-	
+
 	# 验证基本属性
 	if version.is_empty():
 		errors.append(FuseLocalization.translate("FUSE_ERROR_GLOBAL_VAR_VERSION_EMPTY"))
-	
+
 	if created_time <= 0.0:
 		errors.append(FuseLocalization.translate("FUSE_ERROR_GLOBAL_VAR_CREATED_TIME_INVALID"))
-	
+
 	if last_modified < created_time:
 		errors.append(FuseLocalization.translate("FUSE_ERROR_GLOBAL_VAR_MODIFIED_TIME_EARLIER"))
-	
+
 	# 验证变量数据
 	for name in variables:
 		if not _is_valid_variable_name(name):
 			errors.append(FuseLocalization.translate_format("FUSE_ERROR_GLOBAL_VAR_INVALID_NAME", {"name": name}))
-		
+
 		if not _is_valid_variable_data(variables[name]):
 			errors.append(FuseLocalization.translate_format("FUSE_ERROR_GLOBAL_VAR_INVALID_DATA", {"name": name}))
-	
+
 	# 验证标签
 	for tag in tags:
 		if tag.is_empty():
 			errors.append(FuseLocalization.translate("FUSE_ERROR_TAG_EMPTY"))
-	
+
 	return errors
 
 ## 清理无效变量
 ## returns: int - 清理的变量数量
 func cleanup_invalid_variables() -> int:
 	var invalid_names: Array[String] = []
-	
+
 	# 找出无效变量
 	for name in variables:
 		if not _is_valid_variable_name(name) or not _is_valid_variable_data(variables[name]):
 			invalid_names.append(name)
-	
+
 	# 移除无效变量
 	for name in invalid_names:
 		variables.erase(name)
-	
+
 	if invalid_names.size() > 0:
 		update_timestamp()
 		_log_info("清理了 %d 个无效变量" % invalid_names.size())
-	
+
 	return invalid_names.size()
 
 ## 私有方法 - 标准化变量数据格式
@@ -363,7 +363,7 @@ func _is_serializable_value(val) -> bool:
 	# 检查基本类型
 	if val == null:
 		return true
-	
+
 	var val_type = typeof(val)
 	match val_type:
 		TYPE_NIL, TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING:
@@ -408,10 +408,10 @@ static func _deep_copy_value(val):
 func _format_timestamp(timestamp: float) -> String:
 	if timestamp <= 0.0:
 		return "从未"
-	
+
 	var current_time = Time.get_ticks_msec() / 1000.0
 	var diff = current_time - timestamp
-	
+
 	if diff < 60:
 		return "%d秒前" % int(diff)
 	elif diff < 3600:
@@ -429,7 +429,7 @@ func _create_fuse_error(message: String, error_type: FuseError.ErrorType = FuseE
 	error_context["resource_version"] = version
 	error_context["variable_count"] = variables.size()
 	error_context["is_empty"] = is_empty()
-	
+
 	_fuse_error = FuseError.create_with_context(error_type, "GlobalVariableResource", message, error_context)
 
 ## 获取 FuseError 实例

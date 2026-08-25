@@ -12,7 +12,7 @@ var _fuse_localization_class: RefCounted = null  # 缓存本地化类引用
 func _init(p_edited_object: Object, p_property_name: String):
     edited_object = p_edited_object
     property_name = p_property_name
-    
+
     # 监听数组变化
     edited_object.property_list_changed.connect(_on_property_changed)
 
@@ -89,7 +89,7 @@ func _create_ui() -> void:
         search_box.placeholder_text = "搜索指令..."  # 回退文本
     search_box.text_changed.connect(_on_search_text_changed)
     main_vbox.add_child(search_box)
-    
+
     # 分类树（占据主要空间）
     category_tree = Tree.new()
     category_tree.columns = 2  # 第一列显示指令名，第二列显示加号按钮
@@ -104,16 +104,16 @@ func _create_ui() -> void:
     category_tree.set_column_expand(0, true)  # 第一列可扩展
     category_tree.set_column_expand(1, false) # 第二列固定宽度
     category_tree.set_column_custom_minimum_width(1, 32)  # 第二列最小宽度32像素
-    
+
     # 创建根项目（即使隐藏也需要）
     var root = category_tree.create_item()
     root.set_text(0, "Root")
-    
+
     main_vbox.add_child(category_tree)
-    
+
     # 将主容器添加为对话框的子节点
     self.add_child(main_vbox)
-    
+
     # 移除确定按钮的添加指令功能，确保功能唯一化
     # 只保留取消信号用于关闭对话框
     self.canceled.connect(_on_cancel_button_pressed)
@@ -188,23 +188,23 @@ func _add_instruction_to_array(instruction_info: Dictionary):
     if not instruction_info or not instruction_info.has("class"):
         print("错误：指令信息无效")
         return
-    
+
     var instruction_class = instruction_info.class
     if not instruction_class:
         print("错误：指令类为空")
         return
-    
+
     var instruction_instance = instruction_class.new()
-    
+
     # 获取当前指令数组
     var instructions = edited_object.get(property_name)
     if not instructions:
         instructions = []
-    
+
     # 创建新数组并添加指令
     var new_instructions = instructions.duplicate()
     new_instructions.append(instruction_instance)
-    
+
     # 直接追加到数组（适用于所有对象，包括 ActionRunner 和嵌套指令列表）
     var existing_array = edited_object.get(property_name)
     if existing_array == null:
@@ -220,7 +220,7 @@ func _add_instruction_to_array(instruction_info: Dictionary):
     if not verified or verified.size() == 0 or verified[-1] != instruction_instance:
         print("警告：指令添加后验证失败")
         return
-    
+
     # 通知编辑器更新
     if edited_object.has_method("notify_property_list_changed"):
         edited_object.notify_property_list_changed()
@@ -239,7 +239,7 @@ func _verify_addition(instruction_name: String, actual_size: int):
     # 延迟验证，确保编辑器完全同步
     var current_instructions = edited_object.get(property_name)
     var final_size = current_instructions.size() if current_instructions else 0
-    
+
     # 强制Inspector刷新
     call_deferred("_delayed_inspect_object", edited_object)
 
@@ -254,15 +254,15 @@ func _force_editor_refresh():
 func _update_instruction_list(search_query: String = ""):
     if _updating_ui:
         return
-        
+
     _updating_ui = true
     var search_results = InstructionSearch.search(search_query)
-    
+
     # 提取指令信息用于分类树
     var filtered_instructions: Array[Dictionary] = []
     for result in search_results:
         filtered_instructions.append(result.item)
-    
+
     # 使用延迟调用来更新分类树，避免在信号处理期间操作Tree
     call_deferred("_update_category_tree_deferred", filtered_instructions)
 
@@ -274,18 +274,18 @@ func _update_category_tree_deferred(instructions: Array[Dictionary]):
 func _update_category_tree(instructions: Array[Dictionary]):
     if not category_tree or not category_tree.is_inside_tree():
         return
-        
+
     category_tree.clear()
-    
+
     # 重新创建根项目
     var root = category_tree.create_item()
     if root == null:
         print("错误：无法创建根项目，Tree可能被blocked")
         _updating_ui = false
         return
-        
+
     root.set_text(0, "Root")
-    
+
     # 按分类组织指令
     var categories = {}
     for instruction_info in instructions:

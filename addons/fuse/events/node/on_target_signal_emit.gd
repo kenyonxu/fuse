@@ -158,14 +158,14 @@ func _get_property_list() -> Array[Dictionary]:
 			"hint_string": _cached_placeholder_select_node,
 			"usage": PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_READ_ONLY
 		})
-	
+
 	# 基础选项
 	properties.append({
 		"name": "trigger_once",
 		"type": TYPE_BOOL,
 		"usage": PROPERTY_USAGE_DEFAULT
 	})
-	
+
 	properties.append({
 		"name": "filter_signal_args",
 		"type": TYPE_BOOL,
@@ -176,7 +176,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"name": "arg_filter_values",
 		"type": TYPE_DICTIONARY
 	})
-	
+
 	# 如果启用参数过滤，添加过滤值配置
 	if filter_signal_args:
 		# 从 RuntimeInstance 获取 signal_info
@@ -186,7 +186,7 @@ func _get_property_list() -> Array[Dictionary]:
 		if signal_info:
 			var arg_properties = _get_arg_filter_properties()
 			properties.append_array(arg_properties)
-	
+
 	return properties
 
 ## 属性验证和显示控制
@@ -196,7 +196,7 @@ func _validate_property(property: Dictionary) -> void:
 	# 均以 STORAGE 位为口径，NONE 会让 arg_filter_values 在任何状态下都不可见
 	if not filter_signal_args and property.name == "arg_filter_values":
 		property.usage = PROPERTY_USAGE_NO_EDITOR  # Inspector 隐藏但保留可存储位
-	
+
 	# 当 filter_signal_args 为 true 时，显示 arg_filter_values 属性
 	# 这个逻辑是隐式的，因为默认情况下属性是显示的
 
@@ -513,20 +513,20 @@ func _get_target_node_in_editor():
 func _create_test_scene() -> Node:
 	var scene = Node.new()
 	scene.name = "TestRoot"
-	
+
 	# 创建测试节点
 	var test_button = Button.new()
 	test_button.name = "TestButton"
 	scene.add_child(test_button)
-	
+
 	var test_label = Label.new()
 	test_label.name = "TestLabel"
 	scene.add_child(test_label)
-	
+
 	var test_timer = Timer.new()
 	test_timer.name = "TestTimer"
 	scene.add_child(test_timer)
-	
+
 	return scene
 
 ## 检查信号参数（Dictionary 按名过滤：键存在即参与，全部通过才匹配）

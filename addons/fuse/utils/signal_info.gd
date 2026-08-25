@@ -44,13 +44,13 @@ func get_signature():
 		var arg = args[i]
 		var type_str = _get_type_string(arg.type)
 		var arg_name = arg.name if arg.has("name") else "arg%d" % i
-		
+
 		# 添加默认值信息
 		if i < default_args.size():
 			args_str.append("%s: %s = %s" % [arg_name, type_str, str(default_args[i])])
 		else:
 			args_str.append("%s: %s" % [arg_name, type_str])
-	
+
 	return "%s(%s)" % [name, ", ".join(args_str)]
 
 ## 获取简短的显示名称
@@ -74,22 +74,22 @@ func has_arg_count(count: int):
 func are_args_compatible(arg_types):
 	if args.size() != arg_types.size():
 		return false
-	
+
 	for i in range(args.size()):
 		if not _are_types_compatible(args[i].type, arg_types[i]):
 			return false
-	
+
 	return true
 
 ## 验证信号参数值
 func validate_args(values):
 	if values.size() > args.size():
 		return false
-	
+
 	for i in range(values.size()):
 		if not _is_value_valid_for_type(values[i], args[i].type):
 			return false
-	
+
 	return true
 
 ## 获取参数过滤属性（用于编辑器；按参数名生成，Object 类型参数不生成——期望值无从表达）
@@ -153,12 +153,12 @@ static func matches_arg(expected: Variant, actual: Variant) -> bool:
 ## 创建参数上下文字典
 func create_arg_context(values):
 	var context = {}
-	
+
 	for i in range(min(values.size(), args.size())):
 		var arg = args[i]
 		var arg_name = arg.name if arg.has("name") else "arg%d" % i
 		context[arg_name] = values[i]
-	
+
 	return context
 
 ## 序列化信号信息
@@ -221,32 +221,32 @@ func _are_types_compatible(type1: int, type2: int):
 	# 完全匹配
 	if type1 == type2:
 		return true
-	
+
 	# 数值类型兼容性
 	var numeric_types = [TYPE_INT, TYPE_FLOAT]
 	if type1 in numeric_types and type2 in numeric_types:
 		return true
-	
+
 	# 向量类型兼容性
 	var vector2_types = [TYPE_VECTOR2, TYPE_VECTOR2I]
 	var vector3_types = [TYPE_VECTOR3, TYPE_VECTOR3I]
-	
+
 	if type1 in vector2_types and type2 in vector2_types:
 		return true
-	
+
 	if type1 in vector3_types and type2 in vector3_types:
 		return true
-	
+
 	# 字符串可以接受任何类型
 	if type1 == TYPE_STRING or type2 == TYPE_STRING:
 		return true
-	
+
 	return false
 
 ## 私有方法：检查值是否对类型有效
 func _is_value_valid_for_type(value: Variant, type: int):
 	if value == null:
 		return type == TYPE_NIL or type == TYPE_OBJECT
-	
+
 	var value_type = typeof(value)
 	return _are_types_compatible(value_type, type)

@@ -370,23 +370,23 @@ func set_variables_batch(variables: Dictionary, scope: VariableScope = VariableS
 		"success_count": 0,
 		"failed_count": 0
 	}
-	
+
 	for name in variables:
 		var value = variables[name]
 		var success = set_variable(name, value, scope, auto_create)
-		
+
 		if success:
 			results["success"].append(name)
 			results["success_count"] += 1
 		else:
 			results["failed"].append(name)
 			results["failed_count"] += 1
-	
+
 	_log_debug("批量设置变量完成: 成功 %d/%d, 失败 %d/%d" % [
 		results["success_count"], results["total"],
 		results["failed_count"], results["total"]
 	])
-	
+
 	return results
 
 ## 批量获取变量
@@ -395,11 +395,11 @@ func set_variables_batch(variables: Dictionary, scope: VariableScope = VariableS
 ## returns: Dictionary - 变量名称到值的映射字典
 func get_variables_batch(names: Array[String], scope: VariableScope = VariableScope.LOCAL) -> Dictionary:
 	var results: Dictionary = {}
-	
+
 	for name in names:
 		var value = get_variable(name, null, scope)
 		results[name] = value
-	
+
 	_log_debug("批量获取变量完成: 获取了 %d 个变量" % results.size())
 	return results
 
@@ -415,22 +415,22 @@ func remove_variables_batch(names: Array[String], scope: VariableScope = Variabl
 		"success_count": 0,
 		"failed_count": 0
 	}
-	
+
 	for name in names:
 		var success = remove_variable(name, scope)
-		
+
 		if success:
 			results["success"].append(name)
 			results["success_count"] += 1
 		else:
 			results["failed"].append(name)
 			results["failed_count"] += 1
-	
+
 	_log_debug("批量删除变量完成: 成功 %d/%d, 失败 %d/%d" % [
 		results["success_count"], results["total"],
 		results["failed_count"], results["total"]
 	])
-	
+
 	return results
 
 ## 批量检查变量是否存在
@@ -439,11 +439,11 @@ func remove_variables_batch(names: Array[String], scope: VariableScope = Variabl
 ## returns: Dictionary - 变量名称到存在状态的映射字典
 func has_variables_batch(names: Array[String], scope: VariableScope = VariableScope.LOCAL) -> Dictionary:
 	var results: Dictionary = {}
-	
+
 	for name in names:
 		var exists = has_variable(name, scope)
 		results[name] = exists
-	
+
 	_log_debug("批量检查变量存在性完成: 检查了 %d 个变量" % results.size())
 	return results
 
@@ -659,7 +659,7 @@ func _variable_exists(name: String, scope: VariableScope) -> bool:
 func _validate_variable_type(value: Variant) -> bool:
 	# 验证变量类型是否有效
 	var value_type = typeof(value)
-	
+
 	# 检查是否为 Godot 支持的类型
 	match value_type:
 		TYPE_NIL:
@@ -776,11 +776,11 @@ func _is_cache_valid(name: String, scope: VariableScope) -> bool:
 	var cache_key = _get_cache_key(name, scope)
 	if not _cache_timestamps.has(cache_key):
 		return false
-	
+
 	var cache_time = _cache_timestamps[cache_key]
 	var current_time = Time.get_ticks_msec() / 1000.0
 	var cache_age = current_time - cache_time
-	
+
 	return cache_age <= _cache_duration
 
 ## 获取缓存键
@@ -812,13 +812,13 @@ func get_cache_info() -> Dictionary:
 	var current_time = Time.get_ticks_msec() / 1000.0
 	var valid_cache_count = 0
 	var total_cache_count = _variable_cache.size()
-	
+
 	for cache_key in _cache_timestamps:
 		var cache_time = _cache_timestamps[cache_key]
 		var cache_age = current_time - cache_time
 		if cache_age <= _cache_duration:
 			valid_cache_count += 1
-	
+
 	return {
 		"enabled": _enable_cache,
 		"duration": _cache_duration,
@@ -831,35 +831,35 @@ func get_cache_info() -> Dictionary:
 func get_variable_cached(name: String, default_value: Variant = null, scope: VariableScope = VariableScope.LOCAL) -> Variant:
 	if not _cache_enabled:
 		return get_variable(name, default_value, scope, false)
-	
+
 	# 检查缓存
 	if _access_cache.has(name):
 		var cached_data = _access_cache[name]
 		if Time.get_ticks_msec() - cached_data.timestamp < 5000:  # 5秒缓存
 			return cached_data.value
-	
+
 	# 获取变量值并缓存
 	var value = get_variable(name, default_value, scope, false)
 	_access_cache[name] = {
 		"value": value,
 		"timestamp": Time.get_ticks_msec()
 	}
-	
+
 	# 限制缓存大小
 	if _access_cache.size() > _cache_max_size:
 		_cleanup_cache()
-	
+
 	return value
 
 ## 清理过期缓存
 func _cleanup_cache():
 	var current_time = Time.get_ticks_msec()
 	var keys_to_remove = []
-	
+
 	for key in _access_cache:
 		if current_time - _access_cache[key].timestamp > 5000:
 			keys_to_remove.append(key)
-	
+
 	for key in keys_to_remove:
 		_access_cache.erase(key)
 
@@ -868,10 +868,10 @@ func precompile_variable_indices(variable_names: Array[String]):
 	_variable_name_to_index.clear()
 	_indexed_variables.clear()
 	_indexed_variables.resize(variable_names.size())
-	
+
 	for i in range(variable_names.size()):
 		_variable_name_to_index[variable_names[i]] = i
-	
+
 	_use_indexed_storage = true
 	_log_debug("预编译了 %d 个变量索引" % variable_names.size())
 
@@ -890,12 +890,12 @@ func get_enhanced_cache_info() -> Dictionary:
 	var current_time = Time.get_ticks_msec()
 	var valid_cache_count = 0
 	var total_cache_count = _access_cache.size()
-	
+
 	for cache_key in _access_cache:
 		var cached_data = _access_cache[cache_key]
 		if current_time - cached_data.timestamp < 5000:
 			valid_cache_count += 1
-	
+
 	return {
 		"enabled": _cache_enabled,
 		"max_size": _cache_max_size,
@@ -954,11 +954,11 @@ func _invalidate_cache_for_variable(name: String, scope: VariableScope):
 func add_variable_dependencies(variable_name: String, depends_on: Array[String]) -> void:
 	if not _variable_dependencies.has(variable_name):
 		_variable_dependencies[variable_name] = []
- 
+
 	for dep_var in depends_on:
 		if not dep_var in _variable_dependencies[variable_name]:
 			_variable_dependencies[variable_name].append(dep_var)
-  
+
   # 更新被依赖关系
 		if not _variable_dependents.has(dep_var):
 			_variable_dependents[dep_var] = []
@@ -971,17 +971,17 @@ func add_variable_dependencies(variable_name: String, depends_on: Array[String])
 func remove_variable_dependencies(variable_name: String, depends_on: Array[String]) -> void:
 	if not _variable_dependencies.has(variable_name):
 		return
- 
+
 	for dep_var in depends_on:
 		if dep_var in _variable_dependencies[variable_name]:
 			_variable_dependencies[variable_name].erase(dep_var)
-  
+
   # 更新被依赖关系
 		if _variable_dependents.has(dep_var) and variable_name in _variable_dependents[dep_var]:
 			_variable_dependents[dep_var].erase(variable_name)
 			if _variable_dependents[dep_var].is_empty():
 				_variable_dependents.erase(dep_var)
- 
+
  # 如果变量没有依赖关系了，移除条目
 	if _variable_dependencies[variable_name].is_empty():
 		_variable_dependencies.erase(variable_name)

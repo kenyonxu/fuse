@@ -439,13 +439,13 @@ func get_description() -> String:
 ## 验证指令参数（优化版本）
 func validate() -> Array[String]:
 	var errors = super.validate()
-	
+
 	# 验证基础属性
 	_validate_basic_properties(errors)
-	
+
 	# 验证作用域设置
 	_validate_scope_settings(errors)
-	
+
 	return errors
 
 ## 验证基础属性
@@ -546,7 +546,7 @@ func get_created_variable() -> BaseVariable:
 func get_assistant_info() -> Dictionary:
 	if detected_assistant == null:
 		return {}
-	
+
 	return {
 		"name": detected_assistant.name,
 		"resource_path": target_resource_path,
@@ -565,17 +565,17 @@ func check_resource_status() -> Dictionary:
 		"assistant_name": "",
 		"resource_info": {}
 	}
-	
+
 	if detected_assistant != null:
 		status["assistant_name"] = detected_assistant.name
-		
+
 		if not target_resource_path.is_empty():
 			status["resource_exists"] = FileAccess.file_exists(target_resource_path)
-			
+
 			if detected_assistant.current_resource != null:
 				status["resource_valid"] = detected_assistant.current_resource is GlobalVariableResource
 				status["resource_info"] = detected_assistant.get_current_resource_info()
-	
+
 	return status
 
 ## 使用父类的 FuseError 处理机制
@@ -601,12 +601,12 @@ func _log_creation_process(context: ExecutionContext):
 		variable_name,
 		VariableScopeUtils.enum_to_string(variable_scope).to_upper()
 	])
-	
+
 	if value == null:
 		_log_debug("使用 null 值")
 	else:
 		_log_debug("使用用户指定的值: %s" % str(value))
-	
+
 	# 记录全局变量的资源信息
 	if variable_scope == BaseVariable.VariableScope.GLOBAL:
 		if detected_assistant != null:

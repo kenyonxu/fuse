@@ -20,7 +20,7 @@ static func search(query: String) -> Array[Dictionary]:
         # 防御性编程：检查info和metadata是否存在
         if not info or not info.has("metadata"):
             continue
-            
+
         var metadata = info.metadata
         if metadata == null:
             continue
@@ -58,10 +58,10 @@ static func search(query: String) -> Array[Dictionary]:
             score = 50
         elif metadata.keywords and metadata.keywords.size() > 0 and _match_keywords(metadata.keywords, q):
             score = 30
-        
+
         if score > 0:
             results.append({"item": info, "score": score})
-    
+
     # 按分数排序
     results.sort_custom(func(a, b): return a.score > b.score)
     return results

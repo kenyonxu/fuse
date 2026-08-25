@@ -89,7 +89,7 @@ func _update_resource_name():
     var value_str = str(value)
     if value_str.length() > 20:
         value_str = value_str.substr(0, 17) + "..."
-    
+
     resource_name = "%s [%s]: %s" % [variable_name, scope_name, value_str]
 
 ## 获取作用域名称
@@ -106,7 +106,7 @@ func get_value() -> Variant:
     access_count += 1
     if not is_initialized:
         _initialize_value()
-    
+
     return value
 
 ## 设置变量值
@@ -127,7 +127,7 @@ func reset():
     modification_count = 0
     is_initialized = true
     _fuse_error = null
-    
+
     variable_reset.emit()
 
 ## 检查变量是否存在值
@@ -183,11 +183,11 @@ func get_info() -> Dictionary:
         "last_modified_time": last_modified_time,
         "is_initialized": is_initialized
     }
-    
+
     # 如果有 FuseError，添加错误信息
     if _fuse_error:
         info["fuse_error"] = _fuse_error.get_error_details()
-    
+
     return info
 
 ## 初始化变量值
@@ -647,11 +647,11 @@ func get_debug_info() -> String:
         str(value),
         modification_count
     ]
-    
+
     # 如果有 FuseError，添加错误信息
     if _fuse_error:
         debug_info += " | Error: %s" % _fuse_error.get_formatted_message()
-    
+
     return debug_info
 
 ## 统一日志方法
@@ -683,19 +683,19 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
     if data.has("name"):
         variable_name = data["name"]
-    
+
     if data.has("value"):
         value = data["value"]
-    
+
     if data.has("persistent"):
         persistent = data["persistent"]
-    
+
     if data.has("modification_count"):
         modification_count = data["modification_count"]
-    
+
     if data.has("last_modified_time"):
         last_modified_time = data["last_modified_time"]
-    
+
     is_initialized = true
     _log_debug("Variable deserialized: %s" % variable_name)
 
@@ -738,12 +738,12 @@ func not_equals(other_value: Variant) -> bool:
 func greater_than(other_value: Variant) -> bool:
     var current_num = to_number()
     var compare_num = _convert_to_number(other_value)
-    
+
     if current_num != 0.0 or compare_num != 0.0:  # 至少有一个不是0
         var result = current_num > compare_num
         _log_debug("Numeric comparison: %s > %s = %s" % [current_num, compare_num, result])
         return result
-    
+
     _log_warning("Cannot compare %s with %s for greater_than operation" % [
         str(typeof(value)), str(typeof(other_value))
     ])
@@ -755,12 +755,12 @@ func greater_than(other_value: Variant) -> bool:
 func less_than(other_value: Variant) -> bool:
     var current_num = to_number()
     var compare_num = _convert_to_number(other_value)
-    
+
     if current_num != 0.0 or compare_num != 0.0:  # 至少有一个不是0
         var result = current_num < compare_num
         _log_debug("Numeric comparison: %s < %s = %s" % [current_num, compare_num, result])
         return result
-    
+
     _log_warning("Cannot compare %s with %s for less_than operation" % [
         str(typeof(value)), str(typeof(other_value))
     ])
@@ -855,7 +855,7 @@ func _create_fuse_error(message: String, error_type: FuseError.ErrorType = FuseE
     var error_context = context.duplicate()
     error_context["variable_name"] = variable_name
     error_context["variable_type"] = get_type_name()
-    
+
     _fuse_error = FuseError.new(error_type, "BaseVariable", message, "", error_context)
 
 ## 获取 FuseError 实例
@@ -879,19 +879,19 @@ static func create(name: String, val: Variant, scope: VariableScope = VariableSc
     if name.is_empty():
         push_error("变量名称不能为空")
         return null
-    
+
     var variable = BaseVariable.new()
     variable.variable_name = name
     variable.value = val
     variable.scope = scope
     variable.creation_time = Time.get_ticks_msec() / 1000.0
-    
+
     # 根据作用域设置默认属性
     variable._configure_by_scope(scope)
-    
+
     # 标记为已初始化
     variable.is_initialized = true
-    
+
     return variable
 
 ## 静态工厂方法 - 便捷创建
@@ -941,20 +941,20 @@ static func create_temp_timer(name: String = "temp_timer", duration: float = 0.0
 ## returns: Array[BaseVariable] - 创建的变量数组
 static func create_batch(variables_data: Array) -> Array[BaseVariable]:
     var variables: Array[BaseVariable] = []
-    
+
     for data in variables_data:
         if data is Dictionary:
             var name = data.get("name", "")
             var val = data.get("value", null)
             var scope = data.get("scope", VariableScope.LOCAL)
-            
+
             if not name.is_empty():
                 variables.append(create(name, val, scope))
             else:
                 push_warning("批量创建变量时跳过空名称的变量")
         else:
             push_warning("批量创建变量时跳过无效的数据格式")
-    
+
     return variables
 
 ## 静态工厂方法 - 从配置创建
@@ -964,11 +964,11 @@ static func from_config(config: Dictionary) -> BaseVariable:
     if not config.has("name"):
         push_error("配置中缺少变量名称")
         return null
-    
+
     var name = config["name"]
     var val = config.get("value", null)
     var scope_str = config.get("scope", "local").to_lower()
-    
+
     # 解析作用域
     var scope = VariableScope.LOCAL
     match scope_str:
@@ -983,19 +983,19 @@ static func from_config(config: Dictionary) -> BaseVariable:
             scope = VariableScope.LOCAL
         _:
             push_warning("未知的作用域 '%s'，使用默认值 LOCAL" % scope_str)
-    
+
     var variable = create(name, val, scope)
-    
+
     # 应用额外配置
     if config.has("persistent"):
         variable.persistent = config["persistent"]
-    
+
     if config.has("auto_create"):
         variable.auto_create = config["auto_create"]
-    
+
     if config.has("log_level"):
         variable.log_level = config["log_level"]
-    
+
     return variable
 
 ## 静态工厂方法 - 克隆变量
@@ -1006,9 +1006,9 @@ static func clone_variable(original: BaseVariable, new_name: String = "") -> Bas
     if not original:
         push_error("原始变量不能为空")
         return null
-    
+
     var variable = BaseVariable.new()
-    
+
     # 深拷贝所有属性
     variable.variable_name = new_name if not new_name.is_empty() else original.variable_name
     variable.value = original.value
@@ -1017,12 +1017,12 @@ static func clone_variable(original: BaseVariable, new_name: String = "") -> Bas
     variable.scope = original.scope
     variable.auto_create = original.auto_create
     variable.creation_time = Time.get_ticks_msec() / 1000.0
-    
+
     # 重置运行时状态
     variable.last_modified_time = original.last_modified_time
     variable.modification_count = original.modification_count
     variable.is_initialized = original.is_initialized
-    
+
     return variable
 
 ## 私有方法 - 根据作用域配置默认属性
@@ -1058,15 +1058,15 @@ func get_creation_info() -> Dictionary:
 ## returns: Array[String] - 配置错误信息数组
 func validate_configuration() -> Array[String]:
     var errors: Array[String] = []
-    
+
     if variable_name.is_empty():
         errors.append(FuseLocalization.translate("FUSE_ERROR_VAR_NAME_EMPTY"))
-    
+
     # 全局变量持久化验证（简化方案：不再强制要求持久化，只作为建议）
     if scope == VariableScope.GLOBAL and not persistent:
         # 改为警告级别，不阻止变量创建
         _log_warning("全局变量 '%s' 未启用持久化，将在场景退出时被自动清理" % variable_name)
-    
+
     return errors
 
 ## 析构函数

@@ -103,9 +103,9 @@ func _on_preset_save_path_selected(tres_path: String, preset: FusePreset, dialog
 
 	var notify := AcceptDialog.new()
 	notify.title = "预设已导出"
-	notify.dialog_text = "已保存到:
+	notify.dialog_text = """已保存到:
 %s
-%s" % [tres_path, json_path]
+%s""" % [tres_path, json_path]
 	notify.confirmed.connect(notify.queue_free)
 	notify.close_requested.connect(notify.queue_free)
 	EditorInterface.get_base_control().add_child(notify)

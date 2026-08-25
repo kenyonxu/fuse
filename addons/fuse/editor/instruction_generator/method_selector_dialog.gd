@@ -236,21 +236,27 @@ func _create_generate_mode_radio_group(parent: HBoxContainer) -> void:
 	_set_radio.button_pressed = true
 	_set_radio.button_group = radio_group
 	_set_radio.tooltip_text = "生成设置属性值指令"
-	_set_radio.toggled.connect(func(_pressed: bool): if _pressed: _generate_mode = GenerateMode.SET)
+	_set_radio.toggled.connect(func(_pressed: bool):
+		if _pressed:
+			_generate_mode = GenerateMode.SET)
 	parent.add_child(_set_radio)
 
 	_get_radio = CheckButton.new()
 	_get_radio.text = "GET"
 	_get_radio.button_group = radio_group
 	_get_radio.tooltip_text = "生成获取属性值指令"
-	_get_radio.toggled.connect(func(_pressed: bool): if _pressed: _generate_mode = GenerateMode.GET)
+	_get_radio.toggled.connect(func(_pressed: bool):
+		if _pressed:
+			_generate_mode = GenerateMode.GET)
 	parent.add_child(_get_radio)
 
 	_both_radio = CheckButton.new()
 	_both_radio.text = "两者都生成"
 	_both_radio.button_group = radio_group
 	_both_radio.tooltip_text = "同时生成 SET 和 GET 指令"
-	_both_radio.toggled.connect(func(_pressed: bool): if _pressed: _generate_mode = GenerateMode.SET_AND_GET)
+	_both_radio.toggled.connect(func(_pressed: bool):
+		if _pressed:
+			_generate_mode = GenerateMode.SET_AND_GET)
 	parent.add_child(_both_radio)
 
 ## 获取标题文本

@@ -30,7 +30,7 @@ func _init(type: ErrorType, component: String, msg: String, code: String = "", c
 	error_code = code
 	context = ctx
 	timestamp = Time.get_ticks_msec() / 1000.0
-	
+
 	# 自动记录到日志系统
 	_log_to_fuse_logger()
 
@@ -169,7 +169,7 @@ func get_formatted_message() -> String:
 ## 记录到 FuseLogger - 改进分类输出
 func _log_to_fuse_logger():
 	var formatted_message = get_formatted_message()
-	
+
 	# 根据错误类型选择正确的日志级别
 	match error_type:
 		ErrorType.VALIDATION_ERROR, ErrorType.CONFIGURATION_ERROR:

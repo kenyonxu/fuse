@@ -101,6 +101,6 @@ class TestInstruction extends BaseInstruction:
 
 	func execute(context):
 		_on_execution_completed()
-		
+
 	func _update_resource_name():
 		pass

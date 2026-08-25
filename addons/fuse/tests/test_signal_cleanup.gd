@@ -42,7 +42,7 @@ class SimpleTestInstruction extends BaseInstruction:
 
 	func get_description() -> String:
 		return "Test Instruction"
-	
+
 	func _update_resource_name():
 		pass
 

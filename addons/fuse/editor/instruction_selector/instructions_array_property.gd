@@ -199,9 +199,9 @@ func _on_export_confirmed(dialog: PresetExportDialog) -> void:
 		file.store_string(JSON.stringify(preset.to_json(), "\t"))
 		file.close()
 	PresetRegistry.scan_presets()
-	var __fs := EditorInterface.get_resource_filesystem()
-	__fs.filesystem_changed.connect(_on_fs_ready_for_navigate.bind(tres_path), CONNECT_ONE_SHOT)
-	__fs.scan()
+	var fs := EditorInterface.get_resource_filesystem()
+	fs.filesystem_changed.connect(_on_fs_ready_for_navigate.bind(tres_path), CONNECT_ONE_SHOT)
+	fs.scan()
 func _on_fs_ready_for_navigate(tres_path: String) -> void:
 	EditorInterface.get_file_system_dock().navigate_to_path(tres_path)
 

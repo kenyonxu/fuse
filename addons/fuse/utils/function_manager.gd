@@ -203,10 +203,10 @@ static func get_callable_methods(node: Node, included_levels: int = 0xFFFFFFFF, 
 static func get_method_parameters(method_info: Dictionary) -> Array[Dictionary]:
 	if not method_info or not method_info.has("args"):
 		return []
-	
+
 	var parameters: Array[Dictionary] = []
 	var args = method_info.get("args", [])
-	
+
 	for i in range(args.size()):
 		var arg_info = args[i]
 		var param_info = {
@@ -218,35 +218,35 @@ static func get_method_parameters(method_info: Dictionary) -> Array[Dictionary]:
 			"usage": arg_info.get("usage", PROPERTY_USAGE_DEFAULT)
 		}
 		parameters.append(param_info)
-	
+
 	return parameters
 
 ## 验证方法可调用性
 static func is_method_callable(node: Node, method_name: String) -> bool:
 	if not node or method_name.is_empty():
 		return false
-	
+
 	# 首先过滤掉不应该调用的方法
 	if _should_filter_method(method_name):
 		return false
-	
+
 	# 检查方法是否存在
 	var method_list = node.get_method_list()
 	for method_info in method_list:
 		if method_info.get("name", "") == method_name:
 			# 检查方法标志，确保不是私有或内部方法
 			var flags = method_info.get("flags", 0)
-			
+
 			# 排除私有方法和受保护的方法
 			if flags & METHOD_FLAG_NORMAL == 0:
 				return false
-			
+
 			# 排除虚方法和纯虚方法（通常不应该直接调用）
 			if flags & METHOD_FLAG_VIRTUAL != 0:
 				return false
-			
+
 			return true
-	
+
 	return false
 
 ## 安全调用方法
@@ -304,12 +304,12 @@ static func call_method_safe(node: Node, method_name: String, args: Array) -> Di
 static func _get_method_info(node: Node, method_name: String) -> Dictionary:
 	if not node or method_name.is_empty():
 		return {}
-	
+
 	var method_list = node.get_method_list()
 	for method_info in method_list:
 		if method_info.get("name", "") == method_name:
 			return method_info
-	
+
 	return {}
 
 ## 验证参数
@@ -318,33 +318,33 @@ static func _validate_arguments(node: Node, method_name: String, args: Array, me
 		"success": false,
 		"error": ""
 	}
-	
+
 	var expected_args = method_info.get("args", [])
-	
+
 	# 检查参数数量
 	if args.size() != expected_args.size():
 		result.error = "参数数量不匹配: 期望 %d，实际 %d" % [expected_args.size(), args.size()]
 		return result
-	
+
 	# 检查每个参数类型
 	for i in range(expected_args.size()):
 		var expected_type = expected_args[i].get("type", TYPE_NIL)
 		var actual_value = args[i]
 		var actual_type = typeof(actual_value)
-		
+
 		# 允许 null 值（对于对象类型）
 		if actual_value == null and (expected_type == TYPE_OBJECT or expected_type == TYPE_NIL):
 			continue
-		
+
 		# 检查类型兼容性
 		if not _is_type_compatible(actual_type, expected_type):
 			result.error = "参数 %d 类型不匹配: 期望 %s，实际 %s" % [
-				i, 
-				_get_type_name(expected_type), 
+				i,
+				_get_type_name(expected_type),
 				_get_type_name(actual_type)
 			]
 			return result
-	
+
 	result.success = true
 	return result
 
@@ -353,47 +353,47 @@ static func _is_type_compatible(actual_type: int, expected_type: int) -> bool:
 	# 完全匹配
 	if actual_type == expected_type:
 		return true
-	
+
 	# 允许 nil 到对象的转换
 	if actual_type == TYPE_NIL and expected_type == TYPE_OBJECT:
 		return true
-	
+
 	# Vector 类型兼容性（Vector2 ↔ Vector2I）
 	if actual_type == TYPE_VECTOR2 and expected_type == TYPE_VECTOR2I:
 		return true
 	if actual_type == TYPE_VECTOR2I and expected_type == TYPE_VECTOR2:
 		return true
-	
+
 	# Vector 类型兼容性（Vector3 ↔ Vector3I）
 	if actual_type == TYPE_VECTOR3 and expected_type == TYPE_VECTOR3I:
 		return true
 	if actual_type == TYPE_VECTOR3I and expected_type == TYPE_VECTOR3:
 		return true
-	
+
 	# 数值类型之间的转换
 	if actual_type in [TYPE_INT, TYPE_FLOAT] and expected_type in [TYPE_INT, TYPE_FLOAT]:
 		return true
-	
+
 	# 字符串到数值的转换（如果字符串可以解析为数值）
 	if actual_type == TYPE_STRING and expected_type in [TYPE_INT, TYPE_FLOAT]:
 		return true
-	
+
 	# 数值到字符串的转换
 	if actual_type in [TYPE_INT, TYPE_FLOAT] and expected_type == TYPE_STRING:
 		return true
-	
+
 	# 布尔值到数值的转换
 	if actual_type == TYPE_BOOL and expected_type in [TYPE_INT, TYPE_FLOAT]:
 		return true
-	
+
 	# 数值到布尔值的转换
 	if actual_type in [TYPE_INT, TYPE_FLOAT] and expected_type == TYPE_BOOL:
 		return true
-	
+
 	# 字符串到布尔值的转换
 	if actual_type == TYPE_STRING and expected_type == TYPE_BOOL:
 		return true
-	
+
 	return false
 
 ## 过滤不应该调用的方法
@@ -401,11 +401,11 @@ static func _should_filter_method(method_name: String) -> bool:
 	# 过滤空方法名
 	if method_name.is_empty():
 		return true
-	
+
 	# 过滤私有方法（以下划线开头）
 	if method_name.begins_with("_"):
 		return true
-	
+
 	# 过滤特殊方法
 	var special_methods = [
 		"_init", "_ready", "_enter_tree", "_exit_tree", "_process", "_physics_process",
@@ -417,7 +417,7 @@ static func _should_filter_method(method_name: String) -> bool:
 		"_edit_set_scale", "_edit_get_transform", "_edit_set_transform", "_edit_get_rect",
 		"_edit_use_rect", "_edit_get_rotation", "_edit_set_rotation"
 	]
-	
+
 	return method_name in special_methods
 
 ## 检查是否为 getter 方法（get/is/has 开头）
@@ -615,7 +615,7 @@ static func _get_last_error() -> String:
 	var error = Engine.get_main_loop().get_meta("last_error", "")
 	if error:
 		return error
-	
+
 	# 如果没有具体的错误信息，返回通用错误
 	return "未知错误"
 
@@ -623,7 +623,7 @@ static func _get_last_error() -> String:
 static func get_method_return_type(method_info: Dictionary) -> int:
 	if not method_info or not method_info.has("return"):
 		return TYPE_NIL
-	
+
 	var return_info = method_info.get("return", {})
 	return return_info.get("type", TYPE_NIL)
 
@@ -636,7 +636,7 @@ static func method_has_return_value(method_info: Dictionary) -> bool:
 static func get_method_argument_count_from_info(method_info: Dictionary) -> int:
 	if not method_info or not method_info.has("args"):
 		return 0
-	
+
 	var args = method_info.get("args", [])
 	return args.size()
 
@@ -644,20 +644,20 @@ static func get_method_argument_count_from_info(method_info: Dictionary) -> int:
 static func get_method_argument_types_from_info(method_info: Dictionary) -> Array[int]:
 	if not method_info or not method_info.has("args"):
 		return []
-	
+
 	var types: Array[int] = []
 	var args = method_info.get("args", [])
-	
+
 	for arg in args:
 		types.append(arg.get("type", TYPE_NIL))
-	
+
 	return types
 
 ## 检查方法是否为虚方法
 static func is_virtual_method_from_info(method_info: Dictionary) -> bool:
 	if not method_info:
 		return false
-	
+
 	var flags = method_info.get("flags", 0)
 	return (flags & METHOD_FLAG_VIRTUAL) != 0
 
@@ -665,7 +665,7 @@ static func is_virtual_method_from_info(method_info: Dictionary) -> bool:
 static func is_static_method_from_info(method_info: Dictionary) -> bool:
 	if not method_info:
 		return false
-	
+
 	var flags = method_info.get("flags", 0)
 	return (flags & METHOD_FLAG_STATIC) != 0
 
@@ -673,6 +673,6 @@ static func is_static_method_from_info(method_info: Dictionary) -> bool:
 static func is_const_method_from_info(method_info: Dictionary) -> bool:
 	if not method_info:
 		return false
-	
+
 	var flags = method_info.get("flags", 0)
 	return (flags & METHOD_FLAG_CONST) != 0

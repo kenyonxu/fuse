@@ -478,17 +478,17 @@ func _update_function_info():
 func _create_lightweight_function_info():
 	if not _target_node_instance or target_function.is_empty():
 		return
-	
+
 	# 直接检查方法是否存在，避免获取所有方法
 	if not _target_node_instance.has_method(target_function):
 		_log_debug("目标节点没有方法: %s" % target_function)
 		return
-	
+
 	# _log_debug("轻量级函数信息创建开始")
-	
+
 	# 尝试获取方法的真实签名信息
 	var method_signature = _get_method_signature(target_function)
-	
+
 	# 创建最小化的函数信息，只包含必要信息
 	var lightweight_method_info = {
 		"name": target_function,
@@ -496,7 +496,7 @@ func _create_lightweight_function_info():
 		"return_val": TYPE_NIL,
 		"flags": METHOD_FLAG_NORMAL
 	}
-	
+
 	# 根据用户提供的参数数量和实际类型创建参数信息
 	var args = _binding_manager.get_runtime_args()
 	var param_count = args.size()
@@ -504,11 +504,11 @@ func _create_lightweight_function_info():
 	for i in range(param_count):
 		var actual_value = args[i] if i < args.size() else null
 		var actual_type = typeof(actual_value) if actual_value != null else TYPE_NIL
-		
+
 		# 如果用户值为null，尝试从方法签名中获取正确的类型
 		if actual_type == TYPE_NIL and method_signature and i < method_signature.args.size():
 			actual_type = method_signature.args[i].type
-		
+
 		var param_info = {
 			"name": "arg_%d" % i,
 			"type": actual_type,  # 使用实际值的类型或方法签名中的类型
@@ -516,19 +516,19 @@ func _create_lightweight_function_info():
 			"hint_string": "",
 			"usage": PROPERTY_USAGE_DEFAULT
 		}
-		
+
 		# 只有当用户值不为null时才设置默认值，否则让系统使用类型默认值
 		if actual_value != null:
 			param_info["default_value"] = actual_value
-		
+
 		lightweight_method_info.args.append(param_info)
-	
+
 	_current_function_info = FunctionInfo.new(lightweight_method_info)
 	# _log_debug("轻量级函数信息创建完成")
 
 	# 保留用户已设置的值，仅更新元数据和 null 参数的默认值
 	_binding_manager.build_from_function_info(_current_function_info, true)
-	
+
 	_log_debug("  调用后 function_args: %s" % str(_binding_manager.get_runtime_args()))
 	_log_debug("轻量级函数信息创建成功: %s (参数数量: %d)" % [target_function, param_count])
 
@@ -536,13 +536,13 @@ func _create_lightweight_function_info():
 func _get_method_signature(method_name: String) -> Dictionary:
 	if not _target_node_instance:
 		return {}
-	
+
 	# 性能优化：使用缓存避免重复获取方法签名
 	var cache_key = str(_target_node_instance.get_instance_id()) + ":" + method_name
 	if _cached_method_signatures.has(cache_key):
 		_log_debug("从缓存获取方法签名: %s" % method_name)
 		return _cached_method_signatures[cache_key]
-	
+
 	# 使用Godot的反射机制获取方法信息
 	var method_list = _target_node_instance.get_method_list()
 	for method in method_list:
@@ -551,7 +551,7 @@ func _get_method_signature(method_name: String) -> Dictionary:
 			# 缓存方法签名
 			_cached_method_signatures[cache_key] = method
 			return method
-	
+
 	_log_debug("未找到方法签名: %s" % method_name)
 	return {}
 
@@ -559,13 +559,13 @@ func _get_method_signature(method_name: String) -> Dictionary:
 func _deserialize_method_cache():
 	if serialized_method_cache.is_empty():
 		return
-	
+
 	_method_cache.clear()
 	for method_data in serialized_method_cache:
 		var method_name = method_data.get("name", "")
 		if not method_name.is_empty():
 			_method_cache[method_name] = method_data
-	
+
 	_cache_valid = true
 	_log_debug("反序列化方法缓存完成，加载 %d 个方法" % _method_cache.size())
 
@@ -667,11 +667,11 @@ func _refresh_method_cache_deferred():
 func _refresh_method_cache():
 	var start_time = Time.get_ticks_msec()
 	_performance_stats.method_cache_refresh_count += 1
-	
+
 	# 避免在后台线程中调用 _has_valid_target_node，直接检查路径
 	if target_node.is_empty():
 		return
-	
+
 	# 在编辑器中获取目标节点
 	var target_instance = _target_node_instance
 	if not target_instance:
@@ -681,22 +681,22 @@ func _refresh_method_cache():
 			var root = Engine.get_main_loop().current_scene
 			if root:
 				target_instance = root.get_node_or_null(target_node)
-	
+
 	if not target_instance:
 		_log_debug("无法获取目标节点实例")
 		return
-	
+
 	# 性能优化：检查是否真的需要刷新缓存
 	var instance_id = target_instance.get_instance_id()
 	var cache_key = str(instance_id) + "_method_cache"
-	
+
 	# 如果已经有缓存且实例未变，跳过刷新
 	if _method_cache.size() > 0 and _cache_valid:
 		var end_time = Time.get_ticks_msec()
 		_performance_stats.method_cache_refresh_time += (end_time - start_time)
 		_log_debug("方法缓存仍然有效，跳过刷新，耗时 %d ms" % (end_time - start_time))
 		return
-	
+
 	_method_cache.clear()
 
 	# 使用配置的过滤参数获取方法列表
@@ -830,32 +830,32 @@ func _build_resource_name() -> String:
 ## 获取方法名称列表（用于下拉选择）
 func _get_method_names() -> Array[String]:
 	var names: Array[String] = []
-	
+
 	# 移除自动刷新逻辑。
     # 理由：在编辑器启动/资源加载阶段，_method_cache 应该通过 _deserialize_method_cache
     # 从磁盘数据中恢复，而不需要实时去场景树里抓取。
     # 如果此时强制刷新，会导致 "Caller thread can't call" 错误。
 	# if not _cache_valid:
 	# 	_refresh_method_cache()
-	
+
 	for method_name in _method_cache.keys():
 		names.append(method_name)
-	
+
 	# 按字母顺序排序
 	names.sort()
-	
+
 	return names
 
 ## 检查是否有有效的目标节点
 func _has_valid_target_node() -> bool:
 	if target_node.is_empty():
 		return false
-	
+
 	# 在编辑器中，检查是否可以获取到目标节点
 	if Engine.is_editor_hint():
 		var target_node = _get_target_node_in_editor()
 		return target_node != null
-	
+
 	# 在运行时，只要有路径就认为有效（实际验证在执行时进行）
 	return true
 
@@ -896,7 +896,7 @@ func _get_property_list() -> Array[Dictionary]:
 		return []
 
 	var properties: Array[Dictionary] = []
-	
+
 	# 目标节点选择
 	properties.append({
 		"name": "target_node",
@@ -905,7 +905,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint_string": "Node",
 		"usage": PROPERTY_USAGE_DEFAULT
 	})
-	
+
 	# 方法选择（动态生成）
 	   # 仅检查路径字符串，防止后台线程调用 get_node 崩溃
 	if not target_node.is_empty():
@@ -981,7 +981,7 @@ func _get_property_list() -> Array[Dictionary]:
 		# 备用方案：如果函数信息为空但绑定管理器有参数数据
 		properties.append_array(_binding_manager.get_inspector_properties())
 
-	
+
 	# 返回值处理配置
 	properties.append({
 		"name": "store_result",
@@ -989,7 +989,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint": PROPERTY_HINT_NONE,
 		"usage": PROPERTY_USAGE_DEFAULT
 	})
-	
+
 	if store_result:
 		properties.append({
 			"name": "result_variable_name",
@@ -1423,16 +1423,16 @@ func _log_performance_stats():
 		_log_info("节点查找次数: %d，总耗时: %d ms" % [_performance_stats.node_lookup_count, _performance_stats.node_lookup_time])
 		_log_info("函数信息创建次数: %d，总耗时: %d ms" % [_performance_stats.function_info_creation_count, _performance_stats.function_info_creation_time])
 		_log_info("属性列表更新次数: %d" % _performance_stats.property_list_update_count)
-		
+
 		# 计算平均时间
 		if _performance_stats.method_cache_refresh_count > 0:
 			var avg_cache_time = _performance_stats.method_cache_refresh_time / _performance_stats.method_cache_refresh_count
 			_log_info("平均方法缓存刷新时间: %.2f ms" % avg_cache_time)
-		
+
 		if _performance_stats.node_lookup_count > 0:
 			var avg_lookup_time = _performance_stats.node_lookup_time / _performance_stats.node_lookup_count
 			_log_info("平均节点查找时间: %.2f ms" % avg_lookup_time)
-		
+
 		if _performance_stats.function_info_creation_count > 0:
 			var avg_creation_time = _performance_stats.function_info_creation_time / _performance_stats.function_info_creation_count
 			_log_info("平均函数信息创建时间: %.2f ms" % avg_creation_time)

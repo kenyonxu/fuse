@@ -229,15 +229,15 @@ func get_info() -> Dictionary:
 ## - Array[String] - 验证错误列表，空数组表示验证通过
 func validate() -> Array[String]:
 	var errors: Array[String] = []
-	
+
 	if not event_definition:
 		errors.append(FuseLocalization.translate("FUSE_ERROR_NO_EVENT_DEFINITION"))
-	
+
 	if not owner_trigger:
 		errors.append(FuseLocalization.translate("FUSE_ERROR_NO_TRIGGER_NODE"))
 	elif not is_instance_valid(owner_trigger):
 		errors.append(FuseLocalization.translate("FUSE_ERROR_TRIGGER_NODE_INVALID"))
-	
+
 	return errors
 
 ## 创建 FuseError 实例
@@ -246,7 +246,7 @@ func _create_fuse_error(message: String, error_type: FuseError.ErrorType = FuseE
 	error_context["event_type"] = event_definition.get_event_type() if event_definition else "unknown"
 	error_context["event_description"] = event_definition.get_description() if event_definition else "无事件定义"
 	error_context["owner_trigger"] = owner_trigger.get_name() if owner_trigger else "无触发器"
-	
+
 	return FuseError.create_with_context(error_type, "RuntimeEventInstance", message, error_context)
 
 ## 统一日志方法

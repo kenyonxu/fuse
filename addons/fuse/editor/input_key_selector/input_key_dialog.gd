@@ -35,13 +35,13 @@ func _start_capture() -> void:
 	# 本地化等待按键提示
 	_update_waiting_text()
 	print("DEBUG: === 使用 window_input 信号 === 开始捕获按键，waiting_for_key =", waiting_for_key)
-	
+
 	# 关键修复：直接使用对话框自身的 window_input 信号
 	# 因为 AcceptDialog 继承自 Window，它应该有自己的 window_input 信号
 	print("DEBUG: 使用对话框自身的 window_input 信号")
 	print("DEBUG: 对话框类型 =", typeof(self))
 	print("DEBUG: 对话框类名 =", self.get_class())
-	
+
 	# 检查对话框自身是否有 window_input 信号
 	if self.has_signal("window_input"):
 		print("DEBUG: 对话框有 window_input 信号")
@@ -55,7 +55,7 @@ func _start_capture() -> void:
 		print("DEBUG: 对话框没有 window_input 信号")
 		# 列出所有可用的信号
 		print("DEBUG: 对话框的信号:", self.get_signal_list())
-		
+
 		# 备用方案：尝试使用 SceneTree 的全局输入处理
 		print("DEBUG: 尝试使用 SceneTree 输入处理")
 		var tree = get_tree()
@@ -72,11 +72,11 @@ func _on_window_input(event: InputEvent):
 	print("DEBUG: waiting_for_key =", waiting_for_key)
 	print("DEBUG: event 类型 =", typeof(event))
 	print("DEBUG: event 类名 =", event.get_class() if event else "null")
-	
+
 	if not waiting_for_key:
 		print("DEBUG: 不在等待按键状态，返回")
 		return
-	
+
 	# 详细记录所有事件信息
 	print("DEBUG: 收到事件:", event)
 	if event is InputEventKey:
@@ -87,19 +87,19 @@ func _on_window_input(event: InputEvent):
 		print("DEBUG: as_text =", event.as_text())
 	else:
 		print("DEBUG: 不是 InputEventKey 事件，类型 =", typeof(event))
-	
+
 	# 过滤按键事件 - 只处理按键按下事件
 	if event is InputEventKey and event.pressed and not event.is_echo():
 		print("DEBUG: ✅ 检测到有效按键按下:", event.keycode, "文本:", event.as_text())
 		key_selected.emit(event.keycode)
 		print("DEBUG: ✅ 已发送 key_selected 信号")
-		
+
 		# 断开 window_input 信号连接
 		if self.has_signal("window_input"):
 			if self.window_input.is_connected(_on_window_input):
 				self.window_input.disconnect(_on_window_input)
 				print("DEBUG: ✅ window_input 信号已断开")
-		
+
 		print("DEBUG: ✅ 准备隐藏对话框")
 		hide()
 	else:
@@ -109,22 +109,22 @@ func _on_tree_input(event: InputEvent):
 	print("DEBUG: === _on_tree_input 被调用 ===")
 	print("DEBUG: waiting_for_key =", waiting_for_key)
 	print("DEBUG: event 类型 =", typeof(event))
-	
+
 	if not waiting_for_key:
 		return
-	
+
 	# 过滤按键事件 - 只处理按键按下事件
 	if event is InputEventKey and event.pressed and not event.is_echo():
 		print("DEBUG: ✅ 通过 SceneTree 检测到有效按键按下:", event.keycode, "文本:", event.as_text())
 		key_selected.emit(event.keycode)
-		
+
 		# 断开 SceneTree input 信号连接
 		var tree = get_tree()
 		if tree:
 			if tree.has_signal("input"):
 				if tree.input.is_connected(_on_tree_input):
 					tree.input.disconnect(_on_tree_input)
-		
+
 		hide()
 
 func _notification(what):
@@ -137,7 +137,7 @@ func _notification(what):
 				if self.window_input.is_connected(_on_window_input):
 					self.window_input.disconnect(_on_window_input)
 					print("DEBUG: 隐藏时 window_input 信号已断开")
-			
+
 			# 断开 SceneTree input 信号连接
 			var tree = get_tree()
 			if tree:

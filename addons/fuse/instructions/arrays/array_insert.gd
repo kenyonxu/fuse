@@ -976,7 +976,10 @@ func get_description() -> String:
 			source_str = FuseLocalization.translate_format("FUSE_INSTRUCTION_ARRAY_INSERT_DESC_GROUP", {"name": group_name}) if not group_name.is_empty() else FuseLocalization.translate("FUSE_INSTRUCTION_ARRAY_INSERT_DESC_NO_GROUP")
 
 	if use_index_from_variable:
-		index_str = FuseLocalization.translate_format("FUSE_INSTRUCTION_ARRAY_INSERT_DESC_INDEX_FROM_VAR", {"name": index_from_variable}) if not index_from_variable.is_empty() else FuseLocalization.translate("FUSE_INSTRUCTION_ARRAY_INSERT_DESC_NO_INDEX_VAR")
+		if not index_from_variable.is_empty():
+			index_str = FuseLocalization.translate_format("FUSE_INSTRUCTION_ARRAY_INSERT_DESC_INDEX_FROM_VAR", {"name": index_from_variable})
+		else:
+			index_str = FuseLocalization.translate("FUSE_INSTRUCTION_ARRAY_INSERT_DESC_NO_INDEX_VAR")
 	else:
 		index_str = str(index_value)
 

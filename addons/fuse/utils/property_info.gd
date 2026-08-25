@@ -43,10 +43,10 @@ static func create(property_dict: Dictionary) -> PropertyInfo:
     info.usage = property_dict.get("usage", 0)
     info.default_value = property_dict.get("default_value", null)
     info.class_type = property_dict.get("class_name", "")
-    
+
     # 解析扩展信息
     info._parse_extended_info(property_dict)
-    
+
     return info
 
 ## 从节点属性创建 PropertyInfo
@@ -55,7 +55,7 @@ static func from_node_property(node: Node, property_name: String) -> PropertyInf
     for prop_dict in property_list:
         if prop_dict.name == property_name:
             return create(prop_dict)
-    
+
     # 如果找不到属性，返回空信息
     var empty_info = PropertyInfo.new()
     empty_info.name = property_name
@@ -66,10 +66,10 @@ static func from_node_property(node: Node, property_name: String) -> PropertyInf
 func _parse_extended_info(property_dict: Dictionary):
     # 分析使用标志
     _parse_usage_flags(property_dict.usage)
-    
+
     # 分析类型特定信息
     _parse_type_specific_info(property_dict)
-    
+
     # 分析提示信息
     _parse_hint_info(property_dict)
 
@@ -210,7 +210,7 @@ func get_display_name() -> String:
 ## 验证值是否适合此属性
 func validate_value(value: Variant) -> Dictionary:
     var result = {"valid": true, "error": "", "converted_value": value}
-    
+
     # 类型检查
     if not TypeConverter.is_compatible(typeof(value), type):
         result.valid = false
@@ -218,30 +218,30 @@ func validate_value(value: Variant) -> Dictionary:
             get_type_name(), TypeConverter.get_type_name(typeof(value))
         ]
         return result
-    
+
     # 数值范围检查
     if is_numeric():
         result = _validate_numeric_range(value)
-    
+
     # 字符串长度检查
     if type == TYPE_STRING and max_value != null:
         var str_value = str(value)
         if str_value.length() > max_value:
             result.valid = false
             result.error = "字符串长度超过限制：%d/%d" % [str_value.length(), max_value]
-    
+
     # 数组大小检查
     if type == TYPE_ARRAY and is_array_fixed_size and array_size > 0:
         if value is Array and value.size() != array_size:
             result.valid = false
             result.error = "数组大小不匹配：期望 %d，实际 %d" % [array_size, value.size()]
-    
+
     return result
 
 ## 验证数值范围
 func _validate_numeric_range(value: Variant) -> Dictionary:
     var result = {"valid": true, "error": "", "converted_value": value}
-    
+
     var num_value: float
     if typeof(value) == TYPE_INT:
         num_value = float(value)
@@ -254,14 +254,14 @@ func _validate_numeric_range(value: Variant) -> Dictionary:
             result.valid = false
             result.error = "无法转换为数值"
             return result
-    
+
     if min_value != null and num_value < min_value:
         result.valid = false
         result.error = "值小于最小值：%f < %f" % [num_value, min_value]
     elif max_value != null and num_value > max_value:
         result.valid = false
         result.error = "值大于最大值：%f > %f" % [num_value, max_value]
-    
+
     return result
 
 ## 获取属性摘要信息
@@ -269,7 +269,7 @@ func get_summary() -> String:
     var parts = []
     parts.append("名称: " + name)
     parts.append("类型: " + get_type_name())
-    
+
     if is_writable():
         parts.append("可写")
     if is_read_only:
@@ -278,7 +278,7 @@ func get_summary() -> String:
         parts.append("内部")
     if is_exported:
         parts.append("导出")
-    
+
     if is_numeric() and (min_value != null or max_value != null):
         var range_str = "范围: "
         if min_value != null:
@@ -287,7 +287,7 @@ func get_summary() -> String:
         if max_value != null:
             range_str += str(max_value)
         parts.append(range_str)
-    
+
     return " | ".join(parts)
 
 ## 转换为字典

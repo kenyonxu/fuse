@@ -34,11 +34,11 @@ func start_tracking(context: ExecutionContext) -> void:
 		"memory_snapshots": [],
 		"variable_changes": []
 	}
-	
+
 	# 记录初始性能指标
 	if track_performance_metrics:
 		_record_initial_performance_metrics()
-	
+
 	# 记录初始内存快照
 	if track_memory_usage:
 		_record_memory_snapshot("start")
@@ -55,7 +55,7 @@ func start_tracking(context: ExecutionContext) -> void:
 func record_instruction_start(instruction: BaseInstruction, context: ExecutionContext) -> void:
 	if not is_tracking:
 		return
-	
+
 	# 安全检查：确保指令对象不为空
 	if not instruction:
 		if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
@@ -63,7 +63,7 @@ func record_instruction_start(instruction: BaseInstruction, context: ExecutionCo
 		else:
 			_log_warning("尝试记录空指令的开始")
 		return
-	
+
 	var step = {
 		"type": "instruction_start",
 		"timestamp": Time.get_ticks_msec(),
@@ -73,11 +73,11 @@ func record_instruction_start(instruction: BaseInstruction, context: ExecutionCo
 		"instruction_index": _get_instruction_index(instruction, context),
 		"performance_data": {}
 	}
-	
+
 	# 记录性能数据
 	if track_performance_metrics:
 		step.performance_data = _collect_performance_metrics()
-	
+
 	# 记录变量状态
 	if track_variable_changes:
 		step.variable_state = _capture_variable_state(context)
@@ -95,7 +95,7 @@ func record_instruction_start(instruction: BaseInstruction, context: ExecutionCo
 func record_instruction_complete(instruction: BaseInstruction, context: ExecutionContext) -> void:
 	if not is_tracking:
 		return
-	
+
 	# 安全检查：确保指令对象不为空
 	if not instruction:
 		if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
@@ -103,7 +103,7 @@ func record_instruction_complete(instruction: BaseInstruction, context: Executio
 		else:
 			_log_warning("尝试记录空指令的完成")
 		return
-	
+
 	var execution_time = instruction.get_execution_time() if instruction.has_method("get_execution_time") else 0.0
 	var step = {
 		"type": "instruction_complete",
@@ -118,11 +118,11 @@ func record_instruction_complete(instruction: BaseInstruction, context: Executio
 		"error_message": instruction.get_error_message() if instruction and instruction.has_method("get_error_message") and instruction.has_error() else "",
 		"performance_data": {}
 	}
-	
+
 	# 记录性能数据
 	if track_performance_metrics:
 		step.performance_data = _collect_performance_metrics()
-	
+
 	# 记录变量状态变化
 	if track_variable_changes:
 		step.variable_changes = _detect_variable_changes(context)
@@ -140,7 +140,7 @@ func record_instruction_complete(instruction: BaseInstruction, context: Executio
 func record_custom_event(event_type: String, event_data: Dictionary) -> void:
 	if not is_tracking:
 		return
-	
+
 	var event = {
 		"type": "custom_event",
 		"timestamp": Time.get_ticks_msec(),
@@ -162,7 +162,7 @@ func record_custom_event(event_type: String, event_data: Dictionary) -> void:
 func record_error(error_message: String, error_type: String = "runtime_error", context: Dictionary = {}) -> void:
 	if not is_tracking:
 		return
-	
+
 	var error_event = {
 		"type": "error",
 		"timestamp": Time.get_ticks_msec(),
@@ -185,7 +185,7 @@ func record_error(error_message: String, error_type: String = "runtime_error", c
 func record_performance_bottleneck(bottleneck_type: String, severity: String = "medium", details: Dictionary = {}) -> void:
 	if not is_tracking:
 		return
-	
+
 	var bottleneck = {
 		"type": "performance_bottleneck",
 		"timestamp": Time.get_ticks_msec(),
@@ -205,30 +205,30 @@ func record_performance_bottleneck(bottleneck_type: String, severity: String = "
 func stop_tracking() -> void:
 	if not is_tracking:
 		return
-	
+
 	var end_time = Time.get_ticks_msec()
 	var total_time = end_time - current_execution.get("start_time", 0)
-	
+
 	current_execution["end_time"] = end_time
 	current_execution["total_time"] = total_time
-	
+
 	# 记录最终性能指标
 	if track_performance_metrics:
 		_record_final_performance_metrics()
-	
+
 	# 记录最终内存快照
 	if track_memory_usage:
 		_record_memory_snapshot("end")
-	
+
 	# 计算执行统计
 	_calculate_execution_stats()
-	
+
 	execution_history.append(current_execution.duplicate())
-	
+
 	# 限制历史记录大小
 	if execution_history.size() > max_history_size:
 		execution_history.pop_front()
-	
+
 	is_tracking = false
 	current_execution.clear()
 
@@ -249,7 +249,7 @@ func get_execution_history() -> Array[Dictionary]:
 func get_recent_executions(count: int = 10) -> Array[Dictionary]:
 	if execution_history.is_empty():
 		return []
-	
+
 	var start_index = max(0, execution_history.size() - count)
 	return execution_history.slice(start_index, execution_history.size()).duplicate()
 
@@ -259,16 +259,16 @@ func get_recent_executions(count: int = 10) -> Array[Dictionary]:
 func get_execution_stats() -> Dictionary:
 	if execution_history.is_empty():
 		return {"error": "没有执行历史"}
-	
+
 	var total_executions = execution_history.size()
 	var total_time = 0.0
 	var instruction_counts = []
 	var error_counts = []
 	var performance_issues = []
-	
+
 	for execution in execution_history:
 		total_time += execution.get("total_time", 0.0)
-		
+
 		# 统计指令数量
 		var instruction_count = 0
 		var error_count = 0
@@ -279,14 +279,14 @@ func get_execution_stats() -> Dictionary:
 				error_count += 1
 			elif step.type == "performance_bottleneck":
 				performance_issues.append(step)
-		
+
 		instruction_counts.append(instruction_count)
 		error_counts.append(error_count)
-	
+
 	var avg_time = total_time / total_executions if total_executions > 0 else 0.0
 	var avg_instructions = instruction_counts.reduce(func(a, b): return a + b, 0) / instruction_counts.size() if instruction_counts.size() > 0 else 0.0
 	var total_errors = error_counts.reduce(func(a, b): return a + b, 0)
-	
+
 	return {
 		"total_executions": total_executions,
 		"total_time": total_time,
@@ -314,13 +314,13 @@ func clear_execution_history() -> void:
 func set_tracking_config(config: Dictionary) -> void:
 	if config.has("max_history_size"):
 		max_history_size = max(10, config["max_history_size"])
-	
+
 	if config.has("track_performance_metrics"):
 		track_performance_metrics = config["track_performance_metrics"]
-	
+
 	if config.has("track_memory_usage"):
 		track_memory_usage = config["track_memory_usage"]
-	
+
 	if config.has("track_variable_changes"):
 		track_variable_changes = config["track_variable_changes"]
 
@@ -352,13 +352,13 @@ func export_execution_history(file_path: String) -> bool:
 		else:
 			_log_warning("没有可导出的执行历史")
 		return false
-	
+
 	var export_data = {
 		"export_time": Time.get_time_string_from_system(),
 		"execution_history": execution_history.duplicate(),
 		"stats": get_execution_stats()
 	}
-	
+
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	if file:
 		var json_string = JSON.stringify(export_data, "\t")
@@ -395,7 +395,7 @@ func _get_instruction_index(instruction: BaseInstruction, context: ExecutionCont
 	# 尝试从上下文中获取指令索引
 	if context and context.has_method("get_instruction_index"):
 		return context.get_instruction_index(instruction)
-	
+
 	# 回退：返回-1表示未知
 	return -1
 
@@ -405,11 +405,11 @@ func _get_instruction_index(instruction: BaseInstruction, context: ExecutionCont
 func _get_instruction_class_name(instruction: BaseInstruction) -> String:
 	if not instruction:
 		return "Unknown"
-	
+
 	var script = instruction.get_script()
 	if not script:
 		return "Unknown"
-	
+
 	# 使用 get_global_name() 替代 get_class_name()
 	return script.get_global_name() if script.has_method("get_global_name") else "Unknown"
 
@@ -417,7 +417,7 @@ func _get_instruction_class_name(instruction: BaseInstruction) -> String:
 func _record_initial_performance_metrics():
 	if not current_execution.has("performance_metrics"):
 		current_execution.performance_metrics = {}
-	
+
 	current_execution.performance_metrics["initial"] = {
 		"timestamp": Time.get_ticks_msec(),
 		"memory_usage": OS.get_static_memory_usage(),
@@ -428,7 +428,7 @@ func _record_initial_performance_metrics():
 func _record_final_performance_metrics():
 	if not current_execution.has("performance_metrics"):
 		current_execution.performance_metrics = {}
-	
+
 	current_execution.performance_metrics["final"] = {
 		"timestamp": Time.get_ticks_msec(),
 		"memory_usage": OS.get_static_memory_usage(),
@@ -440,13 +440,13 @@ func _record_final_performance_metrics():
 func _record_memory_snapshot(phase: String):
 	if not current_execution.has("memory_snapshots"):
 		current_execution.memory_snapshots = []
-	
+
 	var snapshot = {
 		"phase": phase,
 		"timestamp": Time.get_ticks_msec(),
 		"static_memory": OS.get_static_memory_usage()
 	}
-	
+
 	current_execution.memory_snapshots.append(snapshot)
 
 ## 收集性能指标
@@ -471,22 +471,22 @@ func _get_cpu_usage() -> float:
 func _capture_variable_state(context: ExecutionContext) -> Dictionary:
 	if not context:
 		return {}
-	
+
 	var state = {
 		"timestamp": Time.get_ticks_msec(),
 		"local_variables": {},
 		"global_variables": {}
 	}
-	
+
 	# 捕获局部变量
 	# 注意：这里需要访问上下文的内部变量，可能需要添加相应的方法
 	if context.has_method("get_all_local_variables"):
 		state.local_variables = context.get_all_local_variables()
-	
+
 	# 捕获全局变量
 	if context.has_method("get_all_global_variables"):
 		state.global_variables = context.get_all_global_variables()
-	
+
 	return state
 
 ## 检测变量变化
@@ -501,13 +501,13 @@ func _detect_variable_changes(context: ExecutionContext) -> Array:
 func _calculate_execution_stats():
 	if not current_execution.has("steps"):
 		return
-	
+
 	var steps = current_execution.steps
 	var instruction_count = 0
 	var total_execution_time = 0.0
 	var error_count = 0
 	var performance_issues = 0
-	
+
 	for step in steps:
 		match step.type:
 			"instruction_start":
@@ -520,7 +520,7 @@ func _calculate_execution_stats():
 				performance_issues += 1
 			"error":
 				error_count += 1
-	
+
 	current_execution["stats"] = {
 		"instruction_count": instruction_count,
 		"total_execution_time": total_execution_time,

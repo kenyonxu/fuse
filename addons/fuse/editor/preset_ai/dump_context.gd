@@ -82,11 +82,11 @@ func _dump_enums() -> void:
 	# BaseTrigger.CooldownMode（core/base_trigger.gd）
 	enums["CooldownMode"] = _enum_to_dict(BaseTrigger, "CooldownMode")
 	# SequenceMode（if_else 等控制流本地枚举，定义相同；通过 if_else 取）
-	var IfElseScript := load("res://addons/fuse/instructions/flow_control/if_else.gd") as GDScript
-	enums["SequenceMode"] = _script_enum_to_dict(IfElseScript, "SequenceMode")
+	var if_else_script := load("res://addons/fuse/instructions/flow_control/if_else.gd") as GDScript
+	enums["SequenceMode"] = _script_enum_to_dict(if_else_script, "SequenceMode")
 	# ScopeSource（core/utils/variable_scope_utils.gd）
-	var ScopeUtilsScript := load("res://addons/fuse/core/utils/variable_scope_utils.gd") as GDScript
-	enums["ScopeSource"] = _script_enum_to_dict(ScopeUtilsScript, "ScopeSource")
+	var scope_utils_script := load("res://addons/fuse/core/utils/variable_scope_utils.gd") as GDScript
+	enums["ScopeSource"] = _script_enum_to_dict(scope_utils_script, "ScopeSource")
 	_save_json(OUT_DIR + "fuse_enums.json", enums)
 	print("[DumpContext] enums: %d 项" % enums.size())
 

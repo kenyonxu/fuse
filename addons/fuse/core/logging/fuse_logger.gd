@@ -21,9 +21,9 @@ static var _fuse_localization_class: RefCounted = null
 static func log_message(component_name: String, component_level: LogLevel, message_level: LogLevel, message: String, context: String = ""):
 	if not should_log(component_level, message_level):
 		return
-	
+
 	var formatted_message = format_message(message_level, component_name, message, context)
-	
+
 	# 根据级别选择输出方法
 	match message_level:
 		LogLevel.ERROR:
@@ -38,13 +38,13 @@ static func log_message(component_name: String, component_level: LogLevel, messa
 ## 各级别日志方法
 static func log_debug(component_name: String, component_level: LogLevel, message: String, context: String = ""):
 	log_message(component_name, component_level, LogLevel.DEBUG, message, context)
-	
+
 static func log_info(component_name: String, component_level: LogLevel, message: String, context: String = ""):
 	log_message(component_name, component_level, LogLevel.INFO, message, context)
-	
+
 static func log_warning(component_name: String, component_level: LogLevel, message: String, context: String = ""):
 	log_message(component_name, component_level, LogLevel.WARNING, message, context)
-	
+
 static func log_error(component_name: String, component_level: LogLevel, message: String, context: String = ""):
 	log_message(component_name, component_level, LogLevel.ERROR, message, context)
 
@@ -141,12 +141,12 @@ static func should_log(component_level: LogLevel, message_level: LogLevel) -> bo
 static func format_message(level: LogLevel, component_name: String, message: String, context: String = "") -> String:
 	var level_str = LogLevel.keys()[level]
 	var context_str = context if not context.is_empty() else ""
-	
+
 	# 添加颜色代码和图标（只在关键部分使用颜色）
 	var level_color = ""
 	var icon = ""
 	var reset_code = "[/color]"
-	
+
 	match level:
 		LogLevel.ERROR:
 			level_color = "[color=red]"
@@ -160,7 +160,7 @@ static func format_message(level: LogLevel, component_name: String, message: Str
 		LogLevel.DEBUG:
 			level_color = "[color=cyan]"
 			icon = "🔍"
-	
+
 	# 精细的颜色方案：只给级别标签和实际消息内容着色
 	# 格式：[图标][级别][组件名][上下文] 消息内容
 	return "%s%s%s[%s][%s]%s%s%s%s" % [

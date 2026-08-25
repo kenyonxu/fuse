@@ -34,44 +34,44 @@ func _init(p_method_info: Dictionary = {}):
 func get_display_name() -> String:
 	if method_name.is_empty():
 		return "未知方法"
-	
+
 	# 构建显示名称，包含参数信息
 	var param_count = get_parameter_count()
 	var display_name = "%s(%d)" % [method_name, param_count]
-	
+
 	# 如果有返回类型，添加到显示名称
 	if has_return_value():
 		var return_type_name = FunctionManager._get_type_name(return_type)
 		display_name += " -> " + return_type_name
-	
+
 	return display_name
 
 ## 获取方法签名
 func get_method_signature() -> String:
 	if method_name.is_empty():
 		return "unknown()"
-	
+
 	var signature = method_name + "("
-	
+
 	# 添加参数信息
 	for i in range(parameter_infos.size()):
 		if i > 0:
 			signature += ", "
-		
+
 		var param_info = parameter_infos[i]
 		var param_name = param_info.get("name", "param_%d" % i)
 		var param_type = param_info.get("type", TYPE_NIL)
 		var type_name = FunctionManager._get_type_name(param_type)
-		
+
 		signature += "%s: %s" % [param_name, type_name]
-	
+
 	signature += ")"
-	
+
 	# 添加返回类型
 	if has_return_value():
 		var return_type_name = FunctionManager._get_type_name(return_type)
 		signature += " -> " + return_type_name
-	
+
 	return signature
 
 ## 获取参数属性列表（用于动态属性生成）
@@ -128,21 +128,21 @@ func _sanitize_parameter_name(raw_name: String) -> String:
 func validate_arguments(args: Array) -> bool:
 	if args.size() != parameter_infos.size():
 		return false
-	
+
 	for i in range(parameter_infos.size()):
 		var param_info = parameter_infos[i]
 		var expected_type = param_info.get("type", TYPE_NIL)
 		var actual_value = args[i]
 		var actual_type = typeof(actual_value)
-		
+
 		# 允许 null 值（对于对象类型）
 		if actual_value == null and (expected_type == TYPE_OBJECT or expected_type == TYPE_NIL):
 			continue
-			
+
 		# 检查类型兼容性
 		if not FunctionManager._is_type_compatible(actual_type, expected_type):
 			return false
-	
+
 	return true
 
 ## 获取参数数量
@@ -157,53 +157,53 @@ func has_return_value() -> bool:
 func get_parameter_info(index: int) -> Dictionary:
 	if index < 0 or index >= parameter_infos.size():
 		return {}
-	
+
 	return parameter_infos[index]
 
 ## 获取参数名称
 func get_parameter_name(index: int) -> String:
 	if index < 0 or index >= parameter_infos.size():
 		return ""
-	
+
 	return parameter_infos[index].get("name", "param_%d" % index)
 
 ## 获取参数类型
 func get_parameter_type(index: int) -> int:
 	if index < 0 or index >= parameter_infos.size():
 		return TYPE_NIL
-	
+
 	return parameter_infos[index].get("type", TYPE_NIL)
 
 ## 获取参数默认值
 func get_parameter_default(index: int) -> Variant:
 	if index < 0 or index >= parameter_infos.size():
 		return null
-	
+
 	return parameter_infos[index].get("default_value", null)
 
 ## 检查参数是否有默认值
 func parameter_has_default(index: int) -> bool:
 	if index < 0 or index >= parameter_infos.size():
 		return false
-	
+
 	return parameter_infos[index].has("default_value")
 
 ## 获取所有参数名称
 func get_parameter_names() -> Array[String]:
 	var names: Array[String] = []
-	
+
 	for param_info in parameter_infos:
 		names.append(param_info.get("name", ""))
-	
+
 	return names
 
 ## 获取所有参数类型
 func get_parameter_types() -> Array[int]:
 	var types: Array[int] = []
-	
+
 	for param_info in parameter_infos:
 		types.append(param_info.get("type", TYPE_NIL))
-	
+
 	return types
 
 ## 检查是否为虚方法
@@ -222,14 +222,14 @@ func is_const_method() -> bool:
 func get_method_flags() -> int:
 	if not method_info or not method_info.has("flags"):
 		return 0
-	
+
 	return method_info.get("flags", 0)
 
 ## 获取方法ID
 func get_method_id() -> int:
 	if not method_info or not method_info.has("id"):
 		return -1
-	
+
 	return method_info.get("id", -1)
 
 ## 获取方法参数类型列表
@@ -243,7 +243,7 @@ func get_argument_count() -> int:
 ## 创建参数的默认值数组
 func create_default_arguments() -> Array:
 	var defaults: Array = []
-	
+
 	for i in range(parameter_infos.size()):
 		var default_value = get_parameter_default(i)
 		if parameter_has_default(i):
@@ -252,7 +252,7 @@ func create_default_arguments() -> Array:
 			# 根据类型创建合适的默认值
 			var param_type = get_parameter_type(i)
 			defaults.append(_create_default_value_for_type(param_type))
-	
+
 	return defaults
 
 ## 根据类型创建默认值
@@ -284,15 +284,15 @@ func _create_default_value_for_type(type: int) -> Variant:
 func matches_signature(name: String, param_types: Array[int]) -> bool:
 	if method_name != name:
 		return false
-	
+
 	var actual_types = get_argument_types()
 	if actual_types.size() != param_types.size():
 		return false
-	
+
 	for i in range(param_types.size()):
 		if not FunctionManager._is_type_compatible(param_types[i], actual_types[i]):
 			return false
-	
+
 	return true
 
 ## 获取方法的详细信息字典

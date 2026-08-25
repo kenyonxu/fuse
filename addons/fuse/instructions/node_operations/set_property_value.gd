@@ -18,7 +18,7 @@ enum ScopeSource {
 # 调试：确保日志级别为 DEBUG
 func _init():
 	super._init()
-	
+
 # 关键：实现这个静态方法，用于指令选择器
 static func _get_instruction_metadata() -> InstructionMetadata:
 	metadata = InstructionMetadata.new()
@@ -155,10 +155,10 @@ func _update_property_type_info():
 	# 这确保了在保存场景后重启编辑器时，属性选择不会丢失
 	if _available_properties.is_empty():
 		_update_target_node_info()
-	
+
 	# 使用 PropertyManager 获取属性信息
 	_current_property_info = PropertyManager.find_property(_target_node_instance, target_property)
-	
+
 	if _current_property_info != null:
 		_current_property_type = _current_property_info.type
 		_current_property_hint = _current_property_info.hint
@@ -205,7 +205,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint_string": "Node",
 		"default": NodePath("")
 	})
-	
+
 	# target_property - String with enum hint
 	var enum_string = _get_property_enum_string()
 	properties.append({
@@ -215,7 +215,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint_string": enum_string,
 		"default": ""
 	})
-	
+
 	# set_with_variable - bool
 	properties.append({
 		"name": "set_with_variable",
@@ -223,7 +223,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint": PROPERTY_HINT_NONE,
 		"default": false
 	})
-	
+
 	# new_value - 动态类型根据选择的属性
 	var new_value_property = {
 		"name": "new_value",
@@ -233,7 +233,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"default": null
 	}
 	properties.append(new_value_property)
-	
+
 	# variable_name - String
 	properties.append({
 		"name": "variable_name",
@@ -241,7 +241,7 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint": PROPERTY_HINT_NONE,
 		"default": ""
 	})
-	
+
 	# variable_scope - enum (包含三层变量体系)
 	properties.append({
 		"name": "variable_scope",
@@ -502,7 +502,7 @@ func _validate_parameters() -> Array[String]:
 func _is_value_compatible_with_property(value: Variant) -> bool:
 	if _current_property_info == null:
 		return true  # 如果没有属性信息，假设兼容
-	
+
 	return TypeConverter.is_compatible(typeof(value), _current_property_info.type)
 
 ## 更新资源名称

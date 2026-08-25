@@ -178,33 +178,33 @@ func check(context: ExecutionContext) -> bool:
 		_log_error("ExecutionContext is null, cannot check condition")
 		_create_fuse_error_localized("FUSE_ERROR_CONTEXT_NULL_CHECK_CONDITION", FuseError.ErrorType.VALIDATION_ERROR)
 		return false
-	
+
 	if not enabled:
 		_log_debug("Condition is disabled, returning false")
 		return false
-	
+
 	# 检查缓存是否有效
 	if enable_cache and _is_cache_valid(context):
 		_log_debug("Using cached result: %s" % ("true" if _cached_result else "false"))
 		last_result = _cached_result
 		return _cached_result
-	
+
 	check_count += 1
 	last_check_time = Time.get_ticks_msec() / 1000.0
-	
+
 	# 执行实际的条件检查
 	var result = _evaluate_condition(context)
-	
+
 	# 应用结果取反
 	if negate_result:
 		result = not result
-	
+
 	last_result = result
-	
+
 	# 更新缓存
 	if enable_cache:
 		_update_cache(result, context)
-	
+
 	_log_debug("Condition check #%d: %s" % [check_count, "true" if result else "false"])
 	return result
 
@@ -218,11 +218,11 @@ func _evaluate_condition(context: ExecutionContext) -> bool
 ## returns: Array[String] - 验证错误列表，空数组表示验证通过
 func validate() -> Array[String]:
 	var errors: Array[String] = []
-	
+
 	if not enabled:
 		errors.append("Condition is disabled")
 		_create_fuse_error_localized("FUSE_ERROR_CONDITION_DISABLED", FuseError.ErrorType.VALIDATION_ERROR)
-	
+
 	return errors
 
 ## 条件描述信息
@@ -242,11 +242,11 @@ func get_detailed_info() -> Dictionary:
 		"last_check_time": last_check_time,
 		"last_result": last_result
 	}
-	
+
 	# 如果有 FuseError，添加错误信息
 	if _fuse_error:
 		detailed_info["fuse_error"] = _fuse_error.get_error_details()
-	
+
 	return detailed_info
 
 ## 获取条件状态信息
@@ -328,13 +328,13 @@ func set_parameters(parameters: Dictionary):
 	if parameters == null:
 		_log_error("Parameters dictionary is null, cannot set parameters")
 		return
-	
+
 	for key in parameters:
 		# 使用 get(key) 方法检查属性是否存在
 		# 如果属性不存在，get 返回 null
 		var current_value = get(key)
 		var property_exists = current_value != null
-		
+
 		if property_exists:
 			_log_debug("Setting property: %s = %s" % [key, str(parameters[key])])
 			# 使用 Godot 4.x 兼容的设置方法
@@ -354,7 +354,7 @@ func needs_recheck(context: ExecutionContext) -> bool:
 	if context == null:
 		_log_warning("ExecutionContext is null, defaulting to recheck")
 		return true
-	
+
 	# 默认情况下，每次都重新检查
 	# 子类可以重写此方法来实现更智能的检查策略
 	return true
@@ -454,10 +454,10 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary):
 	if data.has("enabled"):
 		enabled = data["enabled"]
-	
+
 	if data.has("negate_result"):
 		negate_result = data["negate_result"]
-	
+
 	if data.has("parameters"):
 		set_parameters(data["parameters"])
 
@@ -466,13 +466,13 @@ func deserialize(data: Dictionary):
 func clone() -> BaseCondition:
 	# 使用 Godot 4.x 兼容的复制方法
 	var new_condition = duplicate()
-	
+
 	# 确保新条件重置状态
 	if new_condition.has_method("reset"):
 		new_condition.reset()
 	else:
 		_log_warning("Clone does not have reset method")
-	
+
 	return new_condition
 
 ## 检查条件是否有效
@@ -483,11 +483,11 @@ func is_valid(context: ExecutionContext) -> bool:
 	if context == null:
 		_log_warning("ExecutionContext is null, checking basic validity only")
 		_create_fuse_error_localized("FUSE_ERROR_CONTEXT_NULL_BASIC_VALIDATION", FuseError.ErrorType.VALIDATION_ERROR)
-	
+
 	var validation_errors = validate()
 	for error in validation_errors:
 		_log_error("Validation error: %s" % error)
-	
+
 	return validation_errors.is_empty()
 
 ## 获取条件的历史记录
@@ -506,7 +506,7 @@ func on_condition_met(context: ExecutionContext):
 	# 防御性编程：检查 context 是否为空
 	if context == null:
 		_log_warning("ExecutionContext is null in on_condition_met")
-	
+
 	_log_debug("Condition met: %s" % get_description())
 	# 子类可以重写此方法来响应条件满足事件
 
@@ -515,7 +515,7 @@ func on_condition_failed(context: ExecutionContext):
 	# 防御性编程：检查 context 是否为空
 	if context == null:
 		_log_warning("ExecutionContext is null in on_condition_failed")
-	
+
 	_log_debug("Condition failed: %s" % get_description())
 	# 子类可以重写此方法来响应条件不满足事件
 
@@ -536,7 +536,7 @@ func optimized_check(context: ExecutionContext) -> bool:
 	if context == null:
 		_log_error("ExecutionContext is null, cannot perform optimized check")
 		return false
-	
+
 	# 默认使用标准检查
 	# 子类可以重写此方法来实现优化检查
 	return check(context)
@@ -559,15 +559,15 @@ func get_debug_info() -> String:
 func check_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 	var results: Array[bool] = []
 	var start_time = Time.get_ticks_msec() / 1000.0
-	
+
 	for context in contexts:
 		var result = check(context)
 		results.append(result)
-	
+
 	var end_time = Time.get_ticks_msec() / 1000.0
 	var total_time = end_time - start_time
 	var avg_time = total_time / contexts.size() if contexts.size() > 0 else 0.0
-	
+
 	_log_debug("批量条件检查完成: 检查了 %d 个上下文, 平均时间: %.4f 秒" % [contexts.size(), avg_time])
 	return results
 
@@ -577,15 +577,15 @@ func check_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 func optimized_check_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 	var results: Array[bool] = []
 	var start_time = Time.get_ticks_msec() / 1000.0
-	
+
 	for context in contexts:
 		var result = optimized_check(context)
 		results.append(result)
-	
+
 	var end_time = Time.get_ticks_msec() / 1000.0
 	var total_time = end_time - start_time
 	var avg_time = total_time / contexts.size() if contexts.size() > 0 else 0.0
-	
+
 	_log_debug("批量优化条件检查完成: 检查了 %d 个上下文, 平均时间: %.4f 秒" % [contexts.size(), avg_time])
 	return results
 
@@ -594,11 +594,11 @@ func optimized_check_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 ## returns: Array[bool] - 条件验证结果数组
 func validate_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 	var results: Array[bool] = []
-	
+
 	for context in contexts:
 		var result = is_valid(context)
 		results.append(result)
-	
+
 	_log_debug("批量条件验证完成: 验证了 %d 个上下文" % contexts.size())
 	return results
 
@@ -607,11 +607,11 @@ func validate_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 ## returns: Array[Dictionary] - 条件状态信息数组
 func get_status_info_batch(contexts: Array[ExecutionContext]) -> Array[Dictionary]:
 	var results: Array[Dictionary] = []
-	
+
 	for context in contexts:
 		var status_info = get_status_info()
 		results.append(status_info)
-	
+
 	_log_debug("批量获取条件状态信息完成: 获取了 %d 个上下文的状态" % contexts.size())
 	return results
 
@@ -623,21 +623,21 @@ func get_status_info_batch(contexts: Array[ExecutionContext]) -> Array[Dictionar
 func _is_cache_valid(context: ExecutionContext) -> bool:
 	if _cache_timestamp == 0.0:
 		return false
-	
+
 	var current_time = Time.get_ticks_msec() / 1000.0
 	var cache_age = current_time - _cache_timestamp
-	
+
 	# 检查缓存是否过期
 	if cache_age > cache_duration:
 		_log_debug("Cache expired (age: %.2f > duration: %.2f)" % [cache_age, cache_duration])
 		return false
-	
+
 	# 检查上下文是否发生变化
 	var current_context_hash = _generate_context_hash(context)
 	if current_context_hash != _cache_context_hash:
 		_log_debug("Context changed, cache invalidated")
 		return false
-	
+
 	return true
 
 ## 更新缓存
@@ -706,7 +706,7 @@ func get_cache_info() -> Dictionary:
 	var current_time = Time.get_ticks_msec() / 1000.0
 	var cache_age = current_time - _cache_timestamp if _cache_timestamp > 0 else 0.0
 	var is_valid = _cache_timestamp > 0 and cache_age <= cache_duration
-	
+
 	return {
 		"enabled": enable_cache,
 		"duration": cache_duration,
@@ -736,7 +736,7 @@ func remove_dependencies(depends_on: Array[String]) -> void:
 func get_dependency_graph() -> Dictionary:
 	var dependencies = get_dependencies()
 	var affected_variables = get_affected_variables()
-	
+
 	var graph = {
 		"nodes": [],
 		"edges": [],
@@ -747,14 +747,14 @@ func get_dependency_graph() -> Dictionary:
 			"priority": get_priority()
 		}
 	}
-	
+
 	# 添加条件节点
 	graph["nodes"].append({
 		"id": "condition_" + str(get_instance_id()),
 		"label": get_description(),
 		"type": "condition"
 	})
-	
+
 	# 添加依赖变量节点和边
 	for dep_var in dependencies:
 		graph["nodes"].append({
@@ -767,7 +767,7 @@ func get_dependency_graph() -> Dictionary:
 			"to": "condition_" + str(get_instance_id()),
 			"type": "dependency"
 		})
-	
+
 	# 添加影响变量节点和边
 	for affected_var in affected_variables:
 		graph["nodes"].append({
@@ -780,7 +780,7 @@ func get_dependency_graph() -> Dictionary:
 			"to": affected_var,
 			"type": "affects"
 		})
-	
+
 	return graph
 
 ## 检查条件依赖关系是否满足
@@ -790,13 +790,13 @@ func check_dependencies(context: ExecutionContext) -> bool:
 	if context == null:
 		_log_error("ExecutionContext is null, cannot check dependencies")
 		return false
-	
+
 	var dependencies = get_dependencies()
 	for dep_var in dependencies:
 		if not context.has_variable(dep_var):
 			_log_debug("依赖变量不存在: %s" % dep_var)
 			return false
-	
+
 	_log_debug("所有依赖关系满足: %s" % str(dependencies))
 	return true
 
@@ -811,22 +811,22 @@ func get_dependency_status(context: ExecutionContext) -> Dictionary:
 		"missing_dependencies": [],
 		"dependency_details": {}
 	}
-	
+
 	for dep_var in dependencies:
 		var exists = context.has_variable(dep_var) if context else false
 		var value = context.get_variable(dep_var) if context else null
-		
+
 		status["dependency_details"][dep_var] = {
 			"exists": exists,
 			"value": value,
 			"type": typeof(value) if value != null else TYPE_NIL
 		}
-		
+
 		if exists:
 			status["satisfied_dependencies"] += 1
 		else:
 			status["missing_dependencies"].append(dep_var)
-	
+
 	return status
 
 ## 批量检查条件依赖关系
@@ -834,11 +834,11 @@ func get_dependency_status(context: ExecutionContext) -> Dictionary:
 ## @return: Array[bool] - 依赖关系检查结果数组
 func check_dependencies_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 	var results: Array[bool] = []
-	
+
 	for context in contexts:
 		var result = check_dependencies(context)
 		results.append(result)
-	
+
 	_log_debug("批量检查条件依赖关系完成: 检查了 %d 个上下文" % contexts.size())
 	return results
 
@@ -847,11 +847,11 @@ func check_dependencies_batch(contexts: Array[ExecutionContext]) -> Array[bool]:
 ## @return: Array[Dictionary] - 依赖关系状态数组
 func get_dependency_status_batch(contexts: Array[ExecutionContext]) -> Array[Dictionary]:
 	var results: Array[Dictionary] = []
-	
+
 	for context in contexts:
 		var status = get_dependency_status(context)
 		results.append(status)
-	
+
 	_log_debug("批量获取条件依赖关系状态完成: 获取了 %d 个上下文的状态" % contexts.size())
 	return results
 
@@ -860,7 +860,7 @@ func get_dependency_status_batch(contexts: Array[ExecutionContext]) -> Array[Dic
 func get_dependency_visualization_data() -> Dictionary:
 	var dependencies = get_dependencies()
 	var affected_variables = get_affected_variables()
-	
+
 	var visualization_data = {
 		"condition": {
 			"id": "condition_" + str(get_instance_id()),
@@ -873,11 +873,11 @@ func get_dependency_visualization_data() -> Dictionary:
 		"affected_variables": affected_variables,
 		"dependency_graph": get_dependency_graph()
 	}
-	
+
 	# 如果有 FuseError，添加错误信息
 	if _fuse_error:
 		visualization_data["fuse_error"] = _fuse_error.get_error_details()
-	
+
 	return visualization_data
 
 ## 创建 FuseError 实例
@@ -888,7 +888,7 @@ func _create_fuse_error(message: String, error_type: FuseError.ErrorType = FuseE
 	var error_context = context.duplicate()
 	error_context["condition_type"] = get_condition_type()
 	error_context["condition_description"] = get_description()
-	
+
 	_fuse_error = FuseError.create_with_context(error_type, "BaseCondition", message, error_context)
 
 ## 创建本地化 FuseError 实例

@@ -146,7 +146,7 @@ func initialize(owner_node: Node) -> void:
 	if Engine.is_editor_hint():
 		_log_debug("编辑器模式下，跳过事件初始化")
 		return
-	
+
 	_create_fuse_error_localized("FUSE_ERROR_BASE_EVENT_INITIALIZE_NOT_OVERRIDDEN", FuseError.ErrorType.RUNTIME_ERROR)
 	push_error("BaseEvent.initialize() must be overridden in subclass")
 
@@ -399,11 +399,11 @@ func get_detailed_info() -> Dictionary:
 		"description": get_description(),
 		"category": get_event_category()
 	}
-	
+
 	# 如果有 FuseError，添加错误信息
 	if _fuse_error:
 		detailed_info["fuse_error"] = _fuse_error.get_error_details()
-	
+
 	return detailed_info
 
 ## 创建 FuseError 实例

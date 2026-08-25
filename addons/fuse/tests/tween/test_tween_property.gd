@@ -23,14 +23,14 @@ func _ready():
 	test_label.text = "Test Label"
 	test_label.modulate = Color.WHITE
 
-	info_label.text = "Tween Property Test
+	info_label.text = """Tween Property Test
 Press 1: Test position animation
 Press 2: Test scale animation
 Press 3: Test rotation animation
 Press 4: Test color animation
 Press 5: Test modulate alpha animation
 Press 6: Test label text animation
-Press 7: Test position with auto_free"
+Press 7: Test position with auto_free"""
 
 func _input(event):
 	if not event.is_pressed():

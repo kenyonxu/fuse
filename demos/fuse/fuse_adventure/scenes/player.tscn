@@ -13,8 +13,8 @@
 [ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="11_mf6og"]
 [ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="12_ds1tm"]
 [ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="13_5bacu"]
+[ext_resource type="Script" uid="uid://cmu6yuufyy78a" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="13_iok25"]
 [ext_resource type="Script" uid="uid://cga028a3a8dd" path="res://addons/fuse/instructions/animation/set_animation_tree_parameter.gd" id="14_5bacu"]
-[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="15_8gaye"]
 [ext_resource type="Script" uid="uid://lavknbtj1ssn" path="res://addons/fuse/instructions/flow_control/wait_for_signal.gd" id="16_47yx7"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
@@ -154,14 +154,22 @@ parameter_name = "conditions/hit"
 parameter_type = 2
 bool_value = true
 
-[sub_resource type="Resource" id="Resource_cg1nb"]
-resource_name = "等待 0.1 秒"
-script = ExtResource("15_8gaye")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 0.1
+[sub_resource type="Resource" id="Resource_wnts0"]
+resource_name = "移动到 [player] (-40.0, 0.0) (本地) (0.50s)"
+script = ExtResource("13_iok25")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+target_position = Vector2(-40, 0)
+duration = 0.5
+space_mode = 1
+easing_type = 1
+trans_type = 3
+completion_timing = 0
 
 [sub_resource type="Resource" id="Resource_un7io"]
 resource_name = "等待信号 ../AnimationTree::animation_finished"
@@ -209,7 +217,7 @@ variable_scope = 0
 
 [sub_resource type="Resource" id="Resource_fgjoy"]
 script = ExtResource("8_mf6og")
-instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_cg1nb"), SubResource("Resource_un7io"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh")])
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_wnts0"), SubResource("Resource_un7io"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
@@ -218,7 +226,6 @@ script = ExtResource("4_7t5up")
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")

@@ -214,7 +214,7 @@ func reset() -> void:
 
 func validate() -> Array[String]:
 	var errors: Array[String] = []
-	
+
 	if target_input_action.is_empty():
 		errors.append(FuseLocalization.translate("FUSE_ERROR_INPUT_ACTION_NOT_SET"))
 		return errors
@@ -233,7 +233,7 @@ func validate() -> Array[String]:
 	var events = InputMap.action_get_events(target_input_action)
 	if events.is_empty():
 		errors.append(FuseLocalization.translate_format("FUSE_ERROR_INPUT_ACTION_NO_EVENTS", {"action": target_input_action}))
-			
+
 	return errors
 
 func _update_resource_name() -> void:

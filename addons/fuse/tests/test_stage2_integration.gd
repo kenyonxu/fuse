@@ -13,7 +13,7 @@ var test_results: Array[Dictionary] = []
 var current_test_index: int = 0
 
 ## FuseLocalization 类引用
-var FuseLocalization_class
+var fuse_localization_class
 
 
 func _ready() -> void:
@@ -23,18 +23,18 @@ func _ready() -> void:
 	print(separator + "\n")
 
 	# 动态加载 FuseLocalization 避免循环依赖
-	FuseLocalization_class = load("res://addons/fuse/localization/fuse_localization.gd")
+	fuse_localization_class = load("res://addons/fuse/localization/fuse_localization.gd")
 
-	if not FuseLocalization_class:
+	if not fuse_localization_class:
 		push_error("无法加载 FuseLocalization 类")
 		return
 
 	# 初始化本地化系统
-	if not FuseLocalization_class.has_method("init"):
+	if not fuse_localization_class.has_method("init"):
 		push_error("FuseLocalization 类缺少 init() 方法")
 		return
 
-	FuseLocalization_class.init()
+	fuse_localization_class.init()
 
 	# 等待一帧后开始测试
 	await get_tree().process_frame
@@ -98,7 +98,7 @@ func test_instruction_selector_localization() -> void:
 	]
 
 	for key in required_keys:
-		var zh_result = FuseLocalization_class.translate(key)
+		var zh_result = fuse_localization_class.translate(key)
 		if zh_result == key:
 			test_pass = false
 			errors.append("  - 翻译键缺失或无效: %s" % key)
@@ -114,7 +114,7 @@ func test_instruction_selector_localization() -> void:
 	if file:
 		var content = file.get_as_text()
 		file.close()
-		if "FuseLocalization_class.translate" in content or "translate(" in content:
+		if "fuse_localization_class.translate" in content or "translate(" in content:
 			print("  ✓ 指令选择器已使用本地化 API")
 		else:
 			test_pass = false
@@ -160,7 +160,7 @@ func test_input_key_selector_localization() -> void:
 	]
 
 	for key in required_keys:
-		var result = FuseLocalization_class.translate(key)
+		var result = fuse_localization_class.translate(key)
 		if result == key:
 			test_pass = false
 			errors.append("  - 翻译键缺失或无效: %s" % key)
@@ -220,7 +220,7 @@ func test_debug_visualizer_localization() -> void:
 	]
 
 	for key in sample_keys:
-		var result = FuseLocalization_class.translate(key)
+		var result = fuse_localization_class.translate(key)
 		if result == key:
 			test_pass = false
 			errors.append("  - 翻译键缺失或无效: %s" % key)
@@ -280,7 +280,7 @@ func test_execution_tracker_localization() -> void:
 	]
 
 	for key in sample_keys:
-		var result = FuseLocalization_class.translate(key)
+		var result = fuse_localization_class.translate(key)
 		if result == key:
 			test_pass = false
 			errors.append("  - 翻译键缺失或无效: %s" % key)
@@ -340,7 +340,7 @@ func test_inspector_plugin_localization() -> void:
 	]
 
 	for key in required_keys:
-		var result = FuseLocalization_class.translate(key)
+		var result = fuse_localization_class.translate(key)
 		if result == key:
 			test_pass = false
 			errors.append("  - 翻译键缺失或无效: %s" % key)
@@ -392,7 +392,7 @@ func test_translation_key_coverage() -> void:
 	var errors: Array[String] = []
 
 	# 获取翻译统计
-	var stats = FuseLocalization_class.get_translation_stats()
+	var stats = fuse_localization_class.get_translation_stats()
 
 	print("  - 翻译键总数: %d" % stats.total_keys)
 	print("  - 中文覆盖率: %.1f%%" % stats.zh_CN_coverage)
@@ -412,7 +412,7 @@ func test_translation_key_coverage() -> void:
 		errors.append("  - 英文覆盖率不足 (当前: %.1f%%, 期望: ≥95%%)" % stats.en_US_coverage)
 
 	# 检查是否有缺失的翻译
-	var missing = FuseLocalization_class.get_missing_translations()
+	var missing = fuse_localization_class.get_missing_translations()
 	if not missing.is_empty():
 		print("  - 缺失的翻译数量: %d" % missing.size())
 
@@ -463,7 +463,7 @@ func test_parameterized_translations() -> void:
 		var key = test_case["key"]
 		var args = test_case["args"]
 
-		var result = FuseLocalization_class.translate_format(key, args)
+		var result = fuse_localization_class.translate_format(key, args)
 
 		# 检查是否返回了原始键（表示翻译失败）
 		if test_case.has("should_not_be_key") and result == key:
@@ -508,8 +508,8 @@ func test_language_switching() -> void:
 	var errors: Array[String] = []
 
 	# 切换到英文
-	FuseLocalization_class.set_locale("en_US")
-	var en_result = FuseLocalization_class.translate("FUSE_UI_INSTRUCTION_SELECTOR_TITLE")
+	fuse_localization_class.set_locale("en_US")
+	var en_result = fuse_localization_class.translate("FUSE_UI_INSTRUCTION_SELECTOR_TITLE")
 
 	if en_result == "Instruction Selector":
 		print("  ✓ 英文切换成功: %s" % en_result)
@@ -518,8 +518,8 @@ func test_language_switching() -> void:
 		errors.append("  - 英文切换失败: %s" % en_result)
 
 	# 切换到中文
-	FuseLocalization_class.set_locale("zh_CN")
-	var zh_result = FuseLocalization_class.translate("FUSE_UI_INSTRUCTION_SELECTOR_TITLE")
+	fuse_localization_class.set_locale("zh_CN")
+	var zh_result = fuse_localization_class.translate("FUSE_UI_INSTRUCTION_SELECTOR_TITLE")
 
 	if zh_result == "指令选择器":
 		print("  ✓ 中文切换成功: %s" % zh_result)
@@ -558,7 +558,7 @@ func test_fallback_mechanism() -> void:
 
 	# 测试不存在的翻译键
 	var fake_key = "FUSE_FAKE_TRANSLATION_KEY_12345"
-	var result = FuseLocalization_class.translate(fake_key)
+	var result = fuse_localization_class.translate(fake_key)
 
 	# 应该返回原始键
 	if result == fake_key:
@@ -630,7 +630,7 @@ func print_test_summary() -> void:
 
 	# 输出翻译统计
 	print("\n翻译统计:")
-	var stats = FuseLocalization_class.get_translation_stats()
+	var stats = fuse_localization_class.get_translation_stats()
 	print("  - 翻译键总数: %d" % stats.total_keys)
 	print("  - 当前语言: %s" % stats.current_locale)
 	print("  - 中文覆盖率: %.1f%%" % stats.zh_CN_coverage)

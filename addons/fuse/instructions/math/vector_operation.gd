@@ -321,7 +321,7 @@ func _get_property_list() -> Array[Dictionary]:
 				hint_string = "Nearest,Custom ID,Trigger Scope,Target Node",
 				usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 			})
-		
+
 			if vector_b_scope_source == ScopeSource.CUSTOM_ID:
 				properties.append({
 					name = "vector_b_scope_id",
