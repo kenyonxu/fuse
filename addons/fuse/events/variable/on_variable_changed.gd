@@ -72,9 +72,22 @@ enum CheckMode {
 		check_mode = value
 		_update_resource_name()
 
-## 目标值（用于 ON_EQUAL、ON_GREATER、ON_LESS 模式；声明走 _get_property_list 的
-## TYPE_NIL+TYPE_STRING hint 呈现可编辑 Variant——@export 的 Variant 恒 null 不可编辑）
-var target_value: Variant = null
+# 目标值实际存储（私有成员不进属性列表；Inspector 呈现走 _get_property_list 声明 +
+# _set/_get 桥接——普通 var 会以无 hint 的 TYPE_NIL 自动列出，与声明同名打架显示死 null）
+var _target_value: Variant = null
+
+## Inspector 桥接（target_value 读写转发到私有存储）
+func _set(property: StringName, value: Variant) -> bool:
+	if property == "target_value":
+		_target_value = value
+		_update_resource_name()
+		return true
+	return false
+
+func _get(property: StringName) -> Variant:
+	if property == "target_value":
+		return _target_value
+	return null
 
 ## 检查间隔（秒），默认 0.1 秒
 @export var check_interval: float = 0.1:
@@ -158,11 +171,11 @@ func _update_resource_name():
 
 	var mode_text = FuseLocalization.translate(mode_key)
 	if check_mode == CheckMode.ON_EQUAL:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_target_value)})
 	elif check_mode == CheckMode.ON_GREATER:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_target_value)})
 	elif check_mode == CheckMode.ON_LESS:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_target_value)})
 
 	resource_name = FuseLocalization.translate_format("FUSE_EVENT_ON_VARIABLE_CHANGED_RESOURCE_NAME", {
 		"variable": variable_name,
@@ -270,17 +283,17 @@ func _check_variable(event_instance: RuntimeEventInstance = null):
 
 		CheckMode.ON_EQUAL:
 			# 值等于目标值时触发
-			if _are_values_equal(current_value, target_value):
+			if _are_values_equal(current_value, _target_value):
 				should_trigger = true
 
 		CheckMode.ON_GREATER:
 			# 值大于目标值时触发
-			if _compare_values(current_value, target_value) > 0:
+			if _compare_values(current_value, _target_value) > 0:
 				should_trigger = true
 
 		CheckMode.ON_LESS:
 			# 值小于目标值时触发
-			if _compare_values(current_value, target_value) < 0:
+			if _compare_values(current_value, _target_value) < 0:
 				should_trigger = true
 
 	if should_trigger:
@@ -409,11 +422,11 @@ func get_description() -> String:
 
 	var mode_text = FuseLocalization.translate(mode_key)
 	if check_mode == CheckMode.ON_EQUAL:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_target_value)})
 	elif check_mode == CheckMode.ON_GREATER:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_target_value)})
 	elif check_mode == CheckMode.ON_LESS:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_target_value)})
 
 	var value_key = ""
 	if emit_old_value and emit_new_value:
