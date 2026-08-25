@@ -76,6 +76,51 @@ var duration: float = 0.5:
 		duration = value
 		_update_resource_name()
 
+## 时长来源
+enum DurationSource {
+	DIRECT,    ## 直接设置
+	VARIABLE   ## 从变量读取
+}
+
+## 时长值来源模式
+var duration_source: DurationSource = DurationSource.DIRECT:
+	set(value):
+		duration_source = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+## 时长变量名（当 duration_source == VARIABLE 时使用）
+var duration_variable: String = "":
+	set(value):
+		duration_variable = value
+		_update_resource_name()
+
+## 时长变量作用域
+var duration_variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
+	set(value):
+		duration_variable_scope = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+## 时长作用域来源（仅当 duration_variable_scope == SCOPE 时使用）
+var duration_scope_source: ScopeSource = ScopeSource.NEAREST:
+	set(value):
+		duration_scope_source = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+## 时长自定义作用域 ID（CUSTOM_ID 模式使用）
+var duration_custom_scope_id: String = "":
+	set(value):
+		duration_custom_scope_id = value
+		_update_resource_name()
+
+## 时长目标节点路径（TARGET_NODE 模式使用）
+var duration_target_node_path: NodePath = NodePath(""):
+	set(value):
+		duration_target_node_path = value
+		_update_resource_name()
+
 var space_mode: SpaceMode = SpaceMode.GLOBAL:
 	set(value):
 		space_mode = value
@@ -111,7 +156,39 @@ func get_variable_modes() -> Array[Dictionary]:
 	var modes: Array[Dictionary] = []
 	if use_variable_for_target:
 		modes.append({"name": "target_variable", "mode": "read"})
+	if duration_source == DurationSource.VARIABLE:
+		modes.append({"name": "duration_variable", "mode": "read"})
 	return modes
+
+## 解析实际时长（DIRECT 直返；VARIABLE 读变量，失败返回 -1.0 由调用方报错）
+func _get_duration(context: ExecutionContext) -> float:
+	if duration_source == DurationSource.DIRECT:
+		return duration
+
+	if duration_variable.is_empty():
+		return -1.0
+
+	var var_value: Variant
+	if duration_variable_scope == BaseVariable.VariableScope.SCOPE:
+		if duration_scope_source == ScopeSource.NEAREST:
+			var_value = VariableOperations.get_variable(context, duration_variable, BaseVariable.VariableScope.SCOPE, null)
+		else:
+			var utils_scope_source = duration_scope_source as VariableScopeUtils.ScopeSource
+			var scope_container = VariableScopeUtils.get_scope_container_by_source(
+				context,
+				utils_scope_source,
+				duration_custom_scope_id,
+				duration_target_node_path
+			)
+			if scope_container == null:
+				return -1.0
+			var_value = scope_container.get_variable(duration_variable, null)
+	else:
+		var_value = VariableOperations.get_variable(context, duration_variable, duration_variable_scope, null)
+
+	if var_value == null:
+		return -1.0
+	return TypeConverter.safe_convert_to_float(var_value)
 
 
 ## 获取属性列表
@@ -193,14 +270,58 @@ func _get_property_list() -> Array[Dictionary]:
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
 
-	# 持续时间
+	# 持续时间（双轨：直填 / 变量）
 	properties.append({
-		name = "duration",
-		type = TYPE_FLOAT,
-		hint = PROPERTY_HINT_RANGE,
-		hint_string = "0,10,0.1,or_greater",
+		name = "duration_source",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Direct,Variable",
 		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	})
+	if duration_source == DurationSource.DIRECT:
+		properties.append({
+			name = "duration",
+			type = TYPE_FLOAT,
+			hint = PROPERTY_HINT_RANGE,
+			hint_string = "0,10,0.1,or_greater",
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+	else:
+		properties.append({
+			name = "duration_variable",
+			type = TYPE_STRING,
+			hint = PROPERTY_HINT_NONE,
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+		properties.append({
+			name = "duration_variable_scope",
+			type = TYPE_INT,
+			hint = PROPERTY_HINT_ENUM,
+			hint_string = "Local,Scope,Global",
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+		if duration_variable_scope == BaseVariable.VariableScope.SCOPE:
+			properties.append({
+				name = "duration_scope_source",
+				type = TYPE_INT,
+				hint = PROPERTY_HINT_ENUM,
+				hint_string = "Nearest,Custom ID,Trigger Scope,Target Node",
+				usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+			})
+			if duration_scope_source == ScopeSource.CUSTOM_ID:
+				properties.append({
+					name = "duration_custom_scope_id",
+					type = TYPE_STRING,
+					hint = PROPERTY_HINT_NONE,
+					usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+				})
+			elif duration_scope_source == ScopeSource.TARGET_NODE:
+				properties.append({
+					name = "duration_target_node_path",
+					type = TYPE_NODE_PATH,
+					hint = PROPERTY_HINT_NONE,
+					usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+				})
 
 	# 坐标空间
 	properties.append({
@@ -252,7 +373,11 @@ func _update_resource_name():
 	parts.append(str(target_position))
 	var space_key = "FUSE_SPACE_GLOBAL" if space_mode == SpaceMode.GLOBAL else "FUSE_SPACE_LOCAL"
 	parts.append("(%s)" % FuseLocalization.translate(space_key))
-	parts.append("(%.2fs)" % duration)
+	if duration_source == DurationSource.DIRECT:
+		parts.append("(%.2fs)" % duration)
+	else:
+		var dur_str := duration_variable if not duration_variable.is_empty() else "-"
+		parts.append("(%s)" % dur_str)
 
 	resource_name = " ".join(parts)
 
@@ -272,6 +397,20 @@ func _validate_property(property: Dictionary) -> void:
 		else:
 			var target_utils_scope_source = target_scope_source as VariableScopeUtils.ScopeSource
 			VariableScopeUtils.validate_scope_source_property(property, target_utils_scope_source)
+
+	# 时长来源相关属性可见性
+	if duration_source == DurationSource.DIRECT:
+		if property.name in ["duration_variable", "duration_variable_scope", "duration_scope_source", "duration_custom_scope_id", "duration_target_node_path"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+	else:
+		if property.name == "duration":
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+		if duration_variable_scope != BaseVariable.VariableScope.SCOPE:
+			if property.name in ["duration_scope_source", "duration_custom_scope_id", "duration_target_node_path"]:
+				property.usage = PROPERTY_USAGE_NO_EDITOR
+		else:
+			var duration_utils_scope_source = duration_scope_source as VariableScopeUtils.ScopeSource
+			VariableScopeUtils.validate_scope_source_property(property, duration_utils_scope_source)
 ## 动态属性设置
 func _set(property: StringName, value: Variant) -> bool:
 	if property in ["use_variable_for_target", "target_scope", "target_scope_source"]:
@@ -344,6 +483,14 @@ func execute(context: ExecutionContext) -> void:
 	# 应用缓动设置
 	_apply_easing_settings(tween, easing_type, trans_type)
 
+	# 解析实际时长（变量源失败为负，报错终止）
+	var actual_duration := _get_duration(context)
+	if actual_duration < 0:
+		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"param": "duration"})
+		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"param": "duration"})
+		finished.emit()
+		return
+
 	# 获取当前位置并计算相对移动的目标位置
 	var current_position: Vector2
 	var final_position: Vector2
@@ -368,7 +515,7 @@ func execute(context: ExecutionContext) -> void:
 	var property_name = "global_position" if space_mode == SpaceMode.GLOBAL else "position"
 
 	# 播放移动动画到相对偏移后的位置
-	tween.tween_property(target, property_name, final_position, duration)
+	tween.tween_property(target, property_name, final_position, actual_duration)
 
 	_log_info_localized("FUSE_LOG_TWEEN_MOVE_TO", {
 		"node": target.name,
@@ -376,7 +523,7 @@ func execute(context: ExecutionContext) -> void:
 		"from": str(current_position),
 		"offset": str(target_position),
 		"space": "global" if space_mode == SpaceMode.GLOBAL else "local",
-		"duration": str(duration)
+		"duration": str(actual_duration)
 	})
 
 	# 等待动画完成
@@ -402,8 +549,19 @@ func validate() -> Array[String]:
 			errors.append(FuseLocalization.translate("FUSE_ERROR_TARGET_NODE_EMPTY"))
 
 
-	if duration <= 0:
-		errors.append(FuseLocalization.translate("FUSE_ERROR_DURATION_MUST_BE_POSITIVE"))
+	if duration_source == DurationSource.DIRECT:
+		if duration <= 0:
+			errors.append(FuseLocalization.translate("FUSE_ERROR_DURATION_MUST_BE_POSITIVE"))
+	else:
+		if duration_variable.is_empty():
+			errors.append(FuseLocalization.translate("FUSE_ERROR_VAR_NAME_EMPTY"))
+		if duration_variable_scope == BaseVariable.VariableScope.SCOPE:
+			var duration_utils_scope_source = duration_scope_source as VariableScopeUtils.ScopeSource
+			errors.append_array(VariableScopeUtils.validate_scope_source_params(
+				duration_utils_scope_source,
+				duration_custom_scope_id,
+				duration_target_node_path
+			))
 
 	return errors
 
@@ -470,6 +628,16 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 		runtime_instance._complete_execution()
 		return true
 
+	# 解析实际时长（变量源失败为负，报错终止）
+	var actual_duration := _get_duration(runtime_instance.execution_context)
+	if actual_duration < 0:
+		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"param": "duration"})
+		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"param": "duration"})
+		runtime_instance._has_error = true
+		runtime_instance._error_message = get_error_message()
+		runtime_instance._complete_execution()
+		return true
+
 	state["tween"] = tween
 	state["is_running"] = true
 
@@ -496,7 +664,7 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	var property_name = "global_position" if space_mode == SpaceMode.GLOBAL else "position"
 
 	# 播放移动动画
-	tween.tween_property(target, property_name, final_position, duration)
+	tween.tween_property(target, property_name, final_position, actual_duration)
 
 	_log_info_localized("FUSE_LOG_TWEEN_MOVE_TO", {
 		"node": target.name,
@@ -504,7 +672,7 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 		"from": str(current_position),
 		"offset": str(target_position),
 		"space": "global" if space_mode == SpaceMode.GLOBAL else "local",
-		"duration": str(duration)
+		"duration": str(actual_duration)
 	})
 
 	# 使用回调注册机制

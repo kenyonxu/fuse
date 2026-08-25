@@ -25070,6 +25070,71 @@
       "type_name": "NodePath"
     },
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "duration_variable",
+      "requires": {
+        "duration_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "duration_variable_scope",
+      "requires": {
+        "duration_source": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "duration_scope_source",
+      "requires": {
+        "duration_source": 1,
+        "duration_variable_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "duration_custom_scope_id",
+      "requires": {
+        "duration_scope_source": 1,
+        "duration_source": 1,
+        "duration_variable_scope": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "duration_target_node_path",
+      "requires": {
+        "duration_scope_source": 3,
+        "duration_source": 1,
+        "duration_variable_scope": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
       "default": false,
       "hint": 0,
       "hint_string": "",
@@ -25095,6 +25160,15 @@
       "name": "target_position",
       "type": 5,
       "type_name": "Vector2"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Direct,Variable",
+      "is_nested_instructions": false,
+      "name": "duration_source",
+      "type": 2,
+      "type_name": "int"
     },
     {
       "default": 0.5,
