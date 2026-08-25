@@ -14103,6 +14103,136 @@
       "type_name": "int"
     }
   ],
+  "GetAnimationLength": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local:0,Scope:1,Global:2",
+      "is_nested_instructions": false,
+      "name": "target_scope",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "target_scope_source",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_custom_scope_id",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_target_node_path",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "save_to_scope_source",
+      "requires": {
+        "save_to_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_custom_scope_id",
+      "requires": {
+        "save_to_scope": 1,
+        "save_to_scope_source": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_target_node_path",
+      "requires": {
+        "save_to_scope": 1,
+        "save_to_scope_source": 3
+      },
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_variable_for_target",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "AnimationPlayer",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "animation_name",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "save_to_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Local,Scope,Global",
+      "is_nested_instructions": false,
+      "name": "save_to_scope",
+      "type": 2,
+      "type_name": "int"
+    }
+  ],
   "GetChildByIndex": [
     {
       "default": "",

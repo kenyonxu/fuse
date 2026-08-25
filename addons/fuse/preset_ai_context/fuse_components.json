@@ -72,6 +72,24 @@
     "type": "GetAnimatedSprite2DSpeedScale"
   },
   {
+    "builtin_icon": "Time",
+    "category": "instruction",
+    "category_key": "FUSE_CATEGORY_ANIMATION",
+    "description_key": "FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_DESC",
+    "icon_name": "",
+    "keywords": [
+      "animation",
+      "length",
+      "duration",
+      "动画",
+      "时长",
+      "获取",
+      "AnimationPlayer"
+    ],
+    "name_key": "FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_NAME",
+    "type": "GetAnimationLength"
+  },
+  {
     "builtin_icon": "AnimationPlayer",
     "category": "instruction",
     "category_key": "FUSE_CATEGORY_ANIMATION",

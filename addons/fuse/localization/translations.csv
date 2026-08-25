@@ -5121,3 +5121,10 @@ FUSE_ERROR_WAIT_FOR_SIGNAL_TIMEOUT,等待信号超时,Wait for signal timed out
 FUSE_INSTRUCTION_WAIT_FOR_EVENT_NAME,等待事件,Wait For Event
 FUSE_INSTRUCTION_WAIT_FOR_EVENT_DESC,暂停执行直到事件总线上发出指定事件，事件参数以 event_ 前缀局部变量暴露；超时失败终止,Pauses execution until the named event is sent on the event bus; args exposed as event_* local variables; fails on timeout
 FUSE_ERROR_WAIT_FOR_EVENT_TIMEOUT,等待事件超时,Wait for event timed out
+FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_NAME,获取动画时长,Get Animation Length
+FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_DESC,读取 AnimationPlayer 中指定动画的时长（秒）并保存到变量（动画名支持库前缀如 player/hit）,Reads the length (seconds) of the named animation from an AnimationPlayer and saves it to a variable (animation name supports library prefix like player/hit)
+FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_DESC_FORMAT,获取动画 '{animation}' 的时长 → {variable},Get length of animation '{animation}' → {variable}
+FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_RESOURCE_NAME,动画时长 {animation} → {variable},Anim length {animation} → {variable}
+FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_NO_TARGET,未选择动画节点,No animation node selected
+FUSE_LOG_GET_ANIMATION_LENGTH,动画 {animation} 时长为 {length} 秒,Animation {animation} length is {length} seconds
+FUSE_ERROR_NOT_ANIMATION_PLAYER,目标节点不是 AnimationPlayer,Target node is not an AnimationPlayer

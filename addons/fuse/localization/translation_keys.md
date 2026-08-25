@@ -605,3 +605,6 @@ docs(localization): 更新翻译键参考文档
 **文档维护**: Fuse 本地化团队
 **最后更新**: 2026-01-25
 **反馈**: 请在 GitHub Issues 中报告问题或建议
+- FUSE_INSTRUCTION_GET_ANIMATION_LENGTH_NAME / DESC / DESC_FORMAT / RESOURCE_NAME / NO_TARGET
+- FUSE_LOG_GET_ANIMATION_LENGTH
+- FUSE_ERROR_NOT_ANIMATION_PLAYER
