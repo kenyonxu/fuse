@@ -19,6 +19,11 @@
 [ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="17_iok25"]
 [ext_resource type="Script" uid="uid://ciok2e7h5waqe" path="res://addons/fuse/conditions/node/check_node_property.gd" id="18_e7e1d"]
 [ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="19_un7io"]
+[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="20_nelp3"]
+[ext_resource type="Script" uid="uid://bhy8o7uexju0b" path="res://addons/fuse/instructions/flow_control/if_then.gd" id="21_4aelh"]
+[ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="21_wnts0"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="23_3ayao"]
+[ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="24_7xii8"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -194,7 +199,7 @@ property_value = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_un7io"]
-resource_name = "冲量 (300.0, 0.0) → @SubViewport@9904"
+resource_name = "冲量 (300.0, 0.0) → [上级]"
 script = ExtResource("15_47yx7")
 target_variable = ""
 target_scope = 0
@@ -214,7 +219,7 @@ impulse = Vector2(300, 0)
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_mbt1i"]
-resource_name = "冲量 (-300.0, 0.0) → @SubViewport@9904"
+resource_name = "冲量 (-300.0, 0.0) → [上级]"
 script = ExtResource("15_47yx7")
 target_variable = ""
 target_scope = 0
@@ -288,10 +293,60 @@ variable_scope = 0
 log_level = 0
 completion_timing = 0
 
+[sub_resource type="Resource" id="Resource_buyw0"]
+resource_name = "检查变量 [ID:player]: life EQUALS 0"
+script = ExtResource("20_nelp3")
+variable_name = "life"
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 1
+scope_source = 1
+custom_scope_id = "player"
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_041sw"]
+resource_name = "发送事件: playerdie"
+script = ExtResource("21_wnts0")
+event_name = "playerdie"
+
+[sub_resource type="Resource" id="Resource_kiu2e"]
+resource_name = "If/Then life [ID:player] EQUALS 0 [1 个指令] [异步]"
+script = ExtResource("21_4aelh")
+condition = SubResource("Resource_buyw0")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_041sw")])
+
 [sub_resource type="Resource" id="Resource_fgjoy"]
 script = ExtResource("8_mf6og")
-instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_cg1nb"), SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_7xii8"), SubResource("Resource_wnts0"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh")])
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_cg1nb"), SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_7xii8"), SubResource("Resource_wnts0"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh"), SubResource("Resource_kiu2e")])
 log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_3qrqi"]
+resource_name = "On Ready With Delay: 0.0"
+script = ExtResource("23_3ayao")
+
+[sub_resource type="Resource" id="Resource_0wiwi"]
+resource_name = "获取节点 '..' → player [ID:level_scope]"
+script = ExtResource("24_7xii8")
+target_node_path = NodePath("")
+node_path = NodePath("..")
+result_variable = "player"
+result_scope = 1
+scope_source = 1
+custom_scope_id = "level_scope"
+
+[sub_resource type="Resource" id="Resource_7nek4"]
+script = ExtResource("8_mf6og")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_0wiwi")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
@@ -300,7 +355,7 @@ script = ExtResource("4_7t5up")
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 9
+frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
@@ -346,4 +401,10 @@ metadata/_custom_type_script = "uid://b5up05i5u1nqd"
 script = ExtResource("5_kvs1w")
 event_definition = SubResource("Resource_8gaye")
 action_runner = SubResource("Resource_fgjoy")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Trigger" type="Node" parent="." unique_id=1738576075]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_3qrqi")
+action_runner = SubResource("Resource_7nek4")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

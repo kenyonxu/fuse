@@ -2,6 +2,13 @@
 
 [ext_resource type="Texture2D" uid="uid://dl1lbfdtbikrp" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Other/hearts/hearts_96x128.png" id="1_eh2d5"]
 [ext_resource type="Texture2D" uid="uid://dfxf0tubv5x3e" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Main Characters/Mask Dude/Fall (32x32).png" id="1_uugg1"]
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="3_q55qy"]
+[ext_resource type="Script" uid="uid://clryhcrodte5h" path="res://addons/fuse/events/variable/on_variable_changed.gd" id="4_lenfx"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_wvq25"]
+[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="6_cj703"]
+[ext_resource type="Script" uid="uid://bhy8o7uexju0b" path="res://addons/fuse/instructions/flow_control/if_then.gd" id="6_n3k5l"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="7_cj703"]
+[ext_resource type="Script" uid="uid://btqvw0a03xqcx" path="res://addons/fuse/instructions/ui/show_hide_ui.gd" id="7_rwnbb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uugg1"]
 content_margin_left = 0.0
@@ -18,6 +25,233 @@ corner_detail = 5
 [sub_resource type="AtlasTexture" id="AtlasTexture_fgjoy"]
 atlas = ExtResource("1_eh2d5")
 region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="Resource" id="Resource_udnhj"]
+resource_name = "变量变化: life ([SCOPE]) - 值变化"
+script = ExtResource("4_lenfx")
+variable_name = "life"
+variable_scope = 1
+target_value = 0
+emit_old_value = false
+scope_source = 1
+custom_scope_id = "player"
+
+[sub_resource type="Resource" id="Resource_7y26n"]
+resource_name = "检查变量 [[本地]]: event_new_value EQUALS 2"
+script = ExtResource("6_cj703")
+variable_name = "event_new_value"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 2
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_7ca05"]
+resource_name = "显示 UI → heart03"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
+action = 1
+
+[sub_resource type="Resource" id="Resource_rwnbb"]
+resource_name = "If/Then event_new_value [[本地]] EQUALS 2 [1 个指令] [异步]"
+script = ExtResource("6_n3k5l")
+condition = SubResource("Resource_7y26n")
+instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_7ca05")])
+
+[sub_resource type="Resource" id="Resource_cj703"]
+resource_name = "检查变量 [[本地]]: event_new_value EQUALS 1"
+script = ExtResource("6_cj703")
+variable_name = "event_new_value"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 1
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_njqm7"]
+resource_name = "显示 UI → heart03"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
+action = 1
+
+[sub_resource type="Resource" id="Resource_suhb4"]
+resource_name = "隐藏 UI → heart02"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart02")
+action = 1
+
+[sub_resource type="Resource" id="Resource_pfklj"]
+resource_name = "If/Then event_new_value [[本地]] EQUALS 1 [2 个指令] [异步]"
+script = ExtResource("6_n3k5l")
+condition = SubResource("Resource_cj703")
+instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_njqm7"), SubResource("Resource_suhb4")])
+
+[sub_resource type="Resource" id="Resource_4cmqd"]
+resource_name = "检查变量 [[本地]]: event_new_value EQUALS 0"
+script = ExtResource("6_cj703")
+variable_name = "event_new_value"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_qbp7c"]
+resource_name = "显示 UI → heart03"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
+action = 1
+
+[sub_resource type="Resource" id="Resource_fjn7e"]
+resource_name = "显示 UI → heart02"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart02")
+action = 1
+
+[sub_resource type="Resource" id="Resource_bkv8f"]
+resource_name = "隐藏 UI → heart01"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart01")
+action = 1
+
+[sub_resource type="Resource" id="Resource_wpvjo"]
+resource_name = "If/Then event_new_value [[本地]] EQUALS 0 [3 个指令] [异步]"
+script = ExtResource("6_n3k5l")
+condition = SubResource("Resource_4cmqd")
+instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_qbp7c"), SubResource("Resource_fjn7e"), SubResource("Resource_bkv8f")])
+
+[sub_resource type="Resource" id="Resource_6aywj"]
+resource_name = "检查变量 [[本地]]: event_new_value EQUALS 3"
+script = ExtResource("6_cj703")
+variable_name = "event_new_value"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 3
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_4p08m"]
+resource_name = "显示 UI → heart03"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
+action = 0
+
+[sub_resource type="Resource" id="Resource_g054i"]
+resource_name = "显示 UI → heart02"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart02")
+action = 0
+
+[sub_resource type="Resource" id="Resource_3s4uw"]
+resource_name = "显示 UI → heart01"
+script = ExtResource("7_rwnbb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart01")
+action = 0
+
+[sub_resource type="Resource" id="Resource_1j333"]
+resource_name = "If/Then event_new_value [[本地]] EQUALS 0 [3 个指令] [异步]"
+script = ExtResource("6_n3k5l")
+condition = SubResource("Resource_6aywj")
+instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_4p08m"), SubResource("Resource_g054i"), SubResource("Resource_3s4uw")])
+
+[sub_resource type="Resource" id="Resource_lenfx"]
+script = ExtResource("7_cj703")
+instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_rwnbb"), SubResource("Resource_pfklj"), SubResource("Resource_wpvjo"), SubResource("Resource_1j333")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="UI_Life" type="Control" unique_id=225107553]
 layout_mode = 3
@@ -80,3 +314,9 @@ texture_filter = 1
 layout_mode = 2
 texture = SubResource("AtlasTexture_fgjoy")
 stretch_mode = 5
+
+[node name="OnPlayerHurt" type="Node" parent="." unique_id=95223891]
+script = ExtResource("3_q55qy")
+event_definition = SubResource("Resource_udnhj")
+action_runner = SubResource("Resource_lenfx")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"

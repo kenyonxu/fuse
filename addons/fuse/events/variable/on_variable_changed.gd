@@ -74,7 +74,7 @@ enum CheckMode {
 
 ## 目标值（用于 ON_EQUAL、ON_GREATER、ON_LESS 模式）
 ## 与 SetVariable.new_value 同款：@export Variant 由引擎内建 Variant 编辑器呈现
-@export var target_value: Variant = null:
+@export var target_value: Variant:
 	set(value):
 		target_value = value
 		_update_resource_name()
