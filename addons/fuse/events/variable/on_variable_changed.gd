@@ -31,6 +31,33 @@ class_name OnVariableChanged
 		variable_scope = value
 		_update_resource_name()
 
+## 作用域来源（仅当 variable_scope == SCOPE 时使用）
+enum ScopeSource {
+	NEAREST,        ## 最近的作用域容器（默认）
+	CUSTOM_ID,      ## 指定 scope_id
+	TRIGGER_SCOPE,  ## Trigger 节点上的作用域
+	TARGET_NODE     ## Target 节点上的作用域
+}
+
+## 作用域来源（仅当 variable_scope == SCOPE 时使用）
+var scope_source: ScopeSource = ScopeSource.NEAREST:
+	set(value):
+		scope_source = value
+		_update_resource_name()
+		notify_property_list_changed()
+
+## 自定义作用域 ID（CUSTOM_ID 模式使用）
+var custom_scope_id: String = "":
+	set(value):
+		custom_scope_id = value
+		_update_resource_name()
+
+## 目标节点路径（TARGET_NODE 模式使用）
+var scope_target_node_path: NodePath = NodePath(""):
+	set(value):
+		scope_target_node_path = value
+		_update_resource_name()
+
 ## 检查模式
 enum CheckMode {
 	ON_CHANGE,   ## 值变化时触发
@@ -119,14 +146,15 @@ func initialize(owner_node: Node) -> void:
 		_create_fuse_error_localized("FUSE_ERROR_ASSISTANT_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
 
-	# 🔧 使用 RuntimeEventInstance 的状态
+	# 🔧 使用 RuntimeEventInstance 的状态（last_value 与 _check_variable 走同一 helper，
+	# 避免历史上成员变量与 runtime_state 两套状态脱节导致的初始化假触发）
 	if _runtime_instance_ref:
 		_runtime_instance_ref.set_runtime_state("is_monitoring", true)
 		_runtime_instance_ref.set_runtime_state("check_timer", 0.0)
 		_runtime_instance_ref.set_runtime_state("last_value", _get_variable_value())
 
 	# 检查变量是否存在
-	if _last_value == null and not _variable_exists():
+	if _get_state().get("last_value", null) == null and not _variable_exists():
 		_log_debug_localized("FUSE_LOG_EVENT_VARIABLE_NOT_FOUND", {"variable": variable_name, "scope": VariableScopeUtils.enum_to_string(variable_scope)})
 
 	_log_debug_localized("FUSE_LOG_EVENT_VARIABLE_MONITORING_STARTED", {
@@ -151,29 +179,31 @@ func terminate(owner_node: Node) -> void:
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
 ## 每帧处理（由 Trigger 调用）
-func on_process(delta: float) -> void:
-	# 🔧 使用 RuntimeEventInstance 的状态
-	var is_monitoring = false
-	if _runtime_instance_ref:
-		is_monitoring = _runtime_instance_ref.runtime_state.get("is_monitoring", false)
-
-	if not is_monitoring:
+func on_process(delta: float, event_instance: RuntimeEventInstance = null) -> void:
+	var state := _get_state(event_instance)
+	if not state.get("is_monitoring", false):
 		return
 
-	var check_timer = 0.0
-	if _runtime_instance_ref:
-		check_timer = _runtime_instance_ref.runtime_state.get("check_timer", 0.0)
-
-	check_timer += delta
-
+	# 每帧写回累计值——历史上只在到点时写回，未到点时累计结果丢失，永不触发
+	var check_timer: float = state.get("check_timer", 0.0) + delta
 	if check_timer >= check_interval:
 		check_timer -= check_interval
-		if _runtime_instance_ref:
-			_runtime_instance_ref.set_runtime_state("check_timer", check_timer)
-		_check_variable()
+		state["check_timer"] = check_timer
+		_check_variable(event_instance)
+	else:
+		state["check_timer"] = check_timer
+
+## 取运行时状态字典（优先显式实例，回退成员引用——兼容两条调用路径）
+func _get_state(event_instance: RuntimeEventInstance = null) -> Dictionary:
+	if event_instance:
+		return event_instance.runtime_state
+	if _runtime_instance_ref:
+		return _runtime_instance_ref.runtime_state
+	return {}
 
 ## 检查变量变化
-func _check_variable():
+func _check_variable(event_instance: RuntimeEventInstance = null):
+	var state := _get_state(event_instance)
 	var current_value = _get_variable_value()
 
 	# 如果变量不存在，跳过检查
@@ -184,8 +214,9 @@ func _check_variable():
 
 	match check_mode:
 		CheckMode.ON_CHANGE:
-			# 值变化时触发
-			if not _are_values_equal(current_value, _last_value):
+			# 值变化时触发（读 state 的 last_value——历史上读成员变量恒 null，
+			# 与 initialize 写入的 runtime_state 脱节，导致每次轮询都假触发）
+			if not _are_values_equal(current_value, state.get("last_value", null)):
 				should_trigger = true
 
 		CheckMode.ON_EQUAL:
@@ -204,8 +235,8 @@ func _check_variable():
 				should_trigger = true
 
 	if should_trigger:
-		var old_val = _last_value
-		_last_value = current_value
+		var old_val = state.get("last_value", null)
+		state["last_value"] = current_value
 
 		_log_info_localized("FUSE_LOG_EVENT_VARIABLE_CHANGED", {
 			"variable": variable_name,
@@ -224,16 +255,34 @@ func _check_variable():
 		context_node.set_meta("variable_name", variable_name)
 		context_node.set_meta("variable_scope", VariableScopeUtils.enum_to_string(variable_scope))
 
+		# 桥接到 last_event_args（宿主 Trigger 同步为 event_<参数名> 局部变量，
+		# 与 OnTargetSignalEmit/OnReceiveEvent 的 A1 桥接同款）
+		if _runtime_instance_ref:
+			var args: Dictionary = {"variable_name": variable_name}
+			if emit_old_value:
+				args["old_value"] = old_val
+			if emit_new_value:
+				args["new_value"] = current_value
+			_runtime_instance_ref.set_runtime_state("last_event_args", args)
+
 		triggered.emit(context_node)
 
 		# 清理上下文节点
 		context_node.queue_free()
 
-## 获取变量值（使用 VariableOperations 工具类）
+## 获取变量值（SCOPE 时按 scope_source 分子来源解析容器）
 func _get_variable_value() -> Variant:
-	# 使用 VariableOperations 获取变量值
-	var value = VariableOperations.get_variable(_create_temp_context(), variable_name, variable_scope, null)
-	return value
+	var context = _create_temp_context()
+	if variable_scope == BaseVariable.VariableScope.SCOPE and scope_source != ScopeSource.NEAREST:
+		var utils_scope_source = scope_source as VariableScopeUtils.ScopeSource
+		var scope_container = VariableScopeUtils.get_scope_container_by_source(
+			context, utils_scope_source, custom_scope_id, scope_target_node_path)
+		if scope_container == null:
+			return null
+		if not scope_container.has_variable(variable_name):
+			return null
+		return scope_container.get_variable(variable_name)
+	return VariableOperations.get_variable(context, variable_name, variable_scope, null)
 
 ## 检查变量是否存在（使用 VariableOperations 工具类）
 func _variable_exists() -> bool:
@@ -253,16 +302,29 @@ func _create_temp_context() -> ExecutionContext:
 	return temp_context
 
 
-## 比较两个值是否相等
+## 比较两个值是否相等（数值 int/float 与 String/StringName 宽松互转）
 func _are_values_equal(a: Variant, b: Variant) -> bool:
-	if typeof(a) != typeof(b):
-		return false
-
-	return a == b
+	var ta := typeof(a)
+	var tb := typeof(b)
+	if ta == tb:
+		return a == b
+	if (ta == TYPE_INT or ta == TYPE_FLOAT) and (tb == TYPE_INT or tb == TYPE_FLOAT):
+		return float(a) == float(b)
+	if (ta == TYPE_STRING and tb == TYPE_STRING_NAME) or (ta == TYPE_STRING_NAME and tb == TYPE_STRING):
+		return String(a) == String(b)
+	return false
 
 ## 比较两个值的大小
 func _compare_values(a: Variant, b: Variant) -> int:
-	# 检查是否可以比较
+	# 数值互转后可比较（int/float）
+	if (a is int or a is float) and (b is int or b is float):
+		if a < b:
+			return -1
+		elif a > b:
+			return 1
+		return 0
+
+	# 类型不同且非数值族，无法比较
 	if typeof(a) != typeof(b):
 		_log_warning("变量值类型不一致，无法比较: %s vs %s" % [type_string(typeof(a)), type_string(typeof(b))])
 		return 0
@@ -339,6 +401,11 @@ func validate() -> Array[String]:
 
 	if check_interval <= 0:
 		errors.append(FuseLocalization.translate("FUSE_ERROR_CHECK_INTERVAL_INVALID"))
+
+	if variable_scope == BaseVariable.VariableScope.SCOPE:
+		var utils_scope_source = scope_source as VariableScopeUtils.ScopeSource
+		errors.append_array(VariableScopeUtils.validate_scope_source_params(
+			utils_scope_source, custom_scope_id, scope_target_node_path))
 
 	return errors
 
