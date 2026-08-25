@@ -19659,6 +19659,44 @@
     {
       "default": 0,
       "hint": 2,
+      "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+      "is_nested_instructions": false,
+      "name": "scope_source",
+      "requires": {
+        "variable_scope": 1
+      },
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "custom_scope_id",
+      "requires": {
+        "scope_source": 1,
+        "variable_scope": 1
+      },
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "scope_target_node_path",
+      "requires": {
+        "scope_source": 3,
+        "variable_scope": 1
+      },
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 0,
+      "hint": 2,
       "hint_string": "On Change:0,On Equal:1,On Greater:2,On Less:3",
       "is_nested_instructions": false,
       "name": "check_mode",

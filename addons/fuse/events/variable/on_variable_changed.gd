@@ -91,6 +91,53 @@ var _last_value: Variant = null
 var _is_monitoring: bool = false
 var _owner_node_ref: Node = null
 
+## 动态属性列表：SCOPE 四态子来源 + target_value 可编辑 Variant
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	if variable_scope == BaseVariable.VariableScope.SCOPE:
+		properties.append({
+			name = "scope_source",
+			type = TYPE_INT,
+			hint = PROPERTY_HINT_ENUM,
+			hint_string = "Nearest,Custom ID,Trigger Scope,Target Node",
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+		if scope_source == ScopeSource.CUSTOM_ID:
+			properties.append({
+				name = "custom_scope_id",
+				type = TYPE_STRING,
+				hint = PROPERTY_HINT_NONE,
+				usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+			})
+		elif scope_source == ScopeSource.TARGET_NODE:
+			properties.append({
+				name = "scope_target_node_path",
+				type = TYPE_NODE_PATH,
+				hint = PROPERTY_HINT_NONE,
+				usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+			})
+
+	properties.append({
+		name = "target_value",
+		type = TYPE_NIL,
+		hint = PROPERTY_HINT_TYPE_STRING,
+		hint_string = "Variant",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties
+
+## 属性可见性：非 SCOPE 隐藏子来源；NEAREST 隐藏子参数
+func _validate_property(property: Dictionary) -> void:
+	if variable_scope != BaseVariable.VariableScope.SCOPE:
+		if property.name in ["scope_source", "custom_scope_id", "scope_target_node_path"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+	elif scope_source == ScopeSource.NEAREST:
+		if property.name in ["custom_scope_id", "scope_target_node_path"]:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+	else:
+		var utils_scope_source = scope_source as VariableScopeUtils.ScopeSource
+		VariableScopeUtils.validate_scope_source_property(property, utils_scope_source)
+
 ## 更新资源名称（必需）
 func _update_resource_name():
 	var scope_str = VariableScopeUtils.enum_to_string(variable_scope).to_upper()
