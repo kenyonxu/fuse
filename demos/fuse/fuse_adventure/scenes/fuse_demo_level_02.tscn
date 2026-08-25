@@ -722,6 +722,7 @@ target_scope = 0
 delay = 0.0
 
 [sub_resource type="Resource" id="Resource_cq55b"]
+resource_name = "等待 1.0 秒"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""

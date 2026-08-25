@@ -36,7 +36,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_pda7d"]
-resource_name = "Saw 进度比 0.0 (±0.1)"
+resource_name = "@SubViewport@9904 进度比 0.0 (±0.1)"
 script = ExtResource("3_pda7d")
 ratio_variable = ""
 ratio_scope = 0
@@ -52,7 +52,7 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_rxgda"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
 script = ExtResource("3_388jc")
 event = SubResource("Resource_pda7d")
 action_runner = SubResource("Resource_gitbv")
@@ -81,7 +81,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_miin1"]
-resource_name = "Saw 进度比 1.0 (±0.1)"
+resource_name = "@SubViewport@9904 进度比 1.0 (±0.1)"
 script = ExtResource("3_pda7d")
 ratio_variable = ""
 ratio_scope = 0
@@ -97,7 +97,7 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_fgjoy"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+resource_name = "监听 @SubViewport@9904，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
 script = ExtResource("3_388jc")
 event = SubResource("Resource_miin1")
 action_runner = SubResource("Resource_388jc")
@@ -114,14 +114,14 @@ instructions = Array[ExtResource("4_388jc")]([SubResource("Resource_e1vev")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_p5x0g"]
-resource_name = "当 任何物体 进入 ../Area2D 时触发"
+resource_name = "当 player 首次进入 ../Area2D 时触发"
 script = ExtResource("8_pda7d")
 area_node_path = NodePath("../Area2D")
 target_group = "player"
 trigger_once_per_body = true
 
 [sub_resource type="Resource" id="Resource_poe6l"]
-resource_name = "当 任何物体 进入 未指定 时触发"
+resource_name = "当 player 首次进入 ../Area2D 时触发"
 script = ExtResource("3_388jc")
 event = SubResource("Resource_p5x0g")
 action_runner = SubResource("Resource_uuras")

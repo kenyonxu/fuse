@@ -412,4 +412,3 @@ func _resolve_node(
 			set_error_localized(not_found_error_key, FuseError.ErrorType.RUNTIME_ERROR, {"node": str(node_path)})
 			return null
 		return resolved_node
-
