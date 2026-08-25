@@ -72,12 +72,53 @@ enum CheckMode {
 		check_mode = value
 		_update_resource_name()
 
-## 目标值（用于 ON_EQUAL、ON_GREATER、ON_LESS 模式）
-## 与 SetVariable.new_value 同款：@export Variant 由引擎内建 Variant 编辑器呈现
-@export var target_value: Variant = null:
+## 目标值类型（用于 ON_EQUAL、ON_GREATER、ON_LESS 模式）
+enum TargetValueType {
+	BOOL,
+	INT,
+	FLOAT,
+	STRING
+}
+
+@export var target_value_type: TargetValueType = TargetValueType.INT:
 	set(value):
-		target_value = value
+		target_value_type = value
 		_update_resource_name()
+		notify_property_list_changed()
+
+@export var target_bool_value: bool = false:
+	set(value):
+		target_bool_value = value
+		_update_resource_name()
+
+@export var target_int_value: int = 0:
+	set(value):
+		target_int_value = value
+		_update_resource_name()
+
+@export var target_float_value: float = 0.0:
+	set(value):
+		target_float_value = value
+		_update_resource_name()
+
+@export var target_string_value: String = "":
+	set(value):
+		target_string_value = value
+		_update_resource_name()
+
+## 按类型枚举解析目标值（@export Variant 为 null 时 Inspector 不可编辑——
+## 项目内 Variant 值输入的验证模式是类型枚举+类型化字段，对齐 CheckNodeProperty）
+func _resolve_target_value() -> Variant:
+	match target_value_type:
+		TargetValueType.BOOL:
+			return target_bool_value
+		TargetValueType.INT:
+			return target_int_value
+		TargetValueType.FLOAT:
+			return target_float_value
+		TargetValueType.STRING:
+			return target_string_value
+	return null
 
 ## 检查间隔（秒），默认 0.1 秒
 @export var check_interval: float = 0.1:
@@ -122,10 +163,20 @@ func _get_property_list() -> Array[Dictionary]:
 				usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 			})
 
+	# 值字段由 @export 自动列出，此处不重复声明（避免同名双条目）；
+	# 只显示当前类型的字段靠 _validate_property 隐藏其余
 	return properties
 
 ## 属性可见性：非 SCOPE 隐藏子来源；NEAREST 隐藏子参数
 func _validate_property(property: Dictionary) -> void:
+	# 隐藏非当前类型的值字段
+	var active_value_field := "target_%s_value" % ["bool", "int", "float", "string"][target_value_type]
+	for field in ["target_bool_value", "target_int_value", "target_float_value", "target_string_value"]:
+		if field == active_value_field:
+			continue
+		if property.name == field:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+
 	if variable_scope != BaseVariable.VariableScope.SCOPE:
 		if property.name in ["scope_source", "custom_scope_id", "scope_target_node_path"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
@@ -154,11 +205,11 @@ func _update_resource_name():
 
 	var mode_text = FuseLocalization.translate(mode_key)
 	if check_mode == CheckMode.ON_EQUAL:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_resolve_target_value())})
 	elif check_mode == CheckMode.ON_GREATER:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_resolve_target_value())})
 	elif check_mode == CheckMode.ON_LESS:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_resolve_target_value())})
 
 	resource_name = FuseLocalization.translate_format("FUSE_EVENT_ON_VARIABLE_CHANGED_RESOURCE_NAME", {
 		"variable": variable_name,
@@ -266,17 +317,17 @@ func _check_variable(event_instance: RuntimeEventInstance = null):
 
 		CheckMode.ON_EQUAL:
 			# 值等于目标值时触发
-			if _are_values_equal(current_value, target_value):
+			if _are_values_equal(current_value, _resolve_target_value()):
 				should_trigger = true
 
 		CheckMode.ON_GREATER:
 			# 值大于目标值时触发
-			if _compare_values(current_value, target_value) > 0:
+			if _compare_values(current_value, _resolve_target_value()) > 0:
 				should_trigger = true
 
 		CheckMode.ON_LESS:
 			# 值小于目标值时触发
-			if _compare_values(current_value, target_value) < 0:
+			if _compare_values(current_value, _resolve_target_value()) < 0:
 				should_trigger = true
 
 	if should_trigger:
@@ -405,11 +456,11 @@ func get_description() -> String:
 
 	var mode_text = FuseLocalization.translate(mode_key)
 	if check_mode == CheckMode.ON_EQUAL:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_resolve_target_value())})
 	elif check_mode == CheckMode.ON_GREATER:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_resolve_target_value())})
 	elif check_mode == CheckMode.ON_LESS:
-		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(target_value)})
+		mode_text = FuseLocalization.translate_format(mode_key, {"value": str(_resolve_target_value())})
 
 	var value_key = ""
 	if emit_old_value and emit_new_value:
