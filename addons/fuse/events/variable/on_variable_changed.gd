@@ -30,6 +30,7 @@ class_name OnVariableChanged
 	set(value):
 		variable_scope = value
 		_update_resource_name()
+		notify_property_list_changed()
 
 ## 作用域来源（仅当 variable_scope == SCOPE 时使用）
 enum ScopeSource {
@@ -71,8 +72,9 @@ enum CheckMode {
 		check_mode = value
 		_update_resource_name()
 
-## 目标值（用于 ON_EQUAL、ON_GREATER、ON_LESS 模式）
-@export var target_value: Variant = null
+## 目标值（用于 ON_EQUAL、ON_GREATER、ON_LESS 模式；声明走 _get_property_list 的
+## TYPE_NIL+TYPE_STRING hint 呈现可编辑 Variant——@export 的 Variant 恒 null 不可编辑）
+var target_value: Variant = null
 
 ## 检查间隔（秒），默认 0.1 秒
 @export var check_interval: float = 0.1:
