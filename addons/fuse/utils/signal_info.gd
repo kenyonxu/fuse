@@ -93,6 +93,10 @@ func validate_args(values):
 	return true
 
 ## 获取参数过滤属性（用于编辑器；按参数名生成，Object 类型参数不生成——期望值无从表达）
+##
+## usage 取 EDITOR（显示可编辑、不参与存储）：子字段经组件 _set/_get 桥接写入
+## arg_filter_values dict，顶层 dict 是唯一数据源——带 STORAGE 会让 serialize
+## 产出无法还原的冗余 "arg_filter_values/<名>" 子键
 func get_arg_property_list():
 	var properties = []
 	for i in range(args.size()):
@@ -103,7 +107,7 @@ func get_arg_property_list():
 		var property = {
 			"name": "arg_filter_values/%s" % arg_name,
 			"type": arg.type,
-			"usage": PROPERTY_USAGE_DEFAULT
+			"usage": PROPERTY_USAGE_EDITOR
 		}
 		if arg.has("hint"):
 			property["hint"] = arg.hint

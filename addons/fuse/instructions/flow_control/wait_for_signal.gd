@@ -353,6 +353,24 @@ func _validate_property(property: Dictionary) -> void:
 	if not filter_signal_args and property.name == "arg_filter_values":
 		property.usage = PROPERTY_USAGE_NONE
 
+## Inspector 子属性桥接（arg_filter_values/<参数名>）——引擎不支持 dict 子路径，手动分发
+func _set(property: StringName, value: Variant) -> bool:
+	var s := String(property)
+	if s.begins_with("arg_filter_values/"):
+		var key := s.substr("arg_filter_values/".length())
+		if value == null:
+			arg_filter_values.erase(key)
+		else:
+			arg_filter_values[key] = value
+		return true
+	return super._set(property, value)
+
+func _get(property: StringName) -> Variant:
+	var s := String(property)
+	if s.begins_with("arg_filter_values/"):
+		return arg_filter_values.get(s.substr("arg_filter_values/".length()))
+	return null
+
 ## ==================== 元数据与校验 ===================
 
 static func _get_instruction_metadata() -> InstructionMetadata:

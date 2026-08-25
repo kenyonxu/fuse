@@ -23,6 +23,7 @@ func _ready() -> void:
 	await _test_otsa_gate_off_regression()
 	await _test_otsa_empty_dict_no_match()
 	await _test_wait_for_signal_filter()
+	_test_arg_filter_subproperty_bridge()
 	print("=== 参数过滤升级测试完成（失败 %d 项）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -173,3 +174,58 @@ func _test_wait_for_signal_filter() -> void:
 	_check(_wfs_finished, "部分过滤（仅 body_shape）匹配完成")
 	emitter.queue_free()
 	m.queue_free()
+
+## Inspector 子属性桥接（_set/_get 分发 dict 子路径）+ 子字段去 STORAGE（serialize 无冗余子键）
+func _test_arg_filter_subproperty_bridge() -> void:
+	print("\n--- per-arg 字段 _set/_get 桥接 ---")
+	# WaitForSignal 桥接直测（引擎 Object.set/get 不支持 dict 子路径，靠 _set/_get 桥接）
+	var wfs := WaitForSignal.new()
+	wfs.set("arg_filter_values/anim_name", "attack")
+	_check(wfs.arg_filter_values.get("anim_name") == "attack", "WFS _set 子路径写入 dict")
+	_check(wfs.get("arg_filter_values/anim_name") == "attack", "WFS _get 子路径读出 dict")
+	wfs.set("arg_filter_values/anim_name", null)
+	_check(not wfs.arg_filter_values.has("anim_name"), "WFS _set null 移除键")
+
+	# OnTargetSignalEmit 桥接直测
+	var ev := OnTargetSignalEmit.new()
+	ev.set("arg_filter_values/anim_name", "idle")
+	_check(ev.arg_filter_values.get("anim_name") == "idle", "OTSA _set 子路径写入 dict")
+	_check(ev.get("arg_filter_values/anim_name") == "idle", "OTSA _get 子路径读出 dict")
+	ev.set("arg_filter_values/anim_name", null)
+	_check(not ev.arg_filter_values.has("anim_name"), "OTSA _set null 移除键")
+
+	# WFS serialize 无冗余子键（模拟编辑器信号缓存使 per-arg 字段进属性列表）
+	var sig_info := SignalInfo.new()
+	sig_info.name = "animation_finished"
+	sig_info.args = [{"name": "anim_name", "type": TYPE_STRING}]
+	wfs._editor_available_signals = [sig_info]
+	wfs.target_signal = "animation_finished"
+	wfs.filter_signal_args = true
+	wfs.arg_filter_values = {"anim_name": "attack"}
+	var data := PresetValueCodec.serialize_instruction(wfs)
+	var has_subkey := false
+	for k in data.keys():
+		if String(k).begins_with("arg_filter_values/"):
+			has_subkey = true
+	_check(data.has("arg_filter_values") and data["arg_filter_values"].get("anim_name") == "attack",
+		"顶层 dict 为唯一数据源（含完整过滤值）")
+	_check(not has_subkey, "WFS serialize 不产出 arg_filter_values/ 冗余子键")
+
+	# OTSA serialize 无冗余子键（initialize 解析 runtime signal_info 使子字段进属性列表）
+	var emitter := AnimEmitter.new()
+	emitter.name = "BridgeEmitter"
+	add_child(emitter)
+	var ev2 := OnTargetSignalEmit.new()
+	ev2.target_node = NodePath("../BridgeEmitter")
+	ev2.target_signal = "animation_finished"
+	ev2.filter_signal_args = true
+	ev2.arg_filter_values = {"anim_name": "attack"}
+	ev2.initialize(self)
+	var ev_data := PresetValueCodec.serialize_event(ev2)
+	var ev_has_sub := false
+	for k in ev_data.keys():
+		if String(k).begins_with("arg_filter_values/"):
+			ev_has_sub = true
+	_check(not ev_has_sub, "OTSA serialize 不产出 arg_filter_values/ 冗余子键")
+	ev2.terminate(self)
+	emitter.queue_free()

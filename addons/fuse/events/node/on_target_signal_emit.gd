@@ -198,6 +198,24 @@ func _validate_property(property: Dictionary) -> void:
 	# 当 filter_signal_args 为 true 时，显示 arg_filter_values 属性
 	# 这个逻辑是隐式的，因为默认情况下属性是显示的
 
+## Inspector 子属性桥接（arg_filter_values/<参数名>）——引擎不支持 dict 子路径，手动分发
+func _set(property: StringName, value: Variant) -> bool:
+	var s := String(property)
+	if s.begins_with("arg_filter_values/"):
+		var key := s.substr("arg_filter_values/".length())
+		if value == null:
+			arg_filter_values.erase(key)
+		else:
+			arg_filter_values[key] = value
+		return true
+	return super._set(property, value)
+
+func _get(property: StringName) -> Variant:
+	var s := String(property)
+	if s.begins_with("arg_filter_values/"):
+		return arg_filter_values.get(s.substr("arg_filter_values/".length()))
+	return null
+
 ## 初始化事件（已弃用，使用 initialize_with_runtime_instance 代替）
 func initialize(owner_node):
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
