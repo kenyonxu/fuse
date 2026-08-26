@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="9_kkifu"]
 [ext_resource type="Script" uid="uid://cxgqov24kvfsv" path="res://addons/fuse/events/node/on_path_follow_2d_progress_ratio.gd" id="10_n5feu"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="10_v5lb7"]
+[ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="11_pyj0u"]
 [ext_resource type="Script" uid="uid://4ob2qfha1jx1" path="res://addons/fuse/instructions/system/set_viewport_size.gd" id="11_vvbtj"]
 [ext_resource type="Script" uid="uid://bbt1honqn6xl7" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="12_kkifu"]
 [ext_resource type="Script" uid="uid://byqqvu7x3liin" path="res://addons/fuse/instructions/arrays/array_get.gd" id="13_n5feu"]
@@ -68,6 +69,160 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 719)
 
+[sub_resource type="Curve2D" id="Curve2D_qyi66"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -321, -14, 0, 0, 0, 0, -321, -239)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_ffb08"]
+resource_name = "间隔执行: 12.1s - 自动开始 立即触发 无限重复"
+script = ExtResource("11_pyj0u")
+trigger_on_start = true
+emit_repeat_count = false
+interval_seconds = 12.1
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+
+[sub_resource type="Resource" id="Resource_bn3sp"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("16_r155i")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+
+[sub_resource type="Resource" id="Resource_v8mi7"]
+resource_name = "属性动画 [PathFollow2D] [Node] .progress_ratio = 1.0 (4.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PathFollow2D")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 1.0
+duration = 4.0
+auto_free = false
+easing_type = 2
+trans_type = 0
+metadata/_custom_type_script = "uid://cr14niect8p3c"
+
+[sub_resource type="Resource" id="Resource_pyj0u"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("16_r155i")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+metadata/_custom_type_script = "uid://spkts3pa4cdm"
+
+[sub_resource type="Resource" id="Resource_4jxn0"]
+resource_name = "属性动画 [PathFollow2D] [Node] .progress_ratio = 0.0 (4.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PathFollow2D")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 0.0
+duration = 4.0
+auto_free = false
+easing_type = 2
+trans_type = 0
+metadata/_custom_type_script = "uid://cr14niect8p3c"
+
+[sub_resource type="Resource" id="Resource_p86fg"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_bn3sp"), SubResource("Resource_v8mi7"), SubResource("Resource_pyj0u"), SubResource("Resource_4jxn0")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Curve2D" id="Curve2D_r155i"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -58, -225, 0, 0, 0, 0, -58, 1)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_p6k3q"]
+resource_name = "间隔执行: 12.1s - 自动开始 立即触发 无限重复"
+script = ExtResource("11_pyj0u")
+trigger_on_start = true
+emit_repeat_count = false
+interval_seconds = 12.1
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+
+[sub_resource type="Resource" id="Resource_jn2gk"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("16_r155i")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+
+[sub_resource type="Resource" id="Resource_qakxj"]
+resource_name = "属性动画 [PathFollow2D] [Node] .progress_ratio = 1.0 (4.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PathFollow2D")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 1.0
+duration = 4.0
+auto_free = false
+easing_type = 2
+trans_type = 0
+metadata/_custom_type_script = "uid://cr14niect8p3c"
+
+[sub_resource type="Resource" id="Resource_b3lrm"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("16_r155i")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+metadata/_custom_type_script = "uid://spkts3pa4cdm"
+
+[sub_resource type="Resource" id="Resource_sj40y"]
+resource_name = "属性动画 [PathFollow2D] [Node] .progress_ratio = 0.0 (4.00s)"
+script = ExtResource("9_kkifu")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PathFollow2D")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 0.0
+duration = 4.0
+auto_free = false
+easing_type = 2
+trans_type = 0
+metadata/_custom_type_script = "uid://cr14niect8p3c"
+
+[sub_resource type="Resource" id="Resource_g3ia6"]
+script = ExtResource("8_lj5vm")
+instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_jn2gk"), SubResource("Resource_qakxj"), SubResource("Resource_b3lrm"), SubResource("Resource_sj40y")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
 [sub_resource type="Curve2D" id="Curve2D_lj5vm"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 60, 131, 0, 0, 0, 0, 60, -39, 0, 0, 0, 0, 299, -39)
@@ -93,7 +248,7 @@ easing_type = 2
 trans_type = 1
 log_level = 0
 
-[sub_resource type="Resource" id="Resource_pyj0u"]
+[sub_resource type="Resource" id="Resource_4jwmc"]
 script = ExtResource("8_lj5vm")
 instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_n5feu")])
 log_level = 0
@@ -119,7 +274,7 @@ log_level = 0
 resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_6kde4")
-action_runner = SubResource("Resource_pyj0u")
+action_runner = SubResource("Resource_4jwmc")
 metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
 
 [sub_resource type="Resource" id="Resource_kkifu"]
@@ -924,11 +1079,38 @@ position = Vector2(484, -96)
 
 [node name="Platforms" type="Node2D" parent="Worlds" unique_id=1934213410]
 
-[node name="MovingPlatform" parent="Worlds/Platforms" unique_id=44856654 instance=ExtResource("4_kqe04")]
-position = Vector2(-321, -14)
+[node name="platformpath01" type="Path2D" parent="Worlds/Platforms" unique_id=330990169]
+curve = SubResource("Curve2D_qyi66")
 
-[node name="MovingPlatform2" parent="Worlds/Platforms" unique_id=1104359027 instance=ExtResource("4_kqe04")]
-position = Vector2(-58, -224)
+[node name="PathFollow2D" type="PathFollow2D" parent="Worlds/Platforms/platformpath01" unique_id=275009400]
+position = Vector2(-321, -14)
+rotation = -1.5707964
+
+[node name="MovingPlatform" parent="Worlds/Platforms/platformpath01/PathFollow2D" unique_id=44856654 instance=ExtResource("4_kqe04")]
+rotation = 1.5707964
+
+[node name="MovePlatformOnInterval" type="Node" parent="Worlds/Platforms/platformpath01" unique_id=1830195680]
+script = ExtResource("9_f8sk5")
+event_definition = SubResource("Resource_ffb08")
+action_runner = SubResource("Resource_p86fg")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="platformpath02" type="Path2D" parent="Worlds/Platforms" unique_id=1945233051]
+curve = SubResource("Curve2D_r155i")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Worlds/Platforms/platformpath02" unique_id=1811057900]
+position = Vector2(-58, -225)
+rotation = 1.5707964
+
+[node name="MovingPlatform2" parent="Worlds/Platforms/platformpath02/PathFollow2D" unique_id=1104359027 instance=ExtResource("4_kqe04")]
+position = Vector2(1, 0)
+rotation = -1.5707964
+
+[node name="MovePlatformOnInterval" type="Node" parent="Worlds/Platforms/platformpath02" unique_id=738180905]
+script = ExtResource("9_f8sk5")
+event_definition = SubResource("Resource_p6k3q")
+action_runner = SubResource("Resource_g3ia6")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="Traps" type="Node" parent="Worlds" unique_id=1190718704]
 script = ExtResource("1_os8oo")
