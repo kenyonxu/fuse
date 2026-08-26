@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/tests/tween/test_base_tween_physics_process.gd" id="1"]
+
+[node name="TestBaseTweenPhysicsProcess" type="Node"]
+script = ExtResource("1")

@@ -770,7 +770,7 @@ func execute(context: ExecutionContext) -> void:
 		return
 
 	# 创建 Tween
-	_tween = target.create_tween()
+	_tween = _create_tween(target)
 	if _tween == null:
 		_log_error_localized("FUSE_ERROR_CANNOT_CREATE_TWEEN", {})
 		set_error_localized("FUSE_ERROR_CANNOT_CREATE_TWEEN", FuseError.ErrorType.RUNTIME_ERROR, {})
@@ -1055,7 +1055,7 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 		return true
 
 	# 创建 Tween
-	var tween = target.create_tween()
+	var tween = _create_tween(target)
 	if tween == null:
 		_log_error_localized("FUSE_ERROR_CANNOT_CREATE_TWEEN", {})
 		set_error_localized("FUSE_ERROR_CANNOT_CREATE_TWEEN", FuseError.ErrorType.RUNTIME_ERROR, {})

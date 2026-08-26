@@ -2,8 +2,15 @@
 
 [ext_resource type="TileSet" uid="uid://be2m5b4ne8ix7" path="res://demos/fuse/fuse_adventure/resources/tilesets/fuse_adventure_tile_set.tres" id="8_imxvr"]
 
-[node name="MovingPlatform" type="Node2D" unique_id=1630528275]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
+size = Vector2(232, 32)
+
+[node name="MovingPlatform" type="AnimatableBody2D" unique_id=200890158]
 
 [node name="Platform" type="TileMapLayer" parent="." unique_id=2113527258]
 tile_map_data = PackedByteArray("AAAEAAAAAAAOAAoAAAAEAP//AAAOAAkAAAADAAAAAAANAAoAAAADAP//AAANAAkAAAACAAAAAAAOAAoAAAACAP//AAAOAAkAAAABAAAAAAANAAoAAAABAP//AAANAAkAAAAAAAAAAAAOAAoAAAAAAP//AAAOAAkAAAD//wAAAAANAAoAAAD/////AAANAAkAAAD+/wAAAAAOAAoAAAD+////AAAOAAkAAAD9/wAAAAANAAoAAAD9////AAANAAkAAAAGAAAAAAAOAAoAAAAGAP//AAAOAAkAAAAFAAAAAAANAAoAAAAFAP//AAANAAkAAAD8/wAAAAAOAAoAAAD8////AAAOAAkAAAD7/wAAAAANAAoAAAD7////AAANAAkAAAD6/wAAAAAOAAoAAAD6////AAAOAAkAAAD5/wAAAAANAAoAAAD5////AAANAAkAAAA=")
 tile_set = ExtResource("8_imxvr")
+collision_enabled = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=437678131]
+shape = SubResource("RectangleShape2D_rxgda")

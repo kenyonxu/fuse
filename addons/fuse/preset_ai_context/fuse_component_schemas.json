@@ -3513,7 +3513,17 @@
       "type_name": "bool"
     }
   ],
-  "BaseTweenInstruction": [],
+  "BaseTweenInstruction": [
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
+    }
+  ],
   "BlendAnimation": [
     {
       "default": "",
@@ -24904,6 +24914,15 @@
       "name": "duration",
       "type": 3,
       "type_name": "float"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenColorTransition": [
@@ -25005,6 +25024,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenFadeIn": [
@@ -25115,6 +25143,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenFadeOut": [
@@ -25216,6 +25253,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenMoveTo": [
@@ -25409,6 +25455,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenPause": [
@@ -25557,6 +25612,15 @@
       "name": "duration",
       "type": 3,
       "type_name": "float"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenPropertyInstruction": [
@@ -25685,6 +25749,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenPulseAnimation": [
@@ -25786,6 +25859,15 @@
       "name": "loop_count",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenResume": [
@@ -25961,6 +26043,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenScaleTo": [
@@ -26062,6 +26153,15 @@
       "name": "trans_type",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "TweenShakeAnimation": [
@@ -26163,6 +26263,15 @@
       "name": "shake_axis",
       "type": 2,
       "type_name": "int"
+    },
+    {
+      "default": false,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "use_physics_process",
+      "type": 1,
+      "type_name": "bool"
     }
   ],
   "VectorOperation": [

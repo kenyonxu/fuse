@@ -45,9 +45,16 @@ enum TransitionType {
 	ELASTIC   ## 弹性过渡
 }
 
+## 是否使用物理帧驱动 Tween（TWEEN_PROCESS_PHYSICS）
+##
+## 默认 false（idle 帧驱动，适合 UI/演出动画）。开启后 Tween 按物理帧插值，
+## 与 CharacterBody2D 等物理体的移动同步更新，避免站上移动平台的角色抖动——
+## 平台跳跃类游戏的移动平台应开启此开关。
+@export var use_physics_process: bool = false
+
 ## 创建并配置 Tween
 ##
-## 在目标节点上创建一个 Tween 对象
+## 在目标节点上创建一个 Tween 对象，按 use_physics_process 选择驱动帧
 ##
 ## 参数：
 ## - target: Node - 目标节点
@@ -56,6 +63,8 @@ enum TransitionType {
 ## - Tween - 创建的 Tween 对象
 func _create_tween(target: Node) -> Tween:
 	var tween = target.create_tween()
+	if use_physics_process:
+		tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	return tween
 
 ## 应用缓动设置
