@@ -206,7 +206,10 @@ func execute(context: ExecutionContext):
 
 	# 创建新的 AudioStreamPlayer
 	var new_player = AudioStreamPlayer.new()
-	new_player.name = "Fuse_MusicPlayer_Crossfade"
+	# 名字必须唯一：容器中常有上一个未清理的同名播放器，add_child 同名冲突
+	# 会被引擎改名为 @AudioStreamPlayer@N，导致后续按 Fuse_MusicPlayer* 查找的
+	# 淡出/清理逻辑对它失效（旧曲漏淡出 → 新旧两曲叠加）
+	new_player.name = "Fuse_MusicPlayer_Crossfade_%d" % Time.get_ticks_msec()
 	new_player.bus = bus
 	new_player.stream = music_resource
 	new_player.volume_db = -60.0  # 从静音开始
@@ -300,15 +303,16 @@ func _find_current_music_player() -> AudioStreamPlayer:
 
 	var players = FuseAudioContainer.find_music_players("Fuse_MusicPlayer*")
 
-	_log_debug("[DEBUG_FIND] find_music_players 返回 %d 个结果" % players.size())
+	# 选音量最大的 playing 播放器作为淡出目标：
+	# 过渡窗口内新旧两个都在 playing，取第一个会误选已淡出到无声的旧播放器，
+	# 导致真正在响的那个漏掉淡出（两曲叠加）
+	var best: AudioStreamPlayer = null
 	for player in players:
-		_log_debug("[DEBUG_FIND] 播放器: %s, playing=%s, stream_paused=%s, is_inside_tree=%s, queued=%s" % [
-			player.name, player.playing, player.stream_paused, player.is_inside_tree(), player.is_queued_for_deletion()])
-
-	for player in players:
-		if player.playing:
-			_log_debug("找到正在播放的音乐播放器: %s" % player.name)
-			return player
+		if player.playing and (best == null or player.volume_db > best.volume_db):
+			best = player
+	if best:
+		_log_debug("找到正在播放的音乐播放器: %s" % best.name)
+		return best
 
 	# 后备：在 current_scene 中查找（兼容旧版本）
 	var scene_tree = Engine.get_main_loop()
@@ -440,7 +444,8 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 
 	# 创建新的 AudioStreamPlayer
 	var new_player = AudioStreamPlayer.new()
-	new_player.name = "Fuse_MusicPlayer_Crossfade"
+	# 名字必须唯一（同名冲突被引擎改名后会对淡出/清理逻辑隐形，见 execute 注释）
+	new_player.name = "Fuse_MusicPlayer_Crossfade_%d" % Time.get_ticks_msec()
 	new_player.bus = bus
 	new_player.stream = music_resource
 	new_player.volume_db = -60.0  # 从静音开始
@@ -521,7 +526,11 @@ func _create_crossfade_callback(runtime_instance: RuntimeInstructionInstance) ->
 
 ## 交叉淡入淡出完成回调（运行时实例版本）
 func _on_crossfade_completed_runtime(runtime_instance: RuntimeInstructionInstance) -> void:
-	if not runtime_instance or runtime_instance.is_completed():
+	# 资源善后（清理 old、接管 new 的播完释放）不依赖实例完成状态：
+	# ON_START 完成时机的指令在启动瞬间就"完成"（不阻塞 runner，LoopMusic 续播依赖此语义），
+	# 若在此处被 is_completed 挡板拦住，old 播放器会残留为无声 playing 僵尸；
+	# 取消路径的清理由 on_runtime_cancel 接管，与这里的清理幂等共存
+	if not runtime_instance:
 		return
 
 	var state = runtime_instance.runtime_state
@@ -534,11 +543,11 @@ func _on_crossfade_completed_runtime(runtime_instance: RuntimeInstructionInstanc
 		FuseAudioContainer.remove_music_player(old_player)
 		old_player.queue_free()
 
-	# 连接新播放器的 finished 信号
+	# 连接新播放器的 finished 信号（回调闭包直接持有播放器引用：
+	# ON_START 下实例会被对象池快速回收复用，state 届时不可靠）
 	if new_player and is_instance_valid(new_player):
-		var finished_callback = _create_audio_finished_callback(runtime_instance)
+		var finished_callback = _create_audio_finished_callback(new_player)
 		new_player.finished.connect(finished_callback, CONNECT_ONE_SHOT)
-		runtime_instance.register_timer_callback(finished_callback)
 		state["finished_callback"] = finished_callback
 
 	_log_info_localized("FUSE_INSTRUCTION_CROSSFADE_TO_MUSIC_LOG_COMPLETE", {})
@@ -549,27 +558,50 @@ func _on_crossfade_completed_runtime(runtime_instance: RuntimeInstructionInstanc
 	state["is_running"] = false
 	state["tween_callback"] = null
 
-## 创建音频播放完成回调
-func _create_audio_finished_callback(runtime_instance: RuntimeInstructionInstance) -> Callable:
+## 创建音频播放完成回调（闭包直接持有播放器，不依赖可被池复用的实例 state）
+func _create_audio_finished_callback(player: AudioStreamPlayer) -> Callable:
 	var callback = func():
-		_on_audio_finished_runtime(runtime_instance)
+		_on_audio_finished_direct(player)
 	return callback
 
-## 音频播放完成回调（运行时实例版本）
-func _on_audio_finished_runtime(runtime_instance: RuntimeInstructionInstance) -> void:
-	if not runtime_instance or runtime_instance.is_completed():
-		return
+## 音频播放完成处理：释放播放器（不触碰 runtime_instance——
+## ON_START 时机的实例此时可能早已归还对象池并被复用）
+func _on_audio_finished_direct(player: AudioStreamPlayer) -> void:
+	if is_instance_valid(player):
+		FuseAudioContainer.remove_music_player(player)
+		player.queue_free()
 
+## 取消处理（场景切换时 runner 被取消：清理过渡状态，保留已启动的新音乐）
+## 不处理的话：tween 挂在 SceneTree 上继续跑，完成回调因实例已取消被跳过，
+## 旧播放器残留为无声但 playing 状态的僵尸，被下一次 crossfade 误选为淡出目标
+func on_runtime_cancel(runtime_instance: RuntimeInstructionInstance) -> void:
 	var state = runtime_instance.runtime_state
+
+	# 中止未完成的过渡 tween
+	var tween = state.get("tween")
+	if tween and is_instance_valid(tween):
+		tween.kill()
+	state["tween"] = null
+	state["tween_callback"] = null
+
+	# 旧播放器：正常路径 3 秒后淡出清理；取消时立即清理，避免僵尸残留
+	var old_player = state.get("old_player")
+	if old_player and is_instance_valid(old_player):
+		old_player.stop()
+		FuseAudioContainer.remove_music_player(old_player)
+		old_player.queue_free()
+	state["old_player"] = null
+
+	# 新播放器：直接跳到目标音量并保留（音乐跨场景延续，由下一场景的
+	# crossfade 找到并淡出）；断开绑定已取消实例的 finished 回调
 	var new_player = state.get("new_player")
-
 	if new_player and is_instance_valid(new_player):
-		new_player.queue_free()
-
-	state["new_player"] = null
+		new_player.volume_db = linear_to_db(volume)
+		var finished_cb = state.get("finished_callback")
+		if finished_cb is Callable and new_player.finished.is_connected(finished_cb):
+			new_player.finished.disconnect(finished_cb)
 	state["finished_callback"] = null
-
-	runtime_instance._complete_execution()
+	state["is_running"] = false
 
 ## 暂停处理
 func on_runtime_pause(runtime_instance: RuntimeInstructionInstance) -> void:
