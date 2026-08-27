@@ -250,9 +250,10 @@ func _on_event_fired(context: Node, index: int) -> void:
 		_log_debug("Binding[%d] 已触发，跳过" % index)
 		return
 
-	# ActionRunner 运行检查
+	# ActionRunner 运行检查：默认跳过；RESTART 策略推迟到条件检查通过后取消重启
 	var action_instance: RuntimeActionRunnerInstance = _runtime_action_instances[index]
-	if action_instance != null and action_instance.is_running():
+	var runner_busy: bool = action_instance != null and action_instance.is_running()
+	if runner_busy and binding.retrigger_policy != EventBinding.RetriggerPolicy.RESTART:
 		_log_debug("Binding[%d] ActionRunner 正在运行，跳过" % index)
 		return
 
@@ -282,8 +283,16 @@ func _on_event_fired(context: Node, index: int) -> void:
 
 	# 执行 ActionRunner
 	if action_instance != null:
-		_log_debug("Binding[%d] 执行 ActionRunner" % index)
-		action_instance.run(execution_context)
+		if runner_busy:
+			# RESTART 策略：取消当前执行并重启。cancel 会同步唤醒顺序协程收尾
+			# （emit execution_canceled）；并行等待循环为帧轮询，需等一帧收尾，
+			# 故 run 延迟到帧末执行，避免与旧执行的状态收尾竞争。
+			_log_debug("Binding[%d] ActionRunner 运行中，按 RESTART 策略取消并重启" % index)
+			action_instance.cancel_execution("retrigger_restart")
+			action_instance.run.call_deferred(execution_context)
+		else:
+			_log_debug("Binding[%d] 执行 ActionRunner" % index)
+			action_instance.run(execution_context)
 	else:
 		_log_warning("Binding[%d] 无 ActionRunner" % index)
 

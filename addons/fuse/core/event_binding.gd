@@ -10,6 +10,12 @@ class_name EventBinding extends Resource
 ## 注意：CooldownMode 定义在 BaseTrigger 中，通过 BaseTrigger.CooldownMode 访问。
 
 
+## 运行中重新触发策略
+enum RetriggerPolicy {
+	SKIP,     ## ActionRunner 运行中忽略新触发（默认，旧行为）
+	RESTART,  ## ActionRunner 运行中取消当前执行并重新开始
+}
+
 ## ==================== 导出属性 ====================
 
 ## 事件定义
@@ -35,6 +41,13 @@ class_name EventBinding extends Resource
 @export var trigger_once: bool = false:
 	set(value):
 		trigger_once = value
+		emit_changed()
+
+## 运行中重新触发策略
+## 事件在 ActionRunner 尚未执行完时再次触发的处理方式
+@export var retrigger_policy: RetriggerPolicy = RetriggerPolicy.SKIP:
+	set(value):
+		retrigger_policy = value
 		emit_changed()
 
 ## 冷却模式
@@ -104,6 +117,9 @@ func get_description() -> String:
 
 	if trigger_once:
 		desc += " [触发一次]"
+
+	if retrigger_policy == RetriggerPolicy.RESTART:
+		desc += " [运行中重启]"
 
 	if cooldown_mode != BaseTrigger.CooldownMode.NONE and cooldown_time > 0.0:
 		var mode_text: String = ""
