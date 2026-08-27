@@ -41,6 +41,9 @@ var check_interval: float = 0.1:
 var _check_timer: Timer = null
 var _was_on_ground: bool = false
 var _initialized: bool = false
+# 基线未采样标志：初始化时 body 尚未 move_and_slide，is_on_floor() 恒为 false，
+# 直接采样会把"出生在地面"误判为落地；首次轮询时再定基线。
+var _baseline_pending: bool = false
 
 ## 获取默认运行时状态
 func get_default_runtime_state() -> Dictionary:
@@ -60,6 +63,41 @@ func _update_resource_name():
 		"node": node_str,
 		"trigger": trigger_str
 	})
+
+## 动态属性列表 - 让事件参数在 Inspector 中显示并持久化
+## （缺失此声明时 target_node/trigger_on/check_interval 不显示且保存场景时被剔除，
+## 导致 target_node 回落为空、事件指向 Trigger 自身而非 CharacterBody，静默失效）
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+
+	properties.append({
+		"name": "target_node",
+		"type": TYPE_NODE_PATH,
+		"usage": PROPERTY_USAGE_DEFAULT,
+	})
+
+	var trigger_modes := ",".join([
+		FuseLocalization.translate("FUSE_EVENT_GROUND_STATE_LAND"),
+		FuseLocalization.translate("FUSE_EVENT_GROUND_STATE_LEAVE"),
+		FuseLocalization.translate("FUSE_EVENT_GROUND_STATE_BOTH"),
+	])
+	properties.append({
+		"name": "trigger_on",
+		"type": TYPE_INT,
+		"usage": PROPERTY_USAGE_DEFAULT,
+		"hint": PROPERTY_HINT_ENUM,
+		"hint_string": trigger_modes,
+	})
+
+	properties.append({
+		"name": "check_interval",
+		"type": TYPE_FLOAT,
+		"usage": PROPERTY_USAGE_DEFAULT,
+		"hint": PROPERTY_HINT_RANGE,
+		"hint_string": "0.05,10.0,0.01",
+	})
+
+	return properties
 
 ## 使用 RuntimeInstance 初始化
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance) -> void:
@@ -82,14 +120,11 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 	if node == null:
 		return
 
-	# 初始化着地状态
-	if node is CharacterBody2D:
-		_was_on_ground = (node as CharacterBody2D).is_on_floor()
-	elif node is CharacterBody3D:
-		_was_on_ground = (node as CharacterBody3D).is_on_floor()
-	else:
+	# 节点类型校验（基线采样推迟到首次轮询）
+	if not (node is CharacterBody2D or node is CharacterBody3D):
 		return
 
+	_baseline_pending = true
 	_initialized = true
 
 	# 创建定时器轮询
@@ -115,13 +150,10 @@ func initialize(owner_node: Node) -> void:
 	if node == null:
 		return
 
-	if node is CharacterBody2D:
-		_was_on_ground = (node as CharacterBody2D).is_on_floor()
-	elif node is CharacterBody3D:
-		_was_on_ground = (node as CharacterBody3D).is_on_floor()
-	else:
+	if not (node is CharacterBody2D or node is CharacterBody3D):
 		return
 
+	_baseline_pending = true
 	_initialized = true
 
 	_check_timer = Timer.new()
@@ -144,6 +176,7 @@ func terminate(owner_node: Node) -> void:
 func reset() -> void:
 	super.reset()
 	_was_on_ground = false
+	_baseline_pending = true
 
 func _check_ground_state(owner_node: Node) -> void:
 	if not _initialized:
@@ -164,6 +197,12 @@ func _check_ground_state(owner_node: Node) -> void:
 	elif node is CharacterBody3D:
 		is_on_ground = (node as CharacterBody3D).is_on_floor()
 	else:
+		return
+
+	# 首次轮询：只采样基线不触发（初始化时 is_on_floor 不可靠）
+	if _baseline_pending:
+		_was_on_ground = is_on_ground
+		_baseline_pending = false
 		return
 
 	if is_on_ground == _was_on_ground:
