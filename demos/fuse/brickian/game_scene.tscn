@@ -13,7 +13,8 @@
 [ext_resource type="Script" uid="uid://banshq4o4dxat" path="res://addons/fuse/core/global_variable_assistant.gd" id="13_eqo6o"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="13_gg6w5"]
 [ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="14_7khlk"]
-[ext_resource type="Resource" uid="uid://bhjs8wycs1uw3" path="res://demos/fuse/brickian/resources/brikian_variables.tres" id="14_ej378"]
+[ext_resource type="Resource" uid="uid://cgy5j8e7tna3" path="res://demos/fuse/brickian/resources/brikian_variables.tres" id="14_ej378"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="15_36vvb"]
 [ext_resource type="Script" uid="uid://bm18bxocu5c06" path="res://addons/fuse/instructions/transform/move_by.gd" id="15_klkoa"]
 [ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="16_iubae"]
 [ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="17_1qeon"]
@@ -814,10 +815,23 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_ucofn"]
 resource_name = "移动到 [RedPlanet] (0.0, 900.0) (本地) (50.00s)"
 script = ExtResource("6_la12f")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+duration_variable = ""
+duration_variable_scope = 0
+duration_scope_source = 0
+duration_custom_scope_id = ""
+duration_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("..")
 target_position = Vector2(0, 900)
+duration_source = 0
 duration = 50.0
 space_mode = 1
+move_axis = 0
 easing_type = 2
 trans_type = 0
 log_level = 0
@@ -902,8 +916,13 @@ resource_name = "On Ready With Delay: 0.1"
 script = ExtResource("13_gg6w5")
 delay_seconds = 0.1
 
+[sub_resource type="Resource" id="Resource_y2bdi"]
+resource_name = "打印: Hello, World!"
+script = ExtResource("15_36vvb")
+
 [sub_resource type="Resource" id="Resource_iubae"]
 script = ExtResource("7_fteec")
+instructions = Array[ExtResource("5_7v0hv")]([SubResource("Resource_y2bdi")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_ouq7j"]
@@ -936,12 +955,18 @@ treat_empty_as_null = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_ois5b"]
-resource_name = "相对移动 '../..' [局部] 偏移 (0.0"
+resource_name = "相对移动 '[2层上级]' [局部] 偏移 (0.0"
 script = ExtResource("15_klkoa")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
 offset_variable = ""
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("../..")
 space = 1
 use_variable = false
@@ -949,12 +974,18 @@ offset = Vector3(-30, 0, 0)
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_78cr5"]
-resource_name = "相对移动 '../..' [局部] 偏移 (0.0"
+resource_name = "相对移动 '[2层上级]' [局部] 偏移 (0.0"
 script = ExtResource("15_klkoa")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
 offset_variable = ""
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("../..")
 space = 1
 use_variable = false
@@ -1146,9 +1177,15 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_3waro"]
 resource_name = "获取子节点数量 → Enemies → current_enemy [[本地]]"
 script = ExtResource("21_2oc5f")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
 scope_source = 0
 custom_scope_id = ""
 scope_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("../../Enemies")
 include_internal = false
 result_variable = "current_enemy"
@@ -1234,9 +1271,15 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_d7s1n"]
 resource_name = "获取随机子节点 → Enemies → child [[本地]]"
 script = ExtResource("20_ois5b")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
 scope_source = 0
 custom_scope_id = ""
 scope_target_node_path = NodePath("")
+use_variable_for_target = false
 target_node = NodePath("../../Enemies")
 include_internal = true
 result_variable = "child"
@@ -1333,20 +1376,21 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_s6tot"]
-resource_name = "间隔执行: 51.0s - 自动开始 立即触发 无限重复"
+resource_name = "间隔执行: 25.0s - 自动开始 立即触发 无限重复"
 script = ExtResource("4_k85lc")
 trigger_on_start = true
 emit_repeat_count = false
-interval_seconds = 51.0
+interval_seconds = 25.0
 min_interval_seconds = 0.5
 max_interval_seconds = 2.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_h5334"]
-resource_name = "每 51.0 秒触发一次，无限重复，自动开始，{trigger}"
+resource_name = "每 25.0 秒触发一次，无限重复，自动开始，{trigger}"
 script = ExtResource("36_36vvb")
 event = SubResource("Resource_s6tot")
 action_runner = SubResource("Resource_usg4j")
+retrigger_policy = 1
 cooldown_time = 1.0
 
 [sub_resource type="Resource" id="Resource_ketc8"]
@@ -1408,7 +1452,7 @@ target_scope_source = 0
 target_custom_scope_id = ""
 target_target_node_path = NodePath("")
 custom_scope_id = ""
-use_variable = false
+use_variable_for_target = false
 target_node = NodePath("../../Game_Layer/Markers")
 recursive = false
 use_global_position = true
@@ -2332,6 +2376,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://banshq4o4dxat"
 
 [node name="GameFlow" type="Node" parent="GameManager" unique_id=784962586]
+process_mode = 3
 script = ExtResource("35_dcc30")
 event_bindings = Array[ExtResource("36_36vvb")]([SubResource("Resource_h5334"), SubResource("Resource_wrbcl"), SubResource("Resource_o1wkr"), SubResource("Resource_k7heh"), SubResource("Resource_y5ua0")])
 
