@@ -86,6 +86,9 @@ var property_name: String = "":
 # 编辑器属性缓存（仅编辑器会话，不序列化）
 var _editor_available_properties: Array = []
 var _editor_selected_property_type: int = TYPE_NIL
+var _editor_resolved_node: Node = null
+# 缓存时的反射缓存代际（脚本热重载清缓存后代际 +1，本地缓存随之失效）
+var _editor_props_generation: int = -1
 
 ## 期望的属性值
 var property_value: Variant = null:
@@ -99,6 +102,16 @@ var property_value: Variant = null:
 
 ## 获取属性列表
 func _get_property_list() -> Array[Dictionary]:
+	# 编辑器兜底：解析失败时重试（同 SetPropertyValue 的加载时序修复），
+	# 反射缓存代际变化时（脚本热重载）仅重拉属性表、不重扫描宿主
+	if Engine.is_editor_hint() and node_source == NodeSource.NODE_PATH and not target_node_path.is_empty():
+		if not is_instance_valid(_editor_resolved_node):
+			_editor_refresh_properties()
+		elif _editor_props_generation != PropertyManager.cache_generation:
+			_editor_available_properties = PropertyManager.get_readable_properties(_editor_resolved_node)
+			_editor_props_generation = PropertyManager.cache_generation
+			_refresh_selected_property_type()
+
 	var properties: Array[Dictionary] = []
 	# ========== 节点配置 ==========
 	properties.append({
@@ -208,15 +221,19 @@ func _get_property_list() -> Array[Dictionary]:
 
 	return properties
 
-## 编辑器：刷新目标节点的可写属性缓存（选择节点后触发）
+## 编辑器：刷新目标节点的可读属性缓存（选择节点后触发）
 func _editor_refresh_properties() -> void:
 	_editor_available_properties.clear()
 	_editor_selected_property_type = TYPE_NIL
+	_editor_resolved_node = null
 	var edited_root = EditorInterface.get_edited_scene_root() if Engine.is_editor_hint() else null
 	if edited_root:
 		var target = FuseNodeUtils.find_node_from_resource_context(edited_root, self, target_node_path)
 		if target:
-			_editor_available_properties = PropertyManager.get_writable_properties(target)
+			_editor_resolved_node = target
+			# 只读检查枚举可读属性（而非可写）：getter-only 计算属性（如 can_jump）也应可选
+			_editor_available_properties = PropertyManager.get_readable_properties(target)
+	_editor_props_generation = PropertyManager.cache_generation
 	_refresh_selected_property_type()
 	notify_property_list_changed()
 

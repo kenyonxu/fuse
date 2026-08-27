@@ -9,6 +9,11 @@ extends RefCounted
 static func _get_cache() -> ReflectionCache:
 	return ReflectionCache.get_instance()
 
+## 反射缓存代际：clear_all_cache 时 +1。
+## 组件层的本地属性缓存（如 _editor_available_properties）据此判断是否已失效——
+## 脚本热重载时节点实例不重建，仅靠节点粒度的缓存键无法感知属性表变化
+static var cache_generation: int = 0
+
 ## 属性过滤器
 enum PropertyFilter {
 	ALL,				## 所有属性
@@ -16,7 +21,8 @@ enum PropertyFilter {
 	EXPORTED_ONLY,	   ## 仅导出属性
 	NUMERIC_ONLY,		## 仅数值属性
 	CONTAINER_ONLY,	   ## 仅容器属性
-	CUSTOM_PROPERTIES	## 自定义属性过滤器
+	CUSTOM_PROPERTIES,	## 自定义属性过滤器
+	READABLE_ONLY		## 仅可读属性（只读检查类组件用；getter-only 计算属性也应可选）
 }
 
 ## 获取节点的所有属性信息
@@ -44,6 +50,10 @@ static func get_all_properties(node: Node) -> Array[PropertyInfo]:
 ## 获取节点的可写属性
 static func get_writable_properties(node: Node) -> Array[PropertyInfo]:
 	return get_filtered_properties(node, PropertyFilter.WRITABLE_ONLY)
+
+## 获取节点的可读属性
+static func get_readable_properties(node: Node) -> Array[PropertyInfo]:
+	return get_filtered_properties(node, PropertyFilter.READABLE_ONLY)
 
 ## 获取节点的导出属性
 static func get_exported_properties(node: Node) -> Array[PropertyInfo]:
@@ -83,6 +93,8 @@ static func _passes_filter(property_info: PropertyInfo, filter: PropertyFilter) 
 			return property_info.is_container() and _is_valid_settable_property(property_info)
 		PropertyFilter.CUSTOM_PROPERTIES:
 			return _custom_filter_check(property_info) and _is_valid_settable_property(property_info)
+		PropertyFilter.READABLE_ONLY:
+			return property_info.is_readable() and _is_valid_settable_property(property_info)
 		_:
 			return _is_valid_settable_property(property_info)
 
@@ -322,6 +334,7 @@ static func clear_cache(node: Node):
 ## 清除所有缓存
 static func clear_all_cache():
 	_get_cache().clear_all()
+	cache_generation += 1
 
 ## 获取缓存统计信息
 static func get_cache_stats() -> Dictionary:

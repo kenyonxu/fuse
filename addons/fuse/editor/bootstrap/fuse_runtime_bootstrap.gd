@@ -45,7 +45,10 @@ func _register_reflection_cache_cleanup() -> void:
 	var tree = _plugin.get_tree()
 	if tree:
 		tree.node_removed.connect(_on_node_removed_for_cache)
-		print("[FusePlugin] 反射缓存自动清理已注册")
+	# 脚本保存触发热重载但不重建节点实例，以 instance_id 为键的反射缓存会变陈旧
+	if not _plugin.resource_saved.is_connected(_on_resource_saved_for_cache):
+		_plugin.resource_saved.connect(_on_resource_saved_for_cache)
+	print("[FusePlugin] 反射缓存自动清理已注册")
 
 ## 清理节点删除信号
 func _unregister_reflection_cache_cleanup() -> void:
@@ -53,6 +56,8 @@ func _unregister_reflection_cache_cleanup() -> void:
 	if tree:
 		if tree.node_removed.is_connected(_on_node_removed_for_cache):
 			tree.node_removed.disconnect(_on_node_removed_for_cache)
+	if _plugin.resource_saved.is_connected(_on_resource_saved_for_cache):
+		_plugin.resource_saved.disconnect(_on_resource_saved_for_cache)
 	# 同时清理所有静态缓存
 	PropertyManager.clear_all_cache()
 	SignalManager.clear_all_cache()
@@ -63,6 +68,13 @@ func _unregister_reflection_cache_cleanup() -> void:
 func _on_node_removed_for_cache(node: Node) -> void:
 	ReflectionCache.get_instance().clear_node(node)
 	FunctionManager.clear_callable_cache(node)
+
+## 脚本保存时清理反射缓存（热重载后属性/信号/方法表可能已变化）
+func _on_resource_saved_for_cache(resource: Resource) -> void:
+	if resource is Script:
+		PropertyManager.clear_all_cache()
+		SignalManager.clear_all_cache()
+		FunctionManager.clear_all_callable_cache()
 
 ## 注册 FuseRuntimeBridge 为 Autoload
 func _register_runtime_bridge() -> void:

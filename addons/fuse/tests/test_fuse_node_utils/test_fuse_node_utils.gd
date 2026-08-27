@@ -15,6 +15,8 @@ const EventBindingClass = preload("res://addons/fuse/core/event_binding.gd")
 const ActionRunnerClass = preload("res://addons/fuse/core/base/action_runner.gd")
 const ProgressRatioEventClass = preload("res://addons/fuse/events/node/on_path_follow_2d_progress_ratio.gd")
 const TweenPropertyClass = preload("res://addons/fuse/instructions/tween/tween_property.gd")
+const IfThenClass = preload("res://addons/fuse/instructions/flow_control/if_then.gd")
+const CheckNodePropertyClass = preload("res://addons/fuse/conditions/node/check_node_property.gd")
 
 ## ==================== 测试状态 ====================
 
@@ -34,6 +36,9 @@ func _ready() -> void:
 	test_resource_context_resolves_instruction_in_multi_event_trigger()
 	test_resource_context_resolves_event_in_multi_event_trigger()
 	test_resource_context_returns_null_for_unknown_resource()
+	test_resource_context_resolves_nested_condition_in_if_then()
+	test_resource_context_resolves_nested_instruction_in_if_then()
+	test_resource_context_resolves_condition_in_trigger_conditions()
 
 	# 输出测试报告
 	_print_test_report()
@@ -173,8 +178,122 @@ func test_resource_context_returns_null_for_unknown_resource() -> void:
 		_fail_count += 1
 		print("[FAIL] %s: 期望返回 null，实际返回 %s" % [test_name, resolved])
 
-## ==================== 辅助方法 ====================
+## 测试：IfThen.condition 里嵌套的条件资源可通过 "../.." 解析到 Trigger 的上级
+## 回归用例：player.tscn OnInputActionJump 的 If/Then 内嵌 CheckNodeProperty 时，
+## _check_action_runner_ownership 原本只查 runner.instructions 直接成员，
+## 找不到嵌套条件的宿主 → 编辑器属性下拉为空
+func test_resource_context_resolves_nested_condition_in_if_then() -> void:
+	_test_count += 1
+	var test_name: String = "test_resource_context_resolves_nested_condition_in_if_then"
+	print("\n[%s] 开始测试..." % test_name)
 
+	# 复刻 player.tscn 结构：root(player) / PlayerController / Trigger
+	var root := Node2D.new()
+	root.name = "player"
+	add_child(root)
+
+	var controller := Node.new()
+	controller.name = "PlayerController"
+	root.add_child(controller)
+
+	var trigger := TriggerClass.new()
+	trigger.name = "OnInputActionJump"
+	controller.add_child(trigger)
+
+	var condition := CheckNodePropertyClass.new()
+	var if_then := IfThenClass.new()
+	if_then.condition = condition
+	var runner := ActionRunnerClass.new()
+	runner.instructions = [if_then]
+	trigger.action_runner = runner
+
+	var resolved: Node = FuseNodeUtils.find_node_from_resource_context(root, condition, NodePath("../.."))
+
+	# 清理
+	root.queue_free()
+
+	# 验证结果：从 Trigger 起算 "../.." 应解析到 root
+	if resolved == root:
+		_pass_count += 1
+		print("[PASS] %s: IfThen 嵌套条件的 '../..' 解析到场景根" % test_name)
+	else:
+		_fail_count += 1
+		print("[FAIL] %s: 期望返回 root，实际返回 %s" % [test_name, resolved])
+
+## 测试：IfThen.instructions 里嵌套的指令资源可通过 ".." 解析到 Trigger 的父节点
+func test_resource_context_resolves_nested_instruction_in_if_then() -> void:
+	_test_count += 1
+	var test_name: String = "test_resource_context_resolves_nested_instruction_in_if_then"
+	print("\n[%s] 开始测试..." % test_name)
+
+	var root := Node2D.new()
+	root.name = "player"
+	add_child(root)
+
+	var controller := Node.new()
+	controller.name = "PlayerController"
+	root.add_child(controller)
+
+	var trigger := TriggerClass.new()
+	trigger.name = "OnInputActionJump"
+	controller.add_child(trigger)
+
+	var nested_instr := TweenPropertyClass.new()
+	var if_then := IfThenClass.new()
+	if_then.instructions = [nested_instr]
+	var runner := ActionRunnerClass.new()
+	runner.instructions = [if_then]
+	trigger.action_runner = runner
+
+	var resolved: Node = FuseNodeUtils.find_node_from_resource_context(root, nested_instr, NodePath(".."))
+
+	# 清理
+	root.queue_free()
+
+	# 验证结果：从 Trigger 起算 ".." 应解析到 controller
+	if resolved == controller:
+		_pass_count += 1
+		print("[PASS] %s: IfThen 嵌套指令的 '..' 解析到 Trigger 父节点" % test_name)
+	else:
+		_fail_count += 1
+		print("[FAIL] %s: 期望返回 controller，实际返回 %s" % [test_name, resolved])
+
+## 测试：Trigger.conditions 数组里的门控条件可通过 ".." 解析到 Trigger 的父节点
+## 回归用例：_find_resource_owner 原本不检查 Trigger 自带的 conditions 数组
+func test_resource_context_resolves_condition_in_trigger_conditions() -> void:
+	_test_count += 1
+	var test_name: String = "test_resource_context_resolves_condition_in_trigger_conditions"
+	print("\n[%s] 开始测试..." % test_name)
+
+	var root := Node2D.new()
+	root.name = "player"
+	add_child(root)
+
+	var controller := Node.new()
+	controller.name = "PlayerController"
+	root.add_child(controller)
+
+	var trigger := TriggerClass.new()
+	trigger.name = "OnInputActionJump"
+	controller.add_child(trigger)
+
+	var condition := CheckNodePropertyClass.new()
+	trigger.conditions = [condition]
+
+	var resolved: Node = FuseNodeUtils.find_node_from_resource_context(root, condition, NodePath(".."))
+
+	# 清理
+	root.queue_free()
+
+	# 验证结果：从 Trigger 起算 ".." 应解析到 controller
+	if resolved == controller:
+		_pass_count += 1
+		print("[PASS] %s: Trigger.conditions 条件的 '..' 解析到 Trigger 父节点" % test_name)
+	else:
+		_fail_count += 1
+		print("[FAIL] %s: 期望返回 controller，实际返回 %s" % [test_name, resolved])
+
+## ==================== 辅助方法 ====================
 ## 打印测试报告
 func _print_test_report() -> void:
 	print("\n========================================")

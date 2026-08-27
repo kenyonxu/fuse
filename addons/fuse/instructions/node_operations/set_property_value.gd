@@ -104,6 +104,8 @@ var _available_properties: Array[PropertyInfo] = []
 ## 缓存（避免重复计算属性列表）
 var _cached_properties: Array[PropertyInfo] = []
 var _cached_node: Node = null
+## 缓存时的反射缓存代际（脚本热重载清缓存后代际 +1，本地缓存随之失效）
+var _cached_generation: int = -1
 
 ## 设置指令元数据
 func _setup_metadata():
@@ -170,9 +172,9 @@ func _update_property_type_info():
 
 ## 获取可用属性列表
 func _get_available_properties() -> Array[PropertyInfo]:
-	# 检查缓存：如果目标节点未改变且缓存不为空，直接返回缓存
+	# 检查缓存：如果目标节点未改变且缓存不为空且反射缓存代际未变，直接返回缓存
 	# 这避免了重复计算属性列表，提升性能
-	if _cached_node == _target_node_instance and not _cached_properties.is_empty():
+	if _cached_node == _target_node_instance and not _cached_properties.is_empty() and _cached_generation == PropertyManager.cache_generation:
 		return _cached_properties
 
 	if _target_node_instance == null:
@@ -184,6 +186,7 @@ func _get_available_properties() -> Array[PropertyInfo]:
 	# 更新缓存
 	_cached_properties = properties
 	_cached_node = _target_node_instance
+	_cached_generation = PropertyManager.cache_generation
 
 	return properties
 

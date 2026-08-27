@@ -267,6 +267,12 @@ static func _find_resource_owner(root: Node, resource: Resource, use_cache: bool
 				if _check_action_runner_ownership(action_runner, resource):
 					return node
 
+			# Trigger 自带的门控条件数组（use_conditions）也直接持有条件资源
+			if "conditions" in node:
+				var trigger_conditions = node.get("conditions")
+				if trigger_conditions and _resource_holds_resource(trigger_conditions, resource):
+					return node
+
 		# 检查节点是否是 Runner 类型（有 action_runner 但没有 event_definition）
 		elif "action_runner" in node and not "event_definition" in node:
 			var action_runner = node.get("action_runner")
@@ -278,17 +284,55 @@ static func _find_resource_owner(root: Node, resource: Resource, use_cache: bool
 
 ## 检查 ActionRunner 资源是否包含目标资源
 static func _check_action_runner_ownership(action_runner: Resource, resource: Resource) -> bool:
-	# 检查 action_runner 本身是否是目标资源
-	if action_runner == resource:
+	# 递归下钻：资源可能嵌套在复合组件里（if_then.condition、if_else 双分支、
+	# check_all.conditions 等），只查 instructions 直接成员会漏掉嵌套资源，
+	# 导致编辑器里相对路径解析不到宿主节点
+	return _resource_holds_resource(action_runner, resource)
+
+## 递归检查 container 是否（传递地）持有目标资源
+##
+## 沿 STORAGE 的 Object/Array/Dictionary 属性下钻，用 visited 防环、限深 8 层。
+## 跳过 Script 资源（组件资源不会是 Script，避免在脚本源码属性上空转）。
+static func _resource_holds_resource(container: Variant, resource: Resource, depth: int = 0, visited: Dictionary = {}) -> bool:
+	if container == null or depth > 8:
+		return false
+
+	# Array/Dictionary 先分派：它们与 Object 做 == 是非法操作数
+	if container is Array:
+		for item in container:
+			if _resource_holds_resource(item, resource, depth + 1, visited):
+				return true
+		return false
+
+	if container is Dictionary:
+		for value in container.values():
+			if _resource_holds_resource(value, resource, depth + 1, visited):
+				return true
+		return false
+
+	if not container is Resource or container is Script:
+		return false
+
+	if container == resource:
 		return true
 
-	# 直接访问 instructions 属性
-	if "instructions" in action_runner:
-		var instructions = action_runner.get("instructions")
-		if instructions:
-			for inst in instructions:
-				if inst == resource:
-					return true
+	var container_id: int = container.get_instance_id()
+	if visited.has(container_id):
+		return false
+	visited[container_id] = true
+
+	for prop in container.get_property_list():
+		if (prop.usage & PROPERTY_USAGE_STORAGE) == 0:
+			continue
+		if prop.type != TYPE_OBJECT and prop.type != TYPE_ARRAY and prop.type != TYPE_DICTIONARY:
+			continue
+		if prop.name == "script":
+			continue
+		var value: Variant = container.get(prop.name)
+		if value == null:
+			continue
+		if _resource_holds_resource(value, resource, depth + 1, visited):
+			return true
 
 	return false
 

@@ -17952,7 +17952,35 @@
       "type_name": "int"
     }
   ],
-  "OnGroundStateChanged": [],
+  "OnGroundStateChanged": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 2,
+      "hint": 2,
+      "hint_string": "着地,离地,着地+离地",
+      "is_nested_instructions": false,
+      "name": "trigger_on",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0.1,
+      "hint": 1,
+      "hint_string": "0.05,10.0,0.01",
+      "is_nested_instructions": false,
+      "name": "check_interval",
+      "type": 3,
+      "type_name": "float"
+    }
+  ],
   "OnHealthChanged": [
     {
       "default": "",
