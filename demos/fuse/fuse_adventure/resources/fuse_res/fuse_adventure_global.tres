@@ -13,5 +13,5 @@ variables = {
 }
 }
 description = "全局变量存储（仅持久化）"
-created_time = 6.234
-last_modified = 6.234
+created_time = 6.843
+last_modified = 6.843

@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://ba5eqvk8bvd7"]
+
+[ext_resource type="Texture2D" uid="uid://cnehgup6kn147" path="res://third_party_resources/sprites/bullet_9b_topleft_8frames.png" id="1_nbbct"]
+[ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="2_uyb87"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_0xo5r"]
+[ext_resource type="Script" uid="uid://dpsqlhclw051d" path="res://addons/fuse/instructions/node_operations/enable_disable_node.gd" id="4_tqc2p"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="5_jhgik"]
+[ext_resource type="Script" uid="uid://bk5xvyc2mqs4o" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="6_tqc2p"]
+[ext_resource type="Script" uid="uid://t4gmw2xe0e2j" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="7_jhgik"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_rxgda"]
+particles_animation = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_nbbct"]
+_data = [Vector2(0, 0.008928657), 0.0, 6.0150437, 0, 0, Vector2(0.50078005, 0.99132943), 0.0, 0.0, 0, 0, Vector2(0.99999994, 0.014450908), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Resource" id="Resource_2k4j1"]
+resource_name = "禁用 处理和可见性 '..'"
+script = ExtResource("4_tqc2p")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+enable = false
+mode = 2
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_7v7bs"]
+script = ExtResource("5_jhgik")
+instructions = Array[ExtResource("3_0xo5r")]([SubResource("Resource_2k4j1")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_jhgik"]
+resource_name = "设置属性 [CPUParticles2D] .emitting = true"
+script = ExtResource("6_tqc2p")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("..")
+target_property = "emitting"
+set_with_variable = false
+new_value = true
+variable_name = ""
+variable_scope = 0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_lpqqo"]
+resource_name = "随机播放音效 (3 个音效)"
+script = ExtResource("7_jhgik")
+sound_paths = Array[String](["uid://bws8o7kjplan1", "uid://bm3m0cp7kifcq", "uid://duejvyqtdt3cx"])
+volume = 1.0
+pitch_scale = 1.0
+pitch_random_range = 0.0
+bus = "Master"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_0xo5r"]
+script = ExtResource("5_jhgik")
+instructions = Array[ExtResource("3_0xo5r")]([SubResource("Resource_jhgik"), SubResource("Resource_lpqqo")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="CPUParticles2D" type="CPUParticles2D" unique_id=1906597673]
+material = SubResource("CanvasItemMaterial_rxgda")
+emitting = false
+amount = 16
+texture = ExtResource("1_nbbct")
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 120.0
+initial_velocity_max = 120.0
+scale_amount_curve = SubResource("Curve_nbbct")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[node name="OnFinished" type="Node" parent="." unique_id=1135533315]
+script = ExtResource("2_uyb87")
+action_runner = SubResource("Resource_7v7bs")
+target_node = NodePath("..")
+signal_name = "finished"
+action_runner = SubResource("Resource_7v7bs")
+target_node = NodePath("..")
+signal_name = "finished"
+metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="OnReady" type="Node" parent="." unique_id=2002879952]
+script = ExtResource("2_uyb87")
+action_runner = SubResource("Resource_0xo5r")
+target_node = NodePath("..")
+signal_name = "ready"
+action_runner = SubResource("Resource_0xo5r")
+target_node = NodePath("..")
+signal_name = "ready"
+metadata/_custom_type_script = "uid://parouyd882ij"

@@ -26,16 +26,19 @@
 [sub_resource type="Resource" id="Resource_8vwsa"]
 resource_name = "On Ready With Delay: 0.0"
 script = ExtResource("4_adcf2")
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_chg11"]
 resource_name = "设置视口尺寸 640x648"
 script = ExtResource("6_pq6vj")
 width = 640
 height = 648
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("7_45fck")
 instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_chg11")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_0a2a6"]
@@ -75,10 +78,12 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_lh002"]
 script = ExtResource("7_45fck")
 instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_ax8le")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_fknqa"]
 script = ExtResource("12_5nq0w")
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_gubkn"]
 resource_name = "间隔执行: 1.3s - 自动开始 间隔后触发 无限重复"
@@ -125,6 +130,7 @@ log_level = 0
 [sub_resource type="Resource" id="Resource_0t5sn"]
 script = ExtResource("7_45fck")
 instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_qcapw"), SubResource("Resource_mtd1c")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_rt6no"]
@@ -132,11 +138,13 @@ resource_name = "fuse_demo_level_01.tscn 预加载: LOADED"
 script = ExtResource("16_ttd6d")
 scene_path = "uid://cxiwcx0w5nofb"
 expected_status = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_xa4at"]
 resource_name = "打印: loaded"
 script = ExtResource("17_1g7tc")
 message = "loaded"
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_08rkf"]
 resource_name = "If/Then 检查场景 fuse_demo_level_01.tscn 的预加载状态是否为 LOADED [1 个指令] [异步]"
@@ -150,10 +158,12 @@ resource_name = "切换场景 'fuse_demo_level_01.tscn' (延迟 1.0 秒)"
 script = ExtResource("19_fuljr")
 scene_path = "uid://cxiwcx0w5nofb"
 delay = 1.0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_3nc64"]
 script = ExtResource("7_45fck")
 instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_08rkf"), SubResource("Resource_vuhxv")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_r4ibc"]
@@ -167,6 +177,7 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("..")
 action = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_cm44k"]
 resource_name = "淡入 [Panel] alpha: 0.0→1.0 (0.50s)"
@@ -183,10 +194,12 @@ from_alpha = 0.0
 to_alpha = 1.0
 easing_type = 1
 trans_type = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_2f70v"]
 script = ExtResource("7_45fck")
 instructions = Array[ExtResource("5_fv8b1")]([SubResource("Resource_r4ibc"), SubResource("Resource_cm44k")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="LabelSettings" id="LabelSettings_jlq5n"]

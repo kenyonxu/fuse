@@ -21,6 +21,13 @@ extends CharacterBody2D
 ## 受击锁移动期间的水平冲量摩擦衰减（px/s²，越大停得越快）
 @export var knockback_friction: float = 600.0
 
+## 是否还能起跳（供 Fuse 条件检查：受击锁定期间不可跳 / 一段跳需在地面 / 二段跳未耗尽）
+@export var can_jump: bool:
+	get:
+		if lock_movement:
+			return false
+		return is_on_floor() or (enable_double_jump and _jump_count == 1)
+
 @onready var _sprite: AnimatedSprite2D = $PlayerSprites
 @onready var _anim_tree: AnimationTree = $AnimationTree
 
@@ -30,6 +37,8 @@ extends CharacterBody2D
 # @export_storage：进入 get_property_list 供 fuse SetPropertyValue 枚举/写入，但不在 Inspector 显示
 @export_storage var move_input: Vector2 = Vector2.ZERO
 @export_storage var jump_requested: bool = false
+
+
 
 var _jump_count: int = 0
 var _was_on_floor: bool = false

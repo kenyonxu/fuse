@@ -10,13 +10,20 @@
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="8_mf6og"]
 [ext_resource type="Script" uid="uid://bk5xvyc2mqs4o" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="8_mw7hn"]
 [ext_resource type="Script" uid="uid://cgl60422nwy0k" path="res://addons/fuse/events/input/on_input_action.gd" id="9_1yqi1"]
+[ext_resource type="Script" uid="uid://t4gmw2xe0e2j" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="11_7xii8"]
 [ext_resource type="Script" uid="uid://b5up05i5u1nqd" path="res://addons/fuse/core/base/scope_variable_container.gd" id="11_mf6og"]
 [ext_resource type="Script" uid="uid://lujgnh8jpmvc" path="res://addons/fuse/events/event/on_receive_event.gd" id="12_ds1tm"]
+[ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="12_mbt1i"]
+[ext_resource type="Script" uid="uid://curjhtpsk638v" path="res://addons/fuse/core/base/base_condition.gd" id="13_3qrqi"]
 [ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="13_5bacu"]
 [ext_resource type="Script" uid="uid://dlny0ndt7nshk" path="res://addons/fuse/instructions/animation/get_animation_length.gd" id="13_47yx7"]
+[ext_resource type="Script" uid="uid://brb0b60x7i2o8" path="res://addons/fuse/conditions/physics/check_velocity.gd" id="13_buyw0"]
 [ext_resource type="Script" uid="uid://cga028a3a8dd" path="res://addons/fuse/instructions/animation/set_animation_tree_parameter.gd" id="14_5bacu"]
+[ext_resource type="Script" uid="uid://cypq1kg2q53jp" path="res://addons/fuse/conditions/physics/check_in_air.gd" id="15_0wiwi"]
 [ext_resource type="Script" uid="uid://t183q8wo17g1" path="res://addons/fuse/instructions/physics/add_velocity.gd" id="15_47yx7"]
+[ext_resource type="Script" uid="uid://dm0qufi52uvad" path="res://addons/fuse/conditions/composite/check_all.gd" id="16_oay6c"]
 [ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="17_iok25"]
+[ext_resource type="Script" uid="uid://ba2e8bbba2130" path="res://addons/fuse/events/physics/on_ground_state_changed.gd" id="18_0wiwi"]
 [ext_resource type="Script" uid="uid://ciok2e7h5waqe" path="res://addons/fuse/conditions/node/check_node_property.gd" id="18_e7e1d"]
 [ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="19_un7io"]
 [ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="20_nelp3"]
@@ -24,6 +31,10 @@
 [ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="21_wnts0"]
 [ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="23_3ayao"]
 [ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="24_7xii8"]
+[ext_resource type="Script" uid="uid://cg88npkpvssm6" path="res://addons/fuse/instructions/audio/play_sound.gd" id="24_oay6c"]
+[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="33_gcf2b"]
+[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="34_ec0ik"]
+[ext_resource type="Script" uid="uid://dpsqlhclw051d" path="res://addons/fuse/instructions/node_operations/enable_disable_node.gd" id="35_ec0ik"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wga5u"]
 animation = &"player/hit"
@@ -106,9 +117,134 @@ variable_name = ""
 variable_scope = 0
 log_level = 0
 
+[sub_resource type="Resource" id="Resource_oay6c"]
+resource_name = "[2层上级].can_jump == true"
+script = ExtResource("18_e7e1d")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../..")
+property_name = "can_jump"
+property_value = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_ca48s"]
+resource_name = "随机播放音效 (3 个音效) (音量 30.0%%) (随机音高 ±0.15)"
+script = ExtResource("11_7xii8")
+sound_paths = Array[String](["uid://dtf154nthu4wj", "uid://ds8a3sjqosxi2", "uid://dro6lqk78udps"])
+volume = 0.3
+pitch_scale = 1.0
+pitch_random_range = 0.15
+bus = "Master"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_babbx"]
+resource_name = "If/Then player.can_jump == true [1 个指令] [异步]"
+script = ExtResource("21_4aelh")
+condition = SubResource("Resource_oay6c")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_ca48s")])
+log_level = 0
+metadata/_custom_type_script = "uid://bhy8o7uexju0b"
+
 [sub_resource type="Resource" id="Resource_phq6w"]
 script = ExtResource("8_mf6og")
-instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_ds1tm")])
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_ds1tm"), SubResource("Resource_babbx")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_qqhlc"]
+resource_name = "间隔执行: 0.3s - 自动开始 立即触发 无限重复"
+script = ExtResource("12_mbt1i")
+trigger_on_start = true
+interval_seconds = 0.3
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+metadata/_custom_type_script = "uid://cfgfb15l8dlvx"
+
+[sub_resource type="Resource" id="Resource_buyw0"]
+resource_name = "速度 > 30.0"
+script = ExtResource("13_buyw0")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../..")
+velocity_threshold = 30.0
+comparison_operator = 0
+log_level = 0
+metadata/_custom_type_script = "uid://brb0b60x7i2o8"
+
+[sub_resource type="Resource" id="Resource_kiu2e"]
+resource_name = "在空中: [2层上级]"
+script = ExtResource("15_0wiwi")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../..")
+log_level = 0
+negate_result = true
+metadata/_custom_type_script = "uid://cypq1kg2q53jp"
+
+[sub_resource type="Resource" id="Resource_ec0ik"]
+resource_name = "ALL (2 个条件)"
+script = ExtResource("16_oay6c")
+conditions = Array[ExtResource("13_3qrqi")]([SubResource("Resource_buyw0"), SubResource("Resource_kiu2e")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_gcf2b"]
+resource_name = "随机播放音效 (2 个音效) (音量 40.0%%)"
+script = ExtResource("11_7xii8")
+sound_paths = Array[String](["uid://bxvdinoyec4hi", "uid://c63q8t45jfo2i"])
+volume = 0.4
+pitch_scale = 1.0
+pitch_random_range = 0.0
+bus = "Master"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_l1eem"]
+resource_name = "If/Then ALL (2 个条件) [1 个指令] [异步]"
+script = ExtResource("21_4aelh")
+condition = SubResource("Resource_ec0ik")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_gcf2b")])
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_iubcl"]
+script = ExtResource("8_mf6og")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_l1eem")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_8cjm8"]
+resource_name = "着地状态: player [着地]"
+script = ExtResource("18_0wiwi")
+target_node = NodePath("../..")
+trigger_on = 0
+check_interval = 0.1
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_lpa1m"]
+resource_name = "随机播放音效 (3 个音效) (随机音高 ±0.15)"
+script = ExtResource("11_7xii8")
+sound_paths = Array[String](["uid://vq6418bpimtj", "uid://dg4qetd5626m8", "uid://dvole8d6f22wb"])
+volume = 1.0
+pitch_scale = 1.0
+pitch_random_range = 0.15
+bus = "Master"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_uikym"]
+script = ExtResource("8_mf6og")
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_lpa1m")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_8gaye"]
@@ -129,7 +265,7 @@ save_to_scope_source = 0
 save_to_custom_scope_id = ""
 save_to_target_node_path = NodePath("")
 use_variable_for_target = false
-target_node = NodePath("../PlayerSprites/AnimationPlayer")
+target_node = NodePath("../../PlayerSprites/AnimationPlayer")
 animation_name = "player/hit"
 save_to_variable = "hit_time"
 save_to_scope = 0
@@ -143,7 +279,7 @@ variable_scope = 0
 scope_source = 0
 custom_scope_id = ""
 scope_target_node_path = NodePath("")
-target_node = NodePath("..")
+target_node = NodePath("../..")
 target_property = "lock_movement"
 set_with_variable = false
 new_value = true
@@ -166,6 +302,16 @@ save_scope_source = 1
 save_custom_scope_id = "player"
 log_level = 0
 
+[sub_resource type="Resource" id="Resource_fq0o2"]
+resource_name = "播放音效 'sfx_sounds_impact1.wav' (音量 40.0%%)"
+script = ExtResource("24_oay6c")
+sound_path = "uid://boxqcri3pso82"
+volume = 0.4
+pitch_scale = 1.0
+pitch_random_range = 0.0
+bus = "Master"
+log_level = 0
+
 [sub_resource type="Resource" id="Resource_iok25"]
 resource_name = "动画参数: conditions/hit = true"
 script = ExtResource("14_5bacu")
@@ -178,7 +324,7 @@ float_value = 0.0
 int_value = 0
 string_value = ""
 use_variable_for_target = false
-target_node = NodePath("../AnimationTree")
+target_node = NodePath("../../AnimationTree")
 parameter_name = "conditions/hit"
 parameter_type = 2
 bool_value = true
@@ -193,13 +339,13 @@ node_scope_source = 0
 node_custom_scope_id = ""
 node_target_node_path = NodePath("")
 node_source = 0
-target_node_path = NodePath("../PlayerSprites")
+target_node_path = NodePath("../../PlayerSprites")
 property_name = "flip_h"
 property_value = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_un7io"]
-resource_name = "冲量 (300.0, 0.0) → [上级]"
+resource_name = "冲量 (300.0, 0.0) → [2层上级]"
 script = ExtResource("15_47yx7")
 target_variable = ""
 target_scope = 0
@@ -212,14 +358,14 @@ impulse_scope_source = 0
 impulse_custom_scope_id = ""
 impulse_target_node_path = NodePath("")
 use_variable_for_target = false
-target_node = NodePath("..")
+target_node = NodePath("../..")
 replace_mode = 1
 impulse_source = 0
 impulse = Vector2(300, 0)
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_mbt1i"]
-resource_name = "冲量 (-300.0, 0.0) → [上级]"
+resource_name = "冲量 (-300.0, 0.0) → [2层上级]"
 script = ExtResource("15_47yx7")
 target_variable = ""
 target_scope = 0
@@ -232,7 +378,7 @@ impulse_scope_source = 0
 impulse_custom_scope_id = ""
 impulse_target_node_path = NodePath("")
 use_variable_for_target = false
-target_node = NodePath("..")
+target_node = NodePath("../..")
 replace_mode = 1
 impulse_source = 0
 impulse = Vector2(-300, 0)
@@ -269,7 +415,7 @@ float_value = 0.0
 int_value = 0
 string_value = ""
 use_variable_for_target = false
-target_node = NodePath("../AnimationTree")
+target_node = NodePath("../../AnimationTree")
 parameter_name = "conditions/hit"
 parameter_type = 2
 bool_value = false
@@ -284,7 +430,7 @@ variable_scope = 0
 scope_source = 0
 custom_scope_id = ""
 scope_target_node_path = NodePath("")
-target_node = NodePath("..")
+target_node = NodePath("../..")
 target_property = "lock_movement"
 set_with_variable = false
 new_value = false
@@ -293,7 +439,7 @@ variable_scope = 0
 log_level = 0
 completion_timing = 0
 
-[sub_resource type="Resource" id="Resource_buyw0"]
+[sub_resource type="Resource" id="Resource_xm46p"]
 resource_name = "检查变量 [ID:player]: life EQUALS 0"
 script = ExtResource("20_nelp3")
 variable_name = "life"
@@ -312,50 +458,141 @@ check_with_another_variable = false
 case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_041sw"]
 resource_name = "发送事件: playerdie"
 script = ExtResource("21_wnts0")
 event_name = "playerdie"
+log_level = 0
 
-[sub_resource type="Resource" id="Resource_kiu2e"]
+[sub_resource type="Resource" id="Resource_0o1ib"]
 resource_name = "If/Then life [ID:player] EQUALS 0 [1 个指令] [异步]"
 script = ExtResource("21_4aelh")
-condition = SubResource("Resource_buyw0")
+condition = SubResource("Resource_xm46p")
 instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_041sw")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fgjoy"]
 script = ExtResource("8_mf6og")
-instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_cg1nb"), SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_iok25"), SubResource("Resource_7xii8"), SubResource("Resource_wnts0"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh"), SubResource("Resource_kiu2e")])
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_cg1nb"), SubResource("Resource_nelp3"), SubResource("Resource_47yx7"), SubResource("Resource_fq0o2"), SubResource("Resource_iok25"), SubResource("Resource_7xii8"), SubResource("Resource_wnts0"), SubResource("Resource_e7e1d"), SubResource("Resource_4aelh"), SubResource("Resource_0o1ib")])
 log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_3qrqi"]
 resource_name = "On Ready With Delay: 0.0"
 script = ExtResource("23_3ayao")
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_0wiwi"]
-resource_name = "获取节点 '..' → player [ID:level_scope]"
+resource_name = "获取节点 '../..' → player [ID:level_scope]"
 script = ExtResource("24_7xii8")
 target_node_path = NodePath("")
-node_path = NodePath("..")
+node_path = NodePath("../..")
 result_variable = "player"
 result_scope = 1
 scope_source = 1
 custom_scope_id = "level_scope"
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_xymtv"]
+resource_name = "获取位置 player → pos [LOCAL]"
+script = ExtResource("33_gcf2b")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../..")
+save_to_variable = "pos"
+save_to_scope = 0
+use_global_position = true
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_pbix6"]
+resource_name = "实例化 'respawn_effect.tscn' 从变量 [[本地]] pos"
+script = ExtResource("34_ec0ik")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(0, 0, 0)
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "uid://d37dkl35avjkv"
+parent_node = NodePath("")
+position_mode = 1
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "pos"
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = false
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_8wb2e"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("17_iok25")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_5pj87"]
+resource_name = "启用 可见性 '../..'"
+script = ExtResource("35_ec0ik")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../..")
+enable = true
+mode = 1
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_be1xc"]
+resource_name = "设置属性 [player] .gravity_scale = 1.0"
+script = ExtResource("8_mw7hn")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../..")
+target_property = "gravity_scale"
+set_with_variable = false
+new_value = 1.0
+variable_name = ""
+variable_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_7nek4"]
 script = ExtResource("8_mf6og")
-instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_0wiwi")])
+instructions = Array[ExtResource("7_mw7hn")]([SubResource("Resource_0wiwi"), SubResource("Resource_xymtv"), SubResource("Resource_pbix6"), SubResource("Resource_8wb2e"), SubResource("Resource_5pj87"), SubResource("Resource_be1xc")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="player" type="CharacterBody2D" unique_id=1414059474 groups=["player"]]
+visible = false
 script = ExtResource("4_7t5up")
+gravity_scale = 0.0
 
 [node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=225014475]
 sprite_frames = ExtResource("1_yihwy")
 animation = &"idle"
-frame = 3
+frame = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1233082201]
 libraries/player = ExtResource("2_wga5u")
@@ -375,21 +612,7 @@ parameters/PlayerNormal/conditions/land = false
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_rxgda")
 
-[node name="PlayerController" type="Node2D" parent="." unique_id=681370264]
-
-[node name="OnInputCompositeAction" type="Node" parent="PlayerController" unique_id=684465951]
-script = ExtResource("5_kvs1w")
-event_definition = SubResource("Resource_ixdjt")
-action_runner = SubResource("Resource_rxgda")
-metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
-
-[node name="OnInputAction" type="Node" parent="PlayerController" unique_id=1624013137]
-script = ExtResource("5_kvs1w")
-event_definition = SubResource("Resource_mw7hn")
-action_runner = SubResource("Resource_phq6w")
-metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
-
-[node name="PlayerVariables" type="Node" parent="." unique_id=541579564]
+[node name="PlayerController" type="Node" parent="." unique_id=541579564]
 script = ExtResource("11_mf6og")
 scope_id = "player"
 variables = Dictionary[String, Variant]({
@@ -397,13 +620,39 @@ variables = Dictionary[String, Variant]({
 })
 metadata/_custom_type_script = "uid://b5up05i5u1nqd"
 
-[node name="OnPlayerHurt" type="Node" parent="." unique_id=329523553]
+[node name="OnInputCompositeAction" type="Node" parent="PlayerController" unique_id=684465951]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_ixdjt")
+action_runner = SubResource("Resource_rxgda")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnInputActionJump" type="Node" parent="PlayerController" unique_id=1624013137]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_mw7hn")
+action_runner = SubResource("Resource_phq6w")
+use_conditions = true
+conditions = Array[ExtResource("13_3qrqi")]([])
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnFootstep" type="Node" parent="PlayerController" unique_id=128051883]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_qqhlc")
+action_runner = SubResource("Resource_iubcl")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnLand" type="Node" parent="PlayerController" unique_id=1951865194]
+script = ExtResource("5_kvs1w")
+event_definition = SubResource("Resource_8cjm8")
+action_runner = SubResource("Resource_uikym")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="OnPlayerHurt" type="Node" parent="PlayerController" unique_id=329523553]
 script = ExtResource("5_kvs1w")
 event_definition = SubResource("Resource_8gaye")
 action_runner = SubResource("Resource_fgjoy")
 metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
-[node name="Trigger" type="Node" parent="." unique_id=1738576075]
+[node name="OnReay" type="Node" parent="PlayerController" unique_id=1738576075]
 script = ExtResource("5_kvs1w")
 event_definition = SubResource("Resource_3qrqi")
 action_runner = SubResource("Resource_7nek4")

@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://bn84jd6qntujg"]
+
+[ext_resource type="Script" uid="uid://b17kbpnvgxdvy" path="res://addons/fuse/core/trigger.gd" id="1_q166p"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_0ju1a"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_a72l0"]
+[ext_resource type="Script" uid="uid://mh76nrrf2u5" path="res://addons/fuse/instructions/variables/create_variable.gd" id="4_0ju1a"]
+[ext_resource type="Script" uid="uid://nm2bk1fa2wre" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="4_yi2ly"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="5_sd52w"]
+
+[sub_resource type="Resource" id="Resource_rxgda"]
+resource_name = "On Ready With Delay: 0.0"
+script = ExtResource("2_0ju1a")
+metadata/_custom_type_script = "uid://ccdjf1c0cwt8b"
+
+[sub_resource type="Resource" id="Resource_a72l0"]
+resource_name = "创建变量 [LOCAL] pos = (100.0, 100.0)"
+script = ExtResource("4_0ju1a")
+variable_name = "pos"
+value = Vector2(100, 100)
+
+[sub_resource type="Resource" id="Resource_oftng"]
+resource_name = "实例化 'death_explosion.tscn' 到 Node2D 从变量 [[本地]] pos"
+script = ExtResource("4_yi2ly")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+spawn_position = Vector3(200, 0, 0)
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "uid://ba5eqvk8bvd7"
+parent_node = NodePath("..")
+position_mode = 1
+spawn_position = Vector3(200, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = "pos"
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = false
+
+[sub_resource type="Resource" id="Resource_fgjoy"]
+script = ExtResource("5_sd52w")
+instructions = Array[ExtResource("3_a72l0")]([SubResource("Resource_a72l0"), SubResource("Resource_oftng")])
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[node name="Node2D" type="Node2D" unique_id=809064382]
+
+[node name="Trigger" type="Node" parent="." unique_id=1050795914]
+script = ExtResource("1_q166p")
+event_definition = SubResource("Resource_rxgda")
+action_runner = SubResource("Resource_fgjoy")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=894317144]

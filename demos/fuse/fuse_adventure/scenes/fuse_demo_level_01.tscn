@@ -20,6 +20,8 @@
 [ext_resource type="Script" uid="uid://blw2r788hie53" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="17_uh7fd"]
 [ext_resource type="PackedScene" uid="uid://drf83gp3l1112" path="res://demos/fuse/fuse_adventure/scenes/canvas_layer.tscn" id="19_gdobu"]
 [ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="19_ymh5n"]
+[ext_resource type="Script" uid="uid://cfgfb15l8dlvx" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="20_gmyrx"]
+[ext_resource type="Script" uid="uid://dgk6lyr4260ad" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="21_yfhd5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxgda"]
 size = Vector2(1266, 719)
@@ -33,6 +35,7 @@ node_path = NodePath("..")
 result_variable = "camera"
 result_scope = 1
 scope_source = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_0u2nx"]
 resource_name = "相机边界 (Camera2D ← CameraFrame)"
@@ -52,21 +55,25 @@ camera_node = NodePath("..")
 use_variable_for_bounds = false
 bounds_area = NodePath("../../../Worlds/CameraFrame")
 margin = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_g28q7"]
 script = ExtResource("7_cl5h0")
 instructions = Array[ExtResource("4_ymh5n")]([SubResource("Resource_ak1ug"), SubResource("Resource_0u2nx")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_io55n"]
 resource_name = "On Ready With Delay: 0.0"
 script = ExtResource("9_j1tm6")
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_3ucjy"]
 resource_name = "设置视口尺寸 640x360"
 script = ExtResource("10_jqnkt")
 width = 640
 height = 360
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_plqys"]
 resource_name = "获取组中节点 'player_spawn_point' → spawn_points [[本地]]"
@@ -77,6 +84,7 @@ target_node_path = NodePath("")
 group_name = "player_spawn_point"
 result_variable = "spawn_points"
 result_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_scxm5"]
 resource_name = "Array Get 数组 spawn_points [0] → spawn_point"
@@ -95,6 +103,7 @@ array_scope = 0
 index_value = 0
 target_variable = "spawn_point"
 target_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fovbj"]
 resource_name = "获取位置 spawn_point [LOCAL] → pos_spawn [LOCAL]"
@@ -112,6 +121,7 @@ target_scope = 0
 save_to_variable = "pos_spawn"
 save_to_scope = 0
 use_global_position = true
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_sqapb"]
 resource_name = "实例化 'player.tscn' 从变量 [[本地]] pos_spawn"
@@ -136,6 +146,7 @@ save_instance_id = false
 target_variable = "player"
 save_to_scope = 0
 use_object_pool = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_o4ukh"]
 resource_name = "获取组中节点 'player' → grp_player [[本地]]"
@@ -146,6 +157,7 @@ target_node_path = NodePath("")
 group_name = "player"
 result_variable = "grp_player"
 result_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_5a3ub"]
 resource_name = "Array Get 数组 grp_player [0] → player"
@@ -164,6 +176,7 @@ array_scope = 0
 index_value = 0
 target_variable = "player"
 target_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_cb305"]
 resource_name = "等待 0.1 秒"
@@ -173,6 +186,7 @@ custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_3vddb"]
 resource_name = "打印变量 'player' [[本地]]"
@@ -182,6 +196,7 @@ custom_scope_id = ""
 target_node_path = NodePath("")
 variable_name = "player"
 variable_scope = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_p1ubp"]
 resource_name = "打印变量 'camera' [最近作用域]"
@@ -191,6 +206,7 @@ target_node_path = NodePath("")
 variable_name = "camera"
 variable_scope = 1
 scope_source = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_mw75f"]
 resource_name = "相机跟随 player [LOCAL] → camera [SCOPE] 平滑 速度: 5.0"
@@ -210,11 +226,12 @@ camera_scope_source = 0
 follow_mode = 1
 smooth_speed = 5.0
 enabled = true
-log_level = 4
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("7_cl5h0")
 instructions = Array[ExtResource("4_ymh5n")]([SubResource("Resource_3ucjy"), SubResource("Resource_plqys"), SubResource("Resource_scxm5"), SubResource("Resource_fovbj"), SubResource("Resource_sqapb"), SubResource("Resource_o4ukh"), SubResource("Resource_5a3ub"), SubResource("Resource_cb305"), SubResource("Resource_3vddb"), SubResource("Resource_p1ubp"), SubResource("Resource_mw75f")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_ax8le"]
@@ -233,10 +250,39 @@ scene_path = "uid://b18ilhox3hf0m"
 preload_mode = 0
 timeout = 5.0
 status_variable = "preload_scene_status"
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_gmyrx"]
 script = ExtResource("7_cl5h0")
 instructions = Array[ExtResource("4_ymh5n")]([SubResource("Resource_ax8le"), SubResource("Resource_ymh5n")])
+log_level = 0
+metadata/_custom_type_script = "uid://nsaea7jh1jr5"
+
+[sub_resource type="Resource" id="Resource_yfhd5"]
+resource_name = "间隔执行: 25.0s - 自动开始 立即触发 无限重复"
+script = ExtResource("20_gmyrx")
+trigger_on_start = true
+emit_repeat_count = false
+interval_seconds = 25.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+log_level = 0
+
+[sub_resource type="Resource" id="Resource_pd7xt"]
+resource_name = "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)"
+script = ExtResource("21_yfhd5")
+music_path = "uid://bi1lb4nvpv6gn"
+volume = 1.0
+bus = "Master"
+continue_during_pause = false
+crossfade_duration = 3.0
+log_level = 0
+completion_timing = 0
+
+[sub_resource type="Resource" id="Resource_cl5h0"]
+script = ExtResource("7_cl5h0")
+instructions = Array[ExtResource("4_ymh5n")]([SubResource("Resource_pd7xt")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="FuseDemoLevel" type="Node" unique_id=1396739659]
@@ -298,5 +344,11 @@ action_runner = SubResource("Resource_gmyrx")
 target_node = NodePath("../..")
 signal_name = "ready"
 metadata/_custom_type_script = "uid://parouyd882ij"
+
+[node name="LoopMusic" type="Node" parent="GameManager" unique_id=1127187875]
+script = ExtResource("8_pd7xt")
+event_definition = SubResource("Resource_yfhd5")
+action_runner = SubResource("Resource_cl5h0")
+metadata/_custom_type_script = "uid://b17kbpnvgxdvy"
 
 [node name="CanvasLayer" parent="." unique_id=746731906 instance=ExtResource("19_gdobu")]

@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://2ye3jp4pqq0c" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="4_wikf6"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="5_uqe6k"]
 [ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="6_bqeww"]
+[ext_resource type="Script" uid="uid://t4gmw2xe0e2j" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="7_odqfd"]
 [ext_resource type="Script" uid="uid://bxi20p1anvc7o" path="res://addons/fuse/instructions/animation/animated_sprite_2d_play.gd" id="7_uqe6k"]
 [ext_resource type="Script" uid="uid://bi7je2pxxdm2d" path="res://addons/fuse/instructions/event/send_event.gd" id="8_odqfd"]
 [ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="9_tjybd"]
@@ -200,6 +201,15 @@ resource_name = "发送事件: banana_get"
 script = ExtResource("8_odqfd")
 event_name = "banana_get"
 
+[sub_resource type="Resource" id="Resource_y0esl"]
+resource_name = "随机播放音效 (3 个音效) (音量 40.0%%) (随机音高 ±0.15)"
+script = ExtResource("7_odqfd")
+sound_paths = Array[String](["uid://v84byr1sp1om", "uid://c6cchaqyhe7m4", "uid://cdulwm1yedgid"])
+volume = 0.4
+pitch_scale = 1.0
+pitch_random_range = 0.15
+bus = "Master"
+
 [sub_resource type="Resource" id="Resource_bqeww"]
 resource_name = "播放动画 → AnimatedSprite2D 'collect'"
 script = ExtResource("7_uqe6k")
@@ -222,11 +232,11 @@ from_end = false
 
 [sub_resource type="Resource" id="Resource_rxgda"]
 script = ExtResource("6_bqeww")
-instructions = Array[ExtResource("5_uqe6k")]([SubResource("Resource_qgy2h"), SubResource("Resource_bqeww")])
+instructions = Array[ExtResource("5_uqe6k")]([SubResource("Resource_qgy2h"), SubResource("Resource_y0esl"), SubResource("Resource_bqeww")])
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_odqfd"]
-resource_name = "禁用 FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_BOTH_MODE '..'"
+resource_name = "禁用 处理和可见性 '..'"
 script = ExtResource("10_tjybd")
 target_variable = ""
 target_scope = 0

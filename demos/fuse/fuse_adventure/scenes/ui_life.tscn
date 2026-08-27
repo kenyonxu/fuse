@@ -35,6 +35,7 @@ target_value = 0
 emit_old_value = false
 scope_source = 1
 custom_scope_id = "player"
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_7y26n"]
 resource_name = "检查变量 [[本地]]: event_new_value EQUALS 2"
@@ -55,9 +56,10 @@ check_with_another_variable = false
 case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_7ca05"]
-resource_name = "显示 UI → heart03"
+resource_name = "隐藏 UI → heart03"
 script = ExtResource("7_rwnbb")
 target_variable = ""
 target_scope = 0
@@ -67,12 +69,14 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
 action = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_rwnbb"]
 resource_name = "If/Then event_new_value [[本地]] EQUALS 2 [1 个指令] [异步]"
 script = ExtResource("6_n3k5l")
 condition = SubResource("Resource_7y26n")
 instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_7ca05")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_cj703"]
 resource_name = "检查变量 [[本地]]: event_new_value EQUALS 1"
@@ -93,9 +97,10 @@ check_with_another_variable = false
 case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_njqm7"]
-resource_name = "显示 UI → heart03"
+resource_name = "隐藏 UI → heart03"
 script = ExtResource("7_rwnbb")
 target_variable = ""
 target_scope = 0
@@ -105,6 +110,7 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
 action = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_suhb4"]
 resource_name = "隐藏 UI → heart02"
@@ -117,12 +123,14 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart02")
 action = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_pfklj"]
 resource_name = "If/Then event_new_value [[本地]] EQUALS 1 [2 个指令] [异步]"
 script = ExtResource("6_n3k5l")
 condition = SubResource("Resource_cj703")
 instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_njqm7"), SubResource("Resource_suhb4")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_4cmqd"]
 resource_name = "检查变量 [[本地]]: event_new_value EQUALS 0"
@@ -143,9 +151,10 @@ check_with_another_variable = false
 case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_qbp7c"]
-resource_name = "显示 UI → heart03"
+resource_name = "隐藏 UI → heart03"
 script = ExtResource("7_rwnbb")
 target_variable = ""
 target_scope = 0
@@ -155,9 +164,10 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
 action = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_fjn7e"]
-resource_name = "显示 UI → heart02"
+resource_name = "隐藏 UI → heart02"
 script = ExtResource("7_rwnbb")
 target_variable = ""
 target_scope = 0
@@ -167,6 +177,7 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart02")
 action = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_bkv8f"]
 resource_name = "隐藏 UI → heart01"
@@ -179,12 +190,14 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart01")
 action = 1
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_wpvjo"]
 resource_name = "If/Then event_new_value [[本地]] EQUALS 0 [3 个指令] [异步]"
 script = ExtResource("6_n3k5l")
 condition = SubResource("Resource_4cmqd")
 instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_qbp7c"), SubResource("Resource_fjn7e"), SubResource("Resource_bkv8f")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_6aywj"]
 resource_name = "检查变量 [[本地]]: event_new_value EQUALS 3"
@@ -205,6 +218,7 @@ check_with_another_variable = false
 case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_4p08m"]
 resource_name = "显示 UI → heart03"
@@ -217,6 +231,7 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart03")
 action = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_g054i"]
 resource_name = "显示 UI → heart02"
@@ -229,6 +244,7 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart02")
 action = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_3s4uw"]
 resource_name = "显示 UI → heart01"
@@ -241,16 +257,19 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../MarginContainer/HBoxContainer/HeartsContainer/heart01")
 action = 0
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_1j333"]
-resource_name = "If/Then event_new_value [[本地]] EQUALS 0 [3 个指令] [异步]"
+resource_name = "If/Then event_new_value [[本地]] EQUALS 3 [3 个指令] [异步]"
 script = ExtResource("6_n3k5l")
 condition = SubResource("Resource_6aywj")
 instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_4p08m"), SubResource("Resource_g054i"), SubResource("Resource_3s4uw")])
+log_level = 0
 
 [sub_resource type="Resource" id="Resource_lenfx"]
 script = ExtResource("7_cj703")
 instructions = Array[ExtResource("5_wvq25")]([SubResource("Resource_rwnbb"), SubResource("Resource_pfklj"), SubResource("Resource_wpvjo"), SubResource("Resource_1j333")])
+log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [node name="UI_Life" type="Control" unique_id=225107553]
