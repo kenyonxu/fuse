@@ -599,6 +599,9 @@ func _on_deferred_add_legacy(parent: Node, instance: Node, pool, context: Execut
 	if instance.get_parent():
 		instance.get_parent().remove_child(instance)
 
+	# 位置预置（同 RuntimeInstance 模式：保证 _ready 自启动前位置已正确）
+	_prespawn_position(instance, parent, context)
+
 	parent.add_child(instance)
 
 	# 池化实例重置
@@ -763,6 +766,11 @@ func _on_deferred_add(runtime_instance: RuntimeInstructionInstance, parent: Node
 	if instance.get_parent():
 		instance.get_parent().remove_child(instance)
 
+	# 位置预置：add_child 的 _ready 调用栈内子场景可能自启动（如粒子 emitting=true），
+	# 且 global_position 需进树后才能设置——因此先用局部坐标把位置放对，
+	# 进树后 _finalize_instance 内再用 global_position 校正兜底
+	_prespawn_position(instance, parent, runtime_instance.execution_context)
+
 	parent.add_child(instance)
 
 	# 池化实例重置
@@ -789,6 +797,23 @@ func _finalize_instance(instance: Node, context: ExecutionContext, runtime_insta
 	})
 
 	runtime_instance._complete_execution()
+
+## 进树前预置生成位置（局部坐标）
+## 场景子树 _ready 内的自启动行为（如 CPUParticles2D emitting=true）
+## 会锁定当时的位置，必须保证 add_child 前位置已正确
+func _prespawn_position(instance: Node, parent: Node, context: ExecutionContext) -> void:
+	var spawn_pos := _get_spawn_position(context)
+	if instance is Node2D:
+		var target := Vector2(spawn_pos.x, spawn_pos.y)
+		if parent is CanvasItem:
+			instance.position = (parent as CanvasItem).get_global_transform().affine_inverse() * target
+		else:
+			instance.position = target
+	elif instance is Node3D:
+		if parent is Node3D:
+			instance.position = (parent as Node3D).global_transform.affine_inverse() * spawn_pos
+		else:
+			instance.position = spawn_pos
 
 ## 应用生成位置
 func _apply_spawn_position(instance: Node, context: ExecutionContext) -> void:
