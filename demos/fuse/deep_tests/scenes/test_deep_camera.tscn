@@ -7,39 +7,48 @@
 [ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="5_asmn2"]
 [ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="6_qbpxq"]
 [ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="7_k0vpf"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/set_camera_zoom.gd" id="8_hxk2y"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="9_fgaog"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="10_ighm6"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="11_y57jq"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/set_camera_limit.gd" id="12_7bvrp"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/set_camera_limit_from_area2d.gd" id="13_an0c8"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/transform/set_position.gd" id="14_bk8y4"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="15_jh57a"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="16_5qlqe"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="17_bsrjx"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="18_l2lld"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_shake.gd" id="19_costv"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_fade_out.gd" id="20_6q4px"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_fade_in.gd" id="21_th7pb"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="22_gxdlp"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="23_0dfe6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="8_hxk2y"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/set_camera_zoom.gd" id="9_fgaog"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="10_ighm6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="11_y57jq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/set_position.gd" id="12_7bvrp"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_follow.gd" id="13_an0c8"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="14_bk8y4"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="15_jh57a"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="16_5qlqe"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/set_camera_limit.gd" id="17_bsrjx"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/set_camera_limit_from_area2d.gd" id="18_l2lld"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="19_costv"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="20_6q4px"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_shake.gd" id="21_th7pb"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_fade_out.gd" id="22_gxdlp"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/camera/camera_fade_in.gd" id="23_0dfe6"]
 
 [sub_resource type="RectangleShape2D" id="Rect_bounds"]
 size = Vector2(200, 100)
 
 [sub_resource type="Resource" id="Resource_f06gs"]
-resource_name = "打印: === deep_camera START（每步约 1.5s，跟着控制台提示看画面）==="
+resource_name = "打印: === deep_camera START（2 秒后开始，请盯住游戏窗口）==="
 script = ExtResource("7_k0vpf")
-message = "=== deep_camera START（每步约 1.5s，跟着控制台提示看画面）==="
+message = "=== deep_camera START（2 秒后开始，请盯住游戏窗口）==="
 
 [sub_resource type="Resource" id="Resource_pxciq"]
-resource_name = "打印: >>> [F5] 阶段1：变焦 zoom=2.0（画面放大）"
-script = ExtResource("7_k0vpf")
-message = ">>> [F5] 阶段1：变焦 zoom=2.0（画面放大）"
+resource_name = "等待 2.0 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
 
 [sub_resource type="Resource" id="Resource_rpxqt"]
+resource_name = "打印: >>> [F5] 阶段1/5：变焦 zoom=2.0 —— 画面放大一倍"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 阶段1/5：变焦 zoom=2.0 —— 画面放大一倍"
+
+[sub_resource type="Resource" id="Resource_3aaas"]
 resource_name = "设置相机缩放 → 未选择 (1.00x)"
-script = ExtResource("8_hxk2y")
+script = ExtResource("9_fgaog")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -56,9 +65,9 @@ zoom_source = 0
 zoom = 2.0
 zoom_mode = 0
 
-[sub_resource type="Resource" id="Resource_3aaas"]
+[sub_resource type="Resource" id="Resource_4kyp5"]
 resource_name = "Cam.zoom == (2.0, 2.0)"
-script = ExtResource("9_fgaog")
+script = ExtResource("10_ighm6")
 node_variable_name = ""
 node_variable_scope = 0
 node_scope_source = 0
@@ -69,207 +78,41 @@ target_node_path = NodePath("../Cam")
 property_name = "zoom"
 property_value = "(2.0, 2.0)"
 
-[sub_resource type="Resource" id="Resource_4kyp5"]
+[sub_resource type="Resource" id="Resource_kmuiv"]
 resource_name = "打印: FAIL: SetCameraZoom"
 script = ExtResource("7_k0vpf")
 message = "FAIL: SetCameraZoom"
 
-[sub_resource type="Resource" id="Resource_kmuiv"]
+[sub_resource type="Resource" id="Resource_px4bv"]
 resource_name = "打印: PASS: SetCameraZoom"
 script = ExtResource("7_k0vpf")
 message = "PASS: SetCameraZoom"
 
-[sub_resource type="Resource" id="Resource_px4bv"]
-resource_name = "If/Else Cam.zoom == (2.0, 2.0) [真:1 [同步]"
-script = ExtResource("10_ighm6")
-sequence_mode = 0
-condition = SubResource("Resource_3aaas")
-true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_kmuiv")])
-false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_4kyp5")])
-
 [sub_resource type="Resource" id="Resource_7xfwp"]
-resource_name = "等待 1.5 秒"
+resource_name = "If/Else Cam.zoom == (2.0, 2.0) [真:1 [同步]"
 script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 1.5
+sequence_mode = 0
+condition = SubResource("Resource_4kyp5")
+true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_px4bv")])
+false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_kmuiv")])
 
 [sub_resource type="Resource" id="Resource_2wych"]
-resource_name = "打印: >>> [F5] 阶段2：相机边界 Left=-100 Right=600（拖不出去）"
-script = ExtResource("7_k0vpf")
-message = ">>> [F5] 阶段2：相机边界 Left=-100 Right=600（拖不出去）"
+resource_name = "等待 2.5 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.5
 
 [sub_resource type="Resource" id="Resource_g2g3d"]
-resource_name = "相机边界 左 值: -100"
-script = ExtResource("12_7bvrp")
-target_variable = ""
-target_scope = 0
-target_scope_source = 0
-target_custom_scope_id = ""
-target_target_node_path = NodePath("")
-use_variable_for_target = false
-target_node = NodePath("../Cam")
-limit_side = 2
-limit_value = -100
+resource_name = "打印: >>> [F5] 阶段2/5：相机锁定跟随 Player(0,0) —— 画面瞬移到左下角"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 阶段2/5：相机锁定跟随 Player(0,0) —— 画面瞬移到左下角"
 
 [sub_resource type="Resource" id="Resource_lrupo"]
-resource_name = "Cam.limit_left == -100.0"
-script = ExtResource("9_fgaog")
-node_variable_name = ""
-node_variable_scope = 0
-node_scope_source = 0
-node_custom_scope_id = ""
-node_target_node_path = NodePath("")
-node_source = 0
-target_node_path = NodePath("../Cam")
-property_name = "limit_left"
-property_value = -100.0
-
-[sub_resource type="Resource" id="Resource_ghatm"]
-resource_name = "打印: FAIL: SetCameraLimit(Left)"
-script = ExtResource("7_k0vpf")
-message = "FAIL: SetCameraLimit(Left)"
-
-[sub_resource type="Resource" id="Resource_khk56"]
-resource_name = "打印: PASS: SetCameraLimit(Left)"
-script = ExtResource("7_k0vpf")
-message = "PASS: SetCameraLimit(Left)"
-
-[sub_resource type="Resource" id="Resource_vqokc"]
-resource_name = "If/Else Cam.limit_left == -100.0 [真:1 [同步]"
-script = ExtResource("10_ighm6")
-sequence_mode = 0
-condition = SubResource("Resource_lrupo")
-true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_khk56")])
-false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_ghatm")])
-
-[sub_resource type="Resource" id="Resource_e3lnk"]
-resource_name = "相机边界 右 值: 600"
-script = ExtResource("12_7bvrp")
-target_variable = ""
-target_scope = 0
-target_scope_source = 0
-target_custom_scope_id = ""
-target_target_node_path = NodePath("")
-use_variable_for_target = false
-target_node = NodePath("../Cam")
-limit_side = 3
-limit_value = 600
-
-[sub_resource type="Resource" id="Resource_myyrc"]
-resource_name = "Cam.limit_right == 600.0"
-script = ExtResource("9_fgaog")
-node_variable_name = ""
-node_variable_scope = 0
-node_scope_source = 0
-node_custom_scope_id = ""
-node_target_node_path = NodePath("")
-node_source = 0
-target_node_path = NodePath("../Cam")
-property_name = "limit_right"
-property_value = 600.0
-
-[sub_resource type="Resource" id="Resource_7mjiw"]
-resource_name = "打印: FAIL: SetCameraLimit(Right)"
-script = ExtResource("7_k0vpf")
-message = "FAIL: SetCameraLimit(Right)"
-
-[sub_resource type="Resource" id="Resource_y6216"]
-resource_name = "打印: PASS: SetCameraLimit(Right)"
-script = ExtResource("7_k0vpf")
-message = "PASS: SetCameraLimit(Right)"
-
-[sub_resource type="Resource" id="Resource_xmfow"]
-resource_name = "If/Else Cam.limit_right == 600.0 [真:1 [同步]"
-script = ExtResource("10_ighm6")
-sequence_mode = 0
-condition = SubResource("Resource_myyrc")
-true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_y6216")])
-false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_7mjiw")])
-
-[sub_resource type="Resource" id="Resource_fy3vl"]
-resource_name = "等待 1.5 秒"
-script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 1.5
-
-[sub_resource type="Resource" id="Resource_j4g4r"]
-resource_name = "打印: >>> [F5] 阶段3：从 Area2D 取边界（0..200 x 0..100 盒子）"
-script = ExtResource("7_k0vpf")
-message = ">>> [F5] 阶段3：从 Area2D 取边界（0..200 x 0..100 盒子）"
-
-[sub_resource type="Resource" id="Resource_psptj"]
-resource_name = "相机边界 (Cam ← Bounds)"
-script = ExtResource("13_an0c8")
-camera_variable = ""
-camera_scope = 0
-camera_scope_source = 0
-camera_custom_scope_id = ""
-camera_target_node_path = NodePath("")
-bounds_variable = ""
-bounds_scope = 0
-bounds_scope_source = 0
-bounds_custom_scope_id = ""
-bounds_target_node_path = NodePath("")
-use_variable_for_camera = false
-camera_node = NodePath("../Cam")
-use_variable_for_bounds = false
-bounds_area = NodePath("../Bounds")
-margin = 0
-
-[sub_resource type="Resource" id="Resource_as087"]
-resource_name = "Cam.limit_left == 0.0"
-script = ExtResource("9_fgaog")
-node_variable_name = ""
-node_variable_scope = 0
-node_scope_source = 0
-node_custom_scope_id = ""
-node_target_node_path = NodePath("")
-node_source = 0
-target_node_path = NodePath("../Cam")
-property_name = "limit_left"
-property_value = 0.0
-
-[sub_resource type="Resource" id="Resource_iy37v"]
-resource_name = "打印: FAIL: SetCameraLimitFromArea2D(left)"
-script = ExtResource("7_k0vpf")
-message = "FAIL: SetCameraLimitFromArea2D(left)"
-
-[sub_resource type="Resource" id="Resource_uix0m"]
-resource_name = "打印: PASS: SetCameraLimitFromArea2D(left)"
-script = ExtResource("7_k0vpf")
-message = "PASS: SetCameraLimitFromArea2D(left)"
-
-[sub_resource type="Resource" id="Resource_xy3lo"]
-resource_name = "If/Else Cam.limit_left == 0.0 [真:1 [同步]"
-script = ExtResource("10_ighm6")
-sequence_mode = 0
-condition = SubResource("Resource_as087")
-true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_uix0m")])
-false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_iy37v")])
-
-[sub_resource type="Resource" id="Resource_bdmxx"]
-resource_name = "等待 1.5 秒"
-script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 1.5
-
-[sub_resource type="Resource" id="Resource_mpwvj"]
-resource_name = "打印: >>> [F5] 阶段4：相机跳去跟随 Player(400,0)（受边界钳制）"
-script = ExtResource("7_k0vpf")
-message = ">>> [F5] 阶段4：相机跳去跟随 Player(400,0)（受边界钳制）"
-
-[sub_resource type="Resource" id="Resource_6noc4"]
 resource_name = "设置位置 '未指定节点' [全局] = (0.0"
-script = ExtResource("14_bk8y4")
+script = ExtResource("12_7bvrp")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -281,13 +124,13 @@ use_variable_for_target = false
 target_node = NodePath("../Player")
 space = 0
 use_variable = false
-position = Vector3(400, 0, 0)
+position = Vector3(0, 0, 0)
 position_variable = ""
 position_scope = 0
 
-[sub_resource type="Resource" id="Resource_p4100"]
+[sub_resource type="Resource" id="Resource_ghatm"]
 resource_name = "相机跟随 Player → Cam 锁定"
-script = ExtResource("15_jh57a")
+script = ExtResource("13_an0c8")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -305,18 +148,18 @@ camera_node = NodePath("../Cam")
 follow_mode = 0
 enabled = true
 
-[sub_resource type="Resource" id="Resource_yml3w"]
-resource_name = "等待 0.5 秒"
-script = ExtResource("11_y57jq")
+[sub_resource type="Resource" id="Resource_khk56"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("8_hxk2y")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
-wait_time = 0.5
+wait_time = 0.3
 
-[sub_resource type="Resource" id="Resource_w328l"]
+[sub_resource type="Resource" id="Resource_vqokc"]
 resource_name = "获取位置 Cam → cam_pos [LOCAL]"
-script = ExtResource("16_5qlqe")
+script = ExtResource("14_bk8y4")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -331,23 +174,23 @@ save_to_variable = "cam_pos"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_cvx8q"]
-resource_name = "'Vector2(400, 0)' → cexp [Vector2]"
-script = ExtResource("17_bsrjx")
+[sub_resource type="Resource" id="Resource_e3lnk"]
+resource_name = "'Vector2(0, 0)' → cexp [Vector2]"
+script = ExtResource("15_jh57a")
 custom_scope_id = ""
 target_node_path = NodePath("")
 save_scope_source = 0
 save_custom_scope_id = ""
 save_target_node_path = NodePath("")
-expression = "Vector2(400, 0)"
+expression = "Vector2(0, 0)"
 output_type = 2
 scope_source = 0
 save_to_variable = "cexp"
 save_to_scope = 0
 
-[sub_resource type="Resource" id="Resource_lwo41"]
+[sub_resource type="Resource" id="Resource_myyrc"]
 resource_name = "检查变量 [[本地]]: cam_pos EQUALS [[本地]] cexp"
-script = ExtResource("18_l2lld")
+script = ExtResource("16_5qlqe")
 variable_name = "cam_pos"
 scope_source = 0
 custom_scope_id = ""
@@ -365,134 +208,330 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_pexy6"]
-resource_name = "打印: FAIL: CameraFollow"
+[sub_resource type="Resource" id="Resource_7mjiw"]
+resource_name = "打印: FAIL: CameraFollow(锁定0,0)"
 script = ExtResource("7_k0vpf")
-message = "FAIL: CameraFollow"
+message = "FAIL: CameraFollow(锁定0,0)"
+
+[sub_resource type="Resource" id="Resource_y6216"]
+resource_name = "打印: PASS: CameraFollow(锁定0,0)"
+script = ExtResource("7_k0vpf")
+message = "PASS: CameraFollow(锁定0,0)"
+
+[sub_resource type="Resource" id="Resource_xmfow"]
+resource_name = "If/Else cam_pos [[本地]] EQUALS cexp [[本地]] [真:1 [同步]"
+script = ExtResource("11_y57jq")
+sequence_mode = 0
+condition = SubResource("Resource_myyrc")
+true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_y6216")])
+false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_7mjiw")])
+
+[sub_resource type="Resource" id="Resource_fy3vl"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+
+[sub_resource type="Resource" id="Resource_j4g4r"]
+resource_name = "打印: >>> [F5] 阶段3/5：Player→(600,0) 相机跟跳；随后设右边界 400、Player 冲 900 —— 画面卡在边界"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 阶段3/5：Player→(600,0) 相机跟跳；随后设右边界 400、Player 冲 900 —— 画面卡在边界"
+
+[sub_resource type="Resource" id="Resource_psptj"]
+resource_name = "设置位置 '未指定节点' [全局] = (0.0"
+script = ExtResource("12_7bvrp")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+position_variable = ""
+position_scope = 0
+use_variable_for_target = false
+target_node = NodePath("../Player")
+space = 0
+use_variable = false
+position = Vector3(600, 0, 0)
+position_variable = ""
+position_scope = 0
+
+[sub_resource type="Resource" id="Resource_as087"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_iy37v"]
+resource_name = "获取位置 Cam → cam_pos2 [LOCAL]"
+script = ExtResource("14_bk8y4")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../Cam")
+save_to_variable = "cam_pos2"
+save_to_scope = 0
+use_global_position = true
+
+[sub_resource type="Resource" id="Resource_uix0m"]
+resource_name = "'Vector2(600, 0)' → cexp2 [Vector2]"
+script = ExtResource("15_jh57a")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(600, 0)"
+output_type = 2
+scope_source = 0
+save_to_variable = "cexp2"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_xy3lo"]
+resource_name = "检查变量 [[本地]]: cam_pos2 EQUALS [[本地]] cexp2"
+script = ExtResource("16_5qlqe")
+variable_name = "cam_pos2"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = true
+compare_variable = "cexp2"
+compare_variable_scope = 0
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_bdmxx"]
+resource_name = "打印: FAIL: CameraFollow(跟随600)"
+script = ExtResource("7_k0vpf")
+message = "FAIL: CameraFollow(跟随600)"
+
+[sub_resource type="Resource" id="Resource_mpwvj"]
+resource_name = "打印: PASS: CameraFollow(跟随600)"
+script = ExtResource("7_k0vpf")
+message = "PASS: CameraFollow(跟随600)"
+
+[sub_resource type="Resource" id="Resource_6noc4"]
+resource_name = "If/Else cam_pos2 [[本地]] EQUALS cexp2 [[本地]] [真:1 [同步]"
+script = ExtResource("11_y57jq")
+sequence_mode = 0
+condition = SubResource("Resource_xy3lo")
+true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_mpwvj")])
+false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_bdmxx")])
+
+[sub_resource type="Resource" id="Resource_p4100"]
+resource_name = "等待 1.5 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.5
+
+[sub_resource type="Resource" id="Resource_yml3w"]
+resource_name = "相机边界 左 值: -100"
+script = ExtResource("17_bsrjx")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Cam")
+limit_side = 2
+limit_value = -100
+
+[sub_resource type="Resource" id="Resource_w328l"]
+resource_name = "Cam.limit_left == -100.0"
+script = ExtResource("10_ighm6")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Cam")
+property_name = "limit_left"
+property_value = -100.0
+
+[sub_resource type="Resource" id="Resource_cvx8q"]
+resource_name = "打印: FAIL: SetCameraLimit(Left)"
+script = ExtResource("7_k0vpf")
+message = "FAIL: SetCameraLimit(Left)"
+
+[sub_resource type="Resource" id="Resource_lwo41"]
+resource_name = "打印: PASS: SetCameraLimit(Left)"
+script = ExtResource("7_k0vpf")
+message = "PASS: SetCameraLimit(Left)"
+
+[sub_resource type="Resource" id="Resource_pexy6"]
+resource_name = "If/Else Cam.limit_left == -100.0 [真:1 [同步]"
+script = ExtResource("11_y57jq")
+sequence_mode = 0
+condition = SubResource("Resource_w328l")
+true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_lwo41")])
+false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_cvx8q")])
 
 [sub_resource type="Resource" id="Resource_br42j"]
-resource_name = "打印: PASS: CameraFollow"
-script = ExtResource("7_k0vpf")
-message = "PASS: CameraFollow"
+resource_name = "相机边界 右 值: 400"
+script = ExtResource("17_bsrjx")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Cam")
+limit_side = 3
+limit_value = 400
 
 [sub_resource type="Resource" id="Resource_suxgc"]
-resource_name = "If/Else cam_pos [[本地]] EQUALS cexp [[本地]] [真:1 [同步]"
+resource_name = "Cam.limit_right == 400.0"
 script = ExtResource("10_ighm6")
-sequence_mode = 0
-condition = SubResource("Resource_lwo41")
-true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_br42j")])
-false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_pexy6")])
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Cam")
+property_name = "limit_right"
+property_value = 400.0
 
 [sub_resource type="Resource" id="Resource_y1aeh"]
-resource_name = "等待 1.5 秒"
-script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 1.5
+resource_name = "打印: FAIL: SetCameraLimit(Right)"
+script = ExtResource("7_k0vpf")
+message = "FAIL: SetCameraLimit(Right)"
 
 [sub_resource type="Resource" id="Resource_d2fm7"]
-resource_name = "打印: >>> [F5] 阶段5：相机震动 0.8s"
+resource_name = "打印: PASS: SetCameraLimit(Right)"
 script = ExtResource("7_k0vpf")
-message = ">>> [F5] 阶段5：相机震动 0.8s"
+message = "PASS: SetCameraLimit(Right)"
 
 [sub_resource type="Resource" id="Resource_ibbox"]
-resource_name = "相机抖动 (强度: 0.3"
-script = ExtResource("19_costv")
-target_variable = ""
-target_scope = 0
-target_scope_source = 0
-target_custom_scope_id = ""
-target_target_node_path = NodePath("")
-use_variable_for_target = false
-target_node = NodePath("../Cam")
-intensity = 0.3
-duration = 0.8
+resource_name = "If/Else Cam.limit_right == 400.0 [真:1 [同步]"
+script = ExtResource("11_y57jq")
+sequence_mode = 0
+condition = SubResource("Resource_suxgc")
+true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_d2fm7")])
+false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_y1aeh")])
 
 [sub_resource type="Resource" id="Resource_d36k1"]
-resource_name = "打印: PASS(m): CameraShake(F5 观感)"
-script = ExtResource("7_k0vpf")
-message = "PASS(m): CameraShake(F5 观感)"
-
-[sub_resource type="Resource" id="Resource_bycee"]
-resource_name = "等待 1.5 秒"
-script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 1.5
-
-[sub_resource type="Resource" id="Resource_ixsqd"]
-resource_name = "打印: >>> [F5] 阶段6：淡出→淡入"
-script = ExtResource("7_k0vpf")
-message = ">>> [F5] 阶段6：淡出→淡入"
-
-[sub_resource type="Resource" id="Resource_orcua"]
-resource_name = "摄像机淡出 (0.60s)"
-script = ExtResource("20_6q4px")
-color = Color(0, 0, 0, 1)
-duration = 0.6
-easing_type = 1
-
-[sub_resource type="Resource" id="Resource_4fvw4"]
-resource_name = "等待 0.9 秒"
-script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 0.9
-
-[sub_resource type="Resource" id="Resource_uupov"]
-resource_name = "摄像机淡入 (0.60s)"
-script = ExtResource("21_th7pb")
-color = Color(0, 0, 0, 1)
-duration = 0.6
-easing_type = 2
-
-[sub_resource type="Resource" id="Resource_2htgs"]
-resource_name = "等待 0.9 秒"
-script = ExtResource("11_y57jq")
-scope_source = 0
-custom_scope_id = ""
-target_node_path = NodePath("")
-value_source = 0
-wait_time = 0.9
-
-[sub_resource type="Resource" id="Resource_ecdmt"]
-resource_name = "打印: PASS(m): CameraFadeOut+CameraFadeIn(F5 观感)"
-script = ExtResource("7_k0vpf")
-message = "PASS(m): CameraFadeOut+CameraFadeIn(F5 观感)"
-
-[sub_resource type="Resource" id="Resource_beqs2"]
-resource_name = "打印: >>> [F5] 终态复位：zoom=1.0，Player 回 (100,50)——此刻画面应稳定可见"
-script = ExtResource("7_k0vpf")
-message = ">>> [F5] 终态复位：zoom=1.0，Player 回 (100,50)——此刻画面应稳定可见"
-
-[sub_resource type="Resource" id="Resource_3xqeg"]
-resource_name = "设置相机缩放 → 未选择 (1.00x)"
-script = ExtResource("8_hxk2y")
+resource_name = "设置位置 '未指定节点' [全局] = (0.0"
+script = ExtResource("12_7bvrp")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
 target_custom_scope_id = ""
 target_target_node_path = NodePath("")
-zoom_variable = ""
-zoom_scope = 0
+position_variable = ""
+position_scope = 0
+use_variable_for_target = false
+target_node = NodePath("../Player")
+space = 0
+use_variable = false
+position = Vector3(900, 0, 0)
+position_variable = ""
+position_scope = 0
+
+[sub_resource type="Resource" id="Resource_bycee"]
+resource_name = "等待 2.5 秒"
+script = ExtResource("8_hxk2y")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
-use_variable_for_target = false
-target_node = NodePath("../Cam")
-zoom_source = 0
-zoom = 1.0
-zoom_mode = 0
+value_source = 0
+wait_time = 2.5
+
+[sub_resource type="Resource" id="Resource_ixsqd"]
+resource_name = "打印: >>> [F5] 阶段4/5：Area2D 边界（0..200 盒子）—— 画面被拉回中央小区"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 阶段4/5：Area2D 边界（0..200 盒子）—— 画面被拉回中央小区"
+
+[sub_resource type="Resource" id="Resource_orcua"]
+resource_name = "相机边界 (Cam ← Bounds)"
+script = ExtResource("18_l2lld")
+camera_variable = ""
+camera_scope = 0
+camera_scope_source = 0
+camera_custom_scope_id = ""
+camera_target_node_path = NodePath("")
+bounds_variable = ""
+bounds_scope = 0
+bounds_scope_source = 0
+bounds_custom_scope_id = ""
+bounds_target_node_path = NodePath("")
+use_variable_for_camera = false
+camera_node = NodePath("../Cam")
+use_variable_for_bounds = false
+bounds_area = NodePath("../Bounds")
+margin = 0
+
+[sub_resource type="Resource" id="Resource_4fvw4"]
+resource_name = "Cam.limit_left == 0.0"
+script = ExtResource("10_ighm6")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Cam")
+property_name = "limit_left"
+property_value = 0.0
+
+[sub_resource type="Resource" id="Resource_uupov"]
+resource_name = "打印: FAIL: SetCameraLimitFromArea2D(left)"
+script = ExtResource("7_k0vpf")
+message = "FAIL: SetCameraLimitFromArea2D(left)"
+
+[sub_resource type="Resource" id="Resource_2htgs"]
+resource_name = "打印: PASS: SetCameraLimitFromArea2D(left)"
+script = ExtResource("7_k0vpf")
+message = "PASS: SetCameraLimitFromArea2D(left)"
+
+[sub_resource type="Resource" id="Resource_ecdmt"]
+resource_name = "If/Else Cam.limit_left == 0.0 [真:1 [同步]"
+script = ExtResource("11_y57jq")
+sequence_mode = 0
+condition = SubResource("Resource_4fvw4")
+true_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_2htgs")])
+false_instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_uupov")])
+
+[sub_resource type="Resource" id="Resource_beqs2"]
+resource_name = "等待 2.5 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.5
+
+[sub_resource type="Resource" id="Resource_3xqeg"]
+resource_name = "打印: >>> [F5] 阶段5/5：Player 静止回中央，随后另一链执行震动与淡出"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 阶段5/5：Player 静止回中央，随后另一链执行震动与淡出"
 
 [sub_resource type="Resource" id="Resource_k8uji"]
 resource_name = "设置位置 '未指定节点' [全局] = (0.0"
-script = ExtResource("14_bk8y4")
+script = ExtResource("12_7bvrp")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -510,7 +549,7 @@ position_scope = 0
 
 [sub_resource type="Resource" id="Resource_mi1a3"]
 resource_name = "等待 1.0 秒"
-script = ExtResource("11_y57jq")
+script = ExtResource("8_hxk2y")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -518,16 +557,16 @@ value_source = 0
 wait_time = 1.0
 
 [sub_resource type="Resource" id="Resource_bc334"]
-resource_name = "打印: === deep_camera DONE ==="
+resource_name = "打印: === 绑定1 DONE（跟随与边界）==="
 script = ExtResource("7_k0vpf")
-message = "=== deep_camera DONE ==="
+message = "=== 绑定1 DONE（跟随与边界）==="
 
 [sub_resource type="Resource" id="Resource_e7574"]
-script = ExtResource("22_gxdlp")
-instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_f06gs"), SubResource("Resource_pxciq"), SubResource("Resource_rpxqt"), SubResource("Resource_px4bv"), SubResource("Resource_7xfwp"), SubResource("Resource_2wych"), SubResource("Resource_g2g3d"), SubResource("Resource_vqokc"), SubResource("Resource_e3lnk"), SubResource("Resource_xmfow"), SubResource("Resource_fy3vl"), SubResource("Resource_j4g4r"), SubResource("Resource_psptj"), SubResource("Resource_xy3lo"), SubResource("Resource_bdmxx"), SubResource("Resource_mpwvj"), SubResource("Resource_6noc4"), SubResource("Resource_p4100"), SubResource("Resource_yml3w"), SubResource("Resource_w328l"), SubResource("Resource_cvx8q"), SubResource("Resource_suxgc"), SubResource("Resource_y1aeh"), SubResource("Resource_d2fm7"), SubResource("Resource_ibbox"), SubResource("Resource_d36k1"), SubResource("Resource_bycee"), SubResource("Resource_ixsqd"), SubResource("Resource_orcua"), SubResource("Resource_4fvw4"), SubResource("Resource_uupov"), SubResource("Resource_2htgs"), SubResource("Resource_ecdmt"), SubResource("Resource_beqs2"), SubResource("Resource_3xqeg"), SubResource("Resource_k8uji"), SubResource("Resource_mi1a3"), SubResource("Resource_bc334")])
+script = ExtResource("19_costv")
+instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_f06gs"), SubResource("Resource_pxciq"), SubResource("Resource_rpxqt"), SubResource("Resource_3aaas"), SubResource("Resource_7xfwp"), SubResource("Resource_2wych"), SubResource("Resource_g2g3d"), SubResource("Resource_lrupo"), SubResource("Resource_ghatm"), SubResource("Resource_khk56"), SubResource("Resource_vqokc"), SubResource("Resource_e3lnk"), SubResource("Resource_xmfow"), SubResource("Resource_fy3vl"), SubResource("Resource_j4g4r"), SubResource("Resource_psptj"), SubResource("Resource_as087"), SubResource("Resource_iy37v"), SubResource("Resource_uix0m"), SubResource("Resource_6noc4"), SubResource("Resource_p4100"), SubResource("Resource_yml3w"), SubResource("Resource_pexy6"), SubResource("Resource_br42j"), SubResource("Resource_ibbox"), SubResource("Resource_d36k1"), SubResource("Resource_bycee"), SubResource("Resource_ixsqd"), SubResource("Resource_orcua"), SubResource("Resource_ecdmt"), SubResource("Resource_beqs2"), SubResource("Resource_3xqeg"), SubResource("Resource_k8uji"), SubResource("Resource_mi1a3"), SubResource("Resource_bc334")])
 
 [sub_resource type="Resource" id="Resource_7eg62"]
-script = ExtResource("23_0dfe6")
+script = ExtResource("20_6q4px")
 
 [sub_resource type="Resource" id="Resource_p61sb"]
 resource_name = "场景就绪时触发"
@@ -537,75 +576,202 @@ action_runner = SubResource("Resource_e7574")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_camera" type="Node2D" unique_id=420652701]
+[sub_resource type="Resource" id="Resource_akyr3"]
+resource_name = "等待 16.0 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 16.0
 
-[node name="Cam" type="Camera2D" parent="." unique_id=1630183733]
+[sub_resource type="Resource" id="Resource_3txie"]
+resource_name = "打印: >>> [F5] 附加A：相机震动 1.0s"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 附加A：相机震动 1.0s"
+
+[sub_resource type="Resource" id="Resource_s1kjc"]
+resource_name = "相机抖动 (强度: 0.3"
+script = ExtResource("21_th7pb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Cam")
+intensity = 0.3
+duration = 1.0
+
+[sub_resource type="Resource" id="Resource_jveb2"]
+resource_name = "打印: PASS(m): CameraShake(F5 观感)"
+script = ExtResource("7_k0vpf")
+message = "PASS(m): CameraShake(F5 观感)"
+
+[sub_resource type="Resource" id="Resource_6ve0t"]
+resource_name = "等待 2.0 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.0
+
+[sub_resource type="Resource" id="Resource_br1tp"]
+resource_name = "打印: >>> [F5] 附加B：淡出→淡入"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 附加B：淡出→淡入"
+
+[sub_resource type="Resource" id="Resource_usomv"]
+resource_name = "摄像机淡出 (0.60s)"
+script = ExtResource("22_gxdlp")
+color = Color(0, 0, 0, 1)
+duration = 0.6
+easing_type = 1
+
+[sub_resource type="Resource" id="Resource_2atk1"]
+resource_name = "等待 0.9 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.9
+
+[sub_resource type="Resource" id="Resource_j7q4w"]
+resource_name = "摄像机淡入 (0.60s)"
+script = ExtResource("23_0dfe6")
+color = Color(0, 0, 0, 1)
+duration = 0.6
+easing_type = 2
+
+[sub_resource type="Resource" id="Resource_cdsiy"]
+resource_name = "等待 0.9 秒"
+script = ExtResource("8_hxk2y")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.9
+
+[sub_resource type="Resource" id="Resource_eples"]
+resource_name = "打印: PASS(m): CameraFadeOut+CameraFadeIn(F5 观感)"
+script = ExtResource("7_k0vpf")
+message = "PASS(m): CameraFadeOut+CameraFadeIn(F5 观感)"
+
+[sub_resource type="Resource" id="Resource_s05br"]
+resource_name = "打印: >>> [F5] 终态复位：zoom=1.0"
+script = ExtResource("7_k0vpf")
+message = ">>> [F5] 终态复位：zoom=1.0"
+
+[sub_resource type="Resource" id="Resource_vh75v"]
+resource_name = "设置相机缩放 → 未选择 (1.00x)"
+script = ExtResource("9_fgaog")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+zoom_variable = ""
+zoom_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Cam")
+zoom_source = 0
+zoom = 1.0
+zoom_mode = 0
+
+[sub_resource type="Resource" id="Resource_8xybq"]
+resource_name = "打印: === deep_camera DONE ==="
+script = ExtResource("7_k0vpf")
+message = "=== deep_camera DONE ==="
+
+[sub_resource type="Resource" id="Resource_8cwo0"]
+script = ExtResource("19_costv")
+instructions = Array[ExtResource("6_qbpxq")]([SubResource("Resource_akyr3"), SubResource("Resource_3txie"), SubResource("Resource_s1kjc"), SubResource("Resource_jveb2"), SubResource("Resource_6ve0t"), SubResource("Resource_br1tp"), SubResource("Resource_usomv"), SubResource("Resource_2atk1"), SubResource("Resource_j7q4w"), SubResource("Resource_cdsiy"), SubResource("Resource_eples"), SubResource("Resource_s05br"), SubResource("Resource_vh75v"), SubResource("Resource_8xybq")])
+
+[sub_resource type="Resource" id="Resource_yb21s"]
+script = ExtResource("20_6q4px")
+
+[sub_resource type="Resource" id="Resource_d3a78"]
+resource_name = "场景就绪时触发"
+script = ExtResource("5_asmn2")
+event = SubResource("Resource_yb21s")
+action_runner = SubResource("Resource_8cwo0")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_camera" type="Node2D" unique_id=1944444759]
+
+[node name="Cam" type="Camera2D" parent="." unique_id=227633539]
 position = Vector2(100, 50)
 
-[node name="Player" type="Node2D" parent="." unique_id=47490574]
+[node name="Player" type="Node2D" parent="." unique_id=528950693]
 
-[node name="Bounds" type="Area2D" parent="." unique_id=1968392577]
+[node name="Bounds" type="Area2D" parent="." unique_id=1980003826]
 position = Vector2(100, 50)
 
-[node name="Shape" type="CollisionShape2D" parent="Bounds" unique_id=533696303]
+[node name="Shape" type="CollisionShape2D" parent="Bounds" unique_id=952773025]
 shape = SubResource("Rect_bounds")
 
-[node name="Ground" type="Sprite2D" parent="." unique_id=1178485322]
+[node name="Ground" type="Sprite2D" parent="." unique_id=1200532323]
 position = Vector2(300, 150)
 scale = Vector2(10, 10)
 texture = ExtResource("1_pj018")
 
-[node name="Ground2" type="Sprite2D" parent="." unique_id=98972431]
+[node name="Ground2" type="Sprite2D" parent="." unique_id=1091390366]
 position = Vector2(-340, 150)
 scale = Vector2(10, 10)
 texture = ExtResource("1_pj018")
 
-[node name="Ground3" type="Sprite2D" parent="." unique_id=563187982]
+[node name="Ground3" type="Sprite2D" parent="." unique_id=1984363488]
 position = Vector2(940, 150)
 scale = Vector2(10, 10)
 texture = ExtResource("1_pj018")
 
-[node name="Hero0" type="Sprite2D" parent="." unique_id=1538399244]
+[node name="Hero0" type="Sprite2D" parent="." unique_id=1115345328]
 position = Vector2(20, 80)
 scale = Vector2(2, 2)
 texture = ExtResource("2_4iysd")
 
-[node name="Hero1" type="Sprite2D" parent="." unique_id=1623136497]
+[node name="Hero1" type="Sprite2D" parent="." unique_id=1310151789]
 position = Vector2(180, 20)
 scale = Vector2(2, 2)
 texture = ExtResource("2_4iysd")
 
-[node name="Hero2" type="Sprite2D" parent="." unique_id=298364408]
+[node name="Hero2" type="Sprite2D" parent="." unique_id=671627585]
 position = Vector2(100, 50)
 scale = Vector2(2, 2)
 texture = ExtResource("2_4iysd")
 
-[node name="Hero3" type="Sprite2D" parent="." unique_id=1777169093]
+[node name="Hero3" type="Sprite2D" parent="." unique_id=834373008]
 position = Vector2(560, 120)
 scale = Vector2(2, 2)
 texture = ExtResource("2_4iysd")
 
-[node name="Hero4" type="Sprite2D" parent="." unique_id=166547364]
+[node name="Hero4" type="Sprite2D" parent="." unique_id=76124448]
 position = Vector2(-360, 40)
 scale = Vector2(2, 2)
 texture = ExtResource("2_4iysd")
 
-[node name="Fruit0" type="Sprite2D" parent="." unique_id=2067273690]
+[node name="Fruit0" type="Sprite2D" parent="." unique_id=523541202]
 position = Vector2(20, 20)
 scale = Vector2(2, 2)
 texture = ExtResource("3_26qmk")
 
-[node name="Fruit1" type="Sprite2D" parent="." unique_id=1034969987]
+[node name="Fruit1" type="Sprite2D" parent="." unique_id=594406162]
 position = Vector2(180, 80)
 scale = Vector2(2, 2)
 texture = ExtResource("3_26qmk")
 
-[node name="Fruit2" type="Sprite2D" parent="." unique_id=974077485]
+[node name="Fruit2" type="Sprite2D" parent="." unique_id=2113111008]
 position = Vector2(300, 180)
 scale = Vector2(2, 2)
 texture = ExtResource("3_26qmk")
 
-[node name="DeepCamera" type="Node" parent="." unique_id=823695797]
+[node name="DeepCamera" type="Node" parent="." unique_id=1650461903]
 script = ExtResource("4_ivh8m")
-event_bindings = Array[ExtResource("5_asmn2")]([SubResource("Resource_p61sb")])
+event_bindings = Array[ExtResource("5_asmn2")]([SubResource("Resource_p61sb"), SubResource("Resource_d3a78")])
 use_parallel_condition_evaluation = false

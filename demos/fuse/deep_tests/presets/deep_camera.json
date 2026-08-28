@@ -3,12 +3,14 @@
   "level": "L4",
   "display_name": "DeepCamera",
   "category": "camera",
-  "description": "深度测试·Camera：7 指令（F5 观感版：阶段提示+停顿+终态复位）",
+  "description": "深度测试·Camera：7 指令（v4：跟随链与效果链分绑定）",
   "icon_name": "",
   "variables": {
     "local": [
       "cam_pos",
-      "cexp"
+      "cam_pos2",
+      "cexp",
+      "cexp2"
     ],
     "scope": [],
     "global": []
@@ -32,11 +34,15 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "=== deep_camera START（每步约 1.5s，跟着控制台提示看画面）==="
+            "message": "=== deep_camera START（2 秒后开始，请盯住游戏窗口）==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 2.0
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 阶段1：变焦 zoom=2.0（画面放大）"
+            "message": ">>> [F5] 阶段1/5：变焦 zoom=2.0 —— 画面放大一倍"
           },
           {
             "type": "SetCameraZoom",
@@ -68,11 +74,117 @@
           },
           {
             "type": "Wait",
-            "wait_time": 1.5
+            "wait_time": 2.5
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 阶段2：相机边界 Left=-100 Right=600（拖不出去）"
+            "message": ">>> [F5] 阶段2/5：相机锁定跟随 Player(0,0) —— 画面瞬移到左下角"
+          },
+          {
+            "type": "SetPosition",
+            "target_node": "../Player",
+            "position": "(0.0, 0.0, 0.0)"
+          },
+          {
+            "type": "CameraFollow",
+            "target_node": "../Player",
+            "camera_node": "../Cam",
+            "follow_mode": 0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Cam",
+            "save_to_variable": "cam_pos"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(0, 0)",
+            "output_type": 2,
+            "save_to_variable": "cexp"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cam_pos",
+              "check_with_another_variable": true,
+              "compare_variable": "cexp",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CameraFollow(锁定0,0)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CameraFollow(锁定0,0)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 2.0
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段3/5：Player→(600,0) 相机跟跳；随后设右边界 400、Player 冲 900 —— 画面卡在边界"
+          },
+          {
+            "type": "SetPosition",
+            "target_node": "../Player",
+            "position": "(600.0, 0.0, 0.0)"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Cam",
+            "save_to_variable": "cam_pos2"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(600, 0)",
+            "output_type": 2,
+            "save_to_variable": "cexp2"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cam_pos2",
+              "check_with_another_variable": true,
+              "compare_variable": "cexp2",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CameraFollow(跟随600)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CameraFollow(跟随600)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
           },
           {
             "type": "SetCameraLimit",
@@ -106,7 +218,7 @@
             "type": "SetCameraLimit",
             "target_node": "../Cam",
             "limit_side": 3,
-            "limit_value": 600
+            "limit_value": 400
           },
           {
             "type": "IfElse",
@@ -115,7 +227,7 @@
               "type": "CheckNodeProperty",
               "target_node_path": "../Cam",
               "property_name": "limit_right",
-              "property_value": 600
+              "property_value": 400
             },
             "true_instructions": [
               {
@@ -131,12 +243,17 @@
             ]
           },
           {
+            "type": "SetPosition",
+            "target_node": "../Player",
+            "position": "(900.0, 0.0, 0.0)"
+          },
+          {
             "type": "Wait",
-            "wait_time": 1.5
+            "wait_time": 2.5
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 阶段3：从 Area2D 取边界（0..200 x 0..100 盒子）"
+            "message": ">>> [F5] 阶段4/5：Area2D 边界（0..200 盒子）—— 画面被拉回中央小区"
           },
           {
             "type": "SetCameraLimitFromArea2D",
@@ -167,75 +284,54 @@
           },
           {
             "type": "Wait",
-            "wait_time": 1.5
+            "wait_time": 2.5
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 阶段4：相机跳去跟随 Player(400,0)（受边界钳制）"
+            "message": ">>> [F5] 阶段5/5：Player 静止回中央，随后另一链执行震动与淡出"
           },
           {
             "type": "SetPosition",
             "target_node": "../Player",
-            "position": "(400.0, 0.0, 0.0)"
-          },
-          {
-            "type": "CameraFollow",
-            "target_node": "../Player",
-            "camera_node": "../Cam",
-            "follow_mode": 0
+            "position": "(100.0, 50.0, 0.0)"
           },
           {
             "type": "Wait",
-            "wait_time": 0.5
-          },
-          {
-            "type": "GetPosition",
-            "target": "../Cam",
-            "save_to_variable": "cam_pos"
-          },
-          {
-            "type": "MathExpression",
-            "expression": "Vector2(400, 0)",
-            "output_type": 2,
-            "save_to_variable": "cexp"
-          },
-          {
-            "type": "IfElse",
-            "sequence_mode": 0,
-            "condition": {
-              "type": "CheckVariable",
-              "variable_name": "cam_pos",
-              "check_with_another_variable": true,
-              "compare_variable": "cexp",
-              "comparison_operator": 0,
-              "auto_convert_types": true
-            },
-            "true_instructions": [
-              {
-                "type": "Print",
-                "message": "PASS: CameraFollow"
-              }
-            ],
-            "false_instructions": [
-              {
-                "type": "Print",
-                "message": "FAIL: CameraFollow"
-              }
-            ]
-          },
-          {
-            "type": "Wait",
-            "wait_time": 1.5
+            "wait_time": 1.0
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 阶段5：相机震动 0.8s"
+            "message": "=== 绑定1 DONE（跟随与边界）==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Wait",
+            "wait_time": 16.0
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 附加A：相机震动 1.0s"
           },
           {
             "type": "CameraShake",
             "target_node": "../Cam",
             "intensity": 0.3,
-            "duration": 0.8
+            "duration": 1.0
           },
           {
             "type": "Print",
@@ -243,11 +339,11 @@
           },
           {
             "type": "Wait",
-            "wait_time": 1.5
+            "wait_time": 2.0
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 阶段6：淡出→淡入"
+            "message": ">>> [F5] 附加B：淡出→淡入"
           },
           {
             "type": "CameraFadeOut",
@@ -273,22 +369,13 @@
           },
           {
             "type": "Print",
-            "message": ">>> [F5] 终态复位：zoom=1.0，Player 回 (100,50)——此刻画面应稳定可见"
+            "message": ">>> [F5] 终态复位：zoom=1.0"
           },
           {
             "type": "SetCameraZoom",
             "target_node": "../Cam",
             "zoom": 1.0,
             "zoom_mode": 0
-          },
-          {
-            "type": "SetPosition",
-            "target_node": "../Player",
-            "position": "(100.0, 50.0, 0.0)"
-          },
-          {
-            "type": "Wait",
-            "wait_time": 1.0
           },
           {
             "type": "Print",
