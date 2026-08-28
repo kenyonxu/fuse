@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ba5eqvk8bvd7"]
 
-[ext_resource type="Texture2D" uid="uid://cnehgup6kn147" path="res://third_party_resources/sprites/bullet_9b_topleft_8frames.png" id="1_nbbct"]
+[ext_resource type="Texture2D" uid="uid://cnehgup6kn147" path="res://demos/fuse/fuse_adventure/resources/sprites/bullet_9b_topleft_8frames.png" id="1_nbbct"]
 [ext_resource type="Script" uid="uid://parouyd882ij" path="res://addons/fuse/core/runner.gd" id="2_uyb87"]
 [ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_0xo5r"]
 [ext_resource type="Script" uid="uid://dpsqlhclw051d" path="res://addons/fuse/instructions/node_operations/enable_disable_node.gd" id="4_tqc2p"]
