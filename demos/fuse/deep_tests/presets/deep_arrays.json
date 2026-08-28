@@ -1,0 +1,902 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "DeepArrays",
+  "category": "arrays",
+  "description": "深度测试·Arrays 类目：18 指令 + 2 条件全覆盖，IfElse+CheckVariable 自检链打 PASS/FAIL 标记",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "a_add",
+      "a_cond",
+      "a_rev",
+      "a_rnd",
+      "a_shuf",
+      "a_sort",
+      "a_vec",
+      "cf",
+      "fv",
+      "gv",
+      "iv",
+      "lg",
+      "rnd",
+      "rv",
+      "s0",
+      "sm",
+      "sv",
+      "sz",
+      "v_closest",
+      "v_exp_far",
+      "v_exp_near",
+      "v_far",
+      "v_furthest",
+      "v_mid",
+      "v_near",
+      "v_ref",
+      "vs0"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "Print",
+        "message": "=== deep_arrays START ==="
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_add",
+        "array_scope": 0,
+        "element_value": 7
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_add",
+        "array_scope": 0,
+        "element_value": 42
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_add",
+          "comparison": 0,
+          "compare_value": 2
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayAdd"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayAdd"
+          }
+        ]
+      },
+      {
+        "type": "ArraySize",
+        "array_variable": "a_add",
+        "target_variable": "sz"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "sz",
+          "comparison_operator": 0,
+          "expected_value": 2,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArraySize"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArraySize"
+          }
+        ]
+      },
+      {
+        "type": "ArrayGet",
+        "array_variable": "a_add",
+        "index_value": 1,
+        "target_variable": "gv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "gv",
+          "comparison_operator": 0,
+          "expected_value": 42,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayGet"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayGet"
+          }
+        ]
+      },
+      {
+        "type": "ArraySet",
+        "array_variable": "a_add",
+        "index_value": 0,
+        "element_value": 99
+      },
+      {
+        "type": "ArrayGet",
+        "array_variable": "a_add",
+        "index_value": 0,
+        "target_variable": "sv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "sv",
+          "comparison_operator": 0,
+          "expected_value": 99,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArraySet"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArraySet"
+          }
+        ]
+      },
+      {
+        "type": "ArrayInsert",
+        "array_variable": "a_add",
+        "index_value": 1,
+        "element_value": 5
+      },
+      {
+        "type": "ArrayGet",
+        "array_variable": "a_add",
+        "index_value": 1,
+        "target_variable": "iv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "iv",
+          "comparison_operator": 0,
+          "expected_value": 5,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayInsert"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayInsert"
+          }
+        ]
+      },
+      {
+        "type": "ArrayFind",
+        "array_variable": "a_add",
+        "search_value": 42,
+        "target_variable": "fv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "fv",
+          "comparison_operator": 0,
+          "expected_value": 2,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayFind"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayFind"
+          }
+        ]
+      },
+      {
+        "type": "ArrayContains",
+        "array_variable": "a_add",
+        "search_value": 5,
+        "target_variable": "cf"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "cf",
+          "comparison_operator": 0,
+          "expected_value": true,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayContains"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayContains"
+          }
+        ]
+      },
+      {
+        "type": "ArrayRemove",
+        "array_variable": "a_add",
+        "remove_mode": 0,
+        "index_value": 0
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_add",
+          "comparison": 0,
+          "compare_value": 2
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayRemove(index)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayRemove(index)"
+          }
+        ]
+      },
+      {
+        "type": "ArrayRemove",
+        "array_variable": "a_add",
+        "remove_mode": 1,
+        "element_value": 5
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_add",
+          "comparison": 0,
+          "compare_value": 1
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayRemove(value)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayRemove(value)"
+          }
+        ]
+      },
+      {
+        "type": "ArrayClear",
+        "array_variable": "a_add"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_add",
+          "comparison": 0,
+          "compare_value": 0
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayClear"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayClear"
+          }
+        ]
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_rev",
+        "array_scope": 0,
+        "element_value": 1
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_rev",
+        "array_scope": 0,
+        "element_value": 2
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_rev",
+        "array_scope": 0,
+        "element_value": 3
+      },
+      {
+        "type": "ArrayReverse",
+        "array_variable": "a_rev"
+      },
+      {
+        "type": "ArrayGet",
+        "array_variable": "a_rev",
+        "index_value": 0,
+        "target_variable": "rv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "rv",
+          "comparison_operator": 0,
+          "expected_value": 3,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayReverse"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayReverse"
+          }
+        ]
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_sort",
+        "array_scope": 0,
+        "element_value": 3
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_sort",
+        "array_scope": 0,
+        "element_value": 1
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_sort",
+        "array_scope": 0,
+        "element_value": 2
+      },
+      {
+        "type": "ArrayNumericSort",
+        "array_variable": "a_sort",
+        "sort_mode": 0
+      },
+      {
+        "type": "ArrayGet",
+        "array_variable": "a_sort",
+        "index_value": 0,
+        "target_variable": "s0"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "s0",
+          "comparison_operator": 0,
+          "expected_value": 1,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayNumericSort"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayNumericSort"
+          }
+        ]
+      },
+      {
+        "type": "ArrayNumericGetLargest",
+        "array_variable": "a_sort",
+        "target_variable": "lg"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "lg",
+          "comparison_operator": 0,
+          "expected_value": 3,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayNumericGetLargest"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayNumericGetLargest"
+          }
+        ]
+      },
+      {
+        "type": "ArrayNumericGetSmallest",
+        "array_variable": "a_sort",
+        "target_variable": "sm"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "sm",
+          "comparison_operator": 0,
+          "expected_value": 1,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayNumericGetSmallest"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayNumericGetSmallest"
+          }
+        ]
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_shuf",
+        "array_scope": 0,
+        "element_value": 1
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_shuf",
+        "array_scope": 0,
+        "element_value": 2
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_shuf",
+        "array_scope": 0,
+        "element_value": 3
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_shuf",
+        "array_scope": 0,
+        "element_value": 4
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_shuf",
+        "array_scope": 0,
+        "element_value": 5
+      },
+      {
+        "type": "ArrayShuffle",
+        "array_variable": "a_shuf"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_shuf",
+          "comparison": 0,
+          "compare_value": 5
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayShuffle"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayShuffle"
+          }
+        ]
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_rnd",
+        "array_scope": 0,
+        "element_value": 42
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_rnd",
+        "array_scope": 0,
+        "element_value": 42
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_rnd",
+        "array_scope": 0,
+        "element_value": 42
+      },
+      {
+        "type": "ArrayRandom",
+        "array_variable": "a_rnd",
+        "target_variable": "rnd"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "rnd",
+          "comparison_operator": 0,
+          "expected_value": 42,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayRandom"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayRandom"
+          }
+        ]
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(0, 0)",
+        "output_type": 2,
+        "save_to_variable": "v_ref"
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(1, 0)",
+        "output_type": 2,
+        "save_to_variable": "v_near"
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(5, 0)",
+        "output_type": 2,
+        "save_to_variable": "v_mid"
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(9, 0)",
+        "output_type": 2,
+        "save_to_variable": "v_far"
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_vec",
+        "array_scope": 0,
+        "use_element_from_variable": true,
+        "element_from_variable": "v_near"
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_vec",
+        "array_scope": 0,
+        "use_element_from_variable": true,
+        "element_from_variable": "v_mid"
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_vec",
+        "array_scope": 0,
+        "use_element_from_variable": true,
+        "element_from_variable": "v_far"
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(1, 0)",
+        "output_type": 2,
+        "save_to_variable": "v_exp_near"
+      },
+      {
+        "type": "ArrayVectorGetClosest",
+        "array_variable": "a_vec",
+        "vector_type": 0,
+        "use_reference_from_variable": true,
+        "reference_variable": "v_ref",
+        "target_variable": "v_closest"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "v_closest",
+          "check_with_another_variable": true,
+          "compare_variable": "v_exp_near",
+          "comparison_operator": 0,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayVectorGetClosest"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayVectorGetClosest"
+          }
+        ]
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(9, 0)",
+        "output_type": 2,
+        "save_to_variable": "v_exp_far"
+      },
+      {
+        "type": "ArrayVectorGetFurthest",
+        "array_variable": "a_vec",
+        "vector_type": 0,
+        "use_reference_from_variable": true,
+        "reference_variable": "v_ref",
+        "target_variable": "v_furthest"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "v_furthest",
+          "check_with_another_variable": true,
+          "compare_variable": "v_exp_far",
+          "comparison_operator": 0,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayVectorGetFurthest"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayVectorGetFurthest"
+          }
+        ]
+      },
+      {
+        "type": "ArrayVectorSort",
+        "array_variable": "a_vec",
+        "vector_type": 0,
+        "sort_mode": 0,
+        "use_reference_from_variable": true,
+        "reference_variable": "v_ref"
+      },
+      {
+        "type": "ArrayGet",
+        "array_variable": "a_vec",
+        "index_value": 0,
+        "target_variable": "vs0"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "vs0",
+          "check_with_another_variable": true,
+          "compare_variable": "v_exp_near",
+          "comparison_operator": 0,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ArrayVectorSort"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ArrayVectorSort"
+          }
+        ]
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_cond",
+        "array_scope": 0,
+        "element_value": 7
+      },
+      {
+        "type": "ArrayAdd",
+        "source_type": 0,
+        "array_variable": "a_cond",
+        "array_scope": 0,
+        "element_value": 42
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArrayContains",
+          "array_variable": "a_cond",
+          "search_value": 42
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckArrayContains(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckArrayContains(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArrayContains",
+          "array_variable": "a_cond",
+          "search_value": 999
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckArrayContains(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckArrayContains(neg)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_cond",
+          "comparison": 0,
+          "compare_value": 2
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckArraySize(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckArraySize(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckArraySize",
+          "array_variable": "a_cond",
+          "comparison": 2,
+          "compare_value": 5
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckArraySize(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckArraySize(neg)"
+          }
+        ]
+      },
+      {
+        "type": "Print",
+        "message": "=== deep_arrays DONE ==="
+      }
+    ]
+  },
+  "event": {
+    "type": "OnReady"
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}

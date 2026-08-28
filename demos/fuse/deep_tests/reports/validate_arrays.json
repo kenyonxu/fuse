@@ -1,0 +1,580 @@
+{
+	"files": [
+		{
+			"errors": 0,
+			"findings": [
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[1]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[2]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[3].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[4]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[5].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[6]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[7].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[8]",
+					"message": "缺少 8 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、source_type、array_scope、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[9]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[10].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[11]",
+					"message": "缺少 14 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、index_from_variable、index_from_variable_scope、index_scope_source、index_custom_scope_id、index_target_node_path、source_type、array_scope、use_index_from_variable、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[12]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[13].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[14]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[15].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[16]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[17].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[18]",
+					"message": "缺少 7 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、source_type、array_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[19].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[20]",
+					"message": "缺少 9 个参数（将用默认值）：use_element_from_variable、element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、source_type、array_scope、index_value",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[21].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[22]",
+					"message": "缺少 2 个参数（将用默认值）：source_type、array_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[23].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[24]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[25]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[26]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[27]",
+					"message": "缺少 2 个参数（将用默认值）：source_type、array_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[28]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[29].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[30]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[31]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[32]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[33]",
+					"message": "缺少 2 个参数（将用默认值）：source_type、array_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[34]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[35].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[36]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[37].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[38]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[39].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[40]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[41]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[42]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[43]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[44]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[45]",
+					"message": "缺少 2 个参数（将用默认值）：source_type、array_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[46].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[47]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[48]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[49]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[50]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[51].condition",
+					"message": "缺少 15 个参数（将用默认值）：compare_variable、compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、variable_scope、check_with_another_variable、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[52]",
+					"message": "缺少 2 个参数（将用默认值）：scope_source、save_to_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[53]",
+					"message": "缺少 2 个参数（将用默认值）：scope_source、save_to_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[54]",
+					"message": "缺少 2 个参数（将用默认值）：scope_source、save_to_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[55]",
+					"message": "缺少 2 个参数（将用默认值）：scope_source、save_to_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[56]",
+					"message": "缺少 5 个参数（将用默认值）：element_value、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[57]",
+					"message": "缺少 5 个参数（将用默认值）：element_value、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[58]",
+					"message": "缺少 5 个参数（将用默认值）：element_value、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[59]",
+					"message": "缺少 2 个参数（将用默认值）：scope_source、save_to_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[60]",
+					"message": "缺少 8 个参数（将用默认值）：reference_position、reference_variable_scope、reference_scope_source、reference_custom_scope_id、reference_target_node_path、source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[61].condition",
+					"message": "缺少 14 个参数（将用默认值）：compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、expected_value、variable_scope、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[62]",
+					"message": "缺少 2 个参数（将用默认值）：scope_source、save_to_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[63]",
+					"message": "缺少 8 个参数（将用默认值）：reference_position、reference_variable_scope、reference_scope_source、reference_custom_scope_id、reference_target_node_path、source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[64].condition",
+					"message": "缺少 14 个参数（将用默认值）：compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、expected_value、variable_scope、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[65]",
+					"message": "缺少 7 个参数（将用默认值）：reference_position、reference_variable_scope、reference_scope_source、reference_custom_scope_id、reference_target_node_path、source_type、array_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[66]",
+					"message": "缺少 3 个参数（将用默认值）：source_type、array_scope、target_scope",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[67].condition",
+					"message": "缺少 14 个参数（将用默认值）：compare_variable_scope、compare_scope_source、compare_custom_scope_id、compare_target_node_path、expected_value、variable_scope、case_sensitive、treat_empty_as_null、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[68]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[69]",
+					"message": "缺少 6 个参数（将用默认值）：element_from_variable、element_from_variable_scope、element_scope_source、element_custom_scope_id、element_target_node_path、use_element_from_variable",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[70].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[71].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[72].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.action_runner.instructions[73].condition",
+					"message": "缺少 8 个参数（将用默认值）：source_type、array_scope、enabled、negate_result、enable_cache、cache_duration、cache_context_changes、hash_all_variables",
+					"severity": "warning"
+				},
+				{
+					"code": "W_MISSING_PARAM",
+					"json_path": "$.event",
+					"message": "缺少 1 个参数（将用默认值）：delay_seconds",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'sz' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'gv' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'sv' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'iv' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'fv' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'cf' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'rv' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 's0' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'lg' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'sm' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'rnd' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_ref' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_near' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_mid' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_far' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_exp_near' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_closest' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_exp_far' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'v_furthest' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				},
+				{
+					"code": "W_VARIABLE_UNDECLARED",
+					"json_path": "",
+					"message": "变量 'vs0' 被写入但未在 variables 中声明",
+					"severity": "warning"
+				}
+			],
+			"path": "res://demos/fuse/deep_tests/presets/deep_arrays.json",
+			"warnings": 94
+		}
+	],
+	"summary": {
+		"failed": 0,
+		"passed": 1,
+		"total": 1
+	}
+}
