@@ -100,10 +100,10 @@ func execute(context: ExecutionContext):
 
 	# 获取 viewport
 	var viewport: Viewport = null
-	if context.has_node("."):
-		var root = context.get_node(".")
-		if root:
-			viewport = root.get_viewport()
+	# ExecutionContext 无 has_node——get_node 对无效路径返回 null，直接探测
+	var root = context.get_node(NodePath("."))
+	if root:
+		viewport = root.get_viewport()
 
 	if not viewport:
 		set_error_localized("FUSE_ERROR_VIEWPORT_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {})

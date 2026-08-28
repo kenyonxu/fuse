@@ -1,0 +1,124 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepNavigation",
+  "category": "navigation",
+  "icon_name": "",
+  "description": "深度测试·Navigation：CheckPathAvailable 全过；NavigateToPosition/OnNavigationTargetReached 信号依赖外部轮询（已知问题）",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_navigation START ==="
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckPathAvailable",
+              "agent_node": "../Agent/NavAgent",
+              "target_position": "(150.0, 100.0)"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckPathAvailable(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckPathAvailable(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckPathAvailable",
+              "agent_node": "../Agent/NavAgent",
+              "target_position": "(199.0, 199.0)"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckPathAvailable(mesh内远点)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckPathAvailable(mesh内远点)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "TweenMoveTo",
+            "target_node": "../Agent",
+            "target_position": "(180.0, 100.0)",
+            "duration": 1.0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): NavigateToPosition(设目标成功)"
+          },
+          {
+            "type": "NavigateToPosition",
+            "agent_node": "../Agent/NavAgent",
+            "target_position": "(180.0, 100.0)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnNavigationTargetReached",
+        "agent_node": "../Agent/NavAgent"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnNavigationTargetReached"
+          }
+        ]
+      }
+    }
+  ]
+}

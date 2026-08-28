@@ -1,0 +1,341 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepTime",
+  "category": "time",
+  "description": "深度测试·Time",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "cd_start",
+      "dt"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_time START ==="
+          },
+          {
+            "type": "GetDeltaTime",
+            "save_to_variable": "dt"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "dt",
+              "comparison_operator": 4,
+              "expected_value": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetDeltaTime"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetDeltaTime"
+              }
+            ]
+          },
+          {
+            "type": "SetTimeScale",
+            "time_scale": 1.0,
+            "duration": 0.1
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SetTimeScale"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckGameTime",
+              "target_game_time": 0.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckGameTime(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckGameTime(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckGameTime",
+              "target_game_time": 9999.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckGameTime(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckGameTime(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckTimeRange",
+              "start_time": 0.0,
+              "end_time": 10.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckTimeRange(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckTimeRange(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckTimeRange",
+              "start_time": 500.0,
+              "end_time": 600.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckTimeRange(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckTimeRange(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckTimeReached",
+              "target_time": 0.0,
+              "time_mode": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckTimeReached(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckTimeReached(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckTimeReached",
+              "target_time": 9999.0,
+              "time_mode": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckTimeReached(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckTimeReached(neg)"
+              }
+            ]
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "cd_start",
+            "new_value": 0
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckCountdownFinished",
+              "start_time_variable": "cd_start",
+              "duration": 0.001
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckCountdownFinished(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckCountdownFinished(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckCountdownFinished",
+              "start_time_variable": "cd_start",
+              "duration": 9999.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckCountdownFinished(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckCountdownFinished(neg)"
+              }
+            ]
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_time DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnTimer",
+        "wait_time": 0.5,
+        "autostart": true,
+        "repeat_count": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnTimer"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnCountdown",
+        "countdown_seconds": 0.6,
+        "auto_start": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnCountdown"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnCooldownFinished",
+        "cooldown_seconds": 0.7,
+        "manual_trigger": false
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnCooldownFinished"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnRealtime",
+        "interval_seconds": 0.8,
+        "max_triggers": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnRealtime"
+          }
+        ]
+      }
+    }
+  ]
+}

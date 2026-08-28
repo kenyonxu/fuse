@@ -18965,7 +18965,17 @@
       "type_name": "bool"
     }
   ],
-  "OnNavigationTargetReached": [],
+  "OnNavigationTargetReached": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "agent_node",
+      "type": 22,
+      "type_name": "NodePath"
+    }
+  ],
   "OnNodeInstance": [
     {
       "default": "",

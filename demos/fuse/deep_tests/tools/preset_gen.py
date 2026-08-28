@@ -85,12 +85,13 @@ def declare_local_variables(preset):
     return names
 
 
-def expected_pass_count(instructions):
-    return json.dumps(instructions).count('"PASS: ')
+def expected_pass_count(preset):
+    """整个 preset（含 L4 event_bindings）内的唯一 PASS 标记前缀计数。"""
+    return json.dumps(preset).count('"PASS: ')
 
 
 def write_preset(preset, out_path):
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(preset, f, ensure_ascii=False, indent=2)
-    n = expected_pass_count(preset["action_runner"]["instructions"])
+    n = expected_pass_count(preset)
     print(f"written {out_path}: 预期唯一 PASS 标记 {n} 个")

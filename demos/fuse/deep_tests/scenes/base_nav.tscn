@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_sq"]
+vertices = PackedVector2Array(0, 0, 200, 0, 200, 200, 0, 200)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+
+[node name="Base" type="Node2D"]
+
+[node name="NavRegion" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_sq")
+
+[node name="Agent" type="CharacterBody2D" parent="."]
+position = Vector2(20, 100)
+
+[node name="NavAgent" type="NavigationAgent2D" parent="Agent"]
+target_position = Vector2(20, 100)

@@ -1,0 +1,180 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_3t1tj"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_wn2lo"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_sylrw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_4n25a"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/navigation/check_path_available.gd" id="5_1gmjx"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="6_go5ni"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_vy2t6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="8_7ce8k"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/navigation/navigate_to_position.gd" id="9_cujg4"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="10_u4gst"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_28ypi"]
+[ext_resource type="Script" path="res://addons/fuse/events/navigation/on_navigation_target_reached.gd" id="12_1fyhf"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_sq"]
+vertices = PackedVector2Array(0, 0, 200, 0, 200, 200, 0, 200)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+
+[sub_resource type="Resource" id="Resource_qpwe1"]
+resource_name = "打印: === deep_navigation START ==="
+script = ExtResource("4_4n25a")
+message = "=== deep_navigation START ==="
+
+[sub_resource type="Resource" id="Resource_4d1bm"]
+resource_name = "路径可用: NavAgent → (150.0, 100.0)"
+script = ExtResource("5_1gmjx")
+agent_node = NodePath("../Agent/NavAgent")
+target_position = Vector2(150, 100)
+
+[sub_resource type="Resource" id="Resource_vke71"]
+resource_name = "打印: FAIL: CheckPathAvailable(true)"
+script = ExtResource("4_4n25a")
+message = "FAIL: CheckPathAvailable(true)"
+
+[sub_resource type="Resource" id="Resource_jakmb"]
+resource_name = "打印: PASS: CheckPathAvailable(true)"
+script = ExtResource("4_4n25a")
+message = "PASS: CheckPathAvailable(true)"
+
+[sub_resource type="Resource" id="Resource_jxcfe"]
+resource_name = "If/Else NavAgent 到 (150.0, 100.0) 路径可用 [真:1 [同步]"
+script = ExtResource("6_go5ni")
+sequence_mode = 0
+condition = SubResource("Resource_4d1bm")
+true_instructions = Array[ExtResource("3_sylrw")]([SubResource("Resource_jakmb")])
+false_instructions = Array[ExtResource("3_sylrw")]([SubResource("Resource_vke71")])
+
+[sub_resource type="Resource" id="Resource_dj1c6"]
+resource_name = "路径可用: NavAgent → (199.0, 199.0)"
+script = ExtResource("5_1gmjx")
+agent_node = NodePath("../Agent/NavAgent")
+target_position = Vector2(199, 199)
+
+[sub_resource type="Resource" id="Resource_eep5k"]
+resource_name = "打印: FAIL: CheckPathAvailable(mesh内远点)"
+script = ExtResource("4_4n25a")
+message = "FAIL: CheckPathAvailable(mesh内远点)"
+
+[sub_resource type="Resource" id="Resource_64jhd"]
+resource_name = "打印: PASS: CheckPathAvailable(mesh内远点)"
+script = ExtResource("4_4n25a")
+message = "PASS: CheckPathAvailable(mesh内远点)"
+
+[sub_resource type="Resource" id="Resource_pypt0"]
+resource_name = "If/Else NavAgent 到 (199.0, 199.0) 路径可用 [真:1 [同步]"
+script = ExtResource("6_go5ni")
+sequence_mode = 0
+condition = SubResource("Resource_dj1c6")
+true_instructions = Array[ExtResource("3_sylrw")]([SubResource("Resource_64jhd")])
+false_instructions = Array[ExtResource("3_sylrw")]([SubResource("Resource_eep5k")])
+
+[sub_resource type="Resource" id="Resource_ug4cu"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("7_vy2t6")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_iw76n"]
+resource_name = "移动到 [Agent] (180.0, 100.0) (全局) (1.00s)"
+script = ExtResource("8_7ce8k")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+duration_variable = ""
+duration_variable_scope = 0
+duration_scope_source = 0
+duration_custom_scope_id = ""
+duration_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Agent")
+target_position = Vector2(180, 100)
+duration_source = 0
+duration = 1.0
+space_mode = 0
+move_axis = 0
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_81bdm"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("7_vy2t6")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_m6i64"]
+resource_name = "打印: PASS(m): NavigateToPosition(设目标成功)"
+script = ExtResource("4_4n25a")
+message = "PASS(m): NavigateToPosition(设目标成功)"
+
+[sub_resource type="Resource" id="Resource_xw7fh"]
+resource_name = "导航: NavAgent → (180.0, 100.0)"
+script = ExtResource("9_cujg4")
+target_position_3d = Vector3(0, 0, 0)
+target_variable = ""
+agent_node = NodePath("../Agent/NavAgent")
+use_3d = false
+target_from_variable = false
+target_position = Vector2(180, 100)
+
+[sub_resource type="Resource" id="Resource_3e2jb"]
+script = ExtResource("10_u4gst")
+instructions = Array[ExtResource("3_sylrw")]([SubResource("Resource_qpwe1"), SubResource("Resource_jxcfe"), SubResource("Resource_pypt0"), SubResource("Resource_ug4cu"), SubResource("Resource_iw76n"), SubResource("Resource_81bdm"), SubResource("Resource_m6i64"), SubResource("Resource_xw7fh")])
+
+[sub_resource type="Resource" id="Resource_ttow2"]
+script = ExtResource("11_28ypi")
+
+[sub_resource type="Resource" id="Resource_nttyv"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_wn2lo")
+event = SubResource("Resource_ttow2")
+action_runner = SubResource("Resource_3e2jb")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_sahnw"]
+resource_name = "打印: PASS: OnNavigationTargetReached"
+script = ExtResource("4_4n25a")
+message = "PASS: OnNavigationTargetReached"
+
+[sub_resource type="Resource" id="Resource_nng2o"]
+script = ExtResource("10_u4gst")
+instructions = Array[ExtResource("3_sylrw")]([SubResource("Resource_sahnw")])
+
+[sub_resource type="Resource" id="Resource_56flx"]
+resource_name = "导航到达: NavAgent"
+script = ExtResource("12_1fyhf")
+agent_node = NodePath("../Agent/NavAgent")
+
+[sub_resource type="Resource" id="Resource_m2cdw"]
+resource_name = "NavAgent 到达导航目标"
+script = ExtResource("2_wn2lo")
+event = SubResource("Resource_56flx")
+action_runner = SubResource("Resource_nng2o")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_navigation" type="Node2D" unique_id=1766921363]
+
+[node name="NavRegion" type="NavigationRegion2D" parent="." unique_id=496414824]
+navigation_polygon = SubResource("NavigationPolygon_sq")
+
+[node name="Agent" type="CharacterBody2D" parent="." unique_id=1794503092]
+position = Vector2(20, 100)
+
+[node name="NavAgent" type="NavigationAgent2D" parent="Agent" unique_id=491865544]
+target_position = Vector2(20, 100)
+
+[node name="DeepNavigation" type="Node" parent="." unique_id=2095603600]
+script = ExtResource("1_3t1tj")
+event_bindings = Array[ExtResource("2_wn2lo")]([SubResource("Resource_nttyv"), SubResource("Resource_m2cdw")])
+use_parallel_condition_evaluation = false

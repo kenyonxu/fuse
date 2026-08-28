@@ -1,0 +1,180 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepTransform",
+  "category": "transform",
+  "description": "深度测试·Transform",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "exp_a",
+      "exp_b",
+      "pa",
+      "pb",
+      "rot"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_transform START ==="
+          },
+          {
+            "type": "SetPosition",
+            "target_node": "../Targets/A",
+            "position": "(10.0, 20.0, 0.0)"
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Targets/A",
+            "save_to_variable": "pa"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(10, 20)",
+            "output_type": 2,
+            "save_to_variable": "exp_a"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "pa",
+              "check_with_another_variable": true,
+              "compare_variable": "exp_a",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetPosition+GetPosition"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetPosition+GetPosition"
+              }
+            ]
+          },
+          {
+            "type": "MoveBy",
+            "target_node": "../Targets/B",
+            "offset": "(1.0, 1.0, 0.0)",
+            "space": 0
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Targets/B",
+            "save_to_variable": "pb"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(4, 5)",
+            "output_type": 2,
+            "save_to_variable": "exp_b"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "pb",
+              "check_with_another_variable": true,
+              "compare_variable": "exp_b",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: MoveBy"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: MoveBy"
+              }
+            ]
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector3(0, 0, 1.5708)",
+            "output_type": 3,
+            "save_to_variable": "rot"
+          },
+          {
+            "type": "SetRotation",
+            "target_node": "../Targets/C",
+            "rotation_variable": "rot"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SetRotation"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector3(0.5, 0, 0)",
+            "output_type": 3,
+            "save_to_variable": "rby"
+          },
+          {
+            "type": "RotateBy",
+            "target_node": "../Targets/C",
+            "rotation_offset": "(0.5, 0.0, 0.0)",
+            "space": 0,
+            "rotation_variable": "rby"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: RotateBy"
+          },
+          {
+            "type": "SetScale",
+            "target_node": "../Targets/C",
+            "scale": "(2.0, 2.0, 1.0)"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SetScale"
+          },
+          {
+            "type": "LookAt",
+            "target_node": "../Targets/C",
+            "look_at_node": "../Targets/A",
+            "target_type": 1
+          },
+          {
+            "type": "Print",
+            "message": "PASS: LookAt"
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_transform DONE ==="
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_ks81l"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_o2hr3"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_vteaf"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_tt7uw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/event/send_event.gd" id="5_mgrqr"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="6_uwm2v"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="7_gvlm1"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="8_17rjd"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_htljx"]
+[ext_resource type="Script" path="res://addons/fuse/events/event/on_receive_event.gd" id="10_ui1rg"]
+
+[sub_resource type="Resource" id="Resource_2qwht"]
+resource_name = "打印: === deep_event START ==="
+script = ExtResource("4_tt7uw")
+message = "=== deep_event START ==="
+
+[sub_resource type="Resource" id="Resource_lpqnh"]
+resource_name = "发送事件: deep_event"
+script = ExtResource("5_mgrqr")
+event_name = "deep_event"
+event_args = {
+"v": 42.0
+}
+
+[sub_resource type="Resource" id="Resource_m8njr"]
+resource_name = "打印: PASS: SendEvent"
+script = ExtResource("4_tt7uw")
+message = "PASS: SendEvent"
+
+[sub_resource type="Resource" id="Resource_ymf12"]
+resource_name = "打印: === deep_event DONE ==="
+script = ExtResource("4_tt7uw")
+message = "=== deep_event DONE ==="
+
+[sub_resource type="Resource" id="Resource_is1oi"]
+script = ExtResource("6_uwm2v")
+instructions = Array[ExtResource("3_vteaf")]([SubResource("Resource_2qwht"), SubResource("Resource_lpqnh"), SubResource("Resource_m8njr"), SubResource("Resource_ymf12")])
+
+[sub_resource type="Resource" id="Resource_o2j5r"]
+script = ExtResource("7_gvlm1")
+
+[sub_resource type="Resource" id="Resource_g4sqv"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_o2hr3")
+event = SubResource("Resource_o2j5r")
+action_runner = SubResource("Resource_is1oi")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_dbw6e"]
+resource_name = "检查变量 [[本地]]: event_v EQUALS 42.0"
+script = ExtResource("8_17rjd")
+variable_name = "event_v"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = "event_v"
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 42.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_wynkb"]
+resource_name = "打印: FAIL: OnReceiveEvent(args)"
+script = ExtResource("4_tt7uw")
+message = "FAIL: OnReceiveEvent(args)"
+
+[sub_resource type="Resource" id="Resource_o02xm"]
+resource_name = "打印: PASS: OnReceiveEvent(args)"
+script = ExtResource("4_tt7uw")
+message = "PASS: OnReceiveEvent(args)"
+
+[sub_resource type="Resource" id="Resource_ge85c"]
+resource_name = "If/Else event_v [[本地]] EQUALS 42.0 [真:1 [同步]"
+script = ExtResource("9_htljx")
+sequence_mode = 0
+condition = SubResource("Resource_dbw6e")
+true_instructions = Array[ExtResource("3_vteaf")]([SubResource("Resource_o02xm")])
+false_instructions = Array[ExtResource("3_vteaf")]([SubResource("Resource_wynkb")])
+
+[sub_resource type="Resource" id="Resource_et2a6"]
+script = ExtResource("6_uwm2v")
+instructions = Array[ExtResource("3_vteaf")]([SubResource("Resource_ge85c")])
+
+[sub_resource type="Resource" id="Resource_k0hut"]
+resource_name = "接收事件: deep_event"
+script = ExtResource("10_ui1rg")
+event_name = "deep_event"
+local_var_prefix = "ev_"
+
+[sub_resource type="Resource" id="Resource_a35lx"]
+resource_name = "接收事件: deep_event"
+script = ExtResource("2_o2hr3")
+event = SubResource("Resource_k0hut")
+action_runner = SubResource("Resource_et2a6")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_event" type="Node2D" unique_id=2070178814]
+
+[node name="DeepEvent" type="Node" parent="." unique_id=927843530]
+script = ExtResource("1_ks81l")
+event_bindings = Array[ExtResource("2_o2hr3")]([SubResource("Resource_g4sqv"), SubResource("Resource_a35lx")])
+use_parallel_condition_evaluation = false

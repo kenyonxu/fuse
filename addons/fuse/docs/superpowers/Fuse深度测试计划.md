@@ -289,6 +289,39 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 
 ## 九、执行记录
 
+### M1 · A 层 12 场景（2026-08-28）✅ 全部完成
+
+| 场景 | 结果 | 场景 | 结果 |
+|------|------|------|------|
+| Arrays(M0) | 23/23 | FlowControl | 23/23 |
+| Debug | 3/3 | System | 10/10 |
+| String | 10/10 | Time | 14/14 |
+| Dictionaries | 18/18 | Event | 2/2 |
+| Math | 12/12 | Transform | 6/6 |
+| Variables | 24/25* | Navigation | 2+1(m)* |
+
+全部 12 个 preset 过 validate 门禁；运行 0 SCRIPT ERROR / 0 FAIL。*两个带已知问题（下）。
+
+**M1 挖出并修复的产品 bug（11 处，全部独立提交）**：
+
+1. 10 个条件（String/Distance/Input/Physics/System/UI/Navigation/Animation 类）缺 `_get_property_list` 注册——参数在 .tres/.tscn 序列化时**静默丢失**（实测存 hello 取回空）
+2. String 指令全族 + 2 String 条件 + CloneNode/GetViewportSize/LoadResourceByPath 调不存在的 `context.get_local/set_local`（正确 API get_variable/set_variable）——6 个指令一跑即崩
+3. CheckVariable 等值比较 Packed*Array==Array 运行时崩溃（StringSplit 产出 PackedStringArray）
+4. VectorOperation 直填向量值恒报类型错误（Variant 属性收字符串不转换，补运行时解析）
+5. CheckDistance 把位于原点的节点误判为"没有 global_position"（GDScript 零向量为假值）
+6. AddVariable/SwapVariables 实参互反（scope/value 交换）——AddVariable 一跑即崩（5+3=8 被当 scope 越界）
+7. OnHealthChanged 调 Object 不存在的 has_property()
+8. LOCAL 变量 Trigger meta 桥接只有写侧没有读侧——事件轮询恒 null
+9. BreakLoop/ContinueLoop 调不存在的 is_in_loop + 错误方法名——BreakLoop 一进循环即崩
+10. CheckComposite 内联条件字典从不反序列化，逻辑树无叶子恒假
+11. MouseWorldPosition 调不存在的 context.has_node；OnNavigationTargetReached 缺属性注册（存储丢失病第 12 例）
+
+**已知问题（M1 遗留，待专项）**：
+
+1. **OnVariableChanged 在 L4+LOCAL 下不触发**——meta 桥接修复后读值仍 null，监控态藏于 RuntimeEventInstance 深处
+2. **ContinueLoop 语义缺陷**——标志仅在迭代顶消费，"跳过下一迭代"而非"跳过本次剩余指令"（断言已按当前行为校准看守）
+3. **NavigateToPosition / OnNavigationTargetReached 依赖外部轮询**——探针实证 NavigationAgent2D 的 `is_finished=true` 后 `navigation_finished` 信号仅在有人调用 `get_next_path_position()` 时才发射；Fuse 侧无轮询则指令永不完成（正常游戏由玩家移动代码的每帧轮询掩盖）
+
 ### M0 · Arrays 打样（2026-08-28）✅
 
 六步全流程走通，出口标准全部达成：

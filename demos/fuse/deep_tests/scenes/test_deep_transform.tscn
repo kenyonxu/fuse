@@ -1,0 +1,341 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_5c2mj"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_8byfs"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_ut121"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_hq81f"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/set_position.gd" id="5_0pihb"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="6_mhqd1"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="7_u56sb"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="8_myolf"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_q3fi0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/move_by.gd" id="10_hhv5q"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/set_rotation.gd" id="11_x4a71"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/rotate_by.gd" id="12_f36eo"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/set_scale.gd" id="13_vyokl"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/look_at.gd" id="14_uywx3"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="15_rnll0"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="16_2c1af"]
+
+[sub_resource type="Resource" id="Resource_qfpwy"]
+resource_name = "打印: === deep_transform START ==="
+script = ExtResource("4_hq81f")
+message = "=== deep_transform START ==="
+
+[sub_resource type="Resource" id="Resource_g7alb"]
+resource_name = "设置位置 '未指定节点' [全局] = (0.0"
+script = ExtResource("5_0pihb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+position_variable = ""
+position_scope = 0
+use_variable_for_target = false
+target_node = NodePath("../Targets/A")
+space = 0
+use_variable = false
+position = Vector3(10, 20, 0)
+position_variable = ""
+position_scope = 0
+
+[sub_resource type="Resource" id="Resource_71kyr"]
+resource_name = "获取位置 A → pa [LOCAL]"
+script = ExtResource("6_mhqd1")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../Targets/A")
+save_to_variable = "pa"
+save_to_scope = 0
+use_global_position = true
+
+[sub_resource type="Resource" id="Resource_1jnkv"]
+resource_name = "'Vector2(10, 20)' → exp_a [Vector2]"
+script = ExtResource("7_u56sb")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(10, 20)"
+output_type = 2
+scope_source = 0
+save_to_variable = "exp_a"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_v77pl"]
+resource_name = "检查变量 [[本地]]: pa EQUALS [[本地]] exp_a"
+script = ExtResource("8_myolf")
+variable_name = "pa"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = true
+compare_variable = "exp_a"
+compare_variable_scope = 0
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_4qe1j"]
+resource_name = "打印: FAIL: SetPosition+GetPosition"
+script = ExtResource("4_hq81f")
+message = "FAIL: SetPosition+GetPosition"
+
+[sub_resource type="Resource" id="Resource_1cej6"]
+resource_name = "打印: PASS: SetPosition+GetPosition"
+script = ExtResource("4_hq81f")
+message = "PASS: SetPosition+GetPosition"
+
+[sub_resource type="Resource" id="Resource_kjb58"]
+resource_name = "If/Else pa [[本地]] EQUALS exp_a [[本地]] [真:1 [同步]"
+script = ExtResource("9_q3fi0")
+sequence_mode = 0
+condition = SubResource("Resource_v77pl")
+true_instructions = Array[ExtResource("3_ut121")]([SubResource("Resource_1cej6")])
+false_instructions = Array[ExtResource("3_ut121")]([SubResource("Resource_4qe1j")])
+
+[sub_resource type="Resource" id="Resource_nxuu2"]
+resource_name = "相对移动 'B' [全局] 偏移 (1.0"
+script = ExtResource("10_hhv5q")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+offset_variable = ""
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/B")
+space = 0
+use_variable = false
+offset = Vector3(1, 1, 0)
+
+[sub_resource type="Resource" id="Resource_1s54f"]
+resource_name = "获取位置 B → pb [LOCAL]"
+script = ExtResource("6_mhqd1")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../Targets/B")
+save_to_variable = "pb"
+save_to_scope = 0
+use_global_position = true
+
+[sub_resource type="Resource" id="Resource_wvyq3"]
+resource_name = "'Vector2(4, 5)' → exp_b [Vector2]"
+script = ExtResource("7_u56sb")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(4, 5)"
+output_type = 2
+scope_source = 0
+save_to_variable = "exp_b"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_5vaev"]
+resource_name = "检查变量 [[本地]]: pb EQUALS [[本地]] exp_b"
+script = ExtResource("8_myolf")
+variable_name = "pb"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = true
+compare_variable = "exp_b"
+compare_variable_scope = 0
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_k3x2l"]
+resource_name = "打印: FAIL: MoveBy"
+script = ExtResource("4_hq81f")
+message = "FAIL: MoveBy"
+
+[sub_resource type="Resource" id="Resource_nduia"]
+resource_name = "打印: PASS: MoveBy"
+script = ExtResource("4_hq81f")
+message = "PASS: MoveBy"
+
+[sub_resource type="Resource" id="Resource_mo1ex"]
+resource_name = "If/Else pb [[本地]] EQUALS exp_b [[本地]] [真:1 [同步]"
+script = ExtResource("9_q3fi0")
+sequence_mode = 0
+condition = SubResource("Resource_5vaev")
+true_instructions = Array[ExtResource("3_ut121")]([SubResource("Resource_nduia")])
+false_instructions = Array[ExtResource("3_ut121")]([SubResource("Resource_k3x2l")])
+
+[sub_resource type="Resource" id="Resource_f0iq5"]
+resource_name = "'Vector3(0, 0, 1.5708)' → rot [Vector3]"
+script = ExtResource("7_u56sb")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector3(0, 0, 1.5708)"
+output_type = 3
+scope_source = 0
+save_to_variable = "rot"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_8f7lp"]
+resource_name = "设置旋转 '未指定节点' [全局] 从变量'rotation [SCOPE]'"
+script = ExtResource("11_x4a71")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/C")
+space = 0
+rotation_variable = "rot"
+rotation_scope = 1
+
+[sub_resource type="Resource" id="Resource_3gum0"]
+resource_name = "打印: PASS: SetRotation"
+script = ExtResource("4_hq81f")
+message = "PASS: SetRotation"
+
+[sub_resource type="Resource" id="Resource_dg8br"]
+resource_name = "'Vector3(0.5, 0, 0)' → rby [Vector3]"
+script = ExtResource("7_u56sb")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector3(0.5, 0, 0)"
+output_type = 3
+scope_source = 0
+save_to_variable = "rby"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_lq8ir"]
+resource_name = "相对旋转 '未指定节点' [局部] 从变量'amount [SCOPE]'"
+script = ExtResource("12_f36eo")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+rotation_offset = Vector3(0.5, 0, 0)
+use_variable_for_target = false
+target_node = NodePath("../Targets/C")
+space = 0
+rotation_variable = "rby"
+rotation_scope = 1
+
+[sub_resource type="Resource" id="Resource_hgias"]
+resource_name = "打印: PASS: RotateBy"
+script = ExtResource("4_hq81f")
+message = "PASS: RotateBy"
+
+[sub_resource type="Resource" id="Resource_xva1b"]
+resource_name = "设置缩放 '未指定节点' = (1.0"
+script = ExtResource("13_vyokl")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scale_variable = ""
+scale_scope = 0
+use_variable_for_target = false
+target_node = NodePath("../Targets/C")
+use_variable = false
+scale = Vector3(2, 2, 1)
+scale_variable = ""
+scale_scope = 0
+
+[sub_resource type="Resource" id="Resource_cyyc4"]
+resource_name = "打印: PASS: SetScale"
+script = ExtResource("4_hq81f")
+message = "PASS: SetScale"
+
+[sub_resource type="Resource" id="Resource_nu4yu"]
+resource_name = "朝向 未指定节点 未指定变量"
+script = ExtResource("14_uywx3")
+position_variable = ""
+up_vector = Vector3(0, 1, 0)
+target_node = NodePath("../Targets/C")
+target_type = 1
+position_variable = ""
+position_scope = 0
+look_at_node = NodePath("../Targets/A")
+use_custom_up = false
+up_vector = Vector3(0, 1, 0)
+
+[sub_resource type="Resource" id="Resource_0j2rj"]
+resource_name = "打印: PASS: LookAt"
+script = ExtResource("4_hq81f")
+message = "PASS: LookAt"
+
+[sub_resource type="Resource" id="Resource_3s561"]
+resource_name = "打印: === deep_transform DONE ==="
+script = ExtResource("4_hq81f")
+message = "=== deep_transform DONE ==="
+
+[sub_resource type="Resource" id="Resource_i1a7m"]
+script = ExtResource("15_rnll0")
+instructions = Array[ExtResource("3_ut121")]([SubResource("Resource_qfpwy"), SubResource("Resource_g7alb"), SubResource("Resource_71kyr"), SubResource("Resource_1jnkv"), SubResource("Resource_kjb58"), SubResource("Resource_nxuu2"), SubResource("Resource_1s54f"), SubResource("Resource_wvyq3"), SubResource("Resource_mo1ex"), SubResource("Resource_f0iq5"), SubResource("Resource_8f7lp"), SubResource("Resource_3gum0"), SubResource("Resource_dg8br"), SubResource("Resource_lq8ir"), SubResource("Resource_hgias"), SubResource("Resource_xva1b"), SubResource("Resource_cyyc4"), SubResource("Resource_nu4yu"), SubResource("Resource_0j2rj"), SubResource("Resource_3s561")])
+
+[sub_resource type="Resource" id="Resource_twrsq"]
+script = ExtResource("16_2c1af")
+
+[sub_resource type="Resource" id="Resource_hvthc"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_8byfs")
+event = SubResource("Resource_twrsq")
+action_runner = SubResource("Resource_i1a7m")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_transform" type="Node2D" unique_id=1420957398]
+
+[node name="Targets" type="Node2D" parent="." unique_id=1196181753]
+
+[node name="A" type="Node2D" parent="Targets" unique_id=1804170383]
+
+[node name="B" type="Node2D" parent="Targets" unique_id=2011710665]
+position = Vector2(3, 4)
+
+[node name="C" type="Node2D" parent="Targets" unique_id=480434059]
+position = Vector2(100, 100)
+
+[node name="DeepTransform" type="Node" parent="." unique_id=1241707549]
+script = ExtResource("1_5c2mj")
+event_bindings = Array[ExtResource("2_8byfs")]([SubResource("Resource_hvthc")])
+use_parallel_condition_evaluation = false

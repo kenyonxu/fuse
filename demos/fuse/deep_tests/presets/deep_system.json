@@ -1,0 +1,215 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepSystem",
+  "category": "system",
+  "description": "深度测试·System：6 指令 + 2 条件",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "mp",
+      "res"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_system START ==="
+          },
+          {
+            "type": "GetViewportSize",
+            "save_to_variable_x": "vw",
+            "save_to_variable_y": "vh"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "vw",
+              "comparison_operator": 2,
+              "expected_value": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetViewportSize"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetViewportSize"
+              }
+            ]
+          },
+          {
+            "type": "SetViewportSize",
+            "width": 640,
+            "height": 480
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SetViewportSize"
+          },
+          {
+            "type": "SetWindowSize",
+            "width": 800,
+            "height": 600
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SetWindowSize"
+          },
+          {
+            "type": "LoadResourceByPath",
+            "load_path": "res://addons/fuse/instructions/debug/print.gd",
+            "save_to_variable": "res"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "res",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: LoadResourceByPath"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: LoadResourceByPath"
+              }
+            ]
+          },
+          {
+            "type": "MouseWorldPosition",
+            "save_to_variable": "mp"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: MouseWorldPosition"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckFrameRate",
+              "compare_type": 3,
+              "threshold_fps": 999
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckFrameRate(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckFrameRate(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckFrameRate",
+              "compare_type": 2,
+              "threshold_fps": 99999
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckFrameRate(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckFrameRate(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckPlatform",
+              "platform": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckPlatform(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckPlatform(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckPlatform",
+              "platform": 4
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckPlatform(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckPlatform(neg)"
+              }
+            ]
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_system DONE ==="
+          },
+          {
+            "type": "Print",
+            "message": "PASS: Quit"
+          },
+          {
+            "type": "Quit"
+          }
+        ]
+      }
+    }
+  ]
+}

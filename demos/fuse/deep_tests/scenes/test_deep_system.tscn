@@ -1,0 +1,274 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_bahxe"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_fhclq"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_34jtf"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_s3cc1"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/system/get_viewport_size.gd" id="5_gkc14"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="6_yulri"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_5hpsk"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/system/set_viewport_size.gd" id="8_cwtql"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/system/set_window_size.gd" id="9_h2gp6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/system/load_resource_by_path.gd" id="10_3kp7f"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/system/mouse_world_position.gd" id="11_vi7v7"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/system/check_frame_rate.gd" id="12_x3mth"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/system/check_platform.gd" id="13_d7wed"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/system/quit.gd" id="14_6ok4k"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="15_n1ffm"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="16_m5rqd"]
+
+[sub_resource type="Resource" id="Resource_ls3w1"]
+resource_name = "打印: === deep_system START ==="
+script = ExtResource("4_s3cc1")
+message = "=== deep_system START ==="
+
+[sub_resource type="Resource" id="Resource_osvvc"]
+resource_name = "获取视口尺寸 → vw, vh"
+script = ExtResource("5_gkc14")
+save_to_variable_x = "vw"
+save_to_variable_y = "vh"
+
+[sub_resource type="Resource" id="Resource_jivdb"]
+resource_name = "检查变量 [[本地]]: vw GREATER_THAN 0.0"
+script = ExtResource("6_yulri")
+variable_name = "vw"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0.0
+variable_scope = 0
+comparison_operator = 2
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_t1klp"]
+resource_name = "打印: FAIL: GetViewportSize"
+script = ExtResource("4_s3cc1")
+message = "FAIL: GetViewportSize"
+
+[sub_resource type="Resource" id="Resource_lthpr"]
+resource_name = "打印: PASS: GetViewportSize"
+script = ExtResource("4_s3cc1")
+message = "PASS: GetViewportSize"
+
+[sub_resource type="Resource" id="Resource_l64kc"]
+resource_name = "If/Else vw [[本地]] GREATER_THAN 0.0 [真:1 [同步]"
+script = ExtResource("7_5hpsk")
+sequence_mode = 0
+condition = SubResource("Resource_jivdb")
+true_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_lthpr")])
+false_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_t1klp")])
+
+[sub_resource type="Resource" id="Resource_bhwdd"]
+resource_name = "设置视口尺寸 640x480"
+script = ExtResource("8_cwtql")
+width = 640
+height = 480
+
+[sub_resource type="Resource" id="Resource_humda"]
+resource_name = "打印: PASS: SetViewportSize"
+script = ExtResource("4_s3cc1")
+message = "PASS: SetViewportSize"
+
+[sub_resource type="Resource" id="Resource_jn8wl"]
+resource_name = "设置窗口尺寸 800x600"
+script = ExtResource("9_h2gp6")
+width = 800
+height = 600
+
+[sub_resource type="Resource" id="Resource_ou6pd"]
+resource_name = "打印: PASS: SetWindowSize"
+script = ExtResource("4_s3cc1")
+message = "PASS: SetWindowSize"
+
+[sub_resource type="Resource" id="Resource_to3o5"]
+resource_name = "加载资源 [print.gd] → {0}"
+script = ExtResource("10_3kp7f")
+load_path = "res://addons/fuse/instructions/debug/print.gd"
+save_to_variable = "res"
+
+[sub_resource type="Resource" id="Resource_xr50r"]
+resource_name = "检查变量 [[本地]]: res IS_NOT_NULL null"
+script = ExtResource("6_yulri")
+variable_name = "res"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_t0803"]
+resource_name = "打印: FAIL: LoadResourceByPath"
+script = ExtResource("4_s3cc1")
+message = "FAIL: LoadResourceByPath"
+
+[sub_resource type="Resource" id="Resource_5macd"]
+resource_name = "打印: PASS: LoadResourceByPath"
+script = ExtResource("4_s3cc1")
+message = "PASS: LoadResourceByPath"
+
+[sub_resource type="Resource" id="Resource_wsuha"]
+resource_name = "If/Else res [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("7_5hpsk")
+sequence_mode = 0
+condition = SubResource("Resource_xr50r")
+true_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_5macd")])
+false_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_t0803")])
+
+[sub_resource type="Resource" id="Resource_xu2vh"]
+resource_name = "鼠标坐标 → mp"
+script = ExtResource("11_vi7v7")
+camera_node = NodePath("")
+save_to_variable = "mp"
+
+[sub_resource type="Resource" id="Resource_0or64"]
+resource_name = "打印: PASS: MouseWorldPosition"
+script = ExtResource("4_s3cc1")
+message = "PASS: MouseWorldPosition"
+
+[sub_resource type="Resource" id="Resource_4nwog"]
+resource_name = "FPS < 999.0"
+script = ExtResource("12_x3mth")
+compare_type = 3
+threshold_fps = 999.0
+
+[sub_resource type="Resource" id="Resource_3y1im"]
+resource_name = "打印: FAIL: CheckFrameRate(true)"
+script = ExtResource("4_s3cc1")
+message = "FAIL: CheckFrameRate(true)"
+
+[sub_resource type="Resource" id="Resource_w6noi"]
+resource_name = "打印: PASS: CheckFrameRate(true)"
+script = ExtResource("4_s3cc1")
+message = "PASS: CheckFrameRate(true)"
+
+[sub_resource type="Resource" id="Resource_2dsio"]
+resource_name = "If/Else 检查当前帧率是否 < 999.0 [真:1 [同步]"
+script = ExtResource("7_5hpsk")
+sequence_mode = 0
+condition = SubResource("Resource_4nwog")
+true_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_w6noi")])
+false_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_3y1im")])
+
+[sub_resource type="Resource" id="Resource_qfeim"]
+resource_name = "FPS > 99999.0"
+script = ExtResource("12_x3mth")
+compare_type = 2
+threshold_fps = 99999.0
+
+[sub_resource type="Resource" id="Resource_5nh6n"]
+resource_name = "打印: PASS: CheckFrameRate(neg)"
+script = ExtResource("4_s3cc1")
+message = "PASS: CheckFrameRate(neg)"
+
+[sub_resource type="Resource" id="Resource_oltg0"]
+resource_name = "打印: FAIL: CheckFrameRate(neg)"
+script = ExtResource("4_s3cc1")
+message = "FAIL: CheckFrameRate(neg)"
+
+[sub_resource type="Resource" id="Resource_2t3h2"]
+resource_name = "If/Else 检查当前帧率是否 > 99999.0 [真:1 [同步]"
+script = ExtResource("7_5hpsk")
+sequence_mode = 0
+condition = SubResource("Resource_qfeim")
+true_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_oltg0")])
+false_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_5nh6n")])
+
+[sub_resource type="Resource" id="Resource_43ppd"]
+resource_name = "平台 = Windows"
+script = ExtResource("13_d7wed")
+platform = 0
+
+[sub_resource type="Resource" id="Resource_2knbv"]
+resource_name = "打印: FAIL: CheckPlatform(true)"
+script = ExtResource("4_s3cc1")
+message = "FAIL: CheckPlatform(true)"
+
+[sub_resource type="Resource" id="Resource_bgjed"]
+resource_name = "打印: PASS: CheckPlatform(true)"
+script = ExtResource("4_s3cc1")
+message = "PASS: CheckPlatform(true)"
+
+[sub_resource type="Resource" id="Resource_31hj6"]
+resource_name = "If/Else 检查当前是否为 Windows 平台 [真:1 [同步]"
+script = ExtResource("7_5hpsk")
+sequence_mode = 0
+condition = SubResource("Resource_43ppd")
+true_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_bgjed")])
+false_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_2knbv")])
+
+[sub_resource type="Resource" id="Resource_c4a0q"]
+resource_name = "平台 = iOS"
+script = ExtResource("13_d7wed")
+platform = 4
+
+[sub_resource type="Resource" id="Resource_33cm8"]
+resource_name = "打印: PASS: CheckPlatform(neg)"
+script = ExtResource("4_s3cc1")
+message = "PASS: CheckPlatform(neg)"
+
+[sub_resource type="Resource" id="Resource_retjb"]
+resource_name = "打印: FAIL: CheckPlatform(neg)"
+script = ExtResource("4_s3cc1")
+message = "FAIL: CheckPlatform(neg)"
+
+[sub_resource type="Resource" id="Resource_f8hma"]
+resource_name = "If/Else 检查当前是否为 iOS 平台 [真:1 [同步]"
+script = ExtResource("7_5hpsk")
+sequence_mode = 0
+condition = SubResource("Resource_c4a0q")
+true_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_retjb")])
+false_instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_33cm8")])
+
+[sub_resource type="Resource" id="Resource_vrb7y"]
+resource_name = "打印: === deep_system DONE ==="
+script = ExtResource("4_s3cc1")
+message = "=== deep_system DONE ==="
+
+[sub_resource type="Resource" id="Resource_fkne8"]
+resource_name = "打印: PASS: Quit"
+script = ExtResource("4_s3cc1")
+message = "PASS: Quit"
+
+[sub_resource type="Resource" id="Resource_g8k4s"]
+resource_name = "退出应用程序"
+script = ExtResource("14_6ok4k")
+
+[sub_resource type="Resource" id="Resource_02t5q"]
+script = ExtResource("15_n1ffm")
+instructions = Array[ExtResource("3_34jtf")]([SubResource("Resource_ls3w1"), SubResource("Resource_osvvc"), SubResource("Resource_l64kc"), SubResource("Resource_bhwdd"), SubResource("Resource_humda"), SubResource("Resource_jn8wl"), SubResource("Resource_ou6pd"), SubResource("Resource_to3o5"), SubResource("Resource_wsuha"), SubResource("Resource_xu2vh"), SubResource("Resource_0or64"), SubResource("Resource_2dsio"), SubResource("Resource_2t3h2"), SubResource("Resource_31hj6"), SubResource("Resource_f8hma"), SubResource("Resource_vrb7y"), SubResource("Resource_fkne8"), SubResource("Resource_g8k4s")])
+
+[sub_resource type="Resource" id="Resource_js3el"]
+script = ExtResource("16_m5rqd")
+
+[sub_resource type="Resource" id="Resource_qjeog"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_fhclq")
+event = SubResource("Resource_js3el")
+action_runner = SubResource("Resource_02t5q")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_system" type="Node2D" unique_id=1869091482]
+
+[node name="DeepSystem" type="Node" parent="." unique_id=470357836]
+script = ExtResource("1_bahxe")
+event_bindings = Array[ExtResource("2_fhclq")]([SubResource("Resource_qjeog")])
+use_parallel_condition_evaluation = false

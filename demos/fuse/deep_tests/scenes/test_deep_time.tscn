@@ -1,0 +1,404 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_60nli"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_llqf7"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_6ctfl"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_yhshg"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/time/get_delta_time.gd" id="5_m32c4"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="6_dha8p"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_teiad"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/time/set_time_scale.gd" id="8_4dqpr"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/time/check_game_time.gd" id="9_0htvu"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/time/check_time_range.gd" id="10_vutsm"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/time/check_time_reached.gd" id="11_o0mmu"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/set_variable.gd" id="12_6llgy"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/time/check_countdown_finished.gd" id="13_fcxtp"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="14_mm6yu"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="15_v62tv"]
+[ext_resource type="Script" path="res://addons/fuse/events/timing/on_timer.gd" id="16_h0smj"]
+[ext_resource type="Script" path="res://addons/fuse/events/timing/on_countdown.gd" id="17_yy347"]
+[ext_resource type="Script" path="res://addons/fuse/events/timing/on_cooldown_finished.gd" id="18_0p37l"]
+[ext_resource type="Script" path="res://addons/fuse/events/timing/on_realtime.gd" id="19_4vu6c"]
+
+[sub_resource type="Resource" id="Resource_xoyms"]
+resource_name = "打印: === deep_time START ==="
+script = ExtResource("4_yhshg")
+message = "=== deep_time START ==="
+
+[sub_resource type="Resource" id="Resource_0kfpw"]
+resource_name = "获取 Delta 时间 → [本地]变量 'dt'"
+script = ExtResource("5_m32c4")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_to_variable = "dt"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_t27xq"]
+resource_name = "检查变量 [[本地]]: dt GREATER_EQUAL 0.0"
+script = ExtResource("6_dha8p")
+variable_name = "dt"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0.0
+variable_scope = 0
+comparison_operator = 4
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_g6fly"]
+resource_name = "打印: FAIL: GetDeltaTime"
+script = ExtResource("4_yhshg")
+message = "FAIL: GetDeltaTime"
+
+[sub_resource type="Resource" id="Resource_hr1ot"]
+resource_name = "打印: PASS: GetDeltaTime"
+script = ExtResource("4_yhshg")
+message = "PASS: GetDeltaTime"
+
+[sub_resource type="Resource" id="Resource_1eh8u"]
+resource_name = "If/Else dt [[本地]] GREATER_EQUAL 0.0 [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_t27xq")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_hr1ot")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_g6fly")])
+
+[sub_resource type="Resource" id="Resource_x8aih"]
+resource_name = "时间缩放 1.00x (永久)"
+script = ExtResource("8_4dqpr")
+time_scale = 1.0
+duration = 0.1
+
+[sub_resource type="Resource" id="Resource_ur8jf"]
+resource_name = "打印: PASS: SetTimeScale"
+script = ExtResource("4_yhshg")
+message = "PASS: SetTimeScale"
+
+[sub_resource type="Resource" id="Resource_dqpso"]
+resource_name = "游戏时间: 0.0s"
+script = ExtResource("9_0htvu")
+
+[sub_resource type="Resource" id="Resource_po5lt"]
+resource_name = "打印: FAIL: CheckGameTime(true)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckGameTime(true)"
+
+[sub_resource type="Resource" id="Resource_x812k"]
+resource_name = "打印: PASS: CheckGameTime(true)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckGameTime(true)"
+
+[sub_resource type="Resource" id="Resource_xlysi"]
+resource_name = "If/Else 游戏时间 >= 0.0s [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_dqpso")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_x812k")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_po5lt")])
+
+[sub_resource type="Resource" id="Resource_dmnch"]
+resource_name = "游戏时间: 9999.0s"
+script = ExtResource("9_0htvu")
+target_game_time = 9999.0
+
+[sub_resource type="Resource" id="Resource_ve0m7"]
+resource_name = "打印: PASS: CheckGameTime(neg)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckGameTime(neg)"
+
+[sub_resource type="Resource" id="Resource_apcei"]
+resource_name = "打印: FAIL: CheckGameTime(neg)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckGameTime(neg)"
+
+[sub_resource type="Resource" id="Resource_fax16"]
+resource_name = "If/Else 游戏时间 >= 9999.0s [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_dmnch")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_apcei")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_ve0m7")])
+
+[sub_resource type="Resource" id="Resource_iys8n"]
+resource_name = "时间段: 0.0s - 10.0s"
+script = ExtResource("10_vutsm")
+end_time = 10.0
+
+[sub_resource type="Resource" id="Resource_26i28"]
+resource_name = "打印: FAIL: CheckTimeRange(true)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckTimeRange(true)"
+
+[sub_resource type="Resource" id="Resource_c8lbc"]
+resource_name = "打印: PASS: CheckTimeRange(true)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckTimeRange(true)"
+
+[sub_resource type="Resource" id="Resource_cdgtt"]
+resource_name = "If/Else 时间段: [0.0s [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_iys8n")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_c8lbc")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_26i28")])
+
+[sub_resource type="Resource" id="Resource_wws6q"]
+resource_name = "时间段: 500.0s - 600.0s"
+script = ExtResource("10_vutsm")
+start_time = 500.0
+end_time = 600.0
+
+[sub_resource type="Resource" id="Resource_lw453"]
+resource_name = "打印: PASS: CheckTimeRange(neg)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckTimeRange(neg)"
+
+[sub_resource type="Resource" id="Resource_eab74"]
+resource_name = "打印: FAIL: CheckTimeRange(neg)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckTimeRange(neg)"
+
+[sub_resource type="Resource" id="Resource_ykblb"]
+resource_name = "If/Else 时间段: [500.0s [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_wws6q")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_eab74")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_lw453")])
+
+[sub_resource type="Resource" id="Resource_4ypip"]
+resource_name = "时间到达: 相对 0.0 秒"
+script = ExtResource("11_o0mmu")
+target_time = 0.0
+
+[sub_resource type="Resource" id="Resource_sxwi2"]
+resource_name = "打印: FAIL: CheckTimeReached(true)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckTimeReached(true)"
+
+[sub_resource type="Resource" id="Resource_xs1cx"]
+resource_name = "打印: PASS: CheckTimeReached(true)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckTimeReached(true)"
+
+[sub_resource type="Resource" id="Resource_q5eau"]
+resource_name = "If/Else 时间到达: 相对 0.0 秒 [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_4ypip")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_xs1cx")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_sxwi2")])
+
+[sub_resource type="Resource" id="Resource_1g84i"]
+resource_name = "时间到达: 相对 9999.0 秒"
+script = ExtResource("11_o0mmu")
+target_time = 9999.0
+
+[sub_resource type="Resource" id="Resource_75lum"]
+resource_name = "打印: PASS: CheckTimeReached(neg)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckTimeReached(neg)"
+
+[sub_resource type="Resource" id="Resource_fc4d4"]
+resource_name = "打印: FAIL: CheckTimeReached(neg)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckTimeReached(neg)"
+
+[sub_resource type="Resource" id="Resource_7g26m"]
+resource_name = "If/Else 时间到达: 相对 9999.0 秒 [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_1g84i")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_fc4d4")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_75lum")])
+
+[sub_resource type="Resource" id="Resource_dqwep"]
+resource_name = "设置变量 [[本地]] 'cd_start' = 0.0"
+script = ExtResource("12_6llgy")
+target_variable = "cd_start"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 0.0
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_0wpgy"]
+resource_name = "cd_start [[本地]] 倒计时 0.00s"
+script = ExtResource("13_fcxtp")
+start_time_variable = "cd_start"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+duration = 0.001
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_vpa4r"]
+resource_name = "打印: FAIL: CheckCountdownFinished(true)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckCountdownFinished(true)"
+
+[sub_resource type="Resource" id="Resource_bj2hc"]
+resource_name = "打印: PASS: CheckCountdownFinished(true)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckCountdownFinished(true)"
+
+[sub_resource type="Resource" id="Resource_ln4vh"]
+resource_name = "If/Else cd_start [[本地]] 倒计时 0.00s [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_0wpgy")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_bj2hc")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_vpa4r")])
+
+[sub_resource type="Resource" id="Resource_radw4"]
+resource_name = "cd_start [[本地]] 倒计时 9999.00s"
+script = ExtResource("13_fcxtp")
+start_time_variable = "cd_start"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+duration = 9999.0
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_88u0p"]
+resource_name = "打印: PASS: CheckCountdownFinished(neg)"
+script = ExtResource("4_yhshg")
+message = "PASS: CheckCountdownFinished(neg)"
+
+[sub_resource type="Resource" id="Resource_2xiel"]
+resource_name = "打印: FAIL: CheckCountdownFinished(neg)"
+script = ExtResource("4_yhshg")
+message = "FAIL: CheckCountdownFinished(neg)"
+
+[sub_resource type="Resource" id="Resource_3o84m"]
+resource_name = "If/Else cd_start [[本地]] 倒计时 9999.00s [真:1 [同步]"
+script = ExtResource("7_teiad")
+sequence_mode = 0
+condition = SubResource("Resource_radw4")
+true_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_2xiel")])
+false_instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_88u0p")])
+
+[sub_resource type="Resource" id="Resource_ngq82"]
+resource_name = "打印: === deep_time DONE ==="
+script = ExtResource("4_yhshg")
+message = "=== deep_time DONE ==="
+
+[sub_resource type="Resource" id="Resource_d8ykw"]
+script = ExtResource("14_mm6yu")
+instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_xoyms"), SubResource("Resource_0kfpw"), SubResource("Resource_1eh8u"), SubResource("Resource_x8aih"), SubResource("Resource_ur8jf"), SubResource("Resource_xlysi"), SubResource("Resource_fax16"), SubResource("Resource_cdgtt"), SubResource("Resource_ykblb"), SubResource("Resource_q5eau"), SubResource("Resource_7g26m"), SubResource("Resource_dqwep"), SubResource("Resource_ln4vh"), SubResource("Resource_3o84m"), SubResource("Resource_ngq82")])
+
+[sub_resource type="Resource" id="Resource_xfn4u"]
+script = ExtResource("15_v62tv")
+
+[sub_resource type="Resource" id="Resource_ft25t"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_llqf7")
+event = SubResource("Resource_xfn4u")
+action_runner = SubResource("Resource_d8ykw")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_xyena"]
+resource_name = "打印: PASS: OnTimer"
+script = ExtResource("4_yhshg")
+message = "PASS: OnTimer"
+
+[sub_resource type="Resource" id="Resource_o6wb4"]
+script = ExtResource("14_mm6yu")
+instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_xyena")])
+
+[sub_resource type="Resource" id="Resource_03ivb"]
+resource_name = "定时器: 0.50s - 自动开始(无限重复)"
+script = ExtResource("16_h0smj")
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_0upk4"]
+resource_name = "每 0.50 秒触发一次，(无限重复)，自动开始"
+script = ExtResource("2_llqf7")
+event = SubResource("Resource_03ivb")
+action_runner = SubResource("Resource_o6wb4")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_baepf"]
+resource_name = "打印: PASS: OnCountdown"
+script = ExtResource("4_yhshg")
+message = "PASS: OnCountdown"
+
+[sub_resource type="Resource" id="Resource_5uq7k"]
+script = ExtResource("14_mm6yu")
+instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_baepf")])
+
+[sub_resource type="Resource" id="Resource_nrdj4"]
+resource_name = "倒计时: 0.6s - 自动开始显示进度 (0.100ss)"
+script = ExtResource("17_yy347")
+countdown_seconds = 0.6
+
+[sub_resource type="Resource" id="Resource_lcfn8"]
+resource_name = "倒计时 0.6 秒后触发（自动开始）显示剩余时间（更新间隔: 0.100ss）"
+script = ExtResource("2_llqf7")
+event = SubResource("Resource_nrdj4")
+action_runner = SubResource("Resource_5uq7k")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_uws78"]
+resource_name = "打印: PASS: OnCooldownFinished"
+script = ExtResource("4_yhshg")
+message = "PASS: OnCooldownFinished"
+
+[sub_resource type="Resource" id="Resource_debfi"]
+script = ExtResource("14_mm6yu")
+instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_uws78")])
+
+[sub_resource type="Resource" id="Resource_cbyqq"]
+resource_name = "冷却完成: 0.7s - 自动开始显示进度 (0.100ss)"
+script = ExtResource("18_0p37l")
+cooldown_seconds = 0.7
+
+[sub_resource type="Resource" id="Resource_q5nce"]
+resource_name = "冷却 0.7 秒后触发（自动开始）显示冷却进度（更新间隔: 0.100ss）"
+script = ExtResource("2_llqf7")
+event = SubResource("Resource_cbyqq")
+action_runner = SubResource("Resource_debfi")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_gvfi0"]
+resource_name = "打印: PASS: OnRealtime"
+script = ExtResource("4_yhshg")
+message = "PASS: OnRealtime"
+
+[sub_resource type="Resource" id="Resource_rrofg"]
+script = ExtResource("14_mm6yu")
+instructions = Array[ExtResource("3_6ctfl")]([SubResource("Resource_gvfi0")])
+
+[sub_resource type="Resource" id="Resource_6gqm6"]
+resource_name = "On Realtime: 0.8s(最多 1 次)"
+script = ExtResource("19_4vu6c")
+interval_seconds = 0.8
+max_triggers = 1
+
+[sub_resource type="Resource" id="Resource_wv53g"]
+resource_name = "每 0.8 秒（实际时间）触发一次最多 1 次"
+script = ExtResource("2_llqf7")
+event = SubResource("Resource_6gqm6")
+action_runner = SubResource("Resource_rrofg")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_time" type="Node2D" unique_id=2057407700]
+
+[node name="DeepTime" type="Node" parent="." unique_id=1790862535]
+script = ExtResource("1_60nli")
+event_bindings = Array[ExtResource("2_llqf7")]([SubResource("Resource_ft25t"), SubResource("Resource_0upk4"), SubResource("Resource_lcfn8"), SubResource("Resource_q5nce"), SubResource("Resource_wv53g")])
+use_parallel_condition_evaluation = false
