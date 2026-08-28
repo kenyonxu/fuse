@@ -207,7 +207,9 @@ func get_node(path: NodePath) -> Node:
 			if found:
 				return found
 
-	_log_error_localized("FUSE_ERROR_NODE_NOT_FOUND_AT_PATH", {"path": str(path)})
+	# 查找未命中降为 debug：get_node 是查询型 API，调用方决定缺失是否为错误——
+	# CheckNodeExists 反例（QueueFreeNode 后验证已删除）等合法模式不该被 push_error 染红
+	_log_debug_localized("FUSE_ERROR_NODE_NOT_FOUND_AT_PATH", {"path": str(path)})
 	return null
 
 ## 添加变量（接受 BaseVariable 对象）
