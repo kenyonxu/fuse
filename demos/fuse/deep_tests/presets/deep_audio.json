@@ -1,0 +1,279 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepAudio",
+  "category": "audio",
+  "description": "深度测试·Audio：7 指令 + 4 事件（音乐类指令独立绑定隔离 headless 挂起）",
+  "icon_name": "",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_audio START ==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "PlaySound",
+            "sound_path": "res://demos/fuse/fuse_adventure/resources/sfx/jumps/sfx_movement_jump1.wav",
+            "volume": 0.8
+          },
+          {
+            "type": "Print",
+            "message": "PASS: PlaySound(执行级)"
+          },
+          {
+            "type": "PlayRandomSound",
+            "sound_paths": [
+              "res://demos/fuse/fuse_adventure/resources/sfx/coins/sfx_coin_cluster1.wav",
+              "res://demos/fuse/fuse_adventure/resources/sfx/coins/sfx_coin_cluster3.wav",
+              "res://demos/fuse/fuse_adventure/resources/sfx/coins/sfx_coin_cluster4.wav"
+            ],
+            "volume": 0.8
+          },
+          {
+            "type": "Print",
+            "message": "PASS: PlayRandomSound(执行级)"
+          },
+          {
+            "type": "SetAudioVolume",
+            "target_mode": 1,
+            "bus": "Master",
+            "volume": 0.5
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.4
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): SetAudioVolume(bus 0.5，事件侧验证)"
+          },
+          {
+            "type": "PauseResumeAudio",
+            "target_player": "../AP1",
+            "action_mode": 0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "PauseResumeAudio",
+            "target_player": "../AP1",
+            "action_mode": 1
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "StopAudio",
+            "stop_mode": 0,
+            "fade_out": true,
+            "fade_duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.8
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../AP1",
+              "property_name": "playing",
+              "property_value": false
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: StopAudio(AP1停)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: StopAudio(AP1停)"
+              }
+            ]
+          },
+          {
+            "type": "Print",
+            "message": "=== 绑定1 DONE（指令链）==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "PlayMusic",
+            "music_path": "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav",
+            "volume": 0.6,
+            "fade_in": true,
+            "fade_duration": 0.3
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): PlayMusic(F5 听感)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Wait",
+            "wait_time": 3.0
+          },
+          {
+            "type": "CrossfadeToMusic",
+            "music_path": "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav",
+            "volume": 0.5,
+            "crossfade_duration": 0.5
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): CrossfadeToMusic(F5 听感)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAudioStarted",
+        "audio_player_path": "../AP1"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS(m): OnAudioStarted(F5)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAudioFinished",
+        "audio_player_path": "../AP1"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS(m): OnAudioFinished(F5)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAudioBusVolumeChanged",
+        "bus_name": "Master",
+        "trigger_on_any_change": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS(m): OnAudioBusVolumeChanged(F5)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnMusicBeat",
+        "bpm": 120.0,
+        "beat_interval": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS(m): OnMusicBeat(F5)"
+          }
+        ]
+      }
+    }
+  ]
+}

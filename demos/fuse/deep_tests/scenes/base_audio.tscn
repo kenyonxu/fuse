@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="AudioStreamWAV" path="res://demos/fuse/fuse_adventure/resources/sfx/jumps/sfx_movement_jump1.wav" id="1_jump"]
+
+[node name="Base" type="Node2D"]
+
+[node name="AP1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_jump")
+volume_db = 0.0
+playing = true

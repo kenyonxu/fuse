@@ -1,0 +1,415 @@
+[gd_scene format=3]
+
+[ext_resource type="AudioStream" path="res://demos/fuse/fuse_adventure/resources/sfx/jumps/sfx_movement_jump1.wav" id="1_iae4s"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_skify"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_eoqpe"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_rvdvv"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_kwlqy"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_dkjpo"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/play_sound.gd" id="7_mwaco"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="8_t2isx"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/set_audio_volume.gd" id="9_62jww"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/pause_resume_audio.gd" id="10_63al5"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/stop_audio.gd" id="11_g1f04"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="12_f8j04"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="13_vbp7c"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="14_5ksxy"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="15_qqtcl"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/play_music.gd" id="16_5selu"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="17_y2doq"]
+[ext_resource type="Script" path="res://addons/fuse/events/audio/on_audio_started.gd" id="18_47dfr"]
+[ext_resource type="Script" path="res://addons/fuse/events/audio/on_audio_finished.gd" id="19_cboxa"]
+[ext_resource type="Script" path="res://addons/fuse/events/audio/on_audio_bus_volume_changed.gd" id="20_mdyla"]
+[ext_resource type="Script" path="res://addons/fuse/events/audio/on_music_beat.gd" id="21_wwn6l"]
+
+[sub_resource type="Resource" id="Resource_is5pt"]
+resource_name = "打印: === deep_audio START ==="
+script = ExtResource("5_kwlqy")
+message = "=== deep_audio START ==="
+
+[sub_resource type="Resource" id="Resource_6e1vu"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_8vd18"]
+resource_name = "播放音效 'sfx_movement_jump1.wav' (音量 80.0%%)"
+script = ExtResource("7_mwaco")
+sound_path = "res://demos/fuse/fuse_adventure/resources/sfx/jumps/sfx_movement_jump1.wav"
+volume = 0.8
+pitch_scale = 1.0
+pitch_random_range = 0.0
+bus = "Master"
+
+[sub_resource type="Resource" id="Resource_xadg1"]
+resource_name = "打印: PASS: PlaySound(执行级)"
+script = ExtResource("5_kwlqy")
+message = "PASS: PlaySound(执行级)"
+
+[sub_resource type="Resource" id="Resource_3q4xb"]
+resource_name = "随机播放音效 (3 个音效) (音量 80.0%%)"
+script = ExtResource("8_t2isx")
+sound_paths = Array[String](["res://demos/fuse/fuse_adventure/resources/sfx/coins/sfx_coin_cluster1.wav", "res://demos/fuse/fuse_adventure/resources/sfx/coins/sfx_coin_cluster3.wav", "res://demos/fuse/fuse_adventure/resources/sfx/coins/sfx_coin_cluster4.wav"])
+volume = 0.8
+pitch_scale = 1.0
+pitch_random_range = 0.0
+bus = "Master"
+
+[sub_resource type="Resource" id="Resource_n7stq"]
+resource_name = "打印: PASS: PlayRandomSound(执行级)"
+script = ExtResource("5_kwlqy")
+message = "PASS: PlayRandomSound(执行级)"
+
+[sub_resource type="Resource" id="Resource_fjwfi"]
+resource_name = "设置音量 未指定播放器 = 100.0%%"
+script = ExtResource("9_62jww")
+target_player = NodePath("")
+use_variable_for_target = false
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+name_pattern = "Fuse_AudioPlayer_*"
+fade_duration = 0.5
+target_mode = 1
+use_variable_for_target = false
+target_player = NodePath("")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+volume = 0.5
+fade = false
+fade_duration = 0.5
+
+[sub_resource type="Resource" id="Resource_58ymy"]
+resource_name = "等待 0.4 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.4
+
+[sub_resource type="Resource" id="Resource_7vo2i"]
+resource_name = "打印: PASS(m): SetAudioVolume(bus 0.5，事件侧验证)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): SetAudioVolume(bus 0.5，事件侧验证)"
+
+[sub_resource type="Resource" id="Resource_0fg2d"]
+resource_name = "暂停 (所有正在播放)"
+script = ExtResource("10_63al5")
+target_player = NodePath("../AP1")
+use_variable_for_target = false
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+action_mode = 0
+target_mode = 3
+use_variable_for_target = false
+target_player = NodePath("../AP1")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+
+[sub_resource type="Resource" id="Resource_ishr6"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_8k20g"]
+resource_name = "暂停 (所有正在播放)"
+script = ExtResource("10_63al5")
+target_player = NodePath("../AP1")
+use_variable_for_target = false
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+action_mode = 1
+target_mode = 3
+use_variable_for_target = false
+target_player = NodePath("../AP1")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+
+[sub_resource type="Resource" id="Resource_qovif"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_skfva"]
+resource_name = "停止音频 (全部)"
+script = ExtResource("11_g1f04")
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+stop_mode = 0
+bus = "Master"
+name_pattern = "Fuse_AudioPlayer_*"
+fade_out = true
+fade_duration = 0.3
+
+[sub_resource type="Resource" id="Resource_gj34g"]
+resource_name = "等待 0.8 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.8
+
+[sub_resource type="Resource" id="Resource_67nc4"]
+resource_name = "AP1.playing == false"
+script = ExtResource("12_f8j04")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../AP1")
+property_name = "playing"
+property_value = false
+
+[sub_resource type="Resource" id="Resource_b5gci"]
+resource_name = "打印: FAIL: StopAudio(AP1停)"
+script = ExtResource("5_kwlqy")
+message = "FAIL: StopAudio(AP1停)"
+
+[sub_resource type="Resource" id="Resource_irol4"]
+resource_name = "打印: PASS: StopAudio(AP1停)"
+script = ExtResource("5_kwlqy")
+message = "PASS: StopAudio(AP1停)"
+
+[sub_resource type="Resource" id="Resource_fkf1d"]
+resource_name = "If/Else AP1.playing == false [真:1 [同步]"
+script = ExtResource("13_vbp7c")
+sequence_mode = 0
+condition = SubResource("Resource_67nc4")
+true_instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_irol4")])
+false_instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_b5gci")])
+
+[sub_resource type="Resource" id="Resource_22kar"]
+resource_name = "打印: === 绑定1 DONE（指令链）==="
+script = ExtResource("5_kwlqy")
+message = "=== 绑定1 DONE（指令链）==="
+
+[sub_resource type="Resource" id="Resource_gnudc"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_is5pt"), SubResource("Resource_6e1vu"), SubResource("Resource_8vd18"), SubResource("Resource_xadg1"), SubResource("Resource_3q4xb"), SubResource("Resource_n7stq"), SubResource("Resource_fjwfi"), SubResource("Resource_58ymy"), SubResource("Resource_7vo2i"), SubResource("Resource_0fg2d"), SubResource("Resource_ishr6"), SubResource("Resource_8k20g"), SubResource("Resource_qovif"), SubResource("Resource_skfva"), SubResource("Resource_gj34g"), SubResource("Resource_fkf1d"), SubResource("Resource_22kar")])
+
+[sub_resource type="Resource" id="Resource_p03y3"]
+script = ExtResource("15_qqtcl")
+
+[sub_resource type="Resource" id="Resource_hv7cn"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_p03y3")
+action_runner = SubResource("Resource_gnudc")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_7s1hv"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_xn1qe"]
+resource_name = "播放音乐 'SpaceBattle_8bit_final.wav' [37.84s]"
+script = ExtResource("16_5selu")
+music_path = "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav"
+volume = 0.6
+bus = "Master"
+continue_during_pause = false
+fade_in = true
+fade_duration = 0.3
+
+[sub_resource type="Resource" id="Resource_x36d2"]
+resource_name = "打印: PASS(m): PlayMusic(F5 听感)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): PlayMusic(F5 听感)"
+
+[sub_resource type="Resource" id="Resource_88bh8"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_7s1hv"), SubResource("Resource_xn1qe"), SubResource("Resource_x36d2")])
+
+[sub_resource type="Resource" id="Resource_ceem4"]
+script = ExtResource("15_qqtcl")
+
+[sub_resource type="Resource" id="Resource_xr3sf"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_ceem4")
+action_runner = SubResource("Resource_88bh8")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_be1nx"]
+resource_name = "等待 3.0 秒"
+script = ExtResource("6_dkjpo")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 3.0
+
+[sub_resource type="Resource" id="Resource_io4s1"]
+resource_name = "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)"
+script = ExtResource("17_y2doq")
+music_path = "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav"
+volume = 0.5
+bus = "Master"
+continue_during_pause = false
+crossfade_duration = 0.5
+
+[sub_resource type="Resource" id="Resource_ydh2e"]
+resource_name = "打印: PASS(m): CrossfadeToMusic(F5 听感)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): CrossfadeToMusic(F5 听感)"
+
+[sub_resource type="Resource" id="Resource_0pbsw"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_be1nx"), SubResource("Resource_io4s1"), SubResource("Resource_ydh2e")])
+
+[sub_resource type="Resource" id="Resource_vja4u"]
+script = ExtResource("15_qqtcl")
+
+[sub_resource type="Resource" id="Resource_a8pxg"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_vja4u")
+action_runner = SubResource("Resource_0pbsw")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_4a1yb"]
+resource_name = "打印: PASS(m): OnAudioStarted(F5)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): OnAudioStarted(F5)"
+
+[sub_resource type="Resource" id="Resource_8drdm"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_4a1yb")])
+
+[sub_resource type="Resource" id="Resource_nd7al"]
+resource_name = "On Audio Started: ../AP1"
+script = ExtResource("18_47dfr")
+audio_player_path = NodePath("../AP1")
+
+[sub_resource type="Resource" id="Resource_0qba7"]
+resource_name = "监听音频开始播放，检测间隔：0.10s"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_nd7al")
+action_runner = SubResource("Resource_8drdm")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_2cr3e"]
+resource_name = "打印: PASS(m): OnAudioFinished(F5)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): OnAudioFinished(F5)"
+
+[sub_resource type="Resource" id="Resource_xtpvd"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_2cr3e")])
+
+[sub_resource type="Resource" id="Resource_k6xh7"]
+resource_name = "音频完成: ../AP1"
+script = ExtResource("19_cboxa")
+audio_player_path = NodePath("../AP1")
+
+[sub_resource type="Resource" id="Resource_d741i"]
+resource_name = "当 ../AP1 播放完成时触发，发出 音频名称"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_k6xh7")
+action_runner = SubResource("Resource_xtpvd")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_mu0xg"]
+resource_name = "打印: PASS(m): OnAudioBusVolumeChanged(F5)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): OnAudioBusVolumeChanged(F5)"
+
+[sub_resource type="Resource" id="Resource_wqfxx"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_mu0xg")])
+
+[sub_resource type="Resource" id="Resource_g66cl"]
+resource_name = "音频总线音量变化: Master (阈值: 1.0 dB)"
+script = ExtResource("20_mdyla")
+
+[sub_resource type="Resource" id="Resource_rdksu"]
+resource_name = "监听音频总线 'Master' 音量，变化超过 1.0 dB 时触发，每 0.10 秒检查一次，发出 旧音量、新音量、变化量"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_g66cl")
+action_runner = SubResource("Resource_wqfxx")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_od4pw"]
+resource_name = "打印: PASS(m): OnMusicBeat(F5)"
+script = ExtResource("5_kwlqy")
+message = "PASS(m): OnMusicBeat(F5)"
+
+[sub_resource type="Resource" id="Resource_vaavm"]
+script = ExtResource("14_5ksxy")
+instructions = Array[ExtResource("4_rvdvv")]([SubResource("Resource_od4pw")])
+
+[sub_resource type="Resource" id="Resource_rwse7"]
+resource_name = "音乐节拍: 120 BPM (每 1 拍)"
+script = ExtResource("21_wwn6l")
+
+[sub_resource type="Resource" id="Resource_1qfjw"]
+resource_name = "检测音乐节拍，BPM：120，间隔：1 拍"
+script = ExtResource("3_eoqpe")
+event = SubResource("Resource_rwse7")
+action_runner = SubResource("Resource_vaavm")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_audio" type="Node2D" unique_id=9040355]
+
+[node name="AP1" type="AudioStreamPlayer" parent="." unique_id=1274180346]
+stream = ExtResource("1_iae4s")
+
+[node name="DeepAudio" type="Node" parent="." unique_id=679602830]
+script = ExtResource("2_skify")
+event_bindings = Array[ExtResource("3_eoqpe")]([SubResource("Resource_hv7cn"), SubResource("Resource_xr3sf"), SubResource("Resource_a8pxg"), SubResource("Resource_0qba7"), SubResource("Resource_d741i"), SubResource("Resource_rdksu"), SubResource("Resource_1qfjw")])
+use_parallel_condition_evaluation = false
