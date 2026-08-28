@@ -248,6 +248,18 @@ func execute(context: ExecutionContext) -> void:
 		return
 
 	var node: Node
+	# 解析目标节点——此前声明后从未赋值，has_signal 恒空引用崩溃
+	if use_variable_for_target and not target_variable.is_empty():
+		var node_value = VariableOperations.get_variable(context, target_variable, target_scope, null)
+		if node_value is Node:
+			node = node_value
+	else:
+		node = context.get_node(target_node)
+	if node == null:
+		_log_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": str(target_node)})
+		set_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"node": str(target_node)})
+		finished.emit()
+		return
 
 	# 检查信号是否存在
 	if not node.has_signal(signal_name):

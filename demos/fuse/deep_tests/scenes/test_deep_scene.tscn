@@ -1,26 +1,26 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cgyct81d7143n"]
 
-[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_b52nl"]
-[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_0l4le"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_85haw"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_n3t50"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="5_fl3wi"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="6_wvtro"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_wv6d0"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/scene/get_scene_path.gd" id="8_djxbt"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="9_hafyh"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/scene/load_scene_background.gd" id="10_ffmoq"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/scene/add_scene_as_child.gd" id="11_sri61"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="12_y21od"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_process_mode.gd" id="13_qd3i3"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="14_sh2av"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="15_ymd8r"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="16_7dras"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="17_er6n1"]
-[ext_resource type="Script" path="res://addons/fuse/events/scene/on_background_load_progress.gd" id="18_i0mnh"]
-[ext_resource type="Script" path="res://addons/fuse/events/scene/on_tree_changed.gd" id="19_tnsfb"]
-[ext_resource type="Script" path="res://addons/fuse/events/scene/on_node_paused_resumed.gd" id="20_7aaj8"]
-[ext_resource type="Script" path="res://addons/fuse/events/scene/on_scene_about_to_change.gd" id="21_3fsfd"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_b52nl"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="2_0l4le"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_85haw"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="4_n3t50"]
+[ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="5_fl3wi"]
+[ext_resource type="Script" uid="uid://bpgyrl1kelnm0" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="6_wvtro"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_wv6d0"]
+[ext_resource type="Script" uid="uid://dag2k4ss5ibw1" path="res://addons/fuse/instructions/scene/get_scene_path.gd" id="8_djxbt"]
+[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="9_hafyh"]
+[ext_resource type="Script" uid="uid://cjuhviikwpav2" path="res://addons/fuse/instructions/scene/load_scene_background.gd" id="10_ffmoq"]
+[ext_resource type="Script" uid="uid://de3dlfynl0ygh" path="res://addons/fuse/instructions/scene/add_scene_as_child.gd" id="11_sri61"]
+[ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="12_y21od"]
+[ext_resource type="Script" uid="uid://e4b0a4c8ef0c" path="res://addons/fuse/instructions/node_operations/set_process_mode.gd" id="13_qd3i3"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="14_sh2av"]
+[ext_resource type="Script" uid="uid://koqcwgwlg15a" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="15_ymd8r"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="16_7dras"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="17_er6n1"]
+[ext_resource type="Script" uid="uid://bx8ykw7njlh5p" path="res://addons/fuse/events/scene/on_background_load_progress.gd" id="18_i0mnh"]
+[ext_resource type="Script" uid="uid://ocfla6cc4s2c" path="res://addons/fuse/events/scene/on_tree_changed.gd" id="19_tnsfb"]
+[ext_resource type="Script" uid="uid://djqys585n8ydc" path="res://addons/fuse/events/scene/on_node_paused_resumed.gd" id="20_7aaj8"]
+[ext_resource type="Script" uid="uid://djxmheidqqnbi" path="res://addons/fuse/events/scene/on_scene_about_to_change.gd" id="21_3fsfd"]
 
 [sub_resource type="Resource" id="Resource_wid61"]
 resource_name = "打印: === deep_scene START ==="
@@ -132,6 +132,7 @@ true_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_wqbvd")
 false_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_60s4i")])
 
 [sub_resource type="Resource" id="Resource_ktonp"]
+resource_name = "后台加载场景 'base_targets.tscn' 到变量 'bg' ([本地])"
 script = ExtResource("10_ffmoq")
 scope_source = 0
 custom_scope_id = ""

@@ -1,0 +1,1308 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_t1bw3"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_emu1n"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_ljrp1"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_6jiwh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="5_wvisw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="6_o1p8u"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="7_u4f6i"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="8_ava8w"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/find_node.gd" id="9_3tt35"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_child_count.gd" id="10_2l86k"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_child_by_index.gd" id="11_520dg"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_last_child.gd" id="12_lwp8a"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_random_child.gd" id="13_ouxf0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_all_children.gd" id="14_yu8cd"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/arrays/check_array_size.gd" id="15_ce1xa"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_all_children_position.gd" id="16_8t2t6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_nodes_in_group.gd" id="17_em3fk"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_group_count.gd" id="18_pstjt"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/instantiate_scene.gd" id="19_rjndg"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/clone_node.gd" id="20_n0x70"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/reparent_node.gd" id="21_28x53"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_exists.gd" id="22_am0fb"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/queue_free_node.gd" id="23_paoyw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/enable_disable_node.gd" id="24_4p2r1"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_active.gd" id="25_holsw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="26_ib64l"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="27_rrtjn"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_global_position.gd" id="28_7apfi"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="29_hka17"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="30_272sm"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_process_mode.gd" id="31_30sl7"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/emit_signal.gd" id="32_1lqmy"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/warm_up_pool.gd" id="33_epv6d"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_property.gd" id="34_ro0e5"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="35_v8evv"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="36_5m8rf"]
+[ext_resource type="Script" path="res://addons/fuse/events/node/on_node_instance.gd" id="37_x5nr6"]
+[ext_resource type="Script" path="res://addons/fuse/events/node/on_signal_from_group.gd" id="38_4epv2"]
+[ext_resource type="Script" path="res://addons/fuse/events/node/on_target_signal_emit.gd" id="39_riaia"]
+[ext_resource type="Script" path="res://addons/fuse/events/node/on_path_follow_2d_progress_ratio.gd" id="40_c7lok"]
+
+[sub_resource type="Curve2D" id="Curve_line"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_sdhro"]
+resource_name = "打印: === deep_node_ops START ==="
+script = ExtResource("4_6jiwh")
+message = "=== deep_node_ops START ==="
+
+[sub_resource type="Resource" id="Resource_nwovi"]
+resource_name = "等待 0.2 秒"
+script = ExtResource("5_wvisw")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.2
+
+[sub_resource type="Resource" id="Resource_mhe2s"]
+resource_name = "获取节点 '../Targets/A' → na [[本地]]"
+script = ExtResource("6_o1p8u")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+node_path = NodePath("../Targets/A")
+result_variable = "na"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_vqng1"]
+resource_name = "检查变量 [[本地]]: na IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "na"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_1dlhp"]
+resource_name = "打印: FAIL: GetNode"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetNode"
+
+[sub_resource type="Resource" id="Resource_w2s7o"]
+resource_name = "打印: PASS: GetNode"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetNode"
+
+[sub_resource type="Resource" id="Resource_kpo73"]
+resource_name = "If/Else na [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_vqng1")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_w2s7o")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_1dlhp")])
+
+[sub_resource type="Resource" id="Resource_shuoi"]
+resource_name = "查找节点 [按名称] (未指定搜索值) 在子节点中 -> [未指定变量]"
+script = ExtResource("9_3tt35")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+search_type = 0
+search_scope = 1
+search_value = "C"
+recursive = true
+first_match_only = true
+result_variable = "found"
+result_scope = 0
+error_handling = 0
+
+[sub_resource type="Resource" id="Resource_bm5xt"]
+resource_name = "检查变量 [[本地]]: found IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "found"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_qbcyf"]
+resource_name = "打印: FAIL: FindNode"
+script = ExtResource("4_6jiwh")
+message = "FAIL: FindNode"
+
+[sub_resource type="Resource" id="Resource_dunlm"]
+resource_name = "打印: PASS: FindNode"
+script = ExtResource("4_6jiwh")
+message = "PASS: FindNode"
+
+[sub_resource type="Resource" id="Resource_238ed"]
+resource_name = "If/Else found [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_bm5xt")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_dunlm")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_qbcyf")])
+
+[sub_resource type="Resource" id="Resource_jwjg1"]
+resource_name = "获取子节点数量 → Targets → cc [[本地]]"
+script = ExtResource("10_2l86k")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets")
+include_internal = true
+result_variable = "cc"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_qbmgm"]
+resource_name = "检查变量 [[本地]]: cc EQUALS 3.0"
+script = ExtResource("7_u4f6i")
+variable_name = "cc"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 3.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_ele6g"]
+resource_name = "打印: FAIL: GetChildCount"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetChildCount"
+
+[sub_resource type="Resource" id="Resource_nkl7r"]
+resource_name = "打印: PASS: GetChildCount"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetChildCount"
+
+[sub_resource type="Resource" id="Resource_cvx3n"]
+resource_name = "If/Else cc [[本地]] EQUALS 3.0 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_qbmgm")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_nkl7r")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_ele6g")])
+
+[sub_resource type="Resource" id="Resource_xaonn"]
+resource_name = "获取子节点 → Targets [1] → cbi [[本地]]"
+script = ExtResource("11_520dg")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+index_variable = ""
+index_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets")
+index_source = 0
+index = 1
+include_internal = true
+result_variable = "cbi"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_lg4oc"]
+resource_name = "检查变量 [[本地]]: cbi IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "cbi"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_0sifk"]
+resource_name = "打印: FAIL: GetChildByIndex"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetChildByIndex"
+
+[sub_resource type="Resource" id="Resource_syjuj"]
+resource_name = "打印: PASS: GetChildByIndex"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetChildByIndex"
+
+[sub_resource type="Resource" id="Resource_3myom"]
+resource_name = "If/Else cbi [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_lg4oc")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_syjuj")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_0sifk")])
+
+[sub_resource type="Resource" id="Resource_goxui"]
+resource_name = "获取最后子节点 → Targets → lc [[本地]]"
+script = ExtResource("12_lwp8a")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets")
+include_internal = true
+result_variable = "lc"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_r4opl"]
+resource_name = "检查变量 [[本地]]: lc IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "lc"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_lwi2x"]
+resource_name = "打印: FAIL: GetLastChild"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetLastChild"
+
+[sub_resource type="Resource" id="Resource_kig8b"]
+resource_name = "打印: PASS: GetLastChild"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetLastChild"
+
+[sub_resource type="Resource" id="Resource_b0so4"]
+resource_name = "If/Else lc [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_r4opl")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_kig8b")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_lwi2x")])
+
+[sub_resource type="Resource" id="Resource_566nh"]
+resource_name = "获取随机子节点 → Targets → rc [[本地]]"
+script = ExtResource("13_ouxf0")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets")
+include_internal = true
+result_variable = "rc"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_o0ywn"]
+resource_name = "检查变量 [[本地]]: rc IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "rc"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_fbioo"]
+resource_name = "打印: FAIL: GetRandomChild"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetRandomChild"
+
+[sub_resource type="Resource" id="Resource_6n0ro"]
+resource_name = "打印: PASS: GetRandomChild"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetRandomChild"
+
+[sub_resource type="Resource" id="Resource_lu5n1"]
+resource_name = "If/Else rc [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_o0ywn")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_6n0ro")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_fbioo")])
+
+[sub_resource type="Resource" id="Resource_ect8k"]
+resource_name = "获取子节点 Targets → ach [LOCAL]"
+script = ExtResource("14_yu8cd")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets")
+recursive = false
+result_variable = "ach"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_g6s0a"]
+resource_name = "ach [[本地]] EQUALS 3"
+script = ExtResource("15_ce1xa")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+compare_value = 3
+source_type = 0
+array_variable = "ach"
+array_scope = 0
+comparison = 0
+
+[sub_resource type="Resource" id="Resource_sh4r1"]
+resource_name = "打印: FAIL: GetAllChildren(非递归)"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetAllChildren(非递归)"
+
+[sub_resource type="Resource" id="Resource_qin1y"]
+resource_name = "打印: PASS: GetAllChildren(非递归)"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetAllChildren(非递归)"
+
+[sub_resource type="Resource" id="Resource_kbvbd"]
+resource_name = "If/Else ach [[本地]] EQUALS 3 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_g6s0a")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_qin1y")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_sh4r1")])
+
+[sub_resource type="Resource" id="Resource_7qbtc"]
+resource_name = "获取子节点位置 Targets [global] → acp [LOCAL]"
+script = ExtResource("16_8t2t6")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets")
+recursive = false
+use_global_position = true
+result_variable = "acp"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_1p3w1"]
+resource_name = "acp [[本地]] EQUALS 3"
+script = ExtResource("15_ce1xa")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+compare_value = 3
+source_type = 0
+array_variable = "acp"
+array_scope = 0
+comparison = 0
+
+[sub_resource type="Resource" id="Resource_yxox2"]
+resource_name = "打印: FAIL: GetAllChildrenPosition"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetAllChildrenPosition"
+
+[sub_resource type="Resource" id="Resource_kme2f"]
+resource_name = "打印: PASS: GetAllChildrenPosition"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetAllChildrenPosition"
+
+[sub_resource type="Resource" id="Resource_eojys"]
+resource_name = "If/Else acp [[本地]] EQUALS 3 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_1p3w1")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_kme2f")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_yxox2")])
+
+[sub_resource type="Resource" id="Resource_mdaxd"]
+resource_name = "获取组中节点 'nt_group' → garr [[本地]]"
+script = ExtResource("17_em3fk")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+group_name = "nt_group"
+result_variable = "garr"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_yhwov"]
+resource_name = "garr [[本地]] EQUALS 2"
+script = ExtResource("15_ce1xa")
+array_scope_source = 0
+array_custom_scope_id = ""
+array_target_node_path = NodePath("")
+group_name = ""
+target_node_path = NodePath("")
+compare_value = 2
+source_type = 0
+array_variable = "garr"
+array_scope = 0
+comparison = 0
+
+[sub_resource type="Resource" id="Resource_xfsq4"]
+resource_name = "打印: FAIL: GetNodesInGroup"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetNodesInGroup"
+
+[sub_resource type="Resource" id="Resource_1rdcl"]
+resource_name = "打印: PASS: GetNodesInGroup"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetNodesInGroup"
+
+[sub_resource type="Resource" id="Resource_48o3e"]
+resource_name = "If/Else garr [[本地]] EQUALS 2 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_yhwov")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_1rdcl")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_xfsq4")])
+
+[sub_resource type="Resource" id="Resource_ydj7u"]
+resource_name = "获取组节点数量 'nt_group' → gc [[本地]]"
+script = ExtResource("18_pstjt")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+group_name = "nt_group"
+result_variable = "gc"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_ecvti"]
+resource_name = "检查变量 [[本地]]: gc EQUALS 2.0"
+script = ExtResource("7_u4f6i")
+variable_name = "gc"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 2.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_8ery6"]
+resource_name = "打印: FAIL: GetGroupCount"
+script = ExtResource("4_6jiwh")
+message = "FAIL: GetGroupCount"
+
+[sub_resource type="Resource" id="Resource_3n8s3"]
+resource_name = "打印: PASS: GetGroupCount"
+script = ExtResource("4_6jiwh")
+message = "PASS: GetGroupCount"
+
+[sub_resource type="Resource" id="Resource_1ao6d"]
+resource_name = "If/Else gc [[本地]] EQUALS 2.0 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_ecvti")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_3n8s3")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_8ery6")])
+
+[sub_resource type="Resource" id="Resource_m7wsw"]
+resource_name = "实例化 未指定场景 在位置 (0.0"
+script = ExtResource("19_rjndg")
+target_variable = "instance_id"
+save_to_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+position_variable = ""
+position_scope = 0
+position_scope_source = 0
+position_custom_scope_id = ""
+position_target_node_path = NodePath("")
+scene_path = "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
+parent_node = NodePath("../Spawned")
+position_mode = 0
+spawn_position = Vector3(0, 0, 0)
+spawn_offset = Vector3(0, 0, 0)
+position_variable = ""
+position_scope = 0
+save_instance_id = false
+target_variable = "instance_id"
+save_to_scope = 0
+use_object_pool = false
+
+[sub_resource type="Resource" id="Resource_jwrvr"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("5_wvisw")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_swt6d"]
+resource_name = "获取节点 '../Spawned/Base' → inst [[本地]]"
+script = ExtResource("6_o1p8u")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+node_path = NodePath("../Spawned/Base")
+result_variable = "inst"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_0ym5x"]
+resource_name = "检查变量 [[本地]]: inst IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "inst"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_itr47"]
+resource_name = "打印: FAIL: InstantiateScene"
+script = ExtResource("4_6jiwh")
+message = "FAIL: InstantiateScene"
+
+[sub_resource type="Resource" id="Resource_c6x42"]
+resource_name = "打印: PASS: InstantiateScene"
+script = ExtResource("4_6jiwh")
+message = "PASS: InstantiateScene"
+
+[sub_resource type="Resource" id="Resource_66i1k"]
+resource_name = "If/Else inst [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_0ym5x")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_c6x42")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_itr47")])
+
+[sub_resource type="Resource" id="Resource_f3fyp"]
+resource_name = "克隆节点 [A] → {0}"
+script = ExtResource("20_n0x70")
+source_node = NodePath("../Targets/A")
+parent_node = NodePath("../Spawned")
+save_to_variable = "cl"
+
+[sub_resource type="Resource" id="Resource_gwb1q"]
+resource_name = "检查变量 [[本地]]: cl IS_NOT_NULL null"
+script = ExtResource("7_u4f6i")
+variable_name = "cl"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_vslyd"]
+resource_name = "打印: FAIL: CloneNode"
+script = ExtResource("4_6jiwh")
+message = "FAIL: CloneNode"
+
+[sub_resource type="Resource" id="Resource_vvd0r"]
+resource_name = "打印: PASS: CloneNode"
+script = ExtResource("4_6jiwh")
+message = "PASS: CloneNode"
+
+[sub_resource type="Resource" id="Resource_bnrpi"]
+resource_name = "If/Else cl [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_gwb1q")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_vvd0r")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_vslyd")])
+
+[sub_resource type="Resource" id="Resource_edugv"]
+resource_name = "重父化 未指定 到 未指定"
+script = ExtResource("21_28x53")
+target_node = NodePath("../Spawned/Base")
+new_parent = NodePath("../Reparented")
+keep_global_transform = false
+
+[sub_resource type="Resource" id="Resource_taxgo"]
+resource_name = "等待 0.2 秒"
+script = ExtResource("5_wvisw")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.2
+
+[sub_resource type="Resource" id="Resource_vno8w"]
+resource_name = "节点存在: Base"
+script = ExtResource("22_am0fb")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+check_node_path = NodePath("../Reparented/Base")
+
+[sub_resource type="Resource" id="Resource_mycn2"]
+resource_name = "打印: FAIL: ReparentNode"
+script = ExtResource("4_6jiwh")
+message = "FAIL: ReparentNode"
+
+[sub_resource type="Resource" id="Resource_e71dp"]
+resource_name = "打印: PASS: ReparentNode"
+script = ExtResource("4_6jiwh")
+message = "PASS: ReparentNode"
+
+[sub_resource type="Resource" id="Resource_8qukq"]
+resource_name = "If/Else 节点存在: Base [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_vno8w")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_e71dp")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_mycn2")])
+
+[sub_resource type="Resource" id="Resource_uibtf"]
+resource_name = "释放 'Doomed'"
+script = ExtResource("23_paoyw")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Trash/Doomed")
+delay = 0.0
+
+[sub_resource type="Resource" id="Resource_mqnxc"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("5_wvisw")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_n71uo"]
+resource_name = "节点存在: Doomed"
+script = ExtResource("22_am0fb")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+check_node_path = NodePath("../Trash/Doomed")
+
+[sub_resource type="Resource" id="Resource_jvc07"]
+resource_name = "打印: PASS: QueueFreeNode(已不存在)"
+script = ExtResource("4_6jiwh")
+message = "PASS: QueueFreeNode(已不存在)"
+
+[sub_resource type="Resource" id="Resource_jxdiw"]
+resource_name = "打印: FAIL: QueueFreeNode(已不存在)"
+script = ExtResource("4_6jiwh")
+message = "FAIL: QueueFreeNode(已不存在)"
+
+[sub_resource type="Resource" id="Resource_67ne1"]
+resource_name = "If/Else 节点存在: Doomed [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_n71uo")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_jxdiw")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_jvc07")])
+
+[sub_resource type="Resource" id="Resource_eax1j"]
+resource_name = "启用 处理模式 未指定节点"
+script = ExtResource("24_4p2r1")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/C")
+enable = false
+mode = 0
+
+[sub_resource type="Resource" id="Resource_s4pmr"]
+resource_name = "处理状态: C"
+script = ExtResource("25_holsw")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+check_node_path = NodePath("../Targets/C")
+check_type = 1
+
+[sub_resource type="Resource" id="Resource_ihlrk"]
+resource_name = "打印: PASS: EnableDisableNode(禁用)"
+script = ExtResource("4_6jiwh")
+message = "PASS: EnableDisableNode(禁用)"
+
+[sub_resource type="Resource" id="Resource_ed6f2"]
+resource_name = "打印: FAIL: EnableDisableNode(禁用)"
+script = ExtResource("4_6jiwh")
+message = "FAIL: EnableDisableNode(禁用)"
+
+[sub_resource type="Resource" id="Resource_km7a3"]
+resource_name = "If/Else 处理状态: C [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_s4pmr")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_ed6f2")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_ihlrk")])
+
+[sub_resource type="Resource" id="Resource_hrvji"]
+resource_name = "启用 处理模式 未指定节点"
+script = ExtResource("24_4p2r1")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/C")
+enable = true
+mode = 0
+
+[sub_resource type="Resource" id="Resource_oy0ow"]
+resource_name = "处理状态: C"
+script = ExtResource("25_holsw")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+check_node_path = NodePath("../Targets/C")
+check_type = 1
+
+[sub_resource type="Resource" id="Resource_iyefs"]
+resource_name = "打印: FAIL: EnableDisableNode(恢复)"
+script = ExtResource("4_6jiwh")
+message = "FAIL: EnableDisableNode(恢复)"
+
+[sub_resource type="Resource" id="Resource_n2wnr"]
+resource_name = "打印: PASS: EnableDisableNode(恢复)"
+script = ExtResource("4_6jiwh")
+message = "PASS: EnableDisableNode(恢复)"
+
+[sub_resource type="Resource" id="Resource_gfjg0"]
+resource_name = "If/Else 处理状态: C [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_oy0ow")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_n2wnr")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_iyefs")])
+
+[sub_resource type="Resource" id="Resource_4mhck"]
+resource_name = "设置属性 [C] .rotation = 0.5"
+script = ExtResource("26_ib64l")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../Targets/C")
+target_property = "rotation"
+set_with_variable = false
+new_value = 0.5
+variable_name = ""
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_kfcmw"]
+resource_name = "C.rotation == 0.5"
+script = ExtResource("27_rrtjn")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Targets/C")
+property_name = "rotation"
+property_value = 0.5
+
+[sub_resource type="Resource" id="Resource_yqxhs"]
+resource_name = "打印: FAIL: SetPropertyValue"
+script = ExtResource("4_6jiwh")
+message = "FAIL: SetPropertyValue"
+
+[sub_resource type="Resource" id="Resource_s5w4o"]
+resource_name = "打印: PASS: SetPropertyValue"
+script = ExtResource("4_6jiwh")
+message = "PASS: SetPropertyValue"
+
+[sub_resource type="Resource" id="Resource_asdjn"]
+resource_name = "If/Else C.rotation == 0.5 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_kfcmw")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_s5w4o")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_yqxhs")])
+
+[sub_resource type="Resource" id="Resource_8cgda"]
+resource_name = "C 全局 (50.0, 60.0)"
+script = ExtResource("28_7apfi")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+position_3d = Vector3(0, 0, 0)
+use_variable_for_target = false
+target_node = NodePath("../Targets/C")
+use_3d = false
+position_2d = Vector2(50, 60)
+
+[sub_resource type="Resource" id="Resource_tf434"]
+resource_name = "获取位置 C → gp [LOCAL]"
+script = ExtResource("29_hka17")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+save_target_node_path = NodePath("")
+use_variable = false
+target = NodePath("../Targets/C")
+save_to_variable = "gp"
+save_to_scope = 0
+use_global_position = true
+
+[sub_resource type="Resource" id="Resource_7h6ej"]
+resource_name = "'Vector2(50, 60)' → gexp [Vector2]"
+script = ExtResource("30_272sm")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(50, 60)"
+output_type = 2
+scope_source = 0
+save_to_variable = "gexp"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_n88jt"]
+resource_name = "检查变量 [[本地]]: gp EQUALS [[本地]] gexp"
+script = ExtResource("7_u4f6i")
+variable_name = "gp"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = true
+compare_variable = "gexp"
+compare_variable_scope = 0
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_bk64r"]
+resource_name = "打印: FAIL: SetGlobalPosition"
+script = ExtResource("4_6jiwh")
+message = "FAIL: SetGlobalPosition"
+
+[sub_resource type="Resource" id="Resource_nayo4"]
+resource_name = "打印: PASS: SetGlobalPosition"
+script = ExtResource("4_6jiwh")
+message = "PASS: SetGlobalPosition"
+
+[sub_resource type="Resource" id="Resource_ns3r6"]
+resource_name = "If/Else gp [[本地]] EQUALS gexp [[本地]] [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_n88jt")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_nayo4")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_bk64r")])
+
+[sub_resource type="Resource" id="Resource_kwjhr"]
+resource_name = "处理模式: A → 禁用"
+script = ExtResource("31_30sl7")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/A")
+process_mode = 4
+
+[sub_resource type="Resource" id="Resource_gqt6l"]
+resource_name = "A.process_mode == 4.0"
+script = ExtResource("27_rrtjn")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Targets/A")
+property_name = "process_mode"
+property_value = 4.0
+
+[sub_resource type="Resource" id="Resource_t7353"]
+resource_name = "打印: FAIL: SetProcessMode(4)"
+script = ExtResource("4_6jiwh")
+message = "FAIL: SetProcessMode(4)"
+
+[sub_resource type="Resource" id="Resource_l2aq0"]
+resource_name = "打印: PASS: SetProcessMode(4)"
+script = ExtResource("4_6jiwh")
+message = "PASS: SetProcessMode(4)"
+
+[sub_resource type="Resource" id="Resource_g221k"]
+resource_name = "If/Else A.process_mode == 4.0 [真:1 [同步]"
+script = ExtResource("8_ava8w")
+sequence_mode = 0
+condition = SubResource("Resource_gqt6l")
+true_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_l2aq0")])
+false_instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_t7353")])
+
+[sub_resource type="Resource" id="Resource_aqavl"]
+resource_name = "处理模式: A → 继承"
+script = ExtResource("31_30sl7")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/A")
+process_mode = 0
+
+[sub_resource type="Resource" id="Resource_p0y0h"]
+resource_name = "发射信号 'pressed' [Btn]"
+script = ExtResource("32_1lqmy")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Btn")
+signal_name = "pressed"
+signal_args = []
+
+[sub_resource type="Resource" id="Resource_vgdel"]
+resource_name = "打印: PASS: EmitSignal(执行级，事件侧验证)"
+script = ExtResource("4_6jiwh")
+message = "PASS: EmitSignal(执行级，事件侧验证)"
+
+[sub_resource type="Resource" id="Resource_erldn"]
+resource_name = "预热 'base_targets.tscn' ×2"
+script = ExtResource("33_epv6d")
+batch_size = 2
+batch_delay = 0.1
+scene_path = "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
+warm_up_count = 2
+warm_up_mode = 0
+pool_initial_size = 2
+pool_max_size = 4
+
+[sub_resource type="Resource" id="Resource_obvxa"]
+resource_name = "打印: PASS(m): WarmUpPool(执行级)"
+script = ExtResource("4_6jiwh")
+message = "PASS(m): WarmUpPool(执行级)"
+
+[sub_resource type="Resource" id="Resource_vqog3"]
+resource_name = "打印: PASS(m): RecyclePooledScene(执行级)"
+script = ExtResource("4_6jiwh")
+message = "PASS(m): RecyclePooledScene(执行级)"
+
+[sub_resource type="Resource" id="Resource_q26gc"]
+resource_name = "打印: PASS(m): RunTargetNodeFunction(编辑器面板验)"
+script = ExtResource("4_6jiwh")
+message = "PASS(m): RunTargetNodeFunction(编辑器面板验)"
+
+[sub_resource type="Resource" id="Resource_xv1s2"]
+resource_name = "属性动画 [PathFollow2D] [Node] .progress_ratio = 1.0 (2.00s)"
+script = ExtResource("34_ro0e5")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Path2D/PathFollow2D")
+property_source = 0
+property_path = "progress_ratio"
+to_value = 1.0
+duration = 2.0
+auto_free = false
+easing_type = 2
+trans_type = 1
+
+[sub_resource type="Resource" id="Resource_psg8j"]
+resource_name = "打印: PASS(m): TweenProperty(驱动PathFollow，事件侧验证)"
+script = ExtResource("4_6jiwh")
+message = "PASS(m): TweenProperty(驱动PathFollow，事件侧验证)"
+
+[sub_resource type="Resource" id="Resource_wm7et"]
+resource_name = "等待 3.0 秒"
+script = ExtResource("5_wvisw")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 3.0
+
+[sub_resource type="Resource" id="Resource_25go2"]
+resource_name = "打印: === deep_node_ops DONE ==="
+script = ExtResource("4_6jiwh")
+message = "=== deep_node_ops DONE ==="
+
+[sub_resource type="Resource" id="Resource_g1axu"]
+script = ExtResource("35_v8evv")
+instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_sdhro"), SubResource("Resource_nwovi"), SubResource("Resource_mhe2s"), SubResource("Resource_kpo73"), SubResource("Resource_shuoi"), SubResource("Resource_238ed"), SubResource("Resource_jwjg1"), SubResource("Resource_cvx3n"), SubResource("Resource_xaonn"), SubResource("Resource_3myom"), SubResource("Resource_goxui"), SubResource("Resource_b0so4"), SubResource("Resource_566nh"), SubResource("Resource_lu5n1"), SubResource("Resource_ect8k"), SubResource("Resource_kbvbd"), SubResource("Resource_7qbtc"), SubResource("Resource_eojys"), SubResource("Resource_mdaxd"), SubResource("Resource_48o3e"), SubResource("Resource_ydj7u"), SubResource("Resource_1ao6d"), SubResource("Resource_m7wsw"), SubResource("Resource_jwrvr"), SubResource("Resource_swt6d"), SubResource("Resource_66i1k"), SubResource("Resource_f3fyp"), SubResource("Resource_bnrpi"), SubResource("Resource_edugv"), SubResource("Resource_taxgo"), SubResource("Resource_8qukq"), SubResource("Resource_uibtf"), SubResource("Resource_mqnxc"), SubResource("Resource_67ne1"), SubResource("Resource_eax1j"), SubResource("Resource_km7a3"), SubResource("Resource_hrvji"), SubResource("Resource_gfjg0"), SubResource("Resource_4mhck"), SubResource("Resource_asdjn"), SubResource("Resource_8cgda"), SubResource("Resource_tf434"), SubResource("Resource_7h6ej"), SubResource("Resource_ns3r6"), SubResource("Resource_kwjhr"), SubResource("Resource_g221k"), SubResource("Resource_aqavl"), SubResource("Resource_p0y0h"), SubResource("Resource_vgdel"), SubResource("Resource_erldn"), SubResource("Resource_obvxa"), SubResource("Resource_vqog3"), SubResource("Resource_q26gc"), SubResource("Resource_xv1s2"), SubResource("Resource_psg8j"), SubResource("Resource_wm7et"), SubResource("Resource_25go2")])
+
+[sub_resource type="Resource" id="Resource_x3d44"]
+script = ExtResource("36_5m8rf")
+
+[sub_resource type="Resource" id="Resource_noanx"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_emu1n")
+event = SubResource("Resource_x3d44")
+action_runner = SubResource("Resource_g1axu")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_5fxhv"]
+resource_name = "打印: PASS: OnNodeInstance"
+script = ExtResource("4_6jiwh")
+message = "PASS: OnNodeInstance"
+
+[sub_resource type="Resource" id="Resource_3wwiq"]
+script = ExtResource("35_v8evv")
+instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_5fxhv")])
+
+[sub_resource type="Resource" id="Resource_yaa0h"]
+resource_name = "节点实例化: base_targets(父节点: Spawned)"
+script = ExtResource("37_x5nr6")
+scene_path = "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
+parent_node = NodePath("../Spawned")
+
+[sub_resource type="Resource" id="Resource_pj388"]
+resource_name = "当场景 'base_targets' 作为 Spawned 的子节点实例化时触发"
+script = ExtResource("2_emu1n")
+event = SubResource("Resource_yaa0h")
+action_runner = SubResource("Resource_3wwiq")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_t4nc4"]
+resource_name = "打印: PASS: OnSignalFromGroup"
+script = ExtResource("4_6jiwh")
+message = "PASS: OnSignalFromGroup"
+
+[sub_resource type="Resource" id="Resource_laymj"]
+script = ExtResource("35_v8evv")
+instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_t4nc4")])
+
+[sub_resource type="Resource" id="Resource_4r3as"]
+resource_name = "组信号监听: sig_group.pressed"
+script = ExtResource("38_4epv2")
+signal_name = "pressed"
+group_name = "sig_group"
+
+[sub_resource type="Resource" id="Resource_uy1m1"]
+resource_name = "监听组 'sig_group' 中节点的 'pressed' 信号"
+script = ExtResource("2_emu1n")
+event = SubResource("Resource_4r3as")
+action_runner = SubResource("Resource_laymj")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_walw0"]
+resource_name = "打印: PASS: OnTargetSignalEmit"
+script = ExtResource("4_6jiwh")
+message = "PASS: OnTargetSignalEmit"
+
+[sub_resource type="Resource" id="Resource_u8j0n"]
+script = ExtResource("35_v8evv")
+instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_walw0")])
+
+[sub_resource type="Resource" id="Resource_3mqkj"]
+resource_name = "信号监听 → Btn :: pressed"
+script = ExtResource("39_riaia")
+arg_filter_values = {}
+target_node = NodePath("../Btn")
+target_signal = "pressed"
+trigger_once = false
+filter_signal_args = false
+arg_filter_values = {}
+
+[sub_resource type="Resource" id="Resource_qjvpi"]
+resource_name = "当 Btn 节点发出 pressed 信号时触发"
+script = ExtResource("2_emu1n")
+event = SubResource("Resource_3mqkj")
+action_runner = SubResource("Resource_u8j0n")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_ttclf"]
+resource_name = "打印: PASS: OnPathFollow2DProgressRatio"
+script = ExtResource("4_6jiwh")
+message = "PASS: OnPathFollow2DProgressRatio"
+
+[sub_resource type="Resource" id="Resource_k17fy"]
+script = ExtResource("35_v8evv")
+instructions = Array[ExtResource("3_ljrp1")]([SubResource("Resource_ttclf")])
+
+[sub_resource type="Resource" id="Resource_6w4x1"]
+resource_name = "PathFollow2D 进度比 0.5 (±0.05)"
+script = ExtResource("40_c7lok")
+ratio_variable = ""
+ratio_scope = 0
+ratio_scope_source = 0
+ratio_custom_scope_id = ""
+ratio_target_node_path = NodePath("")
+target_node = NodePath("../Path2D/PathFollow2D")
+use_variable_for_ratio = false
+target_ratio = 0.5
+tolerance = 0.05
+check_interval = 0.05
+trigger_once = true
+
+[sub_resource type="Resource" id="Resource_036w2"]
+resource_name = "监听 PathFollow2D，当 progress_ratio 接近 0.5 (容差 0.05) 时触发"
+script = ExtResource("2_emu1n")
+event = SubResource("Resource_6w4x1")
+action_runner = SubResource("Resource_k17fy")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_node_ops" type="Node2D" unique_id=617006869]
+
+[node name="Targets" type="Node2D" parent="." unique_id=1953834983]
+
+[node name="A" type="Node2D" parent="Targets" unique_id=871101398 groups=["nt_group"]]
+
+[node name="Sub1" type="Node2D" parent="Targets/A" unique_id=1100767143]
+
+[node name="B" type="Node2D" parent="Targets" unique_id=1374250567 groups=["nt_group"]]
+position = Vector2(10, 0)
+
+[node name="C" type="Node2D" parent="Targets" unique_id=557263688]
+position = Vector2(20, 0)
+
+[node name="Targets_Sub1#Sub1a" type="Node2D" parent="." unique_id=1365971020]
+
+[node name="Targets_Sub1#Sub1b" type="Node2D" parent="." unique_id=751928530]
+
+[node name="Btn" type="Button" parent="." unique_id=670424921 groups=["sig_group"]]
+
+[node name="Path2D" type="Path2D" parent="." unique_id=1489923588]
+curve = SubResource("Curve_line")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D" unique_id=1583821514]
+loop = false
+
+[node name="Spawned" type="Node2D" parent="." unique_id=2015956514]
+
+[node name="Reparented" type="Node2D" parent="." unique_id=130981094]
+
+[node name="Trash" type="Node2D" parent="." unique_id=1619112573]
+
+[node name="Doomed" type="Node2D" parent="Trash" unique_id=871007318]
+
+[node name="DeepNodeOps" type="Node" parent="." unique_id=1596544648]
+script = ExtResource("1_t1bw3")
+event_bindings = Array[ExtResource("2_emu1n")]([SubResource("Resource_noanx"), SubResource("Resource_pj388"), SubResource("Resource_uy1m1"), SubResource("Resource_qjvpi"), SubResource("Resource_036w2")])
+use_parallel_condition_evaluation = false

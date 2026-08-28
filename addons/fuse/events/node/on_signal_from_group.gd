@@ -102,7 +102,11 @@ func _connect_group_signals(owner_node: Node) -> void:
 	# 使用 RuntimeEventInstance 的状态
 	var connected_nodes: Array[Node] = []
 	if _runtime_instance_ref:
-		connected_nodes = _runtime_instance_ref.get_runtime_state("connected_nodes")
+		# runtime_state 取出的是无类型 Array，不能直赋 Array[Node]
+		var state_nodes: Array = _runtime_instance_ref.get_runtime_state("connected_nodes")
+		for state_node in state_nodes:
+			if state_node is Node:
+				connected_nodes.append(state_node)
 
 	var nodes = owner_node.get_tree().get_nodes_in_group(group_name)
 

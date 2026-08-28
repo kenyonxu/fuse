@@ -1,0 +1,751 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepNodeOps",
+  "category": "node_operations",
+  "description": "深度测试·Node Operations：22 指令 + 6 条件 + 4 NODE 事件",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "ach",
+      "acp",
+      "cl",
+      "garr",
+      "gexp",
+      "gp"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_node_ops START ==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "GetNode",
+            "node_path": "../Targets/A",
+            "result_variable": "na"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "na",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetNode"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetNode"
+              }
+            ]
+          },
+          {
+            "type": "FindNode",
+            "search_type": 0,
+            "search_value": "C",
+            "recursive": true,
+            "first_match_only": true,
+            "result_variable": "found",
+            "error_handling": 0,
+            "search_scope": 1
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "found",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: FindNode"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: FindNode"
+              }
+            ]
+          },
+          {
+            "type": "GetChildCount",
+            "target_node": "../Targets",
+            "result_variable": "cc"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cc",
+              "comparison_operator": 0,
+              "expected_value": 3,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetChildCount"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetChildCount"
+              }
+            ]
+          },
+          {
+            "type": "GetChildByIndex",
+            "target_node": "../Targets",
+            "index_source": 0,
+            "index": 1,
+            "result_variable": "cbi"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cbi",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetChildByIndex"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetChildByIndex"
+              }
+            ]
+          },
+          {
+            "type": "GetLastChild",
+            "target_node": "../Targets",
+            "result_variable": "lc"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "lc",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetLastChild"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetLastChild"
+              }
+            ]
+          },
+          {
+            "type": "GetRandomChild",
+            "target_node": "../Targets",
+            "result_variable": "rc"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "rc",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetRandomChild"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetRandomChild"
+              }
+            ]
+          },
+          {
+            "type": "GetAllChildren",
+            "target_node": "../Targets",
+            "recursive": false,
+            "result_variable": "ach"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "ach",
+              "comparison": 0,
+              "compare_value": 3
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetAllChildren(非递归)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetAllChildren(非递归)"
+              }
+            ]
+          },
+          {
+            "type": "GetAllChildrenPosition",
+            "target_node": "../Targets",
+            "recursive": false,
+            "use_global_position": true,
+            "result_variable": "acp"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "acp",
+              "comparison": 0,
+              "compare_value": 3
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetAllChildrenPosition"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetAllChildrenPosition"
+              }
+            ]
+          },
+          {
+            "type": "GetNodesInGroup",
+            "group_name": "nt_group",
+            "result_variable": "garr"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "garr",
+              "comparison": 0,
+              "compare_value": 2
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetNodesInGroup"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetNodesInGroup"
+              }
+            ]
+          },
+          {
+            "type": "GetGroupCount",
+            "group_name": "nt_group",
+            "result_variable": "gc"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "gc",
+              "comparison_operator": 0,
+              "expected_value": 2,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetGroupCount"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetGroupCount"
+              }
+            ]
+          },
+          {
+            "type": "InstantiateScene",
+            "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
+            "parent_node": "../Spawned",
+            "position_mode": 0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "GetNode",
+            "node_path": "../Spawned/Base",
+            "result_variable": "inst"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "inst",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: InstantiateScene"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: InstantiateScene"
+              }
+            ]
+          },
+          {
+            "type": "CloneNode",
+            "source_node": "../Targets/A",
+            "parent_node": "../Spawned",
+            "save_to_variable": "cl"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cl",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CloneNode"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CloneNode"
+              }
+            ]
+          },
+          {
+            "type": "ReparentNode",
+            "target_node": "../Spawned/Base",
+            "new_parent": "../Reparented",
+            "keep_global_transform": false
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeExists",
+              "check_node_path": "../Reparented/Base"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: ReparentNode"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: ReparentNode"
+              }
+            ]
+          },
+          {
+            "type": "QueueFreeNode",
+            "target_node": "../Trash/Doomed",
+            "delay": 0.0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeExists",
+              "check_node_path": "../Trash/Doomed"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: QueueFreeNode(已不存在)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: QueueFreeNode(已不存在)"
+              }
+            ]
+          },
+          {
+            "type": "EnableDisableNode",
+            "target_node": "../Targets/C",
+            "enable": false,
+            "mode": 0
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeActive",
+              "check_node_path": "../Targets/C",
+              "check_type": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: EnableDisableNode(禁用)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: EnableDisableNode(禁用)"
+              }
+            ]
+          },
+          {
+            "type": "EnableDisableNode",
+            "target_node": "../Targets/C",
+            "enable": true,
+            "mode": 0
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeActive",
+              "check_node_path": "../Targets/C",
+              "check_type": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: EnableDisableNode(恢复)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: EnableDisableNode(恢复)"
+              }
+            ]
+          },
+          {
+            "type": "SetPropertyValue",
+            "target_node": "../Targets/C",
+            "target_property": "rotation",
+            "new_value": 0.5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Targets/C",
+              "property_name": "rotation",
+              "property_value": 0.5
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetPropertyValue"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetPropertyValue"
+              }
+            ]
+          },
+          {
+            "type": "SetGlobalPosition",
+            "target_node": "../Targets/C",
+            "use_3d": false,
+            "position_2d": "(50.0, 60.0)"
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Targets/C",
+            "save_to_variable": "gp"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(50, 60)",
+            "output_type": 2,
+            "save_to_variable": "gexp"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "gp",
+              "check_with_another_variable": true,
+              "compare_variable": "gexp",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetGlobalPosition"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetGlobalPosition"
+              }
+            ]
+          },
+          {
+            "type": "SetProcessMode",
+            "target_node": "../Targets/A",
+            "process_mode": 4
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Targets/A",
+              "property_name": "process_mode",
+              "property_value": 4
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetProcessMode(4)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetProcessMode(4)"
+              }
+            ]
+          },
+          {
+            "type": "SetProcessMode",
+            "target_node": "../Targets/A",
+            "process_mode": 0
+          },
+          {
+            "type": "EmitSignal",
+            "target_node": "../Btn",
+            "signal_name": "pressed"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: EmitSignal(执行级，事件侧验证)"
+          },
+          {
+            "type": "WarmUpPool",
+            "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
+            "warm_up_count": 2,
+            "warm_up_mode": 0,
+            "pool_initial_size": 2,
+            "pool_max_size": 4,
+            "batch_size": 2,
+            "batch_delay": 0.1
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): WarmUpPool(执行级)"
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): RecyclePooledScene(执行级)"
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): RunTargetNodeFunction(编辑器面板验)"
+          },
+          {
+            "type": "TweenPropertyInstruction",
+            "target_node": "../Path2D/PathFollow2D",
+            "property_source": 0,
+            "property_path": "progress_ratio",
+            "to_value": 1.0,
+            "duration": 2.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): TweenProperty(驱动PathFollow，事件侧验证)"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 3.0
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_node_ops DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnNodeInstance",
+        "parent_node": "../Spawned",
+        "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnNodeInstance"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnSignalFromGroup",
+        "signal_name": "pressed",
+        "group_name": "sig_group"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnSignalFromGroup"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnTargetSignalEmit",
+        "target_node": "../Btn",
+        "target_signal": "pressed"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnTargetSignalEmit"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnPathFollow2DProgressRatio",
+        "target_node": "../Path2D/PathFollow2D",
+        "target_ratio": 0.5,
+        "tolerance": 0.05,
+        "check_interval": 0.05
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnPathFollow2DProgressRatio"
+          }
+        ]
+      }
+    }
+  ]
+}

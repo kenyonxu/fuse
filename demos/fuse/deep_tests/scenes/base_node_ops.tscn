@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[sub_resource type="Curve2D" id="Curve_line"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0),
+"point_count": 2
+}
+
+[node name="Base" type="Node2D"]
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="A" type="Node2D" parent="Targets" groups=["nt_group"]]
+position = Vector2(0, 0)
+
+[node name="B" type="Node2D" parent="Targets" groups=["nt_group"]]
+position = Vector2(10, 0)
+
+[node name="C" type="Node2D" parent="Targets"]
+position = Vector2(20, 0)
+
+[node name="Sub1" type="Node2D" parent="Targets/A"]
+position = Vector2(0, 0)
+
+[node name="Sub1a" type="Node2D" parent="Targets/Sub1"]
+
+[node name="Sub1b" type="Node2D" parent="Targets/Sub1"]
+
+[node name="Btn" type="Button" parent="." groups=["sig_group"]]
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("Curve_line")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+progress_ratio = 0.0
+loop = false
+
+[node name="Spawned" type="Node2D" parent="."]
+
+[node name="Reparented" type="Node2D" parent="."]
+
+[node name="Trash" type="Node2D" parent="."]
+
+[node name="Doomed" type="Node2D" parent="Trash"]

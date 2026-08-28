@@ -228,9 +228,9 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 	var node = _get_target_node(context)
 	var exists = node != null
 
-	var log_msg = FuseLocalization.translate("FUSE_LOG_NODE_EXISTS_CHECK")
 	var result_str = FuseLocalization.translate("FUSE_LOG_EXISTS" if exists else "FUSE_LOG_NOT_EXISTS")
-	_log_debug(log_msg % [_get_node_source_string(), result_str])
+	_log_debug(FuseLocalization.translate_format("FUSE_LOG_NODE_EXISTS_CHECK",
+		{"path": _get_node_source_string(), "result": result_str}))
 
 	return exists
 

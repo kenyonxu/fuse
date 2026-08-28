@@ -215,8 +215,9 @@ func _update_resource_name() -> void:
 		resource_name = FuseLocalization.translate("FUSE_CONDITION_NODE_ACTIVE_NOT_SET")
 	else:
 		var type_str = _get_check_type_name()
-		var translated = FuseLocalization.translate("FUSE_CONDITION_NODE_ACTIVE_FORMAT")
-		resource_name = translated % [type_str, node_str]
+		# 模板为花括号占位符（{type}/{path}），GDScript 的 % 只认 %s——必须走 translate_format
+		resource_name = FuseLocalization.translate_format("FUSE_CONDITION_NODE_ACTIVE_FORMAT",
+			{"type": type_str, "path": node_str})
 
 ## 获取节点来源显示字符串
 func _get_node_source_string() -> String:
@@ -286,9 +287,9 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 			_log_error(error_msg)
 			return false
 
-	var log_msg = FuseLocalization.translate("FUSE_LOG_NODE_ACTIVE_CHECK")
 	var result_str = FuseLocalization.translate("FUSE_LOG_ACTIVE" if result else "FUSE_LOG_INACTIVE")
-	_log_debug(log_msg % [_get_node_source_string(), _get_check_type_name(), result_str])
+	_log_debug(FuseLocalization.translate_format("FUSE_LOG_NODE_ACTIVE_CHECK",
+		{"path": _get_node_source_string(), "type": _get_check_type_name(), "result": result_str}))
 
 	return result
 
@@ -420,8 +421,8 @@ func get_description() -> String:
 	if node_str.is_empty():
 		return FuseLocalization.translate("FUSE_CONDITION_NODE_ACTIVE_DESC_NOT_SET")
 
-	var desc_base = FuseLocalization.translate("FUSE_CONDITION_NODE_ACTIVE_DESC_FORMAT")
-	var desc = desc_base % [_get_check_type_name(), node_str]
+	var desc = FuseLocalization.translate_format("FUSE_CONDITION_NODE_ACTIVE_DESC_FORMAT",
+		{"type": _get_check_type_name(), "path": node_str})
 
 	# 限制描述长度
 	if desc.length() > 50:
