@@ -409,6 +409,13 @@ static func _build_node_from_structure(structure: Dictionary) -> LogicNode:
 			if item is BaseCondition:
 				node.add_operand(LogicNode.create_leaf(item))
 			elif item is Dictionary:
+				# 内联条件字典（preset JSON 形如 {"type": "CheckVariable", ...}）——
+				# 先反序列化为条件；无 type 键才当子逻辑节点
+				if item.has("type"):
+					var inline_cond = PresetValueCodec.deserialize_condition(item)
+					if inline_cond != null:
+						node.add_operand(LogicNode.create_leaf(inline_cond))
+						continue
 				var child_node = _build_node_from_structure(item)
 				if child_node != null:
 					node.add_operand(child_node)
@@ -424,6 +431,11 @@ static func _build_node_from_structure(structure: Dictionary) -> LogicNode:
 			if item is BaseCondition:
 				node.add_operand(LogicNode.create_leaf(item))
 			elif item is Dictionary:
+				if item.has("type"):
+					var inline_cond = PresetValueCodec.deserialize_condition(item)
+					if inline_cond != null:
+						node.add_operand(LogicNode.create_leaf(inline_cond))
+						continue
 				var child_node = _build_node_from_structure(item)
 				if child_node != null:
 					node.add_operand(child_node)

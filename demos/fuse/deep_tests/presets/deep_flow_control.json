@@ -1,0 +1,705 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepFlowControl",
+  "category": "flow_control",
+  "icon_name": "",
+  "description": "深度测试·Flow Control：16 指令 + COMPOSITE 4 条件",
+  "variables": {
+    "local": [
+      "a",
+      "b",
+      "br_out",
+      "co_out",
+      "fa",
+      "fe_out",
+      "fl_out",
+      "ie",
+      "ift",
+      "wl_out",
+      "wu"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_flow_control START ==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "Print",
+            "message": "PASS: Wait"
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "a",
+            "new_value": 1
+          },
+          {
+            "type": "IfThen",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "a",
+              "comparison_operator": 0,
+              "expected_value": 1,
+              "auto_convert_types": true
+            },
+            "instructions": [
+              {
+                "type": "SetVariable",
+                "target_variable": "ift",
+                "new_value": 7
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "ift",
+              "comparison_operator": 0,
+              "expected_value": 7,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: IfThen"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: IfThen"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "a",
+              "comparison_operator": 0,
+              "expected_value": 1,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "SetVariable",
+                "target_variable": "ie",
+                "new_value": 1
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "SetVariable",
+                "target_variable": "ie",
+                "new_value": 2
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "ie",
+              "comparison_operator": 0,
+              "expected_value": 1,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: IfElse"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: IfElse"
+              }
+            ]
+          },
+          {
+            "type": "ForLoop",
+            "sequence_mode": 0,
+            "loop_count": 3,
+            "use_index_variable": true,
+            "index_variable": "i",
+            "loop_instructions": [
+              {
+                "type": "ArrayAdd",
+                "array_variable": "fl_out",
+                "element_value": 0
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "fl_out",
+              "comparison": 0,
+              "compare_value": 3
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: ForLoop"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: ForLoop"
+              }
+            ]
+          },
+          {
+            "type": "ArrayAdd",
+            "array_variable": "fa",
+            "element_value": 5
+          },
+          {
+            "type": "ArrayAdd",
+            "array_variable": "fa",
+            "element_value": 6
+          },
+          {
+            "type": "ForEach",
+            "sequence_mode": 0,
+            "array_variable": "fa",
+            "item_variable": "item",
+            "loop_instructions": [
+              {
+                "type": "ArrayAdd",
+                "array_variable": "fe_out",
+                "element_value": 0
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "fe_out",
+              "comparison": 0,
+              "compare_value": 2
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: ForEach"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: ForEach"
+              }
+            ]
+          },
+          {
+            "type": "CreateVariable",
+            "variable_name": "wl_flag",
+            "value": true
+          },
+          {
+            "type": "WhileLoop",
+            "sequence_mode": 0,
+            "condition_variable": "wl_flag",
+            "condition_check": 0,
+            "max_iterations": 10,
+            "loop_instructions": [
+              {
+                "type": "ArrayAdd",
+                "array_variable": "wl_out",
+                "element_value": 1
+              },
+              {
+                "type": "ToggleVariable",
+                "variable_name": "wl_flag"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "wl_out",
+              "comparison": 0,
+              "compare_value": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: WhileLoop"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: WhileLoop"
+              }
+            ]
+          },
+          {
+            "type": "ForLoop",
+            "sequence_mode": 0,
+            "loop_count": 5,
+            "use_index_variable": true,
+            "index_variable": "i2",
+            "loop_instructions": [
+              {
+                "type": "ArrayAdd",
+                "array_variable": "br_out",
+                "element_value": 1
+              },
+              {
+                "type": "BreakLoop"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "br_out",
+              "comparison": 0,
+              "compare_value": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: BreakLoop"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: BreakLoop"
+              }
+            ]
+          },
+          {
+            "type": "ForLoop",
+            "sequence_mode": 0,
+            "loop_count": 3,
+            "use_index_variable": true,
+            "index_variable": "i3",
+            "loop_instructions": [
+              {
+                "type": "ContinueLoop"
+              },
+              {
+                "type": "ArrayAdd",
+                "array_variable": "co_out",
+                "element_value": 1
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckArraySize",
+              "array_variable": "co_out",
+              "comparison": 0,
+              "compare_value": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: ContinueLoop(当前语义)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: ContinueLoop(当前语义)"
+              }
+            ]
+          },
+          {
+            "type": "RunConditionCheck",
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "a",
+              "comparison_operator": 0,
+              "expected_value": 1,
+              "auto_convert_types": true
+            },
+            "on_condition_true": 0,
+            "on_condition_false": 3
+          },
+          {
+            "type": "Print",
+            "message": "PASS: RunConditionCheck"
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "wu",
+            "new_value": 1
+          },
+          {
+            "type": "WaitUntil",
+            "condition_type": 2,
+            "check_variable_name": "wu",
+            "check_interval": 0.05,
+            "timeout": 2.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS: WaitUntil"
+          },
+          {
+            "type": "Count",
+            "initial_count": 0,
+            "increment": 1
+          },
+          {
+            "type": "Print",
+            "message": "PASS: Count"
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "b",
+            "new_value": 2
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAll",
+              "conditions": [
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "a",
+                  "comparison_operator": 0,
+                  "expected_value": 1,
+                  "auto_convert_types": true
+                },
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "b",
+                  "comparison_operator": 0,
+                  "expected_value": 2,
+                  "auto_convert_types": true
+                }
+              ],
+              "short_circuit": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckAll(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckAll(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAll",
+              "conditions": [
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "a",
+                  "comparison_operator": 0,
+                  "expected_value": 1,
+                  "auto_convert_types": true
+                },
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "b",
+                  "comparison_operator": 0,
+                  "expected_value": 99,
+                  "auto_convert_types": true
+                }
+              ],
+              "short_circuit": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckAll(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckAll(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAny",
+              "conditions": [
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "a",
+                  "comparison_operator": 0,
+                  "expected_value": 9,
+                  "auto_convert_types": true
+                },
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "b",
+                  "comparison_operator": 0,
+                  "expected_value": 2,
+                  "auto_convert_types": true
+                }
+              ],
+              "short_circuit": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckAny(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckAny(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAny",
+              "conditions": [
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "a",
+                  "comparison_operator": 0,
+                  "expected_value": 9,
+                  "auto_convert_types": true
+                },
+                {
+                  "type": "CheckVariable",
+                  "variable_name": "b",
+                  "comparison_operator": 0,
+                  "expected_value": 9,
+                  "auto_convert_types": true
+                }
+              ],
+              "short_circuit": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckAny(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckAny(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNot",
+              "inner_condition": {
+                "type": "CheckVariable",
+                "variable_name": "a",
+                "comparison_operator": 0,
+                "expected_value": 1,
+                "auto_convert_types": true
+              }
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckNot(true-inner)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckNot(true-inner)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNot",
+              "inner_condition": {
+                "type": "CheckVariable",
+                "variable_name": "a",
+                "comparison_operator": 0,
+                "expected_value": 9,
+                "auto_convert_types": true
+              }
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckNot(false-inner)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckNot(false-inner)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckComposite",
+              "logic_tree_serialized": [
+                {
+                  "operator": "AND",
+                  "conditions": [
+                    {
+                      "type": "CheckVariable",
+                      "variable_name": "a",
+                      "comparison_operator": 0,
+                      "expected_value": 1,
+                      "auto_convert_types": true
+                    },
+                    {
+                      "type": "CheckVariable",
+                      "variable_name": "b",
+                      "comparison_operator": 0,
+                      "expected_value": 2,
+                      "auto_convert_types": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckComposite"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckComposite"
+              }
+            ]
+          },
+          {
+            "type": "PauseGame",
+            "show_pause_menu": false
+          },
+          {
+            "type": "ResumeGame",
+            "close_pause_menu": false
+          },
+          {
+            "type": "Print",
+            "message": "PASS: PauseGame+ResumeGame"
+          },
+          {
+            "type": "WaitForEvent",
+            "event_name": "fc_event",
+            "timeout": 3.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS: WaitForEvent"
+          },
+          {
+            "type": "WaitForSignal",
+            "target_node": "../Timer1",
+            "target_signal": "timeout",
+            "timeout": 3.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS: WaitForSignal"
+          },
+          {
+            "type": "RunRunner",
+            "target_runner": "../MiniRunner",
+            "wait_for_completion": true
+          },
+          {
+            "type": "Print",
+            "message": "PASS: RunRunner(调用)"
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_flow_control DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInterval",
+        "interval_seconds": 0.6,
+        "auto_start": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "SendEvent",
+            "event_name": "fc_event",
+            "deferred": false
+          }
+        ]
+      }
+    }
+  ]
+}

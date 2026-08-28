@@ -66,14 +66,8 @@ func execute(context: ExecutionContext):
 	_start_execution(context)
 
 	# 检查是否在循环中
-	if not context.is_in_loop():
-		_log_error_localized("FUSE_ERROR_BREAK_NOT_IN_LOOP", {})
-		set_error_localized("FUSE_ERROR_BREAK_NOT_IN_LOOP", FuseError.ErrorType.RUNTIME_ERROR, {})
-		finished.emit()
-		return
-
 	# 设置 break 标志
-	context.set_break_loop_flag()
+	context.set_break_loop()
 	_log_info_localized("FUSE_LOG_BREAK_DETECTED", {"index": str(context.get_current_loop_index() if context.has_method("get_current_loop_index") else "?")})
 	_on_execution_completed()
 
