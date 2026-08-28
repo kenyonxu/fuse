@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/trigger.gd" id="1_wwuba"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_k0v6o"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_uc4uv"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_r2bg0"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="5_mi2no"]
+
+[sub_resource type="Resource" id="Resource_tl42k"]
+script = ExtResource("2_k0v6o")
+
+[sub_resource type="Resource" id="Resource_lerw3"]
+resource_name = "打印: === deep_scene_b 到达 ==="
+script = ExtResource("4_r2bg0")
+message = "=== deep_scene_b 到达 ==="
+
+[sub_resource type="Resource" id="Resource_1dhbl"]
+resource_name = "打印: PASS: ChangeScene(到达B)"
+script = ExtResource("4_r2bg0")
+message = "PASS: ChangeScene(到达B)"
+
+[sub_resource type="Resource" id="Resource_5pudg"]
+resource_name = "打印: PASS: OnSceneLoaded(B)"
+script = ExtResource("4_r2bg0")
+message = "PASS: OnSceneLoaded(B)"
+
+[sub_resource type="Resource" id="Resource_rp6u0"]
+resource_name = "打印: PASS(m): ReloadScene(F5 手动验)"
+script = ExtResource("4_r2bg0")
+message = "PASS(m): ReloadScene(F5 手动验)"
+
+[sub_resource type="Resource" id="Resource_ab0b3"]
+script = ExtResource("5_mi2no")
+instructions = Array[ExtResource("3_uc4uv")]([SubResource("Resource_lerw3"), SubResource("Resource_1dhbl"), SubResource("Resource_5pudg"), SubResource("Resource_rp6u0")])
+
+[node name="test_deep_scene_b" type="Node2D" unique_id=923541117]
+
+[node name="DeepSceneB" type="Node" parent="." unique_id=1086062927]
+script = ExtResource("1_wwuba")
+event_definition = SubResource("Resource_tl42k")
+action_runner = SubResource("Resource_ab0b3")
+trigger_once = true

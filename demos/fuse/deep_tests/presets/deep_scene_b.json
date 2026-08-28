@@ -1,0 +1,42 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "DeepSceneB",
+  "category": "scene",
+  "description": "Scene 场景跳转目标 B",
+  "icon_name": "",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "Print",
+        "message": "=== deep_scene_b 到达 ==="
+      },
+      {
+        "type": "Print",
+        "message": "PASS: ChangeScene(到达B)"
+      },
+      {
+        "type": "Print",
+        "message": "PASS: OnSceneLoaded(B)"
+      },
+      {
+        "type": "Print",
+        "message": "PASS(m): ReloadScene(F5 手动验)"
+      }
+    ]
+  },
+  "event": {
+    "type": "OnReady"
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}

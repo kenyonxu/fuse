@@ -91,7 +91,22 @@ def expected_pass_count(preset):
 
 
 def write_preset(preset, out_path):
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(preset, f, ensure_ascii=False, indent=2)
+    text = json.dumps(preset, ensure_ascii=False, indent=2)
+    # Windows + Godot 编辑器目录监视器会在扫描时短暂锁住写入口——留足重试窗口
+    import os
+    import time
+    for _ in range(12):
+        try:
+            with open(out_path, "w", encoding="utf-8") as f:
+                f.write(text)
+            break
+        except FileNotFoundError as e:
+            try:
+                os.remove(out_path)
+            except OSError:
+                pass
+            time.sleep(0.5)
+    else:
+        raise RuntimeError("写入失败: %s" % out_path)
     n = expected_pass_count(preset)
     print(f"written {out_path}: 预期唯一 PASS 标记 {n} 个")

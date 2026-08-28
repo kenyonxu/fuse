@@ -35,6 +35,9 @@ func get_default_runtime_state() -> Dictionary:
 	return base
 
 ## 使用 RuntimeInstance 初始化事件
+## tween_node_path 语义：**Tween 目标节点**路径——Tween 是 RefCounted 不进场景树，
+## BaseTweenInstruction 创建 tween 时注册到目标节点 meta "_fuse_tween"，
+## 事件轮询发现后连接 finished（初始化先于 tween 创建属常态）
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance) -> void:
 	if Engine.is_editor_hint():
 		return
@@ -52,31 +55,31 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
 
-	# 获取目标节点
-	var tween_node = owner_node.get_node_or_null(tween_node_path)
-	if not tween_node:
-		_create_fuse_error_localized("FUSE_ERROR_TWEEN_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {
-			"node_path": str(tween_node_path)
-		})
-		return
-
-	# 验证节点类型
-	if not tween_node is Tween:
-		_create_fuse_error_localized("FUSE_ERROR_INVALID_TARGET", FuseError.ErrorType.CONFIGURATION_ERROR, {
-			"node_path": str(tween_node_path)
-		})
-		return
-
-	_tween = tween_node
-
-	# 连接 finished 信号（Godot 4.6 使用 finished 信号）
-	if not _tween.finished.is_connected(_on_tween_finished):
-		_tween.finished.connect(_on_tween_finished)
-
-	# 初始化运行时状态
 	_runtime_instance_ref.set_runtime_state("is_monitoring", true)
+	_runtime_instance_ref.set_runtime_state("tween_connected", false)
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
+
+
+## 每帧轮询：目标节点出现 _fuse_tween 注册即连接 finished（tween 晚于事件初始化的场景）
+func on_process(_delta: float, event_instance: RuntimeEventInstance = null) -> void:
+	if _runtime_instance_ref == null or _owner_node_ref == null:
+		return
+	if not _runtime_instance_ref.has_runtime_state("is_monitoring"):
+		return
+	if not _runtime_instance_ref.get_runtime_state("is_monitoring"):
+		return
+	if _runtime_instance_ref.get_runtime_state("tween_connected"):
+		return
+
+	var target: Node = _owner_node_ref.get_node_or_null(tween_node_path)
+	if target == null or not target.has_meta("_fuse_tween"):
+		return
+
+	var tween: Tween = target.get_meta("_fuse_tween")
+	_tween = tween
+	tween.finished.connect(_on_tween_finished)
+	_runtime_instance_ref.set_runtime_state("tween_connected", true)
 
 ## Tween 完成回调
 func _on_tween_finished() -> void:
@@ -88,7 +91,8 @@ func _on_tween_finished() -> void:
 		return
 
 	_log_debug_localized("FUSE_LOG_EVENT_TWEEN_COMPLETED", {
-		"node": _tween.name
+		# Tween 是 RefCounted 无 name——用监听的目标节点路径
+		"node": str(tween_node_path)
 	})
 
 	# 创建上下文节点传递 Tween 引用

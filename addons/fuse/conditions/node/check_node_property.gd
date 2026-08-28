@@ -536,6 +536,15 @@ func _compare_equal(a: Variant, b: Variant) -> bool:
 	if _is_numeric(a) and b is String:
 		return _to_number(a) == _to_number(b)
 
+	# 引擎值类型（Vector2/Color 等）与规范字符串比较——str_to_var 需类型前缀
+	# （preset JSON 的 Variant 属性只能给 "(x, y)" 字符串形）
+	var a_type := typeof(a)
+	if b is String and a_type in [TYPE_VECTOR2, TYPE_VECTOR2I, TYPE_VECTOR3, TYPE_VECTOR3I,
+			TYPE_COLOR, TYPE_RECT2, TYPE_RECT2I, TYPE_QUATERNION]:
+		var parsed: Variant = str_to_var(type_string(a_type) + b)
+		if parsed != null:
+			return a == parsed
+
 	return a == b
 
 ## 检查是否为数值类型

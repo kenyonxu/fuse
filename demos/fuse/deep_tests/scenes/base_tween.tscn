@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Main Characters/Mask Dude/Idle (32x32).png" id="1_idle"]
+
+[node name="Base" type="Node2D"]
+
+[node name="S" type="Sprite2D" parent="."]
+position = Vector2(0, 0)
+texture = ExtResource("1_idle")

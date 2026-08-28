@@ -1,0 +1,238 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepCamera",
+  "category": "camera",
+  "description": "深度测试·Camera：7 指令",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "cam_pos",
+      "cexp"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_camera START ==="
+          },
+          {
+            "type": "SetCameraZoom",
+            "target_node": "../Cam",
+            "zoom": 2.0,
+            "zoom_mode": 0
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Cam",
+              "property_name": "zoom",
+              "property_value": "(2.0, 2.0)"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetCameraZoom"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetCameraZoom"
+              }
+            ]
+          },
+          {
+            "type": "SetCameraLimit",
+            "target_node": "../Cam",
+            "limit_side": 2,
+            "limit_value": -100
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Cam",
+              "property_name": "limit_left",
+              "property_value": -100
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetCameraLimit(Left)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetCameraLimit(Left)"
+              }
+            ]
+          },
+          {
+            "type": "SetCameraLimit",
+            "target_node": "../Cam",
+            "limit_side": 3,
+            "limit_value": 600
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Cam",
+              "property_name": "limit_right",
+              "property_value": 600
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetCameraLimit(Right)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetCameraLimit(Right)"
+              }
+            ]
+          },
+          {
+            "type": "SetCameraLimitFromArea2D",
+            "camera_node": "../Cam",
+            "bounds_area": "../Bounds"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Cam",
+              "property_name": "limit_left",
+              "property_value": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetCameraLimitFromArea2D(left)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetCameraLimitFromArea2D(left)"
+              }
+            ]
+          },
+          {
+            "type": "SetPosition",
+            "target_node": "../Player",
+            "position": "(400.0, 0.0, 0.0)"
+          },
+          {
+            "type": "CameraFollow",
+            "target_node": "../Player",
+            "camera_node": "../Cam",
+            "follow_mode": 0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Cam",
+            "save_to_variable": "cam_pos"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(400, 0)",
+            "output_type": 2,
+            "save_to_variable": "cexp"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cam_pos",
+              "check_with_another_variable": true,
+              "compare_variable": "cexp",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CameraFollow"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CameraFollow"
+              }
+            ]
+          },
+          {
+            "type": "CameraShake",
+            "target_node": "../Cam",
+            "intensity": 0.3,
+            "duration": 0.5
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): CameraShake(F5 观感)"
+          },
+          {
+            "type": "CameraFadeOut",
+            "color": "(0, 0, 0, 1)",
+            "duration": 0.4
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.6
+          },
+          {
+            "type": "CameraFadeIn",
+            "color": "(0, 0, 0, 1)",
+            "duration": 0.4
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.6
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): CameraFadeOut+CameraFadeIn(F5 观感)"
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_camera DONE ==="
+          }
+        ]
+      }
+    }
+  ]
+}

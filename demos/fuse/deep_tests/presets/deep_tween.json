@@ -1,0 +1,454 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepTween",
+  "category": "tween",
+  "description": "深度测试·Tween：13 指令 + OnTweenCompleted",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "paused_pos",
+      "resumed_pos",
+      "texp",
+      "texp2",
+      "texp3",
+      "tp",
+      "tp2"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_tween START ==="
+          },
+          {
+            "type": "TweenMoveTo",
+            "target_node": "../S",
+            "target_position": "(100.0, 50.0)",
+            "duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.6
+          },
+          {
+            "type": "GetPosition",
+            "target": "../S",
+            "save_to_variable": "tp"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(100, 50)",
+            "output_type": 2,
+            "save_to_variable": "texp"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "tp",
+              "check_with_another_variable": true,
+              "compare_variable": "texp",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenMoveTo"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenMoveTo"
+              }
+            ]
+          },
+          {
+            "type": "TweenRotateTo",
+            "target_node": "../S",
+            "target_rotation": 1.5,
+            "duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.6
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../S",
+              "property_name": "rotation",
+              "property_value": 1.5
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenRotateTo"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenRotateTo"
+              }
+            ]
+          },
+          {
+            "type": "TweenScaleTo",
+            "target_node": "../S",
+            "target_scale": "(2.0, 2.0)",
+            "duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.6
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../S",
+              "property_name": "scale",
+              "property_value": "(2.0, 2.0)"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenScaleTo"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenScaleTo"
+              }
+            ]
+          },
+          {
+            "type": "TweenPropertyInstruction",
+            "target_node": "../S",
+            "property_source": 0,
+            "property_path": "position",
+            "to_value": "(0.0, 0.0)",
+            "duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.6
+          },
+          {
+            "type": "GetPosition",
+            "target": "../S",
+            "save_to_variable": "tp2"
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(0, 0)",
+            "output_type": 2,
+            "save_to_variable": "texp2"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "tp2",
+              "check_with_another_variable": true,
+              "compare_variable": "texp2",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenPropertyInstruction"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenPropertyInstruction"
+              }
+            ]
+          },
+          {
+            "type": "TweenFadeOut",
+            "target_node": "../S",
+            "duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../S",
+              "property_name": "modulate:a",
+              "property_value": 0.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenFadeOut"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenFadeOut"
+              }
+            ]
+          },
+          {
+            "type": "TweenFadeIn",
+            "target_node": "../S",
+            "duration": 0.3
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../S",
+              "property_name": "modulate:a",
+              "property_value": 1.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenFadeIn"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenFadeIn"
+              }
+            ]
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(200, 100)",
+            "output_type": 2,
+            "save_to_variable": "texp3"
+          },
+          {
+            "type": "TweenMoveTo",
+            "target_node": "../S",
+            "target_position": "(200.0, 100.0)",
+            "duration": 1.2
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "TweenPause",
+            "target_node": "../S"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.4
+          },
+          {
+            "type": "GetPosition",
+            "target": "../S",
+            "save_to_variable": "paused_pos"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "paused_pos",
+              "check_with_another_variable": true,
+              "compare_variable": "texp3",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenPause(暂停中未达目标)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenPause(暂停中未达目标)"
+              }
+            ]
+          },
+          {
+            "type": "TweenResume",
+            "target_node": "../S"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.6
+          },
+          {
+            "type": "GetPosition",
+            "target": "../S",
+            "save_to_variable": "resumed_pos"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "resumed_pos",
+              "check_with_another_variable": true,
+              "compare_variable": "texp3",
+              "comparison_operator": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: TweenResume(最终到达)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: TweenResume(最终到达)"
+              }
+            ]
+          },
+          {
+            "type": "TweenBounceAnimation",
+            "target_node": "../S",
+            "bounce_height": 50.0,
+            "duration": 0.6
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): TweenBounceAnimation"
+          },
+          {
+            "type": "TweenPopAnimation",
+            "target_node": "../S",
+            "target_scale": "(1.5, 1.5)",
+            "duration": 0.5
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): TweenPopAnimation"
+          },
+          {
+            "type": "TweenPulseAnimation",
+            "target_node": "../S",
+            "min_scale": "(0.8, 0.8)",
+            "max_scale": "(1.3, 1.3)",
+            "duration": 0.6
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): TweenPulseAnimation"
+          },
+          {
+            "type": "TweenShakeAnimation",
+            "target_node": "../S",
+            "intensity": 0.5,
+            "duration": 0.5
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): TweenShakeAnimation"
+          },
+          {
+            "type": "TweenColorTransition",
+            "target_node": "../S",
+            "target_color": "(1, 0, 0, 1)",
+            "duration": 0.5
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): TweenColorTransition"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.8
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_tween DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnTweenCompleted",
+        "tween_node_path": "../S"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnTweenCompleted"
+          }
+        ]
+      }
+    }
+  ]
+}

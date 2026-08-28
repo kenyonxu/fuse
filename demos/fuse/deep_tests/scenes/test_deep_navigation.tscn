@@ -1,17 +1,18 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://celis7qhnhhlb"]
 
-[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_3t1tj"]
-[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_wn2lo"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_sylrw"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_4n25a"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/navigation/check_path_available.gd" id="5_1gmjx"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="6_go5ni"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_vy2t6"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="8_7ce8k"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/navigation/navigate_to_position.gd" id="9_cujg4"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="10_u4gst"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_28ypi"]
-[ext_resource type="Script" path="res://addons/fuse/events/navigation/on_navigation_target_reached.gd" id="12_1fyhf"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_3t1tj"]
+[ext_resource type="Texture2D" uid="uid://igfanid0y2wo" path="res://addons/at-icons/mesh/cat.svg" id="1_j1ft2"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="2_wn2lo"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_sylrw"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="4_4n25a"]
+[ext_resource type="Script" uid="uid://6b4bga1agaa0" path="res://addons/fuse/conditions/navigation/check_path_available.gd" id="5_1gmjx"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="6_go5ni"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_vy2t6"]
+[ext_resource type="Script" uid="uid://cmu6yuufyy78a" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="8_7ce8k"]
+[ext_resource type="Script" uid="uid://0ce04a2a22af" path="res://addons/fuse/instructions/navigation/navigate_to_position.gd" id="9_cujg4"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="10_u4gst"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_28ypi"]
+[ext_resource type="Script" uid="uid://414502ddb6c2" path="res://addons/fuse/events/navigation/on_navigation_target_reached.gd" id="12_1fyhf"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_sq"]
 vertices = PackedVector2Array(0, 0, 200, 0, 200, 200, 0, 200)
@@ -174,7 +175,12 @@ position = Vector2(20, 100)
 [node name="NavAgent" type="NavigationAgent2D" parent="Agent" unique_id=491865544]
 target_position = Vector2(20, 100)
 
+[node name="Sprite2D" type="Sprite2D" parent="Agent" unique_id=890339636]
+texture = ExtResource("1_j1ft2")
+
 [node name="DeepNavigation" type="Node" parent="." unique_id=2095603600]
 script = ExtResource("1_3t1tj")
 event_bindings = Array[ExtResource("2_wn2lo")]([SubResource("Resource_nttyv"), SubResource("Resource_m2cdw")])
 use_parallel_condition_evaluation = false
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=319435737]

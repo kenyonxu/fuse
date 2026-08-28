@@ -1,0 +1,296 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepScene",
+  "category": "scene",
+  "description": "深度测试·Scene：6 指令 + 1 条件 + 5 事件",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "bg",
+      "sp"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_scene START ==="
+          },
+          {
+            "type": "PreloadSceneInstruction",
+            "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn",
+            "preload_mode": 0,
+            "timeout": 5.0,
+            "status_variable": "pl"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckPreloadStatus",
+              "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn",
+              "expected_status": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: PreloadSceneInstruction+CheckPreloadStatus(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: PreloadSceneInstruction+CheckPreloadStatus(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckPreloadStatus",
+              "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn",
+              "expected_status": 3
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckPreloadStatus(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckPreloadStatus(neg)"
+              }
+            ]
+          },
+          {
+            "type": "GetScenePath",
+            "path_mode": 0,
+            "save_to_variable": "sp"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "sp",
+              "comparison_operator": 6,
+              "expected_value": "deep_scene",
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetScenePath"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetScenePath"
+              }
+            ]
+          },
+          {
+            "type": "LoadSceneBackground",
+            "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
+            "save_to_variable": "bg"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "bg",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: LoadSceneBackground"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: LoadSceneBackground"
+              }
+            ]
+          },
+          {
+            "type": "AddSceneAsChild",
+            "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
+            "target_parent": "..",
+            "new_node_name": "AddedChild"
+          },
+          {
+            "type": "GetNode",
+            "node_path": "../AddedChild",
+            "result_variable": "added"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "added",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: AddSceneAsChild"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: AddSceneAsChild"
+              }
+            ]
+          },
+          {
+            "type": "PauseGame",
+            "show_pause_menu": false
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "ResumeGame",
+            "close_pause_menu": false
+          },
+          {
+            "type": "Print",
+            "message": "PASS: PauseGame/ResumeGame(供OnNodePausedResumed)"
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): ReloadScene(F5 手动验)"
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_scene 主链 DONE，即将切 B ==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "ChangeScene",
+            "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnBackgroundLoadProgress",
+        "load_resource_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
+        "progress_threshold": 1.0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnBackgroundLoadProgress"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnTreeChanged",
+        "change_type": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnTreeChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnNodePausedResumed",
+        "target_node": "../Targets/A",
+        "trigger_on": 2,
+        "check_interval": 0.05
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnNodePausedResumed"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnSceneAboutToChange"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnSceneAboutToChange"
+          }
+        ]
+      }
+    }
+  ]
+}

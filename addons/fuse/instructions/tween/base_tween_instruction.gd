@@ -63,6 +63,9 @@ enum TransitionType {
 ## - Tween - 创建的 Tween 对象
 func _create_tween(target: Node) -> Tween:
 	var tween = target.create_tween()
+	# 注册到目标节点 meta——Tween 是 RefCounted 不进场景树，
+	# OnTweenCompleted 经目标节点路径发现并监听（最新 tween 覆盖旧注册）
+	target.set_meta("_fuse_tween", tween)
 	if use_physics_process:
 		tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	return tween

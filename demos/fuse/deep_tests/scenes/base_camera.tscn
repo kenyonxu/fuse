@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[sub_resource type="RectangleShape2D" id="Rect_bounds"]
+size = Vector2(200, 100)
+
+[node name="Base" type="Node2D"]
+
+[node name="Cam" type="Camera2D" parent="."]
+position = Vector2(100, 50)
+
+[node name="Player" type="Node2D" parent="."]
+
+[node name="Bounds" type="Area2D" parent="."]
+position = Vector2(100, 50)
+
+[node name="Shape" type="CollisionShape2D" parent="Bounds"]
+shape = SubResource("Rect_bounds")
+
+[node name="Marker1" type="Node2D" parent="."]
+position = Vector2(400, 0)
+
+[node name="Marker2" type="Node2D" parent="."]
+position = Vector2(-400, 0)
