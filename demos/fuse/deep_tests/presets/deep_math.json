@@ -1,0 +1,406 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "DeepMath",
+  "category": "math",
+  "description": "深度测试·Math：8 指令 + ExpressionCondition + CheckDistance",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "cv",
+      "lp",
+      "me",
+      "mo",
+      "p1",
+      "p2",
+      "rn",
+      "rpt",
+      "se",
+      "va",
+      "vexp",
+      "vsum"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "Print",
+        "message": "=== deep_math START ==="
+      },
+      {
+        "type": "MathOperation",
+        "operation_type": 0,
+        "operand_a_source": 0,
+        "operand_a_value": 7,
+        "operand_b_source": 0,
+        "operand_b_value": 5,
+        "save_to_variable": "mo"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "mo",
+          "comparison_operator": 0,
+          "expected_value": 12,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: MathOperation"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: MathOperation"
+          }
+        ]
+      },
+      {
+        "type": "MathExpression",
+        "expression": "(3+4)*2",
+        "output_type": 0,
+        "save_to_variable": "me"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "me",
+          "comparison_operator": 0,
+          "expected_value": 14,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: MathExpression"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: MathExpression"
+          }
+        ]
+      },
+      {
+        "type": "ClampValue",
+        "value_source": 0,
+        "value": 15,
+        "min_value": 0,
+        "max_value": 10,
+        "save_to_variable": "cv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "cv",
+          "comparison_operator": 0,
+          "expected_value": 10,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ClampValue"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ClampValue"
+          }
+        ]
+      },
+      {
+        "type": "Lerp",
+        "from_source": 0,
+        "from_value": 0,
+        "to_source": 0,
+        "to_value": 10,
+        "weight_source": 0,
+        "weight": 0.5,
+        "save_to_variable": "lp"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "lp",
+          "comparison_operator": 0,
+          "expected_value": 5,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: Lerp"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: Lerp"
+          }
+        ]
+      },
+      {
+        "type": "RandomNumber",
+        "min_value": 5,
+        "max_value": 5,
+        "is_integer": true,
+        "save_to_variable": "rn"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "rn",
+          "comparison_operator": 0,
+          "expected_value": 5,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: RandomNumber"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: RandomNumber"
+          }
+        ]
+      },
+      {
+        "type": "GetRandomPointInRange",
+        "dimension_mode": 0,
+        "origin_mode": 0,
+        "origin_direct_2d": "(0.0, 0.0)",
+        "range_mode": 0,
+        "range_direct_2d": "(10.0, 10.0)",
+        "save_to_variable": "rpt"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "rpt",
+          "check_with_another_variable": true,
+          "compare_variable": "rpt",
+          "comparison_operator": 0,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: GetRandomPointInRange"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: GetRandomPointInRange"
+          }
+        ]
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(1, 2)",
+        "output_type": 2,
+        "save_to_variable": "va"
+      },
+      {
+        "type": "VectorOperation",
+        "operation_type": 0,
+        "vector_type": 0,
+        "vector_a_variable": "va",
+        "vector_b_use_variable": false,
+        "vector_b_value": "(10.0, 10.0)",
+        "save_to_variable": "vsum"
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(11, 12)",
+        "output_type": 2,
+        "save_to_variable": "vexp"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "vsum",
+          "check_with_another_variable": true,
+          "compare_variable": "vexp",
+          "comparison_operator": 0,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: VectorOperation"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: VectorOperation"
+          }
+        ]
+      },
+      {
+        "type": "StringExpression",
+        "expression": "\"ab\" + \"cd\"",
+        "save_to_variable": "se"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "se",
+          "comparison_operator": 0,
+          "expected_value": "abcd",
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringExpression"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringExpression"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "ExpressionCondition",
+          "expression": "5 > 3"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ExpressionCondition(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ExpressionCondition(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "ExpressionCondition",
+          "expression": "5 < 3"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: ExpressionCondition(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: ExpressionCondition(neg)"
+          }
+        ]
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(0, 0)",
+        "output_type": 2,
+        "save_to_variable": "p1"
+      },
+      {
+        "type": "MathExpression",
+        "expression": "Vector2(3, 4)",
+        "output_type": 2,
+        "save_to_variable": "p2"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckDistance",
+          "comparison_operator": 1,
+          "threshold": 6,
+          "source_node": "../Targets/A",
+          "target_node": "../Targets/B"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckDistance(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckDistance(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckDistance",
+          "comparison_operator": 0,
+          "threshold": 6,
+          "source_node": "../Targets/A",
+          "target_node": "../Targets/B"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckDistance(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckDistance(neg)"
+          }
+        ]
+      },
+      {
+        "type": "Print",
+        "message": "=== deep_math DONE ==="
+      }
+    ]
+  },
+  "event": {
+    "type": "OnReady"
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}

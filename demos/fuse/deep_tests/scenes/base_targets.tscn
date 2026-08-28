@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[node name="Base" type="Node2D"]
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="A" type="Node2D" parent="Targets" position="Vector2(0, 0)"]
+
+[node name="B" type="Node2D" parent="Targets" position="Vector2(3, 4)"]
+
+[node name="C" type="Node2D" parent="Targets" position="Vector2(100, 100)"]

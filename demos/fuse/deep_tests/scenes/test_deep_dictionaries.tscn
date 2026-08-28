@@ -1,0 +1,1175 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/trigger.gd" id="1_x2yfi"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_ly88w"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_je6yy"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_mecu6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/create_variable.gd" id="5_0lwxi"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_set_key_value.gd" id="6_b18nc"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_get_value.gd" id="7_ni2jl"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="8_ukgqq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_q5hbg"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_set_by_path.gd" id="10_nf76u"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_get_by_path.gd" id="11_y3d33"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_size.gd" id="12_1fqwq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_get_keys.gd" id="13_3cn2d"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_get_values.gd" id="14_e0gda"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_remove_key.gd" id="15_bw1hv"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_modify_number.gd" id="16_vwtsh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_math_op.gd" id="17_dmr30"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_toggle_boolean.gd" id="18_wsa2x"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_merge.gd" id="19_uev78"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_duplicate.gd" id="20_op65x"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_to_json.gd" id="21_fqw3t"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_from_json.gd" id="22_hcp5l"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/dictionaries/dict_clear.gd" id="23_hpk8g"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/dictionaries/check_dict_contains_key.gd" id="24_t6ewx"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/dictionaries/check_dict_size.gd" id="25_6p8wi"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="26_8y4hw"]
+
+[sub_resource type="Resource" id="Resource_jyeml"]
+script = ExtResource("2_ly88w")
+
+[sub_resource type="Resource" id="Resource_bbiev"]
+resource_name = "打印: === deep_dictionaries START ==="
+script = ExtResource("4_mecu6")
+message = "=== deep_dictionaries START ==="
+
+[sub_resource type="Resource" id="Resource_ekdjm"]
+resource_name = "创建变量 [LOCAL] d = { \"hp\": 10.0..."
+script = ExtResource("5_0lwxi")
+variable_name = "d"
+value = {
+"hp": 10.0,
+"mp": 5.0
+}
+
+[sub_resource type="Resource" id="Resource_epx6d"]
+resource_name = "Dict Set 字典 d [gold] = 100.0"
+script = ExtResource("6_b18nc")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+key_value = "gold"
+value_from_variable = ""
+value_from_variable_scope = 0
+value_scope_source = 0
+value_custom_scope_id = ""
+value_target_node_path = NodePath("")
+to_value = 100.0
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+use_value_from_variable = false
+
+[sub_resource type="Resource" id="Resource_50jgo"]
+resource_name = "Dict Get 字典 d [\"gold\"] → gv"
+script = ExtResource("7_ni2jl")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_variable = ""
+key_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path_for_scope = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+key_source_type = 0
+key_value = "gold"
+default_value = null
+target_variable = "gv"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_efwpo"]
+resource_name = "检查变量 [[本地]]: gv EQUALS 100.0"
+script = ExtResource("8_ukgqq")
+variable_name = "gv"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 100.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_po1xq"]
+resource_name = "打印: FAIL: DictSetKeyValue/DictGetValue"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictSetKeyValue/DictGetValue"
+
+[sub_resource type="Resource" id="Resource_yllcc"]
+resource_name = "打印: PASS: DictSetKeyValue/DictGetValue"
+script = ExtResource("4_mecu6")
+message = "PASS: DictSetKeyValue/DictGetValue"
+
+[sub_resource type="Resource" id="Resource_rmf58"]
+resource_name = "If/Else gv [[本地]] EQUALS 100.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_efwpo")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_yllcc")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_po1xq")])
+
+[sub_resource type="Resource" id="Resource_46cm0"]
+resource_name = "Dict SetByPath: d[player.name] = Ninja"
+script = ExtResource("10_nf76u")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+path_from_variable = ""
+path_variable_scope = 0
+value_to_set = "Ninja"
+value_from_variable = ""
+value_variable_scope = 0
+dict_variable = "d"
+dict_scope = 0
+path_string = "player.name"
+path_separator = "."
+use_path_from_variable = false
+use_value_from_variable = false
+
+[sub_resource type="Resource" id="Resource_ma8rs"]
+resource_name = "Dict Get Path 字典 d [\"player.name\"] → pn"
+script = ExtResource("11_y3d33")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+path_variable = ""
+path_variable_scope = 0
+path_scope_source = 0
+path_custom_scope_id = ""
+path_target_node_path_for_scope = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+path_source_type = 0
+path_value = "player.name"
+path_separator = "."
+default_value = ""
+target_variable = "pn"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_repc3"]
+resource_name = "检查变量 [[本地]]: pn EQUALS Ninja"
+script = ExtResource("8_ukgqq")
+variable_name = "pn"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = "Ninja"
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_mxtos"]
+resource_name = "打印: FAIL: DictSetByPath/DictGetByPath"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictSetByPath/DictGetByPath"
+
+[sub_resource type="Resource" id="Resource_qpsvk"]
+resource_name = "打印: PASS: DictSetByPath/DictGetByPath"
+script = ExtResource("4_mecu6")
+message = "PASS: DictSetByPath/DictGetByPath"
+
+[sub_resource type="Resource" id="Resource_c0ygg"]
+resource_name = "If/Else pn [[本地]] EQUALS Ninja [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_repc3")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_qpsvk")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_mxtos")])
+
+[sub_resource type="Resource" id="Resource_faohl"]
+resource_name = "Dict Size 字典 d → dsz"
+script = ExtResource("12_1fqwq")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+target_variable = "dsz"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_irri2"]
+resource_name = "检查变量 [[本地]]: dsz EQUALS 4.0"
+script = ExtResource("8_ukgqq")
+variable_name = "dsz"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 4.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_1xceq"]
+resource_name = "打印: FAIL: DictSize"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictSize"
+
+[sub_resource type="Resource" id="Resource_ny7wp"]
+resource_name = "打印: PASS: DictSize"
+script = ExtResource("4_mecu6")
+message = "PASS: DictSize"
+
+[sub_resource type="Resource" id="Resource_cv57v"]
+resource_name = "If/Else dsz [[本地]] EQUALS 4.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_irri2")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_ny7wp")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_1xceq")])
+
+[sub_resource type="Resource" id="Resource_o3t1n"]
+resource_name = "Dict Get Keys 字典 d → dkeys"
+script = ExtResource("13_3cn2d")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+target_variable = "dkeys"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_6pon1"]
+resource_name = "检查变量 [[本地]]: dkeys CONTAINS gold"
+script = ExtResource("8_ukgqq")
+variable_name = "dkeys"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = "gold"
+variable_scope = 0
+comparison_operator = 6
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_57gk5"]
+resource_name = "打印: FAIL: DictGetKeys"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictGetKeys"
+
+[sub_resource type="Resource" id="Resource_d2byx"]
+resource_name = "打印: PASS: DictGetKeys"
+script = ExtResource("4_mecu6")
+message = "PASS: DictGetKeys"
+
+[sub_resource type="Resource" id="Resource_2f47o"]
+resource_name = "If/Else dkeys [[本地]] CONTAINS gold [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_6pon1")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_d2byx")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_57gk5")])
+
+[sub_resource type="Resource" id="Resource_unlrj"]
+resource_name = "Dict Get Values 字典 d → dvals"
+script = ExtResource("14_e0gda")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+target_variable = "dvals"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_5bcxk"]
+resource_name = "检查变量 [[本地]]: dvals CONTAINS 100.0"
+script = ExtResource("8_ukgqq")
+variable_name = "dvals"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 100.0
+variable_scope = 0
+comparison_operator = 6
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_mkheq"]
+resource_name = "打印: FAIL: DictGetValues"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictGetValues"
+
+[sub_resource type="Resource" id="Resource_dofd8"]
+resource_name = "打印: PASS: DictGetValues"
+script = ExtResource("4_mecu6")
+message = "PASS: DictGetValues"
+
+[sub_resource type="Resource" id="Resource_xk4vd"]
+resource_name = "If/Else dvals [[本地]] CONTAINS 100.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_5bcxk")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_dofd8")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_mkheq")])
+
+[sub_resource type="Resource" id="Resource_hu4u1"]
+resource_name = "Dict Remove Key <未指定字典> × "
+script = ExtResource("15_bw1hv")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_value = "mp"
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+
+[sub_resource type="Resource" id="Resource_1hcnj"]
+resource_name = "Dict Size 字典 d → dsz2"
+script = ExtResource("12_1fqwq")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+target_variable = "dsz2"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_q5dm7"]
+resource_name = "检查变量 [[本地]]: dsz2 EQUALS 3.0"
+script = ExtResource("8_ukgqq")
+variable_name = "dsz2"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 3.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_opnmr"]
+resource_name = "打印: FAIL: DictRemoveKey"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictRemoveKey"
+
+[sub_resource type="Resource" id="Resource_gcoqr"]
+resource_name = "打印: PASS: DictRemoveKey"
+script = ExtResource("4_mecu6")
+message = "PASS: DictRemoveKey"
+
+[sub_resource type="Resource" id="Resource_d47ti"]
+resource_name = "If/Else dsz2 [[本地]] EQUALS 3.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_q5dm7")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_gcoqr")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_opnmr")])
+
+[sub_resource type="Resource" id="Resource_jkv81"]
+resource_name = "Dict Modify 字典 d [hp] += 5.0"
+script = ExtResource("16_vwtsh")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+amount_from_variable = ""
+amount_from_variable_scope = 0
+amount_scope_source = 0
+amount_custom_scope_id = ""
+amount_target_node_path = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+key_value = "hp"
+operation = 0
+use_amount_from_variable = false
+amount = 5.0
+
+[sub_resource type="Resource" id="Resource_ptyju"]
+resource_name = "Dict Get 字典 d [\"hp\"] → hpv"
+script = ExtResource("7_ni2jl")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_variable = ""
+key_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path_for_scope = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+key_source_type = 0
+key_value = "hp"
+default_value = null
+target_variable = "hpv"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_0ax2t"]
+resource_name = "检查变量 [[本地]]: hpv EQUALS 15.0"
+script = ExtResource("8_ukgqq")
+variable_name = "hpv"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 15.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_80io3"]
+resource_name = "打印: FAIL: DictModifyNumber"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictModifyNumber"
+
+[sub_resource type="Resource" id="Resource_vv6q7"]
+resource_name = "打印: PASS: DictModifyNumber"
+script = ExtResource("4_mecu6")
+message = "PASS: DictModifyNumber"
+
+[sub_resource type="Resource" id="Resource_61hw5"]
+resource_name = "If/Else hpv [[本地]] EQUALS 15.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_0ax2t")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_vv6q7")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_80io3")])
+
+[sub_resource type="Resource" id="Resource_jwumr"]
+resource_name = "Dict Math 字典 d [gold] *= 2.0"
+script = ExtResource("17_dmr30")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+operand_from_variable = ""
+operand_from_variable_scope = 0
+operand_scope_source = 0
+operand_custom_scope_id = ""
+operand_target_node_path = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+key_value = "gold"
+operation = 0
+use_operand_from_variable = false
+operand = 2.0
+
+[sub_resource type="Resource" id="Resource_uv3yn"]
+resource_name = "Dict Get 字典 d [\"gold\"] → goldv"
+script = ExtResource("7_ni2jl")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_variable = ""
+key_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path_for_scope = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+key_source_type = 0
+key_value = "gold"
+default_value = null
+target_variable = "goldv"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_og3g1"]
+resource_name = "检查变量 [[本地]]: goldv EQUALS 200.0"
+script = ExtResource("8_ukgqq")
+variable_name = "goldv"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 200.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_2dsiy"]
+resource_name = "打印: FAIL: DictMathOp"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictMathOp"
+
+[sub_resource type="Resource" id="Resource_41tw5"]
+resource_name = "打印: PASS: DictMathOp"
+script = ExtResource("4_mecu6")
+message = "PASS: DictMathOp"
+
+[sub_resource type="Resource" id="Resource_jfgt5"]
+resource_name = "If/Else goldv [[本地]] EQUALS 200.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_og3g1")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_41tw5")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_2dsiy")])
+
+[sub_resource type="Resource" id="Resource_g7016"]
+resource_name = "Dict Set 字典 d [alive] = true"
+script = ExtResource("6_b18nc")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+key_value = "alive"
+value_from_variable = ""
+value_from_variable_scope = 0
+value_scope_source = 0
+value_custom_scope_id = ""
+value_target_node_path = NodePath("")
+to_value = true
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+use_value_from_variable = false
+
+[sub_resource type="Resource" id="Resource_uy18k"]
+resource_name = "Dict Toggle 字典 d [alive]"
+script = ExtResource("18_wsa2x")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+key_value = "alive"
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+
+[sub_resource type="Resource" id="Resource_w2f3t"]
+resource_name = "Dict Get 字典 d [\"alive\"] → av"
+script = ExtResource("7_ni2jl")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_variable = ""
+key_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path_for_scope = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+key_source_type = 0
+key_value = "alive"
+default_value = null
+target_variable = "av"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_f7f4o"]
+resource_name = "检查变量 [[本地]]: av EQUALS false"
+script = ExtResource("8_ukgqq")
+variable_name = "av"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = false
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_m0bdn"]
+resource_name = "打印: FAIL: DictToggleBoolean"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictToggleBoolean"
+
+[sub_resource type="Resource" id="Resource_8lx3a"]
+resource_name = "打印: PASS: DictToggleBoolean"
+script = ExtResource("4_mecu6")
+message = "PASS: DictToggleBoolean"
+
+[sub_resource type="Resource" id="Resource_tmqlm"]
+resource_name = "If/Else av [[本地]] EQUALS false [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_f7f4o")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_8lx3a")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_m0bdn")])
+
+[sub_resource type="Resource" id="Resource_bejsn"]
+resource_name = "创建变量 [LOCAL] src = { \"extra\": 1..."
+script = ExtResource("5_0lwxi")
+variable_name = "src"
+value = {
+"extra": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_3wr7u"]
+resource_name = "Dict merge 字典 src -> 字典 d"
+script = ExtResource("19_uev78")
+source_scope_source = 0
+source_custom_scope_id = ""
+source_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+source_dict_variable = "src"
+source_dict_scope = 0
+target_dict_variable = "d"
+target_dict_scope = 0
+overwrite_existing = true
+
+[sub_resource type="Resource" id="Resource_r0tq4"]
+resource_name = "Dict Get 字典 d [\"extra\"] → ev"
+script = ExtResource("7_ni2jl")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_variable = ""
+key_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path_for_scope = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+key_source_type = 0
+key_value = "extra"
+default_value = null
+target_variable = "ev"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_fet7n"]
+resource_name = "检查变量 [[本地]]: ev EQUALS 1.0"
+script = ExtResource("8_ukgqq")
+variable_name = "ev"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 1.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_dpwl2"]
+resource_name = "打印: FAIL: DictMerge"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictMerge"
+
+[sub_resource type="Resource" id="Resource_qy0jl"]
+resource_name = "打印: PASS: DictMerge"
+script = ExtResource("4_mecu6")
+message = "PASS: DictMerge"
+
+[sub_resource type="Resource" id="Resource_e8sc5"]
+resource_name = "If/Else ev [[本地]] EQUALS 1.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_fet7n")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_qy0jl")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_dpwl2")])
+
+[sub_resource type="Resource" id="Resource_mhnqn"]
+resource_name = "Dict Duplicate 字典 d (深拷贝) → d2"
+script = ExtResource("20_op65x")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+deep_copy = true
+target_variable = "d2"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_in1ho"]
+resource_name = "Dict Size 字典 d2 → d2sz"
+script = ExtResource("12_1fqwq")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d2"
+dict_scope = 0
+target_variable = "d2sz"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_ml5ds"]
+resource_name = "检查变量 [[本地]]: d2sz EQUALS 5.0"
+script = ExtResource("8_ukgqq")
+variable_name = "d2sz"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 5.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_pj2r4"]
+resource_name = "打印: FAIL: DictDuplicate"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictDuplicate"
+
+[sub_resource type="Resource" id="Resource_0sbnt"]
+resource_name = "打印: PASS: DictDuplicate"
+script = ExtResource("4_mecu6")
+message = "PASS: DictDuplicate"
+
+[sub_resource type="Resource" id="Resource_tj6to"]
+resource_name = "If/Else d2sz [[本地]] EQUALS 5.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_ml5ds")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_0sbnt")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_pj2r4")])
+
+[sub_resource type="Resource" id="Resource_2t2ui"]
+resource_name = "Dict To JSON 字典 d (compact) → dj"
+script = ExtResource("21_fqw3t")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+indent_spaces = 4
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "d"
+dict_scope = 0
+pretty_print = false
+target_variable = "dj"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_m0qlh"]
+resource_name = "检查变量 [[本地]]: dj CONTAINS gold"
+script = ExtResource("8_ukgqq")
+variable_name = "dj"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = "gold"
+variable_scope = 0
+comparison_operator = 6
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_kyu87"]
+resource_name = "打印: FAIL: DictToJson"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictToJson"
+
+[sub_resource type="Resource" id="Resource_tr0u5"]
+resource_name = "打印: PASS: DictToJson"
+script = ExtResource("4_mecu6")
+message = "PASS: DictToJson"
+
+[sub_resource type="Resource" id="Resource_2xasg"]
+resource_name = "If/Else dj [[本地]] CONTAINS gold [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_m0qlh")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_tr0u5")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_kyu87")])
+
+[sub_resource type="Resource" id="Resource_4vqyp"]
+resource_name = "Dict From JSON 字典 fd <= \"{\"a\": 1, \"b\": 2}\""
+script = ExtResource("22_hcp5l")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+json_string = "{\"a\": 1, \"b\": 2}"
+json_source_variable = ""
+json_source_scope = 0
+json_scope_source = 0
+json_custom_scope_id = ""
+json_target_node_path = NodePath("")
+dict_variable = "fd"
+dict_scope = 0
+json_source_type = 0
+json_string = "{\"a\": 1, \"b\": 2}"
+
+[sub_resource type="Resource" id="Resource_mqeia"]
+resource_name = "Dict Size 字典 fd → fdsz"
+script = ExtResource("12_1fqwq")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "fd"
+dict_scope = 0
+target_variable = "fdsz"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_aulht"]
+resource_name = "检查变量 [[本地]]: fdsz EQUALS 2.0"
+script = ExtResource("8_ukgqq")
+variable_name = "fdsz"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 2.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_my1s5"]
+resource_name = "打印: FAIL: DictFromJson"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictFromJson"
+
+[sub_resource type="Resource" id="Resource_xqgor"]
+resource_name = "打印: PASS: DictFromJson"
+script = ExtResource("4_mecu6")
+message = "PASS: DictFromJson"
+
+[sub_resource type="Resource" id="Resource_mhty4"]
+resource_name = "If/Else fdsz [[本地]] EQUALS 2.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_aulht")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_xqgor")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_my1s5")])
+
+[sub_resource type="Resource" id="Resource_8aalu"]
+resource_name = "Dict Clear <未指定字典>"
+script = ExtResource("23_hpk8g")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+dict_variable = "fd"
+dict_scope = 0
+
+[sub_resource type="Resource" id="Resource_2nq20"]
+resource_name = "Dict Size 字典 fd → fdsz2"
+script = ExtResource("12_1fqwq")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+target_scope_source = 0
+target_custom_scope_id = ""
+target_node_path_for_scope = NodePath("")
+dict_variable = "fd"
+dict_scope = 0
+target_variable = "fdsz2"
+target_scope = 0
+
+[sub_resource type="Resource" id="Resource_xlq70"]
+resource_name = "检查变量 [[本地]]: fdsz2 EQUALS 0.0"
+script = ExtResource("8_ukgqq")
+variable_name = "fdsz2"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_icg15"]
+resource_name = "打印: FAIL: DictClear"
+script = ExtResource("4_mecu6")
+message = "FAIL: DictClear"
+
+[sub_resource type="Resource" id="Resource_nd0kr"]
+resource_name = "打印: PASS: DictClear"
+script = ExtResource("4_mecu6")
+message = "PASS: DictClear"
+
+[sub_resource type="Resource" id="Resource_j4xec"]
+resource_name = "If/Else fdsz2 [[本地]] EQUALS 0.0 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_xlq70")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_nd0kr")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_icg15")])
+
+[sub_resource type="Resource" id="Resource_8q1us"]
+resource_name = "d [[本地]] 包含键 gold"
+script = ExtResource("24_t6ewx")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+key_value = "gold"
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+
+[sub_resource type="Resource" id="Resource_p7see"]
+resource_name = "打印: FAIL: CheckDictContainsKey(true)"
+script = ExtResource("4_mecu6")
+message = "FAIL: CheckDictContainsKey(true)"
+
+[sub_resource type="Resource" id="Resource_sn7c6"]
+resource_name = "打印: PASS: CheckDictContainsKey(true)"
+script = ExtResource("4_mecu6")
+message = "PASS: CheckDictContainsKey(true)"
+
+[sub_resource type="Resource" id="Resource_olfry"]
+resource_name = "If/Else Dict d [[本地]] contains key gold [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_8q1us")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_sn7c6")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_p7see")])
+
+[sub_resource type="Resource" id="Resource_u1iw1"]
+resource_name = "d [[本地]] 包含键 nope"
+script = ExtResource("24_t6ewx")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+key_from_variable = ""
+key_from_variable_scope = 0
+key_scope_source = 0
+key_custom_scope_id = ""
+key_target_node_path = NodePath("")
+key_value = "nope"
+dict_variable = "d"
+dict_scope = 0
+use_key_from_variable = false
+
+[sub_resource type="Resource" id="Resource_opc2t"]
+resource_name = "打印: PASS: CheckDictContainsKey(neg)"
+script = ExtResource("4_mecu6")
+message = "PASS: CheckDictContainsKey(neg)"
+
+[sub_resource type="Resource" id="Resource_i5wv5"]
+resource_name = "打印: FAIL: CheckDictContainsKey(neg)"
+script = ExtResource("4_mecu6")
+message = "FAIL: CheckDictContainsKey(neg)"
+
+[sub_resource type="Resource" id="Resource_hqyfc"]
+resource_name = "If/Else Dict d [[本地]] contains key nope [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_u1iw1")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_i5wv5")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_opc2t")])
+
+[sub_resource type="Resource" id="Resource_28bf3"]
+resource_name = "d [[本地]] EQUALS 5"
+script = ExtResource("25_6p8wi")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+compare_value = 5
+dict_variable = "d"
+dict_scope = 0
+comparison = 0
+
+[sub_resource type="Resource" id="Resource_pxqqs"]
+resource_name = "打印: FAIL: CheckDictSize(true)"
+script = ExtResource("4_mecu6")
+message = "FAIL: CheckDictSize(true)"
+
+[sub_resource type="Resource" id="Resource_qfn56"]
+resource_name = "打印: PASS: CheckDictSize(true)"
+script = ExtResource("4_mecu6")
+message = "PASS: CheckDictSize(true)"
+
+[sub_resource type="Resource" id="Resource_pqmec"]
+resource_name = "If/Else d [[本地]] EQUALS 5 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_28bf3")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_qfn56")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_pxqqs")])
+
+[sub_resource type="Resource" id="Resource_g7dgv"]
+resource_name = "d [[本地]] GREATER_THAN 9"
+script = ExtResource("25_6p8wi")
+dict_scope_source = 0
+dict_custom_scope_id = ""
+dict_target_node_path = NodePath("")
+compare_value = 9
+dict_variable = "d"
+dict_scope = 0
+comparison = 2
+
+[sub_resource type="Resource" id="Resource_gkqh0"]
+resource_name = "打印: PASS: CheckDictSize(neg)"
+script = ExtResource("4_mecu6")
+message = "PASS: CheckDictSize(neg)"
+
+[sub_resource type="Resource" id="Resource_uxn46"]
+resource_name = "打印: FAIL: CheckDictSize(neg)"
+script = ExtResource("4_mecu6")
+message = "FAIL: CheckDictSize(neg)"
+
+[sub_resource type="Resource" id="Resource_burpl"]
+resource_name = "If/Else d [[本地]] GREATER_THAN 9 [真:1 [同步]"
+script = ExtResource("9_q5hbg")
+sequence_mode = 0
+condition = SubResource("Resource_g7dgv")
+true_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_uxn46")])
+false_instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_gkqh0")])
+
+[sub_resource type="Resource" id="Resource_8141c"]
+resource_name = "打印: === deep_dictionaries DONE ==="
+script = ExtResource("4_mecu6")
+message = "=== deep_dictionaries DONE ==="
+
+[sub_resource type="Resource" id="Resource_nlnvi"]
+script = ExtResource("26_8y4hw")
+instructions = Array[ExtResource("3_je6yy")]([SubResource("Resource_bbiev"), SubResource("Resource_ekdjm"), SubResource("Resource_epx6d"), SubResource("Resource_50jgo"), SubResource("Resource_rmf58"), SubResource("Resource_46cm0"), SubResource("Resource_ma8rs"), SubResource("Resource_c0ygg"), SubResource("Resource_faohl"), SubResource("Resource_cv57v"), SubResource("Resource_o3t1n"), SubResource("Resource_2f47o"), SubResource("Resource_unlrj"), SubResource("Resource_xk4vd"), SubResource("Resource_hu4u1"), SubResource("Resource_1hcnj"), SubResource("Resource_d47ti"), SubResource("Resource_jkv81"), SubResource("Resource_ptyju"), SubResource("Resource_61hw5"), SubResource("Resource_jwumr"), SubResource("Resource_uv3yn"), SubResource("Resource_jfgt5"), SubResource("Resource_g7016"), SubResource("Resource_uy18k"), SubResource("Resource_w2f3t"), SubResource("Resource_tmqlm"), SubResource("Resource_bejsn"), SubResource("Resource_3wr7u"), SubResource("Resource_r0tq4"), SubResource("Resource_e8sc5"), SubResource("Resource_mhnqn"), SubResource("Resource_in1ho"), SubResource("Resource_tj6to"), SubResource("Resource_2t2ui"), SubResource("Resource_2xasg"), SubResource("Resource_4vqyp"), SubResource("Resource_mqeia"), SubResource("Resource_mhty4"), SubResource("Resource_8aalu"), SubResource("Resource_2nq20"), SubResource("Resource_j4xec"), SubResource("Resource_olfry"), SubResource("Resource_hqyfc"), SubResource("Resource_pqmec"), SubResource("Resource_burpl"), SubResource("Resource_8141c")])
+
+[node name="test_deep_dictionaries" type="Node2D" unique_id=1042808044]
+
+[node name="DeepDictionaries" type="Node" parent="." unique_id=52348087]
+script = ExtResource("1_x2yfi")
+event_definition = SubResource("Resource_jyeml")
+action_runner = SubResource("Resource_nlnvi")
+trigger_once = true

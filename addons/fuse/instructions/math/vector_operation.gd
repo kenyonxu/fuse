@@ -510,6 +510,17 @@ func _get_scope_source_string() -> String:
 		_:
 			return FuseLocalization.translate("FUSE_VARIABLE_SCOPE_UNKNOWN")
 
+## 直填向量值兼容——vector_b_value 是 Variant 属性，preset JSON 反序列化只能给出
+## 规范字符串形如 "(10.0, 10.0)"（codec 的引擎类型转换不覆盖无类型 Variant 属性），
+## 按 vector_type 解析为 Vector2/Vector3；解析失败原样返回，走既有类型校验报错
+func _coerce_direct_vector(value: Variant) -> Variant:
+	if not (value is String):
+		return value
+	var prefix := "Vector2" if vector_type == VectorType.VECTOR2 else "Vector3"
+	var parsed: Variant = str_to_var(prefix + value)
+	return parsed if parsed != null else value
+
+
 ## 执行指令
 func execute(context: ExecutionContext):
 	_start_execution(context)
@@ -560,7 +571,7 @@ func execute(context: ExecutionContext):
 				return
 			vector_b = result_b.value
 		else:
-			vector_b = vector_b_value
+			vector_b = _coerce_direct_vector(vector_b_value)
 
 		# 验证向量 B 类型
 		if vector_b != null:

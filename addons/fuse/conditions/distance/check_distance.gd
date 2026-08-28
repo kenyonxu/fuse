@@ -508,14 +508,15 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 	if target == null:
 		return false
 
-	# 检查节点是否有 global_position
-	if not source.has_method("get") or not source.get("global_position"):
+	# 检查节点是否有 global_position（判存在须与零值区分——GDScript 里 Vector2(0,0) 为假值，
+	# 位于原点的节点会被 not get("global_position") 误判为"没有该属性"）
+	if not source.has_method("get") or source.get("global_position") == null:
 		var error_msg = FuseLocalization.translate("FUSE_CONDITION_ERROR_SOURCE_NO_GLOBAL_POSITION")
 		_log_error(error_msg)
 		_create_fuse_error(error_msg, FuseError.ErrorType.RUNTIME_ERROR)
 		return false
 
-	if not target.has_method("get") or not target.get("global_position"):
+	if not target.has_method("get") or target.get("global_position") == null:
 		var error_msg = FuseLocalization.translate("FUSE_CONDITION_ERROR_TARGET_NO_GLOBAL_POSITION")
 		_log_error(error_msg)
 		_create_fuse_error(error_msg, FuseError.ErrorType.RUNTIME_ERROR)

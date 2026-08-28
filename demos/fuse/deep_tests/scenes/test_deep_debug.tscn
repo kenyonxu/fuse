@@ -1,0 +1,143 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/trigger.gd" id="1_b6kpg"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_56oig"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_iypfv"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_h4qke"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/set_variable.gd" id="5_tvooa"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print_variable_value.gd" id="6_tkaab"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="7_455kc"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="8_fhcrs"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/breakpoint_instruction.gd" id="9_bsbia"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="10_jri31"]
+
+[sub_resource type="Resource" id="Resource_1680u"]
+script = ExtResource("2_56oig")
+
+[sub_resource type="Resource" id="Resource_nhgmn"]
+resource_name = "打印: PASS: Print"
+script = ExtResource("4_h4qke")
+message = "PASS: Print"
+
+[sub_resource type="Resource" id="Resource_oyx15"]
+resource_name = "设置变量 [[本地]] 'dbg_x' = 42.0"
+script = ExtResource("5_tvooa")
+target_variable = "dbg_x"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 42.0
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_ujb7b"]
+resource_name = "打印变量 'dbg_x' [[本地]]"
+script = ExtResource("6_tkaab")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+variable_name = "dbg_x"
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_0weat"]
+resource_name = "检查变量 [[本地]]: dbg_x EQUALS 42.0"
+script = ExtResource("7_455kc")
+variable_name = "dbg_x"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 42.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_tp8b3"]
+resource_name = "打印: FAIL: PrintVariableValue"
+script = ExtResource("4_h4qke")
+message = "FAIL: PrintVariableValue"
+
+[sub_resource type="Resource" id="Resource_myksy"]
+resource_name = "打印: PASS: PrintVariableValue"
+script = ExtResource("4_h4qke")
+message = "PASS: PrintVariableValue"
+
+[sub_resource type="Resource" id="Resource_nkfbs"]
+resource_name = "If/Else dbg_x [[本地]] EQUALS 42.0 [真:1 [同步]"
+script = ExtResource("8_fhcrs")
+sequence_mode = 0
+condition = SubResource("Resource_0weat")
+true_instructions = Array[ExtResource("3_iypfv")]([SubResource("Resource_myksy")])
+false_instructions = Array[ExtResource("3_iypfv")]([SubResource("Resource_tp8b3")])
+
+[sub_resource type="Resource" id="Resource_eywd2"]
+resource_name = "断点: deep_debug_bp"
+script = ExtResource("9_bsbia")
+condition = ""
+pause_execution = false
+custom_scope_id = ""
+target_node_path = NodePath("")
+label = "deep_debug_bp"
+use_expression_condition = false
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_xe11v"]
+resource_name = "检查变量 [[本地]]: dbg_x EQUALS 42.0"
+script = ExtResource("7_455kc")
+variable_name = "dbg_x"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 42.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_ktd3l"]
+resource_name = "打印: FAIL: BreakpointInstruction"
+script = ExtResource("4_h4qke")
+message = "FAIL: BreakpointInstruction"
+
+[sub_resource type="Resource" id="Resource_thsqu"]
+resource_name = "打印: PASS: BreakpointInstruction"
+script = ExtResource("4_h4qke")
+message = "PASS: BreakpointInstruction"
+
+[sub_resource type="Resource" id="Resource_ixq16"]
+resource_name = "If/Else dbg_x [[本地]] EQUALS 42.0 [真:1 [同步]"
+script = ExtResource("8_fhcrs")
+sequence_mode = 0
+condition = SubResource("Resource_xe11v")
+true_instructions = Array[ExtResource("3_iypfv")]([SubResource("Resource_thsqu")])
+false_instructions = Array[ExtResource("3_iypfv")]([SubResource("Resource_ktd3l")])
+
+[sub_resource type="Resource" id="Resource_wyugr"]
+resource_name = "打印: === deep_debug DONE ==="
+script = ExtResource("4_h4qke")
+message = "=== deep_debug DONE ==="
+
+[sub_resource type="Resource" id="Resource_765d7"]
+script = ExtResource("10_jri31")
+instructions = Array[ExtResource("3_iypfv")]([SubResource("Resource_nhgmn"), SubResource("Resource_oyx15"), SubResource("Resource_ujb7b"), SubResource("Resource_nkfbs"), SubResource("Resource_eywd2"), SubResource("Resource_ixq16"), SubResource("Resource_wyugr")])
+
+[node name="test_deep_debug" type="Node2D" unique_id=1002358078]
+
+[node name="DeepDebug" type="Node" parent="." unique_id=1251036448]
+script = ExtResource("1_b6kpg")
+event_definition = SubResource("Resource_1680u")
+action_runner = SubResource("Resource_765d7")
+trigger_once = true

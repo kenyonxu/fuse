@@ -8,19 +8,21 @@ extends SceneTree
 ##
 ## 用法：
 ##   Godot --headless --path <项目路径> --script res://demos/fuse/deep_tests/tools/import_preset.gd \
-##     -- <preset.json> <out.tscn> [node2d|control]
+##     -- <preset.json> <out.tscn> [node2d|control] [base_scene.tscn]
+## base_scene：可选基底场景——实例化后作为根，导入节点挂其下（用于需要预置目标节点的场景）
 ## 退出码：0 成功 / 1 导入失败 / 2 参数或 IO 错误
 
 
 func _init() -> void:
 	var args := OS.get_cmdline_user_args()
 	if args.size() < 2:
-		push_error("[import_preset] 用法: -- <preset.json> <out.tscn> [node2d|control]")
+		push_error("[import_preset] 用法: -- <preset.json> <out.tscn> [node2d|control] [base_scene.tscn]")
 		quit(2)
 		return
 	var json_path: String = args[0]
 	var out_path: String = args[1]
 	var root_kind: String = args[2] if args.size() > 2 else "node2d"
+	var base_path: String = args[3] if args.size() > 3 else ""
 
 	var txt := FileAccess.get_file_as_string(json_path)
 	if txt == "":
@@ -41,10 +43,19 @@ func _init() -> void:
 		quit(1)
 		return
 
-	var root: Node = Control.new() if root_kind == "control" else Node2D.new()
+	var root: Node = null
+	if base_path != "":
+		var base_scene: PackedScene = load(base_path)
+		if base_scene == null:
+			push_error("[import_preset] 基底场景加载失败: %s" % base_path)
+			quit(2)
+			return
+		root = base_scene.instantiate()
+	else:
+		root = Control.new() if root_kind == "control" else Node2D.new()
 	root.name = String(out_path.get_file().get_basename())
 	root.add_child(node)
-	node.owner = root
+	_set_owner_recursive(node, root)
 
 	var packed := PackedScene.new()
 	if packed.pack(root) != OK:
@@ -55,6 +66,14 @@ func _init() -> void:
 		push_error("[import_preset] 保存失败: %s" % out_path)
 		quit(1)
 		return
-	print("[import_preset] %s -> %s (level=%s, 指令=%d)" % [
-		json_path, out_path, preset.level, preset.instructions.size()])
+	print("[import_preset] %s -> %s (level=%s, 指令=%d, base=%s)" % [
+		json_path, out_path, preset.level, preset.instructions.size(),
+		base_path if base_path != "" else "-"])
 	quit(0)
+
+
+## 递归设置 owner（PackedScene.pack 只序列化 owner 链完整的子树）
+func _set_owner_recursive(node: Node, root: Node) -> void:
+	node.owner = root
+	for child in node.get_children():
+		_set_owner_recursive(child, root)

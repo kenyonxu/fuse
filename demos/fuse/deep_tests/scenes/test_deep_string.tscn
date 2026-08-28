@@ -1,0 +1,430 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/trigger.gd" id="1_gk64k"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_04l86"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_v0p7u"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_nwlah"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/set_variable.gd" id="5_5s6qh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/string/string_length.gd" id="6_8ilxc"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="7_andob"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="8_3gs2e"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/string/string_contains.gd" id="9_r120k"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/string/string_replace.gd" id="10_edkry"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/string/string_split.gd" id="11_xbkeh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/string/string_join.gd" id="12_te6py"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/string/string_format.gd" id="13_wo8dk"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/string/check_string_contains.gd" id="14_55wh7"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/string/check_string_length.gd" id="15_2bvcu"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="16_sxh4y"]
+
+[sub_resource type="Resource" id="Resource_55us2"]
+script = ExtResource("2_04l86")
+
+[sub_resource type="Resource" id="Resource_1m78y"]
+resource_name = "打印: === deep_string START ==="
+script = ExtResource("4_nwlah")
+message = "=== deep_string START ==="
+
+[sub_resource type="Resource" id="Resource_ci1vo"]
+resource_name = "设置变量 [[本地]] 's' = hello fuse w..."
+script = ExtResource("5_5s6qh")
+target_variable = "s"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = "hello fuse world"
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_il0s1"]
+resource_name = "字符串长度 [s] → {0}"
+script = ExtResource("6_8ilxc")
+source_variable = "s"
+save_to_variable = "slen"
+
+[sub_resource type="Resource" id="Resource_i72e6"]
+resource_name = "检查变量 [[本地]]: slen EQUALS 16.0"
+script = ExtResource("7_andob")
+variable_name = "slen"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 16.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_rx6h0"]
+resource_name = "打印: FAIL: StringLength"
+script = ExtResource("4_nwlah")
+message = "FAIL: StringLength"
+
+[sub_resource type="Resource" id="Resource_4duws"]
+resource_name = "打印: PASS: StringLength"
+script = ExtResource("4_nwlah")
+message = "PASS: StringLength"
+
+[sub_resource type="Resource" id="Resource_p4r5i"]
+resource_name = "If/Else slen [[本地]] EQUALS 16.0 [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_i72e6")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_4duws")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_rx6h0")])
+
+[sub_resource type="Resource" id="Resource_4jry1"]
+resource_name = "字符串包含 [s] '{0}'"
+script = ExtResource("9_r120k")
+source_variable = "s"
+search = "fuse"
+case_sensitive = true
+save_to_variable = "scon"
+
+[sub_resource type="Resource" id="Resource_hw37x"]
+resource_name = "检查变量 [[本地]]: scon EQUALS true"
+script = ExtResource("7_andob")
+variable_name = "scon"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = true
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_cbnsq"]
+resource_name = "打印: FAIL: StringContainsInstruction"
+script = ExtResource("4_nwlah")
+message = "FAIL: StringContainsInstruction"
+
+[sub_resource type="Resource" id="Resource_8rkxh"]
+resource_name = "打印: PASS: StringContainsInstruction"
+script = ExtResource("4_nwlah")
+message = "PASS: StringContainsInstruction"
+
+[sub_resource type="Resource" id="Resource_dyjt3"]
+resource_name = "If/Else scon [[本地]] EQUALS true [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_hw37x")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_8rkxh")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_cbnsq")])
+
+[sub_resource type="Resource" id="Resource_ww5oj"]
+resource_name = "替换字符串 [s]"
+script = ExtResource("10_edkry")
+variable_name = "s"
+search = "world"
+replace = "godot"
+
+[sub_resource type="Resource" id="Resource_yrily"]
+resource_name = "字符串包含 [s] '{0}'"
+script = ExtResource("9_r120k")
+source_variable = "s"
+search = "godot"
+case_sensitive = true
+save_to_variable = "scon2"
+
+[sub_resource type="Resource" id="Resource_sax4m"]
+resource_name = "检查变量 [[本地]]: scon2 EQUALS true"
+script = ExtResource("7_andob")
+variable_name = "scon2"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = true
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_abd18"]
+resource_name = "打印: FAIL: StringReplace"
+script = ExtResource("4_nwlah")
+message = "FAIL: StringReplace"
+
+[sub_resource type="Resource" id="Resource_bp1in"]
+resource_name = "打印: PASS: StringReplace"
+script = ExtResource("4_nwlah")
+message = "PASS: StringReplace"
+
+[sub_resource type="Resource" id="Resource_71wo2"]
+resource_name = "If/Else scon2 [[本地]] EQUALS true [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_sax4m")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_bp1in")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_abd18")])
+
+[sub_resource type="Resource" id="Resource_l0e46"]
+resource_name = "分割字符串 [s] → {0}"
+script = ExtResource("11_xbkeh")
+source_variable = "s"
+delimiter = " "
+save_to_variable = "sparts"
+
+[sub_resource type="Resource" id="Resource_5bi7t"]
+resource_name = "检查变量 [[本地]]: sparts EQUALS [\"hello\", \"fuse\",..."
+script = ExtResource("7_andob")
+variable_name = "sparts"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = ["hello", "fuse", "godot"]
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_bgnq3"]
+resource_name = "打印: FAIL: StringSplit"
+script = ExtResource("4_nwlah")
+message = "FAIL: StringSplit"
+
+[sub_resource type="Resource" id="Resource_1lqij"]
+resource_name = "打印: PASS: StringSplit"
+script = ExtResource("4_nwlah")
+message = "PASS: StringSplit"
+
+[sub_resource type="Resource" id="Resource_kywvs"]
+resource_name = "If/Else sparts [[本地]] EQUALS [\"hello\", \"fuse\", \"godot\"] [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_5bi7t")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_1lqij")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_bgnq3")])
+
+[sub_resource type="Resource" id="Resource_g01rt"]
+resource_name = "合并字符串 [sparts] → {0}"
+script = ExtResource("12_te6py")
+source_variable = "sparts"
+connector = "-"
+save_to_variable = "sjoined"
+
+[sub_resource type="Resource" id="Resource_v58ow"]
+resource_name = "检查变量 [[本地]]: sjoined EQUALS hello-fuse-godot"
+script = ExtResource("7_andob")
+variable_name = "sjoined"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = "hello-fuse-godot"
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_gymao"]
+resource_name = "打印: FAIL: StringJoin"
+script = ExtResource("4_nwlah")
+message = "FAIL: StringJoin"
+
+[sub_resource type="Resource" id="Resource_vl1av"]
+resource_name = "打印: PASS: StringJoin"
+script = ExtResource("4_nwlah")
+message = "PASS: StringJoin"
+
+[sub_resource type="Resource" id="Resource_l2rr1"]
+resource_name = "If/Else sjoined [[本地]] EQUALS hello-fuse-godot [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_v58ow")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_vl1av")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_gymao")])
+
+[sub_resource type="Resource" id="Resource_ha82l"]
+resource_name = "字符串格式化 → {0}"
+script = ExtResource("13_wo8dk")
+template = "res={sjoined}"
+save_to_variable = "sfmt"
+
+[sub_resource type="Resource" id="Resource_0yv8h"]
+resource_name = "检查变量 [[本地]]: sfmt EQUALS res=hello-fuse-godot"
+script = ExtResource("7_andob")
+variable_name = "sfmt"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = "res=hello-fuse-godot"
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_w6jsl"]
+resource_name = "打印: FAIL: StringFormat"
+script = ExtResource("4_nwlah")
+message = "FAIL: StringFormat"
+
+[sub_resource type="Resource" id="Resource_pky0t"]
+resource_name = "打印: PASS: StringFormat"
+script = ExtResource("4_nwlah")
+message = "PASS: StringFormat"
+
+[sub_resource type="Resource" id="Resource_g6vdy"]
+resource_name = "If/Else sfmt [[本地]] EQUALS res=hello-fuse-godot [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_0yv8h")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_pky0t")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_w6jsl")])
+
+[sub_resource type="Resource" id="Resource_wfglk"]
+resource_name = "s 包含 godot"
+script = ExtResource("14_55wh7")
+source_variable = "s"
+search = "godot"
+case_sensitive = true
+
+[sub_resource type="Resource" id="Resource_bgpsv"]
+resource_name = "打印: FAIL: CheckStringContains(true)"
+script = ExtResource("4_nwlah")
+message = "FAIL: CheckStringContains(true)"
+
+[sub_resource type="Resource" id="Resource_2eyt3"]
+resource_name = "打印: PASS: CheckStringContains(true)"
+script = ExtResource("4_nwlah")
+message = "PASS: CheckStringContains(true)"
+
+[sub_resource type="Resource" id="Resource_twe67"]
+resource_name = "If/Else 检查 s 是否包含 godot [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_wfglk")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_2eyt3")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_bgpsv")])
+
+[sub_resource type="Resource" id="Resource_dvfgw"]
+resource_name = "s 包含 zzz"
+script = ExtResource("14_55wh7")
+source_variable = "s"
+search = "zzz"
+case_sensitive = true
+
+[sub_resource type="Resource" id="Resource_rx4i5"]
+resource_name = "打印: PASS: CheckStringContains(neg)"
+script = ExtResource("4_nwlah")
+message = "PASS: CheckStringContains(neg)"
+
+[sub_resource type="Resource" id="Resource_7qh6q"]
+resource_name = "打印: FAIL: CheckStringContains(neg)"
+script = ExtResource("4_nwlah")
+message = "FAIL: CheckStringContains(neg)"
+
+[sub_resource type="Resource" id="Resource_w77yc"]
+resource_name = "If/Else 检查 s 是否包含 zzz [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_dvfgw")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_7qh6q")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_rx4i5")])
+
+[sub_resource type="Resource" id="Resource_i566n"]
+resource_name = "s 长度 == 16"
+script = ExtResource("15_2bvcu")
+source_variable = "s"
+compare_type = 0
+threshold = 16
+
+[sub_resource type="Resource" id="Resource_dl52n"]
+resource_name = "打印: FAIL: CheckStringLength(true)"
+script = ExtResource("4_nwlah")
+message = "FAIL: CheckStringLength(true)"
+
+[sub_resource type="Resource" id="Resource_6e4vk"]
+resource_name = "打印: PASS: CheckStringLength(true)"
+script = ExtResource("4_nwlah")
+message = "PASS: CheckStringLength(true)"
+
+[sub_resource type="Resource" id="Resource_yplj8"]
+resource_name = "If/Else s 长度 == 16 [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_i566n")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_6e4vk")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_dl52n")])
+
+[sub_resource type="Resource" id="Resource_xu0ne"]
+resource_name = "s 长度 > 100"
+script = ExtResource("15_2bvcu")
+source_variable = "s"
+compare_type = 2
+threshold = 100
+
+[sub_resource type="Resource" id="Resource_f81me"]
+resource_name = "打印: PASS: CheckStringLength(neg)"
+script = ExtResource("4_nwlah")
+message = "PASS: CheckStringLength(neg)"
+
+[sub_resource type="Resource" id="Resource_xoyrq"]
+resource_name = "打印: FAIL: CheckStringLength(neg)"
+script = ExtResource("4_nwlah")
+message = "FAIL: CheckStringLength(neg)"
+
+[sub_resource type="Resource" id="Resource_r233r"]
+resource_name = "If/Else s 长度 > 100 [真:1 [同步]"
+script = ExtResource("8_3gs2e")
+sequence_mode = 0
+condition = SubResource("Resource_xu0ne")
+true_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_xoyrq")])
+false_instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_f81me")])
+
+[sub_resource type="Resource" id="Resource_gvod1"]
+resource_name = "打印: === deep_string DONE ==="
+script = ExtResource("4_nwlah")
+message = "=== deep_string DONE ==="
+
+[sub_resource type="Resource" id="Resource_25wo2"]
+script = ExtResource("16_sxh4y")
+instructions = Array[ExtResource("3_v0p7u")]([SubResource("Resource_1m78y"), SubResource("Resource_ci1vo"), SubResource("Resource_il0s1"), SubResource("Resource_p4r5i"), SubResource("Resource_4jry1"), SubResource("Resource_dyjt3"), SubResource("Resource_ww5oj"), SubResource("Resource_yrily"), SubResource("Resource_71wo2"), SubResource("Resource_l0e46"), SubResource("Resource_kywvs"), SubResource("Resource_g01rt"), SubResource("Resource_l2rr1"), SubResource("Resource_ha82l"), SubResource("Resource_g6vdy"), SubResource("Resource_twe67"), SubResource("Resource_w77yc"), SubResource("Resource_yplj8"), SubResource("Resource_r233r"), SubResource("Resource_gvod1")])
+
+[node name="test_deep_string" type="Node2D" unique_id=1807806344]
+
+[node name="DeepString" type="Node" parent="." unique_id=1902150290]
+script = ExtResource("1_gk64k")
+event_definition = SubResource("Resource_55us2")
+action_runner = SubResource("Resource_25wo2")
+trigger_once = true

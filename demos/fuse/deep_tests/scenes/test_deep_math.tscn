@@ -1,0 +1,686 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/trigger.gd" id="1_w575b"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="2_0xoio"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_663kd"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_s3hgi"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_operation.gd" id="5_q00yi"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="6_i2asx"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_jiaf1"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="8_dp4wi"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/clamp_value.gd" id="9_4xglq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/lerp.gd" id="10_t3vui"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/random_number.gd" id="11_sieas"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/get_random_point_in_range.gd" id="12_bado7"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/vector_operation.gd" id="13_bxgia"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/string_expression.gd" id="14_ghxgg"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/math/expression_condition.gd" id="15_mjn3u"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/distance/check_distance.gd" id="16_r5hbp"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="17_4tb6c"]
+
+[sub_resource type="Resource" id="Resource_xk2fw"]
+script = ExtResource("2_0xoio")
+
+[sub_resource type="Resource" id="Resource_xl0w6"]
+resource_name = "打印: === deep_math START ==="
+script = ExtResource("4_s3hgi")
+message = "=== deep_math START ==="
+
+[sub_resource type="Resource" id="Resource_1j07n"]
+resource_name = "7.0 + 5.0"
+script = ExtResource("5_q00yi")
+operand_a_scope_source = 0
+operand_a_custom_scope_id = ""
+operand_a_target_node_path = NodePath("")
+operand_b_scope_source = 0
+operand_b_custom_scope_id = ""
+operand_b_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+operation_type = 0
+operand_a_source = 0
+operand_a_value = 7.0
+operand_b_source = 0
+operand_b_value = 5.0
+save_to_variable = "mo"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_hhss7"]
+resource_name = "检查变量 [[本地]]: mo EQUALS 12.0"
+script = ExtResource("6_i2asx")
+variable_name = "mo"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 12.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_jwehs"]
+resource_name = "打印: FAIL: MathOperation"
+script = ExtResource("4_s3hgi")
+message = "FAIL: MathOperation"
+
+[sub_resource type="Resource" id="Resource_ah0ay"]
+resource_name = "打印: PASS: MathOperation"
+script = ExtResource("4_s3hgi")
+message = "PASS: MathOperation"
+
+[sub_resource type="Resource" id="Resource_vnbs4"]
+resource_name = "If/Else mo [[本地]] EQUALS 12.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_hhss7")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_ah0ay")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_jwehs")])
+
+[sub_resource type="Resource" id="Resource_ijwhv"]
+resource_name = "'(3+4)*2' → me [Float]"
+script = ExtResource("8_dp4wi")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "(3+4)*2"
+output_type = 0
+scope_source = 0
+save_to_variable = "me"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_jujul"]
+resource_name = "检查变量 [[本地]]: me EQUALS 14.0"
+script = ExtResource("6_i2asx")
+variable_name = "me"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 14.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_a3gx0"]
+resource_name = "打印: FAIL: MathExpression"
+script = ExtResource("4_s3hgi")
+message = "FAIL: MathExpression"
+
+[sub_resource type="Resource" id="Resource_pawej"]
+resource_name = "打印: PASS: MathExpression"
+script = ExtResource("4_s3hgi")
+message = "PASS: MathExpression"
+
+[sub_resource type="Resource" id="Resource_fgb11"]
+resource_name = "If/Else me [[本地]] EQUALS 14.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_jujul")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_pawej")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_a3gx0")])
+
+[sub_resource type="Resource" id="Resource_xmhh7"]
+resource_name = "限制范围 [0.0, 10.0] → cv [[本地]]"
+script = ExtResource("9_4xglq")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+value = 15.0
+min_value = 0.0
+max_value = 10.0
+save_to_variable = "cv"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_n8pqr"]
+resource_name = "检查变量 [[本地]]: cv EQUALS 10.0"
+script = ExtResource("6_i2asx")
+variable_name = "cv"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 10.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_yw8j5"]
+resource_name = "打印: FAIL: ClampValue"
+script = ExtResource("4_s3hgi")
+message = "FAIL: ClampValue"
+
+[sub_resource type="Resource" id="Resource_t68ur"]
+resource_name = "打印: PASS: ClampValue"
+script = ExtResource("4_s3hgi")
+message = "PASS: ClampValue"
+
+[sub_resource type="Resource" id="Resource_xvoca"]
+resource_name = "If/Else cv [[本地]] EQUALS 10.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_n8pqr")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_t68ur")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_yw8j5")])
+
+[sub_resource type="Resource" id="Resource_5c8oi"]
+resource_name = "线性插值 0.0 → 10.0 (0.50)"
+script = ExtResource("10_t3vui")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+from_source = 0
+from_value = 0.0
+to_source = 0
+to_value = 10.0
+weight_source = 0
+weight = 0.5
+save_to_variable = "lp"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_pxo7k"]
+resource_name = "检查变量 [[本地]]: lp EQUALS 5.0"
+script = ExtResource("6_i2asx")
+variable_name = "lp"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 5.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_4yf40"]
+resource_name = "打印: FAIL: Lerp"
+script = ExtResource("4_s3hgi")
+message = "FAIL: Lerp"
+
+[sub_resource type="Resource" id="Resource_h7hff"]
+resource_name = "打印: PASS: Lerp"
+script = ExtResource("4_s3hgi")
+message = "PASS: Lerp"
+
+[sub_resource type="Resource" id="Resource_jk62s"]
+resource_name = "If/Else lp [[本地]] EQUALS 5.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_pxo7k")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_h7hff")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_4yf40")])
+
+[sub_resource type="Resource" id="Resource_288gi"]
+resource_name = "随机数 [5, 5] → rn [[本地]]"
+script = ExtResource("11_sieas")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+min_value = 5.0
+max_value = 5.0
+is_integer = true
+save_to_variable = "rn"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_isck1"]
+resource_name = "检查变量 [[本地]]: rn EQUALS 5.0"
+script = ExtResource("6_i2asx")
+variable_name = "rn"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 5.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_6c5ka"]
+resource_name = "打印: FAIL: RandomNumber"
+script = ExtResource("4_s3hgi")
+message = "FAIL: RandomNumber"
+
+[sub_resource type="Resource" id="Resource_hk3k5"]
+resource_name = "打印: PASS: RandomNumber"
+script = ExtResource("4_s3hgi")
+message = "PASS: RandomNumber"
+
+[sub_resource type="Resource" id="Resource_q78jh"]
+resource_name = "If/Else rn [[本地]] EQUALS 5.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_isck1")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_hk3k5")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_6c5ka")])
+
+[sub_resource type="Resource" id="Resource_q4h80"]
+resource_name = "随机点 [2D] @(0, 0) ±(10, 10) → rpt [[本地]]"
+script = ExtResource("12_bado7")
+plane_3d = 0
+origin_direct_3d = Vector3(0, 0, 0)
+origin_variable = ""
+origin_scope = 0
+origin_scope_source = 0
+origin_custom_scope_id = ""
+origin_target_node_path = NodePath("")
+range_direct_3d = Vector3(100, 100, 100)
+range_variable = ""
+range_scope = 0
+range_scope_source = 0
+range_custom_scope_id = ""
+range_target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+dimension_mode = 0
+origin_mode = 0
+origin_direct_2d = Vector2(0, 0)
+range_mode = 0
+range_direct_2d = Vector2(10, 10)
+save_to_variable = "rpt"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_mrd1t"]
+resource_name = "检查变量 [[本地]]: rpt EQUALS [[本地]] rpt"
+script = ExtResource("6_i2asx")
+variable_name = "rpt"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = true
+compare_variable = "rpt"
+compare_variable_scope = 0
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_cmn1v"]
+resource_name = "打印: FAIL: GetRandomPointInRange"
+script = ExtResource("4_s3hgi")
+message = "FAIL: GetRandomPointInRange"
+
+[sub_resource type="Resource" id="Resource_koipm"]
+resource_name = "打印: PASS: GetRandomPointInRange"
+script = ExtResource("4_s3hgi")
+message = "PASS: GetRandomPointInRange"
+
+[sub_resource type="Resource" id="Resource_e0pge"]
+resource_name = "If/Else rpt [[本地]] EQUALS rpt [[本地]] [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_mrd1t")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_koipm")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_cmn1v")])
+
+[sub_resource type="Resource" id="Resource_kclxg"]
+resource_name = "'Vector2(1, 2)' → va [Vector2]"
+script = ExtResource("8_dp4wi")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(1, 2)"
+output_type = 2
+scope_source = 0
+save_to_variable = "va"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_p0pn8"]
+resource_name = "向量加法(Vector2) → vsum [[本地]]"
+script = ExtResource("13_bxgia")
+vector_b_variable = ""
+vector_b_scope = 0
+vector_b_scope_source = 0
+vector_b_scope_id = ""
+scalar_value = 1.0
+scalar_use_variable = false
+scalar_variable = ""
+scalar_scope = 0
+scalar_scope_source = 0
+scalar_scope_id = ""
+scope_source = 0
+scope_id = ""
+operation_type = 0
+vector_type = 0
+vector_a_variable = "va"
+vector_a_scope = 0
+vector_b_use_variable = false
+vector_b_value = "(10.0, 10.0)"
+scalar_use_variable = false
+scalar_value = 1.0
+save_to_variable = "vsum"
+save_to_scope = 0
+scope_source = 0
+scope_id = ""
+
+[sub_resource type="Resource" id="Resource_geu5a"]
+resource_name = "'Vector2(11, 12)' → vexp [Vector2]"
+script = ExtResource("8_dp4wi")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(11, 12)"
+output_type = 2
+scope_source = 0
+save_to_variable = "vexp"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_wqrbq"]
+resource_name = "检查变量 [[本地]]: vsum EQUALS [[本地]] vexp"
+script = ExtResource("6_i2asx")
+variable_name = "vsum"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = true
+compare_variable = "vexp"
+compare_variable_scope = 0
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_sakju"]
+resource_name = "打印: FAIL: VectorOperation"
+script = ExtResource("4_s3hgi")
+message = "FAIL: VectorOperation"
+
+[sub_resource type="Resource" id="Resource_6odpd"]
+resource_name = "打印: PASS: VectorOperation"
+script = ExtResource("4_s3hgi")
+message = "PASS: VectorOperation"
+
+[sub_resource type="Resource" id="Resource_4h2wv"]
+resource_name = "If/Else vsum [[本地]] EQUALS vexp [[本地]] [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_wqrbq")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_6odpd")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_sakju")])
+
+[sub_resource type="Resource" id="Resource_ocj7m"]
+resource_name = "'\"ab\" + \"cd\"' → se [[本地]]"
+script = ExtResource("14_ghxgg")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "\"ab\" + \"cd\""
+scope_source = 0
+save_to_variable = "se"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_6iltd"]
+resource_name = "检查变量 [[本地]]: se EQUALS abcd"
+script = ExtResource("6_i2asx")
+variable_name = "se"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = "abcd"
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_3rjix"]
+resource_name = "打印: FAIL: StringExpression"
+script = ExtResource("4_s3hgi")
+message = "FAIL: StringExpression"
+
+[sub_resource type="Resource" id="Resource_ykhj2"]
+resource_name = "打印: PASS: StringExpression"
+script = ExtResource("4_s3hgi")
+message = "PASS: StringExpression"
+
+[sub_resource type="Resource" id="Resource_ex37o"]
+resource_name = "If/Else se [[本地]] EQUALS abcd [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_6iltd")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_ykhj2")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_3rjix")])
+
+[sub_resource type="Resource" id="Resource_dj4al"]
+resource_name = "表达式: 5 > 3"
+script = ExtResource("15_mjn3u")
+custom_scope_id = ""
+target_node_path = NodePath("")
+expression = "5 > 3"
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_38sne"]
+resource_name = "打印: FAIL: ExpressionCondition(true)"
+script = ExtResource("4_s3hgi")
+message = "FAIL: ExpressionCondition(true)"
+
+[sub_resource type="Resource" id="Resource_3q3ui"]
+resource_name = "打印: PASS: ExpressionCondition(true)"
+script = ExtResource("4_s3hgi")
+message = "PASS: ExpressionCondition(true)"
+
+[sub_resource type="Resource" id="Resource_4heyv"]
+resource_name = "If/Else 5 > 3 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_dj4al")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_3q3ui")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_38sne")])
+
+[sub_resource type="Resource" id="Resource_c56nj"]
+resource_name = "表达式: 5 < 3"
+script = ExtResource("15_mjn3u")
+custom_scope_id = ""
+target_node_path = NodePath("")
+expression = "5 < 3"
+scope_source = 0
+
+[sub_resource type="Resource" id="Resource_loibe"]
+resource_name = "打印: PASS: ExpressionCondition(neg)"
+script = ExtResource("4_s3hgi")
+message = "PASS: ExpressionCondition(neg)"
+
+[sub_resource type="Resource" id="Resource_pgwi7"]
+resource_name = "打印: FAIL: ExpressionCondition(neg)"
+script = ExtResource("4_s3hgi")
+message = "FAIL: ExpressionCondition(neg)"
+
+[sub_resource type="Resource" id="Resource_u02v4"]
+resource_name = "If/Else 5 < 3 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_c56nj")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_pgwi7")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_loibe")])
+
+[sub_resource type="Resource" id="Resource_g3s01"]
+resource_name = "'Vector2(0, 0)' → p1 [Vector2]"
+script = ExtResource("8_dp4wi")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(0, 0)"
+output_type = 2
+scope_source = 0
+save_to_variable = "p1"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_b7mxy"]
+resource_name = "'Vector2(3, 4)' → p2 [Vector2]"
+script = ExtResource("8_dp4wi")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(3, 4)"
+output_type = 2
+scope_source = 0
+save_to_variable = "p2"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_shpcv"]
+resource_name = "A < ≤ 6.0"
+script = ExtResource("16_r5hbp")
+source_variable_name = ""
+source_variable_scope = 0
+source_scope_source = 0
+source_custom_scope_id = ""
+source_target_node_path = NodePath("")
+target_variable_name = ""
+target_variable_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+source_node_source = 0
+source_node = NodePath("../Targets/A")
+target_node_source = 0
+target_node = NodePath("../Targets/B")
+comparison_operator = 1
+threshold = 6.0
+use_squared_distance = false
+equality_tolerance = 1.0
+
+[sub_resource type="Resource" id="Resource_rvvxr"]
+resource_name = "打印: FAIL: CheckDistance(true)"
+script = ExtResource("4_s3hgi")
+message = "FAIL: CheckDistance(true)"
+
+[sub_resource type="Resource" id="Resource_bd01h"]
+resource_name = "打印: PASS: CheckDistance(true)"
+script = ExtResource("4_s3hgi")
+message = "PASS: CheckDistance(true)"
+
+[sub_resource type="Resource" id="Resource_m7uv0"]
+resource_name = "If/Else A < B 6.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_shpcv")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_bd01h")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_rvvxr")])
+
+[sub_resource type="Resource" id="Resource_rqb0d"]
+resource_name = "A > ≤ 6.0"
+script = ExtResource("16_r5hbp")
+source_variable_name = ""
+source_variable_scope = 0
+source_scope_source = 0
+source_custom_scope_id = ""
+source_target_node_path = NodePath("")
+target_variable_name = ""
+target_variable_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+source_node_source = 0
+source_node = NodePath("../Targets/A")
+target_node_source = 0
+target_node = NodePath("../Targets/B")
+comparison_operator = 0
+threshold = 6.0
+use_squared_distance = false
+equality_tolerance = 1.0
+
+[sub_resource type="Resource" id="Resource_0nj5a"]
+resource_name = "打印: PASS: CheckDistance(neg)"
+script = ExtResource("4_s3hgi")
+message = "PASS: CheckDistance(neg)"
+
+[sub_resource type="Resource" id="Resource_sg6uw"]
+resource_name = "打印: FAIL: CheckDistance(neg)"
+script = ExtResource("4_s3hgi")
+message = "FAIL: CheckDistance(neg)"
+
+[sub_resource type="Resource" id="Resource_qsoww"]
+resource_name = "If/Else A > B 6.0 [真:1 [同步]"
+script = ExtResource("7_jiaf1")
+sequence_mode = 0
+condition = SubResource("Resource_rqb0d")
+true_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_sg6uw")])
+false_instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_0nj5a")])
+
+[sub_resource type="Resource" id="Resource_pktdj"]
+resource_name = "打印: === deep_math DONE ==="
+script = ExtResource("4_s3hgi")
+message = "=== deep_math DONE ==="
+
+[sub_resource type="Resource" id="Resource_5yx5y"]
+script = ExtResource("17_4tb6c")
+instructions = Array[ExtResource("3_663kd")]([SubResource("Resource_xl0w6"), SubResource("Resource_1j07n"), SubResource("Resource_vnbs4"), SubResource("Resource_ijwhv"), SubResource("Resource_fgb11"), SubResource("Resource_xmhh7"), SubResource("Resource_xvoca"), SubResource("Resource_5c8oi"), SubResource("Resource_jk62s"), SubResource("Resource_288gi"), SubResource("Resource_q78jh"), SubResource("Resource_q4h80"), SubResource("Resource_e0pge"), SubResource("Resource_kclxg"), SubResource("Resource_p0pn8"), SubResource("Resource_geu5a"), SubResource("Resource_4h2wv"), SubResource("Resource_ocj7m"), SubResource("Resource_ex37o"), SubResource("Resource_4heyv"), SubResource("Resource_u02v4"), SubResource("Resource_g3s01"), SubResource("Resource_b7mxy"), SubResource("Resource_m7uv0"), SubResource("Resource_qsoww"), SubResource("Resource_pktdj")])
+
+[node name="test_deep_math" type="Node2D" unique_id=1847272323]
+
+[node name="Targets" type="Node2D" parent="." unique_id=1536981943]
+
+[node name="A" type="Node2D" parent="Targets" unique_id=1868662802]
+
+[node name="B" type="Node2D" parent="Targets" unique_id=363437618]
+
+[node name="C" type="Node2D" parent="Targets" unique_id=1584741641]
+
+[node name="DeepMath" type="Node" parent="." unique_id=730825731]
+script = ExtResource("1_w575b")
+event_definition = SubResource("Resource_xk2fw")
+action_runner = SubResource("Resource_5yx5y")
+trigger_once = true

@@ -1,0 +1,98 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "DeepDebug",
+  "category": "debug",
+  "description": "深度测试·Debug：Print / PrintVariableValue / BreakpointInstruction",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "dbg_x"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "Print",
+        "message": "PASS: Print"
+      },
+      {
+        "type": "SetVariable",
+        "target_variable": "dbg_x",
+        "new_value": 42
+      },
+      {
+        "type": "PrintVariableValue",
+        "variable_name": "dbg_x",
+        "variable_scope": 0
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dbg_x",
+          "comparison_operator": 0,
+          "expected_value": 42,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: PrintVariableValue"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: PrintVariableValue"
+          }
+        ]
+      },
+      {
+        "type": "BreakpointInstruction",
+        "label": "deep_debug_bp",
+        "pause_execution": false,
+        "log_variables": true
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dbg_x",
+          "comparison_operator": 0,
+          "expected_value": 42,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: BreakpointInstruction"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: BreakpointInstruction"
+          }
+        ]
+      },
+      {
+        "type": "Print",
+        "message": "=== deep_debug DONE ==="
+      }
+    ]
+  },
+  "event": {
+    "type": "OnReady"
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}

@@ -1,0 +1,615 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "DeepDictionaries",
+  "category": "dictionaries",
+  "description": "深度测试·Dictionaries：16 指令 + 2 条件",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "av",
+      "d2",
+      "d2sz",
+      "dj",
+      "dkeys",
+      "dsz",
+      "dsz2",
+      "dvals",
+      "ev",
+      "fdsz",
+      "fdsz2",
+      "goldv",
+      "gv",
+      "hpv",
+      "pn"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "Print",
+        "message": "=== deep_dictionaries START ==="
+      },
+      {
+        "type": "CreateVariable",
+        "variable_name": "d",
+        "value": {
+          "hp": 10,
+          "mp": 5
+        }
+      },
+      {
+        "type": "DictSetKeyValue",
+        "dict_variable": "d",
+        "key_value": "gold",
+        "to_value": 100
+      },
+      {
+        "type": "DictGetValue",
+        "dict_variable": "d",
+        "key_value": "gold",
+        "target_variable": "gv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "gv",
+          "comparison_operator": 0,
+          "expected_value": 100,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictSetKeyValue/DictGetValue"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictSetKeyValue/DictGetValue"
+          }
+        ]
+      },
+      {
+        "type": "DictSetByPath",
+        "dict_variable": "d",
+        "path_string": "player.name",
+        "path_separator": ".",
+        "value_to_set": "Ninja"
+      },
+      {
+        "type": "DictGetByPath",
+        "dict_variable": "d",
+        "path_separator": ".",
+        "target_variable": "pn",
+        "default_value": "",
+        "path_value": "player.name"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "pn",
+          "comparison_operator": 0,
+          "expected_value": "Ninja",
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictSetByPath/DictGetByPath"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictSetByPath/DictGetByPath"
+          }
+        ]
+      },
+      {
+        "type": "DictSize",
+        "dict_variable": "d",
+        "target_variable": "dsz"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dsz",
+          "comparison_operator": 0,
+          "expected_value": 4,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictSize"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictSize"
+          }
+        ]
+      },
+      {
+        "type": "DictGetKeys",
+        "dict_variable": "d",
+        "target_variable": "dkeys"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dkeys",
+          "comparison_operator": 6,
+          "expected_value": "gold",
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictGetKeys"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictGetKeys"
+          }
+        ]
+      },
+      {
+        "type": "DictGetValues",
+        "dict_variable": "d",
+        "target_variable": "dvals"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dvals",
+          "comparison_operator": 6,
+          "expected_value": 100,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictGetValues"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictGetValues"
+          }
+        ]
+      },
+      {
+        "type": "DictRemoveKey",
+        "dict_variable": "d",
+        "key_value": "mp"
+      },
+      {
+        "type": "DictSize",
+        "dict_variable": "d",
+        "target_variable": "dsz2"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dsz2",
+          "comparison_operator": 0,
+          "expected_value": 3,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictRemoveKey"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictRemoveKey"
+          }
+        ]
+      },
+      {
+        "type": "DictModifyNumber",
+        "dict_variable": "d",
+        "key_value": "hp",
+        "operation": 0,
+        "amount": 5
+      },
+      {
+        "type": "DictGetValue",
+        "dict_variable": "d",
+        "key_value": "hp",
+        "target_variable": "hpv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "hpv",
+          "comparison_operator": 0,
+          "expected_value": 15,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictModifyNumber"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictModifyNumber"
+          }
+        ]
+      },
+      {
+        "type": "DictMathOp",
+        "dict_variable": "d",
+        "key_value": "gold",
+        "operation": 0,
+        "operand": 2
+      },
+      {
+        "type": "DictGetValue",
+        "dict_variable": "d",
+        "key_value": "gold",
+        "target_variable": "goldv"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "goldv",
+          "comparison_operator": 0,
+          "expected_value": 200,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictMathOp"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictMathOp"
+          }
+        ]
+      },
+      {
+        "type": "DictSetKeyValue",
+        "dict_variable": "d",
+        "key_value": "alive",
+        "to_value": true
+      },
+      {
+        "type": "DictToggleBoolean",
+        "dict_variable": "d",
+        "key_value": "alive"
+      },
+      {
+        "type": "DictGetValue",
+        "dict_variable": "d",
+        "key_value": "alive",
+        "target_variable": "av"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "av",
+          "comparison_operator": 0,
+          "expected_value": false,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictToggleBoolean"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictToggleBoolean"
+          }
+        ]
+      },
+      {
+        "type": "CreateVariable",
+        "variable_name": "src",
+        "value": {
+          "extra": 1
+        }
+      },
+      {
+        "type": "DictMerge",
+        "source_dict_variable": "src",
+        "target_dict_variable": "d",
+        "overwrite_existing": true
+      },
+      {
+        "type": "DictGetValue",
+        "dict_variable": "d",
+        "key_value": "extra",
+        "target_variable": "ev"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "ev",
+          "comparison_operator": 0,
+          "expected_value": 1,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictMerge"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictMerge"
+          }
+        ]
+      },
+      {
+        "type": "DictDuplicate",
+        "dict_variable": "d",
+        "target_variable": "d2",
+        "deep_copy": true
+      },
+      {
+        "type": "DictSize",
+        "dict_variable": "d2",
+        "target_variable": "d2sz"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "d2sz",
+          "comparison_operator": 0,
+          "expected_value": 5,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictDuplicate"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictDuplicate"
+          }
+        ]
+      },
+      {
+        "type": "DictToJson",
+        "dict_variable": "d",
+        "target_variable": "dj"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "dj",
+          "comparison_operator": 6,
+          "expected_value": "gold",
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictToJson"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictToJson"
+          }
+        ]
+      },
+      {
+        "type": "DictFromJson",
+        "json_string": "{\"a\": 1, \"b\": 2}",
+        "dict_variable": "fd"
+      },
+      {
+        "type": "DictSize",
+        "dict_variable": "fd",
+        "target_variable": "fdsz"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "fdsz",
+          "comparison_operator": 0,
+          "expected_value": 2,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictFromJson"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictFromJson"
+          }
+        ]
+      },
+      {
+        "type": "DictClear",
+        "dict_variable": "fd"
+      },
+      {
+        "type": "DictSize",
+        "dict_variable": "fd",
+        "target_variable": "fdsz2"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "fdsz2",
+          "comparison_operator": 0,
+          "expected_value": 0,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: DictClear"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: DictClear"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckDictContainsKey",
+          "dict_variable": "d",
+          "key_value": "gold"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckDictContainsKey(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckDictContainsKey(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckDictContainsKey",
+          "dict_variable": "d",
+          "key_value": "nope"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckDictContainsKey(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckDictContainsKey(neg)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckDictSize",
+          "dict_variable": "d",
+          "comparison": 0,
+          "compare_value": 5
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckDictSize(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckDictSize(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckDictSize",
+          "dict_variable": "d",
+          "comparison": 2,
+          "compare_value": 9
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckDictSize(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckDictSize(neg)"
+          }
+        ]
+      },
+      {
+        "type": "Print",
+        "message": "=== deep_dictionaries DONE ==="
+      }
+    ]
+  },
+  "event": {
+    "type": "OnReady"
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}

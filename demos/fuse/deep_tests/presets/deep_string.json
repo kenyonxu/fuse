@@ -1,0 +1,317 @@
+{
+  "format_version": "2.0",
+  "level": "L2",
+  "display_name": "DeepString",
+  "category": "string",
+  "description": "深度测试·String：6 指令 + 2 条件",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "s",
+      "scon",
+      "scon2",
+      "sfmt",
+      "sjoined",
+      "slen",
+      "sparts"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "action_runner": {
+    "execution_mode": 0,
+    "instructions": [
+      {
+        "type": "Print",
+        "message": "=== deep_string START ==="
+      },
+      {
+        "type": "SetVariable",
+        "target_variable": "s",
+        "new_value": "hello fuse world"
+      },
+      {
+        "type": "StringLength",
+        "source_variable": "s",
+        "save_to_variable": "slen"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "slen",
+          "comparison_operator": 0,
+          "expected_value": 16,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringLength"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringLength"
+          }
+        ]
+      },
+      {
+        "type": "StringContainsInstruction",
+        "source_variable": "s",
+        "search": "fuse",
+        "case_sensitive": true,
+        "save_to_variable": "scon"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "scon",
+          "comparison_operator": 0,
+          "expected_value": true,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringContainsInstruction"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringContainsInstruction"
+          }
+        ]
+      },
+      {
+        "type": "StringReplace",
+        "variable_name": "s",
+        "search": "world",
+        "replace": "godot"
+      },
+      {
+        "type": "StringContainsInstruction",
+        "source_variable": "s",
+        "search": "godot",
+        "case_sensitive": true,
+        "save_to_variable": "scon2"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "scon2",
+          "comparison_operator": 0,
+          "expected_value": true,
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringReplace"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringReplace"
+          }
+        ]
+      },
+      {
+        "type": "StringSplit",
+        "source_variable": "s",
+        "delimiter": " ",
+        "save_to_variable": "sparts"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "sparts",
+          "comparison_operator": 0,
+          "expected_value": [
+            "hello",
+            "fuse",
+            "godot"
+          ],
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringSplit"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringSplit"
+          }
+        ]
+      },
+      {
+        "type": "StringJoin",
+        "source_variable": "sparts",
+        "connector": "-",
+        "save_to_variable": "sjoined"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "sjoined",
+          "comparison_operator": 0,
+          "expected_value": "hello-fuse-godot",
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringJoin"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringJoin"
+          }
+        ]
+      },
+      {
+        "type": "StringFormat",
+        "template": "res={sjoined}",
+        "save_to_variable": "sfmt"
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckVariable",
+          "variable_name": "sfmt",
+          "comparison_operator": 0,
+          "expected_value": "res=hello-fuse-godot",
+          "auto_convert_types": true
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: StringFormat"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: StringFormat"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckStringContains",
+          "source_variable": "s",
+          "search": "godot"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckStringContains(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckStringContains(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckStringContains",
+          "source_variable": "s",
+          "search": "zzz"
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckStringContains(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckStringContains(neg)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckStringLength",
+          "source_variable": "s",
+          "compare_type": 0,
+          "threshold": 16
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckStringLength(true)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckStringLength(true)"
+          }
+        ]
+      },
+      {
+        "type": "IfElse",
+        "sequence_mode": 0,
+        "condition": {
+          "type": "CheckStringLength",
+          "source_variable": "s",
+          "compare_type": 2,
+          "threshold": 100
+        },
+        "true_instructions": [
+          {
+            "type": "Print",
+            "message": "FAIL: CheckStringLength(neg)"
+          }
+        ],
+        "false_instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: CheckStringLength(neg)"
+          }
+        ]
+      },
+      {
+        "type": "Print",
+        "message": "=== deep_string DONE ==="
+      }
+    ]
+  },
+  "event": {
+    "type": "OnReady"
+  },
+  "trigger_config": {
+    "trigger_once": true,
+    "cooldown_mode": 0,
+    "cooldown_time": 1.0
+  }
+}
