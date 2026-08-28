@@ -619,14 +619,14 @@ index_scope = 0
 loop_instructions = Array[ExtResource("2_am6rr")]([SubResource("Resource_a3v06"), SubResource("Resource_jjicp")])
 
 [sub_resource type="Resource" id="Resource_4fdha"]
-resource_name = "co_out [[本地]] EQUALS 1"
+resource_name = "co_out [[本地]] EQUALS 2"
 script = ExtResource("14_ifv1r")
 array_scope_source = 0
 array_custom_scope_id = ""
 array_target_node_path = NodePath("")
 group_name = ""
 target_node_path = NodePath("")
-compare_value = 1
+compare_value = 2
 source_type = 0
 array_variable = "co_out"
 array_scope = 0
@@ -643,7 +643,7 @@ script = ExtResource("3_sk2ru")
 message = "PASS: ContinueLoop(当前语义)"
 
 [sub_resource type="Resource" id="Resource_0krow"]
-resource_name = "If/Else co_out [[本地]] EQUALS 1 [真:1 [同步]"
+resource_name = "If/Else co_out [[本地]] EQUALS 2 [真:1 [同步]"
 script = ExtResource("11_jvmd8")
 sequence_mode = 0
 condition = SubResource("Resource_4fdha")
@@ -1229,18 +1229,18 @@ action_runner = SubResource("Resource_n7553")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_flow_control" type="Node2D" unique_id=1674060455]
+[node name="test_deep_flow_control" type="Node2D" unique_id=1796715061]
 
-[node name="Timer1" type="Timer" parent="." unique_id=1917862290]
+[node name="Timer1" type="Timer" parent="." unique_id=1485203341]
 one_shot = true
 autostart = true
 
-[node name="MiniRunner" type="Node" parent="." unique_id=1098610028]
+[node name="MiniRunner" type="Node" parent="." unique_id=1713415750]
 script = ExtResource("1_qak4n")
 action_runner = SubResource("Resource_ar1")
 action_runner = SubResource("Resource_ar1")
 
-[node name="DeepFlowControl" type="Node" parent="." unique_id=1654031963]
+[node name="DeepFlowControl" type="Node" parent="." unique_id=2020904955]
 script = ExtResource("5_a5aqb")
 event_bindings = Array[ExtResource("6_52gex")]([SubResource("Resource_o67cr"), SubResource("Resource_gufp3")])
 use_parallel_condition_evaluation = false

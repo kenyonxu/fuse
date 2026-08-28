@@ -334,7 +334,7 @@
               "type": "CheckArraySize",
               "array_variable": "co_out",
               "comparison": 0,
-              "compare_value": 1
+              "compare_value": 2
             },
             "true_instructions": [
               {
