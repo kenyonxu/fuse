@@ -323,6 +323,15 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 2. **ContinueLoop 语义缺陷**——标志仅在迭代顶消费，"跳过下一迭代"而非"跳过本次剩余指令"（断言已按当前行为校准看守）
 3. **NavigateToPosition / OnNavigationTargetReached 依赖外部轮询**——探针实证 NavigationAgent2D 的 `is_finished=true` 后 `navigation_finished` 信号仅在有人调用 `get_next_path_position()` 时才发射；Fuse 侧无轮询则指令永不完成（正常游戏由玩家移动代码的每帧轮询掩盖）
 
+### M2 · B 层进行中（2026-08-28）
+
+| 场景 | headless | F5 感官 | 备注 |
+|------|----------|---------|------|
+| Scene | 13/13 | ReloadScene 待验 | 五事件全触发（本轮救活四个事件组件，见 dc3b0aa） |
+| Camera | 7/7 | ✅ 用户验收 | v4 双绑定编排（shake/fade×移动跟随目标挂死组合绕开，待专项） |
+| Audio | 4+4(m) | ✅ 用户验收 | OnMusicBeat 修复后实测触发；PlayMusic 长指令语义澄清 |
+| Tween | 3+FAIL | ✅ 用户验收 | RotateTo 断言值/TweenProperty Variant 挂起留作已知问题 |
+
 ### M0 · Arrays 打样（2026-08-28）✅
 
 六步全流程走通，出口标准全部达成：
