@@ -137,3 +137,30 @@ static func _get_condition_metadata() -> ConditionMetadata:
 	metadata.keywords = ["字符串", "string", "长度", "length", "比较", "compare", "大小", "size", "计数", "count"]
 	metadata.builtin_icon = "GuiRadioChecked"
 	return metadata
+
+
+# 补齐参数的属性注册——带自定义 setter 的脚本变量只有 SCRIPT_VARIABLE 位、无 STORAGE 位，
+# 不注册则 Inspector 不可编辑、.tres/.tscn 序列化静默丢值、preset schema 提取器漏收录
+# （同 9a90828 对 OnGroundStateChanged 的修法）
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	properties.append({
+		name = "source_variable",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "compare_type",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Equal, Not Equal, Greater, Less, Greater Equal",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "threshold",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties

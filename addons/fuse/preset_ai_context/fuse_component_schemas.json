@@ -4303,6 +4303,51 @@
   ],
   "CheckAnimationTreeParameter": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "parameter_name",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Equal, Not Equal, Greater, Less, Greater Equal",
+      "is_nested_instructions": false,
+      "name": "compare_type",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0.0,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "compare_value",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Float, Bool",
+      "is_nested_instructions": false,
+      "name": "parameter_type",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
       "default": true,
       "hint": 0,
       "hint_string": "",
@@ -6320,6 +6365,24 @@
   ],
   "CheckFrameRate": [
     {
+      "default": 2,
+      "hint": 2,
+      "hint_string": "Equal, Not Equal, Greater, Less, Greater Equal",
+      "is_nested_instructions": false,
+      "name": "compare_type",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 30.0,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "threshold_fps",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
       "default": true,
       "hint": 0,
       "hint_string": "",
@@ -6858,6 +6921,60 @@
   ],
   "CheckInputDirection": [
     {
+      "default": "move_left",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_left",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_right",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_right",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_up",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_up",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_down",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_down",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Up, Down, Left",
+      "is_nested_instructions": false,
+      "name": "expected_direction",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0.3,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "tolerance",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
       "default": true,
       "hint": 0,
       "hint_string": "",
@@ -6987,6 +7104,60 @@
     }
   ],
   "CheckInputMagnitude": [
+    {
+      "default": "move_left",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_left",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_right",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_right",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_up",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_up",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_down",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_down",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Greater, Less, Greater Equal",
+      "is_nested_instructions": false,
+      "name": "compare_type",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0.5,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "threshold",
+      "type": 3,
+      "type_name": "float"
+    },
     {
       "default": true,
       "hint": 0,
@@ -8923,6 +9094,24 @@
   ],
   "CheckPathAvailable": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "agent_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": "(0.0, 0.0)",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_position",
+      "type": 5,
+      "type_name": "Vector2"
+    },
+    {
       "default": true,
       "hint": 0,
       "hint_string": "",
@@ -8978,6 +9167,15 @@
     }
   ],
   "CheckPlatform": [
+    {
+      "default": 0,
+      "hint": 2,
+      "hint_string": "Windows, Macos, Linux, Android, Ios",
+      "is_nested_instructions": false,
+      "name": "platform",
+      "type": 2,
+      "type_name": "int"
+    },
     {
       "default": true,
       "hint": 0,
@@ -9252,6 +9450,33 @@
   ],
   "CheckSlope": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
+    {
+      "default": 1,
+      "hint": 2,
+      "hint_string": "Greater Equal",
+      "is_nested_instructions": false,
+      "name": "compare_type",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 45.0,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "angle_degrees",
+      "type": 3,
+      "type_name": "float"
+    },
+    {
       "default": true,
       "hint": 0,
       "hint_string": "",
@@ -9308,6 +9533,33 @@
   ],
   "CheckStringContains": [
     {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "source_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "search",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": true,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "case_sensitive",
+      "type": 1,
+      "type_name": "bool"
+    },
+    {
       "default": true,
       "hint": 0,
       "hint_string": "",
@@ -9363,6 +9615,33 @@
     }
   ],
   "CheckStringLength": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "source_variable",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 2,
+      "hint": 2,
+      "hint_string": "Equal, Not Equal, Greater, Less, Greater Equal",
+      "is_nested_instructions": false,
+      "name": "compare_type",
+      "type": 2,
+      "type_name": "int"
+    },
+    {
+      "default": 0,
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "threshold",
+      "type": 2,
+      "type_name": "int"
+    },
     {
       "default": true,
       "hint": 0,
@@ -9567,6 +9846,15 @@
     }
   ],
   "CheckUIVisible": [
+    {
+      "default": "",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    },
     {
       "default": true,
       "hint": 0,

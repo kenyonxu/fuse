@@ -141,3 +141,48 @@ static func _get_condition_metadata() -> ConditionMetadata:
 	metadata.keywords = ["输入", "input", "大小", "magnitude", "强度", "intensity", "方向", "direction", "走", "跑", "walk", "run"]
 	metadata.builtin_icon = "InputEventKey"
 	return metadata
+
+
+# 补齐参数的属性注册——带自定义 setter 的脚本变量只有 SCRIPT_VARIABLE 位、无 STORAGE 位，
+# 不注册则 Inspector 不可编辑、.tres/.tscn 序列化静默丢值、preset schema 提取器漏收录
+# （同 9a90828 对 OnGroundStateChanged 的修法）
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	properties.append({
+		name = "input_action_left",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "input_action_right",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "input_action_up",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "input_action_down",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "compare_type",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Greater, Less, Greater Equal",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "threshold",
+		type = TYPE_FLOAT,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties

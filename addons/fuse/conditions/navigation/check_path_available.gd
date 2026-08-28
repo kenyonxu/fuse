@@ -101,3 +101,23 @@ static func _get_condition_metadata() -> ConditionMetadata:
 	metadata.keywords = ["路径", "path", "导航", "navigation", "可达", "reachable", "agent", "目标", "target"]
 	metadata.builtin_icon = "NavigationAgent2D"
 	return metadata
+
+
+# 补齐参数的属性注册——带自定义 setter 的脚本变量只有 SCRIPT_VARIABLE 位、无 STORAGE 位，
+# 不注册则 Inspector 不可编辑、.tres/.tscn 序列化静默丢值、preset schema 提取器漏收录
+# （同 9a90828 对 OnGroundStateChanged 的修法）
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	properties.append({
+		name = "agent_node",
+		type = TYPE_NODE_PATH,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "target_position",
+		type = TYPE_VECTOR2,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties

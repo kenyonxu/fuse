@@ -137,3 +137,30 @@ static func _get_condition_metadata() -> ConditionMetadata:
 	metadata.keywords = ["斜坡", "slope", "角度", "angle", "物理", "physics", "地面", "terrain"]
 	metadata.builtin_icon = "Terrain3D"
 	return metadata
+
+
+# 补齐参数的属性注册——带自定义 setter 的脚本变量只有 SCRIPT_VARIABLE 位、无 STORAGE 位，
+# 不注册则 Inspector 不可编辑、.tres/.tscn 序列化静默丢值、preset schema 提取器漏收录
+# （同 9a90828 对 OnGroundStateChanged 的修法）
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	properties.append({
+		name = "target_node",
+		type = TYPE_NODE_PATH,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "compare_type",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Greater Equal",
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "angle_degrees",
+		type = TYPE_FLOAT,
+		hint = PROPERTY_HINT_NONE,
+		usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties
