@@ -169,9 +169,11 @@ static func _analyze_instructions(instructions: Array, report: Dictionary, prefi
 		_extract_variables(inst, report)
 
 		# 条件（BaseCondition）节点/变量引用
+		# typeof 判别：BreakpointInstruction.condition 是表达式 String（use_expression_condition），
+		# 不能当条件对象反射；OBJECT 桶同时容纳 BaseCondition(RefCounted) 与测试 mock(Resource)
 		if "condition" in inst:
 			var cond = inst.get("condition")
-			if cond != null:
+			if cond != null and typeof(cond) == TYPE_OBJECT:
 				_extract_nodepaths(cond, report)
 				_extract_variables(cond, report)
 
@@ -724,8 +726,9 @@ static func analyze_problems(instructions: Array, scene_root: Node = null, prede
 		# 注意：条件只读不写，故只检测未声明，忽略 cond_entry.mode
 		# 用 cond != null + "condition" in inst 判断（与 _analyze_instructions 一致），
 		# 避免硬绑 BaseCondition（测试 mock 用 Resource 子类即可注入）。
+		# typeof 判别排除 BreakpointInstruction.condition 一类表达式 String（同 _analyze_instructions）
 		var cond = inst.get("condition") if inst != null else null
-		if cond != null:
+		if cond != null and typeof(cond) == TYPE_OBJECT:
 			var cond_tmp := {"variables": {"local": [], "scope": [], "global": []}, "nodes": [], "signals": []}
 			_extract_variables(cond, cond_tmp)
 			for cond_entry in cond_tmp.variables.local:
@@ -771,8 +774,9 @@ static func _check_nodepath_targets(
 			continue
 		_check_nodepath_in_object(inst, inst, i, scene_root, problems)
 		# 条件节点中的 NodePath 引用（与 analyze_problems 变量检测对齐）
+		# typeof 判别排除 BreakpointInstruction.condition 一类表达式 String
 		var cond = inst.get("condition") if inst != null else null
-		if cond != null:
+		if cond != null and typeof(cond) == TYPE_OBJECT:
 			_check_nodepath_in_object(cond, inst, i, scene_root, problems)
 
 

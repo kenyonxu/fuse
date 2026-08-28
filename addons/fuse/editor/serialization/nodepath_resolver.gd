@@ -37,9 +37,10 @@ static func _scan_instructions(instructions: Array, report: Dictionary) -> void:
 		InstructionAnalyzer._extract_nodepaths(inst, report)
 
 		# Condition 节点中的 NodePath 引用
+		# typeof 判别排除 BreakpointInstruction.condition 一类表达式 String（String 为真值）
 		if "condition" in inst:
 			var cond = inst.get("condition")
-			if cond:
+			if cond != null and typeof(cond) == TYPE_OBJECT:
 				InstructionAnalyzer._extract_nodepaths(cond, report)
 
 		# 递归扫描子指令（if/else/loop）

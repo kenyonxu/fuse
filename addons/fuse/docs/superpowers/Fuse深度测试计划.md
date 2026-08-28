@@ -315,6 +315,7 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 9. BreakLoop/ContinueLoop 调不存在的 is_in_loop + 错误方法名——BreakLoop 一进循环即崩
 10. CheckComposite 内联条件字典从不反序列化，逻辑树无叶子恒假
 11. MouseWorldPosition 调不存在的 context.has_node；OnNavigationTargetReached 缺属性注册（存储丢失病第 12 例）
+12. **编辑器分析器把 String 当条件对象反射**——BreakpointInstruction.condition 是表达式字符串，InstructionAnalyzer/NodePathResolver 四处 `"condition" in inst` 假设其为条件资源，编辑器打开含该指令的场景即刷 Invalid call（M1 后用户在编辑器中首次暴露，`typeof == TYPE_OBJECT` 判别修复）
 
 **已知问题（M1 遗留，待专项）**：
 
