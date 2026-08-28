@@ -3,7 +3,7 @@
   "level": "L4",
   "display_name": "DeepCamera",
   "category": "camera",
-  "description": "深度测试·Camera：7 指令",
+  "description": "深度测试·Camera：7 指令（F5 观感版：阶段提示+停顿+终态复位）",
   "icon_name": "",
   "variables": {
     "local": [
@@ -32,7 +32,11 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "=== deep_camera START ==="
+            "message": "=== deep_camera START（每步约 1.5s，跟着控制台提示看画面）==="
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段1：变焦 zoom=2.0（画面放大）"
           },
           {
             "type": "SetCameraZoom",
@@ -61,6 +65,14 @@
                 "message": "FAIL: SetCameraZoom"
               }
             ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段2：相机边界 Left=-100 Right=600（拖不出去）"
           },
           {
             "type": "SetCameraLimit",
@@ -119,6 +131,14 @@
             ]
           },
           {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段3：从 Area2D 取边界（0..200 x 0..100 盒子）"
+          },
+          {
             "type": "SetCameraLimitFromArea2D",
             "camera_node": "../Cam",
             "bounds_area": "../Bounds"
@@ -144,6 +164,14 @@
                 "message": "FAIL: SetCameraLimitFromArea2D(left)"
               }
             ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段4：相机跳去跟随 Player(400,0)（受边界钳制）"
           },
           {
             "type": "SetPosition",
@@ -196,36 +224,71 @@
             ]
           },
           {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段5：相机震动 0.8s"
+          },
+          {
             "type": "CameraShake",
             "target_node": "../Cam",
             "intensity": 0.3,
-            "duration": 0.5
+            "duration": 0.8
           },
           {
             "type": "Print",
             "message": "PASS(m): CameraShake(F5 观感)"
           },
           {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 阶段6：淡出→淡入"
+          },
+          {
             "type": "CameraFadeOut",
             "color": "(0, 0, 0, 1)",
-            "duration": 0.4
+            "duration": 0.6
           },
           {
             "type": "Wait",
-            "wait_time": 0.6
+            "wait_time": 0.9
           },
           {
             "type": "CameraFadeIn",
             "color": "(0, 0, 0, 1)",
-            "duration": 0.4
+            "duration": 0.6
           },
           {
             "type": "Wait",
-            "wait_time": 0.6
+            "wait_time": 0.9
           },
           {
             "type": "Print",
             "message": "PASS(m): CameraFadeOut+CameraFadeIn(F5 观感)"
+          },
+          {
+            "type": "Print",
+            "message": ">>> [F5] 终态复位：zoom=1.0，Player 回 (100,50)——此刻画面应稳定可见"
+          },
+          {
+            "type": "SetCameraZoom",
+            "target_node": "../Cam",
+            "zoom": 1.0,
+            "zoom_mode": 0
+          },
+          {
+            "type": "SetPosition",
+            "target_node": "../Player",
+            "position": "(100.0, 50.0, 0.0)"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.0
           },
           {
             "type": "Print",
