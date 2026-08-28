@@ -1,26 +1,26 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b6rexn7xdemc2"]
 
-[ext_resource type="AudioStream" path="res://demos/fuse/fuse_adventure/resources/sfx/jumps/sfx_movement_jump1.wav" id="1_iae4s"]
-[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_skify"]
-[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_eoqpe"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_rvdvv"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_kwlqy"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_dkjpo"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/play_sound.gd" id="7_mwaco"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="8_t2isx"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/set_audio_volume.gd" id="9_62jww"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="10_63al5"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_g1f04"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/play_music.gd" id="12_f8j04"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/pause_resume_audio.gd" id="13_vbp7c"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="14_5ksxy"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/audio/stop_audio.gd" id="15_qqtcl"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="16_5selu"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="17_y2doq"]
-[ext_resource type="Script" path="res://addons/fuse/events/audio/on_audio_started.gd" id="18_47dfr"]
-[ext_resource type="Script" path="res://addons/fuse/events/audio/on_audio_finished.gd" id="19_cboxa"]
-[ext_resource type="Script" path="res://addons/fuse/events/audio/on_audio_bus_volume_changed.gd" id="20_mdyla"]
-[ext_resource type="Script" path="res://addons/fuse/events/audio/on_music_beat.gd" id="21_wwn6l"]
+[ext_resource type="AudioStream" uid="uid://dtf154nthu4wj" path="res://demos/fuse/fuse_adventure/resources/sfx/jumps/sfx_movement_jump1.wav" id="1_iae4s"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_skify"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="3_eoqpe"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_rvdvv"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="5_kwlqy"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_dkjpo"]
+[ext_resource type="Script" uid="uid://cg88npkpvssm6" path="res://addons/fuse/instructions/audio/play_sound.gd" id="7_mwaco"]
+[ext_resource type="Script" uid="uid://t4gmw2xe0e2j" path="res://addons/fuse/instructions/audio/play_random_sound.gd" id="8_t2isx"]
+[ext_resource type="Script" uid="uid://dwaygbxvtidr" path="res://addons/fuse/instructions/audio/set_audio_volume.gd" id="9_62jww"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="10_63al5"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_g1f04"]
+[ext_resource type="Script" uid="uid://ckkgx5v576aqw" path="res://addons/fuse/instructions/audio/play_music.gd" id="12_f8j04"]
+[ext_resource type="Script" uid="uid://wvxwi8o4yhee" path="res://addons/fuse/instructions/audio/pause_resume_audio.gd" id="13_vbp7c"]
+[ext_resource type="Script" uid="uid://dgk6lyr4260ad" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="14_5ksxy"]
+[ext_resource type="Script" uid="uid://btke6ynca7ot2" path="res://addons/fuse/instructions/audio/stop_audio.gd" id="15_qqtcl"]
+[ext_resource type="Script" uid="uid://ciok2e7h5waqe" path="res://addons/fuse/conditions/node/check_node_property.gd" id="16_5selu"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="17_y2doq"]
+[ext_resource type="Script" uid="uid://c5l5fub0d457t" path="res://addons/fuse/events/audio/on_audio_started.gd" id="18_47dfr"]
+[ext_resource type="Script" uid="uid://cwj2d1ege63ig" path="res://addons/fuse/events/audio/on_audio_finished.gd" id="19_cboxa"]
+[ext_resource type="Script" uid="uid://cjsvbbgsu3wbf" path="res://addons/fuse/events/audio/on_audio_bus_volume_changed.gd" id="20_mdyla"]
+[ext_resource type="Script" uid="uid://drcik2kfh87a2" path="res://addons/fuse/events/audio/on_music_beat.gd" id="21_wwn6l"]
 
 [sub_resource type="Resource" id="Resource_is5pt"]
 resource_name = "打印: === deep_audio START ==="
@@ -65,7 +65,7 @@ script = ExtResource("5_kwlqy")
 message = "PASS: PlayRandomSound(执行级)"
 
 [sub_resource type="Resource" id="Resource_fjwfi"]
-resource_name = "设置音量 未指定播放器 = 100.0%%"
+resource_name = "设置音量 总线 'Master' = 100.0%%"
 script = ExtResource("9_62jww")
 target_player = NodePath("")
 use_variable_for_target = false
@@ -164,7 +164,7 @@ value_source = 0
 wait_time = 2.5
 
 [sub_resource type="Resource" id="Resource_22kar"]
-resource_name = "暂停 (所有正在播放)"
+resource_name = "暂停 模式 'Fuse_AudioPlayer_*'"
 script = ExtResource("13_vbp7c")
 target_player = NodePath("")
 use_variable_for_target = false
@@ -201,7 +201,7 @@ value_source = 0
 wait_time = 1.5
 
 [sub_resource type="Resource" id="Resource_hv7cn"]
-resource_name = "暂停 (所有正在播放)"
+resource_name = "恢复 模式 'Fuse_AudioPlayer_*'"
 script = ExtResource("13_vbp7c")
 target_player = NodePath("")
 use_variable_for_target = false

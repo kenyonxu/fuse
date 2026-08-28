@@ -110,9 +110,12 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		_create_fuse_error_localized("FUSE_ERROR_CHECK_INTERVAL_INVALID", FuseError.ErrorType.CONFIGURATION_ERROR, {"interval": check_interval})
 		return
 
-	# 从 RuntimeInstance 恢复状态
-	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("is_monitoring"):
-		_is_monitoring = _runtime_instance_ref.get_runtime_state("is_monitoring")
+	# 从 RuntimeInstance 恢复状态（无既有状态默认开始监控——初始化即监听）
+	# 初始化即监听：无条件置真（get_default_runtime_state 播种的是 false，
+	# 按状态恢复会让事件永远不监听）；重初始化场景如需恢复语义另行处理
+	_is_monitoring = true
+	if _runtime_instance_ref:
+		_runtime_instance_ref.set_runtime_state("is_monitoring", true)
 
 	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("last_process_mode"):
 		_last_process_mode = _runtime_instance_ref.get_runtime_state("last_process_mode")
@@ -126,9 +129,8 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node)})
 		return
 
-	# 如果需要，重新创建定时器
-	if _is_monitoring:
-		_create_timer()
+	# 创建轮询定时器（默认即监听）
+	_create_timer()
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {
 		"event_type": get_event_type(),
@@ -150,7 +152,7 @@ func terminate(owner_node: Node) -> void:
 
 	# 清理 RuntimeInstance 状态
 	if _runtime_instance_ref:
-		_runtime_instance_ref.clear_runtime_state()
+		_runtime_instance_ref.reset_runtime_state()
 
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
@@ -164,6 +166,9 @@ func _create_timer():
 	_timer = Timer.new()
 	_timer.wait_time = check_interval
 	_timer.one_shot = false
+	# 轮询器必须 ALWAYS：默认 pausable 的话树一暂停 Timer 自身停摆，
+	# 恰好盲掉要观测的暂停窗口（暂停期间无一次采样，恢复后才醒来）
+	_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	_timer.timeout.connect(_on_timer_timeout)
 	_owner_node_ref.add_child(_timer)
 	_timer.start()

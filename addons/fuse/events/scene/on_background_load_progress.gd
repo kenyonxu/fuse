@@ -92,19 +92,18 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 
 	# 从 RuntimeInstance 初始化状态
 	if _runtime_instance_ref:
-		var last_progress = _runtime_instance_ref.get_runtime_state("last_progress")
-		var is_monitoring = _runtime_instance_ref.get_runtime_state("is_monitoring")
-		var load_started = _runtime_instance_ref.get_runtime_state("load_started")
-
-		# 如果状态不存在，使用默认值
-		if !last_progress.is_valid():
+		# get_runtime_state 返回 Variant（默认态是 float/bool 等标量），
+		# 判存在须用 has_runtime_state——对取值调 is_valid() 是类型混淆必崩
+		if not _runtime_instance_ref.has_runtime_state("last_progress"):
 			_runtime_instance_ref.set_runtime_state("last_progress", 0.0)
-		if !is_monitoring.is_valid():
+		if not _runtime_instance_ref.has_runtime_state("is_monitoring"):
 			_runtime_instance_ref.set_runtime_state("is_monitoring", false)
-		if !load_started.is_valid():
+		if not _runtime_instance_ref.has_runtime_state("load_started"):
 			_runtime_instance_ref.set_runtime_state("load_started", false)
 
-	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
+	# 运行时路径与旧入口对齐：校验 + 启动后台加载与轮询 Timer
+	# （迁移 RuntimeInstance 时漏移植启动逻辑，事件此前在此路径下永不监控）
+	initialize(owner_node)
 
 ## 清理事件监听（必需）
 func terminate(owner_node: Node) -> void:

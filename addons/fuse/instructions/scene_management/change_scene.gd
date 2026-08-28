@@ -135,6 +135,11 @@ func _change_scene() -> void:
 		finished.emit()
 		return
 
+	# 经 EventBus 广播切换预告——OnSceneAboutToChange 订阅此事件
+	# （SceneTree 无原生切换前信号，此前事件挂在幻觉信号名上从未触发过）
+	var _bus: Node = scene_tree.root.get_node_or_null("FuseEventBus")
+	if _bus:
+		_bus.send_event("Fuse_SceneAboutToChange", {"scene_path": scene_path})
 	var error_code = scene_tree.change_scene_to_file(scene_path)
 
 	if error_code != OK:
@@ -254,6 +259,11 @@ func _change_scene_runtime(runtime_instance: RuntimeInstructionInstance) -> void
 		runtime_instance._complete_execution()
 		return
 
+	# 经 EventBus 广播切换预告——OnSceneAboutToChange 订阅此事件
+	# （SceneTree 无原生切换前信号，此前事件挂在幻觉信号名上从未触发过）
+	var _bus: Node = scene_tree.root.get_node_or_null("FuseEventBus")
+	if _bus:
+		_bus.send_event("Fuse_SceneAboutToChange", {"scene_path": scene_path})
 	var error_code = scene_tree.change_scene_to_file(scene_path)
 
 	if error_code != OK:

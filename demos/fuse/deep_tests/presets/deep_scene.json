@@ -172,20 +172,22 @@
             ]
           },
           {
-            "type": "PauseGame",
-            "show_pause_menu": false
+            "type": "SetProcessMode",
+            "target_node": "../Targets/A",
+            "process_mode": 4
           },
           {
             "type": "Wait",
             "wait_time": 0.2
           },
           {
-            "type": "ResumeGame",
-            "close_pause_menu": false
+            "type": "SetProcessMode",
+            "target_node": "../Targets/A",
+            "process_mode": 0
           },
           {
             "type": "Print",
-            "message": "PASS: PauseGame/ResumeGame(供OnNodePausedResumed)"
+            "message": "PASS: SetProcessMode(DISABLED→INHERIT)"
           },
           {
             "type": "Print",

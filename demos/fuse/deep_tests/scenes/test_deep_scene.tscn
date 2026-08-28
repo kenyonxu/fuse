@@ -1,92 +1,91 @@
-[gd_scene format=3 uid="uid://da3u2ybi52ota"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_0l4le"]
-[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="2_85haw"]
-[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="3_n3t50"]
-[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="4_fl3wi"]
-[ext_resource type="Script" uid="uid://cw63nnif7yh07" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="5_wvtro"]
-[ext_resource type="Script" uid="uid://bpgyrl1kelnm0" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="6_wv6d0"]
-[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_djxbt"]
-[ext_resource type="Script" uid="uid://dag2k4ss5ibw1" path="res://addons/fuse/instructions/scene/get_scene_path.gd" id="8_hafyh"]
-[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="9_ffmoq"]
-[ext_resource type="Script" uid="uid://cjuhviikwpav2" path="res://addons/fuse/instructions/scene/load_scene_background.gd" id="10_sri61"]
-[ext_resource type="Script" uid="uid://de3dlfynl0ygh" path="res://addons/fuse/instructions/scene/add_scene_as_child.gd" id="11_y21od"]
-[ext_resource type="Script" uid="uid://dygk63s5ifv6y" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="12_qd3i3"]
-[ext_resource type="Script" uid="uid://bxjem41rq4evo" path="res://addons/fuse/instructions/flow_control/pause_game.gd" id="13_sh2av"]
-[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="14_ymd8r"]
-[ext_resource type="Script" uid="uid://dq3x44e84gtf7" path="res://addons/fuse/instructions/flow_control/resume_game.gd" id="15_7dras"]
-[ext_resource type="Script" uid="uid://koqcwgwlg15a" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="16_er6n1"]
-[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="17_i0mnh"]
-[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="18_tnsfb"]
-[ext_resource type="Script" uid="uid://bx8ykw7njlh5p" path="res://addons/fuse/events/scene/on_background_load_progress.gd" id="19_7aaj8"]
-[ext_resource type="Script" uid="uid://ocfla6cc4s2c" path="res://addons/fuse/events/scene/on_tree_changed.gd" id="20_3fsfd"]
-[ext_resource type="Script" uid="uid://djqys585n8ydc" path="res://addons/fuse/events/scene/on_node_paused_resumed.gd" id="21_wid61"]
-[ext_resource type="Script" uid="uid://djxmheidqqnbi" path="res://addons/fuse/events/scene/on_scene_about_to_change.gd" id="22_t6efs"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_b52nl"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_0l4le"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_85haw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_n3t50"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/scene/preload_scene_instruction.gd" id="5_fl3wi"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/scene/check_preload_status.gd" id="6_wvtro"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_wv6d0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/scene/get_scene_path.gd" id="8_djxbt"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="9_hafyh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/scene/load_scene_background.gd" id="10_ffmoq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/scene/add_scene_as_child.gd" id="11_sri61"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_node.gd" id="12_y21od"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_process_mode.gd" id="13_qd3i3"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="14_sh2av"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/scene_management/change_scene.gd" id="15_ymd8r"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="16_7dras"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="17_er6n1"]
+[ext_resource type="Script" path="res://addons/fuse/events/scene/on_background_load_progress.gd" id="18_i0mnh"]
+[ext_resource type="Script" path="res://addons/fuse/events/scene/on_tree_changed.gd" id="19_tnsfb"]
+[ext_resource type="Script" path="res://addons/fuse/events/scene/on_node_paused_resumed.gd" id="20_7aaj8"]
+[ext_resource type="Script" path="res://addons/fuse/events/scene/on_scene_about_to_change.gd" id="21_3fsfd"]
 
-[sub_resource type="Resource" id="Resource_iebhf"]
+[sub_resource type="Resource" id="Resource_wid61"]
 resource_name = "打印: === deep_scene START ==="
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "=== deep_scene START ==="
 
-[sub_resource type="Resource" id="Resource_x53e1"]
+[sub_resource type="Resource" id="Resource_t6efs"]
 resource_name = "预加载场景 'test_deep_scene_b.tscn' (等待完成)"
-script = ExtResource("5_wvtro")
+script = ExtResource("5_fl3wi")
 scene_path = "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn"
 preload_mode = 0
 timeout = 5.0
 status_variable = "pl"
 
-[sub_resource type="Resource" id="Resource_kk745"]
+[sub_resource type="Resource" id="Resource_iebhf"]
 resource_name = "test_deep_scene_b.tscn 预加载: LOADED"
-script = ExtResource("6_wv6d0")
+script = ExtResource("6_wvtro")
 scene_path = "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn"
 expected_status = 0
 
-[sub_resource type="Resource" id="Resource_uwjtx"]
+[sub_resource type="Resource" id="Resource_x53e1"]
 resource_name = "打印: FAIL: PreloadSceneInstruction+CheckPreloadStatus(true)"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "FAIL: PreloadSceneInstruction+CheckPreloadStatus(true)"
 
-[sub_resource type="Resource" id="Resource_n4h8y"]
+[sub_resource type="Resource" id="Resource_kk745"]
 resource_name = "打印: PASS: PreloadSceneInstruction+CheckPreloadStatus(true)"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: PreloadSceneInstruction+CheckPreloadStatus(true)"
 
-[sub_resource type="Resource" id="Resource_e2b17"]
+[sub_resource type="Resource" id="Resource_uwjtx"]
 resource_name = "If/Else 检查场景 test_deep_scene_b.tscn 的预加载状态是否为 LOADED [真:1 [同步]"
-script = ExtResource("7_djxbt")
+script = ExtResource("7_wv6d0")
 sequence_mode = 0
-condition = SubResource("Resource_kk745")
-true_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_n4h8y")])
-false_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_uwjtx")])
+condition = SubResource("Resource_iebhf")
+true_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_kk745")])
+false_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_x53e1")])
 
-[sub_resource type="Resource" id="Resource_enlte"]
+[sub_resource type="Resource" id="Resource_n4h8y"]
 resource_name = "test_deep_scene_b.tscn 预加载: NOT_LOADED"
-script = ExtResource("6_wv6d0")
+script = ExtResource("6_wvtro")
 scene_path = "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn"
 expected_status = 3
 
-[sub_resource type="Resource" id="Resource_u8q47"]
+[sub_resource type="Resource" id="Resource_e2b17"]
 resource_name = "打印: PASS: CheckPreloadStatus(neg)"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: CheckPreloadStatus(neg)"
 
-[sub_resource type="Resource" id="Resource_gk3cc"]
+[sub_resource type="Resource" id="Resource_enlte"]
 resource_name = "打印: FAIL: CheckPreloadStatus(neg)"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "FAIL: CheckPreloadStatus(neg)"
 
-[sub_resource type="Resource" id="Resource_snekg"]
+[sub_resource type="Resource" id="Resource_u8q47"]
 resource_name = "If/Else 检查场景 test_deep_scene_b.tscn 的预加载状态是否为 NOT_LOADED [真:1 [同步]"
-script = ExtResource("7_djxbt")
+script = ExtResource("7_wv6d0")
 sequence_mode = 0
-condition = SubResource("Resource_enlte")
-true_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_gk3cc")])
-false_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_u8q47")])
+condition = SubResource("Resource_n4h8y")
+true_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_enlte")])
+false_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_e2b17")])
 
-[sub_resource type="Resource" id="Resource_60s4i"]
+[sub_resource type="Resource" id="Resource_gk3cc"]
 resource_name = "获取场景路径 [场景文件路径] → 未指定变量"
-script = ExtResource("8_hafyh")
+script = ExtResource("8_djxbt")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -94,9 +93,9 @@ path_mode = 0
 save_to_variable = "sp"
 save_to_scope = 0
 
-[sub_resource type="Resource" id="Resource_wqbvd"]
+[sub_resource type="Resource" id="Resource_snekg"]
 resource_name = "检查变量 [[本地]]: sp CONTAINS deep_scene"
-script = ExtResource("9_ffmoq")
+script = ExtResource("9_hafyh")
 variable_name = "sp"
 scope_source = 0
 custom_scope_id = ""
@@ -114,27 +113,26 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_mm7ng"]
+[sub_resource type="Resource" id="Resource_60s4i"]
 resource_name = "打印: FAIL: GetScenePath"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "FAIL: GetScenePath"
 
-[sub_resource type="Resource" id="Resource_ktonp"]
+[sub_resource type="Resource" id="Resource_wqbvd"]
 resource_name = "打印: PASS: GetScenePath"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: GetScenePath"
 
-[sub_resource type="Resource" id="Resource_66cwj"]
+[sub_resource type="Resource" id="Resource_mm7ng"]
 resource_name = "If/Else sp [[本地]] CONTAINS deep_scene [真:1 [同步]"
-script = ExtResource("7_djxbt")
+script = ExtResource("7_wv6d0")
 sequence_mode = 0
-condition = SubResource("Resource_wqbvd")
-true_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_ktonp")])
-false_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_mm7ng")])
+condition = SubResource("Resource_snekg")
+true_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_wqbvd")])
+false_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_60s4i")])
 
-[sub_resource type="Resource" id="Resource_50q8p"]
-resource_name = "后台加载场景 'base_targets.tscn' 到变量 'bg' ([本地])"
-script = ExtResource("10_sri61")
+[sub_resource type="Resource" id="Resource_ktonp"]
+script = ExtResource("10_ffmoq")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -142,9 +140,9 @@ scene_path = "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
 save_to_variable = "bg"
 save_to_scope = 0
 
-[sub_resource type="Resource" id="Resource_7aven"]
+[sub_resource type="Resource" id="Resource_66cwj"]
 resource_name = "检查变量 [[本地]]: bg IS_NOT_NULL null"
-script = ExtResource("9_ffmoq")
+script = ExtResource("9_hafyh")
 variable_name = "bg"
 scope_source = 0
 custom_scope_id = ""
@@ -162,34 +160,34 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_kcpwi"]
+[sub_resource type="Resource" id="Resource_50q8p"]
 resource_name = "打印: FAIL: LoadSceneBackground"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "FAIL: LoadSceneBackground"
 
-[sub_resource type="Resource" id="Resource_kk203"]
+[sub_resource type="Resource" id="Resource_7aven"]
 resource_name = "打印: PASS: LoadSceneBackground"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: LoadSceneBackground"
 
-[sub_resource type="Resource" id="Resource_ivfn8"]
+[sub_resource type="Resource" id="Resource_kcpwi"]
 resource_name = "If/Else bg [[本地]] IS_NOT_NULL null [真:1 [同步]"
-script = ExtResource("7_djxbt")
+script = ExtResource("7_wv6d0")
 sequence_mode = 0
-condition = SubResource("Resource_7aven")
-true_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_kk203")])
-false_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_kcpwi")])
+condition = SubResource("Resource_66cwj")
+true_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_7aven")])
+false_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_50q8p")])
 
-[sub_resource type="Resource" id="Resource_hg5lg"]
+[sub_resource type="Resource" id="Resource_kk203"]
 resource_name = "添加场景为子节点 '未指定' 到当前场景"
-script = ExtResource("11_y21od")
+script = ExtResource("11_sri61")
 scene_path = "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
 target_parent = NodePath("..")
 new_node_name = "AddedChild"
 
-[sub_resource type="Resource" id="Resource_ydybf"]
+[sub_resource type="Resource" id="Resource_ivfn8"]
 resource_name = "获取节点 '../AddedChild' → added [[本地]]"
-script = ExtResource("12_qd3i3")
+script = ExtResource("12_y21od")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -197,9 +195,9 @@ node_path = NodePath("../AddedChild")
 result_variable = "added"
 result_scope = 0
 
-[sub_resource type="Resource" id="Resource_k5tjh"]
+[sub_resource type="Resource" id="Resource_hg5lg"]
 resource_name = "检查变量 [[本地]]: added IS_NOT_NULL null"
-script = ExtResource("9_ffmoq")
+script = ExtResource("9_hafyh")
 variable_name = "added"
 scope_source = 0
 custom_scope_id = ""
@@ -217,194 +215,204 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_6cmee"]
+[sub_resource type="Resource" id="Resource_ydybf"]
 resource_name = "打印: FAIL: AddSceneAsChild"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "FAIL: AddSceneAsChild"
 
-[sub_resource type="Resource" id="Resource_jl8hf"]
+[sub_resource type="Resource" id="Resource_k5tjh"]
 resource_name = "打印: PASS: AddSceneAsChild"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: AddSceneAsChild"
 
-[sub_resource type="Resource" id="Resource_3kbh3"]
+[sub_resource type="Resource" id="Resource_6cmee"]
 resource_name = "If/Else added [[本地]] IS_NOT_NULL null [真:1 [同步]"
-script = ExtResource("7_djxbt")
+script = ExtResource("7_wv6d0")
 sequence_mode = 0
-condition = SubResource("Resource_k5tjh")
-true_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_jl8hf")])
-false_instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_6cmee")])
+condition = SubResource("Resource_hg5lg")
+true_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_k5tjh")])
+false_instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_ydybf")])
 
-[sub_resource type="Resource" id="Resource_1is0i"]
-resource_name = "暂停游戏 (仅暂停)"
-script = ExtResource("13_sh2av")
-pause_menu_scene = ""
-pause_menu_parent = NodePath("")
-ui_node_path = NodePath("")
-show_pause_menu = false
+[sub_resource type="Resource" id="Resource_jl8hf"]
+resource_name = "处理模式: A → 禁用"
+script = ExtResource("13_qd3i3")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/A")
+process_mode = 4
 
-[sub_resource type="Resource" id="Resource_4ru6h"]
+[sub_resource type="Resource" id="Resource_3kbh3"]
 resource_name = "等待 0.2 秒"
-script = ExtResource("14_ymd8r")
+script = ExtResource("14_sh2av")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.2
 
+[sub_resource type="Resource" id="Resource_1is0i"]
+resource_name = "处理模式: A → 继承"
+script = ExtResource("13_qd3i3")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/A")
+process_mode = 0
+
+[sub_resource type="Resource" id="Resource_4ru6h"]
+resource_name = "打印: PASS: SetProcessMode(DISABLED→INHERIT)"
+script = ExtResource("4_n3t50")
+message = "PASS: SetProcessMode(DISABLED→INHERIT)"
+
 [sub_resource type="Resource" id="Resource_6ifjl"]
-resource_name = "恢复游戏"
-script = ExtResource("15_7dras")
-pause_menu_node = NodePath("")
-ui_node_path = NodePath("")
-close_pause_menu = false
-
-[sub_resource type="Resource" id="Resource_xwivl"]
-resource_name = "打印: PASS: PauseGame/ResumeGame(供OnNodePausedResumed)"
-script = ExtResource("4_fl3wi")
-message = "PASS: PauseGame/ResumeGame(供OnNodePausedResumed)"
-
-[sub_resource type="Resource" id="Resource_jp85a"]
 resource_name = "打印: PASS(m): ReloadScene(F5 手动验)"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS(m): ReloadScene(F5 手动验)"
 
-[sub_resource type="Resource" id="Resource_ecy0x"]
+[sub_resource type="Resource" id="Resource_xwivl"]
 resource_name = "打印: === deep_scene 主链 DONE，即将切 B ==="
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "=== deep_scene 主链 DONE，即将切 B ==="
 
-[sub_resource type="Resource" id="Resource_7scsx"]
+[sub_resource type="Resource" id="Resource_jp85a"]
 resource_name = "等待 0.5 秒"
-script = ExtResource("14_ymd8r")
+script = ExtResource("14_sh2av")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.5
 
-[sub_resource type="Resource" id="Resource_3temy"]
+[sub_resource type="Resource" id="Resource_ecy0x"]
 resource_name = "切换场景 'test_deep_scene_b.tscn'"
-script = ExtResource("16_er6n1")
+script = ExtResource("15_ymd8r")
 scene_path = "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn"
 delay = 0.0
 
+[sub_resource type="Resource" id="Resource_7scsx"]
+script = ExtResource("16_7dras")
+instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_wid61"), SubResource("Resource_t6efs"), SubResource("Resource_uwjtx"), SubResource("Resource_u8q47"), SubResource("Resource_gk3cc"), SubResource("Resource_mm7ng"), SubResource("Resource_ktonp"), SubResource("Resource_kcpwi"), SubResource("Resource_kk203"), SubResource("Resource_ivfn8"), SubResource("Resource_6cmee"), SubResource("Resource_jl8hf"), SubResource("Resource_3kbh3"), SubResource("Resource_1is0i"), SubResource("Resource_4ru6h"), SubResource("Resource_6ifjl"), SubResource("Resource_xwivl"), SubResource("Resource_jp85a"), SubResource("Resource_ecy0x")])
+
+[sub_resource type="Resource" id="Resource_3temy"]
+script = ExtResource("17_er6n1")
+
 [sub_resource type="Resource" id="Resource_380g7"]
-script = ExtResource("17_i0mnh")
-instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_iebhf"), SubResource("Resource_x53e1"), SubResource("Resource_e2b17"), SubResource("Resource_snekg"), SubResource("Resource_60s4i"), SubResource("Resource_66cwj"), SubResource("Resource_50q8p"), SubResource("Resource_ivfn8"), SubResource("Resource_hg5lg"), SubResource("Resource_ydybf"), SubResource("Resource_3kbh3"), SubResource("Resource_1is0i"), SubResource("Resource_4ru6h"), SubResource("Resource_6ifjl"), SubResource("Resource_xwivl"), SubResource("Resource_jp85a"), SubResource("Resource_ecy0x"), SubResource("Resource_7scsx"), SubResource("Resource_3temy")])
-
-[sub_resource type="Resource" id="Resource_0d0aj"]
-script = ExtResource("18_tnsfb")
-
-[sub_resource type="Resource" id="Resource_utikv"]
 resource_name = "场景就绪时触发"
-script = ExtResource("2_85haw")
-event = SubResource("Resource_0d0aj")
-action_runner = SubResource("Resource_380g7")
+script = ExtResource("2_0l4le")
+event = SubResource("Resource_3temy")
+action_runner = SubResource("Resource_7scsx")
 trigger_once = true
 cooldown_time = 1.0
 
-[sub_resource type="Resource" id="Resource_qa63x"]
+[sub_resource type="Resource" id="Resource_0d0aj"]
 resource_name = "打印: PASS: OnBackgroundLoadProgress"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: OnBackgroundLoadProgress"
 
-[sub_resource type="Resource" id="Resource_tl850"]
-script = ExtResource("17_i0mnh")
-instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_qa63x")])
+[sub_resource type="Resource" id="Resource_utikv"]
+script = ExtResource("16_7dras")
+instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_0d0aj")])
 
-[sub_resource type="Resource" id="Resource_07bat"]
+[sub_resource type="Resource" id="Resource_qa63x"]
 resource_name = "后台加载进度: res://demos/fuse/deep_tests/scenes/base_targets.tscn (阈值: 100.0%)"
-script = ExtResource("19_7aaj8")
+script = ExtResource("18_i0mnh")
 load_resource_path = "res://demos/fuse/deep_tests/scenes/base_targets.tscn"
 progress_threshold = 1.0
 
-[sub_resource type="Resource" id="Resource_4dakf"]
+[sub_resource type="Resource" id="Resource_tl850"]
 resource_name = "后台加载 'res://demos/fuse/deep_tests/scenes/base_targets.tscn' 时，进度每增加 100% 触发（检查间隔：0.10s）"
-script = ExtResource("2_85haw")
-event = SubResource("Resource_07bat")
-action_runner = SubResource("Resource_tl850")
+script = ExtResource("2_0l4le")
+event = SubResource("Resource_qa63x")
+action_runner = SubResource("Resource_utikv")
 trigger_once = true
 cooldown_time = 1.0
 
-[sub_resource type="Resource" id="Resource_6v5rn"]
+[sub_resource type="Resource" id="Resource_07bat"]
 resource_name = "打印: PASS: OnTreeChanged"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: OnTreeChanged"
 
-[sub_resource type="Resource" id="Resource_wdsc3"]
-script = ExtResource("17_i0mnh")
-instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_6v5rn")])
+[sub_resource type="Resource" id="Resource_4dakf"]
+script = ExtResource("16_7dras")
+instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_07bat")])
 
-[sub_resource type="Resource" id="Resource_tyr4w"]
+[sub_resource type="Resource" id="Resource_6v5rn"]
 resource_name = "场景树变化: 节点添加"
-script = ExtResource("20_3fsfd")
+script = ExtResource("19_tnsfb")
 change_type = 0
 
-[sub_resource type="Resource" id="Resource_44e2v"]
+[sub_resource type="Resource" id="Resource_wdsc3"]
 resource_name = "场景树节点添加时触发"
-script = ExtResource("2_85haw")
-event = SubResource("Resource_tyr4w")
-action_runner = SubResource("Resource_wdsc3")
+script = ExtResource("2_0l4le")
+event = SubResource("Resource_6v5rn")
+action_runner = SubResource("Resource_4dakf")
 trigger_once = true
 cooldown_time = 1.0
 
-[sub_resource type="Resource" id="Resource_rx3lq"]
+[sub_resource type="Resource" id="Resource_tyr4w"]
 resource_name = "打印: PASS: OnNodePausedResumed"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: OnNodePausedResumed"
 
-[sub_resource type="Resource" id="Resource_dhjmt"]
-script = ExtResource("17_i0mnh")
-instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_rx3lq")])
+[sub_resource type="Resource" id="Resource_44e2v"]
+script = ExtResource("16_7dras")
+instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_tyr4w")])
 
-[sub_resource type="Resource" id="Resource_7jlci"]
+[sub_resource type="Resource" id="Resource_rx3lq"]
 resource_name = "节点暂停/恢复: A [暂停/恢复时]"
-script = ExtResource("21_wid61")
+script = ExtResource("20_7aaj8")
 target_node = NodePath("../Targets/A")
 check_interval = 0.05
 
-[sub_resource type="Resource" id="Resource_mnxqi"]
+[sub_resource type="Resource" id="Resource_dhjmt"]
 resource_name = "监听节点 'A' 的暂停模式变化，每 0.05 秒检查一次，暂停/恢复时"
-script = ExtResource("2_85haw")
-event = SubResource("Resource_7jlci")
-action_runner = SubResource("Resource_dhjmt")
+script = ExtResource("2_0l4le")
+event = SubResource("Resource_rx3lq")
+action_runner = SubResource("Resource_44e2v")
 trigger_once = true
 cooldown_time = 1.0
 
-[sub_resource type="Resource" id="Resource_fxc37"]
+[sub_resource type="Resource" id="Resource_7jlci"]
 resource_name = "打印: PASS: OnSceneAboutToChange"
-script = ExtResource("4_fl3wi")
+script = ExtResource("4_n3t50")
 message = "PASS: OnSceneAboutToChange"
 
+[sub_resource type="Resource" id="Resource_mnxqi"]
+script = ExtResource("16_7dras")
+instructions = Array[ExtResource("3_85haw")]([SubResource("Resource_7jlci")])
+
+[sub_resource type="Resource" id="Resource_fxc37"]
+script = ExtResource("21_3fsfd")
+_subscription = null
+
 [sub_resource type="Resource" id="Resource_lbftc"]
-script = ExtResource("17_i0mnh")
-instructions = Array[ExtResource("3_n3t50")]([SubResource("Resource_fxc37")])
-
-[sub_resource type="Resource" id="Resource_ohovy"]
-script = ExtResource("22_t6efs")
-
-[sub_resource type="Resource" id="Resource_1qysb"]
 resource_name = "监听场景切换前事件"
-script = ExtResource("2_85haw")
-event = SubResource("Resource_ohovy")
-action_runner = SubResource("Resource_lbftc")
+script = ExtResource("2_0l4le")
+event = SubResource("Resource_fxc37")
+action_runner = SubResource("Resource_mnxqi")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_scene" type="Node2D" unique_id=453622810]
+[node name="test_deep_scene" type="Node2D" unique_id=839165926]
 
-[node name="Targets" type="Node2D" parent="." unique_id=1226207838]
+[node name="Targets" type="Node2D" parent="." unique_id=1277547715]
 
-[node name="A" type="Node2D" parent="Targets" unique_id=257953612]
+[node name="A" type="Node2D" parent="Targets" unique_id=315887396]
 
-[node name="B" type="Node2D" parent="Targets" unique_id=635052840]
+[node name="B" type="Node2D" parent="Targets" unique_id=1964387926]
 position = Vector2(3, 4)
 
-[node name="C" type="Node2D" parent="Targets" unique_id=250670055]
+[node name="C" type="Node2D" parent="Targets" unique_id=429000804]
 position = Vector2(100, 100)
 
-[node name="DeepScene" type="Node" parent="." unique_id=1301740965]
-script = ExtResource("1_0l4le")
-event_bindings = Array[ExtResource("2_85haw")]([SubResource("Resource_utikv"), SubResource("Resource_4dakf"), SubResource("Resource_44e2v"), SubResource("Resource_mnxqi"), SubResource("Resource_1qysb")])
+[node name="DeepScene" type="Node" parent="." unique_id=714979471]
+script = ExtResource("1_b52nl")
+event_bindings = Array[ExtResource("2_0l4le")]([SubResource("Resource_380g7"), SubResource("Resource_tl850"), SubResource("Resource_wdsc3"), SubResource("Resource_dhjmt"), SubResource("Resource_lbftc")])
 use_parallel_condition_evaluation = false

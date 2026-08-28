@@ -15,7 +15,9 @@ class_name OnSceneAboutToChange
 ## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
 
 ## 是否传递场景路径
-@export var emit_scene_path: bool = false:
+@export var _subscription: Variant = null
+var _owner_node_ref: Node = null
+var emit_scene_path: bool = false:
 	set(value):
 		emit_scene_path = value
 		_update_resource_name()
@@ -32,142 +34,71 @@ func get_default_runtime_state() -> Dictionary:
 	base["is_monitoring"] = false
 	return base
 
-## 初始化事件监听（必需）
+## 初始化事件监听（必需）## 使用 RuntimeInstance 初始化事件（订阅 EventBus 预告）
+## ChangeScene 指令切换前会广播 "Fuse_SceneAboutToChange"——SceneTree 无原生
+## 切换前信号，原实现挂在幻觉信号 about_to_disconnect_from_scene 上从未触发过
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance) -> void:
 	if Engine.is_editor_hint():
 		return
-
 	_runtime_instance_ref = runtime_instance
-
 	if not owner_node:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
-
-	# 保存节点引用到运行时状态
-	if _runtime_instance_ref:
-		_runtime_instance_ref.set_runtime_state("owner_node_ref", owner_node)
-
-	# 初始化监控状态
-	if _runtime_instance_ref:
-		_runtime_instance_ref.set_runtime_state("is_monitoring", true)
-		_runtime_instance_ref.set_runtime_state("is_connected", false)
-
-	# 连接场景切换信号
-	if not owner_node.tree_entered.is_connected(_on_tree_entered):
-		owner_node.tree_entered.connect(_on_tree_entered)
-
-	_setup_scene_monitoring()
-
+	_owner_node_ref = owner_node
+	_subscribe(owner_node)
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-## 初始化事件监听（兼容旧版本）
+
+## 旧初始化入口（非 RuntimeInstance 路径）
 func initialize(owner_node: Node) -> void:
-	initialize_with_runtime_instance(owner_node, null)
-
-## 设置场景监听
-func _setup_scene_monitoring() -> void:
-	var owner_node_ref = null
-	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("owner_node_ref"):
-		owner_node_ref = _runtime_instance_ref.get_runtime_state("owner_node_ref")
-
-	if not owner_node_ref:
+	if Engine.is_editor_hint():
 		return
-
-	# 更新运行时状态
-	if _runtime_instance_ref:
-		_runtime_instance_ref.set_runtime_state("is_monitoring", true)
-
-	if owner_node_ref.is_inside_tree():
-		_connect_scene_signal()
-	else:
-		# 等待进入场景树后再连接
-		if not owner_node_ref.tree_entered.is_connected(_on_tree_entered):
-			owner_node_ref.tree_entered.connect(_on_tree_entered)
-
-## 当节点进入场景树
-func _on_tree_entered() -> void:
-	_setup_scene_monitoring()
-
-## 连接场景信号
-func _connect_scene_signal() -> void:
-	var owner_node_ref = null
-	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("owner_node_ref"):
-		owner_node_ref = _runtime_instance_ref.get_runtime_state("owner_node_ref")
-
-	if not owner_node_ref:
+	if not owner_node:
+		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
+	_owner_node_ref = owner_node
+	_subscribe(owner_node)
+	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-	var scene_tree = owner_node_ref.get_tree()
-	if not scene_tree:
+
+## 订阅 EventBus 的切换预告事件
+func _subscribe(owner_node: Node) -> void:
+	var bus: Node = Engine.get_main_loop().root.get_node_or_null("FuseEventBus")
+	if bus == null:
+		_create_fuse_error_localized("FUSE_ERROR_EVENT_BUS_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {})
 		return
-
-	var scene_root = scene_tree.root
-	if scene_root:
-		# 先断开之前的连接（如果存在）
-		if scene_root.about_to_disconnect_from_scene.is_connected(_on_scene_about_to_change):
-			scene_root.about_to_disconnect_from_scene.disconnect(_on_scene_about_to_change)
-
-		# 连接信号
-		scene_root.about_to_disconnect_from_scene.connect(_on_scene_about_to_change)
-
-		# 更新运行时状态
-		if _runtime_instance_ref:
-			_runtime_instance_ref.set_runtime_state("is_connected", true)
-
-## 场景切换前回调
-func _on_scene_about_to_change() -> void:
-	var is_monitoring = false
-	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("is_monitoring"):
-		is_monitoring = _runtime_instance_ref.get_runtime_state("is_monitoring")
-
-	if not is_monitoring:
+	if _subscription != null:
 		return
+	_subscription = bus.subscribe("Fuse_SceneAboutToChange", _on_scene_about_to_change.bind(owner_node))
 
-	var target_scene = FuseLocalization.translate("FUSE_TEXT_UNKNOWN")
+
+## 收到切换预告：发触发信号
+func _on_scene_about_to_change(args: Dictionary, owner_node: Node) -> void:
+	var scene_path: String = str(args.get("scene_path", ""))
+	_log_info_localized("FUSE_LOG_EVENT_SCENE_ABOUT_TO_CHANGE", {"scene_path": scene_path})
+
+	var context_node = Node.new()
+	context_node.name = "SceneAboutToChangeContext"
+	context_node.set_meta("scene_path", scene_path)
+	context_node.set_meta("trigger", owner_node)
 	if emit_scene_path:
-		var owner_node_ref = null
-		if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("owner_node_ref"):
-			owner_node_ref = _runtime_instance_ref.get_runtime_state("owner_node_ref")
+		context_node.set_meta("old_scene", owner_node.get_tree().current_scene.scene_file_path if owner_node.get_tree().current_scene else "")
+	triggered.emit(context_node)
+	context_node.queue_free()
 
-		if owner_node_ref:
-			var scene_tree = owner_node_ref.get_tree()
-			if scene_tree and scene_tree.current_scene:
-				target_scene = scene_tree.current_scene.scene_file_path
-				if target_scene.is_empty():
-					target_scene = scene_tree.current_scene.name
-
-	_log_debug_localized("FUSE_LOG_EVENT_SCENE_ABOUT_TO_CHANGE", {
-		"scene": target_scene
-	})
-
-	var context = {
-		"scene_path": target_scene
-	}
-	triggered.emit(context)
 
 ## 清理事件监听（必需）
 func terminate(owner_node: Node) -> void:
-	# 清理 RuntimeEventInstance 的状态
-	if _runtime_instance_ref:
-		_runtime_instance_ref.set_runtime_state("is_monitoring", false)
-		_runtime_instance_ref.set_runtime_state("is_connected", false)
-		_runtime_instance_ref.set_runtime_state("owner_node_ref", null)
-
-	if owner_node and is_instance_valid(owner_node):
-		# 只在场景树中存在时才尝试断开连接
-		if owner_node.is_inside_tree():
-			var scene_tree = owner_node.get_tree()
-			if scene_tree and is_instance_valid(scene_tree):
-				var scene_root = scene_tree.root
-				if scene_root and is_instance_valid(scene_root) and scene_root.about_to_disconnect_from_scene.is_connected(_on_scene_about_to_change):
-					scene_root.about_to_disconnect_from_scene.disconnect(_on_scene_about_to_change)
-
-	if owner_node and is_instance_valid(owner_node) and owner_node.tree_entered.is_connected(_on_tree_entered):
-		owner_node.tree_entered.disconnect(_on_tree_entered)
-
+	if _subscription != null:
+		var bus: Node = Engine.get_main_loop().root.get_node_or_null("FuseEventBus")
+		if bus != null:
+			bus.unsubscribe(_subscription)
+		_subscription = null
+	_runtime_instance_ref = null
+	_owner_node_ref = null
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
-## 获取事件描述
+
 func get_description() -> String:
 	return FuseLocalization.translate("FUSE_EVENT_ON_SCENE_ABOUT_TO_CHANGE_DESC_FORMAT")
 
@@ -193,16 +124,6 @@ func reset() -> void:
 		_runtime_instance_ref.set_runtime_state("is_monitoring", true)
 		_runtime_instance_ref.set_runtime_state("is_connected", false)
 		_runtime_instance_ref.set_runtime_state("owner_node_ref", null)
-
-	# 恢复节点引用
-	var owner_node_ref = null
-	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("owner_node_ref"):
-		owner_node_ref = _runtime_instance_ref.get_runtime_state("owner_node_ref")
-
-	if owner_node_ref and is_instance_valid(owner_node_ref):
-		# 重新连接信号
-		if owner_node_ref.is_inside_tree():
-			_connect_scene_signal()
 
 	_log_debug_localized("FUSE_LOG_EVENT_RESET", {"event_type": get_event_type()})
 
