@@ -128,7 +128,13 @@ static func set_variable(
 			return _set_global_variable(context, variable_name, value)
 
 		_:
-			_log_error("未知的作用域类型: %s" % BaseVariable.VariableScope.keys()[scope])
+			# keys()[scope] 自身会越界崩溃（scope 超出枚举范围时），先安全取值
+			var scope_keys: Array = BaseVariable.VariableScope.keys()
+			var scope_str: String = str(scope) + "(未知)"
+			if scope is int and int(scope) >= 0 and int(scope) < scope_keys.size():
+				scope_str = scope_keys[int(scope)]
+			_log_error("未知的作用域类型: %s (raw=%s type=%s)" % [
+				scope_str, str(scope), type_string(typeof(scope))])
 			return false
 
 ## 检查变量是否存在

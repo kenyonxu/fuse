@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="GlobalVariableResource" format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/global_variable_resource.gd" id="1_1ix6b"]
+
+[resource]
+script = ExtResource("1_1ix6b")
+description = "全局变量存储"
+created_time = 0.889
+last_modified = 0.889

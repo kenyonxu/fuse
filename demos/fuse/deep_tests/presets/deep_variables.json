@@ -1,0 +1,692 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepVariables",
+  "category": "variables",
+  "icon_name": "",
+  "description": "深度测试·Variables：12 指令 + 6 条件 + 4 STATE 事件（L4 多事件绑定）",
+  "variables": {
+    "local": [
+      "scv_out",
+      "si",
+      "sv",
+      "v2",
+      "vwatch"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_variables START ==="
+          },
+          {
+            "type": "CreateVariable",
+            "variable_name": "cv1",
+            "value": 5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cv1",
+              "comparison_operator": 0,
+              "expected_value": 5,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CreateVariable"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CreateVariable"
+              }
+            ]
+          },
+          {
+            "type": "AddVariable",
+            "variable_name": "cv1",
+            "add_value": 3
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cv1",
+              "comparison_operator": 0,
+              "expected_value": 8,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: AddVariable"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: AddVariable"
+              }
+            ]
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "sv",
+            "new_value": 10
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "sv",
+              "comparison_operator": 0,
+              "expected_value": 10,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetVariable"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetVariable"
+              }
+            ]
+          },
+          {
+            "type": "SetIntVariable",
+            "target_variable": "si",
+            "new_value": 7
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "si",
+              "comparison_operator": 0,
+              "expected_value": 7,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetIntVariable"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetIntVariable"
+              }
+            ]
+          },
+          {
+            "type": "CreateVariable",
+            "variable_name": "sw_a",
+            "value": 1
+          },
+          {
+            "type": "CreateVariable",
+            "variable_name": "sw_b",
+            "value": 2
+          },
+          {
+            "type": "SwapVariables",
+            "variable_a": "sw_a",
+            "variable_b": "sw_b"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "sw_a",
+              "comparison_operator": 0,
+              "expected_value": 2,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SwapVariables"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SwapVariables"
+              }
+            ]
+          },
+          {
+            "type": "CreateVariable",
+            "variable_name": "tg",
+            "value": true
+          },
+          {
+            "type": "ToggleVariable",
+            "variable_name": "tg"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "tg",
+              "comparison_operator": 0,
+              "expected_value": false,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: ToggleVariable"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: ToggleVariable"
+              }
+            ]
+          },
+          {
+            "type": "SetScopeVariable",
+            "variable_name": "scv",
+            "scope_source": 0,
+            "new_value": 42
+          },
+          {
+            "type": "GetScopeVariable",
+            "source_variable_name": "scv",
+            "scope_source": 0,
+            "target_variable": "scv_out"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "scv_out",
+              "comparison_operator": 0,
+              "expected_value": 42,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetScopeVariable+GetScopeVariable"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetScopeVariable+GetScopeVariable"
+              }
+            ]
+          },
+          {
+            "type": "SaveGlobalVariables",
+            "save_scope": 0,
+            "save_target": 1,
+            "custom_path": "res://demos/fuse/deep_tests/reports/_deep_globals.tres"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SaveGlobalVariables"
+          },
+          {
+            "type": "LoadGlobalVariables",
+            "load_source": 1,
+            "custom_path": "res://demos/fuse/deep_tests/reports/_deep_globals.tres"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: LoadGlobalVariables"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cv1",
+              "comparison_operator": 0,
+              "expected_value": 8,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckVariable(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckVariable(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cv1",
+              "comparison_operator": 0,
+              "expected_value": 99,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckVariable(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckVariable(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CompareVariable",
+              "variable_name": "cv1",
+              "comparison_operator": 2,
+              "compare_value": 5,
+              "scope_source": 4
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CompareVariable(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CompareVariable(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CompareVariable",
+              "variable_name": "cv1",
+              "comparison_operator": 0,
+              "compare_value": 99,
+              "scope_source": 4
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CompareVariable(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CompareVariable(neg)"
+              }
+            ]
+          },
+          {
+            "type": "MathExpression",
+            "expression": "Vector2(3, 4)",
+            "output_type": 2,
+            "save_to_variable": "v2"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVector2VariableAxis",
+              "variable_name": "v2",
+              "axis": 0,
+              "comparison_operator": 0,
+              "compare_value": 2
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckVector2VariableAxis(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckVector2VariableAxis(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVector2VariableAxis",
+              "variable_name": "v2",
+              "axis": 1,
+              "comparison_operator": 0,
+              "compare_value": 4
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckVector2VariableAxis(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckVector2VariableAxis(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckScopeVariable",
+              "variable_name": "scv",
+              "scope_source": 0,
+              "comparison_operator": 0,
+              "expected_value": 42
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckScopeVariable(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckScopeVariable(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckScopeVariable",
+              "variable_name": "scv",
+              "scope_source": 0,
+              "comparison_operator": 0,
+              "expected_value": 99
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckScopeVariable(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckScopeVariable(neg)"
+              }
+            ]
+          },
+          {
+            "type": "CreateVariable",
+            "variable_name": "hp",
+            "value": 80
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckHealthValue",
+              "health_variable": "hp",
+              "target_value": 80
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckHealthValue(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckHealthValue(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckHealthValue",
+              "health_variable": "hp",
+              "target_value": 99
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckHealthValue(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckHealthValue(neg)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CompareHealthThreshold",
+              "health_variable": "hp",
+              "threshold": 50,
+              "comparison_operator": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CompareHealthThreshold(true)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CompareHealthThreshold(true)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CompareHealthThreshold",
+              "health_variable": "hp",
+              "threshold": 99,
+              "comparison_operator": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CompareHealthThreshold(neg)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CompareHealthThreshold(neg)"
+              }
+            ]
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "vwatch",
+            "new_value": 1
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.4
+          },
+          {
+            "type": "SetVariable",
+            "target_variable": "vwatch",
+            "new_value": 2
+          },
+          {
+            "type": "MoveBy",
+            "target_node": "../Targets/A",
+            "offset": "(50.0, 0.0, 0.0)",
+            "space": 0
+          },
+          {
+            "type": "SetPropertyValue",
+            "target_node": "../HealthNode",
+            "target_property": "health",
+            "new_value": 30
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.8
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_variables DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnVariableChanged",
+        "variable_name": "vwatch",
+        "variable_scope": 0,
+        "check_mode": 0,
+        "check_interval": 0.1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnVariableChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnPropertyChanged",
+        "target_node": "../Targets/A",
+        "property_name": "position",
+        "check_interval": 0.1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnPropertyChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnHealthChanged",
+        "target_node": "../HealthNode",
+        "health_property": "health",
+        "max_health_property": "max_health",
+        "trigger_mode": 0,
+        "check_interval": 0.1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnHealthChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnSoundListened",
+        "sound_source_path": "../SoundSource",
+        "listener_path": "../Targets/B",
+        "max_distance": 100.0,
+        "trigger_mode": 0,
+        "check_interval": 0.1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnSoundListened"
+          }
+        ]
+      }
+    }
+  ]
+}

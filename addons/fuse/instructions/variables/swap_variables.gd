@@ -167,7 +167,7 @@ func _get_variable_value(context: ExecutionContext, var_name: String) -> Variant
 
 ## 设置变量值到上下文
 func _set_variable_value(context: ExecutionContext, var_name: String, value: Variant) -> void:
-	VariableOperations.set_variable(context, var_name, value, variable_scope)
+	VariableOperations.set_variable(context, var_name, variable_scope, value)
 
 ## 动态属性拦截
 func _set(property: StringName, value: Variant) -> bool:

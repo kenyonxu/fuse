@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/health_target.gd" id="1_ht"]
+
+[ext_resource type="Script" path="res://addons/fuse/core/base/scope_variable_container.gd" id="2_svc"]
+
+[node name="Base" type="Node"]
+script = ExtResource("2_svc")
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="A" type="Node2D" parent="Targets"]
+position = Vector2(0, 0)
+
+[node name="B" type="Node2D" parent="Targets"]
+position = Vector2(3, 4)
+
+[node name="SoundSource" type="AudioStreamPlayer2D" parent="."]
+
+[node name="HealthNode" type="Node2D" parent="."]
+script = ExtResource("1_ht")

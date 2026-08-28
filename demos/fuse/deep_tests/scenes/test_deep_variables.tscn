@@ -1,0 +1,989 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/base/scope_variable_container.gd" id="1_ajp5y"]
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/health_target.gd" id="2_ikrr4"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="3_as3ni"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="4_22u3q"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="5_3otbb"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="6_7k8v0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/create_variable.gd" id="7_ni34r"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="8_ertcn"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_gq87r"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/add_variable.gd" id="10_01hxt"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/set_variable.gd" id="11_wx120"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/set_int_variable.gd" id="12_bxhc6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/swap_variables.gd" id="13_c120m"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/toggle_variable.gd" id="14_w1lm4"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/set_scope_variable.gd" id="15_8751i"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/get_scope_variable.gd" id="16_olwej"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/save_global_variables.gd" id="17_1iqkj"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/variables/load_global_variables.gd" id="18_ojq4n"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/compare_variable.gd" id="19_6ooke"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="20_qdo7i"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_vector2_variable_axis.gd" id="21_2x2dg"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/scope/check_scope_variable.gd" id="22_pb5vf"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_health_value.gd" id="23_tuh2b"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/compare_health_threshold.gd" id="24_sugcn"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="25_mru6d"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/move_by.gd" id="26_goof4"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="27_yhaf5"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="28_acekn"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="29_fthfd"]
+[ext_resource type="Script" path="res://addons/fuse/events/variable/on_variable_changed.gd" id="30_jpc14"]
+[ext_resource type="Script" path="res://addons/fuse/events/node/on_property_changed.gd" id="31_6xg6f"]
+[ext_resource type="Script" path="res://addons/fuse/events/gameplay/on_health_changed.gd" id="32_in53y"]
+[ext_resource type="Script" path="res://addons/fuse/events/gameplay/on_sound_listened.gd" id="33_xkjem"]
+
+[sub_resource type="Resource" id="Resource_gao5q"]
+resource_name = "打印: === deep_variables START ==="
+script = ExtResource("6_7k8v0")
+message = "=== deep_variables START ==="
+
+[sub_resource type="Resource" id="Resource_mhivu"]
+resource_name = "创建变量 [LOCAL] cv1 = 5.0"
+script = ExtResource("7_ni34r")
+variable_name = "cv1"
+value = 5.0
+
+[sub_resource type="Resource" id="Resource_xl83j"]
+resource_name = "检查变量 [[本地]]: cv1 EQUALS 5.0"
+script = ExtResource("8_ertcn")
+variable_name = "cv1"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 5.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_ykwb6"]
+resource_name = "打印: FAIL: CreateVariable"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CreateVariable"
+
+[sub_resource type="Resource" id="Resource_c6my0"]
+resource_name = "打印: PASS: CreateVariable"
+script = ExtResource("6_7k8v0")
+message = "PASS: CreateVariable"
+
+[sub_resource type="Resource" id="Resource_2u1aj"]
+resource_name = "If/Else cv1 [[本地]] EQUALS 5.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_xl83j")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_c6my0")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_ykwb6")])
+
+[sub_resource type="Resource" id="Resource_c86vk"]
+resource_name = "增加: [[本地]] cv1 + 3.0"
+script = ExtResource("10_01hxt")
+add_variable = ""
+variable_name = "cv1"
+variable_scope = 0
+use_variable = false
+add_value = 3.0
+
+[sub_resource type="Resource" id="Resource_wnr3c"]
+resource_name = "检查变量 [[本地]]: cv1 EQUALS 8.0"
+script = ExtResource("8_ertcn")
+variable_name = "cv1"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 8.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_h0knj"]
+resource_name = "打印: FAIL: AddVariable"
+script = ExtResource("6_7k8v0")
+message = "FAIL: AddVariable"
+
+[sub_resource type="Resource" id="Resource_ss28h"]
+resource_name = "打印: PASS: AddVariable"
+script = ExtResource("6_7k8v0")
+message = "PASS: AddVariable"
+
+[sub_resource type="Resource" id="Resource_15bku"]
+resource_name = "If/Else cv1 [[本地]] EQUALS 8.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_wnr3c")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_ss28h")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_h0knj")])
+
+[sub_resource type="Resource" id="Resource_k6tm6"]
+resource_name = "设置变量 [[本地]] 'sv' = 10.0"
+script = ExtResource("11_wx120")
+target_variable = "sv"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 10.0
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_7ife5"]
+resource_name = "检查变量 [[本地]]: sv EQUALS 10.0"
+script = ExtResource("8_ertcn")
+variable_name = "sv"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 10.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_20bet"]
+resource_name = "打印: FAIL: SetVariable"
+script = ExtResource("6_7k8v0")
+message = "FAIL: SetVariable"
+
+[sub_resource type="Resource" id="Resource_f4jgc"]
+resource_name = "打印: PASS: SetVariable"
+script = ExtResource("6_7k8v0")
+message = "PASS: SetVariable"
+
+[sub_resource type="Resource" id="Resource_7figo"]
+resource_name = "If/Else sv [[本地]] EQUALS 10.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_7ife5")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_f4jgc")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_20bet")])
+
+[sub_resource type="Resource" id="Resource_67hiv"]
+resource_name = "设置整数变量 [[本地]] 'si' = 7"
+script = ExtResource("12_bxhc6")
+target_variable = "si"
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+from_scope_source = 0
+from_custom_scope_id = ""
+from_target_node_path = NodePath("")
+new_value = 7
+
+[sub_resource type="Resource" id="Resource_81xkh"]
+resource_name = "检查变量 [[本地]]: si EQUALS 7.0"
+script = ExtResource("8_ertcn")
+variable_name = "si"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 7.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_h3ic3"]
+resource_name = "打印: FAIL: SetIntVariable"
+script = ExtResource("6_7k8v0")
+message = "FAIL: SetIntVariable"
+
+[sub_resource type="Resource" id="Resource_88ahw"]
+resource_name = "打印: PASS: SetIntVariable"
+script = ExtResource("6_7k8v0")
+message = "PASS: SetIntVariable"
+
+[sub_resource type="Resource" id="Resource_yys4j"]
+resource_name = "If/Else si [[本地]] EQUALS 7.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_81xkh")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_88ahw")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_h3ic3")])
+
+[sub_resource type="Resource" id="Resource_yie7j"]
+resource_name = "创建变量 [LOCAL] sw_a = 1.0"
+script = ExtResource("7_ni34r")
+variable_name = "sw_a"
+value = 1.0
+
+[sub_resource type="Resource" id="Resource_ampg1"]
+resource_name = "创建变量 [LOCAL] sw_b = 2.0"
+script = ExtResource("7_ni34r")
+variable_name = "sw_b"
+value = 2.0
+
+[sub_resource type="Resource" id="Resource_o3tw3"]
+resource_name = "交换 [[本地]] sw_a ↔ sw_b"
+script = ExtResource("13_c120m")
+variable_a = "sw_a"
+variable_b = "sw_b"
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_877rg"]
+resource_name = "检查变量 [[本地]]: sw_a EQUALS 2.0"
+script = ExtResource("8_ertcn")
+variable_name = "sw_a"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 2.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_c4tcp"]
+resource_name = "打印: FAIL: SwapVariables"
+script = ExtResource("6_7k8v0")
+message = "FAIL: SwapVariables"
+
+[sub_resource type="Resource" id="Resource_hvet6"]
+resource_name = "打印: PASS: SwapVariables"
+script = ExtResource("6_7k8v0")
+message = "PASS: SwapVariables"
+
+[sub_resource type="Resource" id="Resource_d2rxb"]
+resource_name = "If/Else sw_a [[本地]] EQUALS 2.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_877rg")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_hvet6")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_c4tcp")])
+
+[sub_resource type="Resource" id="Resource_x6djq"]
+resource_name = "创建变量 [LOCAL] tg = true"
+script = ExtResource("7_ni34r")
+variable_name = "tg"
+value = true
+
+[sub_resource type="Resource" id="Resource_hdsuy"]
+resource_name = "切换: [[本地]] tg"
+script = ExtResource("14_w1lm4")
+variable_name = "tg"
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_p4ket"]
+resource_name = "检查变量 [[本地]]: tg EQUALS false"
+script = ExtResource("8_ertcn")
+variable_name = "tg"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = false
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_xiceq"]
+resource_name = "打印: FAIL: ToggleVariable"
+script = ExtResource("6_7k8v0")
+message = "FAIL: ToggleVariable"
+
+[sub_resource type="Resource" id="Resource_7dhmt"]
+resource_name = "打印: PASS: ToggleVariable"
+script = ExtResource("6_7k8v0")
+message = "PASS: ToggleVariable"
+
+[sub_resource type="Resource" id="Resource_maj62"]
+resource_name = "If/Else tg [[本地]] EQUALS false [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_p4ket")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_7dhmt")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_xiceq")])
+
+[sub_resource type="Resource" id="Resource_iusth"]
+resource_name = "设置作用域变量 [最近作用域] 'scv' = 42.0"
+script = ExtResource("15_8751i")
+variable_name = "scv"
+new_value = 42.0
+
+[sub_resource type="Resource" id="Resource_boxri"]
+resource_name = "获取作用域变量 [最近作用域] 'scv' → 'scv_out' (默认: <null>)"
+script = ExtResource("16_olwej")
+source_variable_name = "scv"
+target_variable = "scv_out"
+default_value = null
+
+[sub_resource type="Resource" id="Resource_8rnro"]
+resource_name = "检查变量 [[本地]]: scv_out EQUALS 42.0"
+script = ExtResource("8_ertcn")
+variable_name = "scv_out"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 42.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_wjfiv"]
+resource_name = "打印: FAIL: SetScopeVariable+GetScopeVariable"
+script = ExtResource("6_7k8v0")
+message = "FAIL: SetScopeVariable+GetScopeVariable"
+
+[sub_resource type="Resource" id="Resource_waxm4"]
+resource_name = "打印: PASS: SetScopeVariable+GetScopeVariable"
+script = ExtResource("6_7k8v0")
+message = "PASS: SetScopeVariable+GetScopeVariable"
+
+[sub_resource type="Resource" id="Resource_nbqby"]
+resource_name = "If/Else scv_out [[本地]] EQUALS 42.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_8rnro")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_waxm4")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_wjfiv")])
+
+[sub_resource type="Resource" id="Resource_1efwp"]
+resource_name = "保存全局变量 [自定义路径] '_deep_globals.tres' [全部变量]"
+script = ExtResource("17_1iqkj")
+save_target = 1
+custom_path = "res://demos/fuse/deep_tests/reports/_deep_globals.tres"
+save_scope = 0
+
+[sub_resource type="Resource" id="Resource_cibtq"]
+resource_name = "打印: PASS: SaveGlobalVariables"
+script = ExtResource("6_7k8v0")
+message = "PASS: SaveGlobalVariables"
+
+[sub_resource type="Resource" id="Resource_quni2"]
+resource_name = "加载全局变量 [自定义路径] '_deep_globals.tres'"
+script = ExtResource("18_ojq4n")
+load_source = 1
+custom_path = "res://demos/fuse/deep_tests/reports/_deep_globals.tres"
+
+[sub_resource type="Resource" id="Resource_0oi8g"]
+resource_name = "打印: PASS: LoadGlobalVariables"
+script = ExtResource("6_7k8v0")
+message = "PASS: LoadGlobalVariables"
+
+[sub_resource type="Resource" id="Resource_d7s6p"]
+resource_name = "检查变量 [[本地]]: cv1 EQUALS 8.0"
+script = ExtResource("8_ertcn")
+variable_name = "cv1"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 8.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_obqh0"]
+resource_name = "打印: FAIL: CheckVariable(true)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckVariable(true)"
+
+[sub_resource type="Resource" id="Resource_bn1nr"]
+resource_name = "打印: PASS: CheckVariable(true)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckVariable(true)"
+
+[sub_resource type="Resource" id="Resource_g0p1f"]
+resource_name = "If/Else cv1 [[本地]] EQUALS 8.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_d7s6p")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_bn1nr")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_obqh0")])
+
+[sub_resource type="Resource" id="Resource_f11ij"]
+resource_name = "检查变量 [[本地]]: cv1 EQUALS 99.0"
+script = ExtResource("8_ertcn")
+variable_name = "cv1"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 99.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_s5y1c"]
+resource_name = "打印: PASS: CheckVariable(neg)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckVariable(neg)"
+
+[sub_resource type="Resource" id="Resource_t3svo"]
+resource_name = "打印: FAIL: CheckVariable(neg)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckVariable(neg)"
+
+[sub_resource type="Resource" id="Resource_3kh8x"]
+resource_name = "If/Else cv1 [[本地]] EQUALS 99.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_f11ij")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_t3svo")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_s5y1c")])
+
+[sub_resource type="Resource" id="Resource_glfe4"]
+resource_name = "cv1 [Local] > 5.0"
+script = ExtResource("19_6ooke")
+custom_scope_id = ""
+target_node_path = NodePath("")
+comparison_operator = 2
+compare_value = 5.0
+variable_name = "cv1"
+scope_source = 4
+
+[sub_resource type="Resource" id="Resource_a3dwl"]
+resource_name = "打印: FAIL: CompareVariable(true)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CompareVariable(true)"
+
+[sub_resource type="Resource" id="Resource_jcfid"]
+resource_name = "打印: PASS: CompareVariable(true)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CompareVariable(true)"
+
+[sub_resource type="Resource" id="Resource_mb12b"]
+resource_name = "If/Else cv1 [Local] > 5.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_glfe4")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_jcfid")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_a3dwl")])
+
+[sub_resource type="Resource" id="Resource_p5pvr"]
+resource_name = "cv1 [Local] == 99.0"
+script = ExtResource("19_6ooke")
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_value = 99.0
+variable_name = "cv1"
+scope_source = 4
+
+[sub_resource type="Resource" id="Resource_jyt8d"]
+resource_name = "打印: PASS: CompareVariable(neg)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CompareVariable(neg)"
+
+[sub_resource type="Resource" id="Resource_l8c0q"]
+resource_name = "打印: FAIL: CompareVariable(neg)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CompareVariable(neg)"
+
+[sub_resource type="Resource" id="Resource_ntnti"]
+resource_name = "If/Else cv1 [Local] == 99.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_p5pvr")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_l8c0q")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_jyt8d")])
+
+[sub_resource type="Resource" id="Resource_kuaox"]
+resource_name = "'Vector2(3, 4)' → v2 [Vector2]"
+script = ExtResource("20_qdo7i")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(3, 4)"
+output_type = 2
+scope_source = 0
+save_to_variable = "v2"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_u1qm5"]
+resource_name = "v2.x [[本地]] > 2.0"
+script = ExtResource("21_2x2dg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+variable_name = "v2"
+axis = 0
+variable_scope = 0
+comparison_operator = 0
+compare_value = 2.0
+
+[sub_resource type="Resource" id="Resource_lnpe3"]
+resource_name = "打印: FAIL: CheckVector2VariableAxis(true)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckVector2VariableAxis(true)"
+
+[sub_resource type="Resource" id="Resource_x7eth"]
+resource_name = "打印: PASS: CheckVector2VariableAxis(true)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckVector2VariableAxis(true)"
+
+[sub_resource type="Resource" id="Resource_c61c5"]
+resource_name = "If/Else v2.x > 2.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_u1qm5")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_x7eth")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_lnpe3")])
+
+[sub_resource type="Resource" id="Resource_4k6jm"]
+resource_name = "v2.y [[本地]] > 4.0"
+script = ExtResource("21_2x2dg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+variable_name = "v2"
+axis = 1
+variable_scope = 0
+comparison_operator = 0
+compare_value = 4.0
+
+[sub_resource type="Resource" id="Resource_r6n3j"]
+resource_name = "打印: PASS: CheckVector2VariableAxis(neg)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckVector2VariableAxis(neg)"
+
+[sub_resource type="Resource" id="Resource_dsxku"]
+resource_name = "打印: FAIL: CheckVector2VariableAxis(neg)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckVector2VariableAxis(neg)"
+
+[sub_resource type="Resource" id="Resource_avr0r"]
+resource_name = "If/Else v2.y > 4.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_4k6jm")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_dsxku")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_r6n3j")])
+
+[sub_resource type="Resource" id="Resource_2tigg"]
+resource_name = "检查作用域变量 [最近作用域] 'scv' EQUALS 42.0"
+script = ExtResource("22_pb5vf")
+variable_name = "scv"
+expected_value = 42.0
+
+[sub_resource type="Resource" id="Resource_54fqh"]
+resource_name = "打印: FAIL: CheckScopeVariable(true)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckScopeVariable(true)"
+
+[sub_resource type="Resource" id="Resource_eakjw"]
+resource_name = "打印: PASS: CheckScopeVariable(true)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckScopeVariable(true)"
+
+[sub_resource type="Resource" id="Resource_c8rc6"]
+resource_name = "If/Else 检查作用域变量 [最近作用域] 'scv' EQUALS 42.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_2tigg")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_eakjw")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_54fqh")])
+
+[sub_resource type="Resource" id="Resource_wwxgg"]
+resource_name = "检查作用域变量 [最近作用域] 'scv' EQUALS 99.0"
+script = ExtResource("22_pb5vf")
+variable_name = "scv"
+expected_value = 99.0
+
+[sub_resource type="Resource" id="Resource_w5jfa"]
+resource_name = "打印: PASS: CheckScopeVariable(neg)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckScopeVariable(neg)"
+
+[sub_resource type="Resource" id="Resource_ohmfw"]
+resource_name = "打印: FAIL: CheckScopeVariable(neg)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckScopeVariable(neg)"
+
+[sub_resource type="Resource" id="Resource_sp0wi"]
+resource_name = "If/Else 检查作用域变量 [最近作用域] 'scv' EQUALS 99.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_wwxgg")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_ohmfw")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_w5jfa")])
+
+[sub_resource type="Resource" id="Resource_xmgal"]
+resource_name = "创建变量 [LOCAL] hp = 80.0"
+script = ExtResource("7_ni34r")
+variable_name = "hp"
+value = 80.0
+
+[sub_resource type="Resource" id="Resource_0e42x"]
+resource_name = "hp [[本地]] HP == 80.0"
+script = ExtResource("23_tuh2b")
+health_variable = "hp"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_value = 80.0
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_msu5s"]
+resource_name = "打印: FAIL: CheckHealthValue(true)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckHealthValue(true)"
+
+[sub_resource type="Resource" id="Resource_rp40j"]
+resource_name = "打印: PASS: CheckHealthValue(true)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckHealthValue(true)"
+
+[sub_resource type="Resource" id="Resource_8hg2l"]
+resource_name = "If/Else hp [[本地]] HP == 80.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_0e42x")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_rp40j")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_msu5s")])
+
+[sub_resource type="Resource" id="Resource_c60ov"]
+resource_name = "hp [[本地]] HP == 99.0"
+script = ExtResource("23_tuh2b")
+health_variable = "hp"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+target_value = 99.0
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_xc213"]
+resource_name = "打印: PASS: CheckHealthValue(neg)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CheckHealthValue(neg)"
+
+[sub_resource type="Resource" id="Resource_gnuxx"]
+resource_name = "打印: FAIL: CheckHealthValue(neg)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CheckHealthValue(neg)"
+
+[sub_resource type="Resource" id="Resource_xw8mv"]
+resource_name = "If/Else hp [[本地]] HP == 99.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_c60ov")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_gnuxx")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_xc213")])
+
+[sub_resource type="Resource" id="Resource_hoxuw"]
+resource_name = "hp [[本地]] HP > 50.0"
+script = ExtResource("24_sugcn")
+health_variable = "hp"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+threshold = 50.0
+comparison_operator = 1
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_4jnnf"]
+resource_name = "打印: FAIL: CompareHealthThreshold(true)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CompareHealthThreshold(true)"
+
+[sub_resource type="Resource" id="Resource_alncx"]
+resource_name = "打印: PASS: CompareHealthThreshold(true)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CompareHealthThreshold(true)"
+
+[sub_resource type="Resource" id="Resource_t8k74"]
+resource_name = "If/Else hp [[本地]] HP > 50.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_hoxuw")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_alncx")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_4jnnf")])
+
+[sub_resource type="Resource" id="Resource_71kx5"]
+resource_name = "hp [[本地]] HP > 99.0"
+script = ExtResource("24_sugcn")
+health_variable = "hp"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+threshold = 99.0
+comparison_operator = 1
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_gdt5g"]
+resource_name = "打印: PASS: CompareHealthThreshold(neg)"
+script = ExtResource("6_7k8v0")
+message = "PASS: CompareHealthThreshold(neg)"
+
+[sub_resource type="Resource" id="Resource_tkm3t"]
+resource_name = "打印: FAIL: CompareHealthThreshold(neg)"
+script = ExtResource("6_7k8v0")
+message = "FAIL: CompareHealthThreshold(neg)"
+
+[sub_resource type="Resource" id="Resource_a2ngu"]
+resource_name = "If/Else hp [[本地]] HP > 99.0 [真:1 [同步]"
+script = ExtResource("9_gq87r")
+sequence_mode = 0
+condition = SubResource("Resource_71kx5")
+true_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_tkm3t")])
+false_instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_gdt5g")])
+
+[sub_resource type="Resource" id="Resource_lapec"]
+resource_name = "设置变量 [[本地]] 'vwatch' = 1.0"
+script = ExtResource("11_wx120")
+target_variable = "vwatch"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 1.0
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_5opy5"]
+resource_name = "等待 0.4 秒"
+script = ExtResource("25_mru6d")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.4
+
+[sub_resource type="Resource" id="Resource_gh63b"]
+resource_name = "设置变量 [[本地]] 'vwatch' = 2.0"
+script = ExtResource("11_wx120")
+target_variable = "vwatch"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+new_value = 2.0
+target_variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_2fqmd"]
+resource_name = "相对移动 'A' [全局] 偏移 (50.0"
+script = ExtResource("26_goof4")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+offset_variable = ""
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/A")
+space = 0
+use_variable = false
+offset = Vector3(50, 0, 0)
+
+[sub_resource type="Resource" id="Resource_0ypkm"]
+resource_name = "设置属性 [HealthNode] .health = 30.0"
+script = ExtResource("27_yhaf5")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../HealthNode")
+target_property = "health"
+set_with_variable = false
+new_value = 30.0
+variable_name = ""
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_ovbbi"]
+resource_name = "等待 0.8 秒"
+script = ExtResource("25_mru6d")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.8
+
+[sub_resource type="Resource" id="Resource_s5pac"]
+resource_name = "打印: === deep_variables DONE ==="
+script = ExtResource("6_7k8v0")
+message = "=== deep_variables DONE ==="
+
+[sub_resource type="Resource" id="Resource_6ifge"]
+script = ExtResource("28_acekn")
+instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_gao5q"), SubResource("Resource_mhivu"), SubResource("Resource_2u1aj"), SubResource("Resource_c86vk"), SubResource("Resource_15bku"), SubResource("Resource_k6tm6"), SubResource("Resource_7figo"), SubResource("Resource_67hiv"), SubResource("Resource_yys4j"), SubResource("Resource_yie7j"), SubResource("Resource_ampg1"), SubResource("Resource_o3tw3"), SubResource("Resource_d2rxb"), SubResource("Resource_x6djq"), SubResource("Resource_hdsuy"), SubResource("Resource_maj62"), SubResource("Resource_iusth"), SubResource("Resource_boxri"), SubResource("Resource_nbqby"), SubResource("Resource_1efwp"), SubResource("Resource_cibtq"), SubResource("Resource_quni2"), SubResource("Resource_0oi8g"), SubResource("Resource_g0p1f"), SubResource("Resource_3kh8x"), SubResource("Resource_mb12b"), SubResource("Resource_ntnti"), SubResource("Resource_kuaox"), SubResource("Resource_c61c5"), SubResource("Resource_avr0r"), SubResource("Resource_c8rc6"), SubResource("Resource_sp0wi"), SubResource("Resource_xmgal"), SubResource("Resource_8hg2l"), SubResource("Resource_xw8mv"), SubResource("Resource_t8k74"), SubResource("Resource_a2ngu"), SubResource("Resource_lapec"), SubResource("Resource_5opy5"), SubResource("Resource_gh63b"), SubResource("Resource_2fqmd"), SubResource("Resource_0ypkm"), SubResource("Resource_ovbbi"), SubResource("Resource_s5pac")])
+
+[sub_resource type="Resource" id="Resource_dx04w"]
+script = ExtResource("29_fthfd")
+
+[sub_resource type="Resource" id="Resource_2p5t0"]
+resource_name = "场景就绪时触发"
+script = ExtResource("4_22u3q")
+event = SubResource("Resource_dx04w")
+action_runner = SubResource("Resource_6ifge")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_0okxw"]
+resource_name = "打印: PASS: OnVariableChanged"
+script = ExtResource("6_7k8v0")
+message = "PASS: OnVariableChanged"
+
+[sub_resource type="Resource" id="Resource_y00x5"]
+script = ExtResource("28_acekn")
+instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_0okxw")])
+
+[sub_resource type="Resource" id="Resource_kljuk"]
+resource_name = "变量变化: vwatch ([LOCAL]) - 值变化"
+script = ExtResource("30_jpc14")
+variable_name = "vwatch"
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_value = null
+
+[sub_resource type="Resource" id="Resource_fed2d"]
+resource_name = "监听 全局 变量 'vwatch'，值变化时触发，每 0.10 秒检查一次，发出旧值和新值"
+script = ExtResource("4_22u3q")
+event = SubResource("Resource_kljuk")
+action_runner = SubResource("Resource_y00x5")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_xbwt3"]
+resource_name = "打印: PASS: OnPropertyChanged"
+script = ExtResource("6_7k8v0")
+message = "PASS: OnPropertyChanged"
+
+[sub_resource type="Resource" id="Resource_tfuqo"]
+script = ExtResource("28_acekn")
+instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_xbwt3")])
+
+[sub_resource type="Resource" id="Resource_bboo8"]
+resource_name = "属性变化: A.position"
+script = ExtResource("31_6xg6f")
+target_node = NodePath("../Targets/A")
+property_name = "position"
+
+[sub_resource type="Resource" id="Resource_04yfa"]
+resource_name = "监听节点 'A' 的属性 'position'，每 0.1 秒检查一次，发出旧值和新值"
+script = ExtResource("4_22u3q")
+event = SubResource("Resource_bboo8")
+action_runner = SubResource("Resource_tfuqo")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_6kdtw"]
+resource_name = "打印: PASS: OnHealthChanged"
+script = ExtResource("6_7k8v0")
+message = "PASS: OnHealthChanged"
+
+[sub_resource type="Resource" id="Resource_iegyx"]
+script = ExtResource("28_acekn")
+instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_6kdtw")])
+
+[sub_resource type="Resource" id="Resource_gwb0x"]
+resource_name = "生命值变化: HealthNode - 任意变化"
+script = ExtResource("32_in53y")
+target_node = NodePath("../HealthNode")
+
+[sub_resource type="Resource" id="Resource_t4kxe"]
+resource_name = "当 ../HealthNode 的生命值发生任何变化时触发（每 0.10 秒检查）"
+script = ExtResource("4_22u3q")
+event = SubResource("Resource_gwb0x")
+action_runner = SubResource("Resource_iegyx")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_ua20d"]
+resource_name = "打印: PASS: OnSoundListened"
+script = ExtResource("6_7k8v0")
+message = "PASS: OnSoundListened"
+
+[sub_resource type="Resource" id="Resource_fycno"]
+script = ExtResource("28_acekn")
+instructions = Array[ExtResource("5_3otbb")]([SubResource("Resource_ua20d")])
+
+[sub_resource type="Resource" id="Resource_efcx6"]
+resource_name = "声音被听到: 100.0m - 听到时触发"
+script = ExtResource("33_xkjem")
+sound_source_path = NodePath("../SoundSource")
+listener_path = NodePath("../Targets/B")
+trigger_mode = 0
+
+[sub_resource type="Resource" id="Resource_533qx"]
+resource_name = "检测声源 '../SoundSource' 是否被 '../Targets/B' 听到（最大距离 100.0m），第一次听到时触发，每 0.10 秒检查一次"
+script = ExtResource("4_22u3q")
+event = SubResource("Resource_efcx6")
+action_runner = SubResource("Resource_fycno")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_variables" type="Node" unique_id=532926330]
+script = ExtResource("1_ajp5y")
+
+[node name="Targets" type="Node2D" parent="." unique_id=666229112]
+
+[node name="A" type="Node2D" parent="Targets" unique_id=915117371]
+
+[node name="B" type="Node2D" parent="Targets" unique_id=1043145685]
+position = Vector2(3, 4)
+
+[node name="SoundSource" type="AudioStreamPlayer2D" parent="." unique_id=183918565]
+
+[node name="HealthNode" type="Node2D" parent="." unique_id=1731737496]
+script = ExtResource("2_ikrr4")
+
+[node name="DeepVariables" type="Node" parent="." unique_id=1583507146]
+script = ExtResource("3_as3ni")
+event_bindings = Array[ExtResource("4_22u3q")]([SubResource("Resource_2p5t0"), SubResource("Resource_fed2d"), SubResource("Resource_04yfa"), SubResource("Resource_t4kxe"), SubResource("Resource_533qx")])
+use_parallel_condition_evaluation = false

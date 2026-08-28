@@ -216,7 +216,7 @@ func execute(context: ExecutionContext):
 		new_value = float(current) + float(increment)
 
 	# 使用 VariableOperations 设置新值
-	VariableOperations.set_variable(context, variable_name, new_value, variable_scope)
+	VariableOperations.set_variable(context, variable_name, variable_scope, new_value)
 
 	_log_info_localized("FUSE_LOG_VARIABLE_ADDED", {
 		"name": variable_name,

@@ -283,6 +283,13 @@ func _get_local_variable(name: String, default: Variant) -> Variant:
 		if OS.is_debug_build() and _owner.log_level >= FuseLogger.LogLevel.DEBUG:
 			_owner._log_debug("Retrieved local variable '%s': %s (type: %s)" % [name, str(value), typeof(value)])
 		return value
+	# LOCAL 变量桥：VariableOperations 写入时镜像到 Trigger meta（供 Event 轮询），
+	# 临时上下文（如 OnVariableChanged._create_temp_context）经此读到共享值——
+	# 只读镜像不回填字典，避免与执行上下文的本地副本产生双写竞争
+	if _owner.trigger != null:
+		var meta_key := "local_variable_%s" % name
+		if _owner.trigger.has_meta(meta_key):
+			return _owner.trigger.get_meta(meta_key)
 	return default
 
 

@@ -291,14 +291,11 @@ func _get_health_value() -> float:
 	if not _target_node_ref or not is_instance_valid(_target_node_ref):
 		return 0.0
 
-	# 尝试从属性获取
-	if _target_node_ref.has_method("get"):
-		if _target_node_ref.has_property(health_property):
-			return _target_node_ref.get(health_property)
-
-	# 尝试直接访问
-	if _target_node_ref.has_property(health_property):
-		return _target_node_ref.get(health_property)
+	# Object 无 has_property 方法（Godot 4.7 Object API）——用 get() 判存在：
+	# 属性缺失时 get 返回 null，取到值（含 0）视为存在
+	var value: Variant = _target_node_ref.get(health_property)
+	if value != null:
+		return float(value)
 
 	return 0.0
 
@@ -307,18 +304,10 @@ func _get_max_health_value() -> float:
 	if not _target_node_ref or not is_instance_valid(_target_node_ref):
 		return 100.0  # 默认值
 
-	# 尝试从属性获取
-	if _target_node_ref.has_method("get"):
-		if _target_node_ref.has_property(max_health_property):
-			var value = _target_node_ref.get(max_health_property)
-			if value > 0:
-				return value
-
-	# 尝试直接访问
-	if _target_node_ref.has_property(max_health_property):
-		var value = _target_node_ref.get(max_health_property)
-		if value > 0:
-			return value
+	# 同 _get_health_value：get() 判存在（Object 无 has_property 方法）
+	var max_value: Variant = _target_node_ref.get(max_health_property)
+	if max_value != null and float(max_value) > 0:
+		return float(max_value)
 
 	return 100.0  # 默认值
 
