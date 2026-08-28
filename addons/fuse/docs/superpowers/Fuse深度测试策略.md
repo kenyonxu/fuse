@@ -1,6 +1,8 @@
 # Fuse 深度测试策略
 
 > 🦊 知惠编写 · 2026-07-09
+> 🦊 2026-08-28 复核更新：组件总数 298 → 310（指令 +11、事件 +1），阶段场景表按当前注册表重新核算，新增第七节 Headless 可验证性分层，第九节补充 fuse_adventure 实战验证清单
+> 📋 配套执行计划：《Fuse深度测试计划.md》（23 场景 × preset × headless 分层的落地排期）
 > 用途：Fuse 全组件深度测试的执行框架与资源清单
 > 核心原则：**全 Fuse 化测试——不写一行代码，每个场景用 Fuse 面板搭建**
 
@@ -20,62 +22,66 @@ Fuse 是面向用户的 Godot 可视化编程插件。传统 GDScript 自动化�
 
 | 类型 | 总数 | 已自动化测试 | 深度测试覆盖 |
 |------|------|-------------|-------------|
-| 指令 | 174 | 65 (37%) | 全部 174 |
-| 条件 | 55 | 4 (7%) | 全部 55 |
-| 事件 | 69 | 55 (80%) | 全部 69 |
-| **合计** | **298** | **124 (41%)** | **298** |
+| 指令 | 185 | ~101 (54%) | 全部 185 |
+| 条件 | 55 | ~28 (51%) | 全部 55 |
+| 事件 | 70 | ~62 (89%) | 全部 70 |
+| **合计** | **310** | **~191 (61%)** | **310** |
+
+> 🦊 2026-08-28 注：总数按 `preset_ai_context/fuse_components.json`（2026-08-25 dump）计；「已自动化测试」由 tests/ 目录测试代码中的组件类名/脚本引用粗估（2026-07-09 原审计值为 65/4/55 = 124）。
 
 ---
 
 ## 三、测试阶段与外部资源需求
 
-### 🔵 第一阶段：核心交互（5 场景，~40 组件）
+### 🔵 第一阶段：核心交互（5 场景，~63 组件）
 
 > 目标：验证用户最常接触的交互体验——动画播放、音效、相机、变换、UI
 
 | 场景 | 组件数 | 需要的外部资源 |
 |------|--------|---------------|
-| **Animation** | 8 指令 + 6 事件 | 🎨 带 AnimationPlayer 的精灵节点（2D）或模型（3D）；建议准备一个简单的 Sprite2D + 两帧动画 |
+| **Animation** | 13 指令 + 6 事件 + 5 条件 | 🎨 带 AnimationPlayer 的精灵节点（2D）或模型（3D）；建议准备一个简单的 Sprite2D + 两帧动画 |
 | **Audio** | 7 指令 + 4 事件 | 🔊 **音频文件**：一个短音效（如按钮点击声 `.wav`）、一段背景音乐（`.ogg`）、一个带节拍的音乐用于 OnMusicBeat 事件 |
-| **Camera** | 6 指令 | 🎨 一个较大的场景或 TileMap（用于测试 set_camera_limit / camera_follow / camera_shake / zoom / fade） |
+| **Camera** | 7 指令 | 🎨 一个较大的场景或 TileMap（用于测试 set_camera_limit / camera_follow / camera_shake / zoom / fade） |
 | **Transform** | 7 指令 | 🎨 至少两个 2D 节点（Sprite2D 或 Control），用于测试 set_position / move_by / rotate / scale / look_at / get_position |
-| **UI** | 6 指令 + 7 事件 | 🎨 **UI 控件集**：Button、Label、ProgressBar、TextureRect、OptionButton、LineEdit |
+| **UI** | 6 指令 + 7 事件 + 1 条件 | 🎨 **UI 控件集**：Button、Label、ProgressBar、TextureRect、OptionButton、LineEdit |
 
-### 🟢 第二阶段：逻辑与数据（6 场景，~70 组件）
+### 🟢 第二阶段：逻辑与数据（6 场景，~96 组件）
 
 > 目标：验证变量系统、数据结构操作、数学表达式、流程控制等纯逻辑组件
 
 | 场景 | 组件数 | 需要的外部资源 |
 |------|--------|---------------|
-| **Variables** | 10 指令 + 5 条件 | 无（纯逻辑，用 Fuse 内置变量面板验证） |
+| **Variables** | 10 指令 + 6 条件 + 4 事件 | 无（纯逻辑，用 Fuse 内置变量面板验证；事件含变量变化类 OnVariableChanged 等） |
 | **Arrays** | 18 指令 + 2 条件 | 无（纯逻辑，建议用 Print 指令输出数组内容到控制台） |
 | **Dictionaries** | 16 指令 + 2 条件 | 无（纯逻辑，同上） |
-| **Math** | 8 指令 | 无（纯逻辑，建议配合 SetUIText 显示计算结果） |
+| **Math** | 8 指令 + 2 条件 | 无（纯逻辑，建议配合 SetUIText 显示计算结果） |
 | **String** | 6 指令 + 2 条件 | 无（纯逻辑，建议输出到 Label） |
-| **Flow Control** | 14 指令 | 无（纯逻辑，但需要耐心——循环和分支的交互验证最耗时） |
+| **Flow Control** | 16 指令 + 4 条件 | 无（纯逻辑，但需要耐心——循环和分支的交互验证最耗时；含 CheckAll/CheckAny/CheckNot/CheckComposite 组合条件） |
 
-### 🟡 第三阶段：物理与节点（5 场景，~50 组件）
+### 🟡 第三阶段：物理与节点（5 场景，~98 组件）
 
 > 目标：验证物理模拟、节点操作、场景管理、输入事件
 
 | 场景 | 组件数 | 需要的外部资源 |
 |------|--------|---------------|
-| **Physics** | 10 指令 + 7 条件 + 11 事件 | 🎨 **2D 物理场景**：CharacterBody2D / RigidBody2D + 地面（StaticBody2D） + 墙壁 + Area2D；建议用简单的方块/球体系 |
+| **Physics** | 11 指令 + 7 条件 + 11 事件 | 🎨 **2D 物理场景**：CharacterBody2D / RigidBody2D + 地面（StaticBody2D） + 墙壁 + Area2D；建议用简单的方块/球体系 |
 | **Movement** | 1 指令 | 🎨 同上物理场景（Movement 是复合指令，依赖物理环境） |
-| **Node Operations** | 21 指令 + 9 条件 | 🎨 场景中预置若干节点（用于 find_node / reparent / clone / queue_free / get_nodes_in_group 等测试） |
-| **Scene** | 5 指令 + 5 事件 | 🎨 **至少两个独立场景**（用于 change_scene / reload_scene / preload / background_load 测试） |
+| **Node Operations** | 22 指令 + 9 条件 + 4 事件 | 🎨 场景中预置若干节点（用于 find_node / reparent / clone / queue_free / get_nodes_in_group 等测试；事件含节点生命周期类） |
+| **Scene** | 6 指令 + 1 条件 + 5 事件 | 🎨 **至少两个独立场景**（用于 change_scene / reload_scene / preload / background_load 测试） |
 | **Input** | 15 事件 + 6 条件 | ⌨️ 键盘 + 🖱️ 鼠标 + 🎮 手柄（如果有）；建议准备 Input Map 中已配置的动作名 |
 
-### 🟣 第四阶段：高级系统（7 场景，~40 组件）
+### 🟣 第四阶段：高级系统（7 场景，~46 组件）
 
 > 目标：验证 Tween、调试、粒子、渲染、定时、导航等高级功能
+>
+> 🦊 注：Lifecycle 类 7 个事件（OnReady / OnProcess / OnInterval 等）不设独立场景——每个测试场景的 TestTrigger 都以它们驱动，天然全覆盖。
 
 | 场景 | 组件数 | 需要的外部资源 |
 |------|--------|---------------|
-| **Tween** | 14 指令 + 1 事件 | 🎨 至少一个带可视属性的节点（如 Sprite2D 的 modulate / position / scale） |
+| **Tween** | 13 指令 + 1 事件 | 🎨 至少一个带可视属性的节点（如 Sprite2D 的 modulate / position / scale） |
 | **Debug** | 3 指令 | 无（用控制台输出验证） |
-| **System** | 4 指令 + 2 条件 | 无（get_viewport_size / quit / load_resource 等纯系统调用） |
-| **Time** | 2 指令 + 4 条件 | 无（定时器类，需要等待时间验证） |
+| **System** | 6 指令 + 2 条件 | 无（get_viewport_size / set_window_size / quit / load_resource 等纯系统调用） |
+| **Time** | 2 指令 + 4 条件 + 4 事件 | 无（定时器类，需要等待时间验证） |
 | **Rendering** | 5 指令 + 1 条件 | 🎨 **粒子节点**（GPUParticles2D）+ **灯光节点**（PointLight2D）+ **材质**（ShaderMaterial）；用于 set_material_property / control_particles / screen_flash 测试 |
 | **Navigation** | 1 指令 + 1 事件 + 1 条件 | 🎨 **NavigationRegion2D + Agent**：需要一个带导航网格的场景 |
 | **Event** | 1 指令 + 1 事件 | 无（SendEvent / OnReceiveEvent 纯逻辑） |
@@ -151,18 +157,40 @@ Fuse 是面向用户的 Godot 可视化编程插件。传统 GDScript 自动化�
 
 ---
 
-## 七、利用 Preset 系统批量生成测试场景
+## 七、Headless 可验证性分层
+
+> 🦊 2026-08-28 注：headless 能验的是**状态正确 + 控制台无报错**，验不了**看到 / 听到 / 感觉到**。按 headless 验收面把 23 个场景分四层——约 44% 组件可直接 headless 判定，约 45% 可 headless 验状态、F5 只补感官项，真正绕不开 F5 的只有 Rendering 与各场景的感官验收项。
+
+| 分层 | 场景（组件数） | headless 验收面 | F5 仍需要吗 |
+|------|--------------|----------------|------------|
+| **A · 直接 headless**（~136） | 逻辑与数据全部 6 场景（96）、Debug（3）、System（8）、Time（10）、Event（2）、Navigation（3）、Transform（7）、Lifecycle 事件（7） | Print / print_variable_value 的 stdout 输出 | 不需要 |
+| **B · 状态级 headless**（~140） | Physics + Movement（30）、Node Operations（35）、Scene（12）、Tween（14）、Animation（24）、Camera（7）、Audio（11）、UI 内容类（7） | 状态与属性读数：get_position 结果、check_\* 条件真假、playing / volume_db / 播完标志、动画帧与播放状态 | 需要——手感 / 听感 / 观感 headless 验不了，F5 抽查感官项 |
+| **C · 需注入手段**（28） | Input（21）、UI 交互事件（7） | 注入输入 / 信号后同 B 层 | 同 B 层 |
+| **D · 必须 F5**（6） | Rendering（6） | 无——Dummy RenderingServer 下 GPUParticles2D 不模拟（CPUParticles2D 可验 emitting 状态），screen_flash / 材质效果只能属性级确认 | 必须 |
+
+### 7.1 实操要点
+
+1. **廉价回归门禁**：23 个场景全部先 headless 跑一遍——「控制台无红色 error」这条验收标准本身可 grep（`push_error` / `SCRIPT ERROR`），长场景配 `--quit-after` 截断
+2. **PASS/FAIL 标记法（纯 Fuse 自检链）**：目标指令 → RunConditionCheck（预期结果作条件）→ 两分支各接 `Print("PASS: 组件名")` / `Print("FAIL: 组件名")`，跑完 grep FAIL——把目视验收升级为可回归的 stdout 断言，不违背「不写一行代码」
+3. **C 层输入驱动是唯一绕不开的代码**：写一次通用驱动脚本（十几行：`Input.action_press` / `Input.parse_input_event` 注入键盘鼠标、`button.pressed.emit()`），全部 Input 场景复用
+4. **UI 交互可纯 Fuse 合成**：OnButtonPressed 类事件用 run_target_node_function 对 Button 调 `emit_signal("pressed")` 即可触发，不需要驱动
+5. **Preset 前置门禁**：生成的 preset JSON 先跑 validate_preset.tscn 离线校验（本身就是 headless 的），通过后再进编辑器导入
+6. **音频注意**：headless 走 Dummy 音频驱动——playing / volume_db / 播完事件照常可验，听感验不了
+
+---
+
+## 八、利用 Preset 系统批量生成测试场景
 
 > 🦊 知惠注（2026-07-09）：主人散步时提出的方案——用 Fuse Preset 的 JSON 格式让 AI 批量生成测试场景，比手搭 Godot 场景更快更稳。
 
-### 7.1 核心优势
+### 8.1 核心优势
 
 - **AI 友好**：Preset 是结构化 JSON，不涉及 Godot UID 引用、节点缩进、资源路径校验——AI 不会搞砸
-- **批量生成**：一个分类一个 preset 文件，24 个 preset 覆盖全部 298 个组件
+- **批量生成**：一个分类一个 preset 文件，23 个分类场景 preset 覆盖全部 310 个组件
 - **一键导入**：Godot 中打开 Fuse Preset 导入面板，选中 preset 文件即可自动生成完整测试场景
 - **可复用**：测试通过的 preset 文件可直接分享给用户——相当于 Fuse 官方验收的示例场景包
 
-### 7.2 Preset 测试场景标准结构
+### 8.2 Preset 测试场景标准结构
 
 ```json
 {
@@ -184,14 +212,14 @@ Fuse 是面向用户的 Godot 可视化编程插件。传统 GDScript 自动化�
 }
 ```
 
-### 7.3 生成与验收流程
+### 8.3 生成与验收流程
 
 1. **生成**：按策略文档的四阶段顺序，每类生成一个 preset JSON 文件
 2. **导入**：Godot 编辑器 → Fuse Preset 导入面板 → 选择 preset → 自动创建测试场景
 3. **F5 验收**：运行场景，目视确认所有组件无报错、行为符合预期
 4. **导出修正**：如有问题，在编辑器中修正后重新导出 preset，覆盖原始文件
 
-### 7.4 与手搭场景的互补
+### 8.4 与手搭场景的互补
 
 | 方式 | 适用场景 |
 |------|---------|
@@ -200,11 +228,13 @@ Fuse 是面向用户的 Godot 可视化编程插件。传统 GDScript 自动化�
 
 ---
 
-## 八、已验证组件清单（Brickian Demo）
+## 九、已验证组件清单（实战 Demo）
 
 > 🦊 知惠注（2026-07-09）：Brickian 是 Fuse 自带的完整射击小游戏 demo——标题画面 → 玩家飞船 → 敌人生成 → 子弹碰撞 → 爆炸特效 → 计分。全程用 Fuse 搭建，已通过实战验证的组件可直接复用。
+>
+> 🦊 2026-08-28 补充：fuse_adventure 横版平台 demo（标题画面 → 关卡 01/02 → 移动平台/锯齿 → 收集品/血量 UI → 死亡爆炸/重生链 → 跨关卡续播音乐）已实战跑通，其新增覆盖的组件列于下文「fuse_adventure · 补充验证」，与 Brickian 合并去重统计。
 
-### 已验证指令（45个）
+### Brickian · 已验证指令（45个）
 
 animation: —
 **arrays**: array_add
@@ -230,7 +260,7 @@ system: —
 **ui**: set_ui_text, show_hide_ui
 **variables**: set_variable, save_global_variables, load_global_variables
 
-### 已验证事件（9个）
+### Brickian · 已验证事件（9个）
 
 **event**: on_receive_event
 **input**: on_input_action, on_input_action_composite
@@ -238,7 +268,7 @@ system: —
 **node**: on_target_signal_emit
 **physics**: on_area_2d_enter
 
-### 已验证条件（7个）
+### Brickian · 已验证条件（7个）
 
 **composite**: check_any
 **input**: check_any_input
@@ -246,15 +276,43 @@ system: —
 **scene**: check_preload_status
 **variable**: check_variable, check_vector2_variable_axis
 
-### 验证状态总结
+### fuse_adventure · 补充验证（2026-08，24个）
+
+> 🦊 注：以下为 fuse_adventure 场景实际引用并在实战跑通的组件（以 2026-08 提交记录为准），均不在上方 Brickian 清单内。
+
+**新增已验证指令（15个）**
+
+animation: animated_sprite_2d_play, get_animation_length, set_animation_tree_parameter, set_sprite_flip
+**arrays**: array_get
+**camera**: camera_follow, set_camera_limit_from_area2d
+**node_operations**: enable_disable_node, get_node, get_nodes_in_group, set_process_mode, set_property_value
+**physics**: add_velocity
+**system**: set_viewport_size
+**variables**: create_variable
+
+**新增已验证事件（4个）**
+
+**node**: on_path_follow_2d_progress_ratio
+**physics**: on_ground_state_changed
+**state**: on_variable_changed
+**ui**: on_button_pressed
+
+**新增已验证条件（5个）**
+
+**composite**: check_all
+**node_operations**: check_node_property
+**physics**: check_in_air, check_velocity
+**scope_variables**: check_scope_variable
+
+### 验证状态总结（两 demo 合并去重）
 
 | 类型 | 总数 | 已验证 | 待测试 |
 |------|------|--------|--------|
-| 指令 | 174 | 45 (26%) | 129 |
-| 事件 | 69 | 9 (13%) | 60 |
-| 条件 | 55 | 7 (13%) | 48 |
+| 指令 | 185 | 60 (32%) | 125 |
+| 事件 | 70 | 13 (19%) | 57 |
+| 条件 | 55 | 12 (22%) | 43 |
 
-> Brickian 作为验证基线：这 61 个组件已在真实游戏场景中跑通，后续测试可直接跳过、聚焦未覆盖的 237 个组件。
+> Brickian 61 个 + fuse_adventure 新增 24 个 = 85 个组件已在真实游戏场景中跑通，后续深度测试可直接跳过，聚焦未覆盖的 225 个组件。
 
 ---
 
