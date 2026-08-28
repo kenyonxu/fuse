@@ -117,7 +117,12 @@ func execute(context: ExecutionContext) -> void:
 		finished.emit()
 		return
 
-	var arr = context.get_local(source_variable)
+	var arr = context.get_variable(source_variable)
+	# StringSplit 等指令产出 PackedStringArray，join 前统一转 Array（类型校验与消费同时兼容）
+	if arr is PackedStringArray:
+		var unpacked: Array = []
+		unpacked.assign(arr)
+		arr = unpacked
 	if arr == null or not arr is Array:
 		_log_error_localized("FUSE_ERROR_NOT_ARRAY", {"variable": source_variable})
 		set_error_localized("FUSE_ERROR_NOT_ARRAY", FuseError.ErrorType.RUNTIME_ERROR, {"variable": source_variable})
@@ -125,7 +130,7 @@ func execute(context: ExecutionContext) -> void:
 		return
 
 	var result = connector.join(arr)
-	context.set_local(save_to_variable, result)
+	context.set_variable(save_to_variable, result)
 
 	_log_info_localized("FUSE_LOG_STRING_JOIN", {
 		"source": source_variable,

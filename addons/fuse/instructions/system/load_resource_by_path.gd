@@ -109,7 +109,7 @@ func execute(context: ExecutionContext) -> void:
 		return
 
 	var resource = ResourceLoader.load(load_path)
-	context.set_local(save_to_variable, resource)
+	context.set_variable(save_to_variable, resource)
 
 	_log_info_localized("FUSE_LOG_RESOURCE_LOADED", {
 		"path": load_path,

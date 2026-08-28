@@ -117,9 +117,9 @@ func execute(context: ExecutionContext) -> void:
 		finished.emit()
 		return
 
-	var source: String = str(context.get_local(source_variable))
+	var source: String = str(context.get_variable(source_variable))
 	if source.is_empty():
-		context.set_local(save_to_variable, [])
+		context.set_variable(save_to_variable, [])
 		_log_info_localized("FUSE_LOG_STRING_SPLIT", {
 			"source": source_variable,
 			"delimiter": delimiter,
@@ -130,7 +130,7 @@ func execute(context: ExecutionContext) -> void:
 		return
 
 	var parts = source.split(delimiter)
-	context.set_local(save_to_variable, parts)
+	context.set_variable(save_to_variable, parts)
 
 	_log_info_localized("FUSE_LOG_STRING_SPLIT", {
 		"source": source_variable,

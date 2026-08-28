@@ -115,7 +115,7 @@ func execute(context: ExecutionContext) -> void:
 		result = result.replace("{" + var_name + "}", replacement)
 
 	# 保存结果
-	context.set_local(save_to_variable, result)
+	context.set_variable(save_to_variable, result)
 
 	_log_info_localized("FUSE_LOG_STRING_FORMAT", {
 		"template": template.substr(0, 50),
@@ -128,7 +128,7 @@ func execute(context: ExecutionContext) -> void:
 ## 从上下文获取变量值
 func _get_variable_value(context: ExecutionContext, var_name: String) -> Variant:
 	# 按优先级查找：局部 → 全局
-	var value = context.get_local(var_name)
+	var value = context.get_variable(var_name)
 	if value != null:
 		return value
 

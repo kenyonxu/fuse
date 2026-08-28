@@ -62,7 +62,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		_create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
 		return false
 
-	var source: String = str(context.get_local(source_variable))
+	var source: String = str(context.get_variable(source_variable))
 	var length := source.length()
 
 	match compare_type:

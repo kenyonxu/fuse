@@ -128,14 +128,14 @@ func execute(context: ExecutionContext) -> void:
 		finished.emit()
 		return
 
-	var source: String = str(context.get_local(source_variable))
+	var source: String = str(context.get_variable(source_variable))
 	var result: bool
 	if case_sensitive:
 		result = source.contains(search)
 	else:
 		result = source.to_lower().contains(search.to_lower())
 
-	context.set_local(save_to_variable, result)
+	context.set_variable(save_to_variable, result)
 
 	_log_info_localized("FUSE_LOG_STRING_CONTAINS", {
 		"source": source_variable,

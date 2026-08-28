@@ -132,7 +132,7 @@ func execute(context: ExecutionContext) -> void:
 
 	# 保存到变量
 	if not save_to_variable.is_empty():
-		context.set_local(save_to_variable, clone)
+		context.set_variable(save_to_variable, clone)
 
 	_log_info_localized("FUSE_LOG_NODE_CLONED", {
 		"source": source.name,

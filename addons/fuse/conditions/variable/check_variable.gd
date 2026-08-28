@@ -574,8 +574,20 @@ func _compare_equals(actual: Variant, expected: Variant) -> bool:
 		if converted != null:
 			return converted == expected
 
-	# 直接比较
-	return actual == expected
+	# 直接比较（Packed*Array 与 Array 之间无 == 运算，运行时报错——统一解包后元素级比较）
+	return _as_unpacked_array(actual) == _as_unpacked_array(expected)
+
+
+## Packed*Array 统一转 Array（跨容器等值比较用）；其余类型原样返回
+static func _as_unpacked_array(value: Variant) -> Variant:
+	if value is PackedStringArray or value is PackedByteArray or value is PackedInt32Array \
+			or value is PackedInt64Array or value is PackedFloat32Array or value is PackedFloat64Array \
+			or value is PackedVector2Array or value is PackedVector3Array or value is PackedColorArray \
+			or value is PackedVector4Array:
+		var unpacked: Array = []
+		unpacked.assign(value)
+		return unpacked
+	return value
 
 ## 大于比较
 func _compare_greater_than(actual: Variant, expected: Variant) -> bool:

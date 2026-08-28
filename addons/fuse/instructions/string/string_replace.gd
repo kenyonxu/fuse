@@ -100,9 +100,9 @@ func execute(context: ExecutionContext) -> void:
 		finished.emit()
 		return
 
-	var source: String = str(context.get_local(variable_name))
+	var source: String = str(context.get_variable(variable_name))
 	var result = source.replace(search, replace)
-	context.set_local(variable_name, result)
+	context.set_variable(variable_name, result)
 
 	_log_info_localized("FUSE_LOG_STRING_REPLACE", {
 		"variable": variable_name,

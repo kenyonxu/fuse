@@ -102,10 +102,10 @@ func execute(context: ExecutionContext) -> void:
 
 	# 保存到变量
 	if not save_to_variable_x.is_empty():
-		context.set_local(save_to_variable_x, size.x)
+		context.set_variable(save_to_variable_x, size.x)
 
 	if not save_to_variable_y.is_empty():
-		context.set_local(save_to_variable_y, size.y)
+		context.set_variable(save_to_variable_y, size.y)
 
 	_log_info_localized("FUSE_LOG_VIEWPORT_SIZE", {
 		"width": str(size.x),
