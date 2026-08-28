@@ -3,7 +3,7 @@
   "level": "L4",
   "display_name": "DeepAudio",
   "category": "audio",
-  "description": "深度测试·Audio：7 指令 + 4 事件（音乐类指令独立绑定隔离 headless 挂起）",
+  "description": "深度测试·Audio：7 指令 + 4 事件 v2（PlayMusic 长指令语义/暂停恢复靶向音乐/节拍事件修复后可 headless 验证）",
   "icon_name": "",
   "variables": {
     "local": [],
@@ -64,40 +64,115 @@
             "volume": 0.5
           },
           {
-            "type": "Wait",
-            "wait_time": 0.4
+            "type": "Print",
+            "message": "PASS(m): SetAudioVolume(bus内播放器 0.5)"
           },
           {
             "type": "Print",
-            "message": "PASS(m): SetAudioVolume(bus 0.5，事件侧验证)"
+            "message": "=== 绑定1 DONE（音效链）==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): PlayMusic(已启动；指令在曲目 37.8s 播完后才自然完成，F5 听淡入)"
+          },
+          {
+            "type": "PlayMusic",
+            "music_path": "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav",
+            "volume": 0.6,
+            "fade_in": true,
+            "fade_duration": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Wait",
+            "wait_time": 2.5
           },
           {
             "type": "PauseResumeAudio",
-            "target_player": "../AP1",
+            "target_mode": 2,
+            "name_pattern": "Fuse_MusicPlayer*",
             "action_mode": 0
           },
           {
+            "type": "Print",
+            "message": "PASS(m): PauseResumeAudio(暂停音乐 1.5s，F5 听静音)"
+          },
+          {
             "type": "Wait",
-            "wait_time": 0.3
+            "wait_time": 1.5
           },
           {
             "type": "PauseResumeAudio",
-            "target_player": "../AP1",
+            "target_mode": 2,
+            "name_pattern": "Fuse_MusicPlayer*",
             "action_mode": 1
           },
           {
+            "type": "Print",
+            "message": "PASS(m): PauseResumeAudio(恢复音乐，F5 听回归)"
+          },
+          {
             "type": "Wait",
-            "wait_time": 0.3
+            "wait_time": 1.0
+          },
+          {
+            "type": "CrossfadeToMusic",
+            "music_path": "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav",
+            "volume": 0.5,
+            "crossfade_duration": 1.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): CrossfadeToMusic(F5 听交叉淡化)"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
           },
           {
             "type": "StopAudio",
             "stop_mode": 0,
             "fade_out": true,
-            "fade_duration": 0.3
+            "fade_duration": 0.5
           },
           {
             "type": "Wait",
-            "wait_time": 0.8
+            "wait_time": 1.0
           },
           {
             "type": "IfElse",
@@ -123,68 +198,7 @@
           },
           {
             "type": "Print",
-            "message": "=== 绑定1 DONE（指令链）==="
-          }
-        ]
-      }
-    },
-    {
-      "event": {
-        "type": "OnReady"
-      },
-      "binding_config": {
-        "enabled": true,
-        "trigger_once": true,
-        "cooldown_mode": 0,
-        "cooldown_time": 1.0
-      },
-      "action_runner": {
-        "execution_mode": 0,
-        "instructions": [
-          {
-            "type": "Wait",
-            "wait_time": 0.5
-          },
-          {
-            "type": "PlayMusic",
-            "music_path": "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav",
-            "volume": 0.6,
-            "fade_in": true,
-            "fade_duration": 0.3
-          },
-          {
-            "type": "Print",
-            "message": "PASS(m): PlayMusic(F5 听感)"
-          }
-        ]
-      }
-    },
-    {
-      "event": {
-        "type": "OnReady"
-      },
-      "binding_config": {
-        "enabled": true,
-        "trigger_once": true,
-        "cooldown_mode": 0,
-        "cooldown_time": 1.0
-      },
-      "action_runner": {
-        "execution_mode": 0,
-        "instructions": [
-          {
-            "type": "Wait",
-            "wait_time": 3.0
-          },
-          {
-            "type": "CrossfadeToMusic",
-            "music_path": "res://demos/fuse/fuse_adventure/resources/music/SpaceBattle_8bit_final.wav",
-            "volume": 0.5,
-            "crossfade_duration": 0.5
-          },
-          {
-            "type": "Print",
-            "message": "PASS(m): CrossfadeToMusic(F5 听感)"
+            "message": "=== deep_audio DONE ==="
           }
         ]
       }
@@ -270,7 +284,7 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "PASS(m): OnMusicBeat(F5)"
+            "message": "PASS: OnMusicBeat"
           }
         ]
       }

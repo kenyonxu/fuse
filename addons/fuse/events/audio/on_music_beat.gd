@@ -79,8 +79,9 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-## 物理帧处理（用于检测节拍）
-func _process(delta: float) -> void:
+## 每帧处理（由 Trigger 驱动）——原实现写在 _process(delta)，事件是 Resource
+## 引擎从不调用资源的 _process，节拍永不触发；改为事件标准的 on_process 入口
+func on_process(delta: float, _event_instance: RuntimeEventInstance = null) -> void:
 	var is_monitoring = get_runtime_instance().get_runtime_state("is_monitoring")
 	if not is_monitoring:
 		return
