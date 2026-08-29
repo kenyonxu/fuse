@@ -129,13 +129,19 @@ func terminate(owner_node: Node) -> void:
 				var control = target_node as Control
 				if control.mouse_exited.is_connected(callback):
 					control.mouse_exited.disconnect(callback)
+				if control.mouse_entered.is_connected(_on_target_mouse_entered):
+					control.mouse_entered.disconnect(_on_target_mouse_entered)
 			elif target_node is CollisionObject2D:
 				if target_node.mouse_exited.is_connected(callback):
 					target_node.mouse_exited.disconnect(callback)
+				if target_node.mouse_entered.is_connected(_on_target_mouse_entered):
+					target_node.mouse_entered.disconnect(_on_target_mouse_entered)
 			elif target_node is CollisionObject3D:
 				var collision = target_node as CollisionObject3D
 				if collision.mouse_exited.is_connected(callback):
 					collision.mouse_exited.disconnect(callback)
+				if collision.mouse_entered.is_connected(_on_target_mouse_entered):
+					collision.mouse_entered.disconnect(_on_target_mouse_entered)
 
 		# 清理注册表
 		_signal_connections.erase(owner_id)
@@ -169,16 +175,25 @@ func _connect_hover_signals(target_node: Node, owner_node: Node):
 	if target_node is Control:
 		var control = target_node as Control
 		control.mouse_exited.connect(wrapped_callback)
+		control.mouse_entered.connect(_on_target_mouse_entered)
 
 	# 检查是否是 CollisionObject2D
 	elif target_node is CollisionObject2D:
 		var collision = target_node as CollisionObject2D
 		target_node.mouse_exited.connect(wrapped_callback)
+		target_node.mouse_entered.connect(_on_target_mouse_entered)
 
 	# 检查是否是 CollisionObject3D
 	elif target_node is CollisionObject3D:
 		var collision = target_node as CollisionObject3D
 		collision.mouse_exited.connect(wrapped_callback)
+		collision.mouse_entered.connect(_on_target_mouse_entered)
+
+## 重新进入目标——清除离开状态。per-exit 语义要求"每次离开触发一次"，
+## 若无此清除，has_exited 永真导致第二次离开被永久拦截
+func _on_target_mouse_entered() -> void:
+	if _runtime_instance_ref:
+		_runtime_instance_ref.set_runtime_state("has_exited", false)
 
 ## 断开悬停信号
 func _disconnect_hover_signals(target_node: Node):

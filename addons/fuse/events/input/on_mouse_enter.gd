@@ -170,16 +170,25 @@ func _connect_hover_signals(target_node: Node, owner_node: Node):
 	if target_node is Control:
 		var control = target_node as Control
 		control.mouse_entered.connect(wrapped_callback)
+		control.mouse_exited.connect(_on_target_mouse_exited)
 
 	# 检查是否是 CollisionObject2D
 	elif target_node is CollisionObject2D:
 		var collision = target_node as CollisionObject2D
 		target_node.mouse_entered.connect(wrapped_callback)
+		target_node.mouse_exited.connect(_on_target_mouse_exited)
 
 	# 检查是否是 CollisionObject3D
 	elif target_node is CollisionObject3D:
 		var collision = target_node as CollisionObject3D
 		collision.mouse_entered.connect(wrapped_callback)
+		collision.mouse_exited.connect(_on_target_mouse_exited)
+
+## 离开目标——清除悬停状态。per-enter 语义要求"每次进入触发一次"，
+## 若无此清除，is_hovered 永真导致第二次进入被永久拦截（per-enter 退化成 once-ever）
+func _on_target_mouse_exited() -> void:
+	if _runtime_instance_ref:
+		_runtime_instance_ref.set_runtime_state("is_hovered", false)
 
 ## 断开悬停信号
 func _disconnect_hover_signals(target_node: Node):
@@ -196,13 +205,19 @@ func _disconnect_hover_signals(target_node: Node):
 				var control = target_node as Control
 				if control.mouse_entered.is_connected(callback):
 					control.mouse_entered.disconnect(callback)
+				if control.mouse_exited.is_connected(_on_target_mouse_exited):
+					control.mouse_exited.disconnect(_on_target_mouse_exited)
 			elif target_node is CollisionObject2D:
 				if target_node.mouse_entered.is_connected(callback):
 					target_node.mouse_entered.disconnect(callback)
+				if target_node.mouse_exited.is_connected(_on_target_mouse_exited):
+					target_node.mouse_exited.disconnect(_on_target_mouse_exited)
 			elif target_node is CollisionObject3D:
 				var collision = target_node as CollisionObject3D
 				if collision.mouse_entered.is_connected(callback):
 					collision.mouse_entered.disconnect(callback)
+				if collision.mouse_exited.is_connected(_on_target_mouse_exited):
+					collision.mouse_exited.disconnect(_on_target_mouse_exited)
 			keys_to_remove.append(owner_id)
 
 	# 清理注册表

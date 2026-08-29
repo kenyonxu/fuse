@@ -360,7 +360,9 @@ func get_description() -> String:
 	var button_name = _get_mouse_button_name_localized()
 	var mode_name = _get_trigger_mode_name_localized()
 
-	var timing_key = "FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ONCE" if not require_hovered else "FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_HOVERED"
+	# require_hovered=false 的语义是"任意位置点击均触发"，与一次性检测无关——
+	# 原文案键 TIMING_ONCE（"仅检测一次"）严重误导，用户以为有 once 行为
+	var timing_key = "FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_HOVERED" if require_hovered else "FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ANYWHERE"
 	var timing_text = FuseLocalization.translate(timing_key)
 
 	return FuseLocalization.translate_format("FUSE_EVENT_ON_MOUSE_BUTTON_DESC", {

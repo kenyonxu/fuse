@@ -66,7 +66,7 @@ mouse_button = 0
 trigger_mode = 0
 
 [sub_resource type="Resource" id="Resource_bqkni"]
-resource_name = "左键 按下 [仅检测一次]"
+resource_name = "左键 按下 [FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ANYWHERE]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_05rfo")
 action_runner = SubResource("Resource_dpef0")
@@ -88,7 +88,7 @@ mouse_button = 0
 trigger_mode = 1
 
 [sub_resource type="Resource" id="Resource_abex4"]
-resource_name = "左键 释放 [仅检测一次]"
+resource_name = "左键 释放 [FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ANYWHERE]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_0lik5")
 action_runner = SubResource("Resource_do7lw")
@@ -110,7 +110,7 @@ mouse_button = 1
 trigger_mode = 0
 
 [sub_resource type="Resource" id="Resource_6uosq"]
-resource_name = "右键 按下 [仅检测一次]"
+resource_name = "右键 按下 [FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ANYWHERE]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_dvj6a")
 action_runner = SubResource("Resource_2ognj")
@@ -132,7 +132,7 @@ mouse_button = 1
 trigger_mode = 1
 
 [sub_resource type="Resource" id="Resource_wyh7u"]
-resource_name = "右键 释放 [仅检测一次]"
+resource_name = "右键 释放 [FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ANYWHERE]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_jrviq")
 action_runner = SubResource("Resource_qmb61")
@@ -201,22 +201,22 @@ event = SubResource("Resource_rdf83")
 action_runner = SubResource("Resource_oc1xa")
 cooldown_time = 1.5
 
-[node name="test_deep_input_mouse" type="Node2D" unique_id=1570574353]
+[node name="test_deep_input_mouse" type="Node2D" unique_id=1582477668]
 
-[node name="Lbl" type="Label" parent="." unique_id=1530093589]
+[node name="Lbl" type="Label" parent="." unique_id=1234836632]
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 400.0
 offset_bottom = 60.0
 text = "deep_input_mouse"
 
-[node name="Area" type="Area2D" parent="." unique_id=1070074333]
+[node name="Area" type="Area2D" parent="." unique_id=273658828]
 position = Vector2(200, 324)
 
-[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=829164529]
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1428997332]
 shape = SubResource("Rect_area")
 
-[node name="InputDriver" type="Node" parent="." unique_id=1045296359]
+[node name="InputDriver" type="Node" parent="." unique_id=531187051]
 script = ExtResource("1_qcces")
 timeline = Array[Dictionary]([])
 events = Array[Dictionary]([{
@@ -267,7 +267,7 @@ events = Array[Dictionary]([{
 "pos": [200.0, 100.0]
 }])
 
-[node name="DeepInputMouse" type="Node" parent="." unique_id=1051043868]
+[node name="DeepInputMouse" type="Node" parent="." unique_id=78909778]
 script = ExtResource("2_op7v6")
 event_bindings = Array[ExtResource("3_da73v")]([SubResource("Resource_2id2s"), SubResource("Resource_bqkni"), SubResource("Resource_abex4"), SubResource("Resource_6uosq"), SubResource("Resource_wyh7u"), SubResource("Resource_xxnef"), SubResource("Resource_nmedw"), SubResource("Resource_ftpp1")])
 use_parallel_condition_evaluation = false

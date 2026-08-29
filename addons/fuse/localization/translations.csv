@@ -1465,7 +1465,7 @@ FUSE_EVENT_MOUSE_BUTTON_REQUIRE_HOVERED,需悬停,Require Hover
 
 # Mouse Button Event - Descriptions
 FUSE_EVENT_ON_MOUSE_BUTTON_DESC,{button} {mode} [{timing}],When {button} {mode} [{timing}]
-FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ONCE,仅检测一次,Detect only once
+FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_ANYWHERE,任意位置,Anywhere
 FUSE_EVENT_ON_MOUSE_BUTTON_TIMING_HOVERED,需要悬停在目标节点上,Requires hovering over target node
 
 # Mouse Button Event - Mouse Button Names
