@@ -749,6 +749,18 @@ func execute(context: ExecutionContext) -> void:
 				finished.emit()
 				return
 
+	# Variant 目标值：preset 的引擎值规范形字符串（"(x, y)"）在 Variant 属性上
+	# 保持 String（PresetValueCodec 仅对类型化属性做字符串解析）——按目标属性的
+	# 运行时类型补解析；否则 tween_property 对类型不匹配静默不生成 tweener，
+	# 指令 await finished 永挂（deep_tween 实测链条死锁于此）
+	if to_value is String and "(" in to_value and property_source != PropertySource.MATERIAL_PROPERTY:
+		var current: Variant = target.get_indexed(tween_property_path) if ":" in tween_property_path else target.get(tween_property_path)
+		var type_str := type_string(typeof(current))
+		if type_str in ["Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", "Color", "Quaternion", "Rect2"]:
+			var parsed: Variant = str_to_var("%s%s" % [type_str, to_value])
+			if parsed != null:
+				to_value = parsed
+
 	# 验证属性值（使用完整的属性路径进行验证）
 	var validation_property_path = tween_property_path
 	if property_source == PropertySource.MATERIAL_PROPERTY:
@@ -1036,6 +1048,15 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 				set_error_localized("FUSE_ERROR_MATERIAL_PROPERTY_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"property": property_path})
 				runtime_instance._complete_execution()
 				return true
+
+	# Variant 目标值字符串补解析（同主 execute 路径——ActionRunner 实际走此路径）
+	if to_value is String and "(" in to_value and property_source != PropertySource.MATERIAL_PROPERTY:
+		var cur: Variant = target.get_indexed(tween_property_path) if ":" in tween_property_path else target.get(tween_property_path)
+		var tstr := type_string(typeof(cur))
+		if tstr in ["Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", "Color", "Quaternion", "Rect2"]:
+			var parsed: Variant = str_to_var("%s%s" % [tstr, to_value])
+			if parsed != null:
+				to_value = parsed
 
 	# 验证属性值
 	var validation_property_path = tween_property_path

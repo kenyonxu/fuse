@@ -1,41 +1,41 @@
-[gd_scene format=3 uid="uid://e40mcmeo0j55"]
+[gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://drln0amkvv2j0" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Main Characters/Mask Dude/Idle (32x32).png" id="1_xh1yg"]
-[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_s3cpw"]
-[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="3_oy5yv"]
-[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_b7eay"]
-[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="5_ppew3"]
-[ext_resource type="Script" uid="uid://cmu6yuufyy78a" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="6_f5u1w"]
-[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_hfdpd"]
-[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="8_5jq7n"]
-[ext_resource type="Script" uid="uid://bu2i088ecag3p" path="res://addons/fuse/instructions/math/math_expression.gd" id="9_l0tt2"]
-[ext_resource type="Script" uid="uid://cim1j3tygkclq" path="res://addons/fuse/conditions/variable/check_variable.gd" id="10_llp2q"]
-[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="11_2rjtf"]
-[ext_resource type="Script" uid="uid://dyfbn7jgx3xfa" path="res://addons/fuse/instructions/tween/tween_rotate_to.gd" id="12_2ymhi"]
-[ext_resource type="Script" uid="uid://ciok2e7h5waqe" path="res://addons/fuse/conditions/node/check_node_property.gd" id="13_45lcw"]
-[ext_resource type="Script" uid="uid://daiogj0pr3eah" path="res://addons/fuse/instructions/tween/tween_scale_to.gd" id="14_26fx5"]
-[ext_resource type="Script" uid="uid://cr14niect8p3c" path="res://addons/fuse/instructions/tween/tween_property.gd" id="15_4wlp8"]
-[ext_resource type="Script" uid="uid://im3nor20tka0" path="res://addons/fuse/instructions/tween/tween_fade_out.gd" id="16_b3hk1"]
-[ext_resource type="Script" uid="uid://cx6ba54wjdawh" path="res://addons/fuse/instructions/tween/tween_fade_in.gd" id="17_ar4o3"]
-[ext_resource type="Script" uid="uid://e87a37ed56a6" path="res://addons/fuse/instructions/tween/tween_pause.gd" id="18_2o0bv"]
-[ext_resource type="Script" uid="uid://75afba23ba5d" path="res://addons/fuse/instructions/tween/tween_resume.gd" id="19_hrgj3"]
-[ext_resource type="Script" uid="uid://4a80dffw3b67" path="res://addons/fuse/instructions/tween/tween_bounce_animation.gd" id="20_qdbnj"]
-[ext_resource type="Script" uid="uid://bpbepltnle7dn" path="res://addons/fuse/instructions/tween/tween_pop_animation.gd" id="21_f27ov"]
-[ext_resource type="Script" uid="uid://fwtpx5yvgvsb" path="res://addons/fuse/instructions/tween/tween_pulse_animation.gd" id="22_i7cin"]
-[ext_resource type="Script" uid="uid://6er3f03smnjg" path="res://addons/fuse/instructions/tween/tween_shake_animation.gd" id="23_xf06d"]
-[ext_resource type="Script" uid="uid://k40wixwiaroo" path="res://addons/fuse/instructions/tween/tween_color_transition.gd" id="24_33b2b"]
-[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="25_l1pvx"]
-[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="26_1t2wd"]
-[ext_resource type="Script" uid="uid://bnh8x2k5qar3t" path="res://addons/fuse/events/tween/on_tween_completed.gd" id="27_v47kr"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Main Characters/Mask Dude/Idle (32x32).png" id="1_0ocfl"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_5nss2"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_4lmii"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_8xqfe"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_kowie"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_move_to.gd" id="6_br6de"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_lvm6h"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="8_ijcem"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="9_i826x"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="10_r8e6r"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="11_7ncys"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_rotate_to.gd" id="12_7526f"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="13_nmgl0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_scale_to.gd" id="14_0mpvt"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_property.gd" id="15_7x7ym"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_fade_out.gd" id="16_4eayq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_fade_in.gd" id="17_fphql"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_pause.gd" id="18_p8gfg"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_resume.gd" id="19_tqqm5"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_bounce_animation.gd" id="20_6xv08"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_pop_animation.gd" id="21_7ke3c"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_pulse_animation.gd" id="22_d6unv"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_shake_animation.gd" id="23_o5grh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/tween/tween_color_transition.gd" id="24_ny4i4"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="25_qlcs0"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="26_nl080"]
+[ext_resource type="Script" path="res://addons/fuse/events/tween/on_tween_completed.gd" id="27_8w3xe"]
 
-[sub_resource type="Resource" id="Resource_sresx"]
+[sub_resource type="Resource" id="Resource_j6pro"]
 resource_name = "打印: === deep_tween START ==="
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "=== deep_tween START ==="
 
-[sub_resource type="Resource" id="Resource_6twtt"]
+[sub_resource type="Resource" id="Resource_wjnl1"]
 resource_name = "移动到 [S] (100.0, 50.0) (全局) (0.30s)"
-script = ExtResource("6_f5u1w")
+script = ExtResource("6_br6de")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -56,18 +56,18 @@ move_axis = 0
 easing_type = 2
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_dx6fk"]
+[sub_resource type="Resource" id="Resource_wkwk6"]
 resource_name = "等待 0.6 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.6
 
-[sub_resource type="Resource" id="Resource_8n7o6"]
+[sub_resource type="Resource" id="Resource_tgtk1"]
 resource_name = "获取位置 S → tp [LOCAL]"
-script = ExtResource("8_5jq7n")
+script = ExtResource("8_ijcem")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -82,9 +82,9 @@ save_to_variable = "tp"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_cmf1w"]
+[sub_resource type="Resource" id="Resource_dpqck"]
 resource_name = "'Vector2(100, 50)' → texp [Vector2]"
-script = ExtResource("9_l0tt2")
+script = ExtResource("9_i826x")
 custom_scope_id = ""
 target_node_path = NodePath("")
 save_scope_source = 0
@@ -96,9 +96,9 @@ scope_source = 0
 save_to_variable = "texp"
 save_to_scope = 0
 
-[sub_resource type="Resource" id="Resource_0erau"]
+[sub_resource type="Resource" id="Resource_3b3ul"]
 resource_name = "检查变量 [[本地]]: tp EQUALS [[本地]] texp"
-script = ExtResource("10_llp2q")
+script = ExtResource("10_r8e6r")
 variable_name = "tp"
 scope_source = 0
 custom_scope_id = ""
@@ -116,27 +116,27 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_7figq"]
+[sub_resource type="Resource" id="Resource_0837s"]
 resource_name = "打印: FAIL: TweenMoveTo"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenMoveTo"
 
-[sub_resource type="Resource" id="Resource_shhyw"]
+[sub_resource type="Resource" id="Resource_abjsf"]
 resource_name = "打印: PASS: TweenMoveTo"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenMoveTo"
 
-[sub_resource type="Resource" id="Resource_fs6tq"]
+[sub_resource type="Resource" id="Resource_qt552"]
 resource_name = "If/Else tp [[本地]] EQUALS texp [[本地]] [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_0erau")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_shhyw")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_7figq")])
+condition = SubResource("Resource_3b3ul")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_abjsf")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_0837s")])
 
-[sub_resource type="Resource" id="Resource_qrg65"]
-resource_name = "旋转到 [S] 1.5° (本地) (0.30s)"
-script = ExtResource("12_2ymhi")
+[sub_resource type="Resource" id="Resource_adirt"]
+resource_name = "旋转到 [S] 90.0° (本地) (0.30s)"
+script = ExtResource("12_7526f")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -144,24 +144,24 @@ target_custom_scope_id = ""
 target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../S")
-target_rotation = 1.5
+target_rotation = 90.0
 duration = 0.3
 space_mode = 1
 easing_type = 2
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_5vyfn"]
+[sub_resource type="Resource" id="Resource_kl2no"]
 resource_name = "等待 0.6 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.6
 
-[sub_resource type="Resource" id="Resource_n5ckl"]
-resource_name = "S.rotation == 1.5"
-script = ExtResource("13_45lcw")
+[sub_resource type="Resource" id="Resource_cqwl1"]
+resource_name = "S.rotation_degrees == 90.0"
+script = ExtResource("13_nmgl0")
 node_variable_name = ""
 node_variable_scope = 0
 node_scope_source = 0
@@ -169,30 +169,30 @@ node_custom_scope_id = ""
 node_target_node_path = NodePath("")
 node_source = 0
 target_node_path = NodePath("../S")
-property_name = "rotation"
-property_value = 1.5
+property_name = "rotation_degrees"
+property_value = 90.0
 
-[sub_resource type="Resource" id="Resource_ygtxs"]
+[sub_resource type="Resource" id="Resource_pkp0h"]
 resource_name = "打印: FAIL: TweenRotateTo"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenRotateTo"
 
-[sub_resource type="Resource" id="Resource_3b3eh"]
+[sub_resource type="Resource" id="Resource_lmjl5"]
 resource_name = "打印: PASS: TweenRotateTo"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenRotateTo"
 
-[sub_resource type="Resource" id="Resource_373bq"]
-resource_name = "If/Else S.rotation == 1.5 [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+[sub_resource type="Resource" id="Resource_02rvv"]
+resource_name = "If/Else S.rotation_degrees == 90.0 [真:1 [同步]"
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_n5ckl")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_3b3eh")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_ygtxs")])
+condition = SubResource("Resource_cqwl1")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_lmjl5")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_pkp0h")])
 
-[sub_resource type="Resource" id="Resource_eww4k"]
+[sub_resource type="Resource" id="Resource_ixj5e"]
 resource_name = "缩放到 [S] (2.0, 2.0) (0.30s)"
-script = ExtResource("14_26fx5")
+script = ExtResource("14_0mpvt")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -205,18 +205,18 @@ duration = 0.3
 easing_type = 1
 trans_type = 8
 
-[sub_resource type="Resource" id="Resource_rsur5"]
+[sub_resource type="Resource" id="Resource_wwi02"]
 resource_name = "等待 0.6 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.6
 
-[sub_resource type="Resource" id="Resource_7qlm2"]
+[sub_resource type="Resource" id="Resource_aglco"]
 resource_name = "S.scale == (2.0, 2.0)"
-script = ExtResource("13_45lcw")
+script = ExtResource("13_nmgl0")
 node_variable_name = ""
 node_variable_scope = 0
 node_scope_source = 0
@@ -227,27 +227,27 @@ target_node_path = NodePath("../S")
 property_name = "scale"
 property_value = "(2.0, 2.0)"
 
-[sub_resource type="Resource" id="Resource_7bxk0"]
+[sub_resource type="Resource" id="Resource_pap42"]
 resource_name = "打印: FAIL: TweenScaleTo"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenScaleTo"
 
-[sub_resource type="Resource" id="Resource_th5t2"]
+[sub_resource type="Resource" id="Resource_yilaw"]
 resource_name = "打印: PASS: TweenScaleTo"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenScaleTo"
 
-[sub_resource type="Resource" id="Resource_iq06g"]
+[sub_resource type="Resource" id="Resource_6bwan"]
 resource_name = "If/Else S.scale == (2.0, 2.0) [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_7qlm2")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_th5t2")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_7bxk0")])
+condition = SubResource("Resource_aglco")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_yilaw")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_pap42")])
 
-[sub_resource type="Resource" id="Resource_rppqa"]
+[sub_resource type="Resource" id="Resource_buc1i"]
 resource_name = "属性动画 [S] [Node] .position = (0.0, 0.0) (0.30s)"
-script = ExtResource("15_4wlp8")
+script = ExtResource("15_7x7ym")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -257,24 +257,24 @@ use_variable_for_target = false
 target_node = NodePath("../S")
 property_source = 0
 property_path = "position"
-to_value = Vector2(0, 0)
+to_value = "(0.0, 0.0)"
 duration = 0.3
 auto_free = false
 easing_type = 2
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_ugein"]
+[sub_resource type="Resource" id="Resource_0xu1b"]
 resource_name = "等待 0.6 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.6
 
-[sub_resource type="Resource" id="Resource_gpetn"]
+[sub_resource type="Resource" id="Resource_q1oeb"]
 resource_name = "获取位置 S → tp2 [LOCAL]"
-script = ExtResource("8_5jq7n")
+script = ExtResource("8_ijcem")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -289,9 +289,9 @@ save_to_variable = "tp2"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_eds0m"]
+[sub_resource type="Resource" id="Resource_6f7l8"]
 resource_name = "'Vector2(0, 0)' → texp2 [Vector2]"
-script = ExtResource("9_l0tt2")
+script = ExtResource("9_i826x")
 custom_scope_id = ""
 target_node_path = NodePath("")
 save_scope_source = 0
@@ -303,9 +303,9 @@ scope_source = 0
 save_to_variable = "texp2"
 save_to_scope = 0
 
-[sub_resource type="Resource" id="Resource_a6vrc"]
+[sub_resource type="Resource" id="Resource_2rymo"]
 resource_name = "检查变量 [[本地]]: tp2 EQUALS [[本地]] texp2"
-script = ExtResource("10_llp2q")
+script = ExtResource("10_r8e6r")
 variable_name = "tp2"
 scope_source = 0
 custom_scope_id = ""
@@ -323,27 +323,27 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_ktsdg"]
+[sub_resource type="Resource" id="Resource_ckjsv"]
 resource_name = "打印: FAIL: TweenPropertyInstruction"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenPropertyInstruction"
 
-[sub_resource type="Resource" id="Resource_p524q"]
+[sub_resource type="Resource" id="Resource_fpe71"]
 resource_name = "打印: PASS: TweenPropertyInstruction"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenPropertyInstruction"
 
-[sub_resource type="Resource" id="Resource_dc5vc"]
+[sub_resource type="Resource" id="Resource_tyw75"]
 resource_name = "If/Else tp2 [[本地]] EQUALS texp2 [[本地]] [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_a6vrc")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_p524q")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_ktsdg")])
+condition = SubResource("Resource_2rymo")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_fpe71")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_ckjsv")])
 
-[sub_resource type="Resource" id="Resource_sn55w"]
+[sub_resource type="Resource" id="Resource_244d5"]
 resource_name = "淡出 [S] (0.30s)"
-script = ExtResource("16_b3hk1")
+script = ExtResource("16_4eayq")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -356,18 +356,18 @@ auto_free = false
 easing_type = 0
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_lr2x1"]
+[sub_resource type="Resource" id="Resource_u8plb"]
 resource_name = "等待 0.5 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.5
 
-[sub_resource type="Resource" id="Resource_ob5re"]
+[sub_resource type="Resource" id="Resource_kg4ju"]
 resource_name = "S.modulate:a == 0.0"
-script = ExtResource("13_45lcw")
+script = ExtResource("13_nmgl0")
 node_variable_name = ""
 node_variable_scope = 0
 node_scope_source = 0
@@ -378,27 +378,27 @@ target_node_path = NodePath("../S")
 property_name = "modulate:a"
 property_value = 0.0
 
-[sub_resource type="Resource" id="Resource_05i7a"]
+[sub_resource type="Resource" id="Resource_uafcr"]
 resource_name = "打印: FAIL: TweenFadeOut"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenFadeOut"
 
-[sub_resource type="Resource" id="Resource_63wao"]
+[sub_resource type="Resource" id="Resource_75yfe"]
 resource_name = "打印: PASS: TweenFadeOut"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenFadeOut"
 
-[sub_resource type="Resource" id="Resource_t7ono"]
+[sub_resource type="Resource" id="Resource_xh5ds"]
 resource_name = "If/Else S.modulate:a == 0.0 [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_ob5re")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_63wao")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_05i7a")])
+condition = SubResource("Resource_kg4ju")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_75yfe")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_uafcr")])
 
-[sub_resource type="Resource" id="Resource_qr07c"]
+[sub_resource type="Resource" id="Resource_xk4al"]
 resource_name = "淡入 [S] alpha: 0.0→1.0 (0.30s)"
-script = ExtResource("17_ar4o3")
+script = ExtResource("17_fphql")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -412,18 +412,18 @@ to_alpha = 1.0
 easing_type = 1
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_6rekr"]
+[sub_resource type="Resource" id="Resource_w83n7"]
 resource_name = "等待 0.5 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.5
 
-[sub_resource type="Resource" id="Resource_wgkef"]
+[sub_resource type="Resource" id="Resource_n74nv"]
 resource_name = "S.modulate:a == 1.0"
-script = ExtResource("13_45lcw")
+script = ExtResource("13_nmgl0")
 node_variable_name = ""
 node_variable_scope = 0
 node_scope_source = 0
@@ -434,27 +434,27 @@ target_node_path = NodePath("../S")
 property_name = "modulate:a"
 property_value = 1.0
 
-[sub_resource type="Resource" id="Resource_7vt5m"]
+[sub_resource type="Resource" id="Resource_kyo7d"]
 resource_name = "打印: FAIL: TweenFadeIn"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenFadeIn"
 
-[sub_resource type="Resource" id="Resource_sqv5e"]
+[sub_resource type="Resource" id="Resource_8mps6"]
 resource_name = "打印: PASS: TweenFadeIn"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenFadeIn"
 
-[sub_resource type="Resource" id="Resource_geiit"]
+[sub_resource type="Resource" id="Resource_e0mpr"]
 resource_name = "If/Else S.modulate:a == 1.0 [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_wgkef")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_sqv5e")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_7vt5m")])
+condition = SubResource("Resource_n74nv")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_8mps6")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_kyo7d")])
 
-[sub_resource type="Resource" id="Resource_mwvit"]
+[sub_resource type="Resource" id="Resource_mmtua"]
 resource_name = "'Vector2(200, 100)' → texp3 [Vector2]"
-script = ExtResource("9_l0tt2")
+script = ExtResource("9_i826x")
 custom_scope_id = ""
 target_node_path = NodePath("")
 save_scope_source = 0
@@ -466,9 +466,9 @@ scope_source = 0
 save_to_variable = "texp3"
 save_to_scope = 0
 
-[sub_resource type="Resource" id="Resource_t5b2n"]
+[sub_resource type="Resource" id="Resource_m5cyx"]
 resource_name = "移动到 [S] (200.0, 100.0) (全局) (1.20s)"
-script = ExtResource("6_f5u1w")
+script = ExtResource("6_br6de")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -489,18 +489,18 @@ move_axis = 0
 easing_type = 2
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_oeev1"]
+[sub_resource type="Resource" id="Resource_8hx2d"]
 resource_name = "等待 0.2 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.2
 
-[sub_resource type="Resource" id="Resource_5t315"]
+[sub_resource type="Resource" id="Resource_qkr3d"]
 resource_name = "暂停 Tween [S]"
-script = ExtResource("18_2o0bv")
+script = ExtResource("18_p8gfg")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -509,18 +509,18 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../S")
 
-[sub_resource type="Resource" id="Resource_b1lf8"]
+[sub_resource type="Resource" id="Resource_5ofwi"]
 resource_name = "等待 0.4 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.4
 
-[sub_resource type="Resource" id="Resource_aw7o2"]
+[sub_resource type="Resource" id="Resource_8hgt3"]
 resource_name = "获取位置 S → paused_pos [LOCAL]"
-script = ExtResource("8_5jq7n")
+script = ExtResource("8_ijcem")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -535,9 +535,9 @@ save_to_variable = "paused_pos"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_mqxsb"]
-resource_name = "检查变量 [[本地]]: paused_pos EQUALS [[本地]] texp3"
-script = ExtResource("10_llp2q")
+[sub_resource type="Resource" id="Resource_p8gcm"]
+resource_name = "检查变量 [[本地]]: paused_pos NOT_EQUALS [[本地]] texp3"
+script = ExtResource("10_r8e6r")
 variable_name = "paused_pos"
 scope_source = 0
 custom_scope_id = ""
@@ -547,7 +547,7 @@ compare_custom_scope_id = ""
 compare_target_node_path = NodePath("")
 expected_value = null
 variable_scope = 0
-comparison_operator = 0
+comparison_operator = 1
 check_with_another_variable = true
 compare_variable = "texp3"
 compare_variable_scope = 0
@@ -555,27 +555,27 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_n0jx1"]
-resource_name = "打印: PASS: TweenPause(暂停中未达目标)"
-script = ExtResource("5_ppew3")
-message = "PASS: TweenPause(暂停中未达目标)"
+[sub_resource type="Resource" id="Resource_mjhb2"]
+resource_name = "打印: PASS: TweenPause(暂停中停在半途)"
+script = ExtResource("5_kowie")
+message = "PASS: TweenPause(暂停中停在半途)"
 
-[sub_resource type="Resource" id="Resource_2uanq"]
-resource_name = "打印: FAIL: TweenPause(暂停中未达目标)"
-script = ExtResource("5_ppew3")
-message = "FAIL: TweenPause(暂停中未达目标)"
+[sub_resource type="Resource" id="Resource_wsosm"]
+resource_name = "打印: FAIL: TweenPause(暂停中停在半途)"
+script = ExtResource("5_kowie")
+message = "FAIL: TweenPause(暂停中停在半途)"
 
-[sub_resource type="Resource" id="Resource_amcsf"]
-resource_name = "If/Else paused_pos [[本地]] EQUALS texp3 [[本地]] [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+[sub_resource type="Resource" id="Resource_k3i6d"]
+resource_name = "If/Else paused_pos [[本地]] NOT_EQUALS texp3 [[本地]] [真:1 [同步]"
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_mqxsb")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_2uanq")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_n0jx1")])
+condition = SubResource("Resource_p8gcm")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_wsosm")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_mjhb2")])
 
-[sub_resource type="Resource" id="Resource_x5gr5"]
+[sub_resource type="Resource" id="Resource_3ce54"]
 resource_name = "恢复 Tween [S]"
-script = ExtResource("19_hrgj3")
+script = ExtResource("19_tqqm5")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -584,18 +584,18 @@ target_target_node_path = NodePath("")
 use_variable_for_target = false
 target_node = NodePath("../S")
 
-[sub_resource type="Resource" id="Resource_3jn4h"]
+[sub_resource type="Resource" id="Resource_rj73p"]
 resource_name = "等待 1.6 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 1.6
 
-[sub_resource type="Resource" id="Resource_vqhm5"]
+[sub_resource type="Resource" id="Resource_5l1ae"]
 resource_name = "获取位置 S → resumed_pos [LOCAL]"
-script = ExtResource("8_5jq7n")
+script = ExtResource("8_ijcem")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -610,9 +610,9 @@ save_to_variable = "resumed_pos"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_bo7vl"]
+[sub_resource type="Resource" id="Resource_mkxba"]
 resource_name = "检查变量 [[本地]]: resumed_pos EQUALS [[本地]] texp3"
-script = ExtResource("10_llp2q")
+script = ExtResource("10_r8e6r")
 variable_name = "resumed_pos"
 scope_source = 0
 custom_scope_id = ""
@@ -630,27 +630,27 @@ case_sensitive = true
 auto_convert_types = true
 treat_empty_as_null = false
 
-[sub_resource type="Resource" id="Resource_5se5v"]
+[sub_resource type="Resource" id="Resource_55px6"]
 resource_name = "打印: FAIL: TweenResume(最终到达)"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "FAIL: TweenResume(最终到达)"
 
-[sub_resource type="Resource" id="Resource_mvhhn"]
+[sub_resource type="Resource" id="Resource_tccrb"]
 resource_name = "打印: PASS: TweenResume(最终到达)"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: TweenResume(最终到达)"
 
-[sub_resource type="Resource" id="Resource_lgim6"]
+[sub_resource type="Resource" id="Resource_yfg7f"]
 resource_name = "If/Else resumed_pos [[本地]] EQUALS texp3 [[本地]] [真:1 [同步]"
-script = ExtResource("11_2rjtf")
+script = ExtResource("11_7ncys")
 sequence_mode = 0
-condition = SubResource("Resource_bo7vl")
-true_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_mvhhn")])
-false_instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_5se5v")])
+condition = SubResource("Resource_mkxba")
+true_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_tccrb")])
+false_instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_55px6")])
 
-[sub_resource type="Resource" id="Resource_ait6e"]
+[sub_resource type="Resource" id="Resource_j5i1a"]
 resource_name = "弹跳动画 [S] 高度:50.0 3次 (0.60s)"
-script = ExtResource("20_qdbnj")
+script = ExtResource("20_6xv08")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -662,23 +662,23 @@ bounce_height = 50.0
 bounce_count = 3
 duration = 0.6
 
-[sub_resource type="Resource" id="Resource_qln1l"]
+[sub_resource type="Resource" id="Resource_87cw8"]
 resource_name = "等待 0.3 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.3
 
-[sub_resource type="Resource" id="Resource_yssam"]
+[sub_resource type="Resource" id="Resource_lt8tm"]
 resource_name = "打印: PASS(m): TweenBounceAnimation"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS(m): TweenBounceAnimation"
 
-[sub_resource type="Resource" id="Resource_i65kn"]
+[sub_resource type="Resource" id="Resource_kkq7p"]
 resource_name = "弹出动画 [S] (1.5, 1.5) (0.50s)"
-script = ExtResource("21_f27ov")
+script = ExtResource("21_7ke3c")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -689,23 +689,23 @@ target_node = NodePath("../S")
 target_scale = Vector2(1.5, 1.5)
 duration = 0.5
 
-[sub_resource type="Resource" id="Resource_iu5u3"]
+[sub_resource type="Resource" id="Resource_o7a6y"]
 resource_name = "等待 0.3 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.3
 
-[sub_resource type="Resource" id="Resource_734ij"]
+[sub_resource type="Resource" id="Resource_cvt4c"]
 resource_name = "打印: PASS(m): TweenPopAnimation"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS(m): TweenPopAnimation"
 
-[sub_resource type="Resource" id="Resource_0oa0r"]
+[sub_resource type="Resource" id="Resource_7lpgs"]
 resource_name = "脉冲动画 [S] scale: (0.8, 0.8)↔(1.3, 1.3) (无限循环) (0.60s)"
-script = ExtResource("22_i7cin")
+script = ExtResource("22_d6unv")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -718,23 +718,23 @@ max_scale = Vector2(1.3, 1.3)
 duration = 0.6
 loop_count = 0
 
-[sub_resource type="Resource" id="Resource_cmawc"]
+[sub_resource type="Resource" id="Resource_rtb5b"]
 resource_name = "等待 0.3 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.3
 
-[sub_resource type="Resource" id="Resource_m58au"]
+[sub_resource type="Resource" id="Resource_u6ik4"]
 resource_name = "打印: PASS(m): TweenPulseAnimation"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS(m): TweenPulseAnimation"
 
-[sub_resource type="Resource" id="Resource_4hnvu"]
+[sub_resource type="Resource" id="Resource_dnx4m"]
 resource_name = "震动动画 [S] 强度:0.5 3次 轴向:XY (0.50s)"
-script = ExtResource("23_xf06d")
+script = ExtResource("23_o5grh")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -747,23 +747,23 @@ duration = 0.5
 shake_count = 3
 shake_axis = 2
 
-[sub_resource type="Resource" id="Resource_ng267"]
+[sub_resource type="Resource" id="Resource_j5rnk"]
 resource_name = "等待 0.3 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.3
 
-[sub_resource type="Resource" id="Resource_0gw4e"]
+[sub_resource type="Resource" id="Resource_6ypmp"]
 resource_name = "打印: PASS(m): TweenShakeAnimation"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS(m): TweenShakeAnimation"
 
-[sub_resource type="Resource" id="Resource_u0haq"]
+[sub_resource type="Resource" id="Resource_gn01h"]
 resource_name = "颜色过渡 [S] (1.0, 0.0, 0.0, 1.0) (0.50s)"
-script = ExtResource("24_33b2b")
+script = ExtResource("24_ny4i4")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -776,79 +776,77 @@ duration = 0.5
 easing_type = 2
 trans_type = 1
 
-[sub_resource type="Resource" id="Resource_hyaur"]
+[sub_resource type="Resource" id="Resource_vtmg0"]
 resource_name = "等待 0.3 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.3
 
-[sub_resource type="Resource" id="Resource_ke30f"]
+[sub_resource type="Resource" id="Resource_2x8pr"]
 resource_name = "打印: PASS(m): TweenColorTransition"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS(m): TweenColorTransition"
 
-[sub_resource type="Resource" id="Resource_62sv1"]
+[sub_resource type="Resource" id="Resource_21lqa"]
 resource_name = "等待 0.8 秒"
-script = ExtResource("7_hfdpd")
+script = ExtResource("7_lvm6h")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 0.8
 
-[sub_resource type="Resource" id="Resource_v0j6j"]
+[sub_resource type="Resource" id="Resource_nqaxs"]
 resource_name = "打印: === deep_tween DONE ==="
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "=== deep_tween DONE ==="
 
-[sub_resource type="Resource" id="Resource_ctpp1"]
-script = ExtResource("25_l1pvx")
-instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_sresx"), SubResource("Resource_6twtt"), SubResource("Resource_dx6fk"), SubResource("Resource_8n7o6"), SubResource("Resource_cmf1w"), SubResource("Resource_fs6tq"), SubResource("Resource_qrg65"), SubResource("Resource_5vyfn"), SubResource("Resource_373bq"), SubResource("Resource_eww4k"), SubResource("Resource_rsur5"), SubResource("Resource_iq06g"), SubResource("Resource_rppqa"), SubResource("Resource_ugein"), SubResource("Resource_gpetn"), SubResource("Resource_eds0m"), SubResource("Resource_dc5vc"), SubResource("Resource_sn55w"), SubResource("Resource_lr2x1"), SubResource("Resource_t7ono"), SubResource("Resource_qr07c"), SubResource("Resource_6rekr"), SubResource("Resource_geiit"), SubResource("Resource_mwvit"), SubResource("Resource_t5b2n"), SubResource("Resource_oeev1"), SubResource("Resource_5t315"), SubResource("Resource_b1lf8"), SubResource("Resource_aw7o2"), SubResource("Resource_amcsf"), SubResource("Resource_x5gr5"), SubResource("Resource_3jn4h"), SubResource("Resource_vqhm5"), SubResource("Resource_lgim6"), SubResource("Resource_ait6e"), SubResource("Resource_qln1l"), SubResource("Resource_yssam"), SubResource("Resource_i65kn"), SubResource("Resource_iu5u3"), SubResource("Resource_734ij"), SubResource("Resource_0oa0r"), SubResource("Resource_cmawc"), SubResource("Resource_m58au"), SubResource("Resource_4hnvu"), SubResource("Resource_ng267"), SubResource("Resource_0gw4e"), SubResource("Resource_u0haq"), SubResource("Resource_hyaur"), SubResource("Resource_ke30f"), SubResource("Resource_62sv1"), SubResource("Resource_v0j6j")])
+[sub_resource type="Resource" id="Resource_o2gu1"]
+script = ExtResource("25_qlcs0")
+instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_j6pro"), SubResource("Resource_wjnl1"), SubResource("Resource_wkwk6"), SubResource("Resource_tgtk1"), SubResource("Resource_dpqck"), SubResource("Resource_qt552"), SubResource("Resource_adirt"), SubResource("Resource_kl2no"), SubResource("Resource_02rvv"), SubResource("Resource_ixj5e"), SubResource("Resource_wwi02"), SubResource("Resource_6bwan"), SubResource("Resource_buc1i"), SubResource("Resource_0xu1b"), SubResource("Resource_q1oeb"), SubResource("Resource_6f7l8"), SubResource("Resource_tyw75"), SubResource("Resource_244d5"), SubResource("Resource_u8plb"), SubResource("Resource_xh5ds"), SubResource("Resource_xk4al"), SubResource("Resource_w83n7"), SubResource("Resource_e0mpr"), SubResource("Resource_mmtua"), SubResource("Resource_m5cyx"), SubResource("Resource_8hx2d"), SubResource("Resource_qkr3d"), SubResource("Resource_5ofwi"), SubResource("Resource_8hgt3"), SubResource("Resource_k3i6d"), SubResource("Resource_3ce54"), SubResource("Resource_rj73p"), SubResource("Resource_5l1ae"), SubResource("Resource_yfg7f"), SubResource("Resource_j5i1a"), SubResource("Resource_87cw8"), SubResource("Resource_lt8tm"), SubResource("Resource_kkq7p"), SubResource("Resource_o7a6y"), SubResource("Resource_cvt4c"), SubResource("Resource_7lpgs"), SubResource("Resource_rtb5b"), SubResource("Resource_u6ik4"), SubResource("Resource_dnx4m"), SubResource("Resource_j5rnk"), SubResource("Resource_6ypmp"), SubResource("Resource_gn01h"), SubResource("Resource_vtmg0"), SubResource("Resource_2x8pr"), SubResource("Resource_21lqa"), SubResource("Resource_nqaxs")])
 
-[sub_resource type="Resource" id="Resource_3mkm8"]
-script = ExtResource("26_1t2wd")
+[sub_resource type="Resource" id="Resource_t63nx"]
+script = ExtResource("26_nl080")
 
-[sub_resource type="Resource" id="Resource_ogiib"]
+[sub_resource type="Resource" id="Resource_n6sgd"]
 resource_name = "场景就绪时触发"
-script = ExtResource("3_oy5yv")
-event = SubResource("Resource_3mkm8")
-action_runner = SubResource("Resource_ctpp1")
+script = ExtResource("3_4lmii")
+event = SubResource("Resource_t63nx")
+action_runner = SubResource("Resource_o2gu1")
 trigger_once = true
 cooldown_time = 1.0
 
-[sub_resource type="Resource" id="Resource_e7i0g"]
+[sub_resource type="Resource" id="Resource_p1tgw"]
 resource_name = "打印: PASS: OnTweenCompleted"
-script = ExtResource("5_ppew3")
+script = ExtResource("5_kowie")
 message = "PASS: OnTweenCompleted"
 
-[sub_resource type="Resource" id="Resource_er28r"]
-script = ExtResource("25_l1pvx")
-instructions = Array[ExtResource("4_b7eay")]([SubResource("Resource_e7i0g")])
+[sub_resource type="Resource" id="Resource_d6dyp"]
+script = ExtResource("25_qlcs0")
+instructions = Array[ExtResource("4_8xqfe")]([SubResource("Resource_p1tgw")])
 
-[sub_resource type="Resource" id="Resource_0w0it"]
+[sub_resource type="Resource" id="Resource_62jfw"]
 resource_name = "Tween Completed: ../S"
-script = ExtResource("27_v47kr")
+script = ExtResource("27_8w3xe")
 tween_node_path = NodePath("../S")
 
-[sub_resource type="Resource" id="Resource_1wklc"]
+[sub_resource type="Resource" id="Resource_7fv0d"]
 resource_name = "当 ../S 完成补间动画时触发"
-script = ExtResource("3_oy5yv")
-event = SubResource("Resource_0w0it")
-action_runner = SubResource("Resource_er28r")
+script = ExtResource("3_4lmii")
+event = SubResource("Resource_62jfw")
+action_runner = SubResource("Resource_d6dyp")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_tween" type="Node2D" unique_id=1873471439]
+[node name="test_deep_tween" type="Node2D" unique_id=812472550]
 
-[node name="S" type="Sprite2D" parent="." unique_id=765704463]
-texture = ExtResource("1_xh1yg")
+[node name="S" type="Sprite2D" parent="." unique_id=964137933]
+texture = ExtResource("1_0ocfl")
 
-[node name="DeepTween" type="Node" parent="." unique_id=482664536]
-script = ExtResource("2_s3cpw")
-event_bindings = Array[ExtResource("3_oy5yv")]([SubResource("Resource_ogiib"), SubResource("Resource_1wklc")])
+[node name="DeepTween" type="Node" parent="." unique_id=52489304]
+script = ExtResource("2_5nss2")
+event_bindings = Array[ExtResource("3_4lmii")]([SubResource("Resource_n6sgd"), SubResource("Resource_7fv0d")])
 use_parallel_condition_evaluation = false
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=2051352681]

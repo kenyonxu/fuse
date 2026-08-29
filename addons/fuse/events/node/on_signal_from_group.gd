@@ -92,6 +92,10 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 	# 连接组内所有节点的信号
 	_connect_group_signals(owner_node)
 
+	# is_monitoring 默认 false 且此前无人置 true——信号回调的首行检查会永久早退
+	if _runtime_instance_ref:
+		_runtime_instance_ref.set_runtime_state("is_monitoring", true)
+
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
 ## 连接组内节点的信号

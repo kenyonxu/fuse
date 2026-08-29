@@ -212,6 +212,14 @@ static func _get_local_variable(
 	if context.has_variable(variable_name):
 		return context.get_variable(variable_name, default_value)
 
+	# 桥回退：has_variable 只查执行上下文的本地字典——临时上下文（事件轮询，
+	# 如 OnVariableChanged）因此读不到 Trigger meta 镜像的 LOCAL 共享值，
+	# 须与 VariableContext._get_local_variable 的桥保持同构
+	if context.trigger != null:
+		var meta_key := "local_variable_%s" % variable_name
+		if context.trigger.has_meta(meta_key):
+			return context.trigger.get_meta(meta_key)
+
 	_log_debug("局部变量未找到: %s" % variable_name)
 	return default_value
 

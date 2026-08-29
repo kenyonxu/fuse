@@ -628,6 +628,31 @@
           }
         ]
       }
+    },
+    {
+      "event": {
+        "type": "OnScreenEnteredExited",
+        "target_node": "../Player",
+        "camera": "../Cam",
+        "trigger_on": 2,
+        "margin": 100.0,
+        "check_interval": 0.1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnScreenEnteredExited(margin)"
+          }
+        ]
+      }
     }
   ]
 }

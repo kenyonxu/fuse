@@ -38,15 +38,15 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		return
 
 	# 保存到运行时状态
-	var state = runtime_instance.get_state()
-	state.event_states["owner_node_ref"] = owner_node
-	state.event_states["is_monitoring"] = false
+	runtime_instance.set_runtime_state("owner_node_ref", owner_node)
+	runtime_instance.set_runtime_state("is_monitoring", false)
 
-	# 连接 tree_exited 信号
-	if not owner_node.tree_exited.is_connected(_on_tree_exited):
-		owner_node.tree_exited.connect(_on_tree_exited)
+	# 监听 SceneTree.node_removed——owner 自身的 tree_exited 在场景卸载时
+	# 事件已 terminate，永不触发；动态 queue_free/remove_child 的节点经组播捕获
+	if owner_node.is_inside_tree():
+		owner_node.get_tree().node_removed.connect(_on_node_removed)
 
-	state.event_states["is_monitoring"] = true
+	runtime_instance.set_runtime_state("is_monitoring", true)
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
@@ -67,32 +67,31 @@ func initialize(owner_node: Node) -> void:
 func terminate(owner_node: Node) -> void:
 	var runtime_instance = _runtime_instance_ref
 	if runtime_instance:
-		var state = runtime_instance.get_state()
+		var _state = runtime_instance
 
 		# 断开信号连接
-		if owner_node and owner_node.tree_exited.is_connected(_on_tree_exited):
-			owner_node.tree_exited.disconnect(_on_tree_exited)
+		if owner_node and owner_node.is_inside_tree() and owner_node.get_tree().node_removed.is_connected(_on_node_removed):
+			owner_node.get_tree().node_removed.disconnect(_on_node_removed)
 
 		# 清理状态
-		state.event_states["is_monitoring"] = false
-		state.event_states["owner_node_ref"] = null
+		runtime_instance.set_runtime_state("is_monitoring", false)
+		runtime_instance.set_runtime_state("owner_node_ref", null)
 
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
 ## tree_exited 信号回调
-func _on_tree_exited() -> void:
+func _on_node_removed(_node: Node) -> void:
 	var runtime_instance = _runtime_instance_ref
 	if not runtime_instance:
 		return
 
-	var state = runtime_instance.get_state()
-	if not state.event_states.get("is_monitoring", false):
+	if not runtime_instance.get_runtime_state("is_monitoring"):
 		return
 
 	_log_info_localized("FUSE_LOG_EVENT_EXIT_TREE_TRIGGERED", {})
 
 	# 获取 owner_node 引用
-	var owner_node = state.event_states.get("owner_node_ref", null)
+	var owner_node = runtime_instance.get_runtime_state("owner_node_ref")
 
 	# 创建上下文节点
 	var context_node = Node.new()
@@ -106,9 +105,9 @@ func _on_tree_exited() -> void:
 	# 清理上下文节点
 	context_node.queue_free()
 
-	# 更新触发计数
-	state["trigger_count"] = state.get("trigger_count", 0) + 1
-	state["last_trigger_time"] = Time.get_ticks_msec() / 1000.0
+	# 更新触发计数（走 RuntimeEventInstance 统计）
+	if runtime_instance:
+		runtime_instance.update_trigger_stats()
 
 ## 获取事件描述
 func get_description() -> String:
@@ -138,9 +137,8 @@ func reset() -> void:
 	# 清理运行时状态
 	var runtime_instance = _runtime_instance_ref
 	if runtime_instance:
-		var state = runtime_instance.get_state()
-		state.event_states["owner_node_ref"] = null
-		state.event_states["is_monitoring"] = false
+		runtime_instance.set_runtime_state("owner_node_ref", null)
+		runtime_instance.set_runtime_state("is_monitoring", false)
 
 # ============================================================================
 # MIGRATION COMPLETE: OnExitTree 已成功迁移到 RuntimeInstance 自声明状态模式
@@ -149,7 +147,7 @@ func reset() -> void:
 # 1. 删除了状态变量 _owner_node_ref 和 _is_monitoring
 # 2. 实现了 get_default_runtime_state() 方法
 # 3. 实现了 initialize_with_runtime_instance() 方法
-# 4. 修改所有状态访问使用 RuntimeInstance.get_state()
+# 4. 修改所有状态访问使用 RuntimeInstance.get_runtime_state()
 # 5. 在 terminate() 和 reset() 中清理状态
 # 6. 保持了向后兼容性
 # ============================================================================

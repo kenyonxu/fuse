@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
+
+[sub_resource type="BoxShape3D" id="Box_zone"]
+size = Vector3(4, 2, 4)
+
+[sub_resource type="SphereShape3D" id="Sphere_ball"]
+radius = 0.4
+
+[node name="Base" type="Node3D"]
+
+[node name="Zone" type="Area3D" parent="."]
+
+[node name="Shape" type="CollisionShape3D" parent="Zone"]
+shape = SubResource("Box_zone")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+position = Vector3(0, -3, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("Box_zone")
+
+[node name="Ball" type="RigidBody3D" parent="."]
+position = Vector3(0, 4, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="Ball"]
+shape = SubResource("Sphere_ball")
+
+[node name="Cam" type="Camera3D" parent="."]
+position = Vector3(6, 3, 6)
+current = true
+
+[node name="Lbl" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 300.0
+offset_bottom = 60.0
+text = "deep_area3d"
+
+[node name="InputDriver" type="Node" parent="."]
+script = ExtResource("2_driver")
+timeline = []
+events = []

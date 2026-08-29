@@ -398,6 +398,29 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 | 未覆盖 21 项 | 3D 事件×2、触摸×2、OnInputAction 单动作版、OnProcess/OnPhysicsProcess/OnIntervalWithVariable/OnEnterTree/OnExitTree/OnSceneLoaded、OnScreenEnteredExited（已知崩溃专项）、CheckDirection/CheckFacingDirection/CheckIsChildOf/CheckAnimationTreeState/CheckChildCount/CheckGroupCount/CheckNodeInGroup、RecyclePooledScene（编辑器验）、ReloadScene（F5 验） |
 | 回填 | 《Fuse深度测试策略.md》第九节新增 deep_tests 审计段 + 总结表更新为 93% |
 
+
+
+### 遗留专项全清（2026-08-29 晚）✅
+
+九项专项收官，累计产品修复 #45-53，覆盖 289→**306/310**：
+
+| # | 组件 | 问题 | 修复 |
+|---|------|------|------|
+| 45 | OnSignalFromGroup | is_monitoring 默认 false 且无人置 true——回调永久早退 | 初始化尾部置 true |
+| 46 | VariableOperations | LOCAL 读取的 has_variable 预检挡掉 Trigger meta 桥——OnVariableChanged 临时上下文读不到值 | 补桥回退（与 VariableContext 同构） |
+| 47 | ForEach/ForLoop/While ×2 路径 | ContinueLoop 只设标志不中止序列——本次剩余照跑、标志泄漏到下一迭代头反跳一轮 | 6 个嵌套执行器补指令后检测 + clear_continue_flag |
+| 48 | CheckNodeProperty | "modulate:a" 嵌套路径 get() 不解析——静默 null 致比较恒假 | 冒号路径走 get_indexed |
+| 49 | TweenProperty ×2 路径 | Variant to_value 收字符串字面量——tween 不生成 tweener、await 永挂（主链死锁） | 按目标属性运行时类型 str_to_var 补解析 |
+| 50-51 | OnEnterTree/OnExitTree | 监听 owner 自身 tree_entered/exited（初始化前/卸载后才发，永不触发）；OnExitTree 残留 get_state()/event_states 旧 API 加载即崩 | 改 SceneTree.node_added/node_removed 组播 + 状态访问全量迁 RuntimeEventInstance |
+| 52 | OnTouchSwipe | `_input` 回调病（家族第 6 例） | handle_input |
+| 53 | CheckDirection | 角度映射整体顺时针偏 90°（y 轴向下坐标系：90° 是下不是左）——四方向全错位 | 重映射 |
+
+**专项验证关闭 2 项**：OnScreenEnteredExited（M2 崩溃无法复现、实测 PASS 已入 physics 场景）；相机 shake×follow（共存验证通过，架构正交：RemoteTransform 驱 position、shake 动 offset；M2"挂死"疑为当时他因表象）。导航轮询为引擎契约（agent 不自动移动）。
+
+**补测 16 项**：OnTouch/OnTouchSwipe/OnProcess/OnPhysicsProcess/OnIntervalWithVariable/OnEnterTree/OnSceneLoaded/OnArea3DEntered/OnArea3DExited（input_driver 扩 screen_touch/screen_drag 注入）+ CheckChildCount/GroupCount/NodeInGroup/IsChildOf/Direction/FacingDirection + OnScreenEnteredExited。新增场景 test_deep_extra / test_deep_area3d。
+
+**剩余 4 项未覆盖（各有因）**：OnExitTree（QueueFreeNode 驱动链未触发 node_removed，引擎探针证明 queue_free 本身正常——待查指令层）；CheckAnimationTreeState（需活动的 StateMachine 树，当前 base 为 blend tree）；RecyclePooledScene（编辑器验）；ReloadScene（F5 验）。另：CheckDirection.expected_direction 序列化不随 preset 更新（内存对、.tscn 顽固旧值，断言以既存值反向构造绕开）、OnInputAction 绑定就绪但 just 一帧窗口 headless 未捕获 PASS。
+
 **M3→M4 期间用户 F5 验收驱动的追加修复 #41-44**（累计 44 个）：#41 绑定过滤（disabled/once 完毕的事件不再接收回调）；#42 OnMouseEnter/Exit per-enter/per-exit 状态清除；#43 OnMouseButton 误导文案 + OnInputCombo Basis 矩阵编辑器（hint 17 恰为 TYPE_BASIS）；#44 OnInputCombo 属性访问先于类型过滤（motion 崩溃）。**经验教训：F5 实验改参数后保存的场景会污染 .tscn（trigger_once 消耗、enabled/process_mode 残留），回归前须重新 import 洗净**——M4 复核中因此洗净 4 次。
 
 **M2 全部 8 场景完成**。F5 待验清单：NodeOps（节点增减观感）、Physics（落体/跳/撞墙/进区/射线）、Movement（角色右移）。

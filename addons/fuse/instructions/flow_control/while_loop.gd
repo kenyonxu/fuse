@@ -467,6 +467,14 @@ func _execute_instructions_synchronous(context: ExecutionContext):
 		# 执行指令（同步执行）
 		instruction.execute(context)
 
+		# ContinueLoop 标准语义：立即中止本迭代剩余指令
+		# （原实现漏检致剩余照跑、标志泄漏到下一迭代头反跳一轮）
+		if context.should_continue_loop():
+			context.clear_continue_flag()
+			break
+		if context.should_break_loop():
+			break
+
 		# 验证指令是否完成
 		if not instruction.is_completed():
 			_log_warning_localized("FUSE_WARNING_INSTRUCTION_NOT_SYNCED", {"name": instruction.get_description()})
@@ -488,6 +496,13 @@ func _execute_instructions_asynchronous(context: ExecutionContext):
 		if not instruction.is_completed():
 			_log_debug_localized("FUSE_INSTRUCTION_IF_ELSE_WAITING_FOR_INSTRUCTION", {"instruction": instruction.get_description()})
 			await instruction.finished
+
+		# ContinueLoop 标准语义：立即中止本迭代剩余指令
+		if context.should_continue_loop():
+			context.clear_continue_flag()
+			break
+		if context.should_break_loop():
+			break
 
 ## 检查条件
 func _check_condition(value: Variant) -> bool:

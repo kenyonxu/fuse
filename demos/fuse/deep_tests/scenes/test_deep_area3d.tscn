@@ -1,0 +1,135 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="1_veu7k"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_c5guf"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_grlj0"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_skkq5"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_bb4nb"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_7gitv"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="7_ej2yv"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="8_qeee6"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_area_3d_entered.gd" id="9_adook"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_area_3d_exited.gd" id="10_hq1us"]
+
+[sub_resource type="BoxShape3D" id="Box_zone"]
+size = Vector3(4, 2, 4)
+
+[sub_resource type="SphereShape3D" id="Sphere_ball"]
+radius = 0.4
+
+[sub_resource type="Resource" id="Resource_ko4hk"]
+resource_name = "打印: === deep_area3d START（Ball y=4 落体穿越 Zone）==="
+script = ExtResource("5_bb4nb")
+message = "=== deep_area3d START（Ball y=4 落体穿越 Zone）==="
+
+[sub_resource type="Resource" id="Resource_f63t2"]
+resource_name = "等待 4.0 秒"
+script = ExtResource("6_7gitv")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 4.0
+
+[sub_resource type="Resource" id="Resource_s3l4y"]
+resource_name = "打印: === deep_area3d DONE ==="
+script = ExtResource("5_bb4nb")
+message = "=== deep_area3d DONE ==="
+
+[sub_resource type="Resource" id="Resource_wn122"]
+script = ExtResource("7_ej2yv")
+instructions = Array[ExtResource("4_skkq5")]([SubResource("Resource_ko4hk"), SubResource("Resource_f63t2"), SubResource("Resource_s3l4y")])
+
+[sub_resource type="Resource" id="Resource_42abs"]
+script = ExtResource("8_qeee6")
+
+[sub_resource type="Resource" id="Resource_ifogk"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_grlj0")
+event = SubResource("Resource_42abs")
+action_runner = SubResource("Resource_wn122")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_x5kvp"]
+resource_name = "打印: PASS: OnArea3DEntered(Ball入Zone)"
+script = ExtResource("5_bb4nb")
+message = "PASS: OnArea3DEntered(Ball入Zone)"
+
+[sub_resource type="Resource" id="Resource_jcngt"]
+script = ExtResource("7_ej2yv")
+instructions = Array[ExtResource("4_skkq5")]([SubResource("Resource_x5kvp")])
+
+[sub_resource type="Resource" id="Resource_63ms6"]
+resource_name = "每次 任何物体 进入 ../Zone"
+script = ExtResource("9_adook")
+area_node_path = NodePath("../Zone")
+
+[sub_resource type="Resource" id="Resource_1ft2e"]
+resource_name = "每次 任何物体 进入 ../Zone"
+script = ExtResource("3_grlj0")
+event = SubResource("Resource_63ms6")
+action_runner = SubResource("Resource_jcngt")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_ievyq"]
+resource_name = "打印: PASS: OnArea3DExited(Ball出Zone落地)"
+script = ExtResource("5_bb4nb")
+message = "PASS: OnArea3DExited(Ball出Zone落地)"
+
+[sub_resource type="Resource" id="Resource_dh5hc"]
+script = ExtResource("7_ej2yv")
+instructions = Array[ExtResource("4_skkq5")]([SubResource("Resource_ievyq")])
+
+[sub_resource type="Resource" id="Resource_rbkl7"]
+resource_name = "每次 任何物体 进入 ../Zone"
+script = ExtResource("10_hq1us")
+area_node_path = NodePath("../Zone")
+
+[sub_resource type="Resource" id="Resource_p14t7"]
+resource_name = "每次 任何物体 进入 ../Zone"
+script = ExtResource("3_grlj0")
+event = SubResource("Resource_rbkl7")
+action_runner = SubResource("Resource_dh5hc")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_area3d" type="Node3D" unique_id=911842757]
+
+[node name="Zone" type="Area3D" parent="." unique_id=2003451997]
+
+[node name="Shape" type="CollisionShape3D" parent="Zone" unique_id=1774391933]
+shape = SubResource("Box_zone")
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=606118463]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="Floor" unique_id=923241160]
+shape = SubResource("Box_zone")
+
+[node name="Ball" type="RigidBody3D" parent="." unique_id=135799185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="Ball" unique_id=1765289628]
+shape = SubResource("Sphere_ball")
+
+[node name="Cam" type="Camera3D" parent="." unique_id=1682912281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3, 6)
+current = true
+
+[node name="Lbl" type="Label" parent="." unique_id=21131742]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 300.0
+offset_bottom = 60.0
+text = "deep_area3d"
+
+[node name="InputDriver" type="Node" parent="." unique_id=1920788046]
+script = ExtResource("1_veu7k")
+timeline = Array[Dictionary]([])
+
+[node name="DeepArea3D" type="Node" parent="." unique_id=373567977]
+script = ExtResource("2_c5guf")
+event_bindings = Array[ExtResource("3_grlj0")]([SubResource("Resource_ifogk"), SubResource("Resource_1ft2e"), SubResource("Resource_p14t7")])
+use_parallel_condition_evaluation = false

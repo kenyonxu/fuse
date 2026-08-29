@@ -93,6 +93,15 @@ events = [{
 "event": "key",
 "keycode": 32
 }, {
+"delay": 5.6,
+"event": "key",
+"keycode": 68
+}, {
+"delay": 5.65,
+"event": "key",
+"keycode": 68,
+"pressed": false
+}, {
 "delay": 4.2,
 "event": "key",
 "keycode": 32,

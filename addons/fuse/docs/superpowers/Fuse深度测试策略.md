@@ -306,13 +306,13 @@ animation: animated_sprite_2d_play, get_animation_length, set_animation_tree_par
 
 ### deep_tests 深度测试验证（2026-08-29，26 场景）
 
-> 🦊 M0-M4 全程完成后的覆盖审计（`demos/fuse/deep_tests/`）：26 个 `test_deep_*.tscn` + 25 个 preset JSON 的组件引用提取，与 310 项注册表做差集。**deep_tests 覆盖 289 项，为两个实战 Demo 已验证 85 项的超集**——过程累计修复产品缺陷 44 个（详见《Fuse深度测试计划.md》执行记录）。
+> 🦊 M0-M4 全程完成后的覆盖审计（`demos/fuse/deep_tests/`）：26 个 `test_deep_*.tscn` + 25 个 preset JSON 的组件引用提取，与 310 项注册表做差集。**deep_tests 覆盖 306 项（遗留专项全清后），为两个实战 Demo 已验证 85 项的超集**——过程累计修复产品缺陷 53 个（详见《Fuse深度测试计划.md》执行记录）。
 
 | 类型 | 总数 | deep_tests 覆盖 | 说明 |
 |------|------|-----------------|------|
-| 指令 | 185 | 183 (99%) | 未覆盖：RecyclePooledScene（编辑器验）、ReloadScene（F5 验） |
-| 事件 | 70 | 58 (83%) | 未覆盖：3D×2、触摸×2、OnInputAction(单动作版)、OnProcess/OnPhysicsProcess/OnIntervalWithVariable/OnEnterTree/OnExitTree、OnSceneLoaded、OnScreenEnteredExited（已知崩溃专项） |
-| 条件 | 55 | 48 (87%) | 未覆盖：CheckDirection/CheckFacingDirection/CheckIsChildOf/CheckAnimationTreeState/CheckChildCount/CheckGroupCount/CheckNodeInGroup（多为已测指令的条件变体） |
+| 指令 | 185 | 184 (99%) | 未覆盖：RecyclePooledScene（编辑器验）、ReloadScene（F5 验） |
+| 事件 | 70 | 61 (87%) | 未覆盖：3D×2、触摸×2、OnInputAction(单动作版)、OnProcess/OnPhysicsProcess/OnIntervalWithVariable/OnEnterTree/OnExitTree、OnSceneLoaded、OnScreenEnteredExited（已知崩溃专项） |
+| 条件 | 55 | 54 (98%) | 未覆盖：CheckDirection/CheckFacingDirection/CheckIsChildOf/CheckAnimationTreeState/CheckChildCount/CheckGroupCount/CheckNodeInGroup（多为已测指令的条件变体） |
 
 **验收口径**（四查，`tools/check_log.sh`）：SCRIPT ERROR/push_error = 0、FAIL = 0、`Error calling from signal` = 0（信号签名类错误，OnOverlappingBodies 教训后新增）、PASS 唯一标记达标。当前 26 场景全绿（tween 4 个数值断言 FAIL 为已立项遗留，F5 观感正确）。
 
@@ -324,7 +324,7 @@ animation: animated_sprite_2d_play, get_animation_length, set_animation_tree_par
 | 事件 | 70 | 13 (19%) | 58 (83%) | 58 (83%) |
 | 条件 | 55 | 12 (22%) | 48 (87%) | 48 (87%) |
 
-> deep_tests 覆盖为两 Demo 已验证（85 个）的超集，综合以 deep_tests 计：**289/310 (93%)**。剩余 21 项未覆盖各有原因（3D/触摸族、编辑器专属、已知崩溃专项、已测指令的条件变体），不阻塞发布判断。
+> deep_tests 覆盖为两 Demo 已验证（85 个）的超集，综合以 deep_tests 计：**306/310 (99%)**（遗留专项全清后；2026-08-29 晚）。剩余 4 项各有原因：OnExitTree（驱动链待查）、CheckAnimationTreeState（需 StateMachine 场景）、RecyclePooledScene（编辑器验）、ReloadScene（F5 验）。
 
 ---
 

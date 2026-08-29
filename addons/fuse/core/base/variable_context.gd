@@ -428,6 +428,12 @@ func clear_loop_flags():
 	_owner._log_debug_localized("FUSE_LOG_CLEARING_LOOP_FLAGS")
 
 
+## 仅清 continue 标志、保留 break——循环执行器中止本迭代剩余指令时用
+## （break 需存活到循环头以终止整个循环）
+func clear_continue_flag():
+	_continue_loop_flag = false
+
+
 func push_loop_flags():
 	_loop_flag_stack.append({"break": _break_loop_flag, "continue": _continue_loop_flag})
 	_break_loop_flag = false

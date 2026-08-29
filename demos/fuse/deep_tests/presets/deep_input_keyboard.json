@@ -250,7 +250,11 @@
     {
       "event": {
         "type": "OnInputCombo",
-        "combo_sequence": ["Up", "Up", "Down"],
+        "combo_sequence": [
+          "Up",
+          "Up",
+          "Down"
+        ],
         "time_window": 1.0,
         "check_interval": 0.05
       },
@@ -273,7 +277,9 @@
     {
       "event": {
         "type": "OnInputBuffered",
-        "input_actions": ["Jump"],
+        "input_actions": [
+          "Jump"
+        ],
         "buffer_window": 0.15
       },
       "binding_config": {
@@ -313,6 +319,28 @@
           {
             "type": "Print",
             "message": "PASS:OnDirectionalInputChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInputAction",
+        "target_input_action": "Right",
+        "trigger_mode": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnInputAction(Right按下)"
           }
         ]
       }

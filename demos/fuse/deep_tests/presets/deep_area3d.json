@@ -1,0 +1,31 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepArea3D",
+  "category": "physics",
+  "description": "补测：OnArea3DEntered/OnArea3DExited——RigidBody3D 落体穿越 Area3D 的进/出流",
+  "icon_name": "",
+  "variables": {"local": [], "scope": [], "global": []},
+  "trigger_config": {"use_parallel_condition_evaluation": false},
+  "event_bindings": [
+    {
+      "event": {"type": "OnReady"},
+      "binding_config": {"enabled": true, "trigger_once": true, "cooldown_mode": 0, "cooldown_time": 1.0},
+      "action_runner": {"execution_mode": 0, "instructions": [
+        {"type": "Print", "message": "=== deep_area3d START（Ball y=4 落体穿越 Zone）==="},
+        {"type": "Wait", "wait_time": 4.0},
+        {"type": "Print", "message": "=== deep_area3d DONE ==="}
+      ]}
+    },
+    {
+      "event": {"type": "OnArea3DEntered", "area_node_path": "../Zone"},
+      "binding_config": {"enabled": true, "trigger_once": true, "cooldown_mode": 0, "cooldown_time": 1.0},
+      "action_runner": {"execution_mode": 0, "instructions": [{"type": "Print", "message": "PASS: OnArea3DEntered(Ball入Zone)"}]}
+    },
+    {
+      "event": {"type": "OnArea3DExited", "area_node_path": "../Zone"},
+      "binding_config": {"enabled": true, "trigger_once": true, "cooldown_mode": 0, "cooldown_time": 1.0},
+      "action_runner": {"execution_mode": 0, "instructions": [{"type": "Print", "message": "PASS: OnArea3DExited(Ball出Zone落地)"}]}
+    }
+  ]
+}

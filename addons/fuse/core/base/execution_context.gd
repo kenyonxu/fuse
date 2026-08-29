@@ -264,6 +264,11 @@ func set_continue_loop():
 	_variable_context.set_continue_loop()
 
 
+## 仅清 continue 标志、保留 break（循环执行器中止本迭代时用）
+func clear_continue_flag():
+	_variable_context.clear_continue_flag()
+
+
 func should_break_loop() -> bool:
 	return _variable_context.should_break_loop()
 

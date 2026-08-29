@@ -115,7 +115,8 @@ func terminate(owner_node: Node) -> void:
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
 ## 输入处理
-func _input(event: InputEvent) -> void:
+# 由 Trigger._unhandled_input 转发——Resource 的 _input 回调引擎不调用
+func handle_input(event: InputEvent) -> void:
 	if not _runtime_instance_ref:
 		return
 

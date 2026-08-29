@@ -1,14 +1,14 @@
 {
   "format_version": "2.0",
   "level": "L4",
-  "display_name": "DeepScene",
-  "category": "scene",
-  "description": "深度测试·Scene：6 指令 + 1 条件 + 5 事件",
+  "display_name": "DeepExtra",
+  "category": "node",
+  "description": "补测：7 条件（ChildCount/GroupCount/NodeInGroup/IsChildOf/Direction/FacingDirection/AnimationTreeState 见 animation 场景）+ OnTouch/OnTouchSwipe/OnProcess/OnPhysicsProcess/OnIntervalWithVariable/OnEnterTree/OnExitTree",
   "icon_name": "",
   "variables": {
     "local": [
-      "bg",
-      "sp"
+      "dirv",
+      "cc"
     ],
     "scope": [],
     "global": []
@@ -32,33 +32,26 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "=== deep_scene START ==="
-          },
-          {
-            "type": "PreloadSceneInstruction",
-            "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn",
-            "preload_mode": 0,
-            "timeout": 5.0,
-            "status_variable": "pl"
+            "message": "=== deep_extra START（条件断言 + 触摸注入 1.0/2.0 + 动态节点进出树）==="
           },
           {
             "type": "IfElse",
             "sequence_mode": 0,
             "condition": {
-              "type": "CheckPreloadStatus",
-              "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn",
-              "expected_status": 0
+              "type": "CheckChildCount",
+              "target_node_path": "../Targets",
+              "compare_value": 3
             },
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: PreloadSceneInstruction+CheckPreloadStatus(true)"
+                "message": "PASS: CheckChildCount(Targets=3)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: PreloadSceneInstruction+CheckPreloadStatus(true)"
+                "message": "FAIL: CheckChildCount(Targets=3)"
               }
             ]
           },
@@ -66,153 +59,147 @@
             "type": "IfElse",
             "sequence_mode": 0,
             "condition": {
-              "type": "CheckPreloadStatus",
-              "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn",
-              "expected_status": 3
+              "type": "CheckGroupCount",
+              "group_name": "test_targets",
+              "compare_value": 4
             },
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: CheckPreloadStatus(neg)"
+                "message": "PASS: CheckGroupCount(test_targets=4)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: CheckPreloadStatus(neg)"
+                "message": "FAIL: CheckGroupCount(test_targets=4)"
               }
             ]
-          },
-          {
-            "type": "GetScenePath",
-            "path_mode": 0,
-            "save_to_variable": "sp"
           },
           {
             "type": "IfElse",
             "sequence_mode": 0,
             "condition": {
-              "type": "CheckVariable",
-              "variable_name": "sp",
-              "comparison_operator": 6,
-              "expected_value": "deep_scene",
-              "auto_convert_types": true
+              "type": "CheckNodeInGroup",
+              "target_node": "../Targets/A",
+              "group_name": "test_targets"
             },
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: GetScenePath"
+                "message": "PASS: CheckNodeInGroup(A在组)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: GetScenePath"
+                "message": "FAIL: CheckNodeInGroup(A在组)"
               }
             ]
-          },
-          {
-            "type": "LoadSceneBackground",
-            "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
-            "save_to_variable": "bg"
           },
           {
             "type": "IfElse",
             "sequence_mode": 0,
             "condition": {
-              "type": "CheckVariable",
-              "variable_name": "bg",
-              "comparison_operator": 11,
-              "auto_convert_types": true
+              "type": "CheckIsChildOf",
+              "child_node": "../Targets/A",
+              "parent_node": "../Targets"
             },
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: LoadSceneBackground"
+                "message": "PASS: CheckIsChildOf(A⊂Targets)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: LoadSceneBackground"
+                "message": "FAIL: CheckIsChildOf(A⊂Targets)"
               }
             ]
           },
           {
-            "type": "AddSceneAsChild",
-            "scene_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
-            "target_parent": "..",
-            "new_node_name": "AddedChild"
-          },
-          {
-            "type": "GetNode",
-            "node_path": "../AddedChild",
-            "result_variable": "added"
+            "type": "MathExpression",
+            "expression": "Vector2(1, 0)",
+            "output_type": 2,
+            "save_to_variable": "dirv"
           },
           {
             "type": "IfElse",
             "sequence_mode": 0,
             "condition": {
-              "type": "CheckVariable",
-              "variable_name": "added",
-              "comparison_operator": 11,
-              "auto_convert_types": true
+              "type": "CheckDirection",
+              "source_node": "../Targets/B",
+              "target_node": "../Targets/A",
+              "expected_direction": 2
             },
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: AddSceneAsChild"
+                "message": "PASS: CheckDirection(B→A朝左)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: AddSceneAsChild"
+                "message": "FAIL: CheckDirection(B→A朝左)"
               }
             ]
           },
           {
-            "type": "SetProcessMode",
-            "target_node": "../Targets/A",
-            "process_mode": 4
-          },
-          {
-            "type": "Wait",
-            "wait_time": 0.2
-          },
-          {
-            "type": "SetProcessMode",
-            "target_node": "../Targets/A",
-            "process_mode": 0
-          },
-          {
-            "type": "Print",
-            "message": "PASS: SetProcessMode(DISABLED→INHERIT)"
-          },
-          {
-            "type": "Print",
-            "message": "PASS(m): ReloadScene(F5 手动验)"
-          },
-          {
-            "type": "Print",
-            "message": "=== deep_scene 主链 DONE，即将切 B ==="
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckFacingDirection",
+              "target_node": "../Targets/A",
+              "expected_facing": 1
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckFacingDirection(A朝右)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckFacingDirection(A朝右)"
+              }
+            ]
           },
           {
             "type": "Wait",
             "wait_time": 0.5
           },
           {
-            "type": "ChangeScene",
-            "scene_path": "res://demos/fuse/deep_tests/scenes/test_deep_scene_b.tscn"
+            "type": "AddSceneAsChild",
+            "scene_path": "res://demos/fuse/fuse_adventure/scenes/item_banana.tscn",
+            "target_parent": "../Targets",
+            "new_node_name": "DynItem"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "QueueFreeNode",
+            "target_node": "../Targets/DynItem"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 3.5
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_extra DONE ==="
           }
         ]
       }
     },
     {
       "event": {
-        "type": "OnBackgroundLoadProgress",
-        "load_resource_path": "res://demos/fuse/deep_tests/scenes/base_targets.tscn",
-        "progress_threshold": 1.0
+        "type": "OnTouch",
+        "touch_action": 0
       },
       "binding_config": {
         "enabled": true,
@@ -225,15 +212,16 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "PASS: OnBackgroundLoadProgress"
+            "message": "PASS: OnTouch(按下)"
           }
         ]
       }
     },
     {
       "event": {
-        "type": "OnTreeChanged",
-        "change_type": 0
+        "type": "OnTouchSwipe",
+        "swipe_direction": 3,
+        "min_distance": 50.0
       },
       "binding_config": {
         "enabled": true,
@@ -246,17 +234,15 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "PASS: OnTreeChanged"
+            "message": "PASS: OnTouchSwipe(右滑80px)"
           }
         ]
       }
     },
     {
       "event": {
-        "type": "OnNodePausedResumed",
-        "target_node": "../Targets/A",
-        "trigger_on": 2,
-        "check_interval": 0.05
+        "type": "OnProcess",
+        "execution_interval": 0.5
       },
       "binding_config": {
         "enabled": true,
@@ -269,14 +255,15 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "PASS: OnNodePausedResumed"
+            "message": "PASS: OnProcess"
           }
         ]
       }
     },
     {
       "event": {
-        "type": "OnSceneAboutToChange"
+        "type": "OnPhysicsProcess",
+        "execution_interval": 0.5
       },
       "binding_config": {
         "enabled": true,
@@ -289,14 +276,17 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "PASS: OnSceneAboutToChange"
+            "message": "PASS: OnPhysicsProcess"
           }
         ]
       }
     },
     {
       "event": {
-        "type": "OnSceneLoaded"
+        "type": "OnIntervalWithVariable",
+        "variable_name": "tick_interval",
+        "default_interval": 0.3,
+        "auto_start": true
       },
       "binding_config": {
         "enabled": true,
@@ -309,7 +299,27 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "PASS: OnSceneLoaded"
+            "message": "PASS: OnIntervalWithVariable"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnEnterTree"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnEnterTree(动态实例)"
           }
         ]
       }

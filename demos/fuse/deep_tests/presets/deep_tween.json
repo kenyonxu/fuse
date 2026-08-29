@@ -87,7 +87,7 @@
           {
             "type": "TweenRotateTo",
             "target_node": "../S",
-            "target_rotation": 1.5,
+            "target_rotation": 90.0,
             "duration": 0.3
           },
           {
@@ -100,8 +100,8 @@
             "condition": {
               "type": "CheckNodeProperty",
               "target_node_path": "../S",
-              "property_name": "rotation",
-              "property_value": 1.5
+              "property_name": "rotation_degrees",
+              "property_value": 90.0
             },
             "true_instructions": [
               {
@@ -294,19 +294,19 @@
               "variable_name": "paused_pos",
               "check_with_another_variable": true,
               "compare_variable": "texp3",
-              "comparison_operator": 0,
+              "comparison_operator": 1,
               "auto_convert_types": true
             },
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: TweenPause(暂停中未达目标)"
+                "message": "FAIL: TweenPause(暂停中停在半途)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: TweenPause(暂停中未达目标)"
+                "message": "PASS: TweenPause(暂停中停在半途)"
               }
             ]
           },

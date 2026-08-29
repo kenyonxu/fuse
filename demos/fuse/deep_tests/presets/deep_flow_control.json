@@ -318,7 +318,20 @@
             "index_variable": "i3",
             "loop_instructions": [
               {
-                "type": "ContinueLoop"
+                "type": "IfThen",
+                "sequence_mode": 0,
+                "condition": {
+                  "type": "CheckVariable",
+                  "variable_name": "i3",
+                  "comparison_operator": 0,
+                  "expected_value": 1,
+                  "auto_convert_types": true
+                },
+                "instructions": [
+                  {
+                    "type": "ContinueLoop"
+                  }
+                ]
               },
               {
                 "type": "ArrayAdd",
@@ -339,13 +352,13 @@
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: ContinueLoop(当前语义)"
+                "message": "PASS: ContinueLoop(标准语义:仅跳过i3==1迭代)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: ContinueLoop(当前语义)"
+                "message": "FAIL: ContinueLoop(标准语义:仅跳过i3==1迭代)"
               }
             ]
           },

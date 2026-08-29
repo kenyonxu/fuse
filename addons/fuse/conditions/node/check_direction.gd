@@ -713,15 +713,17 @@ func _get_target_node_variable_value(context: ExecutionContext) -> Variant:
 ## 检查方向
 func _check_direction(direction: Vector2) -> bool:
 	var angle = rad_to_deg(direction.angle())
+	# Godot 2D 屏幕坐标 y 轴向下：0°=右、90°=下、±180°=左、-90°(270°)=上
+	# （原映射整体顺时针偏了 90°：上判成 0°、左判成 90°……全部错位）
 	match expected_direction:
 		0:  # 上
-			return abs(angle) <= tolerance or abs(angle - 360) <= tolerance
-		1:  # 下
-			return abs(abs(angle) - 180) <= tolerance
-		2:  # 左
-			return abs(angle - 90) <= tolerance or abs(angle + 270) <= tolerance
-		3:  # 右
 			return abs(angle + 90) <= tolerance or abs(angle - 270) <= tolerance
+		1:  # 下
+			return abs(angle - 90) <= tolerance or abs(angle + 270) <= tolerance
+		2:  # 左
+			return abs(abs(angle) - 180) <= tolerance
+		3:  # 右
+			return abs(angle) <= tolerance or abs(angle - 360) <= tolerance
 		_:
 			return false
 

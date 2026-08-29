@@ -305,7 +305,7 @@
           },
           {
             "type": "Wait",
-            "wait_time": 0.2
+            "wait_time": 1.0
           },
           {
             "type": "StopAnimation",
@@ -407,8 +407,8 @@
     {
       "event": {
         "type": "OnAnimationStarted",
-        "target_node_path": "../PlayerSprites",
-        "animation_name": "run"
+        "target_node_path": "../PlayerSprites/AnimationPlayer",
+        "animation_name": "player/run"
       },
       "binding_config": {
         "enabled": true,

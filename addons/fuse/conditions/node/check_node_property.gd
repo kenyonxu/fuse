@@ -361,7 +361,13 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		_create_fuse_error(error_msg, FuseError.ErrorType.VALIDATION_ERROR)
 		return false
 
-	var actual_value = node.get(property_name)
+	# 嵌套属性路径（"modulate:a" 等 Vector/Color 子分量）须走 get_indexed——
+	# get() 不解析冒号路径，静默返回 null 致比较恒假（TweenFade 断言实测踩中）
+	var actual_value: Variant
+	if ":" in property_name:
+		actual_value = node.get_indexed(property_name)
+	else:
+		actual_value = node.get(property_name)
 
 	# 比较属性值
 	var result = _compare_equal(actual_value, property_value)

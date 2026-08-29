@@ -1,0 +1,512 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="1_vxt1h"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Apple.png" id="2_8nnu2"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Cherries.png" id="3_lelji"]
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="4_o2j8h"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="5_ybqj8"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="6_qir61"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="7_sgl4p"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="8_4qpkj"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_child_count.gd" id="9_xc5up"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="10_bfwma"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_group_count.gd" id="11_g3bvc"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_in_group.gd" id="12_86w34"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_is_child_of.gd" id="13_qaqw6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/math/math_expression.gd" id="14_u7p58"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_direction.gd" id="15_vkp4k"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_facing_direction.gd" id="16_ftgxl"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="17_udje0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/scene/add_scene_as_child.gd" id="18_auoyr"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/queue_free_node.gd" id="19_vkwts"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="20_jc2x3"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="21_6a3er"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_touch.gd" id="22_3mo01"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_touch_swipe.gd" id="23_ckbjt"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_process.gd" id="24_vxjcw"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_physics_process.gd" id="25_ksyl3"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_interval_with_variable.gd" id="26_g2j3y"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_enter_tree.gd" id="27_xd415"]
+
+[sub_resource type="Resource" id="Resource_ion4x"]
+resource_name = "打印: === deep_extra START（条件断言 + 触摸注入 1.0/2.0 + 动态节点进出树）==="
+script = ExtResource("8_4qpkj")
+message = "=== deep_extra START（条件断言 + 触摸注入 1.0/2.0 + 动态节点进出树）==="
+
+[sub_resource type="Resource" id="Resource_6igei"]
+resource_name = "Targets.child_count = 3"
+script = ExtResource("9_xc5up")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_path_source = 0
+target_node_path = NodePath("../Targets")
+recursive = false
+comparison_operator = 0
+compare_value = 3
+
+[sub_resource type="Resource" id="Resource_6jyt6"]
+resource_name = "打印: FAIL: CheckChildCount(Targets=3)"
+script = ExtResource("8_4qpkj")
+message = "FAIL: CheckChildCount(Targets=3)"
+
+[sub_resource type="Resource" id="Resource_m7fkp"]
+resource_name = "打印: PASS: CheckChildCount(Targets=3)"
+script = ExtResource("8_4qpkj")
+message = "PASS: CheckChildCount(Targets=3)"
+
+[sub_resource type="Resource" id="Resource_3uumx"]
+resource_name = "If/Else Targets.child_count = 3 [真:1 [同步]"
+script = ExtResource("10_bfwma")
+sequence_mode = 0
+condition = SubResource("Resource_6igei")
+true_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_m7fkp")])
+false_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_6jyt6")])
+
+[sub_resource type="Resource" id="Resource_v85yn"]
+resource_name = "Group('test_targets') = 4"
+script = ExtResource("11_g3bvc")
+group_variable_name = ""
+group_variable_scope = 0
+group_scope_source = 0
+group_custom_scope_id = ""
+group_target_node_path = NodePath("")
+group_name_source = 0
+group_name = "test_targets"
+comparison_operator = 0
+compare_value = 4
+
+[sub_resource type="Resource" id="Resource_eu15r"]
+resource_name = "打印: FAIL: CheckGroupCount(test_targets=4)"
+script = ExtResource("8_4qpkj")
+message = "FAIL: CheckGroupCount(test_targets=4)"
+
+[sub_resource type="Resource" id="Resource_usgvp"]
+resource_name = "打印: PASS: CheckGroupCount(test_targets=4)"
+script = ExtResource("8_4qpkj")
+message = "PASS: CheckGroupCount(test_targets=4)"
+
+[sub_resource type="Resource" id="Resource_02brt"]
+resource_name = "If/Else Group('test_targets') = 4 [真:1 [同步]"
+script = ExtResource("10_bfwma")
+sequence_mode = 0
+condition = SubResource("Resource_v85yn")
+true_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_usgvp")])
+false_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_eu15r")])
+
+[sub_resource type="Resource" id="Resource_yve8g"]
+resource_name = "节点组检测: A ∈ 'test_targets'"
+script = ExtResource("12_86w34")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Targets/A")
+group_name = "test_targets"
+
+[sub_resource type="Resource" id="Resource_uvui2"]
+resource_name = "打印: FAIL: CheckNodeInGroup(A在组)"
+script = ExtResource("8_4qpkj")
+message = "FAIL: CheckNodeInGroup(A在组)"
+
+[sub_resource type="Resource" id="Resource_smkxg"]
+resource_name = "打印: PASS: CheckNodeInGroup(A在组)"
+script = ExtResource("8_4qpkj")
+message = "PASS: CheckNodeInGroup(A在组)"
+
+[sub_resource type="Resource" id="Resource_u3jx1"]
+resource_name = "If/Else 节点 A ∈ 'test_targets' [真:1 [同步]"
+script = ExtResource("10_bfwma")
+sequence_mode = 0
+condition = SubResource("Resource_yve8g")
+true_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_smkxg")])
+false_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_uvui2")])
+
+[sub_resource type="Resource" id="Resource_5koa3"]
+resource_name = "A 是 Targets 的子节点"
+script = ExtResource("13_qaqw6")
+child_variable_name = ""
+child_variable_scope = 0
+child_scope_source = 0
+child_custom_scope_id = ""
+child_target_node_path = NodePath("")
+parent_variable_name = ""
+parent_variable_scope = 0
+parent_scope_source = 0
+parent_custom_scope_id = ""
+parent_target_node_path = NodePath("")
+child_node_source = 0
+child_node = NodePath("../Targets/A")
+parent_node_source = 0
+parent_node = NodePath("../Targets")
+
+[sub_resource type="Resource" id="Resource_fga0c"]
+resource_name = "打印: FAIL: CheckIsChildOf(A⊂Targets)"
+script = ExtResource("8_4qpkj")
+message = "FAIL: CheckIsChildOf(A⊂Targets)"
+
+[sub_resource type="Resource" id="Resource_nkcqf"]
+resource_name = "打印: PASS: CheckIsChildOf(A⊂Targets)"
+script = ExtResource("8_4qpkj")
+message = "PASS: CheckIsChildOf(A⊂Targets)"
+
+[sub_resource type="Resource" id="Resource_4pteh"]
+resource_name = "If/Else A 是 Targets 的子节点 [真:1 [同步]"
+script = ExtResource("10_bfwma")
+sequence_mode = 0
+condition = SubResource("Resource_5koa3")
+true_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_nkcqf")])
+false_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_fga0c")])
+
+[sub_resource type="Resource" id="Resource_1bg7l"]
+resource_name = "'Vector2(1, 0)' → dirv [Vector2]"
+script = ExtResource("14_u7p58")
+custom_scope_id = ""
+target_node_path = NodePath("")
+save_scope_source = 0
+save_custom_scope_id = ""
+save_target_node_path = NodePath("")
+expression = "Vector2(1, 0)"
+output_type = 2
+scope_source = 0
+save_to_variable = "dirv"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_6tj35"]
+resource_name = "方位: ../Targets/B → A (左)"
+script = ExtResource("15_vkp4k")
+source_variable_name = ""
+source_variable_scope = 0
+source_scope_source = 0
+source_custom_scope_id = ""
+source_target_node_path = NodePath("")
+target_variable_name = ""
+target_variable_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+expected_direction = 2
+source_node_source = 0
+source_node = NodePath("../Targets/B")
+target_node_source = 0
+target_node = NodePath("../Targets/A")
+
+[sub_resource type="Resource" id="Resource_rlege"]
+resource_name = "打印: FAIL: CheckDirection(B→A朝左)"
+script = ExtResource("8_4qpkj")
+message = "FAIL: CheckDirection(B→A朝左)"
+
+[sub_resource type="Resource" id="Resource_kylnu"]
+resource_name = "打印: PASS: CheckDirection(B→A朝左)"
+script = ExtResource("8_4qpkj")
+message = "PASS: CheckDirection(B→A朝左)"
+
+[sub_resource type="Resource" id="Resource_ryvdb"]
+resource_name = "If/Else A 在 ../Targets/B 的左方 [真:1 [同步]"
+script = ExtResource("10_bfwma")
+sequence_mode = 0
+condition = SubResource("Resource_6tj35")
+true_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_kylnu")])
+false_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_rlege")])
+
+[sub_resource type="Resource" id="Resource_j2e0t"]
+resource_name = "朝向: A (右)"
+script = ExtResource("16_ftgxl")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+expected_facing = 1
+node_source = 0
+target_node = NodePath("../Targets/A")
+
+[sub_resource type="Resource" id="Resource_vshwg"]
+resource_name = "打印: FAIL: CheckFacingDirection(A朝右)"
+script = ExtResource("8_4qpkj")
+message = "FAIL: CheckFacingDirection(A朝右)"
+
+[sub_resource type="Resource" id="Resource_skjxx"]
+resource_name = "打印: PASS: CheckFacingDirection(A朝右)"
+script = ExtResource("8_4qpkj")
+message = "PASS: CheckFacingDirection(A朝右)"
+
+[sub_resource type="Resource" id="Resource_4o5al"]
+resource_name = "If/Else 朝向: A (右) [真:1 [同步]"
+script = ExtResource("10_bfwma")
+sequence_mode = 0
+condition = SubResource("Resource_j2e0t")
+true_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_skjxx")])
+false_instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_vshwg")])
+
+[sub_resource type="Resource" id="Resource_b8lla"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("17_udje0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_3kv2y"]
+resource_name = "添加场景为子节点 '未指定' 到当前场景"
+script = ExtResource("18_auoyr")
+scene_path = "res://demos/fuse/fuse_adventure/scenes/item_banana.tscn"
+target_parent = NodePath("../Targets")
+new_node_name = "DynItem"
+
+[sub_resource type="Resource" id="Resource_krin0"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("17_udje0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_0ox1n"]
+resource_name = "释放 'DynItem'"
+script = ExtResource("19_vkwts")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Targets/DynItem")
+delay = 0.0
+
+[sub_resource type="Resource" id="Resource_0ukn6"]
+resource_name = "等待 3.5 秒"
+script = ExtResource("17_udje0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 3.5
+
+[sub_resource type="Resource" id="Resource_brc0d"]
+resource_name = "打印: === deep_extra DONE ==="
+script = ExtResource("8_4qpkj")
+message = "=== deep_extra DONE ==="
+
+[sub_resource type="Resource" id="Resource_ou831"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_ion4x"), SubResource("Resource_3uumx"), SubResource("Resource_02brt"), SubResource("Resource_u3jx1"), SubResource("Resource_4pteh"), SubResource("Resource_1bg7l"), SubResource("Resource_ryvdb"), SubResource("Resource_4o5al"), SubResource("Resource_b8lla"), SubResource("Resource_3kv2y"), SubResource("Resource_krin0"), SubResource("Resource_0ox1n"), SubResource("Resource_0ukn6"), SubResource("Resource_brc0d")])
+
+[sub_resource type="Resource" id="Resource_tpeqi"]
+script = ExtResource("21_6a3er")
+
+[sub_resource type="Resource" id="Resource_jvrmp"]
+resource_name = "场景就绪时触发"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_tpeqi")
+action_runner = SubResource("Resource_ou831")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_q3ppx"]
+resource_name = "打印: PASS: OnTouch(按下)"
+script = ExtResource("8_4qpkj")
+message = "PASS: OnTouch(按下)"
+
+[sub_resource type="Resource" id="Resource_pkofr"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_q3ppx")])
+
+[sub_resource type="Resource" id="Resource_5wxgg"]
+resource_name = "触摸: 任意索引 按下时"
+script = ExtResource("22_3mo01")
+touch_action = 0
+
+[sub_resource type="Resource" id="Resource_osmf6"]
+resource_name = "触摸 任何触摸索引 - 按下"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_5wxgg")
+action_runner = SubResource("Resource_pkofr")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_7v344"]
+resource_name = "打印: PASS: OnTouchSwipe(右滑80px)"
+script = ExtResource("8_4qpkj")
+message = "PASS: OnTouchSwipe(右滑80px)"
+
+[sub_resource type="Resource" id="Resource_rv2v1"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_7v344")])
+
+[sub_resource type="Resource" id="Resource_bkhuv"]
+resource_name = "触摸滑动: 右 >50px"
+script = ExtResource("23_ckbjt")
+swipe_direction = 3
+
+[sub_resource type="Resource" id="Resource_m30ug"]
+resource_name = "检测触摸滑动手势：右，最小距离 50 像素"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_bkhuv")
+action_runner = SubResource("Resource_rv2v1")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_75q5t"]
+resource_name = "打印: PASS: OnProcess"
+script = ExtResource("8_4qpkj")
+message = "PASS: OnProcess"
+
+[sub_resource type="Resource" id="Resource_d2pc5"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_75q5t")])
+
+[sub_resource type="Resource" id="Resource_gci2h"]
+resource_name = "On Process: 每 0.5s 触发渲染帧s - {mode}"
+script = ExtResource("24_vxjcw")
+execution_interval = 0.5
+
+[sub_resource type="Resource" id="Resource_3ko7f"]
+resource_name = "每 每 0.5 秒 秒在 {mode} 触发一次（约 {fps}）⚠️ 注意：此事件性能影响极大"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_gci2h")
+action_runner = SubResource("Resource_d2pc5")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_bkff5"]
+resource_name = "打印: PASS: OnPhysicsProcess"
+script = ExtResource("8_4qpkj")
+message = "PASS: OnPhysicsProcess"
+
+[sub_resource type="Resource" id="Resource_ebtdq"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_bkff5")])
+
+[sub_resource type="Resource" id="Resource_yxbed"]
+resource_name = "On Physics Process: 每 0.5s 触发物理帧"
+script = ExtResource("25_ksyl3")
+execution_interval = 0.5
+
+[sub_resource type="Resource" id="Resource_fenne"]
+resource_name = "每 %.3f 秒 - ⚠️ 性能影响极高，请谨慎使用"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_yxbed")
+action_runner = SubResource("Resource_ebtdq")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_3e8b4"]
+resource_name = "打印: PASS: OnIntervalWithVariable"
+script = ExtResource("8_4qpkj")
+message = "PASS: OnIntervalWithVariable"
+
+[sub_resource type="Resource" id="Resource_bspkn"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_3e8b4")])
+
+[sub_resource type="Resource" id="Resource_l520v"]
+resource_name = "变量间隔: 变量: tick_interval 默认: 默认: 0.3s - 自动初始化变量 自动开始 间隔后触发 无限重复"
+script = ExtResource("26_g2j3y")
+variable_name = "tick_interval"
+default_interval = 0.3
+variable_scope = 0
+interval_seconds = 1.0
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+
+[sub_resource type="Resource" id="Resource_dkp68"]
+resource_name = "从变量 '变量: tick_interval [[本地]]' 读取间隔（默认: 0.3s），无限重复，自动开始，自动初始化变量"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_l520v")
+action_runner = SubResource("Resource_bspkn")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_mvi21"]
+resource_name = "打印: PASS: OnEnterTree(动态实例)"
+script = ExtResource("8_4qpkj")
+message = "PASS: OnEnterTree(动态实例)"
+
+[sub_resource type="Resource" id="Resource_n63i3"]
+script = ExtResource("20_jc2x3")
+instructions = Array[ExtResource("7_sgl4p")]([SubResource("Resource_mvi21")])
+
+[sub_resource type="Resource" id="Resource_s36d4"]
+script = ExtResource("27_xd415")
+
+[sub_resource type="Resource" id="Resource_dglh4"]
+resource_name = "当节点进入场景树时触发"
+script = ExtResource("6_qir61")
+event = SubResource("Resource_s36d4")
+action_runner = SubResource("Resource_n63i3")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_extra" type="Node2D" unique_id=1269742103]
+
+[node name="Lbl" type="Label" parent="." unique_id=508893290]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_extra"
+
+[node name="Targets" type="Node2D" parent="." unique_id=539515786 groups=["test_targets"]]
+
+[node name="A" type="Sprite2D" parent="Targets" unique_id=1014255857 groups=["test_targets"]]
+position = Vector2(100, 200)
+texture = ExtResource("1_vxt1h")
+
+[node name="B" type="Sprite2D" parent="Targets" unique_id=1305980305 groups=["test_targets"]]
+position = Vector2(300, 200)
+texture = ExtResource("2_8nnu2")
+
+[node name="C" type="Sprite2D" parent="Targets" unique_id=1942338438 groups=["test_targets"]]
+position = Vector2(500, 200)
+texture = ExtResource("3_lelji")
+
+[node name="InputDriver" type="Node" parent="." unique_id=1090452217]
+script = ExtResource("4_o2j8h")
+timeline = Array[Dictionary]([])
+events = Array[Dictionary]([{
+"delay": 1.0,
+"event": "screen_touch",
+"index": 0,
+"pos": [200.0, 300.0]
+}, {
+"delay": 1.1,
+"event": "screen_touch",
+"index": 0,
+"pos": [200.0, 300.0],
+"pressed": false
+}, {
+"delay": 2.0,
+"event": "screen_touch",
+"index": 0,
+"pos": [100.0, 300.0]
+}, {
+"delay": 2.05,
+"event": "screen_drag",
+"index": 0,
+"pos": [140.0, 300.0],
+"relative": [40.0, 0.0]
+}, {
+"delay": 2.1,
+"event": "screen_drag",
+"index": 0,
+"pos": [180.0, 300.0],
+"relative": [40.0, 0.0]
+}, {
+"delay": 2.2,
+"event": "screen_touch",
+"index": 0,
+"pos": [180.0, 300.0],
+"pressed": false
+}])
+
+[node name="DeepExtra" type="Node" parent="." unique_id=1338276995]
+script = ExtResource("5_ybqj8")
+event_bindings = Array[ExtResource("6_qir61")]([SubResource("Resource_jvrmp"), SubResource("Resource_osmf6"), SubResource("Resource_m30ug"), SubResource("Resource_3ko7f"), SubResource("Resource_fenne"), SubResource("Resource_dkp68"), SubResource("Resource_dglh4")])
+use_parallel_condition_evaluation = false

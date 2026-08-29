@@ -10,6 +10,7 @@ extends Node
 ##             key {keycode, pressed, unicode?} / text {unicode, pressed}
 ##             mouse_motion {pos, relative?} / mouse_button {button, pressed}
 ##             joypad_motion {axis, value} / joypad_button {button, pressed}
+##             screen_touch {index, pos, pressed} / screen_drag {index, pos, relative?}
 ## 测试工具脚本（计划中约定的 C 层唯一手写代码）。
 
 @export var timeline: Array[Dictionary] = [
@@ -85,6 +86,22 @@ func _dispatch(kind: String, entry: Dictionary) -> void:
 			var ev := InputEventJoypadButton.new()
 			ev.button_index = int(entry.get("button", 0)) as JoyButton
 			ev.pressed = bool(entry.get("pressed", true))
+			_send(ev)
+		"screen_touch":
+			var ev := InputEventScreenTouch.new()
+			ev.index = int(entry.get("index", 0))
+			ev.pressed = bool(entry.get("pressed", true))
+			var tpos: Array = entry.get("pos", [0, 0])
+			ev.position = Vector2(float(tpos[0]), float(tpos[1]))
+			_send(ev)
+		"screen_drag":
+			var ev := InputEventScreenDrag.new()
+			ev.index = int(entry.get("index", 0))
+			var dpos: Array = entry.get("pos", [0, 0])
+			ev.position = Vector2(float(dpos[0]), float(dpos[1]))
+			if entry.has("relative"):
+				var drel: Array = entry["relative"]
+				ev.relative = Vector2(float(drel[0]), float(drel[1]))
 			_send(ev)
 
 

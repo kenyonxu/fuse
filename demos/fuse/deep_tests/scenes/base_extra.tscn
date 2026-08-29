@@ -1,0 +1,71 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="3_banana"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Apple.png" id="4_apple"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Cherries.png" id="5_cherry"]
+
+[sub_resource type="RectangleShape2D" id="Rect_box"]
+size = Vector2(40, 40)
+
+[node name="Base" type="Node2D"]
+
+[node name="Lbl" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_extra"
+
+[node name="Targets" type="Node2D" parent="." groups=["test_targets"]]
+
+[node name="A" type="Sprite2D" parent="Targets" groups=["test_targets"]]
+position = Vector2(100, 200)
+texture = ExtResource("3_banana")
+
+[node name="B" type="Sprite2D" parent="Targets" groups=["test_targets"]]
+position = Vector2(300, 200)
+texture = ExtResource("4_apple")
+
+[node name="C" type="Sprite2D" parent="Targets" groups=["test_targets"]]
+position = Vector2(500, 200)
+texture = ExtResource("5_cherry")
+
+[node name="InputDriver" type="Node" parent="."]
+script = ExtResource("2_driver")
+timeline = []
+events = [{
+"delay": 1.0,
+"event": "screen_touch",
+"index": 0,
+"pos": [200.0, 300.0]
+}, {
+"delay": 1.1,
+"event": "screen_touch",
+"index": 0,
+"pos": [200.0, 300.0],
+"pressed": false
+}, {
+"delay": 2.0,
+"event": "screen_touch",
+"index": 0,
+"pos": [100.0, 300.0]
+}, {
+"delay": 2.05,
+"event": "screen_drag",
+"index": 0,
+"pos": [140.0, 300.0],
+"relative": [40.0, 0.0]
+}, {
+"delay": 2.1,
+"event": "screen_drag",
+"index": 0,
+"pos": [180.0, 300.0],
+"relative": [40.0, 0.0]
+}, {
+"delay": 2.2,
+"event": "screen_touch",
+"index": 0,
+"pos": [180.0, 300.0],
+"pressed": false
+}]

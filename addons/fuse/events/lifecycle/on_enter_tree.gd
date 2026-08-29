@@ -47,9 +47,10 @@ func initialize(owner_node: Node) -> void:
 	# 设置私有变量
 	_owner_node_ref = owner_node
 
-	# 连接 tree_entered 信号
-	if not owner_node.tree_entered.is_connected(_on_tree_entered):
-		owner_node.tree_entered.connect(_on_tree_entered)
+	# 监听 SceneTree.node_added——owner 自身的 tree_entered 在事件初始化前
+	# 早已发出（场景加载即进树），永不触发；动态 add_child 的节点经组播捕获
+	if owner_node.is_inside_tree():
+		owner_node.get_tree().node_added.connect(_on_node_added)
 
 	_is_monitoring = true
 
@@ -65,8 +66,8 @@ func terminate(owner_node: Node) -> void:
 	_is_monitoring = false
 
 	# 断开信号连接
-	if owner_node and owner_node.tree_entered.is_connected(_on_tree_entered):
-		owner_node.tree_entered.disconnect(_on_tree_entered)
+	if owner_node and owner_node.is_inside_tree() and owner_node.get_tree().node_added.is_connected(_on_node_added):
+		owner_node.get_tree().node_added.disconnect(_on_node_added)
 
 	_owner_node_ref = null
 
@@ -76,8 +77,8 @@ func terminate(owner_node: Node) -> void:
 
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
-## tree_entered 信号回调
-func _on_tree_entered() -> void:
+## 节点进树回调（SceneTree.node_added）
+func _on_node_added(_node: Node) -> void:
 	if not _is_monitoring:
 		return
 
@@ -128,9 +129,8 @@ func _initialize_runtime_state(runtime_instance: RuntimeEventInstance) -> void:
 	if owner_node:
 		# 如果运行时状态中有节点引用，使用它
 		_owner_node_ref = owner_node
-		# 连接 tree_entered 信号
-		if not owner_node.tree_entered.is_connected(_on_tree_entered):
-			owner_node.tree_entered.connect(_on_tree_entered)
+		if owner_node.is_inside_tree() and not owner_node.get_tree().node_added.is_connected(_on_node_added):
+			owner_node.get_tree().node_added.connect(_on_node_added)
 
 		_is_monitoring = runtime_instance.get_runtime_state("is_monitoring")
 
