@@ -67,11 +67,22 @@ func _get_property_list() -> Array[Dictionary]:
 		"usage": PROPERTY_USAGE_CATEGORY
 	})
 
+	# 元素为 InputMap 动作名（如 "Up","Down"）。下拉建议仅在编辑器态动态收集自
+	# 工程 InputMap——场景反序列化期 _get_property_list 也会被调用，此时触碰
+	# InputMap 会令加载静默失败（实测 keyboard 场景全灭）；原 "17/17:InputEventAction"
+	# 是无效格式，Inspector 呈现为无类型数组，用户无从知道元素该填什么
+	var action_hint := ""
+	if Engine.is_editor_hint():
+		var action_names: Array[String] = []
+		for action: StringName in InputMap.get_actions():
+			if not action.begins_with("ui_") and not action.begins_with("spatial_"):
+				action_names.append(String(action))
+		action_hint = ",".join(action_names)
 	properties.append({
 		"name": "combo_sequence",
 		"type": TYPE_ARRAY,
 		"hint": PROPERTY_HINT_TYPE_STRING,
-		"hint_string": "17/17:InputEventAction",
+		"hint_string": "4/31:" + action_hint,
 		"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_EDITOR
 	})
 
