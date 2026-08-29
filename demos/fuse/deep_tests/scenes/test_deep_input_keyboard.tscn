@@ -354,16 +354,16 @@ action_runner = SubResource("Resource_wxidk")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_input_keyboard" type="Node2D" unique_id=1019602614]
+[node name="test_deep_input_keyboard" type="Node2D" unique_id=719460238]
 
-[node name="Lbl" type="Label" parent="." unique_id=353273012]
+[node name="Lbl" type="Label" parent="." unique_id=827694806]
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 400.0
 offset_bottom = 60.0
 text = "deep_input_keyboard"
 
-[node name="InputDriver" type="Node" parent="." unique_id=261611857]
+[node name="InputDriver" type="Node" parent="." unique_id=2103652731]
 script = ExtResource("1_tb8uo")
 timeline = Array[Dictionary]([{
 "action": "Left",
@@ -451,7 +451,7 @@ events = Array[Dictionary]([{
 "pressed": false
 }])
 
-[node name="DeepInputKeyboard" type="Node" parent="." unique_id=677013502]
+[node name="DeepInputKeyboard" type="Node" parent="." unique_id=65533561]
 script = ExtResource("2_hkrdg")
 event_bindings = Array[ExtResource("3_o02fy")]([SubResource("Resource_dhnwm"), SubResource("Resource_jlx3l"), SubResource("Resource_ddngj"), SubResource("Resource_loded"), SubResource("Resource_8q7ew"), SubResource("Resource_tjm6h"), SubResource("Resource_p2t8j")])
 use_parallel_condition_evaluation = false
