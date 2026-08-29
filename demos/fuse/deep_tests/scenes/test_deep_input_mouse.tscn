@@ -97,21 +97,22 @@ trigger_once = true
 cooldown_time = 1.0
 
 [sub_resource type="Resource" id="Resource_7svuj"]
-resource_name = "打印: PASS:OnMouseMove(位移≥10px)"
+resource_name = "打印: PASS:OnMouseButton(RIGHT按下)"
 script = ExtResource("5_7imo2")
-message = "PASS:OnMouseMove(位移≥10px)"
+message = "PASS:OnMouseButton(RIGHT按下)"
 
 [sub_resource type="Resource" id="Resource_2ognj"]
 script = ExtResource("7_lj4vw")
 instructions = Array[ExtResource("4_21unf")]([SubResource("Resource_7svuj")])
 
 [sub_resource type="Resource" id="Resource_dvj6a"]
-resource_name = "鼠标移动 [持续触发] []"
-script = ExtResource("10_d08ay")
+resource_name = "鼠标右键 [按下]"
+script = ExtResource("9_b26j6")
+mouse_button = 1
 trigger_mode = 0
 
 [sub_resource type="Resource" id="Resource_6uosq"]
-resource_name = "当鼠标移动时触发 (持续触发) "
+resource_name = "右键 按下 [仅检测一次]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_dvj6a")
 action_runner = SubResource("Resource_2ognj")
@@ -119,21 +120,22 @@ trigger_once = true
 cooldown_time = 1.0
 
 [sub_resource type="Resource" id="Resource_3r2ri"]
-resource_name = "打印: PASS:OnMouseEnter(Area2D)"
+resource_name = "打印: PASS:OnMouseButton(RIGHT释放)"
 script = ExtResource("5_7imo2")
-message = "PASS:OnMouseEnter(Area2D)"
+message = "PASS:OnMouseButton(RIGHT释放)"
 
 [sub_resource type="Resource" id="Resource_qmb61"]
 script = ExtResource("7_lj4vw")
 instructions = Array[ExtResource("4_21unf")]([SubResource("Resource_3r2ri")])
 
 [sub_resource type="Resource" id="Resource_jrviq"]
-resource_name = "鼠标进入: Area [ [仅一次]]"
-script = ExtResource("11_nvc7k")
-target_node_path = NodePath("../Area")
+resource_name = "鼠标右键 [释放]"
+script = ExtResource("9_b26j6")
+mouse_button = 1
+trigger_mode = 1
 
 [sub_resource type="Resource" id="Resource_wyh7u"]
-resource_name = "当鼠标进入 Area 时触发 （每次进入仅触发一次）"
+resource_name = "右键 释放 [仅检测一次]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_jrviq")
 action_runner = SubResource("Resource_qmb61")
@@ -141,49 +143,87 @@ trigger_once = true
 cooldown_time = 1.0
 
 [sub_resource type="Resource" id="Resource_60p8l"]
-resource_name = "打印: PASS:OnMouseExit(Area2D)"
+resource_name = "打印: PASS:OnMouseMove(位移≥10px)"
 script = ExtResource("5_7imo2")
-message = "PASS:OnMouseExit(Area2D)"
+message = "PASS:OnMouseMove(位移≥10px)"
 
 [sub_resource type="Resource" id="Resource_wm4qe"]
 script = ExtResource("7_lj4vw")
 instructions = Array[ExtResource("4_21unf")]([SubResource("Resource_60p8l")])
 
 [sub_resource type="Resource" id="Resource_u7l5g"]
-resource_name = "鼠标离开: Area [ [仅一次]]"
-script = ExtResource("12_1ljix")
-target_node_path = NodePath("../Area")
+resource_name = "鼠标移动 [持续触发] []"
+script = ExtResource("10_d08ay")
+trigger_mode = 0
 
 [sub_resource type="Resource" id="Resource_xxnef"]
-resource_name = "当鼠标离开 Area 时触发 （每次离开仅触发一次）"
+resource_name = "当鼠标移动时触发 (持续触发) "
 script = ExtResource("3_da73v")
 event = SubResource("Resource_u7l5g")
 action_runner = SubResource("Resource_wm4qe")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_input_mouse" type="Node2D" unique_id=1548535581]
+[sub_resource type="Resource" id="Resource_mqosw"]
+resource_name = "打印: PASS:OnMouseEnter(Area2D)"
+script = ExtResource("5_7imo2")
+message = "PASS:OnMouseEnter(Area2D)"
 
-[node name="Lbl" type="Label" parent="." unique_id=508305447]
+[sub_resource type="Resource" id="Resource_d21gk"]
+script = ExtResource("7_lj4vw")
+instructions = Array[ExtResource("4_21unf")]([SubResource("Resource_mqosw")])
+
+[sub_resource type="Resource" id="Resource_m8y6l"]
+resource_name = "鼠标进入: Area [ [仅一次]]"
+script = ExtResource("11_nvc7k")
+target_node_path = NodePath("../Area")
+
+[sub_resource type="Resource" id="Resource_nmedw"]
+resource_name = "当鼠标进入 Area 时触发 （每次进入仅触发一次）"
+script = ExtResource("3_da73v")
+event = SubResource("Resource_m8y6l")
+action_runner = SubResource("Resource_d21gk")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_qrrx8"]
+resource_name = "打印: PASS:OnMouseExit(Area2D)"
+script = ExtResource("5_7imo2")
+message = "PASS:OnMouseExit(Area2D)"
+
+[sub_resource type="Resource" id="Resource_oc1xa"]
+script = ExtResource("7_lj4vw")
+instructions = Array[ExtResource("4_21unf")]([SubResource("Resource_qrrx8")])
+
+[sub_resource type="Resource" id="Resource_rdf83"]
+resource_name = "鼠标离开: Area [ [仅一次]]"
+script = ExtResource("12_1ljix")
+target_node_path = NodePath("../Area")
+
+[sub_resource type="Resource" id="Resource_ftpp1"]
+resource_name = "当鼠标离开 Area 时触发 （每次离开仅触发一次）"
+script = ExtResource("3_da73v")
+event = SubResource("Resource_rdf83")
+action_runner = SubResource("Resource_oc1xa")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_input_mouse" type="Node2D" unique_id=1900941141]
+
+[node name="Lbl" type="Label" parent="." unique_id=987001985]
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 400.0
 offset_bottom = 60.0
 text = "deep_input_mouse"
 
-[node name="Area" type="Area2D" parent="." unique_id=1638684297]
+[node name="Area" type="Area2D" parent="." unique_id=2041314907]
 position = Vector2(200, 324)
 
-[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=110290255]
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1542851904]
 shape = SubResource("Rect_area")
 
-[node name="HoverPanel" type="Panel" parent="." unique_id=877345662]
-offset_left = 700.0
-offset_top = 300.0
-offset_right = 900.0
-offset_bottom = 400.0
-
-[node name="InputDriver" type="Node" parent="." unique_id=1702829949]
+[node name="InputDriver" type="Node" parent="." unique_id=848775882]
 script = ExtResource("1_qcces")
 timeline = Array[Dictionary]([])
 events = Array[Dictionary]([{
@@ -202,7 +242,18 @@ events = Array[Dictionary]([{
 "pos": [150.0, 324.0],
 "pressed": false
 }, {
-"delay": 2.0,
+"button": 2,
+"delay": 1.9,
+"event": "mouse_button",
+"pos": [150.0, 324.0]
+}, {
+"button": 2,
+"delay": 2.1,
+"event": "mouse_button",
+"pos": [150.0, 324.0],
+"pressed": false
+}, {
+"delay": 2.4,
 "event": "mouse_motion",
 "pos": [210.0, 324.0]
 }, {
@@ -223,7 +274,7 @@ events = Array[Dictionary]([{
 "pos": [200.0, 100.0]
 }])
 
-[node name="DeepInputMouse" type="Node" parent="." unique_id=735114499]
+[node name="DeepInputMouse" type="Node" parent="." unique_id=708015373]
 script = ExtResource("2_op7v6")
-event_bindings = Array[ExtResource("3_da73v")]([SubResource("Resource_2id2s"), SubResource("Resource_bqkni"), SubResource("Resource_abex4"), SubResource("Resource_6uosq"), SubResource("Resource_wyh7u"), SubResource("Resource_xxnef")])
+event_bindings = Array[ExtResource("3_da73v")]([SubResource("Resource_2id2s"), SubResource("Resource_bqkni"), SubResource("Resource_abex4"), SubResource("Resource_6uosq"), SubResource("Resource_wyh7u"), SubResource("Resource_xxnef"), SubResource("Resource_nmedw"), SubResource("Resource_ftpp1")])
 use_parallel_condition_evaluation = false

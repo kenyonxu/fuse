@@ -256,6 +256,9 @@ func _on_mouse_move_triggered(position: Vector2, relative: Vector2, total_motion
 
 	if trigger_mode == TriggerMode.ON_THRESHOLD:
 		motion_text = "，移动：%.1fpx" % total_motion.length()
+	else:
+		# CONTINUOUS 模式同样有单帧位移（relative）——不留空模板参数
+		motion_text = "，移动：%.1fpx" % relative.length()
 
 	_log_info_localized("FUSE_LOG_EVENT_MOUSE_MOVE_TRIGGERED", {
 		"position": position_text,

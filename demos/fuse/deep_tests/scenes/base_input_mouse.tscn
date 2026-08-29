@@ -20,12 +20,6 @@ position = Vector2(200, 324)
 [node name="Shape" type="CollisionShape2D" parent="Area"]
 shape = SubResource("Rect_area")
 
-[node name="HoverPanel" type="Panel" parent="."]
-offset_left = 700.0
-offset_top = 300.0
-offset_right = 900.0
-offset_bottom = 400.0
-
 [node name="InputDriver" type="Node" parent="."]
 script = ExtResource("2_driver")
 timeline = []
@@ -45,7 +39,18 @@ events = [{
 "pressed": false,
 "pos": [150.0, 324.0]
 }, {
-"delay": 2.0,
+"delay": 1.9,
+"event": "mouse_button",
+"button": 2,
+"pos": [150.0, 324.0]
+}, {
+"delay": 2.1,
+"event": "mouse_button",
+"button": 2,
+"pressed": false,
+"pos": [150.0, 324.0]
+}, {
+"delay": 2.4,
 "event": "mouse_motion",
 "pos": [210.0, 324.0]
 }, {
