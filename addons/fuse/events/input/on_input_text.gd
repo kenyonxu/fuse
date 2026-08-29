@@ -89,8 +89,8 @@ func terminate(owner_node: Node) -> void:
 
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
-## 输入处理
-func _input(event: InputEvent) -> void:
+## 输入处理（由 Trigger._unhandled_input 转发——Resource 的 _input 回调引擎不调用）
+func handle_input(event: InputEvent) -> void:
 	var is_monitoring: bool = false
 	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("is_monitoring"):
 		is_monitoring = _runtime_instance_ref.get_runtime_state("is_monitoring")
@@ -98,12 +98,13 @@ func _input(event: InputEvent) -> void:
 	if not is_monitoring:
 		return
 
-	if event is InputEvent:
+	if event is InputEventKey and event.pressed and not event.echo:
 		_handle_text_input(event)
 
 ## 处理文本输入
-func _handle_text_input(event: InputEvent) -> void:
-	var text = event.text
+func _handle_text_input(event: InputEventKey) -> void:
+	# InputEventKey 无 text 属性——按 unicode 构造字符
+	var text := String.chr(event.unicode) if event.unicode > 0 else ""
 
 	# 检查是否为空
 	if text.is_empty():

@@ -219,7 +219,9 @@ func _disconnect_text_changed_signal():
 			_target_node_ref.text_changed.disconnect(_on_text_changed)
 
 ## 文本改变回调
-func _on_text_changed(new_text: String):
+func _on_text_changed():
+	# Godot 4 的 LineEdit/TextEdit text_changed 信号无参——从目标控件读当前文本
+	var new_text: String = _target_node_ref.text if _target_node_ref else ""
 	var last_text = ""
 	if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("last_text"):
 		last_text = _runtime_instance_ref.get_runtime_state("last_text")

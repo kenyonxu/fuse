@@ -39,6 +39,25 @@ var _check_timer: Timer = null
 var _last_direction: Vector2 = Vector2.ZERO
 var _initialized: bool = false
 
+## 动态属性注册——带 setter 的 script var 无 STORAGE 位，
+## 不显式注册则参数在 .tres/.tscn 序列化时静默丢失
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	for pname in ["input_action_left", "input_action_right", "input_action_up", "input_action_down"]:
+		properties.append({
+			"name": pname,
+			"type": TYPE_STRING,
+			"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+		})
+	properties.append({
+		"name": "check_interval",
+		"type": TYPE_FLOAT,
+		"hint": PROPERTY_HINT_RANGE,
+		"hint_string": "0.05,1.0,0.05",
+		"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties
+
 ## 获取默认运行时状态
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()

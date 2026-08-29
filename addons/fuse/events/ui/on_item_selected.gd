@@ -35,6 +35,7 @@ class_name OnItemSelected
 @export var emit_count: bool = true
 
 var _itemlist_ref: ItemList = null
+var _optionbutton_ref: OptionButton = null
 
 ## 获取默认运行时状态
 func get_default_runtime_state() -> Dictionary:
@@ -67,31 +68,40 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
 
-	# 获取目标节点
-	_itemlist_ref = owner_node.get_node_or_null(target_node_path)
-	if not _itemlist_ref:
+	# 获取目标节点并按类型分流（OptionButton 单选 / ItemList 单/多选）
+	var node = owner_node.get_node_or_null(target_node_path)
+	if not node:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
-
-	# 验证节点类型
-	if not _itemlist_ref is ItemList:
+	if not _connect_target(node):
 		_create_fuse_error_localized("FUSE_ERROR_INVALID_TARGET", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 
-	# 设置多选模式
-	_itemlist_ref.select_mode = ItemList.SELECT_MULTI if multi_select_mode else ItemList.SELECT_SINGLE
-
-	# 连接信号
-	if not _itemlist_ref.item_selected.is_connected(_on_item_selected):
-		_itemlist_ref.item_selected.connect(_on_item_selected)
-
-	if not _itemlist_ref.multi_selected.is_connected(_on_multi_selected):
-		_itemlist_ref.multi_selected.connect(_on_multi_selected)
-
-	if not _itemlist_ref.nothing_selected.is_connected(_on_nothing_selected):
-		_itemlist_ref.nothing_selected.connect(_on_nothing_selected)
-
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
+
+## 按控件类型连接信号；返回是否为受支持类型
+func _connect_target(node: Node) -> bool:
+	if node is OptionButton:
+		_optionbutton_ref = node
+		if not _optionbutton_ref.item_selected.is_connected(_on_item_selected):
+			_optionbutton_ref.item_selected.connect(_on_item_selected)
+		return true
+	if node is ItemList:
+		_itemlist_ref = node
+		# 设置多选模式
+		_itemlist_ref.select_mode = ItemList.SELECT_MULTI if multi_select_mode else ItemList.SELECT_SINGLE
+
+		# 连接信号
+		if not _itemlist_ref.item_selected.is_connected(_on_item_selected):
+			_itemlist_ref.item_selected.connect(_on_item_selected)
+
+		if not _itemlist_ref.multi_selected.is_connected(_on_multi_selected):
+			_itemlist_ref.multi_selected.connect(_on_multi_selected)
+
+		if not _itemlist_ref.nothing_selected.is_connected(_on_nothing_selected):
+			_itemlist_ref.nothing_selected.connect(_on_nothing_selected)
+		return true
+	return false
 
 ## 初始化事件监听（必需）- 保留向后兼容
 func initialize(owner_node: Node) -> void:
@@ -105,29 +115,14 @@ func initialize(owner_node: Node) -> void:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
 
-	# 获取目标节点
-	_itemlist_ref = owner_node.get_node_or_null(target_node_path)
-	if not _itemlist_ref:
+	# 获取目标节点并按类型分流（OptionButton 单选 / ItemList 单/多选）
+	var node = owner_node.get_node_or_null(target_node_path)
+	if not node:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
-
-	# 验证节点类型
-	if not _itemlist_ref is ItemList:
+	if not _connect_target(node):
 		_create_fuse_error_localized("FUSE_ERROR_INVALID_TARGET", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
-
-	# 设置多选模式
-	_itemlist_ref.select_mode = ItemList.SELECT_MULTI if multi_select_mode else ItemList.SELECT_SINGLE
-
-	# 连接信号
-	if not _itemlist_ref.item_selected.is_connected(_on_item_selected):
-		_itemlist_ref.item_selected.connect(_on_item_selected)
-
-	if not _itemlist_ref.multi_selected.is_connected(_on_multi_selected):
-		_itemlist_ref.multi_selected.connect(_on_multi_selected)
-
-	if not _itemlist_ref.nothing_selected.is_connected(_on_nothing_selected):
-		_itemlist_ref.nothing_selected.connect(_on_nothing_selected)
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
@@ -148,8 +143,13 @@ func terminate(owner_node: Node) -> void:
 		if _itemlist_ref.nothing_selected.is_connected(_on_nothing_selected):
 			_itemlist_ref.nothing_selected.disconnect(_on_nothing_selected)
 
+	if _optionbutton_ref and is_instance_valid(_optionbutton_ref):
+		if _optionbutton_ref.item_selected.is_connected(_on_item_selected):
+			_optionbutton_ref.item_selected.disconnect(_on_item_selected)
+
 	# 清理引用
 	_itemlist_ref = null
+	_optionbutton_ref = null
 
 	_log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
@@ -183,7 +183,7 @@ func _on_item_selected(index: int):
 	if emit_count:
 		context_node.set_meta("selected_count", 1)
 
-	context_node.set_meta("itemlist_node", _itemlist_ref)
+	context_node.set_meta("itemlist_node", _optionbutton_ref if _optionbutton_ref else _itemlist_ref)
 	context_node.set_meta("is_multi_select", false)
 
 	triggered.emit(context_node)
@@ -227,7 +227,7 @@ func _on_multi_selected(index: int, selected: bool):
 	if emit_count:
 		context_node.set_meta("selected_count", selected_indices.size)
 
-	context_node.set_meta("itemlist_node", _itemlist_ref)
+	context_node.set_meta("itemlist_node", _optionbutton_ref if _optionbutton_ref else _itemlist_ref)
 	context_node.set_meta("is_multi_select", true)
 
 	triggered.emit(context_node)
@@ -252,7 +252,7 @@ func _on_nothing_selected():
 	if emit_count:
 		context_node.set_meta("selected_count", 0)
 
-	context_node.set_meta("itemlist_node", _itemlist_ref)
+	context_node.set_meta("itemlist_node", _optionbutton_ref if _optionbutton_ref else _itemlist_ref)
 	context_node.set_meta("is_multi_select", multi_select_mode)
 
 	triggered.emit(context_node)

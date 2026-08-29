@@ -160,11 +160,14 @@ func _on_focus_entered() -> void:
 
 	_log_debug_localized("FUSE_LOG_EVENT_FOCUS_ENTERED", {})
 
-	var context = {
-		"node": _target_node,
-		"action": "entered"
-	}
-	triggered.emit(context)
+	# triggered(context: Node) 信号签名——Dictionary 直传会触发转换错误，
+	# 按惯例用上下文节点携带元数据（node/action）
+	var context_node = Node.new()
+	context_node.name = "FocusContext"
+	context_node.set_meta("focus_node", _target_node)
+	context_node.set_meta("action", "entered")
+	triggered.emit(context_node)
+	context_node.queue_free()
 
 ## 焦点离开
 func _on_focus_exited() -> void:
@@ -180,11 +183,12 @@ func _on_focus_exited() -> void:
 
 	_log_debug_localized("FUSE_LOG_EVENT_FOCUS_EXITED", {})
 
-	var context = {
-		"node": _target_node,
-		"action": "exited"
-	}
-	triggered.emit(context)
+	var exit_node = Node.new()
+	exit_node.name = "FocusContext"
+	exit_node.set_meta("focus_node", _target_node)
+	exit_node.set_meta("action", "exited")
+	triggered.emit(exit_node)
+	exit_node.queue_free()
 
 ## 清理事件监听（必需）
 func terminate(owner_node: Node) -> void:

@@ -252,63 +252,60 @@ func get_event_category() -> String:
 	return "input"
 
 # =============================================
-# 运行时逻辑 — 轮询检测连招
+# 运行时逻辑 — 超时重置 + 事件驱动检测
 # =============================================
+
+## 超时检查（Timer 周期调用）——检测已移至 handle_input：
+## is_action_just_pressed 只有一帧窗口，Timer 轮询（check_interval ≥ 帧长）会结构性错过
 func _check_combo() -> void:
 	if combo_sequence.is_empty():
 		return
 
-	var current_time = Time.get_ticks_msec() / 1000.0
-
-	# 检查是否有超时
 	if _combo_index >= 0:
+		var current_time: float = Time.get_ticks_msec() / 1000.0
 		if current_time - _combo_start_time > time_window:
-			# 时间窗口过期，重置
 			_reset_combo()
-			return
 
-	# 检测下一个需要的输入
-	var next_index = _combo_index + 1
+## 输入驱动（Trigger._unhandled_input 转发）
+func handle_input(event: InputEvent) -> void:
+	if combo_sequence.is_empty():
+		return
+	if not event.pressed or event.is_echo():
+		return
+	if not (event is InputEventKey or event is InputEventJoypadButton or event is InputEventMouseButton):
+		return
 
-	# 如果序列还未开始，检测第一个输入
+	var next_action: String = combo_sequence[0] if _combo_index < 0 else combo_sequence[_combo_index + 1]
+	if InputMap.event_is_action(event, next_action):
+		_advance_combo(next_action)
+		return
+
+	# 非预期输入：按 reset_on_fail 决定是否重置（新输入若是首键则重新起序列）
+	if reset_on_fail:
+		for action in combo_sequence:
+			if action != next_action and InputMap.event_is_action(event, action):
+				_reset_combo()
+				if action == combo_sequence[0]:
+					_combo_index = 0
+					_combo_start_time = Time.get_ticks_msec() / 1000.0
+				return
+
+## 推进连招序列到 action（已确认匹配）
+func _advance_combo(_action: String) -> void:
 	if _combo_index < 0:
-		if Input.is_action_just_pressed(combo_sequence[0]):
-			# 检测是否同时按下了其他 combo 中的键（防止误触）
-			for i in range(1, combo_sequence.size()):
-				if Input.is_action_just_pressed(combo_sequence[i]):
-					# 有歧义，忽略
-					return
-			_combo_index = 0
-			_combo_start_time = current_time
+		_combo_index = 0
+		_combo_start_time = Time.get_ticks_msec() / 1000.0
+		# 如果只有一个元素的序列，直接完成
+		if combo_sequence.size() == 1:
+			_trigger_combo()
+			_reset_combo()
+		return
 
-			# 如果只有一个元素的序列，直接完成
-			if combo_sequence.size() == 1:
-				_trigger_combo()
-				_reset_combo()
-			return
-	else:
-		# 序列进行中，检测下一个输入
-		var expected_action = combo_sequence[next_index]
-
-		if Input.is_action_just_pressed(expected_action):
-			# 正确输入
-			_combo_index = next_index
-
-			# 检查是否序列完成
-			if _combo_index >= combo_sequence.size() - 1:
-				_trigger_combo()
-				_reset_combo()
-		else:
-			# 检查是否有其他输入（非预期输入）
-			if reset_on_fail:
-				for action in combo_sequence:
-					if Input.is_action_just_pressed(action) and action != expected_action:
-						_reset_combo()
-						# 检查这个新输入是否是序列的第一个
-						if action == combo_sequence[0]:
-							_combo_index = 0
-							_combo_start_time = current_time
-						return
+	_combo_index += 1
+	# 检查是否序列完成
+	if _combo_index >= combo_sequence.size() - 1:
+		_trigger_combo()
+		_reset_combo()
 
 func _trigger_combo() -> void:
 	if _runtime_instance_ref:

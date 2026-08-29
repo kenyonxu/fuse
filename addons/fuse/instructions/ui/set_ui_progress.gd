@@ -311,8 +311,9 @@ func execute(context: ExecutionContext):
 		finished.emit()
 		return
 
-	# 设置进度值
-	progress_bar.value = progress_value
+	# 设置进度值——value 是 0.0~1.0 归一化比例，须经 Range.ratio 换算到目标区间
+	# （直接写 value 会让 0-100 的条把 0.8 显示为 0.8%）
+	progress_bar.ratio = progress_value
 	_log_info_localized("FUSE_LOG_SET_UI_PROGRESS", {"node": progress_bar.name, "value": "%.0f%%" % (progress_value * 100)})
 	_on_execution_completed()
 

@@ -16,6 +16,19 @@ var target_node: NodePath = NodePath(""):
 
 var _control_ref: Control = null
 
+## 动态属性注册——带 setter 的 script var 无 STORAGE 位，
+## 不显式注册则 target_node 在 .tres/.tscn 序列化时静默丢失
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	properties.append({
+		"name": "target_node",
+		"type": TYPE_NODE_PATH,
+		"hint": PROPERTY_HINT_NODE_PATH_VALID_TYPES,
+		"hint_string": "Control",
+		"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties
+
 ## 获取默认运行时状态
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()

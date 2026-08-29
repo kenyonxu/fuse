@@ -18131,7 +18131,53 @@
       "type_name": "float"
     }
   ],
-  "OnDirectionalInputChanged": [],
+  "OnDirectionalInputChanged": [
+    {
+      "default": "move_left",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_left",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_right",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_right",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_up",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_up",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": "move_down",
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "input_action_down",
+      "type": 4,
+      "type_name": "String"
+    },
+    {
+      "default": 0.1,
+      "hint": 1,
+      "hint_string": "0.05,1.0,0.05",
+      "is_nested_instructions": false,
+      "name": "check_interval",
+      "type": 3,
+      "type_name": "float"
+    }
+  ],
   "OnEnterTree": [],
   "OnExitTree": [
     {
@@ -19888,8 +19934,28 @@
       "type_name": "NodePath"
     }
   ],
-  "OnUIMouseEntered": [],
-  "OnUIMouseExited": [],
+  "OnUIMouseEntered": [
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Control",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    }
+  ],
+  "OnUIMouseExited": [
+    {
+      "default": "",
+      "hint": 26,
+      "hint_string": "Control",
+      "is_nested_instructions": false,
+      "name": "target_node",
+      "type": 22,
+      "type_name": "NodePath"
+    }
+  ],
   "OnValueChanged": [
     {
       "default": "",
@@ -21226,6 +21292,15 @@
     }
   ],
   "RunTargetNodeFunction": [
+    {
+      "default": [],
+      "hint": 0,
+      "hint_string": "",
+      "is_nested_instructions": false,
+      "name": "function_args",
+      "type": 28,
+      "type_name": "Array"
+    },
     {
       "default": 0,
       "hint": 2,

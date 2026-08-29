@@ -22,6 +22,17 @@ var emit_scene_path: bool = false:
 		emit_scene_path = value
 		_update_resource_name()
 
+## 动态属性注册——带 setter 的 script var 无 STORAGE 位，
+## 不显式注册则 emit_scene_path 在 .tres/.tscn 序列化时静默丢失
+func _get_property_list() -> Array[Dictionary]:
+	var properties: Array[Dictionary] = []
+	properties.append({
+		"name": "emit_scene_path",
+		"type": TYPE_BOOL,
+		"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	return properties
+
 ## 更新资源名称（必需）
 func _update_resource_name() -> void:
 	resource_name = FuseLocalization.translate("FUSE_EVENT_ON_SCENE_ABOUT_TO_CHANGE_RESOURCE_NAME")

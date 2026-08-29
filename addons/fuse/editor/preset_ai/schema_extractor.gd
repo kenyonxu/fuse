@@ -58,6 +58,16 @@ const _CATEGORY_FOLDERS := {
 const _MAX_PROBE_DEPTH := 4
 const _MAX_PROBE_STATES := 128
 
+## 计算属性补录清单——get/set 全走计算逻辑的参数（如 RunTargetNodeFunction.function_args
+## 经 ParameterBinding 以 param_N___ 动态项存取），get_property_list 默认态无条目、
+## 属性列表探测永不收录；但反序列化管线支持 preset 直接写这些参数名，须补录进 schema
+const _EXTRA_COMPUTED_PROPS: Dictionary = {
+	"RunTargetNodeFunction": [
+		{"name": "function_args", "type": TYPE_ARRAY, "hint": PROPERTY_HINT_NONE, "hint_string": ""},
+	],
+}
+
+
 ## 获取单个组件的参数 schema
 ##
 ## 参数：
@@ -93,6 +103,14 @@ static func get_parameter_schema(type_name: String) -> Array[Dictionary]:
 
 	var result: Array[Dictionary] = []
 	var by_name := {}  # pname -> {"index": int, "registered": bool}
+	# 计算属性补录：前插在列表首（既有条目顺序不变）；若组件日后自行注册同名参数则跳过
+	for extra in _EXTRA_COMPUTED_PROPS.get(type_name, []):
+		var extra_name: String = extra["name"]
+		if defaults.has(extra_name):
+			continue
+		result.append(_build_param_entry(inst, extra, {}, false))
+		by_name[extra_name] = {"index": result.size() - 1, "registered": true}
+		defaults[extra_name] = inst.get(extra_name)
 	var queue: Array = [{"assigns": {}, "depth": 0}]
 	var seen_states := {"": true}
 	while not queue.is_empty():
