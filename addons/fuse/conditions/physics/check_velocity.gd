@@ -277,8 +277,10 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 	if node == null:
 		return false
 
-	# 获取速度
+	# 获取速度（CharacterBody 是 velocity；RigidBody2D/3D 是 linear_velocity）
 	var velocity = node.get("velocity")
+	if velocity == null:
+		velocity = node.get("linear_velocity")
 	if velocity == null:
 		var error_msg = FuseLocalization.translate("FUSE_ERROR_VELOCITY_PROPERTY_MISSING")
 		_log_error(error_msg)

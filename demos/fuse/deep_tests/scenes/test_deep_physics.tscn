@@ -1,0 +1,985 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/physics_body.gd" id="1_b3bmx"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_vitm5"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_ga2j0"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_o0dq0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_mi61l"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_w17cp"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_in_air.gd" id="7_ya4g1"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="8_mdnbq"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_is_falling.gd" id="9_e5jhe"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_on_floor.gd" id="10_ieeki"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/add_velocity.gd" id="11_xb4g8"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/set_velocity.gd" id="12_gv0pe"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_velocity.gd" id="13_l8che"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_on_wall.gd" id="14_02q3l"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_overlap_area.gd" id="15_sowj3"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/apply_impulse.gd" id="16_iejlw"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/apply_force.gd" id="17_epn4s"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/enable_disable_collision.gd" id="18_fy8i5"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/set_collision_layer.gd" id="19_ws7u7"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="20_3yl5i"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/set_collision_mask.gd" id="21_0v57x"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/set_gravity_scale.gd" id="22_d8mnk"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/set_gravity_direction.gd" id="23_ihxjd"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/ground_snap.gd" id="24_316rh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/physics/raycast.gd" id="25_6qk71"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="26_35ad2"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/physics/check_slope.gd" id="27_5ry7c"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="28_b862j"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="29_lldy6"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_ground_state_changed.gd" id="30_i1t4p"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_collision.gd" id="31_kpejt"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_area_2d_enter.gd" id="32_1xvxj"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_area_2d_exited.gd" id="33_4k2bo"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_body_entered.gd" id="34_ray2m"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_overlapping_bodies.gd" id="35_qvtlv"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_raycast_hit.gd" id="36_hwpkw"]
+[ext_resource type="Script" path="res://addons/fuse/events/physics/on_shape_cast.gd" id="37_g4nf0"]
+
+[sub_resource type="RectangleShape2D" id="Rect_ground"]
+size = Vector2(1200, 40)
+
+[sub_resource type="RectangleShape2D" id="Rect_wall"]
+size = Vector2(40, 400)
+
+[sub_resource type="RectangleShape2D" id="Rect_player"]
+size = Vector2(30, 50)
+
+[sub_resource type="RectangleShape2D" id="Rect_box"]
+size = Vector2(30, 30)
+
+[sub_resource type="RectangleShape2D" id="Rect_zone"]
+size = Vector2(120, 120)
+
+[sub_resource type="Resource" id="Resource_bpi6f"]
+resource_name = "打印: === deep_physics START（Player 出生空中 (-150)，将自由落体着陆）==="
+script = ExtResource("5_mi61l")
+message = "=== deep_physics START（Player 出生空中 (-150)，将自由落体着陆）==="
+
+[sub_resource type="Resource" id="Resource_k272i"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_3aewh"]
+resource_name = "在空中: Player"
+script = ExtResource("7_ya4g1")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Player")
+
+[sub_resource type="Resource" id="Resource_bdvln"]
+resource_name = "打印: FAIL: CheckInAir(空中)"
+script = ExtResource("5_mi61l")
+message = "FAIL: CheckInAir(空中)"
+
+[sub_resource type="Resource" id="Resource_mrgrm"]
+resource_name = "打印: PASS: CheckInAir(空中)"
+script = ExtResource("5_mi61l")
+message = "PASS: CheckInAir(空中)"
+
+[sub_resource type="Resource" id="Resource_2uv6h"]
+resource_name = "If/Else 在空中: Player [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_3aewh")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_mrgrm")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_bdvln")])
+
+[sub_resource type="Resource" id="Resource_ieb1a"]
+resource_name = "正在下落: Player"
+script = ExtResource("9_e5jhe")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Player")
+
+[sub_resource type="Resource" id="Resource_kihml"]
+resource_name = "打印: FAIL: CheckIsFalling(下落中)"
+script = ExtResource("5_mi61l")
+message = "FAIL: CheckIsFalling(下落中)"
+
+[sub_resource type="Resource" id="Resource_mj3yy"]
+resource_name = "打印: PASS: CheckIsFalling(下落中)"
+script = ExtResource("5_mi61l")
+message = "PASS: CheckIsFalling(下落中)"
+
+[sub_resource type="Resource" id="Resource_t7ruw"]
+resource_name = "If/Else 正在下落: Player [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_ieb1a")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_mj3yy")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_kihml")])
+
+[sub_resource type="Resource" id="Resource_88q8y"]
+resource_name = "等待 1.2 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.2
+
+[sub_resource type="Resource" id="Resource_dc547"]
+resource_name = "在地面: Player"
+script = ExtResource("10_ieeki")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Player")
+
+[sub_resource type="Resource" id="Resource_51sbf"]
+resource_name = "打印: FAIL: CheckOnFloor(着陆)"
+script = ExtResource("5_mi61l")
+message = "FAIL: CheckOnFloor(着陆)"
+
+[sub_resource type="Resource" id="Resource_vk8rf"]
+resource_name = "打印: PASS: CheckOnFloor(着陆)"
+script = ExtResource("5_mi61l")
+message = "PASS: CheckOnFloor(着陆)"
+
+[sub_resource type="Resource" id="Resource_8li1o"]
+resource_name = "If/Else 在地面: Player [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_dc547")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_vk8rf")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_51sbf")])
+
+[sub_resource type="Resource" id="Resource_ve1vn"]
+resource_name = "冲量 (0.0, -400.0) → Player"
+script = ExtResource("11_xb4g8")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+impulse_variable = ""
+impulse_variable_scope = 0
+impulse_scope_source = 0
+impulse_custom_scope_id = ""
+impulse_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Player")
+replace_mode = 0
+impulse_source = 0
+impulse = Vector2(0, -400)
+
+[sub_resource type="Resource" id="Resource_vt2a1"]
+resource_name = "等待 0.2 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.2
+
+[sub_resource type="Resource" id="Resource_glumc"]
+resource_name = "在空中: Player"
+script = ExtResource("7_ya4g1")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Player")
+
+[sub_resource type="Resource" id="Resource_8q6mn"]
+resource_name = "打印: FAIL: AddVelocity(起跳后空中)"
+script = ExtResource("5_mi61l")
+message = "FAIL: AddVelocity(起跳后空中)"
+
+[sub_resource type="Resource" id="Resource_k2674"]
+resource_name = "打印: PASS: AddVelocity(起跳后空中)"
+script = ExtResource("5_mi61l")
+message = "PASS: AddVelocity(起跳后空中)"
+
+[sub_resource type="Resource" id="Resource_teebj"]
+resource_name = "If/Else 在空中: Player [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_glumc")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_k2674")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_8q6mn")])
+
+[sub_resource type="Resource" id="Resource_84j7h"]
+resource_name = "等待 1.5 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.5
+
+[sub_resource type="Resource" id="Resource_7bxds"]
+resource_name = "设置速度 '未指定' ((0.0, 0.0))"
+script = ExtResource("12_gv0pe")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Player")
+use_3d = false
+velocity = Vector2(600, 0)
+use_local_space = false
+
+[sub_resource type="Resource" id="Resource_87ilp"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_1hg22"]
+resource_name = "速度 > 100.0"
+script = ExtResource("13_l8che")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Player")
+velocity_threshold = 100.0
+comparison_operator = 0
+
+[sub_resource type="Resource" id="Resource_rx28m"]
+resource_name = "打印: FAIL: SetVelocity(速度生效)"
+script = ExtResource("5_mi61l")
+message = "FAIL: SetVelocity(速度生效)"
+
+[sub_resource type="Resource" id="Resource_5ukwu"]
+resource_name = "打印: PASS: SetVelocity(速度生效)"
+script = ExtResource("5_mi61l")
+message = "PASS: SetVelocity(速度生效)"
+
+[sub_resource type="Resource" id="Resource_mxhu0"]
+resource_name = "If/Else 速度 > 100.0 [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_1hg22")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_5ukwu")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_rx28m")])
+
+[sub_resource type="Resource" id="Resource_3oavg"]
+resource_name = "等待 1.5 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.5
+
+[sub_resource type="Resource" id="Resource_l5hnr"]
+resource_name = "在墙壁上: Player"
+script = ExtResource("14_02q3l")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Player")
+
+[sub_resource type="Resource" id="Resource_i8714"]
+resource_name = "打印: FAIL: CheckOnWall(贴墙)"
+script = ExtResource("5_mi61l")
+message = "FAIL: CheckOnWall(贴墙)"
+
+[sub_resource type="Resource" id="Resource_6w844"]
+resource_name = "打印: PASS: CheckOnWall(贴墙)"
+script = ExtResource("5_mi61l")
+message = "PASS: CheckOnWall(贴墙)"
+
+[sub_resource type="Resource" id="Resource_bnche"]
+resource_name = "If/Else 在墙壁上: Player [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_l5hnr")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_6w844")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_i8714")])
+
+[sub_resource type="Resource" id="Resource_k2kq7"]
+resource_name = "设置速度 '未指定' ((0.0, 0.0))"
+script = ExtResource("12_gv0pe")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Player")
+use_3d = false
+velocity = Vector2(-250, 0)
+use_local_space = false
+
+[sub_resource type="Resource" id="Resource_4e32i"]
+resource_name = "等待 1.2 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.2
+
+[sub_resource type="Resource" id="Resource_2po4c"]
+resource_name = "设置速度 '未指定' ((0.0, 0.0))"
+script = ExtResource("12_gv0pe")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Player")
+use_3d = false
+velocity = Vector2(0, 0)
+use_local_space = false
+
+[sub_resource type="Resource" id="Resource_hp0l4"]
+resource_name = "重叠: Zone"
+script = ExtResource("15_sowj3")
+area_node = NodePath("../Zone")
+check_group = "player"
+save_to_variable = ""
+
+[sub_resource type="Resource" id="Resource_w43eu"]
+resource_name = "打印: FAIL: CheckOverlapArea(player在Zone)"
+script = ExtResource("5_mi61l")
+message = "FAIL: CheckOverlapArea(player在Zone)"
+
+[sub_resource type="Resource" id="Resource_5v8pj"]
+resource_name = "打印: PASS: CheckOverlapArea(player在Zone)"
+script = ExtResource("5_mi61l")
+message = "PASS: CheckOverlapArea(player在Zone)"
+
+[sub_resource type="Resource" id="Resource_unsfu"]
+resource_name = "If/Else Zone 有组 player 中的重叠体 [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_hp0l4")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_5v8pj")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_w43eu")])
+
+[sub_resource type="Resource" id="Resource_hwy70"]
+resource_name = "施加冲量 (未指定"
+script = ExtResource("16_iejlw")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Box")
+use_3d = false
+impulse = Vector2(400, 0)
+use_center = true
+
+[sub_resource type="Resource" id="Resource_6fhfw"]
+resource_name = "等待 0.2 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.2
+
+[sub_resource type="Resource" id="Resource_iib2a"]
+resource_name = "速度 > 50.0"
+script = ExtResource("13_l8che")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../Box")
+velocity_threshold = 50.0
+comparison_operator = 0
+
+[sub_resource type="Resource" id="Resource_xhk14"]
+resource_name = "打印: FAIL: ApplyImpulse(Box速度)"
+script = ExtResource("5_mi61l")
+message = "FAIL: ApplyImpulse(Box速度)"
+
+[sub_resource type="Resource" id="Resource_akbu0"]
+resource_name = "打印: PASS: ApplyImpulse(Box速度)"
+script = ExtResource("5_mi61l")
+message = "PASS: ApplyImpulse(Box速度)"
+
+[sub_resource type="Resource" id="Resource_bd1to"]
+resource_name = "If/Else 速度 > 50.0 [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_iib2a")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_akbu0")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_xhk14")])
+
+[sub_resource type="Resource" id="Resource_cjvr2"]
+resource_name = "施加力 (未指定"
+script = ExtResource("17_epn4s")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Box")
+use_3d = false
+force = Vector2(800, 0)
+use_center = true
+
+[sub_resource type="Resource" id="Resource_w2yrx"]
+resource_name = "打印: PASS: ApplyForce(执行级)"
+script = ExtResource("5_mi61l")
+message = "PASS: ApplyForce(执行级)"
+
+[sub_resource type="Resource" id="Resource_rytxn"]
+resource_name = "禁用: Shape"
+script = ExtResource("18_fy8i5")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Box/Shape")
+enable = false
+
+[sub_resource type="Resource" id="Resource_j5iph"]
+resource_name = "打印: PASS(m): EnableDisableCollision(执行级)"
+script = ExtResource("5_mi61l")
+message = "PASS(m): EnableDisableCollision(执行级)"
+
+[sub_resource type="Resource" id="Resource_nubkk"]
+resource_name = "启用: Shape"
+script = ExtResource("18_fy8i5")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Box/Shape")
+enable = true
+
+[sub_resource type="Resource" id="Resource_tiq5k"]
+resource_name = "设置碰撞 '未指定' 层:1 掩码:1"
+script = ExtResource("19_ws7u7")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Zone")
+use_3d = false
+set_type = 0
+layer_value = 3
+
+[sub_resource type="Resource" id="Resource_mdd1t"]
+resource_name = "Zone.collision_layer == 3.0"
+script = ExtResource("20_3yl5i")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Zone")
+property_name = "collision_layer"
+property_value = 3.0
+
+[sub_resource type="Resource" id="Resource_1057u"]
+resource_name = "打印: FAIL: SetCollisionLayer"
+script = ExtResource("5_mi61l")
+message = "FAIL: SetCollisionLayer"
+
+[sub_resource type="Resource" id="Resource_ci74o"]
+resource_name = "打印: PASS: SetCollisionLayer"
+script = ExtResource("5_mi61l")
+message = "PASS: SetCollisionLayer"
+
+[sub_resource type="Resource" id="Resource_umrgv"]
+resource_name = "If/Else Zone.collision_layer == 3.0 [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_mdd1t")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_ci74o")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_1057u")])
+
+[sub_resource type="Resource" id="Resource_8tt8c"]
+resource_name = "掩码: Zone = 5"
+script = ExtResource("21_0v57x")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Zone")
+collision_mask = 5
+
+[sub_resource type="Resource" id="Resource_bbaac"]
+resource_name = "Zone.collision_mask == 5.0"
+script = ExtResource("20_3yl5i")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Zone")
+property_name = "collision_mask"
+property_value = 5.0
+
+[sub_resource type="Resource" id="Resource_i3n5o"]
+resource_name = "打印: FAIL: SetCollisionMask"
+script = ExtResource("5_mi61l")
+message = "FAIL: SetCollisionMask"
+
+[sub_resource type="Resource" id="Resource_pi0du"]
+resource_name = "打印: PASS: SetCollisionMask"
+script = ExtResource("5_mi61l")
+message = "PASS: SetCollisionMask"
+
+[sub_resource type="Resource" id="Resource_63v4m"]
+resource_name = "If/Else Zone.collision_mask == 5.0 [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_bbaac")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_pi0du")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_i3n5o")])
+
+[sub_resource type="Resource" id="Resource_yogev"]
+resource_name = "重力缩放: Box = 0.5"
+script = ExtResource("22_d8mnk")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Box")
+gravity_scale = 0.5
+
+[sub_resource type="Resource" id="Resource_bswjs"]
+resource_name = "Box.gravity_scale == 0.5"
+script = ExtResource("20_3yl5i")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Box")
+property_name = "gravity_scale"
+property_value = 0.5
+
+[sub_resource type="Resource" id="Resource_cvwf5"]
+resource_name = "打印: FAIL: SetGravityScale"
+script = ExtResource("5_mi61l")
+message = "FAIL: SetGravityScale"
+
+[sub_resource type="Resource" id="Resource_q7u7v"]
+resource_name = "打印: PASS: SetGravityScale"
+script = ExtResource("5_mi61l")
+message = "PASS: SetGravityScale"
+
+[sub_resource type="Resource" id="Resource_20one"]
+resource_name = "If/Else Box.gravity_scale == 0.5 [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_bswjs")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_q7u7v")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_cvwf5")])
+
+[sub_resource type="Resource" id="Resource_vsint"]
+resource_name = "Player 重力方向 (0.0, 1.0)"
+script = ExtResource("23_ihxjd")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+direction_z = 0.0
+use_variable_for_target = false
+target_node = NodePath("../Player")
+use_2d = true
+direction_x = 0.0
+direction_y = 1.0
+
+[sub_resource type="Resource" id="Resource_d5f8d"]
+resource_name = "打印: PASS: SetGravityDirection(执行级)"
+script = ExtResource("5_mi61l")
+message = "PASS: SetGravityDirection(执行级)"
+
+[sub_resource type="Resource" id="Resource_cgfyp"]
+resource_name = "贴地 [Player]"
+script = ExtResource("24_316rh")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Player")
+
+[sub_resource type="Resource" id="Resource_r2q1o"]
+resource_name = "打印: PASS: GroundSnap(执行级)"
+script = ExtResource("5_mi61l")
+message = "PASS: GroundSnap(执行级)"
+
+[sub_resource type="Resource" id="Resource_kb8ev"]
+resource_name = "射线检测 ((0.0, 0.0) -> (100.0, 0.0))"
+script = ExtResource("25_6qk71")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("../Player")
+use_3d = false
+from_position = Vector2(0, 0)
+to_position = Vector2(0, 500)
+collision_mask = 1
+exclude_target = NodePath("")
+save_result = true
+result_variable = "raycast_hit"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_cldm3"]
+resource_name = "检查变量 [[本地]]: raycast_hit IS_NOT_NULL null"
+script = ExtResource("26_35ad2")
+variable_name = "raycast_hit"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = null
+variable_scope = 0
+comparison_operator = 11
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_e733v"]
+resource_name = "打印: FAIL: Raycast(命中地面)"
+script = ExtResource("5_mi61l")
+message = "FAIL: Raycast(命中地面)"
+
+[sub_resource type="Resource" id="Resource_nu40i"]
+resource_name = "打印: PASS: Raycast(命中地面)"
+script = ExtResource("5_mi61l")
+message = "PASS: Raycast(命中地面)"
+
+[sub_resource type="Resource" id="Resource_7rimt"]
+resource_name = "If/Else raycast_hit [[本地]] IS_NOT_NULL null [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_cldm3")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_nu40i")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_e733v")])
+
+[sub_resource type="Resource" id="Resource_kgo6j"]
+resource_name = "斜坡: Player >= 0.0°"
+script = ExtResource("27_5ry7c")
+target_node = NodePath("../Player")
+compare_type = 0
+angle_degrees = 0.0
+
+[sub_resource type="Resource" id="Resource_cmjpt"]
+resource_name = "打印: FAIL: CheckSlope(平地执行)"
+script = ExtResource("5_mi61l")
+message = "FAIL: CheckSlope(平地执行)"
+
+[sub_resource type="Resource" id="Resource_grren"]
+resource_name = "打印: PASS: CheckSlope(平地执行)"
+script = ExtResource("5_mi61l")
+message = "PASS: CheckSlope(平地执行)"
+
+[sub_resource type="Resource" id="Resource_cap8u"]
+resource_name = "If/Else Player 的斜坡角度 >= 0.0° [真:1 [同步]"
+script = ExtResource("8_mdnbq")
+sequence_mode = 0
+condition = SubResource("Resource_kgo6j")
+true_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_grren")])
+false_instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_cmjpt")])
+
+[sub_resource type="Resource" id="Resource_xfttq"]
+resource_name = "等待 0.5 秒"
+script = ExtResource("6_w17cp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.5
+
+[sub_resource type="Resource" id="Resource_gd6ha"]
+resource_name = "打印: === deep_physics DONE ==="
+script = ExtResource("5_mi61l")
+message = "=== deep_physics DONE ==="
+
+[sub_resource type="Resource" id="Resource_s33tj"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_bpi6f"), SubResource("Resource_k272i"), SubResource("Resource_2uv6h"), SubResource("Resource_t7ruw"), SubResource("Resource_88q8y"), SubResource("Resource_8li1o"), SubResource("Resource_ve1vn"), SubResource("Resource_vt2a1"), SubResource("Resource_teebj"), SubResource("Resource_84j7h"), SubResource("Resource_7bxds"), SubResource("Resource_87ilp"), SubResource("Resource_mxhu0"), SubResource("Resource_3oavg"), SubResource("Resource_bnche"), SubResource("Resource_k2kq7"), SubResource("Resource_4e32i"), SubResource("Resource_2po4c"), SubResource("Resource_unsfu"), SubResource("Resource_hwy70"), SubResource("Resource_6fhfw"), SubResource("Resource_bd1to"), SubResource("Resource_cjvr2"), SubResource("Resource_w2yrx"), SubResource("Resource_rytxn"), SubResource("Resource_j5iph"), SubResource("Resource_nubkk"), SubResource("Resource_tiq5k"), SubResource("Resource_umrgv"), SubResource("Resource_8tt8c"), SubResource("Resource_63v4m"), SubResource("Resource_yogev"), SubResource("Resource_20one"), SubResource("Resource_vsint"), SubResource("Resource_d5f8d"), SubResource("Resource_cgfyp"), SubResource("Resource_r2q1o"), SubResource("Resource_kb8ev"), SubResource("Resource_7rimt"), SubResource("Resource_cap8u"), SubResource("Resource_xfttq"), SubResource("Resource_gd6ha")])
+
+[sub_resource type="Resource" id="Resource_dcg4k"]
+script = ExtResource("29_lldy6")
+
+[sub_resource type="Resource" id="Resource_yvs1h"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_dcg4k")
+action_runner = SubResource("Resource_s33tj")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_nf2t0"]
+resource_name = "打印: PASS: OnGroundStateChanged"
+script = ExtResource("5_mi61l")
+message = "PASS: OnGroundStateChanged"
+
+[sub_resource type="Resource" id="Resource_op38h"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_nf2t0")])
+
+[sub_resource type="Resource" id="Resource_bblcu"]
+resource_name = "着地状态: Player [着地+离地]"
+script = ExtResource("30_i1t4p")
+target_node = NodePath("../Player")
+trigger_on = 2
+check_interval = 0.05
+
+[sub_resource type="Resource" id="Resource_t4ulh"]
+resource_name = "Player 着地状态变化"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_bblcu")
+action_runner = SubResource("Resource_op38h")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_j287j"]
+resource_name = "打印: PASS: OnCollision"
+script = ExtResource("5_mi61l")
+message = "PASS: OnCollision"
+
+[sub_resource type="Resource" id="Resource_pybm0"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_j287j")])
+
+[sub_resource type="Resource" id="Resource_7c1rd"]
+resource_name = "碰撞: 1"
+script = ExtResource("31_kpejt")
+target_node = NodePath("../Player")
+collision_mask = 1
+
+[sub_resource type="Resource" id="Resource_1u3g4"]
+resource_name = "当 Player 发生碰撞时触发（掩码: 1）"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_7c1rd")
+action_runner = SubResource("Resource_pybm0")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_5vujp"]
+resource_name = "打印: PASS: OnArea2DEnter"
+script = ExtResource("5_mi61l")
+message = "PASS: OnArea2DEnter"
+
+[sub_resource type="Resource" id="Resource_yjyq5"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_5vujp")])
+
+[sub_resource type="Resource" id="Resource_qfw4a"]
+resource_name = "当 任何物体 进入 ../Zone 时触发"
+script = ExtResource("32_1xvxj")
+area_node_path = NodePath("../Zone")
+target_group = "player"
+
+[sub_resource type="Resource" id="Resource_vxnce"]
+resource_name = "当 player 进入 ../Zone 时触发"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_qfw4a")
+action_runner = SubResource("Resource_yjyq5")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_uokvq"]
+resource_name = "打印: PASS: OnArea2DExited"
+script = ExtResource("5_mi61l")
+message = "PASS: OnArea2DExited"
+
+[sub_resource type="Resource" id="Resource_jekt4"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_uokvq")])
+
+[sub_resource type="Resource" id="Resource_yvhrr"]
+resource_name = "当 任何物体 进入 ../Zone 时触发"
+script = ExtResource("33_4k2bo")
+area_node_path = NodePath("../Zone")
+target_group = "player"
+
+[sub_resource type="Resource" id="Resource_qmjbt"]
+resource_name = "当 player 进入 ../Zone 时触发"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_yvhrr")
+action_runner = SubResource("Resource_jekt4")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_6u5q4"]
+resource_name = "打印: PASS: OnBodyEntered"
+script = ExtResource("5_mi61l")
+message = "PASS: OnBodyEntered"
+
+[sub_resource type="Resource" id="Resource_ifgh2"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_6u5q4")])
+
+[sub_resource type="Resource" id="Resource_xlwi4"]
+resource_name = "物体进入: ../Zone [组: player] [可重复]"
+script = ExtResource("34_ray2m")
+area_node = NodePath("../Zone")
+target_group = "player"
+
+[sub_resource type="Resource" id="Resource_k8snd"]
+resource_name = "当 player 物体进入区域 ../Zone 时触发 可重复"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_xlwi4")
+action_runner = SubResource("Resource_ifgh2")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_mavcx"]
+resource_name = "打印: PASS: OnOverlappingBodies"
+script = ExtResource("5_mi61l")
+message = "PASS: OnOverlappingBodies"
+
+[sub_resource type="Resource" id="Resource_qdknw"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_mavcx")])
+
+[sub_resource type="Resource" id="Resource_qyroq"]
+resource_name = "重叠物体: > 1"
+script = ExtResource("35_qvtlv")
+area_node = NodePath("../Zone")
+
+[sub_resource type="Resource" id="Resource_2p0i8"]
+resource_name = "当区域 ../Zone 内重叠物体数量大于 1 时触发"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_qyroq")
+action_runner = SubResource("Resource_qdknw")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_5tciw"]
+resource_name = "打印: PASS: OnRaycastHit"
+script = ExtResource("5_mi61l")
+message = "PASS: OnRaycastHit"
+
+[sub_resource type="Resource" id="Resource_3vsn4"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_5tciw")])
+
+[sub_resource type="Resource" id="Resource_2vx3c"]
+resource_name = "射线命中: ../Player → (0.0, 500.0)"
+script = ExtResource("36_hwpkw")
+origin_node_path = NodePath("../Player")
+target_position = Vector2(0, 500)
+
+[sub_resource type="Resource" id="Resource_8lkc3"]
+resource_name = "当射线从 ../Player 指向 (0.0, 500.0) 命中碰撞体时触发"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_2vx3c")
+action_runner = SubResource("Resource_3vsn4")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_bbu85"]
+resource_name = "打印: PASS: OnShapeCast"
+script = ExtResource("5_mi61l")
+message = "PASS: OnShapeCast"
+
+[sub_resource type="Resource" id="Resource_6i3ga"]
+script = ExtResource("28_b862j")
+instructions = Array[ExtResource("4_o0dq0")]([SubResource("Resource_bbu85")])
+
+[sub_resource type="Resource" id="Resource_myuko"]
+resource_name = "形状投射: ../Player (矩形) → (0.0, 300.0)"
+script = ExtResource("37_g4nf0")
+origin_node_path = NodePath("../Player")
+shape_size = Vector2(50, 50)
+target_position = Vector2(0, 300)
+
+[sub_resource type="Resource" id="Resource_7x47r"]
+resource_name = "当形状投射从 ../Player 指向 (0.0, 300.0) 命中碰撞体时触发"
+script = ExtResource("3_ga2j0")
+event = SubResource("Resource_myuko")
+action_runner = SubResource("Resource_6i3ga")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_physics" type="Node2D" unique_id=1778253231]
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=621875714]
+position = Vector2(0, 200)
+
+[node name="Shape" type="CollisionShape2D" parent="Ground" unique_id=218595574]
+shape = SubResource("Rect_ground")
+
+[node name="Wall" type="StaticBody2D" parent="." unique_id=45369663]
+position = Vector2(600, 0)
+
+[node name="Shape" type="CollisionShape2D" parent="Wall" unique_id=18392509]
+shape = SubResource("Rect_wall")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1937784437 groups=["player"]]
+position = Vector2(0, -150)
+script = ExtResource("1_b3bmx")
+
+[node name="Shape" type="CollisionShape2D" parent="Player" unique_id=232833092]
+shape = SubResource("Rect_player")
+
+[node name="Box" type="RigidBody2D" parent="." unique_id=953521035]
+position = Vector2(-200, -50)
+
+[node name="Shape" type="CollisionShape2D" parent="Box" unique_id=492719481]
+shape = SubResource("Rect_box")
+
+[node name="Zone" type="Area2D" parent="." unique_id=596744789]
+position = Vector2(300, 120)
+
+[node name="Shape" type="CollisionShape2D" parent="Zone" unique_id=386590616]
+shape = SubResource("Rect_zone")
+
+[node name="Cam" type="Camera2D" parent="." unique_id=1852331029]
+
+[node name="DeepPhysics" type="Node" parent="." unique_id=1913700861]
+script = ExtResource("2_vitm5")
+event_bindings = Array[ExtResource("3_ga2j0")]([SubResource("Resource_yvs1h"), SubResource("Resource_t4ulh"), SubResource("Resource_1u3g4"), SubResource("Resource_vxnce"), SubResource("Resource_qmjbt"), SubResource("Resource_k8snd"), SubResource("Resource_2p0i8"), SubResource("Resource_8lkc3"), SubResource("Resource_7x47r")])
+use_parallel_condition_evaluation = false

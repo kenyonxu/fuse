@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/physics_body.gd" id="1_body"]
+
+[sub_resource type="RectangleShape2D" id="Rect_player"]
+size = Vector2(30, 50)
+
+[sub_resource type="RectangleShape2D" id="Rect_ground"]
+size = Vector2(1200, 40)
+
+[sub_resource type="RectangleShape2D" id="Rect_wall"]
+size = Vector2(40, 400)
+
+[sub_resource type="RectangleShape2D" id="Rect_box"]
+size = Vector2(30, 30)
+
+[sub_resource type="RectangleShape2D" id="Rect_zone"]
+size = Vector2(120, 120)
+
+[node name="Base" type="Node2D"]
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 200)
+
+[node name="Shape" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("Rect_ground")
+
+[node name="Wall" type="StaticBody2D" parent="."]
+position = Vector2(600, 0)
+
+[node name="Shape" type="CollisionShape2D" parent="Wall"]
+shape = SubResource("Rect_wall")
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(0, -150)
+script = ExtResource("1_body")
+
+[node name="Shape" type="CollisionShape2D" parent="Player"]
+shape = SubResource("Rect_player")
+
+[node name="Box" type="RigidBody2D" parent="."]
+position = Vector2(-200, -50)
+
+[node name="Shape" type="CollisionShape2D" parent="Box"]
+shape = SubResource("Rect_box")
+
+[node name="Zone" type="Area2D" parent="."]
+position = Vector2(300, 120)
+
+[node name="Shape" type="CollisionShape2D" parent="Zone"]
+shape = SubResource("Rect_zone")
+
+[node name="Cam" type="Camera2D" parent="."]
+position = Vector2(0, 0)
+

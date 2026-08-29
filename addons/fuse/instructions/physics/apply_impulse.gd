@@ -293,6 +293,8 @@ func execute(context: ExecutionContext):
 
 		if use_center:
 			# 中心冲量（不产生旋转）
+			# 睡眠刚体对冲量无响应——先唤醒
+			body.sleeping = false
 			body.apply_central_impulse(impulse)
 			_log_info_localized("FUSE_LOG_APPLY_CENTRAL_IMPULSE", {})
 		else:
@@ -311,6 +313,8 @@ func execute(context: ExecutionContext):
 
 		if use_center:
 			# 中心冲量（不产生旋转）
+			# 睡眠刚体对冲量无响应——先唤醒
+			body.sleeping = false
 			body.apply_central_impulse(impulse_3d)
 			_log_info_localized("FUSE_LOG_APPLY_CENTRAL_IMPULSE", {})
 		else:

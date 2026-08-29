@@ -1,0 +1,633 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepPhysics",
+  "category": "physics",
+  "description": "深度测试·Physics：11 指令 + 7 条件 + 11 事件（2D 为主，3D 事件标注）",
+  "icon_name": "",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_physics START（Player 出生空中 (-150)，将自由落体着陆）==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInAir",
+              "target_node": "../Player"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckInAir(空中)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckInAir(空中)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckIsFalling",
+              "target_node": "../Player"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckIsFalling(下落中)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckIsFalling(下落中)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.2
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckOnFloor",
+              "target_node": "../Player"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckOnFloor(着陆)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckOnFloor(着陆)"
+              }
+            ]
+          },
+          {
+            "type": "AddVelocity",
+            "target_node": "../Player",
+            "impulse": "(0.0, -400.0)",
+            "replace_mode": 0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInAir",
+              "target_node": "../Player"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: AddVelocity(起跳后空中)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: AddVelocity(起跳后空中)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "SetVelocity",
+            "target_node": "../Player",
+            "velocity": "(600.0, 0.0)",
+            "use_local_space": false
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVelocity",
+              "target_node": "../Player",
+              "velocity_threshold": 100,
+              "comparison_operator": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetVelocity(速度生效)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetVelocity(速度生效)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckOnWall",
+              "target_node": "../Player"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckOnWall(贴墙)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckOnWall(贴墙)"
+              }
+            ]
+          },
+          {
+            "type": "SetVelocity",
+            "target_node": "../Player",
+            "velocity": "(-250.0, 0.0)",
+            "use_local_space": false
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.2
+          },
+          {
+            "type": "SetVelocity",
+            "target_node": "../Player",
+            "velocity": "(0.0, 0.0)",
+            "use_local_space": false
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckOverlapArea",
+              "area_node": "../Zone",
+              "check_group": "player"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckOverlapArea(player在Zone)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckOverlapArea(player在Zone)"
+              }
+            ]
+          },
+          {
+            "type": "ApplyImpulse",
+            "target_node": "../Box",
+            "impulse": "(400.0, 0.0)",
+            "use_center": true
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVelocity",
+              "target_node": "../Box",
+              "velocity_threshold": 50,
+              "comparison_operator": 0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: ApplyImpulse(Box速度)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: ApplyImpulse(Box速度)"
+              }
+            ]
+          },
+          {
+            "type": "ApplyForce",
+            "target_node": "../Box",
+            "force": "(800.0, 0.0)",
+            "use_center": true
+          },
+          {
+            "type": "Print",
+            "message": "PASS: ApplyForce(执行级)"
+          },
+          {
+            "type": "EnableDisableCollision",
+            "target_node": "../Box/Shape",
+            "enable": false
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): EnableDisableCollision(执行级)"
+          },
+          {
+            "type": "EnableDisableCollision",
+            "target_node": "../Box/Shape",
+            "enable": true
+          },
+          {
+            "type": "SetCollisionLayer",
+            "target_node": "../Zone",
+            "set_type": 0,
+            "layer_value": 3
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Zone",
+              "property_name": "collision_layer",
+              "property_value": 3
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetCollisionLayer"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetCollisionLayer"
+              }
+            ]
+          },
+          {
+            "type": "SetCollisionMask",
+            "target_node": "../Zone",
+            "collision_mask": 5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Zone",
+              "property_name": "collision_mask",
+              "property_value": 5
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetCollisionMask"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetCollisionMask"
+              }
+            ]
+          },
+          {
+            "type": "SetGravityScale",
+            "target_node": "../Box",
+            "gravity_scale": 0.5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../Box",
+              "property_name": "gravity_scale",
+              "property_value": 0.5
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetGravityScale"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetGravityScale"
+              }
+            ]
+          },
+          {
+            "type": "SetGravityDirection",
+            "target_node": "../Player",
+            "use_2d": true,
+            "direction_x": 0.0,
+            "direction_y": 1.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS: SetGravityDirection(执行级)"
+          },
+          {
+            "type": "GroundSnap",
+            "target_node": "../Player"
+          },
+          {
+            "type": "Print",
+            "message": "PASS: GroundSnap(执行级)"
+          },
+          {
+            "type": "Raycast",
+            "target_node_path": "../Player",
+            "from_position": "(0.0, 0.0)",
+            "to_position": "(0.0, 500.0)",
+            "collision_mask": 1,
+            "result_variable": "raycast_hit",
+            "save_result": true
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "raycast_hit",
+              "comparison_operator": 11,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: Raycast(命中地面)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: Raycast(命中地面)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckSlope",
+              "target_node": "../Player",
+              "compare_type": 0,
+              "angle_degrees": 0.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckSlope(平地执行)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckSlope(平地执行)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.5
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_physics DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnGroundStateChanged",
+        "target_node": "../Player",
+        "trigger_on": 2,
+        "check_interval": 0.05
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnGroundStateChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnCollision",
+        "target_node": "../Player",
+        "collision_mask": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnCollision"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnArea2DEnter",
+        "area_node_path": "../Zone",
+        "target_group": "player"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnArea2DEnter"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnArea2DExited",
+        "area_node_path": "../Zone",
+        "target_group": "player"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnArea2DExited"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnBodyEntered",
+        "area_node": "../Zone",
+        "target_group": "player"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnBodyEntered"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnOverlappingBodies",
+        "area_node": "../Zone",
+        "check_threshold": 1,
+        "comparison": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnOverlappingBodies"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnRaycastHit",
+        "origin_node_path": "../Player",
+        "target_position": "(0.0, 500.0)",
+        "collision_mask": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnRaycastHit"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnShapeCast",
+        "origin_node_path": "../Player",
+        "shape_type": 0,
+        "shape_size": "(50.0, 50.0)",
+        "target_position": "(0.0, 300.0)",
+        "collision_mask": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnShapeCast"
+          }
+        ]
+      }
+    }
+  ]
+}

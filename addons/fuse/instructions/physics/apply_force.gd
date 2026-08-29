@@ -297,6 +297,7 @@ func execute(context: ExecutionContext):
 			_log_info_localized("FUSE_LOG_APPLY_CENTRAL_FORCE", {})
 		else:
 			# 偏心力（产生旋转）
+			body.sleeping = false
 			body.apply_force(force, force_position)
 			_log_info_localized("FUSE_LOG_APPLY_FORCE_2D", {
 				"node": body.name,
@@ -315,6 +316,7 @@ func execute(context: ExecutionContext):
 			_log_info_localized("FUSE_LOG_APPLY_CENTRAL_FORCE", {})
 		else:
 			# 偏心力（产生旋转）
+			body.sleeping = false
 			body.apply_force(force_3d, force_position_3d)
 			_log_info_localized("FUSE_LOG_APPLY_FORCE_3D", {
 				"node": body.name,
