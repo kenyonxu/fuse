@@ -270,9 +270,10 @@ func _check_combo() -> void:
 func handle_input(event: InputEvent) -> void:
 	if combo_sequence.is_empty():
 		return
-	if not event.pressed or event.is_echo():
-		return
+	# 类型过滤必须先于 pressed 访问——InputEventMouseMotion 等无 pressed 属性
 	if not (event is InputEventKey or event is InputEventJoypadButton or event is InputEventMouseButton):
+		return
+	if not event.pressed or event.is_echo():
 		return
 
 	var next_action: String = combo_sequence[0] if _combo_index < 0 else combo_sequence[_combo_index + 1]
