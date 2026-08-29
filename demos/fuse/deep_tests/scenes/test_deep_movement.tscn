@@ -1,17 +1,17 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://csojqols6pt32"]
 
-[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="1_nxl25"]
-[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_lfkrd"]
-[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_mush2"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_uxkvj"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_3kgfu"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="6_284ub"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_5jtex"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_vector2_variable_axis.gd" id="8_sf5aa"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_1hmr1"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="10_nje50"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_cgyym"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/movement/move_character_body_2d_composite.gd" id="12_30w2l"]
+[ext_resource type="Script" uid="uid://bxrtmycnk2bfb" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="1_nxl25"]
+[ext_resource type="Script" uid="uid://dfknwkmutjhpg" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_lfkrd"]
+[ext_resource type="Script" uid="uid://bvwgknoxvc6w1" path="res://addons/fuse/core/event_binding.gd" id="3_mush2"]
+[ext_resource type="Script" uid="uid://d1a1h8varfk5o" path="res://addons/fuse/core/base/base_instruction.gd" id="4_uxkvj"]
+[ext_resource type="Script" uid="uid://befh0sce33ljb" path="res://addons/fuse/instructions/debug/print.gd" id="5_3kgfu"]
+[ext_resource type="Script" uid="uid://xho668qiwpx" path="res://addons/fuse/instructions/transform/get_position.gd" id="6_284ub"]
+[ext_resource type="Script" uid="uid://spkts3pa4cdm" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_5jtex"]
+[ext_resource type="Script" uid="uid://d1s5gjjfwsk7o" path="res://addons/fuse/conditions/variable/check_vector2_variable_axis.gd" id="8_sf5aa"]
+[ext_resource type="Script" uid="uid://ckc6rv038opjg" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_1hmr1"]
+[ext_resource type="Script" uid="uid://nsaea7jh1jr5" path="res://addons/fuse/core/base/action_runner.gd" id="10_nje50"]
+[ext_resource type="Script" uid="uid://ccdjf1c0cwt8b" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_cgyym"]
+[ext_resource type="Script" uid="uid://bvelw11gc4h5e" path="res://addons/fuse/instructions/movement/move_character_body_2d_composite.gd" id="12_30w2l"]
 [ext_resource type="Script" path="res://addons/fuse/events/input/on_input_action_composite.gd" id="13_f5k0t"]
 
 [sub_resource type="RectangleShape2D" id="Rect_ground"]
@@ -143,6 +143,7 @@ script = ExtResource("10_nje50")
 instructions = Array[ExtResource("4_uxkvj")]([SubResource("Resource_tsq24")])
 
 [sub_resource type="Resource" id="Resource_ml8gw"]
+resource_name = "当指定的任意输入动作被按下时触发。发出合并后的输入向量。 [左, 右] (60 FPS)"
 script = ExtResource("13_f5k0t")
 _usage_hint = "📖 可用的 LOCAL 变量：input_vector (当前输入，启用归零时触发事件时始终可用，否则仅非零时可用)、last_input_vector (上次输入，永远可用)。访问方法：使用 SetVariable 指令，开启从另一个变量获取值，源变量名填 input_vector 或 last_input_vector，源作用域选 LOCAL。判断方向：向右 (x>0)、向左 (x<0)、向上 (y<0)、向下 (y>0)、静止 (==Vector2ZERO)。"
 action_up = ""

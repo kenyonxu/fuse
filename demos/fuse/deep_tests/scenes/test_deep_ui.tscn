@@ -1,0 +1,797 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="1_lpivf"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="2_k06dj"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="3_v6l5y"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="4_705yq"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/ui/set_ui_text.gd" id="5_028qh"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="6_wb7px"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="7_r065t"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/ui/set_ui_progress.gd" id="8_cglxh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/ui/show_hide_ui.gd" id="9_aui16"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/ui/check_ui_visible.gd" id="10_3hcjk"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/ui/set_ui_color.gd" id="11_g3nrx"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/ui/set_ui_texture.gd" id="12_rrd44"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/ui/add_remove_ui_child.gd" id="13_el0uv"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/get_child_count.gd" id="14_apei2"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="15_38bij"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="16_m1eu0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/set_property_value.gd" id="17_iyavm"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/node_operations/run_target_node_function.gd" id="18_enfea"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="19_u2m78"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="20_njx5p"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_button_pressed.gd" id="21_upvqa"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_focus.gd" id="22_tmng2"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_item_selected.gd" id="23_r8pai"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_text_changed.gd" id="24_eo6m4"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_value_changed.gd" id="25_kay8x"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_ui_mouse_entered.gd" id="26_77k0o"]
+[ext_resource type="Script" path="res://addons/fuse/events/ui/on_ui_mouse_exited.gd" id="27_m24ug"]
+
+[sub_resource type="Resource" id="Resource_e2v3q"]
+resource_name = "打印: === deep_ui START（事件合成：emit_signal via RunTargetNodeFunction）==="
+script = ExtResource("4_705yq")
+message = "=== deep_ui START（事件合成：emit_signal via RunTargetNodeFunction）==="
+
+[sub_resource type="Resource" id="Resource_kkiet"]
+resource_name = "设置文本 → 未选择 (直接文本)"
+script = ExtResource("5_028qh")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+text_variable = ""
+text_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../LblTitle")
+use_variable = false
+text = "HUD Title"
+
+[sub_resource type="Resource" id="Resource_4c17o"]
+resource_name = "LblTitle.text == HUD Title"
+script = ExtResource("6_wb7px")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../LblTitle")
+property_name = "text"
+property_value = "HUD Title"
+
+[sub_resource type="Resource" id="Resource_j8of2"]
+resource_name = "打印: FAIL:SetUIText(text=HUD Title)"
+script = ExtResource("4_705yq")
+message = "FAIL:SetUIText(text=HUD Title)"
+
+[sub_resource type="Resource" id="Resource_y6mdq"]
+resource_name = "打印: PASS:SetUIText(text=HUD Title)"
+script = ExtResource("4_705yq")
+message = "PASS:SetUIText(text=HUD Title)"
+
+[sub_resource type="Resource" id="Resource_3w0ed"]
+resource_name = "If/Else LblTitle.text == HUD Title [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_4c17o")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_y6mdq")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_j8of2")])
+
+[sub_resource type="Resource" id="Resource_0l73y"]
+resource_name = "设置进度 → 未选择 (100%)"
+script = ExtResource("8_cglxh")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../BarHp")
+use_variable = false
+value = 0.8
+
+[sub_resource type="Resource" id="Resource_uitkk"]
+resource_name = "BarHp.value == 80.0"
+script = ExtResource("6_wb7px")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../BarHp")
+property_name = "value"
+property_value = 80.0
+
+[sub_resource type="Resource" id="Resource_0mxdw"]
+resource_name = "打印: FAIL:SetUIProgress(value=80)"
+script = ExtResource("4_705yq")
+message = "FAIL:SetUIProgress(value=80)"
+
+[sub_resource type="Resource" id="Resource_b7vk1"]
+resource_name = "打印: PASS:SetUIProgress(value=80)"
+script = ExtResource("4_705yq")
+message = "PASS:SetUIProgress(value=80)"
+
+[sub_resource type="Resource" id="Resource_gvlv0"]
+resource_name = "If/Else BarHp.value == 80.0 [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_uitkk")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_b7vk1")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_0mxdw")])
+
+[sub_resource type="Resource" id="Resource_rfu04"]
+resource_name = "显示 UI → TexIcon"
+script = ExtResource("9_aui16")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../TexIcon")
+action = 1
+
+[sub_resource type="Resource" id="Resource_mejbt"]
+resource_name = "UI 可见: TexIcon"
+script = ExtResource("10_3hcjk")
+target_node = NodePath("../TexIcon")
+negate_result = true
+
+[sub_resource type="Resource" id="Resource_3fk4j"]
+resource_name = "打印: FAIL:ShowHideUI(HIDE→不可见)"
+script = ExtResource("4_705yq")
+message = "FAIL:ShowHideUI(HIDE→不可见)"
+
+[sub_resource type="Resource" id="Resource_6mr5h"]
+resource_name = "打印: PASS:ShowHideUI(HIDE→不可见)"
+script = ExtResource("4_705yq")
+message = "PASS:ShowHideUI(HIDE→不可见)"
+
+[sub_resource type="Resource" id="Resource_w1fa1"]
+resource_name = "If/Else TexIcon 可见 [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_mejbt")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_6mr5h")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_3fk4j")])
+
+[sub_resource type="Resource" id="Resource_x3a7h"]
+resource_name = "显示 UI → TexIcon"
+script = ExtResource("9_aui16")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../TexIcon")
+action = 0
+
+[sub_resource type="Resource" id="Resource_uilei"]
+resource_name = "UI 可见: TexIcon"
+script = ExtResource("10_3hcjk")
+target_node = NodePath("../TexIcon")
+
+[sub_resource type="Resource" id="Resource_jkk7m"]
+resource_name = "打印: FAIL:ShowHideUI(SHOW→可见)"
+script = ExtResource("4_705yq")
+message = "FAIL:ShowHideUI(SHOW→可见)"
+
+[sub_resource type="Resource" id="Resource_3ixcb"]
+resource_name = "打印: PASS:ShowHideUI(SHOW→可见)"
+script = ExtResource("4_705yq")
+message = "PASS:ShowHideUI(SHOW→可见)"
+
+[sub_resource type="Resource" id="Resource_irw50"]
+resource_name = "If/Else TexIcon 可见 [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_uilei")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_3ixcb")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_jkk7m")])
+
+[sub_resource type="Resource" id="Resource_7lw13"]
+resource_name = "UI 颜色: LblTitle → (1.0, 0.2, 0.2, 1.0)"
+script = ExtResource("11_g3nrx")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+color_variable = ""
+use_variable_for_target = false
+target_node = NodePath("../LblTitle")
+color_target = 0
+use_variable = false
+color = Color(1, 0.2, 0.2, 1)
+
+[sub_resource type="Resource" id="Resource_7bgbk"]
+resource_name = "LblTitle.modulate == (1.0, 0.2, 0.2, 1.0)"
+script = ExtResource("6_wb7px")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../LblTitle")
+property_name = "modulate"
+property_value = "(1.0, 0.2, 0.2, 1.0)"
+
+[sub_resource type="Resource" id="Resource_3fn7m"]
+resource_name = "打印: FAIL:SetUIColor(modulate)"
+script = ExtResource("4_705yq")
+message = "FAIL:SetUIColor(modulate)"
+
+[sub_resource type="Resource" id="Resource_yjedn"]
+resource_name = "打印: PASS:SetUIColor(modulate)"
+script = ExtResource("4_705yq")
+message = "PASS:SetUIColor(modulate)"
+
+[sub_resource type="Resource" id="Resource_n82qh"]
+resource_name = "If/Else LblTitle.modulate == (1.0, 0.2, 0.2, 1.0) [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_7bgbk")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_yjedn")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_3fn7m")])
+
+[sub_resource type="Resource" id="Resource_pkpda"]
+resource_name = "设置纹理 → 未选择 (未选择文件)"
+script = ExtResource("12_rrd44")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+texture_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../TexIcon")
+texture_source = 0
+texture_path = "res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png"
+
+[sub_resource type="Resource" id="Resource_54d4v"]
+resource_name = "添加 [..]"
+script = ExtResource("13_el0uv")
+child_name = ""
+parent_node = NodePath("..")
+action = 0
+child_scene = "res://demos/fuse/fuse_adventure/scenes/ui_life.tscn"
+
+[sub_resource type="Resource" id="Resource_5gfj0"]
+resource_name = "获取子节点数量 → .. → cc [[本地]]"
+script = ExtResource("14_apei2")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+include_internal = true
+result_variable = "cc"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_srf8o"]
+resource_name = "检查变量 [[本地]]: cc EQUALS 8.0"
+script = ExtResource("15_38bij")
+variable_name = "cc"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 8.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_ywgy6"]
+resource_name = "打印: FAIL:AddRemoveUIChild(ADD→cc=8)"
+script = ExtResource("4_705yq")
+message = "FAIL:AddRemoveUIChild(ADD→cc=8)"
+
+[sub_resource type="Resource" id="Resource_11jaj"]
+resource_name = "打印: PASS:AddRemoveUIChild(ADD→cc=8)"
+script = ExtResource("4_705yq")
+message = "PASS:AddRemoveUIChild(ADD→cc=8)"
+
+[sub_resource type="Resource" id="Resource_k4xi7"]
+resource_name = "If/Else cc [[本地]] EQUALS 8.0 [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_srf8o")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_11jaj")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_ywgy6")])
+
+[sub_resource type="Resource" id="Resource_ocv5k"]
+resource_name = "移除 [..]"
+script = ExtResource("13_el0uv")
+child_scene = ""
+parent_node = NodePath("..")
+action = 1
+child_name = "UI_Life"
+
+[sub_resource type="Resource" id="Resource_tma3q"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_gwbvf"]
+resource_name = "获取子节点数量 → .. → cc [[本地]]"
+script = ExtResource("14_apei2")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("..")
+include_internal = true
+result_variable = "cc"
+result_scope = 0
+
+[sub_resource type="Resource" id="Resource_3icp8"]
+resource_name = "检查变量 [[本地]]: cc EQUALS 7.0"
+script = ExtResource("15_38bij")
+variable_name = "cc"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 7.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_4uh8b"]
+resource_name = "打印: FAIL:AddRemoveUIChild(REMOVE→cc=7)"
+script = ExtResource("4_705yq")
+message = "FAIL:AddRemoveUIChild(REMOVE→cc=7)"
+
+[sub_resource type="Resource" id="Resource_kaj30"]
+resource_name = "打印: PASS:AddRemoveUIChild(REMOVE→cc=7)"
+script = ExtResource("4_705yq")
+message = "PASS:AddRemoveUIChild(REMOVE→cc=7)"
+
+[sub_resource type="Resource" id="Resource_bkvc0"]
+resource_name = "If/Else cc [[本地]] EQUALS 7.0 [真:1 [同步]"
+script = ExtResource("7_r065t")
+sequence_mode = 0
+condition = SubResource("Resource_3icp8")
+true_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_kaj30")])
+false_instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_4uh8b")])
+
+[sub_resource type="Resource" id="Resource_mkohi"]
+resource_name = "设置属性 [EdtName] .text = Hero"
+script = ExtResource("17_iyavm")
+variable_name = ""
+variable_scope = 0
+scope_source = 0
+custom_scope_id = ""
+scope_target_node_path = NodePath("")
+target_node = NodePath("../EdtName")
+target_property = "text"
+set_with_variable = false
+new_value = "Hero"
+variable_name = ""
+variable_scope = 0
+
+[sub_resource type="Resource" id="Resource_hyy12"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_bdnu3"]
+resource_name = "运行节点函数 → EdtName 调用: emit_signal 参数: 1 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../EdtName")
+target_function = "emit_signal"
+param_0___ = "text_changed"
+store_result = false
+
+[sub_resource type="Resource" id="Resource_r6rr1"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_lhlpu"]
+resource_name = "运行节点函数 → BtnPlay 调用: emit_signal 参数: 1 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../BtnPlay")
+target_function = "emit_signal"
+param_0___ = "pressed"
+store_result = false
+
+[sub_resource type="Resource" id="Resource_vqls8"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_mraey"]
+resource_name = "运行节点函数 → OptDiff 调用: emit_signal 参数: 2 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../OptDiff")
+target_function = "emit_signal"
+param_0___ = "item_selected"
+param_1___ = 1.0
+store_result = false
+
+[sub_resource type="Resource" id="Resource_ycbkj"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_7s36m"]
+resource_name = "运行节点函数 → BarHp 调用: emit_signal 参数: 2 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../BarHp")
+target_function = "emit_signal"
+param_0___ = "value_changed"
+param_1___ = 90.0
+store_result = false
+
+[sub_resource type="Resource" id="Resource_hlxiq"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_a1v34"]
+resource_name = "运行节点函数 → TexIcon 调用: emit_signal 参数: 1 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../TexIcon")
+target_function = "emit_signal"
+param_0___ = "mouse_entered"
+store_result = false
+
+[sub_resource type="Resource" id="Resource_u88ds"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_v2qoo"]
+resource_name = "运行节点函数 → TexIcon 调用: emit_signal 参数: 1 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../TexIcon")
+target_function = "emit_signal"
+param_0___ = "mouse_exited"
+store_result = false
+
+[sub_resource type="Resource" id="Resource_aqr2x"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_h56r3"]
+resource_name = "运行节点函数 → BtnPlay 调用: emit_signal 参数: 1 个"
+script = ExtResource("18_enfea")
+result_scope_source = 0
+result_custom_scope_id = ""
+result_target_node_path = NodePath("")
+target_node = NodePath("../BtnPlay")
+target_function = "emit_signal"
+param_0___ = "focus_entered"
+store_result = false
+
+[sub_resource type="Resource" id="Resource_g1eox"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("16_m1eu0")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.0
+
+[sub_resource type="Resource" id="Resource_fp563"]
+resource_name = "打印: === deep_ui DONE ==="
+script = ExtResource("4_705yq")
+message = "=== deep_ui DONE ==="
+
+[sub_resource type="Resource" id="Resource_n66ao"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_e2v3q"), SubResource("Resource_kkiet"), SubResource("Resource_3w0ed"), SubResource("Resource_0l73y"), SubResource("Resource_gvlv0"), SubResource("Resource_rfu04"), SubResource("Resource_w1fa1"), SubResource("Resource_x3a7h"), SubResource("Resource_irw50"), SubResource("Resource_7lw13"), SubResource("Resource_n82qh"), SubResource("Resource_pkpda"), SubResource("Resource_54d4v"), SubResource("Resource_5gfj0"), SubResource("Resource_k4xi7"), SubResource("Resource_ocv5k"), SubResource("Resource_tma3q"), SubResource("Resource_gwbvf"), SubResource("Resource_bkvc0"), SubResource("Resource_mkohi"), SubResource("Resource_hyy12"), SubResource("Resource_bdnu3"), SubResource("Resource_r6rr1"), SubResource("Resource_lhlpu"), SubResource("Resource_vqls8"), SubResource("Resource_mraey"), SubResource("Resource_ycbkj"), SubResource("Resource_7s36m"), SubResource("Resource_hlxiq"), SubResource("Resource_a1v34"), SubResource("Resource_u88ds"), SubResource("Resource_v2qoo"), SubResource("Resource_aqr2x"), SubResource("Resource_h56r3"), SubResource("Resource_g1eox"), SubResource("Resource_fp563")])
+
+[sub_resource type="Resource" id="Resource_35nao"]
+script = ExtResource("20_njx5p")
+
+[sub_resource type="Resource" id="Resource_wkodi"]
+resource_name = "场景就绪时触发"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_35nao")
+action_runner = SubResource("Resource_n66ao")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_cna8d"]
+resource_name = "打印: PASS:OnButtonPressed"
+script = ExtResource("4_705yq")
+message = "PASS:OnButtonPressed"
+
+[sub_resource type="Resource" id="Resource_jitxd"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_cna8d")])
+
+[sub_resource type="Resource" id="Resource_bwj5v"]
+resource_name = "按钮按下: ../BtnPlay(要求可用)"
+script = ExtResource("21_upvqa")
+target_button = NodePath("../BtnPlay")
+
+[sub_resource type="Resource" id="Resource_73urw"]
+resource_name = "当按下按钮 ../BtnPlay 时触发且按钮可用"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_bwj5v")
+action_runner = SubResource("Resource_jitxd")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_6iswq"]
+resource_name = "打印: PASS:OnFocus"
+script = ExtResource("4_705yq")
+message = "PASS:OnFocus"
+
+[sub_resource type="Resource" id="Resource_6d0ld"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_6iswq")])
+
+[sub_resource type="Resource" id="Resource_h464b"]
+resource_name = "焦点监控: BtnPlay - 焦点进入和离开"
+script = ExtResource("22_tmng2")
+target_node_path = NodePath("../BtnPlay")
+
+[sub_resource type="Resource" id="Resource_cj852"]
+resource_name = "焦点变化: 焦点进入和离开"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_h464b")
+action_runner = SubResource("Resource_6d0ld")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_xkvkx"]
+resource_name = "打印: PASS:OnItemSelected"
+script = ExtResource("4_705yq")
+message = "PASS:OnItemSelected"
+
+[sub_resource type="Resource" id="Resource_l5phd"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_xkvkx")])
+
+[sub_resource type="Resource" id="Resource_iokb5"]
+resource_name = "ItemList 选中项改变: OptDiff(单选)"
+script = ExtResource("23_r8pai")
+target_node_path = NodePath("../OptDiff")
+
+[sub_resource type="Resource" id="Resource_lege8"]
+resource_name = "当 ItemList (../OptDiff) 的选中项改变时触发（单选模式）"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_iokb5")
+action_runner = SubResource("Resource_l5phd")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_akb52"]
+resource_name = "打印: PASS:OnTextChanged"
+script = ExtResource("4_705yq")
+message = "PASS:OnTextChanged"
+
+[sub_resource type="Resource" id="Resource_orbag"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_akb52")])
+
+[sub_resource type="Resource" id="Resource_8yafy"]
+resource_name = "文本改变: EdtName (文本改变)"
+script = ExtResource("24_eo6m4")
+target_node_path = NodePath("../EdtName")
+
+[sub_resource type="Resource" id="Resource_rvj7q"]
+resource_name = "当 ../EdtName 的文本改变时触发（文本改变）"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_8yafy")
+action_runner = SubResource("Resource_orbag")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_wxdhh"]
+resource_name = "打印: PASS:OnValueChanged"
+script = ExtResource("4_705yq")
+message = "PASS:OnValueChanged"
+
+[sub_resource type="Resource" id="Resource_qhgt3"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_wxdhh")])
+
+[sub_resource type="Resource" id="Resource_e4ytb"]
+resource_name = "值改变: BarHp (值变化)"
+script = ExtResource("25_kay8x")
+target_node_path = NodePath("../BarHp")
+
+[sub_resource type="Resource" id="Resource_jnlnn"]
+resource_name = "当 ../BarHp 的值改变时触发（值变化）"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_e4ytb")
+action_runner = SubResource("Resource_qhgt3")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_ycrqp"]
+resource_name = "打印: PASS:OnUIMouseEntered"
+script = ExtResource("4_705yq")
+message = "PASS:OnUIMouseEntered"
+
+[sub_resource type="Resource" id="Resource_k3qad"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_ycrqp")])
+
+[sub_resource type="Resource" id="Resource_xmken"]
+resource_name = "鼠标进入: TexIcon"
+script = ExtResource("26_77k0o")
+target_node = NodePath("../TexIcon")
+
+[sub_resource type="Resource" id="Resource_1hotx"]
+resource_name = "鼠标进入 TexIcon"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_xmken")
+action_runner = SubResource("Resource_k3qad")
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_5lkyn"]
+resource_name = "打印: PASS:OnUIMouseExited"
+script = ExtResource("4_705yq")
+message = "PASS:OnUIMouseExited"
+
+[sub_resource type="Resource" id="Resource_r4hx1"]
+script = ExtResource("19_u2m78")
+instructions = Array[ExtResource("3_v6l5y")]([SubResource("Resource_5lkyn")])
+
+[sub_resource type="Resource" id="Resource_h0vay"]
+resource_name = "鼠标离开: TexIcon"
+script = ExtResource("27_m24ug")
+target_node = NodePath("../TexIcon")
+
+[sub_resource type="Resource" id="Resource_3181w"]
+resource_name = "鼠标离开 TexIcon"
+script = ExtResource("2_k06dj")
+event = SubResource("Resource_h0vay")
+action_runner = SubResource("Resource_r4hx1")
+cooldown_time = 1.0
+
+[node name="test_deep_ui" type="Control" unique_id=399928936]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LblTitle" type="Label" parent="." unique_id=1877146214]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 300.0
+offset_bottom = 60.0
+text = "Title"
+
+[node name="BtnPlay" type="Button" parent="." unique_id=1106888039]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 80.0
+offset_right = 160.0
+offset_bottom = 120.0
+text = "Play"
+
+[node name="BarHp" type="ProgressBar" parent="." unique_id=2017966943]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 240.0
+offset_bottom = 160.0
+value = 50.0
+
+[node name="OptDiff" type="OptionButton" parent="." unique_id=1958446033]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 190.0
+offset_right = 200.0
+offset_bottom = 220.0
+selected = 0
+item_count = 3
+popup/item_0/text = "Easy"
+popup/item_0/id = 0
+popup/item_1/text = "Normal"
+popup/item_1/id = 1
+popup/item_2/text = "Hard"
+popup/item_2/id = 2
+
+[node name="EdtName" type="LineEdit" parent="." unique_id=259544590]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 250.0
+offset_right = 240.0
+offset_bottom = 280.0
+placeholder_text = "name"
+
+[node name="TexIcon" type="TextureRect" parent="." unique_id=1591316508]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 80.0
+offset_right = 448.0
+offset_bottom = 208.0
+stretch_mode = 5
+
+[node name="DeepUI" type="Node" parent="." unique_id=1718176492]
+script = ExtResource("1_lpivf")
+event_bindings = Array[ExtResource("2_k06dj")]([SubResource("Resource_wkodi"), SubResource("Resource_73urw"), SubResource("Resource_cj852"), SubResource("Resource_lege8"), SubResource("Resource_rvj7q"), SubResource("Resource_jnlnn"), SubResource("Resource_1hotx"), SubResource("Resource_3181w")])
+use_parallel_condition_evaluation = false

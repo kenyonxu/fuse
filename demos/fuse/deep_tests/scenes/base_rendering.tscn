@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="3_banana"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Apple.png" id="4_apple"]
+
+[sub_resource type="ParticleProcessMaterial" id="PPMat"]
+direction = Vector3(0, -1, 0)
+spread = 30.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 300, 0)
+
+[sub_resource type="Shader" id="GlowShader"]
+code = "shader_type canvas_item;
+uniform float glow : hint_range(0.0, 4.0) = 1.0;
+void fragment() {
+	vec4 tex = texture(TEXTURE, UV);
+	COLOR = tex + vec4(glow * 0.25, glow * 0.1, 0.0, 0.0) * tex.a;
+}"
+
+[sub_resource type="ShaderMaterial" id="GlowMat"]
+shader = SubResource("GlowShader")
+shader_parameter/glow = 1.0
+
+[node name="Base" type="Node2D"]
+
+[node name="Cam" type="Camera2D" parent="."]
+
+[node name="Lbl" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_rendering"
+
+[node name="SpriteA" type="Sprite2D" parent="."]
+position = Vector2(200, 200)
+texture = ExtResource("3_banana")
+
+[node name="FarSprite" type="Sprite2D" parent="."]
+position = Vector2(5000, 5000)
+texture = ExtResource("4_apple")
+
+[node name="ShaderSprite" type="Sprite2D" parent="."]
+position = Vector2(400, 200)
+scale = Vector2(2, 2)
+texture = ExtResource("3_banana")
+material = SubResource("GlowMat")
+
+[node name="Light" type="PointLight2D" parent="."]
+position = Vector2(300, 260)
+energy = 1.0
+
+[node name="GpuParticles" type="GPUParticles2D" parent="."]
+position = Vector2(600, 300)
+amount = 32
+process_material = SubResource("PPMat")
+texture = ExtResource("4_apple")
+emitting = false
+
+[node name="InputDriver" type="Node" parent="."]
+script = ExtResource("2_driver")
+timeline = []
+events = []

@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[node name="Base" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LblTitle" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 300.0
+offset_bottom = 60.0
+text = "Title"
+
+[node name="BtnPlay" type="Button" parent="."]
+offset_left = 40.0
+offset_top = 80.0
+offset_right = 160.0
+offset_bottom = 120.0
+text = "Play"
+
+[node name="BarHp" type="ProgressBar" parent="."]
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 240.0
+offset_bottom = 160.0
+max_value = 100.0
+value = 50.0
+
+[node name="OptDiff" type="OptionButton" parent="."]
+offset_left = 40.0
+offset_top = 190.0
+offset_right = 200.0
+offset_bottom = 220.0
+item_count = 3
+selected = 0
+popup/item_0/text = "Easy"
+popup/item_1/text = "Normal"
+popup/item_2/text = "Hard"
+
+[node name="EdtName" type="LineEdit" parent="."]
+offset_left = 40.0
+offset_top = 250.0
+offset_right = 240.0
+offset_bottom = 280.0
+placeholder_text = "name"
+
+[node name="TexIcon" type="TextureRect" parent="."]
+offset_left = 320.0
+offset_top = 80.0
+offset_right = 448.0
+offset_bottom = 208.0
+stretch_mode = 5

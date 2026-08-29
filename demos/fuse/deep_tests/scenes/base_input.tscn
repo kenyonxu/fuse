@@ -1,0 +1,100 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
+
+[node name="Base" type="Node2D"]
+
+[node name="Lbl" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_input_keyboard"
+
+[node name="InputDriver" type="Node" parent="."]
+script = ExtResource("2_driver")
+timeline = [{
+"delay": 4.5,
+"action": "Left",
+"press": true
+}, {
+"delay": 5.4,
+"action": "Left",
+"press": false
+}, {
+"delay": 5.6,
+"action": "Right",
+"press": true
+}, {
+"delay": 7.4,
+"action": "Right",
+"press": false
+}]
+events = [{
+"delay": 1.0,
+"event": "key",
+"keycode": 74
+}, {
+"delay": 1.15,
+"event": "key",
+"keycode": 74,
+"pressed": false
+}, {
+"delay": 1.5,
+"event": "text",
+"keycode": 72,
+"unicode": 72
+}, {
+"delay": 1.5,
+"event": "text",
+"keycode": 72,
+"pressed": false,
+"unicode": 72
+}, {
+"delay": 1.7,
+"event": "text",
+"keycode": 73,
+"unicode": 73
+}, {
+"delay": 1.7,
+"event": "text",
+"keycode": 73,
+"pressed": false,
+"unicode": 73
+}, {
+"delay": 3.0,
+"event": "key",
+"keycode": 87
+}, {
+"delay": 3.05,
+"event": "key",
+"keycode": 87,
+"pressed": false
+}, {
+"delay": 3.2,
+"event": "key",
+"keycode": 87
+}, {
+"delay": 3.25,
+"event": "key",
+"keycode": 87,
+"pressed": false
+}, {
+"delay": 3.4,
+"event": "key",
+"keycode": 83
+}, {
+"delay": 3.45,
+"event": "key",
+"keycode": 83,
+"pressed": false
+}, {
+"delay": 4.0,
+"event": "key",
+"keycode": 32
+}, {
+"delay": 4.2,
+"event": "key",
+"keycode": 32,
+"pressed": false
+}]

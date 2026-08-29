@@ -352,6 +352,41 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 
 **Tween 遗留补充**：完整跑完（3000 帧）后确认 M2 时期就存在 4 个断言 FAIL（FadeIn/FadeOut/Pause/RotateTo），基线对照（还原 base_trigger 重跑）排除本轮回归——F5 观感正确但数值断言有偏差，并入 Tween 专项。
 
+
+### M3 · C 层 + D 层完成（2026-08-29）
+
+| 场景 | headless | F5 待验 | 备注 |
+|------|----------|---------|------|
+| UI | 14/14 | 布局/鼠标进出高亮/OptionButton 展开 | 事件全部用 RunTargetNodeFunction(emit_signal) 纯 Fuse 合成；SetUITexture 断言走 error=0+观感 |
+| Input keyboard | 12/12 | 真实键鼠手感 | events 层注入须带 physical_keycode（InputMap 按物理码绑定） |
+| Input mouse | 3+2(F5) | **Enter/Exit 真实 hover** | Button/Move headless 过；hover 管线 headless 不工作（引擎限制，见下） |
+| Input gamepad | 4/4 | 无实物，注入路径已验 | Axis 双档 + Button 双档 |
+| Rendering | 6/6 | 粒子/灯光/材质 glow/ScreenFlash | CheckIsOnScreen 用 use_notifier=false（Dummy RS 不更新 notifier）；GPUParticles emitting 布尔可断言 |
+
+**四查口径固化**：`tools/check_log.sh`——三查 + 第 4 查 `Error calling from signal`（OnOverlappingBodies 教训），M3 起全场景统一。
+
+**M3 新增产品修复 #32-40**（累计 40）：
+
+| # | 组件 | 问题 | 修复 |
+|---|------|------|------|
+| 32 | OnUIMouseEntered/Exited、OnDirectionalInputChanged、OnSceneAboutToChange | setter var 无 _get_property_list 注册，参数 .tscn 序列化静默丢失（OnScene 为 M2 重写后漏 dump 的欠账） | 补注册（DEFAULT\|SCRIPT_VARIABLE）+ schema_extractor 新增计算属性补录机制（RunTargetNodeFunction.function_args 经 param_N___ 存取，属性探测不可见） |
+| 33 | OnItemSelected | 写死 ItemList——OptionButton 赋值类型崩溃 | 按类型分流（OptionButton 单选/ItemList 单多选） |
+| 34 | SetUIProgress | 归一化 0-1 值直写 ProgressBar.value（0-100 的条显示 0.8%） | 改 Range.ratio 换算 |
+| 35 | OnTextChanged | 处理器带参，Godot 4 的 text_changed 信号无参 → 信号调用报错 | 无参签名 + 从控件读 text |
+| 36 | OnFocus | triggered.emit(Dictionary) → Dictionary→Node 转换错误 | 上下文节点携带 meta（惯例） |
+| 37 | OnInputText | `_input` 回调 + 读不存在的 event.text | handle_input + String.chr(unicode) |
+| 38 | OnInputCombo | Timer 轮询抓不住 is_action_just_pressed 一帧窗口 | 改 handle_input 事件驱动（Timer 仅超时） |
+| 39 | OnMouseButton/OnMouseMove | `_input` 回调 | handle_input |
+| 40 | OnGamepadButton | `_input` 回调 | handle_input |
+
+**"Resource 的 Node 回调引擎不调用"是系统性病灶**（M2 的 OnMusicBeat `_process` 起累计 5 例）——事件组件的输入接收必须实现 `handle_input`（BaseTrigger._unhandled_input 转发），写 `_input`/`_process` 均为死代码。
+
+**headless 引擎限制 2 项（非 Fuse bug，F5 补验）**：
+1. 鼠标 hover 检测管线不工作——parse_input_event/push_input 注入的 motion 不触发 Area2D/Control 的 mouse_entered/exited（探针实证 GUI 与 physics 两条 hover 路径均不更新）；
+2. Dummy RenderingServer 不模拟 GPUParticles、不更新 VisibleOnScreenNotifier（CheckIsOnScreen 用几何比较模式替代）。
+
+**验收语义注记**：CheckInputPressed/Released/AnyInput 与 OnInputCombo 原 just 一帧窗口语义——条件类做稳定期反向断言（真窗口 F5 手测）；CheckInputHeld 的 hold 计时从条件首次评估起算，须挂轮询绑定验证（单次评估恒 false）。
+
 **M2 全部 8 场景完成**。F5 待验清单：NodeOps（节点增减观感）、Physics（落体/跳/撞墙/进区/射线）、Movement（角色右移）。
 
 

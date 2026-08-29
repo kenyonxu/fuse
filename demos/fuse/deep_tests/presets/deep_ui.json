@@ -1,0 +1,482 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepUI",
+  "category": "ui",
+  "description": "深度测试·UI：7 指令（SetUIText/Progress/Texture/Color、ShowHideUI、AddRemoveUIChild、CheckUIVisible）+ 7 事件（Button/Focus/ItemSelected/TextChanged/ValueChanged/UIMouseEntered/Exited），事件用 run_target_node_function 调 emit_signal 纯 Fuse 合成",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "cc"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_ui START（事件合成：emit_signal via RunTargetNodeFunction）==="
+          },
+          {
+            "type": "SetUIText",
+            "target_node": "../LblTitle",
+            "text": "HUD Title"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../LblTitle",
+              "property_name": "text",
+              "property_value": "HUD Title"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:SetUIText(text=HUD Title)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:SetUIText(text=HUD Title)"
+              }
+            ]
+          },
+          {
+            "type": "SetUIProgress",
+            "target_node": "../BarHp",
+            "value": 0.8
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../BarHp",
+              "property_name": "value",
+              "property_value": 80.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:SetUIProgress(value=80)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:SetUIProgress(value=80)"
+              }
+            ]
+          },
+          {
+            "type": "ShowHideUI",
+            "target_node": "../TexIcon",
+            "action": 1
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckUIVisible",
+              "target_node": "../TexIcon",
+              "negate_result": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:ShowHideUI(HIDE→不可见)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:ShowHideUI(HIDE→不可见)"
+              }
+            ]
+          },
+          {
+            "type": "ShowHideUI",
+            "target_node": "../TexIcon",
+            "action": 0
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckUIVisible",
+              "target_node": "../TexIcon"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:ShowHideUI(SHOW→可见)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:ShowHideUI(SHOW→可见)"
+              }
+            ]
+          },
+          {
+            "type": "SetUIColor",
+            "target_node": "../LblTitle",
+            "color_target": 0,
+            "color": "(1.0, 0.2, 0.2, 1.0)"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../LblTitle",
+              "property_name": "modulate",
+              "property_value": "(1.0, 0.2, 0.2, 1.0)"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:SetUIColor(modulate)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:SetUIColor(modulate)"
+              }
+            ]
+          },
+          {
+            "type": "SetUITexture",
+            "target_node": "../TexIcon",
+            "texture_source": 0,
+            "texture_path": "res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png"
+          },
+          {
+            "type": "AddRemoveUIChild",
+            "action": 0,
+            "parent_node": "..",
+            "child_scene": "res://demos/fuse/fuse_adventure/scenes/ui_life.tscn"
+          },
+          {
+            "type": "GetChildCount",
+            "target_node": "..",
+            "result_variable": "cc"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cc",
+              "comparison_operator": 0,
+              "expected_value": 8,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:AddRemoveUIChild(ADD→cc=8)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:AddRemoveUIChild(ADD→cc=8)"
+              }
+            ]
+          },
+          {
+            "type": "AddRemoveUIChild",
+            "action": 1,
+            "parent_node": "..",
+            "child_name": "UI_Life"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "GetChildCount",
+            "target_node": "..",
+            "result_variable": "cc"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "cc",
+              "comparison_operator": 0,
+              "expected_value": 7,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:AddRemoveUIChild(REMOVE→cc=7)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:AddRemoveUIChild(REMOVE→cc=7)"
+              }
+            ]
+          },
+          {
+            "type": "SetPropertyValue",
+            "target_node": "../EdtName",
+            "target_property": "text",
+            "new_value": "Hero"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../EdtName",
+            "target_function": "emit_signal",
+            "function_args": ["text_changed"]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../BtnPlay",
+            "target_function": "emit_signal",
+            "function_args": ["pressed"]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../OptDiff",
+            "target_function": "emit_signal",
+            "function_args": ["item_selected", 1]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../BarHp",
+            "target_function": "emit_signal",
+            "function_args": ["value_changed", 90.0]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../TexIcon",
+            "target_function": "emit_signal",
+            "function_args": ["mouse_entered"]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../TexIcon",
+            "target_function": "emit_signal",
+            "function_args": ["mouse_exited"]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "RunTargetNodeFunction",
+            "target_node": "../BtnPlay",
+            "target_function": "emit_signal",
+            "function_args": ["focus_entered"]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.0
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_ui DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnButtonPressed",
+        "target_button": "../BtnPlay"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnButtonPressed"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnFocus",
+        "target_node_path": "../BtnPlay"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnFocus"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnItemSelected",
+        "target_node_path": "../OptDiff"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnItemSelected"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnTextChanged",
+        "target_node_path": "../EdtName"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnTextChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnValueChanged",
+        "target_node_path": "../BarHp"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnValueChanged"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnUIMouseEntered",
+        "target_node": "../TexIcon"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnUIMouseEntered"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnUIMouseExited",
+        "target_node": "../TexIcon"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnUIMouseExited"
+          }
+        ]
+      }
+    }
+  ]
+}

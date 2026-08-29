@@ -1,0 +1,371 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Bananas.png" id="1_5otsm"]
+[ext_resource type="Texture2D" path="res://demos/fuse/fuse_adventure/resources/arts/Pixel Adventure 1/Free/Items/Fruits/Apple.png" id="2_ft1ce"]
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="3_v6hms"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="4_bxwjl"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="5_netql"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="6_qfpa6"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="7_acfbm"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/rendering/set_z_index.gd" id="8_3c06y"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="9_km3r0"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="10_t1e1f"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/rendering/set_light.gd" id="11_jdwow"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/rendering/set_material_property.gd" id="12_ns06j"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/rendering/control_particles.gd" id="13_sx3na"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/rendering/check_is_on_screen.gd" id="14_1uwyh"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/rendering/screen_flash.gd" id="15_nyf8a"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="16_e23jp"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="17_y6c1s"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="18_6evtj"]
+
+[sub_resource type="Shader" id="GlowShader"]
+code = "shader_type canvas_item;
+uniform float glow : hint_range(0.0, 4.0) = 1.0;
+void fragment() {
+	vec4 tex = texture(TEXTURE, UV);
+	COLOR = tex + vec4(glow * 0.25, glow * 0.1, 0.0, 0.0) * tex.a;
+}"
+
+[sub_resource type="ShaderMaterial" id="GlowMat"]
+shader = SubResource("GlowShader")
+shader_parameter/glow = 1.0
+
+[sub_resource type="ParticleProcessMaterial" id="PPMat"]
+direction = Vector3(0, -1, 0)
+spread = 30.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 300, 0)
+
+[sub_resource type="Resource" id="Resource_hrqlp"]
+resource_name = "打印: === deep_rendering START（灯光/材质/粒子/ZIndex/屏幕内外断言 + ScreenFlash 观感留 F5）==="
+script = ExtResource("7_acfbm")
+message = "=== deep_rendering START（灯光/材质/粒子/ZIndex/屏幕内外断言 + ScreenFlash 观感留 F5）==="
+
+[sub_resource type="Resource" id="Resource_seyco"]
+resource_name = "SpriteA Z=10 (绝对)"
+script = ExtResource("8_3c06y")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../SpriteA")
+z_index = 10
+relative = false
+
+[sub_resource type="Resource" id="Resource_76274"]
+resource_name = "SpriteA.z_index == 10.0"
+script = ExtResource("9_km3r0")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../SpriteA")
+property_name = "z_index"
+property_value = 10.0
+
+[sub_resource type="Resource" id="Resource_862lx"]
+resource_name = "打印: FAIL:SetZIndex(z_index=10)"
+script = ExtResource("7_acfbm")
+message = "FAIL:SetZIndex(z_index=10)"
+
+[sub_resource type="Resource" id="Resource_m3a5r"]
+resource_name = "打印: PASS:SetZIndex(z_index=10)"
+script = ExtResource("7_acfbm")
+message = "PASS:SetZIndex(z_index=10)"
+
+[sub_resource type="Resource" id="Resource_e0d7w"]
+resource_name = "If/Else SpriteA.z_index == 10.0 [真:1 [同步]"
+script = ExtResource("10_t1e1f")
+sequence_mode = 0
+condition = SubResource("Resource_76274")
+true_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_m3a5r")])
+false_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_862lx")])
+
+[sub_resource type="Resource" id="Resource_73cfu"]
+resource_name = "设置灯光 [Light] [启用]"
+script = ExtResource("11_jdwow")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../Light")
+energy = 2.5
+light_color = Color(1, 0.9, 0.5, 1)
+enabled = true
+
+[sub_resource type="Resource" id="Resource_pg2l5"]
+resource_name = "Light.energy == 2.5"
+script = ExtResource("9_km3r0")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../Light")
+property_name = "energy"
+property_value = 2.5
+
+[sub_resource type="Resource" id="Resource_u1d1r"]
+resource_name = "打印: FAIL:SetLight(energy=2.5)"
+script = ExtResource("7_acfbm")
+message = "FAIL:SetLight(energy=2.5)"
+
+[sub_resource type="Resource" id="Resource_khugr"]
+resource_name = "打印: PASS:SetLight(energy=2.5)"
+script = ExtResource("7_acfbm")
+message = "PASS:SetLight(energy=2.5)"
+
+[sub_resource type="Resource" id="Resource_aftky"]
+resource_name = "If/Else Light.energy == 2.5 [真:1 [同步]"
+script = ExtResource("10_t1e1f")
+sequence_mode = 0
+condition = SubResource("Resource_pg2l5")
+true_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_khugr")])
+false_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_u1d1r")])
+
+[sub_resource type="Resource" id="Resource_eirhh"]
+resource_name = "材质: ShaderSprite.glow = 3.5"
+script = ExtResource("12_ns06j")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+color_value = Color(1, 1, 1, 1)
+vec2_value = Vector2(0, 0)
+vec3_value = Vector3(0, 0, 0)
+bool_value = false
+int_value = 0
+use_variable_for_target = false
+target_node = NodePath("../ShaderSprite")
+material_slot = 0
+parameter_name = "glow"
+parameter_type = 0
+float_value = 3.5
+
+[sub_resource type="Resource" id="Resource_ql38f"]
+resource_name = "控制粒子 [开始] [GpuParticles]"
+script = ExtResource("13_sx3na")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../GpuParticles")
+action = 1
+one_shot = false
+
+[sub_resource type="Resource" id="Resource_6rsvr"]
+resource_name = "GpuParticles.emitting == true"
+script = ExtResource("9_km3r0")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../GpuParticles")
+property_name = "emitting"
+property_value = true
+
+[sub_resource type="Resource" id="Resource_r6pvh"]
+resource_name = "打印: FAIL:ControlParticles(START→emitting)"
+script = ExtResource("7_acfbm")
+message = "FAIL:ControlParticles(START→emitting)"
+
+[sub_resource type="Resource" id="Resource_x3elg"]
+resource_name = "打印: PASS:ControlParticles(START→emitting)"
+script = ExtResource("7_acfbm")
+message = "PASS:ControlParticles(START→emitting)"
+
+[sub_resource type="Resource" id="Resource_o3b68"]
+resource_name = "If/Else GpuParticles.emitting == true [真:1 [同步]"
+script = ExtResource("10_t1e1f")
+sequence_mode = 0
+condition = SubResource("Resource_6rsvr")
+true_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_x3elg")])
+false_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_r6pvh")])
+
+[sub_resource type="Resource" id="Resource_qjr5g"]
+resource_name = "控制粒子 [停止] [GpuParticles]"
+script = ExtResource("13_sx3na")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../GpuParticles")
+action = 2
+one_shot = false
+
+[sub_resource type="Resource" id="Resource_o0wx4"]
+resource_name = "GpuParticles.emitting == false"
+script = ExtResource("9_km3r0")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../GpuParticles")
+property_name = "emitting"
+property_value = false
+
+[sub_resource type="Resource" id="Resource_ux5aq"]
+resource_name = "打印: FAIL:ControlParticles(STOP→停发)"
+script = ExtResource("7_acfbm")
+message = "FAIL:ControlParticles(STOP→停发)"
+
+[sub_resource type="Resource" id="Resource_i43no"]
+resource_name = "打印: PASS:ControlParticles(STOP→停发)"
+script = ExtResource("7_acfbm")
+message = "PASS:ControlParticles(STOP→停发)"
+
+[sub_resource type="Resource" id="Resource_5g6gh"]
+resource_name = "If/Else GpuParticles.emitting == false [真:1 [同步]"
+script = ExtResource("10_t1e1f")
+sequence_mode = 0
+condition = SubResource("Resource_o0wx4")
+true_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_i43no")])
+false_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_ux5aq")])
+
+[sub_resource type="Resource" id="Resource_bq1a4"]
+resource_name = "屏幕可见: SpriteA"
+script = ExtResource("14_1uwyh")
+target_node = NodePath("../SpriteA")
+use_notifier = false
+margin = 0.0
+
+[sub_resource type="Resource" id="Resource_nchbp"]
+resource_name = "打印: FAIL:CheckIsOnScreen(屏幕内=true)"
+script = ExtResource("7_acfbm")
+message = "FAIL:CheckIsOnScreen(屏幕内=true)"
+
+[sub_resource type="Resource" id="Resource_ayh0b"]
+resource_name = "打印: PASS:CheckIsOnScreen(屏幕内=true)"
+script = ExtResource("7_acfbm")
+message = "PASS:CheckIsOnScreen(屏幕内=true)"
+
+[sub_resource type="Resource" id="Resource_xwixg"]
+resource_name = "If/Else SpriteA 在屏幕上 [真:1 [同步]"
+script = ExtResource("10_t1e1f")
+sequence_mode = 0
+condition = SubResource("Resource_bq1a4")
+true_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_ayh0b")])
+false_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_nchbp")])
+
+[sub_resource type="Resource" id="Resource_6fys1"]
+resource_name = "屏幕可见: FarSprite"
+script = ExtResource("14_1uwyh")
+target_node = NodePath("../FarSprite")
+use_notifier = false
+margin = 0.0
+
+[sub_resource type="Resource" id="Resource_uvfbu"]
+resource_name = "打印: PASS:CheckIsOnScreen(屏幕外=false)"
+script = ExtResource("7_acfbm")
+message = "PASS:CheckIsOnScreen(屏幕外=false)"
+
+[sub_resource type="Resource" id="Resource_58fx6"]
+resource_name = "打印: FAIL:CheckIsOnScreen(屏幕外应false)"
+script = ExtResource("7_acfbm")
+message = "FAIL:CheckIsOnScreen(屏幕外应false)"
+
+[sub_resource type="Resource" id="Resource_1fc58"]
+resource_name = "If/Else FarSprite 在屏幕上 [真:1 [同步]"
+script = ExtResource("10_t1e1f")
+sequence_mode = 0
+condition = SubResource("Resource_6fys1")
+true_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_58fx6")])
+false_instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_uvfbu")])
+
+[sub_resource type="Resource" id="Resource_es5vq"]
+resource_name = "闪烁 #ffff99 0.4s x2"
+script = ExtResource("15_nyf8a")
+color = Color(1, 1, 0.6, 1)
+duration = 0.4
+flash_count = 2
+
+[sub_resource type="Resource" id="Resource_vqdvu"]
+resource_name = "等待 1.5 秒"
+script = ExtResource("16_e23jp")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.5
+
+[sub_resource type="Resource" id="Resource_poy7g"]
+resource_name = "打印: === deep_rendering DONE ==="
+script = ExtResource("7_acfbm")
+message = "=== deep_rendering DONE ==="
+
+[sub_resource type="Resource" id="Resource_4d2c6"]
+script = ExtResource("17_y6c1s")
+instructions = Array[ExtResource("6_qfpa6")]([SubResource("Resource_hrqlp"), SubResource("Resource_seyco"), SubResource("Resource_e0d7w"), SubResource("Resource_73cfu"), SubResource("Resource_aftky"), SubResource("Resource_eirhh"), SubResource("Resource_ql38f"), SubResource("Resource_o3b68"), SubResource("Resource_qjr5g"), SubResource("Resource_5g6gh"), SubResource("Resource_xwixg"), SubResource("Resource_1fc58"), SubResource("Resource_es5vq"), SubResource("Resource_vqdvu"), SubResource("Resource_poy7g")])
+
+[sub_resource type="Resource" id="Resource_y4b2h"]
+script = ExtResource("18_6evtj")
+
+[sub_resource type="Resource" id="Resource_v6isb"]
+resource_name = "场景就绪时触发"
+script = ExtResource("5_netql")
+event = SubResource("Resource_y4b2h")
+action_runner = SubResource("Resource_4d2c6")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_rendering" type="Node2D" unique_id=1259105277]
+
+[node name="Cam" type="Camera2D" parent="." unique_id=1552872755]
+
+[node name="Lbl" type="Label" parent="." unique_id=1735694897]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_rendering"
+
+[node name="SpriteA" type="Sprite2D" parent="." unique_id=1649084847]
+position = Vector2(200, 200)
+texture = ExtResource("1_5otsm")
+
+[node name="FarSprite" type="Sprite2D" parent="." unique_id=2079297504]
+position = Vector2(5000, 5000)
+texture = ExtResource("2_ft1ce")
+
+[node name="ShaderSprite" type="Sprite2D" parent="." unique_id=499427525]
+material = SubResource("GlowMat")
+position = Vector2(400, 200)
+scale = Vector2(2, 2)
+texture = ExtResource("1_5otsm")
+
+[node name="Light" type="PointLight2D" parent="." unique_id=1146349503]
+position = Vector2(300, 260)
+
+[node name="GpuParticles" type="GPUParticles2D" parent="." unique_id=766594121]
+position = Vector2(600, 300)
+emitting = false
+amount = 32
+texture = ExtResource("2_ft1ce")
+process_material = SubResource("PPMat")
+
+[node name="InputDriver" type="Node" parent="." unique_id=993691372]
+script = ExtResource("3_v6hms")
+timeline = Array[Dictionary]([])
+
+[node name="DeepRendering" type="Node" parent="." unique_id=1103947757]
+script = ExtResource("4_bxwjl")
+event_bindings = Array[ExtResource("5_netql")]([SubResource("Resource_v6isb")])
+use_parallel_condition_evaluation = false

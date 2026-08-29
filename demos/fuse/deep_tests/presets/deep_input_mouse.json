@@ -1,0 +1,156 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepInputMouse",
+  "category": "input",
+  "description": "深度测试·Input 鼠标族：OnMouseButton（pressed/released 双档）、OnMouseMove（位移阈值）、OnMouseEnter/OnMouseExit（Area2D hover 进出），全部由 input_driver 注入 InputEventMouseButton/MouseMotion 驱动",
+  "icon_name": "",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_input_mouse START（motion 1.0s 起 / LMB press 1.3 release 1.5 / Area hover 进出 2.0-3.2）==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 4.0
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_input_mouse DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnMouseButton",
+        "mouse_button": 0,
+        "trigger_mode": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnMouseButton(LEFT按下)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnMouseButton",
+        "mouse_button": 0,
+        "trigger_mode": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnMouseButton(LEFT释放)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnMouseMove",
+        "move_threshold": 10.0,
+        "trigger_mode": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnMouseMove(位移≥10px)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnMouseEnter",
+        "target_node_path": "../Area",
+        "trigger_once_per_enter": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnMouseEnter(Area2D)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnMouseExit",
+        "target_node_path": "../Area",
+        "trigger_once_per_exit": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnMouseExit(Area2D)"
+          }
+        ]
+      }
+    }
+  ]
+}

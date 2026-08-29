@@ -1,0 +1,136 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepInputGamepad",
+  "category": "input",
+  "description": "深度测试·Input 手柄族：OnGamepadAxis（任意变化/越阈值双档）、OnGamepadButton（按下/释放双档），由 input_driver 注入 InputEventJoypadMotion/Button 驱动",
+  "icon_name": "",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_input_gamepad START（axis0→0.8 @1.0、A键 press 1.5 / release 1.8）==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 3.0
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_input_gamepad DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnGamepadAxis",
+        "axis_index": 0,
+        "trigger_mode": 0,
+        "threshold": 0.5
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnGamepadAxis(任意变化)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnGamepadAxis",
+        "axis_index": 0,
+        "trigger_mode": 1,
+        "threshold": 0.5
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnGamepadAxis(0.8越阈值0.5)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnGamepadButton",
+        "button_index": 0,
+        "trigger_mode": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnGamepadButton(A按下)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnGamepadButton",
+        "button_index": 0,
+        "trigger_mode": 1
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnGamepadButton(A释放)"
+          }
+        ]
+      }
+    }
+  ]
+}

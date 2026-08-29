@@ -1,0 +1,457 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="1_tb8uo"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_hkrdg"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_o02fy"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_jj1dn"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_qx0fu"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_swjlf"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/input/check_input_direction.gd" id="7_pjty3"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="8_j0r3o"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/input/check_input_magnitude.gd" id="9_gv5f6"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/input/check_any_input.gd" id="10_xt0pw"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/input/check_input_pressed.gd" id="11_g577b"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/input/check_input_held.gd" id="12_kkrau"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/input/check_input_released.gd" id="13_em1ik"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="14_wa58r"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="15_vo3qa"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="16_yx6r7"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_input_key.gd" id="17_pk05w"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_input_text.gd" id="18_2bd6a"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_input_combo.gd" id="19_gv4up"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_input_buffered.gd" id="20_j72oj"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_directional_input_changed.gd" id="21_1qpxy"]
+
+[sub_resource type="Resource" id="Resource_dwfvl"]
+resource_name = "打印: === deep_input_keyboard START（J键/文本HI/combo UpUpDown/Jump缓冲/Left 4.5-5.4/Right 5.6-7.4）==="
+script = ExtResource("5_qx0fu")
+message = "=== deep_input_keyboard START（J键/文本HI/combo UpUpDown/Jump缓冲/Left 4.5-5.4/Right 5.6-7.4）==="
+
+[sub_resource type="Resource" id="Resource_6srs8"]
+resource_name = "等待 5.0 秒"
+script = ExtResource("6_swjlf")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 5.0
+
+[sub_resource type="Resource" id="Resource_bu81h"]
+resource_name = "输入方向 左"
+script = ExtResource("7_pjty3")
+input_action_left = "Left"
+input_action_right = "Right"
+input_action_up = "Up"
+input_action_down = "Down"
+expected_direction = 2
+tolerance = 0.3
+
+[sub_resource type="Resource" id="Resource_kcnta"]
+resource_name = "打印: FAIL:CheckInputDirection(Left独占窗=LEFT)"
+script = ExtResource("5_qx0fu")
+message = "FAIL:CheckInputDirection(Left独占窗=LEFT)"
+
+[sub_resource type="Resource" id="Resource_lvenw"]
+resource_name = "打印: PASS:CheckInputDirection(Left独占窗=LEFT)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckInputDirection(Left独占窗=LEFT)"
+
+[sub_resource type="Resource" id="Resource_og68y"]
+resource_name = "If/Else 检查输入方向是否为 左 [真:1 [同步]"
+script = ExtResource("8_j0r3o")
+sequence_mode = 0
+condition = SubResource("Resource_bu81h")
+true_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_lvenw")])
+false_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_kcnta")])
+
+[sub_resource type="Resource" id="Resource_xy8iy"]
+resource_name = "输入大小 >= 0.5"
+script = ExtResource("9_gv5f6")
+input_action_left = "Left"
+input_action_right = "Right"
+input_action_up = "Up"
+input_action_down = "Down"
+compare_type = 2
+threshold = 0.5
+
+[sub_resource type="Resource" id="Resource_mq8e4"]
+resource_name = "打印: FAIL:CheckInputMagnitude(>=0.5)"
+script = ExtResource("5_qx0fu")
+message = "FAIL:CheckInputMagnitude(>=0.5)"
+
+[sub_resource type="Resource" id="Resource_nujyt"]
+resource_name = "打印: PASS:CheckInputMagnitude(>=0.5)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckInputMagnitude(>=0.5)"
+
+[sub_resource type="Resource" id="Resource_0b3fb"]
+resource_name = "If/Else 输入大小 >= 0.5 [真:1 [同步]"
+script = ExtResource("8_j0r3o")
+sequence_mode = 0
+condition = SubResource("Resource_xy8iy")
+true_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_nujyt")])
+false_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_mq8e4")])
+
+[sub_resource type="Resource" id="Resource_hx67y"]
+resource_name = "任意输入 (输入映射)"
+script = ExtResource("10_xt0pw")
+
+[sub_resource type="Resource" id="Resource_bisx1"]
+resource_name = "打印: PASS:CheckAnyInput(稳定期=非just)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckAnyInput(稳定期=非just)"
+
+[sub_resource type="Resource" id="Resource_u0le6"]
+resource_name = "打印: FAIL:CheckAnyInput(稳定期应非just)"
+script = ExtResource("5_qx0fu")
+message = "FAIL:CheckAnyInput(稳定期应非just)"
+
+[sub_resource type="Resource" id="Resource_1213r"]
+resource_name = "If/Else 检测: 输入映射 [真:1 [同步]"
+script = ExtResource("8_j0r3o")
+sequence_mode = 0
+condition = SubResource("Resource_hx67y")
+true_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_u0le6")])
+false_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_bisx1")])
+
+[sub_resource type="Resource" id="Resource_fkd10"]
+resource_name = "按键按下: Left"
+script = ExtResource("11_g577b")
+action_name = "Left"
+
+[sub_resource type="Resource" id="Resource_3tfbf"]
+resource_name = "打印: PASS:CheckInputPressed(稳定期=非just)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckInputPressed(稳定期=非just)"
+
+[sub_resource type="Resource" id="Resource_1j36l"]
+resource_name = "打印: FAIL:CheckInputPressed(稳定期应非just)"
+script = ExtResource("5_qx0fu")
+message = "FAIL:CheckInputPressed(稳定期应非just)"
+
+[sub_resource type="Resource" id="Resource_uuuwv"]
+resource_name = "If/Else 按键按下: Left [真:1 [同步]"
+script = ExtResource("8_j0r3o")
+sequence_mode = 0
+condition = SubResource("Resource_fkd10")
+true_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_1j36l")])
+false_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_3tfbf")])
+
+[sub_resource type="Resource" id="Resource_468tp"]
+resource_name = "等待 2.8 秒"
+script = ExtResource("6_swjlf")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 2.8
+
+[sub_resource type="Resource" id="Resource_xljh2"]
+resource_name = "按键按住: Right"
+script = ExtResource("12_kkrau")
+action_name = "Right"
+
+[sub_resource type="Resource" id="Resource_uxt6b"]
+resource_name = "打印: PASS:CheckInputHeld(释放后=false)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckInputHeld(释放后=false)"
+
+[sub_resource type="Resource" id="Resource_qr8ya"]
+resource_name = "打印: FAIL:CheckInputHeld(释放后应false)"
+script = ExtResource("5_qx0fu")
+message = "FAIL:CheckInputHeld(释放后应false)"
+
+[sub_resource type="Resource" id="Resource_4sg2b"]
+resource_name = "If/Else 按键按住: Right [真:1 [同步]"
+script = ExtResource("8_j0r3o")
+sequence_mode = 0
+condition = SubResource("Resource_xljh2")
+true_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_qr8ya")])
+false_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_uxt6b")])
+
+[sub_resource type="Resource" id="Resource_h10mu"]
+resource_name = "按键释放: Right"
+script = ExtResource("13_em1ik")
+action_name = "Right"
+
+[sub_resource type="Resource" id="Resource_mnk1y"]
+resource_name = "打印: PASS:CheckInputReleased(非release帧=false)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckInputReleased(非release帧=false)"
+
+[sub_resource type="Resource" id="Resource_iwujy"]
+resource_name = "打印: FAIL:CheckInputReleased(非release帧应false)"
+script = ExtResource("5_qx0fu")
+message = "FAIL:CheckInputReleased(非release帧应false)"
+
+[sub_resource type="Resource" id="Resource_5fsoj"]
+resource_name = "If/Else 按键释放: Right [真:1 [同步]"
+script = ExtResource("8_j0r3o")
+sequence_mode = 0
+condition = SubResource("Resource_h10mu")
+true_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_iwujy")])
+false_instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_mnk1y")])
+
+[sub_resource type="Resource" id="Resource_4wqn0"]
+resource_name = "打印: === deep_input_keyboard DONE ==="
+script = ExtResource("5_qx0fu")
+message = "=== deep_input_keyboard DONE ==="
+
+[sub_resource type="Resource" id="Resource_x6p6j"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_dwfvl"), SubResource("Resource_6srs8"), SubResource("Resource_og68y"), SubResource("Resource_0b3fb"), SubResource("Resource_1213r"), SubResource("Resource_uuuwv"), SubResource("Resource_468tp"), SubResource("Resource_4sg2b"), SubResource("Resource_5fsoj"), SubResource("Resource_4wqn0")])
+
+[sub_resource type="Resource" id="Resource_8j13h"]
+script = ExtResource("15_vo3qa")
+
+[sub_resource type="Resource" id="Resource_dhnwm"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_8j13h")
+action_runner = SubResource("Resource_x6p6j")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_y61ay"]
+resource_name = "打印: PASS:CheckInputHeld(轮询hold≥0.5s)"
+script = ExtResource("5_qx0fu")
+message = "PASS:CheckInputHeld(轮询hold≥0.5s)"
+
+[sub_resource type="Resource" id="Resource_7318v"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_y61ay")])
+
+[sub_resource type="Resource" id="Resource_tpfp6"]
+resource_name = "间隔执行: 0.3s - 自动开始 间隔后触发 无限重复"
+script = ExtResource("16_yx6r7")
+interval_seconds = 0.3
+min_interval_seconds = 0.5
+max_interval_seconds = 2.0
+
+[sub_resource type="Resource" id="Resource_jlx3l"]
+resource_name = "每 0.3 秒触发一次，无限重复，自动开始，{trigger}"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_tpfp6")
+action_runner = SubResource("Resource_7318v")
+cooldown_time = 1.5
+
+[sub_resource type="Resource" id="Resource_icxwv"]
+resource_name = "打印: PASS:OnInputKey(J=74)"
+script = ExtResource("5_qx0fu")
+message = "PASS:OnInputKey(J=74)"
+
+[sub_resource type="Resource" id="Resource_0ghdh"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_icxwv")])
+
+[sub_resource type="Resource" id="Resource_ipeys"]
+resource_name = "按键按键按下 [J] []"
+script = ExtResource("17_pk05w")
+key_code = 74
+key_event_type = 0
+
+[sub_resource type="Resource" id="Resource_ddngj"]
+resource_name = "按键按下 J 键 []"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_ipeys")
+action_runner = SubResource("Resource_0ghdh")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_788ey"]
+resource_name = "打印: PASS:OnInputText"
+script = ExtResource("5_qx0fu")
+message = "PASS:OnInputText"
+
+[sub_resource type="Resource" id="Resource_xr6tu"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_788ey")])
+
+[sub_resource type="Resource" id="Resource_jssjj"]
+script = ExtResource("18_2bd6a")
+
+[sub_resource type="Resource" id="Resource_loded"]
+resource_name = "监听文本输入"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_jssjj")
+action_runner = SubResource("Resource_xr6tu")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_sx0yk"]
+resource_name = "打印: PASS:OnInputCombo(Up,Up,Down)"
+script = ExtResource("5_qx0fu")
+message = "PASS:OnInputCombo(Up,Up,Down)"
+
+[sub_resource type="Resource" id="Resource_3b5l6"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_sx0yk")])
+
+[sub_resource type="Resource" id="Resource_osyrm"]
+resource_name = "连招 [Up, Up, Down] 1.0s"
+script = ExtResource("19_gv4up")
+combo_sequence = Array[String](["Up", "Up", "Down"])
+time_window = 1.0
+check_interval = 0.05
+reset_on_fail = true
+
+[sub_resource type="Resource" id="Resource_8q7ew"]
+resource_name = "连招序列 [Up, Up, Down] 时间窗口 1.0s"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_osyrm")
+action_runner = SubResource("Resource_3b5l6")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_qkooj"]
+resource_name = "打印: PASS:OnInputBuffered(Jump)"
+script = ExtResource("5_qx0fu")
+message = "PASS:OnInputBuffered(Jump)"
+
+[sub_resource type="Resource" id="Resource_mjh3u"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_qkooj")])
+
+[sub_resource type="Resource" id="Resource_sexqv"]
+resource_name = "输入缓冲: Jump (0.15s)"
+script = ExtResource("20_j72oj")
+input_actions = Array[String](["Jump"])
+buffer_window = 0.15
+consume_input = true
+priority = 0
+
+[sub_resource type="Resource" id="Resource_tjm6h"]
+resource_name = "缓冲检测 Jump (窗口=0.15s)"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_sexqv")
+action_runner = SubResource("Resource_mjh3u")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_1onol"]
+resource_name = "打印: PASS:OnDirectionalInputChanged"
+script = ExtResource("5_qx0fu")
+message = "PASS:OnDirectionalInputChanged"
+
+[sub_resource type="Resource" id="Resource_wxidk"]
+script = ExtResource("14_wa58r")
+instructions = Array[ExtResource("4_jj1dn")]([SubResource("Resource_1onol")])
+
+[sub_resource type="Resource" id="Resource_0nok3"]
+resource_name = "方向输入变化: Left,Right,Up,Down"
+script = ExtResource("21_1qpxy")
+input_action_left = "Left"
+input_action_right = "Right"
+input_action_up = "Up"
+input_action_down = "Down"
+check_interval = 0.05
+
+[sub_resource type="Resource" id="Resource_p2t8j"]
+resource_name = "方向输入变化 (动作=Left,Right,Up,Down"
+script = ExtResource("3_o02fy")
+event = SubResource("Resource_0nok3")
+action_runner = SubResource("Resource_wxidk")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_input_keyboard" type="Node2D" unique_id=976110931]
+
+[node name="Lbl" type="Label" parent="." unique_id=420260916]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_input_keyboard"
+
+[node name="InputDriver" type="Node" parent="." unique_id=1371356067]
+script = ExtResource("1_tb8uo")
+timeline = Array[Dictionary]([{
+"action": "Left",
+"delay": 4.5,
+"press": true
+}, {
+"action": "Left",
+"delay": 5.4,
+"press": false
+}, {
+"action": "Right",
+"delay": 5.6,
+"press": true
+}, {
+"action": "Right",
+"delay": 7.4,
+"press": false
+}])
+events = Array[Dictionary]([{
+"delay": 1.0,
+"event": "key",
+"keycode": 74
+}, {
+"delay": 1.15,
+"event": "key",
+"keycode": 74,
+"pressed": false
+}, {
+"delay": 1.5,
+"event": "text",
+"keycode": 72,
+"unicode": 72
+}, {
+"delay": 1.5,
+"event": "text",
+"keycode": 72,
+"pressed": false,
+"unicode": 72
+}, {
+"delay": 1.7,
+"event": "text",
+"keycode": 73,
+"unicode": 73
+}, {
+"delay": 1.7,
+"event": "text",
+"keycode": 73,
+"pressed": false,
+"unicode": 73
+}, {
+"delay": 3.0,
+"event": "key",
+"keycode": 87
+}, {
+"delay": 3.05,
+"event": "key",
+"keycode": 87,
+"pressed": false
+}, {
+"delay": 3.2,
+"event": "key",
+"keycode": 87
+}, {
+"delay": 3.25,
+"event": "key",
+"keycode": 87,
+"pressed": false
+}, {
+"delay": 3.4,
+"event": "key",
+"keycode": 83
+}, {
+"delay": 3.45,
+"event": "key",
+"keycode": 83,
+"pressed": false
+}, {
+"delay": 4.0,
+"event": "key",
+"keycode": 32
+}, {
+"delay": 4.2,
+"event": "key",
+"keycode": 32,
+"pressed": false
+}])
+
+[node name="DeepInputKeyboard" type="Node" parent="." unique_id=1072553772]
+script = ExtResource("2_hkrdg")
+event_bindings = Array[ExtResource("3_o02fy")]([SubResource("Resource_dhnwm"), SubResource("Resource_jlx3l"), SubResource("Resource_ddngj"), SubResource("Resource_loded"), SubResource("Resource_8q7ew"), SubResource("Resource_tjm6h"), SubResource("Resource_p2t8j")])
+use_parallel_condition_evaluation = false

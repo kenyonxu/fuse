@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
+
+[node name="Base" type="Node2D"]
+
+[node name="Lbl" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_input_gamepad"
+
+[node name="InputDriver" type="Node" parent="."]
+script = ExtResource("2_driver")
+timeline = []
+events = [{
+"delay": 1.0,
+"event": "joypad_motion",
+"axis": 0,
+"value": 0.8
+}, {
+"delay": 1.2,
+"event": "joypad_motion",
+"axis": 0,
+"value": 0.0
+}, {
+"delay": 1.5,
+"event": "joypad_button",
+"button": 0
+}, {
+"delay": 1.8,
+"event": "joypad_button",
+"button": 0,
+"pressed": false
+}]

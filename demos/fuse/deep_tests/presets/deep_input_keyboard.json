@@ -1,0 +1,321 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepInputKeyboard",
+  "category": "input",
+  "description": "深度测试·Input 键盘族：5 事件（Key/Text/Combo/Buffered/DirectionalChanged）+ 6 条件。语义注记：CheckInputHeld 的 hold 计时从条件首次评估起算（挂轮询绑定验证满 0.5s）；Pressed/Released/AnyInput 是 just 一帧窗口语义（稳定期反向断言）；Direction/Magnitude 在 Left 独占窗评估",
+  "icon_name": "",
+  "variables": {
+    "local": [],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_input_keyboard START（J键/文本HI/combo UpUpDown/Jump缓冲/Left 4.5-5.4/Right 5.6-7.4）==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 5.0
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInputDirection",
+              "input_action_left": "Left",
+              "input_action_right": "Right",
+              "input_action_up": "Up",
+              "input_action_down": "Down",
+              "expected_direction": 2
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:CheckInputDirection(Left独占窗=LEFT)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:CheckInputDirection(Left独占窗=LEFT)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInputMagnitude",
+              "input_action_left": "Left",
+              "input_action_right": "Right",
+              "input_action_up": "Up",
+              "input_action_down": "Down",
+              "compare_type": 2,
+              "threshold": 0.5
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:CheckInputMagnitude(>=0.5)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:CheckInputMagnitude(>=0.5)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAnyInput",
+              "check_input_map_actions": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:CheckAnyInput(稳定期应非just)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:CheckAnyInput(稳定期=非just)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInputPressed",
+              "action_name": "Left"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:CheckInputPressed(稳定期应非just)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:CheckInputPressed(稳定期=非just)"
+              }
+            ]
+          },
+          {
+            "type": "Wait",
+            "wait_time": 2.8
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInputHeld",
+              "action_name": "Right",
+              "minimum_hold_time": 0.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:CheckInputHeld(释放后应false)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:CheckInputHeld(释放后=false)"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckInputReleased",
+              "action_name": "Right"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL:CheckInputReleased(非release帧应false)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS:CheckInputReleased(非release帧=false)"
+              }
+            ]
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_input_keyboard DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInterval",
+        "interval_seconds": 0.3,
+        "auto_start": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.5
+      },
+      "conditions": [
+        {
+          "type": "CheckInputHeld",
+          "action_name": "Right",
+          "minimum_hold_time": 0.5
+        }
+      ],
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:CheckInputHeld(轮询hold≥0.5s)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInputKey",
+        "key_code": 74,
+        "key_event_type": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnInputKey(J=74)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInputText"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnInputText"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInputCombo",
+        "combo_sequence": ["Up", "Up", "Down"],
+        "time_window": 1.0,
+        "check_interval": 0.05
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnInputCombo(Up,Up,Down)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInputBuffered",
+        "input_actions": ["Jump"],
+        "buffer_window": 0.15
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnInputBuffered(Jump)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnDirectionalInputChanged",
+        "input_action_left": "Left",
+        "input_action_right": "Right",
+        "input_action_up": "Up",
+        "input_action_down": "Down",
+        "check_interval": 0.05
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS:OnDirectionalInputChanged"
+          }
+        ]
+      }
+    }
+  ]
+}

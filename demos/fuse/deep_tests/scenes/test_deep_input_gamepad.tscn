@@ -1,0 +1,170 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="1_iegns"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_gj786"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_8iw8k"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_o7q62"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_ip210"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="6_rob8t"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="7_lep87"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="8_80vjd"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_gamepad_axis.gd" id="9_5ykn2"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_gamepad_button.gd" id="10_p0vij"]
+
+[sub_resource type="Resource" id="Resource_olfv1"]
+resource_name = "打印: === deep_input_gamepad START（axis0→0.8 @1.0、A键 press 1.5 / release 1.8）==="
+script = ExtResource("5_ip210")
+message = "=== deep_input_gamepad START（axis0→0.8 @1.0、A键 press 1.5 / release 1.8）==="
+
+[sub_resource type="Resource" id="Resource_soil7"]
+resource_name = "等待 3.0 秒"
+script = ExtResource("6_rob8t")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 3.0
+
+[sub_resource type="Resource" id="Resource_af2xn"]
+resource_name = "打印: === deep_input_gamepad DONE ==="
+script = ExtResource("5_ip210")
+message = "=== deep_input_gamepad DONE ==="
+
+[sub_resource type="Resource" id="Resource_8jy6j"]
+script = ExtResource("7_lep87")
+instructions = Array[ExtResource("4_o7q62")]([SubResource("Resource_olfv1"), SubResource("Resource_soil7"), SubResource("Resource_af2xn")])
+
+[sub_resource type="Resource" id="Resource_iplrf"]
+script = ExtResource("8_80vjd")
+
+[sub_resource type="Resource" id="Resource_yeyo0"]
+resource_name = "场景就绪时触发"
+script = ExtResource("3_8iw8k")
+event = SubResource("Resource_iplrf")
+action_runner = SubResource("Resource_8jy6j")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_khthu"]
+resource_name = "打印: PASS:OnGamepadAxis(任意变化)"
+script = ExtResource("5_ip210")
+message = "PASS:OnGamepadAxis(任意变化)"
+
+[sub_resource type="Resource" id="Resource_axla6"]
+script = ExtResource("7_lep87")
+instructions = Array[ExtResource("4_o7q62")]([SubResource("Resource_khthu")])
+
+[sub_resource type="Resource" id="Resource_sj4kb"]
+resource_name = "轴 0 - 任何变化 (所有设备)"
+script = ExtResource("9_5ykn2")
+
+[sub_resource type="Resource" id="Resource_fkd4c"]
+resource_name = "轴 0 监控任何变化（死区 0.1）"
+script = ExtResource("3_8iw8k")
+event = SubResource("Resource_sj4kb")
+action_runner = SubResource("Resource_axla6")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_gwe20"]
+resource_name = "打印: PASS:OnGamepadAxis(0.8越阈值0.5)"
+script = ExtResource("5_ip210")
+message = "PASS:OnGamepadAxis(0.8越阈值0.5)"
+
+[sub_resource type="Resource" id="Resource_pplc7"]
+script = ExtResource("7_lep87")
+instructions = Array[ExtResource("4_o7q62")]([SubResource("Resource_gwe20")])
+
+[sub_resource type="Resource" id="Resource_oh4bj"]
+resource_name = "轴 0 - 阈值 0.5 (所有设备)"
+script = ExtResource("9_5ykn2")
+trigger_mode = 1
+
+[sub_resource type="Resource" id="Resource_jyl1m"]
+resource_name = "轴 0 监控阈值 0.5（死区 0.1）"
+script = ExtResource("3_8iw8k")
+event = SubResource("Resource_oh4bj")
+action_runner = SubResource("Resource_pplc7")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_boo78"]
+resource_name = "打印: PASS:OnGamepadButton(A按下)"
+script = ExtResource("5_ip210")
+message = "PASS:OnGamepadButton(A按下)"
+
+[sub_resource type="Resource" id="Resource_0q7q5"]
+script = ExtResource("7_lep87")
+instructions = Array[ExtResource("4_o7q62")]([SubResource("Resource_boo78")])
+
+[sub_resource type="Resource" id="Resource_4re8u"]
+resource_name = "手柄 0 A 按下"
+script = ExtResource("10_p0vij")
+
+[sub_resource type="Resource" id="Resource_awikq"]
+resource_name = "当手柄 0的A键按下时触发"
+script = ExtResource("3_8iw8k")
+event = SubResource("Resource_4re8u")
+action_runner = SubResource("Resource_0q7q5")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_m7kyx"]
+resource_name = "打印: PASS:OnGamepadButton(A释放)"
+script = ExtResource("5_ip210")
+message = "PASS:OnGamepadButton(A释放)"
+
+[sub_resource type="Resource" id="Resource_esub6"]
+script = ExtResource("7_lep87")
+instructions = Array[ExtResource("4_o7q62")]([SubResource("Resource_m7kyx")])
+
+[sub_resource type="Resource" id="Resource_pbvob"]
+resource_name = "手柄 0 A 释放"
+script = ExtResource("10_p0vij")
+trigger_mode = 1
+
+[sub_resource type="Resource" id="Resource_mlow0"]
+resource_name = "当手柄 0的A键释放时触发"
+script = ExtResource("3_8iw8k")
+event = SubResource("Resource_pbvob")
+action_runner = SubResource("Resource_esub6")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_input_gamepad" type="Node2D" unique_id=1783028855]
+
+[node name="Lbl" type="Label" parent="." unique_id=1588144328]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_input_gamepad"
+
+[node name="InputDriver" type="Node" parent="." unique_id=1724642511]
+script = ExtResource("1_iegns")
+timeline = Array[Dictionary]([])
+events = Array[Dictionary]([{
+"axis": 0,
+"delay": 1.0,
+"event": "joypad_motion",
+"value": 0.8
+}, {
+"axis": 0,
+"delay": 1.2,
+"event": "joypad_motion",
+"value": 0.0
+}, {
+"button": 0,
+"delay": 1.5,
+"event": "joypad_button"
+}, {
+"button": 0,
+"delay": 1.8,
+"event": "joypad_button",
+"pressed": false
+}])
+
+[node name="DeepInputGamepad" type="Node" parent="." unique_id=974005644]
+script = ExtResource("2_gj786")
+event_bindings = Array[ExtResource("3_8iw8k")]([SubResource("Resource_yeyo0"), SubResource("Resource_fkd4c"), SubResource("Resource_jyl1m"), SubResource("Resource_awikq"), SubResource("Resource_mlow0")])
+use_parallel_condition_evaluation = false

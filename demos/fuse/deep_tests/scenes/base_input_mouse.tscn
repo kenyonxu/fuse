@@ -1,0 +1,67 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
+
+[sub_resource type="RectangleShape2D" id="Rect_area"]
+size = Vector2(100, 100)
+
+[node name="Base" type="Node2D"]
+
+[node name="Lbl" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "deep_input_mouse"
+
+[node name="Area" type="Area2D" parent="."]
+position = Vector2(200, 324)
+
+[node name="Shape" type="CollisionShape2D" parent="Area"]
+shape = SubResource("Rect_area")
+
+[node name="HoverPanel" type="Panel" parent="."]
+offset_left = 700.0
+offset_top = 300.0
+offset_right = 900.0
+offset_bottom = 400.0
+
+[node name="InputDriver" type="Node" parent="."]
+script = ExtResource("2_driver")
+timeline = []
+events = [{
+"delay": 1.0,
+"event": "mouse_motion",
+"pos": [150.0, 324.0]
+}, {
+"delay": 1.3,
+"event": "mouse_button",
+"button": 1,
+"pos": [150.0, 324.0]
+}, {
+"delay": 1.5,
+"event": "mouse_button",
+"button": 1,
+"pressed": false,
+"pos": [150.0, 324.0]
+}, {
+"delay": 2.0,
+"event": "mouse_motion",
+"pos": [210.0, 324.0]
+}, {
+"delay": 2.3,
+"event": "mouse_motion",
+"pos": [450.0, 324.0]
+}, {
+"delay": 2.6,
+"event": "mouse_motion",
+"pos": [700.0, 324.0]
+}, {
+"delay": 2.9,
+"event": "mouse_motion",
+"pos": [800.0, 350.0]
+}, {
+"delay": 3.2,
+"event": "mouse_motion",
+"pos": [200.0, 100.0]
+}]
