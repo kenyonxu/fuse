@@ -208,22 +208,22 @@ action_runner = SubResource("Resource_oc1xa")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_input_mouse" type="Node2D" unique_id=1900941141]
+[node name="test_deep_input_mouse" type="Node2D" unique_id=96343845]
 
-[node name="Lbl" type="Label" parent="." unique_id=987001985]
+[node name="Lbl" type="Label" parent="." unique_id=260047847]
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 400.0
 offset_bottom = 60.0
 text = "deep_input_mouse"
 
-[node name="Area" type="Area2D" parent="." unique_id=2041314907]
+[node name="Area" type="Area2D" parent="." unique_id=1373886930]
 position = Vector2(200, 324)
 
-[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1542851904]
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=458659481]
 shape = SubResource("Rect_area")
 
-[node name="InputDriver" type="Node" parent="." unique_id=848775882]
+[node name="InputDriver" type="Node" parent="." unique_id=236647834]
 script = ExtResource("1_qcces")
 timeline = Array[Dictionary]([])
 events = Array[Dictionary]([{
@@ -274,7 +274,7 @@ events = Array[Dictionary]([{
 "pos": [200.0, 100.0]
 }])
 
-[node name="DeepInputMouse" type="Node" parent="." unique_id=708015373]
+[node name="DeepInputMouse" type="Node" parent="." unique_id=1273115195]
 script = ExtResource("2_op7v6")
 event_bindings = Array[ExtResource("3_da73v")]([SubResource("Resource_2id2s"), SubResource("Resource_bqkni"), SubResource("Resource_abex4"), SubResource("Resource_6uosq"), SubResource("Resource_wyh7u"), SubResource("Resource_xxnef"), SubResource("Resource_nmedw"), SubResource("Resource_ftpp1")])
 use_parallel_condition_evaluation = false

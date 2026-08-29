@@ -283,11 +283,19 @@ func _disconnect_action_runner_signals_at(index: int, callbacks: Dictionary) -> 
 
 ## ==================== 引擎回调转发 ====================
 
+## 绑定是否仍应接收引擎回调（输入/帧/物理通知）
+## L4 子类按 binding.enabled 与 trigger_once 已触发状态过滤——
+## disabled 或一次性触发完毕的事件不再处理输入，触发日志随之静默
+func _is_binding_active(index: int) -> bool:
+	return true
+
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 
 	for i: int in range(get_event_count()):
+		if not _is_binding_active(i):
+			continue
 		var event := get_event_at(i)
 		if event != null and event.has_method("on_process"):
 			var event_instance := get_runtime_event_instance_at(i)
@@ -298,6 +306,8 @@ func _physics_process(delta: float) -> void:
 		return
 
 	for i: int in range(get_event_count()):
+		if not _is_binding_active(i):
+			continue
 		var event := get_event_at(i)
 		if event != null and event.has_method("on_physics_process"):
 			var event_instance := get_runtime_event_instance_at(i)
@@ -309,6 +319,8 @@ func _notification(what: int) -> void:
 
 	if what == NOTIFICATION_PROCESS or what == NOTIFICATION_PHYSICS_PROCESS:
 		for i: int in range(get_event_count()):
+			if not _is_binding_active(i):
+				continue
 			var event := get_event_at(i)
 			if event == null:
 				continue
@@ -325,6 +337,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	for i: int in range(get_event_count()):
+		if not _is_binding_active(i):
+			continue
 		var evt := get_event_at(i)
 		if evt != null and evt.has_method("handle_input"):
 			evt.handle_input(event)

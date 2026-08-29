@@ -238,6 +238,18 @@ func _cleanup_runtime_instances() -> void:
 
 ## ==================== 事件处理 ====================
 
+## 绑定是否仍接收引擎回调：enabled=false 或 trigger_once 已触发的事件
+## 不再处理输入/帧通知——否则 disabled 绑定的事件仍会打触发日志（误导性"僵尸触发"）
+func _is_binding_active(index: int) -> bool:
+	if index < 0 or index >= event_bindings.size():
+		return false
+	var binding: EventBinding = event_bindings[index]
+	if not binding.enabled:
+		return false
+	if binding.trigger_once and index < _has_triggered.size() and _has_triggered[index]:
+		return false
+	return true
+
 ## 事件触发回调
 func _on_event_fired(context: Node, index: int) -> void:
 	if index < 0 or index >= event_bindings.size():
