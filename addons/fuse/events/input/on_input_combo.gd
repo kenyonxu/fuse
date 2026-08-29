@@ -67,11 +67,22 @@ func _get_property_list() -> Array[Dictionary]:
 		"usage": PROPERTY_USAGE_CATEGORY
 	})
 
+	# 元素为 InputMap 动作名（如 "Up","Down"）。原 "17/17:InputEventAction" 的
+	# 17 恰是 TYPE_BASIS——Inspector 呈现 Basis 3x3 矩阵编辑器，无法填写字符串。
+	# 下拉建议（ENUM_SUGGEST）仅编辑器态动态收集：场景反序列化期
+	# _get_property_list 亦被调用，加载期触碰 InputMap 有风险
+	var action_hint := ""
+	if Engine.is_editor_hint():
+		var action_names: Array[String] = []
+		for action: StringName in InputMap.get_actions():
+			if not action.begins_with("ui_") and not action.begins_with("spatial_"):
+				action_names.append(String(action))
+		action_hint = ",".join(action_names)
 	properties.append({
 		"name": "combo_sequence",
 		"type": TYPE_ARRAY,
 		"hint": PROPERTY_HINT_TYPE_STRING,
-		"hint_string": "17/17:InputEventAction",
+		"hint_string": "4/31:" + action_hint,
 		"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_EDITOR
 	})
 
