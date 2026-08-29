@@ -1207,7 +1207,7 @@ shape = SubResource("RectangleShape2D_rxgda")
 disabled = true
 
 [node name="PlayerSpawnPoint" type="Node2D" parent="Worlds" unique_id=1244849376 groups=["player_spawn_point"]]
-position = Vector2(0, -119)
+position = Vector2(-44, 217)
 
 [node name="FuseDemoMap" parent="Worlds" unique_id=1630528275 instance=ExtResource("3_os8oo")]
 
