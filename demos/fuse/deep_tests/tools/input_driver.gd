@@ -41,17 +41,17 @@ func _dispatch(kind: String, entry: Dictionary) -> void:
 	match kind:
 		"key":
 			var ev := InputEventKey.new()
-			ev.keycode = int(entry.get("keycode", 0))
+			ev.keycode = int(entry.get("keycode", 0)) as Key
 			# 工程 InputMap 以 physical_keycode 绑定——不设则 InputMap.event_is_action 永不匹配
-			ev.physical_keycode = int(entry.get("keycode", 0))
+			ev.physical_keycode = int(entry.get("keycode", 0)) as Key
 			ev.pressed = bool(entry.get("pressed", true))
 			if entry.has("unicode"):
 				ev.unicode = int(entry["unicode"])
 			_send(ev)
 		"text":
 			var ev := InputEventKey.new()
-			ev.keycode = int(entry.get("keycode", 0))
-			ev.physical_keycode = int(entry.get("keycode", 0))
+			ev.keycode = int(entry.get("keycode", 0)) as Key
+			ev.physical_keycode = int(entry.get("keycode", 0)) as Key
 			ev.unicode = int(entry.get("unicode", 0))
 			ev.pressed = bool(entry.get("pressed", true))
 			_send(ev)
@@ -65,19 +65,19 @@ func _dispatch(kind: String, entry: Dictionary) -> void:
 			_send(ev)
 		"mouse_button":
 			var ev := InputEventMouseButton.new()
-			ev.button_index = int(entry.get("button", 1))
+			ev.button_index = int(entry.get("button", 1)) as MouseButton
 			ev.pressed = bool(entry.get("pressed", true))
 			var pos: Array = entry.get("pos", [0, 0])
 			ev.position = Vector2(float(pos[0]), float(pos[1]))
 			_send(ev)
 		"joypad_motion":
 			var ev := InputEventJoypadMotion.new()
-			ev.axis = int(entry.get("axis", 0))
+			ev.axis = int(entry.get("axis", 0)) as JoyAxis
 			ev.axis_value = float(entry.get("value", 0.0))
 			_send(ev)
 		"joypad_button":
 			var ev := InputEventJoypadButton.new()
-			ev.button_index = int(entry.get("button", 0))
+			ev.button_index = int(entry.get("button", 0)) as JoyButton
 			ev.pressed = bool(entry.get("pressed", true))
 			_send(ev)
 
