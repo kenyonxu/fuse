@@ -131,16 +131,16 @@ action_runner = SubResource("Resource_esub6")
 trigger_once = true
 cooldown_time = 1.0
 
-[node name="test_deep_input_gamepad" type="Node2D" unique_id=1783028855]
+[node name="test_deep_input_gamepad" type="Node2D" unique_id=1954837379]
 
-[node name="Lbl" type="Label" parent="." unique_id=1588144328]
+[node name="Lbl" type="Label" parent="." unique_id=1798542257]
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 400.0
 offset_bottom = 60.0
 text = "deep_input_gamepad"
 
-[node name="InputDriver" type="Node" parent="." unique_id=1724642511]
+[node name="InputDriver" type="Node" parent="." unique_id=286399098]
 script = ExtResource("1_iegns")
 timeline = Array[Dictionary]([])
 events = Array[Dictionary]([{
@@ -164,7 +164,7 @@ events = Array[Dictionary]([{
 "pressed": false
 }])
 
-[node name="DeepInputGamepad" type="Node" parent="." unique_id=974005644]
+[node name="DeepInputGamepad" type="Node" parent="." unique_id=1836030982]
 script = ExtResource("2_gj786")
 event_bindings = Array[ExtResource("3_8iw8k")]([SubResource("Resource_yeyo0"), SubResource("Resource_fkd4c"), SubResource("Resource_jyl1m"), SubResource("Resource_awikq"), SubResource("Resource_mlow0")])
 use_parallel_condition_evaluation = false

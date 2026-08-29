@@ -387,6 +387,19 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 
 **验收语义注记**：CheckInputPressed/Released/AnyInput 与 OnInputCombo 原 just 一帧窗口语义——条件类做稳定期反向断言（真窗口 F5 手测）；CheckInputHeld 的 hold 计时从条件首次评估起算，须挂轮询绑定验证（单次评估恒 false）。
 
+
+### M4 · 覆盖审计 + 全量复核（2026-08-29）✅ 完成
+
+| 项 | 结果 |
+|----|------|
+| validate 全量 | 25 个 preset 全过（exit 0） |
+| 四查全量 | 26 场景：25 全绿 + tween 4 个数值断言 FAIL（已立项遗留，F5 观感正确） |
+| 覆盖审计 | **289/310 (93%)**：指令 183/185 (99%)、事件 58/70 (83%)、条件 48/55 (87%)；为两实战 Demo 已验证 85 项的超集 |
+| 未覆盖 21 项 | 3D 事件×2、触摸×2、OnInputAction 单动作版、OnProcess/OnPhysicsProcess/OnIntervalWithVariable/OnEnterTree/OnExitTree/OnSceneLoaded、OnScreenEnteredExited（已知崩溃专项）、CheckDirection/CheckFacingDirection/CheckIsChildOf/CheckAnimationTreeState/CheckChildCount/CheckGroupCount/CheckNodeInGroup、RecyclePooledScene（编辑器验）、ReloadScene（F5 验） |
+| 回填 | 《Fuse深度测试策略.md》第九节新增 deep_tests 审计段 + 总结表更新为 93% |
+
+**M3→M4 期间用户 F5 验收驱动的追加修复 #41-44**（累计 44 个）：#41 绑定过滤（disabled/once 完毕的事件不再接收回调）；#42 OnMouseEnter/Exit per-enter/per-exit 状态清除；#43 OnMouseButton 误导文案 + OnInputCombo Basis 矩阵编辑器（hint 17 恰为 TYPE_BASIS）；#44 OnInputCombo 属性访问先于类型过滤（motion 崩溃）。**经验教训：F5 实验改参数后保存的场景会污染 .tscn（trigger_once 消耗、enabled/process_mode 残留），回归前须重新 import 洗净**——M4 复核中因此洗净 4 次。
+
 **M2 全部 8 场景完成**。F5 待验清单：NodeOps（节点增减观感）、Physics（落体/跳/撞墙/进区/射线）、Movement（角色右移）。
 
 
