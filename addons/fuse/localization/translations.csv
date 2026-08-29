@@ -3459,7 +3459,7 @@ FUSE_MOVE_MODE_SMOOTH,平滑,Smooth
 FUSE_MOVE_MODE_ACCELERATION,加速度,Acceleration
 FUSE_ERROR_TARGET_NODE_NOT_CHARACTER_BODY_2D,目标节点不是 CharacterBody2D,Target node is not a CharacterBody2D
 FUSE_LOG_CHARACTER_BODY_2D_MOVEMENT_APPLIED,移动已应用：模式={mode}, 速度={velocity}, 方向={direction},Movement applied: mode={mode}, velocity={velocity}, dir={direction}
-FUSE_WARNING_CHARACTER_BODY_2D_ZERO_VELOCITY,计算出零速度,请检查输入向量,Zero velocity calculated, check input vector
+FUSE_LOG_CHARACTER_BODY_2D_ZERO_INPUT,输入向量为零，应用零速处理,Input vector is zero, applying zero-input handling
 FUSE_CATEGORY_MOVEMENT,移动,Movement,,,,
 FUSE_INSTRUCTION_MOVE_CHARACTER_BODY_2D_COMPOSITE_BASE,移动,Move,,,,
 FUSE_INSTRUCTION_MOVE_CHARACTER_BODY_2D_COMPOSITE_TARGET,{node},Target: {node},,,,

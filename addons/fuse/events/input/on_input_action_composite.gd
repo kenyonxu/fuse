@@ -43,10 +43,10 @@ var action_right: String = "":
 ## 较高的帧率会让移动更流畅，但会增加系统负载
 ## 较低的帧率会降低性能开销，但可能感觉卡顿
 enum TriggerRate {
-	FPS_60 = 0,  ## 60 FPS，最流畅（每 16ms 触发一次）
-	FPS_30 = 1,  ## 30 FPS，性能平衡（每 33ms 触发一次）
-	FPS_20 = 2,  ## 20 FPS，低性能设备（每 50ms 触发一次）
-	FPS_10 = 3,  ## 10 FPS，不推荐，会有明显卡顿（每 100ms 触发一次）
+	FPS_60 = 0,  ## 60 FPS，每个 physics tick 触发（physics 本身 60Hz，天然节流）
+	FPS_30 = 1,  ## 30 FPS，性能平衡（约每 33ms 触发一次）
+	FPS_20 = 2,  ## 20 FPS，低性能设备（约每 50ms 触发一次）
+	FPS_10 = 3,  ## 10 FPS，不推荐，会有明显卡顿（约每 100ms 触发一次）
 }
 
 @export var trigger_rate: TriggerRate = TriggerRate.FPS_60:
@@ -86,7 +86,9 @@ static var _cached_none_text: String = ""
 func _get_trigger_interval_ms() -> int:
 	match trigger_rate:
 		TriggerRate.FPS_60:
-			return 16
+			# 事件挂 physics 通知（60Hz）已是天然节流；16ms 限流会与 16.67ms 的
+			# tick 间隔共振（帧率非 60 整除倍时 tick 间隔在 ~14/21ms 交替）随机丢触发
+			return 0
 		TriggerRate.FPS_30:
 			return 33
 		TriggerRate.FPS_20:
@@ -94,7 +96,7 @@ func _get_trigger_interval_ms() -> int:
 		TriggerRate.FPS_10:
 			return 100
 		_:
-			return 16  # 默认 60 FPS
+			return 0
 
 # --- 核心实现：动态下拉菜单 ---
 
@@ -239,24 +241,26 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 	   (action_right.is_empty() or action_right == none_option):
 		_log_warning_localized("FUSE_ERROR_INPUT_ACTION_COMPOSITE_NO_ACTIONS")
 
-	# 启用 processing 以接收 NOTIFICATION_PROCESS
-	_log_debug("OnInputActionComposite: Calling set_process(true) on owner_node")
-	owner_node.set_process(true)
-	_log_debug("OnInputActionComposite: Process enabled successfully")
+	# 启用 physics processing 以接收 NOTIFICATION_PHYSICS_PROCESS
+	# （配套的 MoveCharacterBody2DComposite 在触发链内调 move_and_slide，
+	# 引擎语义要求其在 physics step 内执行，帧级调用的位移量不可靠）
+	_log_debug("OnInputActionComposite: Calling set_physics_process(true) on owner_node")
+	owner_node.set_physics_process(true)
+	_log_debug("OnInputActionComposite: Physics process enabled successfully")
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-## 处理 PROCESS 通知
-func handle_process_notification() -> void:
+## 处理 PHYSICS_PROCESS 通知
+func handle_physics_process_notification() -> void:
 	_process_inputs()
 
 func terminate(owner_node: Node) -> void:
 	if Engine.is_editor_hint():
 		return
 
-	# 禁用 processing
+	# 禁用 physics processing
 	if owner_node:
-		owner_node.set_process(false)
+		owner_node.set_physics_process(false)
 
 	if _runtime_instance_ref:
 		_runtime_instance_ref.set_runtime_state("owner_node_ref", null)
@@ -272,7 +276,7 @@ func reset() -> void:
 		_runtime_instance_ref.set_runtime_state("owner_node_ref", null)
 		_runtime_instance_ref.set_runtime_state("last_input_vector", Vector2.ZERO)
 		_runtime_instance_ref.set_runtime_state("input_vector", Vector2.ZERO)
-		_runtime_instance_ref.set_runtime_state("last_trigger_time", null)
+		_runtime_instance_ref.set_runtime_state("last_input_trigger_time", null)
 		_runtime_instance_ref.set_runtime_state("trigger_cooldown", _get_trigger_interval_ms())
 	_log_debug_localized("FUSE_LOG_EVENT_RESET", {"event_type": get_event_type()})
 
@@ -308,19 +312,20 @@ func _process_inputs() -> void:
 		_runtime_instance_ref.set_runtime_state("input_vector", input_vector)
 
 		# 检查是否需要限制触发频率
-		var current_time = Time.get_ticks_msec()
-		var last_trigger_time = _runtime_instance_ref.get_runtime_state("last_trigger_time")
-		if last_trigger_time == null:
-			last_trigger_time = 0
-		var trigger_cooldown = _runtime_instance_ref.get_runtime_state("trigger_cooldown")
-		if trigger_cooldown == null:
-			trigger_cooldown = _get_trigger_interval_ms()  # 使用配置的值
+		# 用独立键 + 微秒时钟：last_trigger_time 由 Trigger 级冷却以"秒"读写，此处曾以毫秒混写同一键；
+		# 且 Windows 下 get_ticks_msec 粒度 ~15.6ms，与 16ms 冷却共振会随机丢触发
+		var current_time: int = Time.get_ticks_usec()
+		var last_time_raw: Variant = _runtime_instance_ref.get_runtime_state("last_input_trigger_time")
+		var last_trigger_time: int = 0 if last_time_raw == null else int(last_time_raw)
+		var cooldown_raw: Variant = _runtime_instance_ref.get_runtime_state("trigger_cooldown")
+		var cooldown_ms: int = _get_trigger_interval_ms() if cooldown_raw == null else int(cooldown_raw)
 
 		# 如果输入向量改变了，或者超过了冷却时间，则触发
-		if input_vector != last_vector or (current_time - last_trigger_time >= trigger_cooldown):
-			_runtime_instance_ref.set_runtime_state("last_trigger_time", current_time)
+		if input_vector != last_vector or (current_time - last_trigger_time >= cooldown_ms * 1000):
+			_runtime_instance_ref.set_runtime_state("last_input_trigger_time", current_time)
 
-			_log_info_localized("FUSE_LOG_INPUT_ACTION_COMPOSITE_TRIGGERED", {"vector": str(input_vector)})
+			# 高频触发（可达 60Hz）——info 级会在控制台刷屏，debug 级记录
+			_log_debug_localized("FUSE_LOG_INPUT_ACTION_COMPOSITE_TRIGGERED", {"vector": str(input_vector)})
 			# 发出信号，传递输入向量和上下文节点
 			triggered.emit(owner_node)
 	else:

@@ -1,19 +1,18 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/physics_body.gd" id="1_fpogs"]
-[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_4be56"]
-[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="3_ajmra"]
-[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="4_yi8a6"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="5_r7r7o"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="6_hp24o"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="7_5qj3h"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="8_dhfhm"]
-[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_vector2_variable_axis.gd" id="9_vw28e"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="10_hrbai"]
-[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="11_x0jls"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="12_d6tsd"]
-[ext_resource type="Script" path="res://addons/fuse/instructions/movement/move_character_body_2d_composite.gd" id="13_af8xi"]
-[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_interval.gd" id="14_ad7qs"]
+[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="1_nxl25"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="2_lfkrd"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="3_mush2"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="4_uxkvj"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="5_3kgfu"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/transform/get_position.gd" id="6_284ub"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="7_5jtex"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_vector2_variable_axis.gd" id="8_sf5aa"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="9_1hmr1"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="10_nje50"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="11_cgyym"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/movement/move_character_body_2d_composite.gd" id="12_30w2l"]
+[ext_resource type="Script" path="res://addons/fuse/events/input/on_input_action_composite.gd" id="13_f5k0t"]
 
 [sub_resource type="RectangleShape2D" id="Rect_ground"]
 size = Vector2(1200, 40)
@@ -30,14 +29,14 @@ size = Vector2(30, 30)
 [sub_resource type="RectangleShape2D" id="Rect_zone"]
 size = Vector2(120, 120)
 
-[sub_resource type="Resource" id="Resource_osvo6"]
-resource_name = "打印: === deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s）==="
-script = ExtResource("6_hp24o")
-message = "=== deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s）==="
+[sub_resource type="Resource" id="Resource_hlm4f"]
+resource_name = "打印: === deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s，OnInputActionComposite 驱动）==="
+script = ExtResource("5_3kgfu")
+message = "=== deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s，OnInputActionComposite 驱动）==="
 
-[sub_resource type="Resource" id="Resource_r3oc1"]
+[sub_resource type="Resource" id="Resource_o0bki"]
 resource_name = "获取位置 Player → x0 [LOCAL]"
-script = ExtResource("7_5qj3h")
+script = ExtResource("6_284ub")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -52,18 +51,18 @@ save_to_variable = "x0"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_lg8ly"]
+[sub_resource type="Resource" id="Resource_fyiok"]
 resource_name = "等待 2.8 秒"
-script = ExtResource("8_dhfhm")
+script = ExtResource("7_5jtex")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
 value_source = 0
 wait_time = 2.8
 
-[sub_resource type="Resource" id="Resource_ht81e"]
+[sub_resource type="Resource" id="Resource_pjvdo"]
 resource_name = "获取位置 Player → x1 [LOCAL]"
-script = ExtResource("7_5qj3h")
+script = ExtResource("6_284ub")
 target_variable = ""
 target_scope = 0
 target_scope_source = 0
@@ -78,14 +77,9 @@ save_to_variable = "x1"
 save_to_scope = 0
 use_global_position = true
 
-[sub_resource type="Resource" id="Resource_pldrb"]
-resource_name = "打印: (位移断言改走 x1 绝对位置)"
-script = ExtResource("6_hp24o")
-message = "(位移断言改走 x1 绝对位置)"
-
-[sub_resource type="Resource" id="Resource_tqwp8"]
+[sub_resource type="Resource" id="Resource_kkl7g"]
 resource_name = "x1.x [[本地]] > 300.0"
-script = ExtResource("9_vw28e")
+script = ExtResource("8_sf5aa")
 scope_source = 0
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -95,112 +89,113 @@ variable_scope = 0
 comparison_operator = 0
 compare_value = 300.0
 
-[sub_resource type="Resource" id="Resource_fnw4n"]
-resource_name = "打印: FAIL: MoveCharacterBody2DComposite(位移>100)"
-script = ExtResource("6_hp24o")
-message = "FAIL: MoveCharacterBody2DComposite(位移>100)"
+[sub_resource type="Resource" id="Resource_kqhss"]
+resource_name = "打印: FAIL: MoveCharacterBody2DComposite+OnInputActionComposite(位移>300px)"
+script = ExtResource("5_3kgfu")
+message = "FAIL: MoveCharacterBody2DComposite+OnInputActionComposite(位移>300px)"
 
-[sub_resource type="Resource" id="Resource_vs8g3"]
-resource_name = "打印: PASS: MoveCharacterBody2DComposite(位移>100)"
-script = ExtResource("6_hp24o")
-message = "PASS: MoveCharacterBody2DComposite(位移>100)"
+[sub_resource type="Resource" id="Resource_npj03"]
+resource_name = "打印: PASS: MoveCharacterBody2DComposite+OnInputActionComposite(位移>300px)"
+script = ExtResource("5_3kgfu")
+message = "PASS: MoveCharacterBody2DComposite+OnInputActionComposite(位移>300px)"
 
-[sub_resource type="Resource" id="Resource_fofcp"]
+[sub_resource type="Resource" id="Resource_u4eub"]
 resource_name = "If/Else x1.x > 300.0 [真:1 [同步]"
-script = ExtResource("10_hrbai")
+script = ExtResource("9_1hmr1")
 sequence_mode = 0
-condition = SubResource("Resource_tqwp8")
-true_instructions = Array[ExtResource("5_r7r7o")]([SubResource("Resource_vs8g3")])
-false_instructions = Array[ExtResource("5_r7r7o")]([SubResource("Resource_fnw4n")])
+condition = SubResource("Resource_kkl7g")
+true_instructions = Array[ExtResource("4_uxkvj")]([SubResource("Resource_npj03")])
+false_instructions = Array[ExtResource("4_uxkvj")]([SubResource("Resource_kqhss")])
 
-[sub_resource type="Resource" id="Resource_fdlp1"]
+[sub_resource type="Resource" id="Resource_d7hil"]
 resource_name = "打印: === deep_movement DONE ==="
-script = ExtResource("6_hp24o")
+script = ExtResource("5_3kgfu")
 message = "=== deep_movement DONE ==="
 
-[sub_resource type="Resource" id="Resource_gavnk"]
-script = ExtResource("11_x0jls")
-instructions = Array[ExtResource("5_r7r7o")]([SubResource("Resource_osvo6"), SubResource("Resource_r3oc1"), SubResource("Resource_lg8ly"), SubResource("Resource_ht81e"), SubResource("Resource_pldrb"), SubResource("Resource_fofcp"), SubResource("Resource_fdlp1")])
+[sub_resource type="Resource" id="Resource_kvreu"]
+script = ExtResource("10_nje50")
+instructions = Array[ExtResource("4_uxkvj")]([SubResource("Resource_hlm4f"), SubResource("Resource_o0bki"), SubResource("Resource_fyiok"), SubResource("Resource_pjvdo"), SubResource("Resource_u4eub"), SubResource("Resource_d7hil")])
 
-[sub_resource type="Resource" id="Resource_mich0"]
-script = ExtResource("12_d6tsd")
+[sub_resource type="Resource" id="Resource_2enh7"]
+script = ExtResource("11_cgyym")
 
-[sub_resource type="Resource" id="Resource_wq02p"]
+[sub_resource type="Resource" id="Resource_cdgmt"]
 resource_name = "场景就绪时触发"
-script = ExtResource("4_yi8a6")
-event = SubResource("Resource_mich0")
-action_runner = SubResource("Resource_gavnk")
+script = ExtResource("3_mush2")
+event = SubResource("Resource_2enh7")
+action_runner = SubResource("Resource_kvreu")
 trigger_once = true
 cooldown_time = 1.0
 
-[sub_resource type="Resource" id="Resource_ll8ib"]
+[sub_resource type="Resource" id="Resource_tsq24"]
 resource_name = "移动 Player 直接 速度: 300.0"
-script = ExtResource("13_af8xi")
-smooth_factor = 5.0
-acceleration = 800.0
-friction = 10.0
+script = ExtResource("12_30w2l")
+smooth_factor = 10.0
+acceleration = 1000.0
+friction = 800.0
 target_node = NodePath("../Player")
 speed = 300.0
 move_mode = 0
 use_relative_direction = false
 
-[sub_resource type="Resource" id="Resource_lltwc"]
-script = ExtResource("11_x0jls")
-instructions = Array[ExtResource("5_r7r7o")]([SubResource("Resource_ll8ib")])
+[sub_resource type="Resource" id="Resource_1jbyl"]
+script = ExtResource("10_nje50")
+instructions = Array[ExtResource("4_uxkvj")]([SubResource("Resource_tsq24")])
 
-[sub_resource type="Resource" id="Resource_dnllo"]
-resource_name = "间隔执行: 0.2s - 自动开始 间隔后触发 无限重复"
-script = ExtResource("14_ad7qs")
-interval_seconds = 0.2
-min_interval_seconds = 0.5
-max_interval_seconds = 2.0
+[sub_resource type="Resource" id="Resource_ml8gw"]
+script = ExtResource("13_f5k0t")
+_usage_hint = "📖 可用的 LOCAL 变量：input_vector (当前输入，启用归零时触发事件时始终可用，否则仅非零时可用)、last_input_vector (上次输入，永远可用)。访问方法：使用 SetVariable 指令，开启从另一个变量获取值，源变量名填 input_vector 或 last_input_vector，源作用域选 LOCAL。判断方向：向右 (x>0)、向左 (x<0)、向上 (y<0)、向下 (y>0)、静止 (==Vector2ZERO)。"
+action_up = ""
+action_down = ""
+action_left = "Left"
+action_right = "Right"
+trigger_on_zero = false
 
-[sub_resource type="Resource" id="Resource_67o82"]
-resource_name = "每 0.2 秒触发一次，无限重复，自动开始，{trigger}"
-script = ExtResource("4_yi8a6")
-event = SubResource("Resource_dnllo")
-action_runner = SubResource("Resource_lltwc")
+[sub_resource type="Resource" id="Resource_xc6jq"]
+resource_name = "当指定的任意输入动作被按下时触发。发出合并后的输入向量。"
+script = ExtResource("3_mush2")
+event = SubResource("Resource_ml8gw")
+action_runner = SubResource("Resource_1jbyl")
 cooldown_time = 1.0
 
-[node name="test_deep_movement" type="Node2D" unique_id=643811023]
+[node name="test_deep_movement" type="Node2D" unique_id=1012368342]
 
-[node name="Ground" type="StaticBody2D" parent="." unique_id=3714617]
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1930193824]
 position = Vector2(0, 200)
 
-[node name="Shape" type="CollisionShape2D" parent="Ground" unique_id=181929354]
+[node name="Shape" type="CollisionShape2D" parent="Ground" unique_id=1393689005]
 shape = SubResource("Rect_ground")
 
-[node name="Wall" type="StaticBody2D" parent="." unique_id=1302288460]
+[node name="Wall" type="StaticBody2D" parent="." unique_id=201082267]
 position = Vector2(600, 0)
 
-[node name="Shape" type="CollisionShape2D" parent="Wall" unique_id=311877072]
+[node name="Shape" type="CollisionShape2D" parent="Wall" unique_id=17829594]
 shape = SubResource("Rect_wall")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=332906792 groups=["player"]]
+[node name="Player" type="CharacterBody2D" parent="." unique_id=417503582 groups=["player"]]
 position = Vector2(0, -150)
-script = ExtResource("1_fpogs")
 
-[node name="Shape" type="CollisionShape2D" parent="Player" unique_id=27233182]
+[node name="Shape" type="CollisionShape2D" parent="Player" unique_id=666689393]
 shape = SubResource("Rect_player")
 
-[node name="Box" type="RigidBody2D" parent="." unique_id=420450401]
+[node name="Box" type="RigidBody2D" parent="." unique_id=396497742]
 position = Vector2(-200, -50)
 
-[node name="Shape" type="CollisionShape2D" parent="Box" unique_id=807446502]
+[node name="Shape" type="CollisionShape2D" parent="Box" unique_id=1477166296]
 shape = SubResource("Rect_box")
 
-[node name="Zone" type="Area2D" parent="." unique_id=892763611]
+[node name="Zone" type="Area2D" parent="." unique_id=2076957961]
 position = Vector2(300, 120)
 
-[node name="Shape" type="CollisionShape2D" parent="Zone" unique_id=854330679]
+[node name="Shape" type="CollisionShape2D" parent="Zone" unique_id=227954607]
 shape = SubResource("Rect_zone")
 
-[node name="Cam" type="Camera2D" parent="." unique_id=2129452236]
+[node name="Cam" type="Camera2D" parent="." unique_id=323074350]
 
-[node name="InputDriver" type="Node" parent="." unique_id=1718699326]
-script = ExtResource("2_4be56")
+[node name="InputDriver" type="Node" parent="." unique_id=972368938]
+script = ExtResource("1_nxl25")
 
-[node name="DeepMovement" type="Node" parent="." unique_id=493725913]
-script = ExtResource("3_ajmra")
-event_bindings = Array[ExtResource("4_yi8a6")]([SubResource("Resource_wq02p"), SubResource("Resource_67o82")])
+[node name="DeepMovement" type="Node" parent="." unique_id=1012603239]
+script = ExtResource("2_lfkrd")
+event_bindings = Array[ExtResource("3_mush2")]([SubResource("Resource_cdgmt"), SubResource("Resource_xc6jq")])
 use_parallel_condition_evaluation = false

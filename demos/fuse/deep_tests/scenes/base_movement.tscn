@@ -1,6 +1,4 @@
-[gd_scene load_steps=7 format=3]
-
-[ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/physics_body.gd" id="1_body"]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://demos/fuse/deep_tests/tools/input_driver.gd" id="2_driver"]
 
@@ -35,7 +33,6 @@ shape = SubResource("Rect_wall")
 
 [node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
 position = Vector2(0, -150)
-script = ExtResource("1_body")
 
 [node name="Shape" type="CollisionShape2D" parent="Player"]
 shape = SubResource("Rect_player")

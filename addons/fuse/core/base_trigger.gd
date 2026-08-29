@@ -220,6 +220,15 @@ func _sync_event_args_to_context(context: ExecutionContext, index: int) -> void:
 			context.set_variable(key, event_state[key])
 			_log_debug("同步事件状态: %s = %s" % [key, str(event_state[key])])
 
+	# 同步事件显式提供的 LOCAL 变量——兑现 BaseEvent.get_provided_local_variables() 声明
+	# （如 OnInputActionComposite 的 input_vector/last_input_vector，指令按声明名直接读取）
+	var event_def: BaseEvent = event_instance.event_definition
+	if event_def != null:
+		for var_name: String in event_def.get_provided_local_variables():
+			if event_state.has(var_name):
+				context.set_variable(var_name, event_state[var_name])
+				_log_debug("同步事件提供变量: %s = %s" % [var_name, str(event_state[var_name])])
+
 ## ==================== ActionRunner 信号管理 ====================
 
 ## 连接 ActionRunner 信号

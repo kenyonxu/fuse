@@ -3,7 +3,7 @@
   "level": "L4",
   "display_name": "DeepMovement",
   "category": "movement",
-  "description": "深度测试·Movement：MoveCharacterBody2DComposite（OnInterval 持续驱动 + input_driver 注入）",
+  "description": "深度测试·Movement：MoveCharacterBody2DComposite 挂配套事件 OnInputActionComposite（事件合成输入向量 → 指令读取驱动，Player 为裸 CharacterBody2D 确保位移全部来自被测指令）",
   "icon_name": "",
   "variables": {
     "local": [
@@ -33,7 +33,7 @@
         "instructions": [
           {
             "type": "Print",
-            "message": "=== deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s）==="
+            "message": "=== deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s，OnInputActionComposite 驱动）==="
           },
           {
             "type": "GetPosition",
@@ -50,10 +50,6 @@
             "save_to_variable": "x1"
           },
           {
-            "type": "Print",
-            "message": "(位移断言改走 x1 绝对位置)"
-          },
-          {
             "type": "IfElse",
             "sequence_mode": 0,
             "condition": {
@@ -66,13 +62,13 @@
             "true_instructions": [
               {
                 "type": "Print",
-                "message": "PASS: MoveCharacterBody2DComposite(位移>100)"
+                "message": "PASS: MoveCharacterBody2DComposite+OnInputActionComposite(位移>300px)"
               }
             ],
             "false_instructions": [
               {
                 "type": "Print",
-                "message": "FAIL: MoveCharacterBody2DComposite(位移>100)"
+                "message": "FAIL: MoveCharacterBody2DComposite+OnInputActionComposite(位移>300px)"
               }
             ]
           },
@@ -85,9 +81,10 @@
     },
     {
       "event": {
-        "type": "OnInterval",
-        "interval_seconds": 0.2,
-        "auto_start": true
+        "type": "OnInputActionComposite",
+        "action_left": "Left",
+        "action_right": "Right",
+        "trigger_rate": 0
       },
       "binding_config": {
         "enabled": true,
@@ -102,10 +99,7 @@
             "type": "MoveCharacterBody2DComposite",
             "target_node": "../Player",
             "speed": 300.0,
-            "move_mode": 0,
-            "acceleration": 800.0,
-            "friction": 10.0,
-            "smooth_factor": 5.0
+            "move_mode": 0
           }
         ]
       }

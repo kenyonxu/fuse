@@ -334,7 +334,23 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 | NodeOps | 27 | 部分 | 20/22 指令断言 + 3/4 事件（OnSignalFromGroup 待查）；RecyclePool/RunTargetNodeFunction 编辑器验 |
 | Animation | 17 | ✅ 用户验收 | 修 5 组件（AP 偏食×3 + Godot3 API×2）；OnAnimationStarted/Loop 待查 |
 | Physics | 23 | 待验 | 修 2 组件（CheckVelocity 刚体轨 / 睡眠刚体唤醒）；6 事件触发；OnScreenEnteredExited 崩溃待查 |
-| Movement | 1 | 待验 | input_driver 注入 Right 1.5s，位移断言 x>300 |
+| Movement | 1→2 | 待验 | **初版 PASS 为假阳性**（见下方专项记录），重构后位移 450px 精确 |
+
+
+### Movement 假阳性专项与第 28-31 号修复（2026-08-29）
+
+用户 F5 报告 movement 场景每 0.2s 刷「计算出零速度」警告，深挖后发现**初版 PASS 是假阳性**——真正驱动角色右移的是基底脚本 `physics_body.gd`（每帧读 `Input.get_axis`），被测指令 `MoveCharacterBody2DComposite` 的输入链从设计上就是断的。四层修复：
+
+| # | 层 | 问题 | 修复 |
+|---|----|------|------|
+| 28 | `base_trigger.gd` | `get_provided_local_variables()` 声明「触发时自动提供的 LOCAL 变量」在运行时**从未兑现**（只有编辑器静态分析消费）——指令读 `input_vector` 恒为默认值 | `_sync_event_args_to_context` 新增注入：按事件声明从 runtime_state 同名键写入 LOCAL |
+| 29 | `move_character_body_2d_composite.gd` | `_get_input_vector` 第一路径 `context.get_event_instance()` 是死代码（ExecutionContext 无此方法）；零输入走 WARNING 在轮询下刷屏 | 删死代码走变量路径；零输入降 debug（新键 `FUSE_LOG_CHARACTER_BODY_2D_ZERO_INPUT` 替换旧 WARNING 键） |
+| 30 | `on_input_action_composite.gd` | 事件挂帧级 `handle_process_notification`，指令在帧级调 `move_and_slide`——引擎语义要求 physics step 内执行，实测位移只结算 ~42%（cooldown 限流调用与 physics tick 错拍）；另 `last_trigger_time` 与 Trigger 级冷却共用键但单位相反（毫秒 vs 秒） | 改挂 `handle_physics_process_notification`（60Hz 天然节流）；冷却时钟换 `Time.get_ticks_usec()` + 独立键 `last_input_trigger_time`；60Hz 触发日志降 debug |
+| 31 | `on_input_action_composite.gd` | FPS_60 档 16ms 冷却与 physics tick 实际间隔（帧率非 60 整除倍时 ~14/21ms 交替）共振，随机丢 ~40% 触发（实测 53/90） | FPS_60 档返回 0（免限流，physics 本身就是 60Hz 载体） |
+
+**验证**：重构 preset（OnInputActionComposite 驱动 + Player 摘除基底控制脚本确保位移全部来自被测指令）后，headless 位移 **450.000030px = 300px/s × 1.5s 理论精确值**，emits 90/90 零丢失，四查全绿；**全量 21 场景回归 0 新增失败**。定位过程中用探针实测两组引擎行为数据（帧级 vs physics 级调 move_and_slide；Windows `get_ticks_msec` 15.6ms 粒度），已沉淀到修复注释。
+
+**Tween 遗留补充**：完整跑完（3000 帧）后确认 M2 时期就存在 4 个断言 FAIL（FadeIn/FadeOut/Pause/RotateTo），基线对照（还原 base_trigger 重跑）排除本轮回归——F5 观感正确但数值断言有偏差，并入 Tween 专项。
 
 **M2 全部 8 场景完成**。F5 待验清单：NodeOps（节点增减观感）、Physics（落体/跳/撞墙/进区/射线）、Movement（角色右移）。
 

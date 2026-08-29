@@ -227,7 +227,8 @@ func execute(context: ExecutionContext):
 	# 从 RuntimeEventInstance 获取输入向量
 	var input_vector = _get_input_vector(context)
 	if input_vector == Vector2.ZERO:
-		_log_warning_localized("FUSE_WARNING_CHARACTER_BODY_2D_ZERO_VELOCITY", {})
+		# 零输入是正常静止状态（无输入时段/归零帧），轮询触发下高频出现——不是异常，debug 级记录
+		_log_debug_localized("FUSE_LOG_CHARACTER_BODY_2D_ZERO_INPUT", {})
 		# 在 ACCELERATION 模式下，零输入仍然需要应用摩擦力
 		if move_mode == MoveMode.ACCELERATION:
 			_apply_friction(char_body, context.delta)
@@ -289,20 +290,11 @@ func _apply_friction(target: CharacterBody2D, delta: float) -> void:
 
 ## 从上下文获取输入向量
 func _get_input_vector(context: ExecutionContext) -> Vector2:
-	# 尝试从事件实例获取输入向量
-	if context.has_method("get_event_instance"):
-		var event_instance = context.get_event_instance()
-		if event_instance and event_instance.has_method("get_runtime_state"):
-			var input_vector = event_instance.get_runtime_state("last_input_vector")
-			if input_vector is Vector2:
-				return input_vector
-
-	# 备选方案：从执行上下文的变量获取
-	if context.has_method("get_variable"):
-		var input_vector = context.get_variable("input_vector", Vector2.ZERO)
-		if input_vector is Vector2:
-			return input_vector
-
+	# 输入向量由配套事件（OnInputActionComposite）触发时注入 LOCAL 变量
+	# （BaseTrigger._sync_event_args_to_context 兑现 get_provided_local_variables 声明）
+	var input_vector = context.get_variable("input_vector", Vector2.ZERO)
+	if input_vector is Vector2:
+		return input_vector
 	return Vector2.ZERO
 
 ## 验证指令配置
