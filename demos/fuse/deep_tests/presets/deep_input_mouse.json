@@ -50,9 +50,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,
@@ -72,9 +72,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,
@@ -94,9 +94,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,
@@ -116,9 +116,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,
@@ -138,9 +138,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,
@@ -160,9 +160,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,
@@ -182,9 +182,9 @@
       },
       "binding_config": {
         "enabled": true,
-        "trigger_once": true,
+        "trigger_once": false,
         "cooldown_mode": 0,
-        "cooldown_time": 1.0
+        "cooldown_time": 1.5
       },
       "action_runner": {
         "execution_mode": 0,

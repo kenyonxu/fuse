@@ -70,8 +70,7 @@ resource_name = "左键 按下 [仅检测一次]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_05rfo")
 action_runner = SubResource("Resource_dpef0")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
 [sub_resource type="Resource" id="Resource_eofnp"]
 resource_name = "打印: PASS:OnMouseButton(LEFT释放)"
@@ -93,8 +92,7 @@ resource_name = "左键 释放 [仅检测一次]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_0lik5")
 action_runner = SubResource("Resource_do7lw")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
 [sub_resource type="Resource" id="Resource_7svuj"]
 resource_name = "打印: PASS:OnMouseButton(RIGHT按下)"
@@ -116,8 +114,7 @@ resource_name = "右键 按下 [仅检测一次]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_dvj6a")
 action_runner = SubResource("Resource_2ognj")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
 [sub_resource type="Resource" id="Resource_3r2ri"]
 resource_name = "打印: PASS:OnMouseButton(RIGHT释放)"
@@ -139,8 +136,7 @@ resource_name = "右键 释放 [仅检测一次]"
 script = ExtResource("3_da73v")
 event = SubResource("Resource_jrviq")
 action_runner = SubResource("Resource_qmb61")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
 [sub_resource type="Resource" id="Resource_60p8l"]
 resource_name = "打印: PASS:OnMouseMove(位移≥10px)"
@@ -161,8 +157,7 @@ resource_name = "当鼠标移动时触发 (持续触发) "
 script = ExtResource("3_da73v")
 event = SubResource("Resource_u7l5g")
 action_runner = SubResource("Resource_wm4qe")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
 [sub_resource type="Resource" id="Resource_mqosw"]
 resource_name = "打印: PASS:OnMouseEnter(Area2D)"
@@ -183,8 +178,7 @@ resource_name = "当鼠标进入 Area 时触发 （每次进入仅触发一次�
 script = ExtResource("3_da73v")
 event = SubResource("Resource_m8y6l")
 action_runner = SubResource("Resource_d21gk")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
 [sub_resource type="Resource" id="Resource_qrrx8"]
 resource_name = "打印: PASS:OnMouseExit(Area2D)"
@@ -205,25 +199,24 @@ resource_name = "当鼠标离开 Area 时触发 （每次离开仅触发一次�
 script = ExtResource("3_da73v")
 event = SubResource("Resource_rdf83")
 action_runner = SubResource("Resource_oc1xa")
-trigger_once = true
-cooldown_time = 1.0
+cooldown_time = 1.5
 
-[node name="test_deep_input_mouse" type="Node2D" unique_id=96343845]
+[node name="test_deep_input_mouse" type="Node2D" unique_id=1570574353]
 
-[node name="Lbl" type="Label" parent="." unique_id=260047847]
+[node name="Lbl" type="Label" parent="." unique_id=1530093589]
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 400.0
 offset_bottom = 60.0
 text = "deep_input_mouse"
 
-[node name="Area" type="Area2D" parent="." unique_id=1373886930]
+[node name="Area" type="Area2D" parent="." unique_id=1070074333]
 position = Vector2(200, 324)
 
-[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=458659481]
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=829164529]
 shape = SubResource("Rect_area")
 
-[node name="InputDriver" type="Node" parent="." unique_id=236647834]
+[node name="InputDriver" type="Node" parent="." unique_id=1045296359]
 script = ExtResource("1_qcces")
 timeline = Array[Dictionary]([])
 events = Array[Dictionary]([{
@@ -274,7 +267,7 @@ events = Array[Dictionary]([{
 "pos": [200.0, 100.0]
 }])
 
-[node name="DeepInputMouse" type="Node" parent="." unique_id=1273115195]
+[node name="DeepInputMouse" type="Node" parent="." unique_id=1051043868]
 script = ExtResource("2_op7v6")
 event_bindings = Array[ExtResource("3_da73v")]([SubResource("Resource_2id2s"), SubResource("Resource_bqkni"), SubResource("Resource_abex4"), SubResource("Resource_6uosq"), SubResource("Resource_wyh7u"), SubResource("Resource_xxnef"), SubResource("Resource_nmedw"), SubResource("Resource_ftpp1")])
 use_parallel_condition_evaluation = false
