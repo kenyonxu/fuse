@@ -221,11 +221,15 @@ func _on_body_changed(_body: Node):
 		"threshold": check_threshold
 	})
 
-	# 传递当前数量（如果需要）
+	# triggered 信号签名是 (context: Node)——int 直传会触发 int→Object 转换错误；
+	# 按惯例用上下文节点携带元数据（同 OnReceiveEvent/OnSoundListened），emit_count 控制是否附带
+	var context_node = Node.new()
+	context_node.name = "OverlappingBodiesContext"
 	if emit_count:
-		triggered.emit(count)
-	else:
-		triggered.emit(null)
+		context_node.set_meta("body_count", count)
+	context_node.set_meta("threshold", check_threshold)
+	triggered.emit(context_node)
+	context_node.queue_free()
 
 ## 获取事件描述
 func get_description() -> String:
