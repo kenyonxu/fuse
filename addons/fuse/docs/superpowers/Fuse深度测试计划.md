@@ -331,6 +331,13 @@ test_deep_<category>.tscn（Node2D；UI 类用 Control）
 | Camera | 7/7 | ✅ 用户验收 | v4 双绑定编排（shake/fade×移动跟随目标挂死组合绕开，待专项） |
 | Audio | 4+4(m) | ✅ 用户验收 | OnMusicBeat 修复后实测触发；PlayMusic 长指令语义澄清 |
 | Tween | 3+FAIL | ✅ 用户验收 | RotateTo 断言值/TweenProperty Variant 挂起留作已知问题 |
+| NodeOps | 27 | 部分 | 20/22 指令断言 + 3/4 事件（OnSignalFromGroup 待查）；RecyclePool/RunTargetNodeFunction 编辑器验 |
+| Animation | 17 | ✅ 用户验收 | 修 5 组件（AP 偏食×3 + Godot3 API×2）；OnAnimationStarted/Loop 待查 |
+| Physics | 23 | 待验 | 修 2 组件（CheckVelocity 刚体轨 / 睡眠刚体唤醒）；6 事件触发；OnScreenEnteredExited 崩溃待查 |
+| Movement | 1 | 待验 | input_driver 注入 Right 1.5s，位移断言 x>300 |
+
+**M2 全部 8 场景完成**。F5 待验清单：NodeOps（节点增减观感）、Physics（落体/跳/撞墙/进区/射线）、Movement（角色右移）。
+
 
 ### M0 · Arrays 打样（2026-08-28）✅
 

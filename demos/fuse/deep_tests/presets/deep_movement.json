@@ -1,0 +1,114 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepMovement",
+  "category": "movement",
+  "description": "深度测试·Movement：MoveCharacterBody2DComposite（OnInterval 持续驱动 + input_driver 注入）",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "dx",
+      "x0",
+      "x1"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_movement START（InputDriver 1.0s 按住 Right 至 2.5s）==="
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Player",
+            "save_to_variable": "x0"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 2.8
+          },
+          {
+            "type": "GetPosition",
+            "target": "../Player",
+            "save_to_variable": "x1"
+          },
+          {
+            "type": "Print",
+            "message": "(位移断言改走 x1 绝对位置)"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVector2VariableAxis",
+              "variable_name": "x1",
+              "axis": 0,
+              "comparison_operator": 0,
+              "compare_value": 300
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: MoveCharacterBody2DComposite(位移>100)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: MoveCharacterBody2DComposite(位移>100)"
+              }
+            ]
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_movement DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnInterval",
+        "interval_seconds": 0.2,
+        "auto_start": true
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": false,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "MoveCharacterBody2DComposite",
+            "target_node": "../Player",
+            "speed": 300.0,
+            "move_mode": 0,
+            "acceleration": 800.0,
+            "friction": 10.0,
+            "smooth_factor": 5.0
+          }
+        ]
+      }
+    }
+  ]
+}
