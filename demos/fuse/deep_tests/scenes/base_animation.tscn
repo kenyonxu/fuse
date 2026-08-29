@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="SpriteFrames" path="res://demos/fuse/fuse_adventure/resources/animatedSprites/player.tres" id="1_frames"]
+
+[ext_resource type="AnimationLibrary" path="res://demos/fuse/fuse_adventure/resources/animationLibs/player.res" id="2_lib"]
+
+[ext_resource type="AnimationNodeStateMachine" path="res://demos/fuse/fuse_adventure/resources/animation_stm/player_normal.tres" id="3_stm"]
+
+[node name="Base" type="Node2D"]
+
+[node name="PlayerSprites" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_frames")
+animation = &"idle"
+autoplay = ""
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites"]
+libraries/player = ExtResource("2_lib")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../PlayerSprites")
+tree_root = ExtResource("3_stm")
+anim_player = NodePath("../PlayerSprites/AnimationPlayer")
+active = false
+parameters/conditions/jump = false

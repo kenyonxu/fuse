@@ -231,7 +231,9 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 	if node == null:
 		return false
 
-	# 检查节点类型
+	# 检查节点类型（Godot 4 中两者都只有 is_playing() 方法——AnimatedSprite2D 的 playing 属性已移除）
+	if node is AnimatedSprite2D:
+		return node.is_playing()
 	if not node is AnimationPlayer:
 		var error_msg = FuseLocalization.translate("FUSE_CONDITION_ERROR_NOT_ANIMATION_PLAYER")
 		_log_error(error_msg)

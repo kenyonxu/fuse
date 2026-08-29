@@ -261,7 +261,9 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		_create_fuse_error(error_msg, FuseError.ErrorType.VALIDATION_ERROR)
 		return false
 
-	# 检查节点类型
+	# 检查节点类型（AnimatedSprite2D 走 animation 属性；AnimationPlayer 走 get_current_animation()）
+	if node is AnimatedSprite2D:
+		return node.animation == animation_name
 	if not node is AnimationPlayer:
 		var error_msg = FuseLocalization.translate("FUSE_CONDITION_ERROR_NOT_ANIMATION_PLAYER")
 		_log_error(error_msg)

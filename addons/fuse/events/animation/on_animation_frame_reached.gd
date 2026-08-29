@@ -171,9 +171,8 @@ func _on_process_timeout() -> void:
 	var current_position = _animation_player.current_animation_position
 
 	# 计算当前帧（使用动画的帧率，默认 60 FPS）
-	var fps = animation.frame_rate
-	if fps <= 0:
-		fps = 60.0
+	# Godot 4 Animation 无 frame_rate（Godot 3 API）——由 step 反推，step<=0 视作 60
+	var fps = 1.0 / animation.step if animation.step > 0 else 60.0
 
 	var current_frame = int(current_position * fps)
 

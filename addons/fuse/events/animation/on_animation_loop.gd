@@ -59,7 +59,7 @@ enum TriggerMode {
 ## 是否传递动画进度
 @export var emit_animation_progress: bool = true
 
-var _anim_player_ref: AnimationPlayer = null
+var _anim_player_ref: Node = null
 
 ## 获取默认运行时状态
 func get_default_runtime_state() -> Dictionary:
@@ -86,13 +86,15 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		return
 
 	# 获取目标节点
-	_anim_player_ref = owner_node.get_node_or_null(target_node_path)
-	if not _anim_player_ref:
+	var _resolved: Node = owner_node.get_node_or_null(target_node_path)
+	if not _resolved:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 
 	# 验证节点类型
-	if not _anim_player_ref is AnimationPlayer:
+	_anim_player_ref = _resolved
+	# 本事件按 AnimationPlayer 轮询（is_playing/current_animation_position），暂不支持 AnimatedSprite2D
+	if not _resolved is AnimationPlayer:
 		_create_fuse_error_localized("FUSE_ERROR_INVALID_TARGET", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 

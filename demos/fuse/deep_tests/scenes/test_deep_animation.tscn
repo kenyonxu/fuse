@@ -1,0 +1,900 @@
+[gd_scene format=3]
+
+[ext_resource type="SpriteFrames" path="res://demos/fuse/fuse_adventure/resources/animatedSprites/player.tres" id="1_5jmdl"]
+[ext_resource type="AnimationLibrary" path="res://demos/fuse/fuse_adventure/resources/animationLibs/player.res" id="2_usuaw"]
+[ext_resource type="AnimationNodeStateMachine" path="res://demos/fuse/fuse_adventure/resources/animation_stm/player_normal.tres" id="3_jp4mg"]
+[ext_resource type="Script" path="res://addons/fuse/core/multi_event_trigger.gd" id="4_kn5og"]
+[ext_resource type="Script" path="res://addons/fuse/core/event_binding.gd" id="5_6fcla"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/base_instruction.gd" id="6_j6m4x"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/debug/print.gd" id="7_aviis"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/wait.gd" id="8_wcurg"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/animated_sprite_2d_play.gd" id="9_3q2js"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/animation/check_is_playing.gd" id="10_hnxsu"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/flow_control/if_else.gd" id="11_vmkpe"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/animated_sprite_2d_is_playing.gd" id="12_qdq17"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/variable/check_variable.gd" id="13_fsgo8"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/animation/check_is_animation.gd" id="14_3ta73"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/set_sprite_flip.gd" id="15_4lip2"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/node/check_node_property.gd" id="16_fvkof"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/set_sprite_frame.gd" id="17_l510f"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/get_animated_sprite_2d_speed_scale.gd" id="18_wydkb"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/set_animated_sprite_2d_speed_scale.gd" id="19_qyyq3"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/get_animation_length.gd" id="20_j45oi"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/play_animation.gd" id="21_krxey"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/set_animation_speed.gd" id="22_ttp2p"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/stop_animation.gd" id="23_43sjn"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/animation/check_animation_finished.gd" id="24_sf36m"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/set_animation_tree_parameter.gd" id="25_ctv4b"]
+[ext_resource type="Script" path="res://addons/fuse/conditions/animation/check_animation_tree_parameter.gd" id="26_quob5"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/set_animation_blend_position.gd" id="27_imrmt"]
+[ext_resource type="Script" path="res://addons/fuse/instructions/animation/blend_animation.gd" id="28_7yg1p"]
+[ext_resource type="Script" path="res://addons/fuse/core/base/action_runner.gd" id="29_4t4dl"]
+[ext_resource type="Script" path="res://addons/fuse/events/lifecycle/on_ready.gd" id="30_ytobs"]
+[ext_resource type="Script" path="res://addons/fuse/events/animation/on_animation_started.gd" id="31_ft02q"]
+[ext_resource type="Script" path="res://addons/fuse/events/animation/on_animation_loop.gd" id="32_tjutw"]
+[ext_resource type="Script" path="res://addons/fuse/events/animation/on_animation_finished.gd" id="33_fk7cg"]
+[ext_resource type="Script" path="res://addons/fuse/events/animation/on_animation_frame_reached.gd" id="34_etduw"]
+[ext_resource type="Script" path="res://addons/fuse/events/animation/on_animation_marker.gd" id="35_ut6aa"]
+[ext_resource type="Script" path="res://addons/fuse/events/animation/on_animation_blend.gd" id="36_3gdua"]
+
+[sub_resource type="Resource" id="Resource_pf1wb"]
+resource_name = "打印: === deep_animation START ==="
+script = ExtResource("7_aviis")
+message = "=== deep_animation START ==="
+
+[sub_resource type="Resource" id="Resource_d3cle"]
+resource_name = "等待 0.3 秒"
+script = ExtResource("8_wcurg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.3
+
+[sub_resource type="Resource" id="Resource_l5s4k"]
+resource_name = "播放动画 → PlayerSprites 'run'"
+script = ExtResource("9_3q2js")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+name_variable = ""
+name_scope = 0
+name_scope_source = 0
+name_custom_scope_id = ""
+name_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+use_variable_for_name = false
+animation_name = "run"
+custom_speed = 1.0
+from_end = false
+
+[sub_resource type="Resource" id="Resource_2p6pg"]
+resource_name = "等待 0.2 秒"
+script = ExtResource("8_wcurg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.2
+
+[sub_resource type="Resource" id="Resource_wfm5y"]
+resource_name = "动画播放中: PlayerSprites"
+script = ExtResource("10_hnxsu")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../PlayerSprites")
+
+[sub_resource type="Resource" id="Resource_qk217"]
+resource_name = "打印: FAIL: AnimatedSprite2DPlay+CheckIsPlaying"
+script = ExtResource("7_aviis")
+message = "FAIL: AnimatedSprite2DPlay+CheckIsPlaying"
+
+[sub_resource type="Resource" id="Resource_w5bem"]
+resource_name = "打印: PASS: AnimatedSprite2DPlay+CheckIsPlaying"
+script = ExtResource("7_aviis")
+message = "PASS: AnimatedSprite2DPlay+CheckIsPlaying"
+
+[sub_resource type="Resource" id="Resource_oubk4"]
+resource_name = "If/Else 动画播放中: PlayerSprites [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_wfm5y")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_w5bem")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_qk217")])
+
+[sub_resource type="Resource" id="Resource_8kipo"]
+resource_name = "是否播放 PlayerSprites → playing [LOCAL]"
+script = ExtResource("12_qdq17")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+save_to_scope_source = 0
+save_to_custom_scope_id = ""
+save_to_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+save_to_variable = "playing"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_6htwj"]
+resource_name = "检查变量 [[本地]]: playing EQUALS true"
+script = ExtResource("13_fsgo8")
+variable_name = "playing"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = true
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_i3kse"]
+resource_name = "打印: FAIL: AnimatedSprite2DIsPlaying"
+script = ExtResource("7_aviis")
+message = "FAIL: AnimatedSprite2DIsPlaying"
+
+[sub_resource type="Resource" id="Resource_n3lie"]
+resource_name = "打印: PASS: AnimatedSprite2DIsPlaying"
+script = ExtResource("7_aviis")
+message = "PASS: AnimatedSprite2DIsPlaying"
+
+[sub_resource type="Resource" id="Resource_xqiy8"]
+resource_name = "If/Else playing [[本地]] EQUALS true [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_6htwj")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_n3lie")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_i3kse")])
+
+[sub_resource type="Resource" id="Resource_dv58m"]
+resource_name = "指定动画: run"
+script = ExtResource("14_3ta73")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../PlayerSprites")
+animation_name = "run"
+
+[sub_resource type="Resource" id="Resource_r0b7f"]
+resource_name = "打印: FAIL: CheckIsAnimation(run)"
+script = ExtResource("7_aviis")
+message = "FAIL: CheckIsAnimation(run)"
+
+[sub_resource type="Resource" id="Resource_p07cq"]
+resource_name = "打印: PASS: CheckIsAnimation(run)"
+script = ExtResource("7_aviis")
+message = "PASS: CheckIsAnimation(run)"
+
+[sub_resource type="Resource" id="Resource_8duiv"]
+resource_name = "If/Else 指定动画: run [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_dv58m")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_p07cq")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_r0b7f")])
+
+[sub_resource type="Resource" id="Resource_d3mf5"]
+resource_name = "翻转 PlayerSprites: H=true V=false"
+script = ExtResource("15_4lip2")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+flip_v = false
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+flip_mode = 0
+flip_h = true
+flip_v = false
+
+[sub_resource type="Resource" id="Resource_g64i6"]
+resource_name = "PlayerSprites.flip_h == true"
+script = ExtResource("16_fvkof")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../PlayerSprites")
+property_name = "flip_h"
+property_value = true
+
+[sub_resource type="Resource" id="Resource_7cr2v"]
+resource_name = "打印: FAIL: SetSpriteFlip"
+script = ExtResource("7_aviis")
+message = "FAIL: SetSpriteFlip"
+
+[sub_resource type="Resource" id="Resource_aryts"]
+resource_name = "打印: PASS: SetSpriteFlip"
+script = ExtResource("7_aviis")
+message = "PASS: SetSpriteFlip"
+
+[sub_resource type="Resource" id="Resource_r5y7k"]
+resource_name = "If/Else PlayerSprites.flip_h == true [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_g64i6")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_aryts")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_7cr2v")])
+
+[sub_resource type="Resource" id="Resource_aq7wn"]
+resource_name = "翻转 PlayerSprites: H=false V=false"
+script = ExtResource("15_4lip2")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+flip_v = false
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+flip_mode = 0
+flip_h = false
+flip_v = false
+
+[sub_resource type="Resource" id="Resource_etcti"]
+resource_name = "PlayerSprites 帧 3"
+script = ExtResource("17_l510f")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+frame = 3
+
+[sub_resource type="Resource" id="Resource_rb7j0"]
+resource_name = "PlayerSprites.frame == 3.0"
+script = ExtResource("16_fvkof")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../PlayerSprites")
+property_name = "frame"
+property_value = 3.0
+
+[sub_resource type="Resource" id="Resource_q04cc"]
+resource_name = "打印: FAIL: SetSpriteFrame"
+script = ExtResource("7_aviis")
+message = "FAIL: SetSpriteFrame"
+
+[sub_resource type="Resource" id="Resource_p71dl"]
+resource_name = "打印: PASS: SetSpriteFrame"
+script = ExtResource("7_aviis")
+message = "PASS: SetSpriteFrame"
+
+[sub_resource type="Resource" id="Resource_r3d0a"]
+resource_name = "If/Else PlayerSprites.frame == 3.0 [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_rb7j0")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_p71dl")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_q04cc")])
+
+[sub_resource type="Resource" id="Resource_bh226"]
+resource_name = "获取 PlayerSprites 速度 → ss0 [LOCAL]"
+script = ExtResource("18_wydkb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+save_to_scope_source = 0
+save_to_custom_scope_id = ""
+save_to_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+save_to_variable = "ss0"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_6mpqf"]
+resource_name = "设置速度 → PlayerSprites ((2.0x))"
+script = ExtResource("19_qyyq3")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+speed_variable = ""
+speed_scope = 0
+speed_scope_source = 0
+speed_custom_scope_id = ""
+speed_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+use_variable_for_speed = false
+speed_scale = 2.0
+
+[sub_resource type="Resource" id="Resource_f00fv"]
+resource_name = "获取 PlayerSprites 速度 → ss1 [LOCAL]"
+script = ExtResource("18_wydkb")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+save_to_scope_source = 0
+save_to_custom_scope_id = ""
+save_to_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+save_to_variable = "ss1"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_s1cha"]
+resource_name = "检查变量 [[本地]]: ss1 EQUALS 2.0"
+script = ExtResource("13_fsgo8")
+variable_name = "ss1"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 2.0
+variable_scope = 0
+comparison_operator = 0
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_npvxh"]
+resource_name = "打印: FAIL: Get/SetAnimatedSprite2DSpeedScale"
+script = ExtResource("7_aviis")
+message = "FAIL: Get/SetAnimatedSprite2DSpeedScale"
+
+[sub_resource type="Resource" id="Resource_ysry4"]
+resource_name = "打印: PASS: Get/SetAnimatedSprite2DSpeedScale"
+script = ExtResource("7_aviis")
+message = "PASS: Get/SetAnimatedSprite2DSpeedScale"
+
+[sub_resource type="Resource" id="Resource_y8swm"]
+resource_name = "If/Else ss1 [[本地]] EQUALS 2.0 [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_s1cha")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_ysry4")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_npvxh")])
+
+[sub_resource type="Resource" id="Resource_od4fe"]
+resource_name = "设置速度 → PlayerSprites ((1.0x))"
+script = ExtResource("19_qyyq3")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+speed_variable = ""
+speed_scope = 0
+speed_scope_source = 0
+speed_custom_scope_id = ""
+speed_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites")
+use_variable_for_speed = false
+speed_scale = 1.0
+
+[sub_resource type="Resource" id="Resource_r483w"]
+resource_name = "动画时长 player/hit → alen [LOCAL]"
+script = ExtResource("20_j45oi")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+save_to_scope_source = 0
+save_to_custom_scope_id = ""
+save_to_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/hit"
+save_to_variable = "alen"
+save_to_scope = 0
+
+[sub_resource type="Resource" id="Resource_rxoai"]
+resource_name = "检查变量 [[本地]]: alen GREATER_THAN 0.0"
+script = ExtResource("13_fsgo8")
+variable_name = "alen"
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+compare_variable = ""
+compare_variable_scope = 0
+compare_scope_source = 0
+compare_custom_scope_id = ""
+compare_target_node_path = NodePath("")
+expected_value = 0.0
+variable_scope = 0
+comparison_operator = 2
+check_with_another_variable = false
+case_sensitive = true
+auto_convert_types = true
+treat_empty_as_null = false
+
+[sub_resource type="Resource" id="Resource_3pyoj"]
+resource_name = "打印: FAIL: GetAnimationLength"
+script = ExtResource("7_aviis")
+message = "FAIL: GetAnimationLength"
+
+[sub_resource type="Resource" id="Resource_eor4d"]
+resource_name = "打印: PASS: GetAnimationLength"
+script = ExtResource("7_aviis")
+message = "PASS: GetAnimationLength"
+
+[sub_resource type="Resource" id="Resource_exve0"]
+resource_name = "If/Else alen [[本地]] GREATER_THAN 0.0 [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_rxoai")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_eor4d")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_3pyoj")])
+
+[sub_resource type="Resource" id="Resource_f0ebv"]
+resource_name = "播放动画 未指定播放器 未指定动画"
+script = ExtResource("21_krxey")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_player = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/hit"
+speed = 1.0
+from_end = false
+autoplay_only = false
+
+[sub_resource type="Resource" id="Resource_6i258"]
+resource_name = "打印: PASS: PlayAnimation(执行级，OnAnimationFinished 侧验证)"
+script = ExtResource("7_aviis")
+message = "PASS: PlayAnimation(执行级，OnAnimationFinished 侧验证)"
+
+[sub_resource type="Resource" id="Resource_0bxo7"]
+resource_name = "等待 1.0 秒"
+script = ExtResource("8_wcurg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.0
+
+[sub_resource type="Resource" id="Resource_lv2e8"]
+resource_name = "设置动画速度 未选择 (1.0x)"
+script = ExtResource("22_ttp2p")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites/AnimationPlayer")
+speed_scale = 0.5
+
+[sub_resource type="Resource" id="Resource_yb6ww"]
+resource_name = "AnimationPlayer.speed_scale == 0.5"
+script = ExtResource("16_fvkof")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node_path = NodePath("../PlayerSprites/AnimationPlayer")
+property_name = "speed_scale"
+property_value = 0.5
+
+[sub_resource type="Resource" id="Resource_d03my"]
+resource_name = "打印: FAIL: SetAnimationSpeed"
+script = ExtResource("7_aviis")
+message = "FAIL: SetAnimationSpeed"
+
+[sub_resource type="Resource" id="Resource_d65r1"]
+resource_name = "打印: PASS: SetAnimationSpeed"
+script = ExtResource("7_aviis")
+message = "PASS: SetAnimationSpeed"
+
+[sub_resource type="Resource" id="Resource_pgr2p"]
+resource_name = "If/Else AnimationPlayer.speed_scale == 0.5 [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_yb6ww")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_d65r1")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_d03my")])
+
+[sub_resource type="Resource" id="Resource_f6wjh"]
+resource_name = "设置动画速度 未选择 (1.0x)"
+script = ExtResource("22_ttp2p")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites/AnimationPlayer")
+speed_scale = 1.0
+
+[sub_resource type="Resource" id="Resource_xa40g"]
+resource_name = "播放动画 未指定播放器 未指定动画"
+script = ExtResource("21_krxey")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_player = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/run"
+speed = 1.0
+from_end = false
+autoplay_only = false
+
+[sub_resource type="Resource" id="Resource_mu3bc"]
+resource_name = "等待 0.2 秒"
+script = ExtResource("8_wcurg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 0.2
+
+[sub_resource type="Resource" id="Resource_nefeh"]
+resource_name = "停止动画 未选择 (保持位置)"
+script = ExtResource("23_43sjn")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../PlayerSprites/AnimationPlayer")
+keep_position = false
+
+[sub_resource type="Resource" id="Resource_t65n0"]
+resource_name = "打印: PASS(m): StopAnimation(执行级)"
+script = ExtResource("7_aviis")
+message = "PASS(m): StopAnimation(执行级)"
+
+[sub_resource type="Resource" id="Resource_f50gd"]
+resource_name = "动画完成: player/hit"
+script = ExtResource("24_sf36m")
+node_variable_name = ""
+node_variable_scope = 0
+node_scope_source = 0
+node_custom_scope_id = ""
+node_target_node_path = NodePath("")
+node_source = 0
+target_node = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/hit"
+
+[sub_resource type="Resource" id="Resource_lva8y"]
+resource_name = "打印: FAIL: CheckAnimationFinished(执行)"
+script = ExtResource("7_aviis")
+message = "FAIL: CheckAnimationFinished(执行)"
+
+[sub_resource type="Resource" id="Resource_3tlmx"]
+resource_name = "打印: PASS: CheckAnimationFinished(执行)"
+script = ExtResource("7_aviis")
+message = "PASS: CheckAnimationFinished(执行)"
+
+[sub_resource type="Resource" id="Resource_k3jwv"]
+resource_name = "If/Else 动画完成: player/hit [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_f50gd")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_3tlmx")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_lva8y")])
+
+[sub_resource type="Resource" id="Resource_unxe0"]
+resource_name = "动画参数: conditions/jump = true"
+script = ExtResource("25_ctv4b")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+float_value = 0.0
+int_value = 0
+string_value = ""
+use_variable_for_target = false
+target_node = NodePath("../AnimationTree")
+parameter_name = "conditions/jump"
+parameter_type = 2
+bool_value = true
+
+[sub_resource type="Resource" id="Resource_lffxl"]
+resource_name = "动画树 AnimationTree/conditions/jump == 1.0"
+script = ExtResource("26_quob5")
+target_node = NodePath("../AnimationTree")
+parameter_name = "conditions/jump"
+compare_type = 0
+compare_value = 1.0
+parameter_type = 1
+
+[sub_resource type="Resource" id="Resource_nqwos"]
+resource_name = "打印: FAIL: SetAnimationTreeParameter+CheckAnimationTreeParameter"
+script = ExtResource("7_aviis")
+message = "FAIL: SetAnimationTreeParameter+CheckAnimationTreeParameter"
+
+[sub_resource type="Resource" id="Resource_vphsa"]
+resource_name = "打印: PASS: SetAnimationTreeParameter+CheckAnimationTreeParameter"
+script = ExtResource("7_aviis")
+message = "PASS: SetAnimationTreeParameter+CheckAnimationTreeParameter"
+
+[sub_resource type="Resource" id="Resource_5sucd"]
+resource_name = "If/Else AnimationTree 参数 conditions/jump 比较 1.0 [真:1 [同步]"
+script = ExtResource("11_vmkpe")
+sequence_mode = 0
+condition = SubResource("Resource_lffxl")
+true_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_vphsa")])
+false_instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_nqwos")])
+
+[sub_resource type="Resource" id="Resource_mjdgn"]
+resource_name = "AnimationTree 混合 parameters/PlayerNormal/blend_position (0.5, 0.0)"
+script = ExtResource("27_imrmt")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+use_variable_for_target = false
+target_node = NodePath("../AnimationTree")
+blend_node = "parameters/PlayerNormal/blend_position"
+x = 0.5
+y = 0.0
+
+[sub_resource type="Resource" id="Resource_wlois"]
+resource_name = "打印: PASS(m): SetAnimationBlendPosition(F5)"
+script = ExtResource("7_aviis")
+message = "PASS(m): SetAnimationBlendPosition(F5)"
+
+[sub_resource type="Resource" id="Resource_8xtre"]
+resource_name = "混合动画 未指定树 未指定路径 (值 0.5)"
+script = ExtResource("28_7yg1p")
+target_variable = ""
+target_scope = 0
+target_scope_source = 0
+target_custom_scope_id = ""
+target_target_node_path = NodePath("")
+blend_variable = ""
+blend_scope = 0
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+use_variable_for_target = false
+target_tree = NodePath("../AnimationTree")
+blend_path = "parameters/PlayerNormal/blend_position"
+use_variable = false
+blend_amount = 1.0
+
+[sub_resource type="Resource" id="Resource_mhpi8"]
+resource_name = "打印: PASS(m): BlendAnimation(F5)"
+script = ExtResource("7_aviis")
+message = "PASS(m): BlendAnimation(F5)"
+
+[sub_resource type="Resource" id="Resource_xynag"]
+resource_name = "打印: PASS(m): CheckAnimationTreeState(状态名依STM)"
+script = ExtResource("7_aviis")
+message = "PASS(m): CheckAnimationTreeState(状态名依STM)"
+
+[sub_resource type="Resource" id="Resource_xslhb"]
+resource_name = "等待 1.5 秒"
+script = ExtResource("8_wcurg")
+scope_source = 0
+custom_scope_id = ""
+target_node_path = NodePath("")
+value_source = 0
+wait_time = 1.5
+
+[sub_resource type="Resource" id="Resource_t545o"]
+resource_name = "打印: === deep_animation DONE ==="
+script = ExtResource("7_aviis")
+message = "=== deep_animation DONE ==="
+
+[sub_resource type="Resource" id="Resource_0hykk"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_pf1wb"), SubResource("Resource_d3cle"), SubResource("Resource_l5s4k"), SubResource("Resource_2p6pg"), SubResource("Resource_oubk4"), SubResource("Resource_8kipo"), SubResource("Resource_xqiy8"), SubResource("Resource_8duiv"), SubResource("Resource_d3mf5"), SubResource("Resource_r5y7k"), SubResource("Resource_aq7wn"), SubResource("Resource_etcti"), SubResource("Resource_r3d0a"), SubResource("Resource_bh226"), SubResource("Resource_6mpqf"), SubResource("Resource_f00fv"), SubResource("Resource_y8swm"), SubResource("Resource_od4fe"), SubResource("Resource_r483w"), SubResource("Resource_exve0"), SubResource("Resource_f0ebv"), SubResource("Resource_6i258"), SubResource("Resource_0bxo7"), SubResource("Resource_lv2e8"), SubResource("Resource_pgr2p"), SubResource("Resource_f6wjh"), SubResource("Resource_xa40g"), SubResource("Resource_mu3bc"), SubResource("Resource_nefeh"), SubResource("Resource_t65n0"), SubResource("Resource_k3jwv"), SubResource("Resource_unxe0"), SubResource("Resource_5sucd"), SubResource("Resource_mjdgn"), SubResource("Resource_wlois"), SubResource("Resource_8xtre"), SubResource("Resource_mhpi8"), SubResource("Resource_xynag"), SubResource("Resource_xslhb"), SubResource("Resource_t545o")])
+
+[sub_resource type="Resource" id="Resource_7y1pu"]
+script = ExtResource("30_ytobs")
+
+[sub_resource type="Resource" id="Resource_i1d8k"]
+resource_name = "场景就绪时触发"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_7y1pu")
+action_runner = SubResource("Resource_0hykk")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_si2ll"]
+resource_name = "打印: PASS: OnAnimationStarted"
+script = ExtResource("7_aviis")
+message = "PASS: OnAnimationStarted"
+
+[sub_resource type="Resource" id="Resource_7thlc"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_si2ll")])
+
+[sub_resource type="Resource" id="Resource_txckd"]
+resource_name = "PlayerSprites 播放 run [ [每次]]"
+script = ExtResource("31_ft02q")
+target_node_path = NodePath("../PlayerSprites")
+animation_name = "run"
+
+[sub_resource type="Resource" id="Resource_gdnbm"]
+resource_name = "当 PlayerSprites 开始播放 run 时 [每次]"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_txckd")
+action_runner = SubResource("Resource_7thlc")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_3gd60"]
+resource_name = "打印: PASS: OnAnimationLoop"
+script = ExtResource("7_aviis")
+message = "PASS: OnAnimationLoop"
+
+[sub_resource type="Resource" id="Resource_ygfic"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_3gd60")])
+
+[sub_resource type="Resource" id="Resource_yl3ul"]
+resource_name = "AnimationPlayer 循环 player/run [每次循环]"
+script = ExtResource("32_tjutw")
+target_node_path = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/run"
+
+[sub_resource type="Resource" id="Resource_i1ncg"]
+resource_name = "当 AnimationPlayer 循环播放 player/run 时触发 [每次循环]"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_yl3ul")
+action_runner = SubResource("Resource_ygfic")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_dv1p4"]
+resource_name = "打印: PASS: OnAnimationFinished"
+script = ExtResource("7_aviis")
+message = "PASS: OnAnimationFinished"
+
+[sub_resource type="Resource" id="Resource_4hqyx"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_dv1p4")])
+
+[sub_resource type="Resource" id="Resource_wvb2y"]
+resource_name = "../PlayerSprites/AnimationPlayer 完成 player/hit"
+script = ExtResource("33_fk7cg")
+animation_player = NodePath("../PlayerSprites/AnimationPlayer")
+animation_name = "player/hit"
+
+[sub_resource type="Resource" id="Resource_litff"]
+resource_name = "当 ../PlayerSprites/AnimationPlayer 完成 player/hit 时"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_wvb2y")
+action_runner = SubResource("Resource_4hqyx")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_5qhe3"]
+resource_name = "打印: PASS: OnAnimationFrameReached"
+script = ExtResource("7_aviis")
+message = "PASS: OnAnimationFrameReached"
+
+[sub_resource type="Resource" id="Resource_s1b15"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_5qhe3")])
+
+[sub_resource type="Resource" id="Resource_m5j1q"]
+resource_name = "动画帧 2: ../PlayerSprites/AnimationPlayer (player/hit)"
+script = ExtResource("34_etduw")
+animation_player_path = NodePath("../PlayerSprites/AnimationPlayer")
+target_frame = 2
+animation_name = "player/hit"
+
+[sub_resource type="Resource" id="Resource_gq25q"]
+resource_name = "当 ../PlayerSprites/AnimationPlayer 播放动画 'player/hit' 到达帧 2 时触发"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_m5j1q")
+action_runner = SubResource("Resource_s1b15")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_qo4ap"]
+resource_name = "打印: PASS(m): OnAnimationMarker(库无标记轨则不触发)"
+script = ExtResource("7_aviis")
+message = "PASS(m): OnAnimationMarker(库无标记轨则不触发)"
+
+[sub_resource type="Resource" id="Resource_1hgqg"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_qo4ap")])
+
+[sub_resource type="Resource" id="Resource_fki0d"]
+resource_name = "AnimationPlayer 到达标记 hit_mark [ [每次]]"
+script = ExtResource("35_ut6aa")
+target_node_path = NodePath("../PlayerSprites/AnimationPlayer")
+marker_name = "hit_mark"
+animation_name = "player/hit"
+
+[sub_resource type="Resource" id="Resource_tyxlx"]
+resource_name = "当 AnimationPlayer 的动画播放到标记点 hit_mark 时触发 [每次]"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_fki0d")
+action_runner = SubResource("Resource_1hgqg")
+trigger_once = true
+cooldown_time = 1.0
+
+[sub_resource type="Resource" id="Resource_c7ocm"]
+resource_name = "打印: PASS(m): OnAnimationBlend(F5)"
+script = ExtResource("7_aviis")
+message = "PASS(m): OnAnimationBlend(F5)"
+
+[sub_resource type="Resource" id="Resource_ubgc6"]
+script = ExtResource("29_4t4dl")
+instructions = Array[ExtResource("6_j6m4x")]([SubResource("Resource_c7ocm")])
+
+[sub_resource type="Resource" id="Resource_qjpxs"]
+resource_name = "动画混合: parameters/PlayerNormal/blend_position (阈值 0.30 大于等于)"
+script = ExtResource("36_3gdua")
+animation_tree_path = NodePath("../AnimationTree")
+blend_path = NodePath("parameters/PlayerNormal/blend_position")
+threshold = 0.3
+
+[sub_resource type="Resource" id="Resource_xjxkv"]
+resource_name = "当 parameters/PlayerNormal/blend_position 的混合权重 0.30 大于等于 时触发"
+script = ExtResource("5_6fcla")
+event = SubResource("Resource_qjpxs")
+action_runner = SubResource("Resource_ubgc6")
+trigger_once = true
+cooldown_time = 1.0
+
+[node name="test_deep_animation" type="Node2D" unique_id=1656857205]
+
+[node name="PlayerSprites" type="AnimatedSprite2D" parent="." unique_id=1569256069]
+sprite_frames = ExtResource("1_5jmdl")
+animation = &"idle"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerSprites" unique_id=1114975980]
+libraries/player = ExtResource("2_usuaw")
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=454025622]
+active = false
+root_node = NodePath("../PlayerSprites")
+tree_root = ExtResource("3_jp4mg")
+anim_player = NodePath("../PlayerSprites/AnimationPlayer")
+parameters/conditions/do_double_jump = false
+parameters/conditions/fall = false
+parameters/conditions/jump = false
+parameters/conditions/land = false
+
+[node name="DeepAnimation" type="Node" parent="." unique_id=1808506926]
+script = ExtResource("4_kn5og")
+event_bindings = Array[ExtResource("5_6fcla")]([SubResource("Resource_i1d8k"), SubResource("Resource_gdnbm"), SubResource("Resource_i1ncg"), SubResource("Resource_litff"), SubResource("Resource_gq25q"), SubResource("Resource_tyxlx"), SubResource("Resource_xjxkv")])
+use_parallel_condition_evaluation = false

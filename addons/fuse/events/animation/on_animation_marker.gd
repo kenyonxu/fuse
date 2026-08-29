@@ -195,8 +195,8 @@ func _check_markers(animation: Animation, anim_name: String, current_pos: float)
 	for track_idx in animation.get_track_count():
 		var track_type = animation.track_get_type(track_idx)
 
-		# 只处理动画轨道
-		if track_type != "value":
+		# 只处理值轨道——track_get_type 返回枚举 int（Godot 3 返回字符串，历史代码误用）
+		if track_type != Animation.TYPE_VALUE:
 			continue
 
 		# 检查轨道上的所有关键帧

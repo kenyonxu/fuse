@@ -43,7 +43,7 @@ class_name OnAnimationStarted
 ## 是否传递动画循环模式
 @export var emit_loop_mode: bool = false
 
-var _anim_player_ref: AnimationPlayer = null
+var _anim_player_ref: Node = null
 var _owner_node_ref: Node = null
 
 ## 获取默认运行时状态
@@ -70,14 +70,15 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
 
-	# 获取目标节点
-	_anim_player_ref = owner_node.get_node_or_null(target_node_path)
-	if not _anim_player_ref:
+	# 获取目标节点（AnimationPlayer 或 AnimatedSprite2D）
+	var _resolved_node: Node = owner_node.get_node_or_null(target_node_path)
+	if not _resolved_node:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 
+	_anim_player_ref = _resolved_node
 	# 验证节点类型
-	if not _anim_player_ref is AnimationPlayer:
+	if not (_resolved_node is AnimationPlayer or _resolved_node is AnimatedSprite2D):
 		_create_fuse_error_localized("FUSE_ERROR_INVALID_TARGET", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 
@@ -87,10 +88,15 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 	if _runtime_instance_ref:
 		_runtime_instance_ref.set_runtime_state("triggered_animations", {})
 
-	# 尝试连接 animation_started 信号（Godot 4.6+）
+	# AnimationPlayer 有 animation_started；AnimatedSprite2D 无此信号，
+	# 以 animation_changed（play 设置新动画时发射）近似"开始"
 	if _anim_player_ref.has_signal("animation_started"):
 		if not _anim_player_ref.animation_started.is_connected(_on_animation_started):
 			_anim_player_ref.animation_started.connect(_on_animation_started)
+	elif _anim_player_ref.has_signal("animation_changed"):
+		if not _anim_player_ref.animation_changed.is_connected(_on_animation_started.bind("")):
+			# animation_changed 无参信号，绑定空参适配 _on_animation_started(anim_name)
+			_anim_player_ref.animation_changed.connect(_on_animation_started.bind(""))
 		_log_debug_localized("FUSE_LOG_EVENT_ANIMATION_USING_SIGNAL", {"signal": "animation_started"})
 	else:
 		# 如果没有信号，使用轮询方式
@@ -124,23 +130,29 @@ func initialize(owner_node: Node) -> void:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
 		return
 
-	# 获取目标节点
-	_anim_player_ref = owner_node.get_node_or_null(target_node_path)
-	if not _anim_player_ref:
+	# 获取目标节点（AnimationPlayer 或 AnimatedSprite2D）
+	var _resolved_node: Node = owner_node.get_node_or_null(target_node_path)
+	if not _resolved_node:
 		_create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 
+	_anim_player_ref = _resolved_node
 	# 验证节点类型
-	if not _anim_player_ref is AnimationPlayer:
+	if not (_resolved_node is AnimationPlayer or _resolved_node is AnimatedSprite2D):
 		_create_fuse_error_localized("FUSE_ERROR_INVALID_TARGET", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
 		return
 
 	_owner_node_ref = owner_node
 
-	# 尝试连接 animation_started 信号（Godot 4.6+）
+	# AnimationPlayer 有 animation_started；AnimatedSprite2D 无此信号，
+	# 以 animation_changed（play 设置新动画时发射）近似"开始"
 	if _anim_player_ref.has_signal("animation_started"):
 		if not _anim_player_ref.animation_started.is_connected(_on_animation_started):
 			_anim_player_ref.animation_started.connect(_on_animation_started)
+	elif _anim_player_ref.has_signal("animation_changed"):
+		if not _anim_player_ref.animation_changed.is_connected(_on_animation_started.bind("")):
+			# animation_changed 无参信号，绑定空参适配 _on_animation_started(anim_name)
+			_anim_player_ref.animation_changed.connect(_on_animation_started.bind(""))
 		_log_debug_localized("FUSE_LOG_EVENT_ANIMATION_USING_SIGNAL", {"signal": "animation_started"})
 	else:
 		# 如果没有信号，使用轮询方式
@@ -174,6 +186,10 @@ func on_process(delta: float, event_instance: RuntimeEventInstance = null) -> vo
 
 	# 如果已经有 animation_started 信号，不需要轮询
 	if _anim_player_ref.has_signal("animation_started"):
+		return
+
+	# AnimatedSprite2D 无 current_animation 属性且已由 animation_changed 信号驱动——跳过轮询
+	if _anim_player_ref is AnimatedSprite2D:
 		return
 
 	# 轮询检测动画开始

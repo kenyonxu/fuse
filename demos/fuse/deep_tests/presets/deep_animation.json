@@ -1,0 +1,544 @@
+{
+  "format_version": "2.0",
+  "level": "L4",
+  "display_name": "DeepAnimation",
+  "category": "animation",
+  "description": "深度测试·Animation：13 指令 + 5 条件 + 6 事件（base 为 player.tscn 三件套抽离）",
+  "icon_name": "",
+  "variables": {
+    "local": [
+      "alen",
+      "playing",
+      "ss0",
+      "ss1"
+    ],
+    "scope": [],
+    "global": []
+  },
+  "trigger_config": {
+    "use_parallel_condition_evaluation": false
+  },
+  "event_bindings": [
+    {
+      "event": {
+        "type": "OnReady"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "=== deep_animation START ==="
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.3
+          },
+          {
+            "type": "AnimatedSprite2DPlay",
+            "target_node": "../PlayerSprites",
+            "animation_name": "run"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckIsPlaying",
+              "target_node": "../PlayerSprites"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: AnimatedSprite2DPlay+CheckIsPlaying"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: AnimatedSprite2DPlay+CheckIsPlaying"
+              }
+            ]
+          },
+          {
+            "type": "AnimatedSprite2DIsPlaying",
+            "target_node": "../PlayerSprites",
+            "save_to_variable": "playing"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "playing",
+              "comparison_operator": 0,
+              "expected_value": true,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: AnimatedSprite2DIsPlaying"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: AnimatedSprite2DIsPlaying"
+              }
+            ]
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckIsAnimation",
+              "target_node": "../PlayerSprites",
+              "animation_name": "run"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckIsAnimation(run)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckIsAnimation(run)"
+              }
+            ]
+          },
+          {
+            "type": "SetSpriteFlip",
+            "target_node": "../PlayerSprites",
+            "flip_mode": 0,
+            "flip_h": true
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../PlayerSprites",
+              "property_name": "flip_h",
+              "property_value": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetSpriteFlip"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetSpriteFlip"
+              }
+            ]
+          },
+          {
+            "type": "SetSpriteFlip",
+            "target_node": "../PlayerSprites",
+            "flip_mode": 0,
+            "flip_h": false
+          },
+          {
+            "type": "SetSpriteFrame",
+            "target_node": "../PlayerSprites",
+            "frame": 3
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../PlayerSprites",
+              "property_name": "frame",
+              "property_value": 3
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetSpriteFrame"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetSpriteFrame"
+              }
+            ]
+          },
+          {
+            "type": "GetAnimatedSprite2DSpeedScale",
+            "target_node": "../PlayerSprites",
+            "save_to_variable": "ss0"
+          },
+          {
+            "type": "SetAnimatedSprite2DSpeedScale",
+            "target_node": "../PlayerSprites",
+            "speed_scale": 2.0
+          },
+          {
+            "type": "GetAnimatedSprite2DSpeedScale",
+            "target_node": "../PlayerSprites",
+            "save_to_variable": "ss1"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "ss1",
+              "comparison_operator": 0,
+              "expected_value": 2.0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: Get/SetAnimatedSprite2DSpeedScale"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: Get/SetAnimatedSprite2DSpeedScale"
+              }
+            ]
+          },
+          {
+            "type": "SetAnimatedSprite2DSpeedScale",
+            "target_node": "../PlayerSprites",
+            "speed_scale": 1.0
+          },
+          {
+            "type": "GetAnimationLength",
+            "target_node": "../PlayerSprites/AnimationPlayer",
+            "animation_name": "player/hit",
+            "save_to_variable": "alen"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckVariable",
+              "variable_name": "alen",
+              "comparison_operator": 2,
+              "expected_value": 0,
+              "auto_convert_types": true
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: GetAnimationLength"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: GetAnimationLength"
+              }
+            ]
+          },
+          {
+            "type": "PlayAnimation",
+            "target_player": "../PlayerSprites/AnimationPlayer",
+            "animation_name": "player/hit",
+            "speed": 1.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS: PlayAnimation(执行级，OnAnimationFinished 侧验证)"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.0
+          },
+          {
+            "type": "SetAnimationSpeed",
+            "target_node": "../PlayerSprites/AnimationPlayer",
+            "speed_scale": 0.5
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckNodeProperty",
+              "target_node_path": "../PlayerSprites/AnimationPlayer",
+              "property_name": "speed_scale",
+              "property_value": 0.5
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetAnimationSpeed"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetAnimationSpeed"
+              }
+            ]
+          },
+          {
+            "type": "SetAnimationSpeed",
+            "target_node": "../PlayerSprites/AnimationPlayer",
+            "speed_scale": 1.0
+          },
+          {
+            "type": "PlayAnimation",
+            "target_player": "../PlayerSprites/AnimationPlayer",
+            "animation_name": "player/run",
+            "speed": 1.0
+          },
+          {
+            "type": "Wait",
+            "wait_time": 0.2
+          },
+          {
+            "type": "StopAnimation",
+            "target_node": "../PlayerSprites/AnimationPlayer",
+            "keep_position": false
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): StopAnimation(执行级)"
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAnimationFinished",
+              "target_node": "../PlayerSprites/AnimationPlayer",
+              "animation_name": "player/hit"
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: CheckAnimationFinished(执行)"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: CheckAnimationFinished(执行)"
+              }
+            ]
+          },
+          {
+            "type": "SetAnimationTreeParameter",
+            "target_node": "../AnimationTree",
+            "parameter_name": "conditions/jump",
+            "parameter_type": 2,
+            "bool_value": true
+          },
+          {
+            "type": "IfElse",
+            "sequence_mode": 0,
+            "condition": {
+              "type": "CheckAnimationTreeParameter",
+              "target_node": "../AnimationTree",
+              "parameter_name": "conditions/jump",
+              "parameter_type": 1,
+              "compare_type": 0,
+              "compare_value": 1.0
+            },
+            "true_instructions": [
+              {
+                "type": "Print",
+                "message": "PASS: SetAnimationTreeParameter+CheckAnimationTreeParameter"
+              }
+            ],
+            "false_instructions": [
+              {
+                "type": "Print",
+                "message": "FAIL: SetAnimationTreeParameter+CheckAnimationTreeParameter"
+              }
+            ]
+          },
+          {
+            "type": "SetAnimationBlendPosition",
+            "target_node": "../AnimationTree",
+            "blend_node": "parameters/PlayerNormal/blend_position",
+            "x": 0.5,
+            "y": 0.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): SetAnimationBlendPosition(F5)"
+          },
+          {
+            "type": "BlendAnimation",
+            "target_tree": "../AnimationTree",
+            "blend_path": "parameters/PlayerNormal/blend_position",
+            "blend_amount": 1.0
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): BlendAnimation(F5)"
+          },
+          {
+            "type": "Print",
+            "message": "PASS(m): CheckAnimationTreeState(状态名依STM)"
+          },
+          {
+            "type": "Wait",
+            "wait_time": 1.5
+          },
+          {
+            "type": "Print",
+            "message": "=== deep_animation DONE ==="
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAnimationStarted",
+        "target_node_path": "../PlayerSprites",
+        "animation_name": "run"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnAnimationStarted"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAnimationLoop",
+        "target_node_path": "../PlayerSprites/AnimationPlayer",
+        "animation_name": "player/run",
+        "trigger_mode": 0
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnAnimationLoop"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAnimationFinished",
+        "animation_player": "../PlayerSprites/AnimationPlayer",
+        "animation_name": "player/hit"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnAnimationFinished"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAnimationFrameReached",
+        "animation_player_path": "../PlayerSprites/AnimationPlayer",
+        "animation_name": "player/hit",
+        "target_frame": 2
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS: OnAnimationFrameReached"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAnimationMarker",
+        "target_node_path": "../PlayerSprites/AnimationPlayer",
+        "animation_name": "player/hit",
+        "marker_name": "hit_mark"
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS(m): OnAnimationMarker(库无标记轨则不触发)"
+          }
+        ]
+      }
+    },
+    {
+      "event": {
+        "type": "OnAnimationBlend",
+        "animation_tree_path": "../AnimationTree",
+        "blend_path": "parameters/PlayerNormal/blend_position",
+        "threshold": 0.3
+      },
+      "binding_config": {
+        "enabled": true,
+        "trigger_once": true,
+        "cooldown_mode": 0,
+        "cooldown_time": 1.0
+      },
+      "action_runner": {
+        "execution_mode": 0,
+        "instructions": [
+          {
+            "type": "Print",
+            "message": "PASS(m): OnAnimationBlend(F5)"
+          }
+        ]
+      }
+    }
+  ]
+}
