@@ -19,10 +19,16 @@ extends Node
 
 @export var events: Array[Dictionary] = []
 
+## 自动注入总开关——F5 手动测试想关自动注入时在 Inspector 取消勾选即可，
+## 不必改节点的 process_mode（那会随场景保存污染 .tscn）
+@export var enabled := true
+
 var _t := 0.0
 
 
 func _process(delta: float) -> void:
+	if not enabled:
+		return
 	_t += delta
 	for entry in timeline:
 		if not entry.get("done", false) and _t >= float(entry.get("delay", 0.0)):
