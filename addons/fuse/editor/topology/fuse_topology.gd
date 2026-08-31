@@ -9,6 +9,8 @@ extends VBoxContainer
 ## 选中 Trigger → 右侧 Trigger 概要；选中指令 → 右侧指令详情。
 ## 依赖 InstructionAnalyzer 解析引擎。
 
+const TopologyExport := preload("res://addons/fuse/editor/topology/topology_export.gd")
+
 # E6: 问题过滤模式
 const FILTER_ALL := 0
 const FILTER_ERROR := 1
@@ -68,6 +70,11 @@ func _init() -> void:
 	export_btn.text = "导出问题报告"
 	export_btn.pressed.connect(_on_export_problems)
 	banner.add_child(export_btn)
+
+	var export_json_btn := Button.new()
+	export_json_btn.text = "导出 JSON"
+	export_json_btn.pressed.connect(_on_export_json)
+	banner.add_child(export_json_btn)
 
 	# ---- 左右分栏 ----
 	var hsplit := HSplitContainer.new()
@@ -1068,6 +1075,20 @@ func _on_export_problems() -> void:
 		_detail.append_text("\n[color=green]报告已导出: %s[/color]" % path)
 	else:
 		_detail.append_text("\n[color=red]导出失败: %s[/color]" % path)
+
+
+## 导出当前场景拓扑 JSON（TopologyExport 共享序列化，Task 2 毕业 deriver 的地基）
+func _on_export_json() -> void:
+	var scene_root: Node = EditorInterface.get_edited_scene_root()
+	if scene_root == null:
+		_detail.append_text("[color=red](未打开场景，无法导出)[/color]")
+		return
+	var topology: Dictionary = InstructionAnalyzer.build_topology(scene_root)
+	var path: String = TopologyExport.export_to_json(topology, "res://fuse_reports/topology")
+	if path.is_empty():
+		_detail.append_text("[color=red](导出失败，见输出面板)[/color]")
+	else:
+		_detail.append_text("[color=gray]拓扑已导出: %s[/color]\n" % path)
 
 
 # ============================================================
