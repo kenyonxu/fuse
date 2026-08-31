@@ -1,0 +1,609 @@
+# addons/fuse/tests/graduation/test_codegen_emitter.gd
+extends Node
+
+## EventMapper + GdscriptEmitter 测试（M2 毕业导出器核心）
+##
+## 三层覆盖：
+##   1. emit_instruction 单元级——直接构造指令对象断言生成的代码行
+##      （白名单 9 类原生直译 + 各委托降级分支）
+##   2. EventMapper.map_event——四类白名单事件的接线形态 + 非白名单拒绝
+##   3. emit_system 系统级——L2/L4 fixture 组装完整脚本断言关键行
+##      （头注释/preload/_DELEGATED/gate_allows/teardown/入口函数），
+##      并把产物写到 user:// 临时 .gd 后 load() 做解析冒烟（T7 前移）。
+
+var _fail := 0
+var _smoke_seq := 0
+
+
+func _check(cond: bool, msg: String) -> void:
+	if cond:
+		print("✓ " + msg)
+	else:
+		_fail += 1
+		push_error("✗ " + msg)
+
+
+func _ready() -> void:
+	print("=== test_codegen_emitter ===")
+	_test_wait_native()
+	_test_wait_variable_delegated()
+	_test_print_native()
+	_test_tween_delegated()
+	_test_set_variable_native_and_copy_delegated()
+	_test_math_operation_native()
+	_test_send_event_native_and_ref_delegated()
+	_test_show_hide_ui_native()
+	_test_set_ui_text_native()
+	_test_save_load_global_variables()
+	_test_map_ready()
+	_test_map_input_modes()
+	_test_map_interval()
+	_test_map_receive()
+	_test_map_unsupported_event()
+	_test_emit_system_l2_golden()
+	_test_emit_system_l4_multi_and_disabled()
+	_test_emit_system_mixed_native_delegated()
+	_test_emit_system_rejections()
+	_test_parse_smoke_all_event_kinds()
+	print("=== test_codegen_emitter 完成（失败 %d）===" % _fail)
+	get_tree().quit(1 if _fail > 0 else 0)
+
+
+# ============================================================
+# emit_instruction 单元级
+# ============================================================
+
+func _test_wait_native() -> void:
+	var w := Wait.new()
+	w.wait_time = 0.5
+	var line: String = GdscriptEmitter.emit_instruction(w, "\t")
+	_check(line.contains("await get_tree().create_timer(0.5).timeout"), "Wait 原生直译: %s" % line)
+
+
+func _test_wait_variable_delegated() -> void:
+	var w := Wait.new()
+	w.value_source = Wait.ValueSource.VARIABLE
+	w.wait_time_variable = "delay_secs"
+	var line: String = GdscriptEmitter.emit_instruction(w, "\t")
+	_check(line.strip_edges().begins_with("await FuseDelegation.run"), "Wait 变量模式走委托: %s" % line)
+
+
+func _test_print_native() -> void:
+	var p := Print.new()
+	p.message = "hi"
+	var line: String = GdscriptEmitter.emit_instruction(p, "\t")
+	_check(line.contains('print("hi")'), "Print 原生直译: %s" % line)
+
+
+func _test_tween_delegated() -> void:
+	var t: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	var line: String = GdscriptEmitter.emit_instruction(t, "\t")
+	_check(line.strip_edges().begins_with("await FuseDelegation.run"), "非白名单指令走委托: %s" % line)
+
+
+func _test_set_variable_native_and_copy_delegated() -> void:
+	var s := SetVariable.new()
+	s.target_variable = "hp"
+	s.target_variable_scope = BaseVariable.VariableScope.GLOBAL
+	s.new_value = 10
+	var line: String = GdscriptEmitter.emit_instruction(s, "\t")
+	_check(line.contains('FuseDelegation.set_var(self, "hp", 10, "global")'),
+		"SetVariable 字面量模式原生: %s" % line)
+
+	var copy := SetVariable.new()
+	copy.target_variable = "hp"
+	copy.set_with_another_variable = true
+	copy.from_variable = "max_hp"
+	var line2: String = GdscriptEmitter.emit_instruction(copy, "\t")
+	_check(line2.strip_edges().begins_with("await FuseDelegation.run"),
+		"SetVariable 变量复制模式委托（set_with_another_variable）: %s" % line2)
+
+
+func _test_math_operation_native() -> void:
+	var m := MathOperation.new()
+	m.operation_type = MathOperation.OperationType.ADD
+	m.operand_a_source = MathOperation.OperandASource.VALUE
+	m.operand_a_value = 2.0
+	m.operand_b_source = MathOperation.OperandBSource.VARIABLE
+	m.operand_b_variable = "bonus"
+	m.operand_b_scope = BaseVariable.VariableScope.LOCAL
+	m.save_to_variable = "score"
+	m.save_to_scope = BaseVariable.VariableScope.LOCAL
+	var block: String = GdscriptEmitter.emit_instruction(m, "\t")
+	_check(block.contains('FuseDelegation.get_var(self, "bonus", "local")'),
+		"MathOperation 变量操作数经桥读取: %s" % block)
+	_check(block.contains('FuseDelegation.set_var(self, "score",'),
+		"MathOperation 结果经桥写回: %s" % block)
+	_check(block.contains(" + "), "MathOperation ADD 运算符直译: %s" % block)
+	_check(not block.contains("await FuseDelegation.run"), "MathOperation 原生非委托")
+
+
+func _test_send_event_native_and_ref_delegated() -> void:
+	var s := SendEvent.new()
+	s.event_name = "score_changed"
+	s.event_args = {"amount": 5}
+	var line: String = GdscriptEmitter.emit_instruction(s, "\t")
+	_check(line.contains('FuseDelegation.send_event("score_changed", {"amount":5})'),
+		"SendEvent 字面量参数原生: %s" % line)
+
+	var ref := SendEvent.new()
+	ref.event_name = "score_changed"
+	ref.event_args = {"amount": "$score"}
+	var line2: String = GdscriptEmitter.emit_instruction(ref, "\t")
+	_check(line2.strip_edges().begins_with("await FuseDelegation.run"),
+		"SendEvent $variable 引用参数委托: %s" % line2)
+
+
+func _test_show_hide_ui_native() -> void:
+	var show := ShowHideUI.new()
+	show.target_node = NodePath("UI/Panel")
+	show.action = ShowHideUI.Action.SHOW
+	var line: String = GdscriptEmitter.emit_instruction(show, "\t")
+	_check(line.contains('(get_node("UI/Panel") as Control).show()'),
+		"ShowHideUI SHOW 原生: %s" % line)
+
+	var toggle := ShowHideUI.new()
+	toggle.target_node = NodePath("UI/Panel")
+	toggle.action = ShowHideUI.Action.TOGGLE
+	var block: String = GdscriptEmitter.emit_instruction(toggle, "\t")
+	_check(block.contains("visible = not "), "ShowHideUI TOGGLE 原生: %s" % block)
+
+	var by_var := ShowHideUI.new()
+	by_var.use_variable_for_target = true
+	by_var.target_variable = "panel_node"
+	var line3: String = GdscriptEmitter.emit_instruction(by_var, "\t")
+	_check(line3.strip_edges().begins_with("await FuseDelegation.run"),
+		"ShowHideUI 变量目标模式委托: %s" % line3)
+
+
+func _test_set_ui_text_native() -> void:
+	var t := SetUIText.new()
+	t.target_node = NodePath("UI/Label")
+	t.text = "hello"
+	var line: String = GdscriptEmitter.emit_instruction(t, "\t")
+	_check(line.contains('(get_node("UI/Label") as Control).set("text", "hello")'),
+		"SetUIText 字面量模式原生: %s" % line)
+
+	var by_var := SetUIText.new()
+	by_var.use_variable = true
+	by_var.text_variable = "label_text"
+	var line2: String = GdscriptEmitter.emit_instruction(by_var, "\t")
+	_check(line2.strip_edges().begins_with("await FuseDelegation.run"),
+		"SetUIText 文本变量模式委托: %s" % line2)
+
+
+func _test_save_load_global_variables() -> void:
+	var save := SaveGlobalVariables.new()
+	save.save_target = SaveGlobalVariables.SaveTarget.CUSTOM_PATH
+	save.custom_path = "res://saves/game.tres"
+	save.save_scope = SaveGlobalVariables.SaveScope.PERSISTENT_ONLY
+	var line: String = GdscriptEmitter.emit_instruction(save, "\t")
+	_check(line.contains('GlobalVariableManager.get_instance().save_persistent_to_resource("res://saves/game.tres")'),
+		"SaveGlobalVariables CUSTOM_PATH 原生: %s" % line)
+
+	var load_inst := LoadGlobalVariables.new()
+	load_inst.load_source = LoadGlobalVariables.LoadSource.CUSTOM_PATH
+	load_inst.custom_path = "res://saves/game.tres"
+	var line2: String = GdscriptEmitter.emit_instruction(load_inst, "\t")
+	_check(line2.contains('GlobalVariableManager.get_instance().load_from_resource("res://saves/game.tres")'),
+		"LoadGlobalVariables CUSTOM_PATH 原生: %s" % line2)
+
+	var assistant := SaveGlobalVariables.new()
+	assistant.save_target = SaveGlobalVariables.SaveTarget.ASSISTANT_RESOURCE
+	var line3: String = GdscriptEmitter.emit_instruction(assistant, "\t")
+	_check(line3.strip_edges().begins_with("await FuseDelegation.run"),
+		"SaveGlobalVariables ASSISTANT_RESOURCE 委托（路径运行时检测）: %s" % line3)
+
+
+# ============================================================
+# EventMapper
+# ============================================================
+
+func _test_map_ready() -> void:
+	var ev0 := OnReady.new()
+	var m0: Dictionary = EventMapper.map_event(ev0, "u1")
+	_check(m0.get("mode", "") == "ready", "OnReady mode=ready")
+	_check(m0.get("setup_code", "").contains("_on_u1.call_deferred()"),
+		"OnReady delay=0 生成 call_deferred 一帧延迟（对齐 Fuse）: %s" % m0.get("setup_code", ""))
+
+	var ev5 := OnReady.new()
+	ev5.delay_seconds = 1.5
+	var m5: Dictionary = EventMapper.map_event(ev5, "u1")
+	_check(m5.get("setup_code", "").contains("wait_time = 1.5") and m5.get("setup_code", "").contains("one_shot = true"),
+		"OnReady delay>0 one-shot Timer: %s" % m5.get("setup_code", ""))
+
+
+func _test_map_input_modes() -> void:
+	var cases := [
+		[OnInputAction.TriggerMode.JUST_PRESSED, "Input.is_action_just_pressed(\"jump\")"],
+		[OnInputAction.TriggerMode.JUST_RELEASED, "Input.is_action_just_released(\"jump\")"],
+		[OnInputAction.TriggerMode.HOLD, "Input.is_action_pressed(\"jump\")"],
+		[OnInputAction.TriggerMode.PRESSED_OR_RELEASED, "Input.is_action_just_pressed(\"jump\") or Input.is_action_just_released(\"jump\")"],
+	]
+	for case: Array in cases:
+		var ev := OnInputAction.new()
+		ev.target_input_action = "jump"
+		ev.trigger_mode = case[0]
+		var m: Dictionary = EventMapper.map_event(ev, "u1")
+		_check(m.get("mode", "") == "input", "OnInputAction mode=input")
+		_check(m.get("input_branch", "").contains('event.is_action("jump")'),
+			"OnInputAction 分支含 is_action 过滤: %s" % m.get("input_branch", ""))
+		_check(m.get("input_branch", "").contains(case[1]),
+			"OnInputAction trigger_mode=%d 分支: %s" % [case[0], m.get("input_branch", "")])
+
+
+func _test_map_interval() -> void:
+	var ev := OnInterval.new()
+	ev.interval_seconds = 2.0
+	ev.max_repeats = 3
+	var m: Dictionary = EventMapper.map_event(ev, "u1")
+	_check(m.get("mode", "") == "interval", "OnInterval mode=interval")
+	var wiring: String = m.get("wiring_code", "")
+	_check(wiring.contains("_setup_interval_u1") and wiring.contains("_on_interval_u1"),
+		"OnInterval 生成 Timer 成员与滴答函数: %s" % wiring.substr(0, 80))
+	_check(wiring.contains("wait_time = 2.0"), "OnInterval 间隔直译")
+	_check(wiring.contains("_repeats_u1 >= 3"), "OnInterval max_repeats 计数")
+	_check(m.get("setup_code", "").contains("_setup_interval_u1()"), "OnInterval auto_start 接进 _ready")
+
+	var stop := OnInterval.new()
+	stop.interval_seconds = 1.0
+	stop.stop_condition = CheckVariable.new()
+	var m2: Dictionary = EventMapper.map_event(stop, "u1")
+	var wiring2: String = m2.get("wiring_code", "")
+	_check(wiring2.contains("FuseDelegation.check_condition(self, {"),
+		"OnInterval stop_condition 仍原生（每滴 check_condition）: %s" % wiring2.substr(0, 120))
+
+
+func _test_map_receive() -> void:
+	var ev := OnReceiveEvent.new()
+	ev.event_name = "game_over"
+	var m: Dictionary = EventMapper.map_event(ev, "u1")
+	_check(m.get("mode", "") == "receive", "OnReceiveEvent mode=receive")
+	_check(m.get("setup_code", "").contains('FuseDelegation.subscribe("game_over", _on_evt_u1)'),
+		"OnReceiveEvent _ready 订阅: %s" % m.get("setup_code", ""))
+	_check(m.get("teardown_code", "").contains("FuseDelegation.unsubscribe(_sub_u1)"),
+		"OnReceiveEvent _exit_tree 退订: %s" % m.get("teardown_code", ""))
+
+
+func _test_map_unsupported_event() -> void:
+	var ev := OnInputKey.new()
+	var m: Dictionary = EventMapper.map_event(ev, "u1")
+	_check(m.get("mode", "") == "unsupported", "非白名单事件 mode=unsupported")
+	_check(str(m.get("error", "")).length() > 0, "unsupported 带原因说明")
+
+
+# ============================================================
+# emit_system fixture
+# ============================================================
+
+## 最小 System JSON（对齐 SystemDeriver._derive_single 产物结构）
+func _make_system(system_name: String, node_path: String, level: String) -> Dictionary:
+	return {
+		"format_version": "1.0",
+		"name": system_name,
+		"description": "",
+		"units": [{
+			"id": "u1",
+			"kind": "trigger",
+			"scene": "res://test_fixture.tscn",
+			"node_path": node_path,
+			"level": level,
+		}],
+		"emit": {
+			"output_script": "res://fuse_generated/scripts/%s.gd" % system_name,
+			"native_instructions": [],
+		},
+	}
+
+
+func _test_emit_system_l2_golden() -> void:
+	var root := Node.new()
+	root.name = "FixtureScene"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigPrint"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	var p := Print.new()
+	p.message = "graduated"
+	ar.instructions = [p]
+	trigger.action_runner = ar
+	trigger.event_definition = OnReady.new()
+	trigger.trigger_once = false
+	trigger.cooldown_mode = BaseTrigger.CooldownMode.GLOBAL_COOLDOWN
+	trigger.cooldown_time = 2.5
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_print", "TrigPrint", "L2"), trigger, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+
+	_check(text.contains("毕业导出器生成"), "头注释含毕业导出器生成标记")
+	_check(text.contains("System: trig_print"), "头注释含 System 名")
+	_check(text.contains("源单元: TrigPrint (L2)"), "头注释含源单元/层级")
+	_check(text.contains("采用:") and text.contains("回滚:"), "头注释含采用/回滚说明")
+	_check(text.contains('preload("res://addons/fuse/core/graduation/fuse_delegation.gd")'),
+		"FuseDelegation preload 行")
+	_check(text.contains("const _DELEGATED"), "_DELEGATED 常量存在")
+	_check(text.contains("FuseDelegation.build_delegated(_DELEGATED)"), "build_delegated 接线")
+	_check(text.contains('FuseDelegation.gate_allows(_gate, "u1", false, 1, 2.5, get_instance_id())'),
+		"gate_allows 门控调用（trigger_once/cooldown 三值快照）")
+	_check(text.contains("FuseDelegation.teardown(self)"), "_exit_tree teardown")
+	_check(text.contains('print("graduated")'), "Print 原生行")
+	_check(text.contains("_on_u1.call_deferred()"), "OnReady delay=0 入口 call_deferred")
+	_check(result.get("native_count", -1) == 1, "native_count = 1")
+	_check((result.get("delegated_names", []) as Array).is_empty(), "无委托指令")
+	var report: Dictionary = result.get("report", {})
+	_check(report.get("total_instructions", -1) == 1 and report.get("delegated_count", -1) == 0,
+		"report 覆盖率分母/分子")
+	root.queue_free()
+
+
+func _test_emit_system_l4_multi_and_disabled() -> void:
+	var root := Node.new()
+	root.name = "FixtureScene"
+	add_child(root)
+	var multi := MultiEventTrigger.new()
+	multi.name = "MultiTrig"
+	root.add_child(multi)
+	multi.set_owner(root)
+
+	var b0 := EventBinding.new()
+	b0.event = OnInputAction.new()
+	b0.event.target_input_action = "jump"
+	var ar0 := ActionRunner.new()
+	ar0.instructions = [Print.new()]
+	b0.action_runner = ar0
+
+	var b1 := EventBinding.new()
+	b1.event = OnInterval.new()
+	b1.event.interval_seconds = 1.0
+	var ar1 := ActionRunner.new()
+	var t: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	ar1.instructions = [t]
+	b1.action_runner = ar1
+
+	var b2 := EventBinding.new()
+	b2.event = OnReady.new()
+	b2.enabled = false
+	b2.action_runner = ActionRunner.new()
+	multi.event_bindings = [b0, b1, b2]
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("multi_trig", "MultiTrig", "L4"), multi, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+	_check(text.contains('FuseDelegation.gate_allows(_gate, "b0"'), "L4 binding0 gate key b0")
+	_check(text.contains('FuseDelegation.gate_allows(_gate, "b1"'), "L4 binding1 gate key b1")
+	_check(text.contains("func _unhandled_input(event: InputEvent) -> void:"), "输入事件合并 _unhandled_input")
+	_check(text.contains('event.is_action("jump")'), "b0 输入过滤")
+	_check(text.contains("_setup_interval_b1()"), "b1 OnInterval setup")
+	_check(not text.contains('_on_b2'), "disabled binding 直接跳过（不生成入口）")
+	var report: Dictionary = result.get("report", {})
+	var skipped: Array = report.get("skipped_disabled_bindings", [])
+	_check(skipped.size() == 1, "report 列出被跳过的 disabled binding: %s" % str(skipped))
+	_check((result.get("delegated_names", []) as Array).has("TweenMoveTo"), "TweenMoveTo 进委托清单")
+	root.queue_free()
+
+
+func _test_emit_system_mixed_native_delegated() -> void:
+	var root := Node.new()
+	root.name = "FixtureScene"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigMixed"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	var p := Print.new()
+	p.message = "before"
+	var t: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	var p2 := Print.new()
+	p2.message = "after"
+	ar.instructions = [p, t, p2]
+	trigger.action_runner = ar
+	trigger.event_definition = OnReady.new()
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_mixed", "TrigMixed", "L2"), trigger, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+	_check(result.get("native_count", -1) == 2, "混合序列 native_count=2")
+	_check(text.contains('print("before")') and text.contains('print("after")'), "原生行保留")
+	_check(text.contains('await FuseDelegation.run(self, _delegated["u1_d1"],'),
+		"混合序列委托段交错发射: %s" % text.get_slice("await Fuse", 1).substr(0, 60))
+	var lines := text.split("\n")
+	var i_before := -1
+	var i_delegated := -1
+	var i_after := -1
+	for i: int in lines.size():
+		if lines[i].contains('print("before")'):
+			i_before = i
+		elif lines[i].contains("await FuseDelegation.run"):
+			i_delegated = i
+		elif lines[i].contains('print("after")'):
+			i_after = i
+	_check(i_before >= 0 and i_before < i_delegated and i_delegated < i_after,
+		"原生/委托/原生按原顺序交错")
+	_check(text.contains('"u1_d1":[{'), "_DELEGATED 内嵌委托指令 JSON")
+	root.queue_free()
+
+
+func _test_emit_system_rejections() -> void:
+	# L3 Runner 拒生成
+	var root := Node.new()
+	root.name = "FixtureScene"
+	add_child(root)
+	var runner := Runner.new()
+	runner.name = "SpawnLogic"
+	root.add_child(runner)
+	runner.set_owner(root)
+	runner.action_runner = ActionRunner.new()
+	var res_runner: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("spawn_logic", "SpawnLogic", "L3"), runner, "res://test_fixture.tscn")
+	_check(res_runner.get("script_text", "x") == "", "L3 Runner MVP 拒生成（script_text 空）")
+	var errs_runner: Array = res_runner.get("report", {}).get("errors", [])
+	_check(errs_runner.any(func(e): return e.get("code", "") == "E_EVENT_UNSUPPORTED"),
+		"L3 拒生成归 E_EVENT_UNSUPPORTED: %s" % str(errs_runner))
+
+	# 非白名单事件拒生成
+	var trigger := Trigger.new()
+	trigger.name = "TrigKey"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	ar.instructions = [Print.new()]
+	trigger.action_runner = ar
+	trigger.event_definition = OnInputKey.new()
+	var res_ev: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_key", "TrigKey", "L2"), trigger, "res://test_fixture.tscn")
+	_check(res_ev.get("script_text", "x") == "", "非白名单事件拒生成（script_text 空）")
+	var errs_ev: Array = res_ev.get("report", {}).get("errors", [])
+	_check(errs_ev.any(func(e): return e.get("code", "") == "E_EVENT_UNSUPPORTED"),
+		"事件拒生成归 E_EVENT_UNSUPPORTED: %s" % str(errs_ev))
+
+	# RESTART retrigger_policy 拒生成
+	var multi := MultiEventTrigger.new()
+	multi.name = "MultiRestart"
+	root.add_child(multi)
+	multi.set_owner(root)
+	var b := EventBinding.new()
+	b.event = OnReady.new()
+	b.retrigger_policy = EventBinding.RetriggerPolicy.RESTART
+	b.action_runner = ActionRunner.new()
+	multi.event_bindings = [b]
+	var res_restart: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("multi_restart", "MultiRestart", "L4"), multi, "res://test_fixture.tscn")
+	_check(res_restart.get("script_text", "x") == "", "RESTART retrigger_policy 拒生成")
+	var errs_restart: Array = res_restart.get("report", {}).get("errors", [])
+	_check(errs_restart.any(func(e): return str(e.get("detail", "")).contains("RESTART")),
+		"RESTART 拒生成 report 标注: %s" % str(errs_restart))
+	root.queue_free()
+
+
+# ============================================================
+# 解析冒烟：产物写 user:// 后 load() 验证零解析错（T7 前移）
+# ============================================================
+
+func _test_parse_smoke_all_event_kinds() -> void:
+	var root := Node.new()
+	root.name = "SmokeScene"
+	add_child(root)
+
+	# 1) OnReady + 混合指令（含委托）
+	var t1 := Trigger.new()
+	t1.name = "SmokeReady"
+	root.add_child(t1)
+	t1.set_owner(root)
+	var ar1 := ActionRunner.new()
+	var p := Print.new()
+	p.message = "smoke"
+	var tween: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	var setv := SetVariable.new()
+	setv.target_variable = "count"
+	setv.new_value = 1
+	ar1.instructions = [p, tween, setv]
+	t1.action_runner = ar1
+	t1.event_definition = OnReady.new()
+	t1.event_definition.delay_seconds = 0.25
+	_smoke_load(_make_system("smoke_ready", "SmokeReady", "L2"), t1)
+
+	# 2) OnInputAction + Wait + SendEvent 原生
+	var t2 := Trigger.new()
+	t2.name = "SmokeInput"
+	root.add_child(t2)
+	t2.set_owner(root)
+	var ar2 := ActionRunner.new()
+	var w := Wait.new()
+	w.wait_time = 0.1
+	var se := SendEvent.new()
+	se.event_name = "smoke_evt"
+	ar2.instructions = [w, se]
+	t2.action_runner = ar2
+	t2.event_definition = OnInputAction.new()
+	t2.event_definition.target_input_action = "jump"
+	_smoke_load(_make_system("smoke_input", "SmokeInput", "L2"), t2)
+
+	# 3) OnInterval（max_repeats + 随机间隔）
+	var t3 := Trigger.new()
+	t3.name = "SmokeInterval"
+	root.add_child(t3)
+	t3.set_owner(root)
+	var ar3 := ActionRunner.new()
+	ar3.instructions = [Print.new()]
+	t3.action_runner = ar3
+	var interval := OnInterval.new()
+	interval.interval_seconds = 0.5
+	interval.max_repeats = 2
+	interval.use_random_interval = true
+	interval.min_interval_seconds = 0.1
+	interval.max_interval_seconds = 0.3
+	t3.event_definition = interval
+	_smoke_load(_make_system("smoke_interval", "SmokeInterval", "L2"), t3)
+
+	# 4) OnReceiveEvent + MathOperation 原生
+	var t4 := Trigger.new()
+	t4.name = "SmokeReceive"
+	root.add_child(t4)
+	t4.set_owner(root)
+	var ar4 := ActionRunner.new()
+	var m := MathOperation.new()
+	m.operation_type = MathOperation.OperationType.MULTIPLY
+	m.operand_a_source = MathOperation.OperandASource.VALUE
+	m.operand_a_value = 3.0
+	m.operand_b_source = MathOperation.OperandBSource.VALUE
+	m.operand_b_value = 7.0
+	m.save_to_variable = "result"
+	ar4.instructions = [m]
+	t4.action_runner = ar4
+	var receive := OnReceiveEvent.new()
+	receive.event_name = "smoke_evt"
+	t4.event_definition = receive
+	_smoke_load(_make_system("smoke_receive", "SmokeReceive", "L2"), t4)
+
+	# 5) L4 多事件混合（input + interval + receive）
+	var multi := MultiEventTrigger.new()
+	multi.name = "SmokeMulti"
+	root.add_child(multi)
+	multi.set_owner(root)
+	var bindings: Array[EventBinding] = []
+	for i: int in 3:
+		var b := EventBinding.new()
+		var b_ar := ActionRunner.new()
+		b_ar.instructions = [Print.new()]
+		b.action_runner = b_ar
+		match i:
+			0:
+				var ia := OnInputAction.new()
+				ia.target_input_action = "jump"
+				b.event = ia
+			1:
+				var iv := OnInterval.new()
+				iv.interval_seconds = 1.0
+				b.event = iv
+			2:
+				var rc := OnReceiveEvent.new()
+				rc.event_name = "smoke_evt"
+				b.event = rc
+		bindings.append(b)
+	multi.event_bindings = bindings
+	_smoke_load(_make_system("smoke_multi", "SmokeMulti", "L4"), multi)
+
+	root.queue_free()
+
+
+func _smoke_load(system: Dictionary, unit_node: Node) -> void:
+	_smoke_seq += 1
+	var path := "user://graduation_smoke_%d.gd" % _smoke_seq
+	var result: Dictionary = GdscriptEmitter.emit_system(system, unit_node, "res://smoke.tscn")
+	var text: String = result.get("script_text", "")
+	if text.is_empty():
+		_check(false, "解析冒烟 %s：script_text 为空（拒生成）" % system.get("name", "?"))
+		return
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(text)
+	f.close()
+	var script: GDScript = load(path)
+	var ok: bool = script != null and script.can_instantiate()
+	_check(ok, "解析冒烟 %s：load() 零解析错" % system.get("name", "?"))
+	if not ok:
+		push_error("---- 冒烟产物 ----\n" + text)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
