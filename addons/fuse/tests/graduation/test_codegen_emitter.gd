@@ -43,6 +43,7 @@ func _ready() -> void:
 	_test_map_receive()
 	_test_map_unsupported_event()
 	_test_emit_system_l2_golden()
+	_test_emit_system_l2_runner_child_fallback()
 	_test_emit_system_l4_multi_and_disabled()
 	_test_emit_system_mixed_native_delegated()
 	_test_emit_system_rejections()
@@ -424,6 +425,37 @@ func _test_emit_system_l2_golden() -> void:
 	root.queue_free()
 
 
+## L2 Trigger 自身无 action_runner、Runner 子节点承载指令 → emit 取子 runner 的
+## 指令（M3 收口：`_get_action_runner` 回退对齐 deriver/validator 归集语义，防漏发射）
+func _test_emit_system_l2_runner_child_fallback() -> void:
+	var root := Node.new()
+	root.name = "FixtureScene"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigHosted"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	trigger.event_definition = OnReady.new()
+	var runner := Runner.new()
+	runner.name = "HostedRunner"
+	trigger.add_child(runner)
+	var ar := ActionRunner.new()
+	var p := Print.new()
+	p.message = "from_child_runner"
+	ar.instructions = [p]
+	runner.action_runner = ar
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_hosted", "TrigHosted", "L2"), trigger, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+	_check(text.contains('print("from_child_runner")'),
+		"L2 Runner 子节点承载指令 → emit 拿到（回退对齐 deriver/validator）")
+	_check(result.get("native_count", -1) == 1, "子 runner 指令计入 native_count")
+	_check(result.get("report", {}).get("total_instructions", -1) == 1,
+		"子 runner 指令计入 report.total_instructions")
+	root.queue_free()
+
+
 func _test_emit_system_l4_multi_and_disabled() -> void:
 	var root := Node.new()
 	root.name = "FixtureScene"
@@ -564,6 +596,11 @@ func _test_emit_system_rejections() -> void:
 	_check(downgraded == ["b0"], "RESTART 降级入 report: %s" % str(downgraded))
 	_check(str(res_restart.get("script_text", "")).contains("降级备案: b0"),
 		"RESTART 降级在生成脚本头注释显著备案")
+	var restart_text := str(res_restart.get("script_text", ""))
+	_check(restart_text.contains("请人工确认重触发时上一轮执行已完成"),
+		"降级备案为中性确认文案（人工确认义务）")
+	_check(not restart_text.contains("不可达"),
+		"降级备案不含'不可达'式断言（M3 收口中性化）")
 	root.queue_free()
 
 

@@ -14,7 +14,8 @@ extends RefCounted
 ## codes（spec §5）：
 ##   E_FORMAT_VERSION / E_UNIT_NOT_FOUND / E_UNIT_LEVEL_MISMATCH /
 ##   E_EXTERNAL_UNRESOLVED / E_WARNING_NOT_ACKNOWLEDGED / E_EMIT_TARGET_CONFLICT /
-##   W_SINGLETON_IN_COMPONENT / W_NESTED_UNIT
+##   W_SINGLETON_IN_COMPONENT / W_NESTED_UNIT / W_RESTART_DEGRADED（M3 收口：
+##   RESTART retrigger 生成时降级为 SKIP 的人工确认提示，warning 不阻断）
 ## 另有 info 级：I_CROSS_SCENE_EXTERNAL（跨场景依赖从宽提示）、
 ##   I_OVERWRITE_GENERATED（覆盖本导出器旧生成物）、I_NOT_SYSTEM（目录递归时跳过非 System JSON）
 ##
@@ -188,6 +189,7 @@ static func _validate_units(data: Dictionary, findings: Array) -> void:
 		_check_component_singleton(unit_name, ctx, upath, findings)
 		_check_warnings_acknowledged(data, unit_name, ctx, upath, findings)
 		_check_externals(data, unit_name, ctx, upath, findings)
+		_check_retrigger_policies(node, upath, findings)
 
 
 # 嵌套单元（位于实例化子场景内）——生成目标与挂载点需人工确认，不阻断
@@ -278,6 +280,23 @@ static func _has_other_producer(sent_by_unit: Dictionary, unit_name: String, ev_
 		if (sent_by_unit[other] as Array).has(ev_name):
 			return true
 	return false
+
+
+# RESTART retrigger 生成时降级为 SKIP（emitter 备案降级，T7 ruling）——校验层
+# 同步显著提示：该绑定重触发时上一轮执行已完成需人工确认（warning 不阻断，
+# 与 emitter `_collect_l4_bindings` 的 enabled 过滤口径一致——disabled 不报）
+static func _check_retrigger_policies(node: Node, upath: String, findings: Array) -> void:
+	var bindings = node.get("event_bindings")
+	if bindings == null:
+		return
+	for i: int in (bindings as Array).size():
+		var binding = (bindings as Array)[i]
+		if binding == null or not bool(binding.get("enabled")):
+			continue
+		if int(binding.get("retrigger_policy")) == EventBinding.RetriggerPolicy.RESTART:
+			findings.append(_finding("W_RESTART_DEGRADED", "warning",
+				"%s~event_bindings[b%d]" % [upath, i],
+				"绑定 b%d retrigger_policy=RESTART，生成时降级为 SKIP，请人工确认该绑定重触发时上一轮已完成" % i))
 
 
 # ---- 第 3 层：emit 目标覆盖保护 ----

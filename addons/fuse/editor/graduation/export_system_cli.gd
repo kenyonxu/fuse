@@ -91,7 +91,7 @@ func _export_one(path: String) -> int:
 		print("  ✗ 拒绝生成：发射器 error %d 项" % errors.size())
 		return 1
 
-	# 5. 写 output_script + <stem>.report.md
+	# 5. 写 output_script + <stem>.report.md（report 写失败计 IO 错误 → exit 2）
 	var out_path: String = str(system.get("emit", {}).get("output_script", ""))
 	var write_err := _write_text(out_path, str(result["script_text"]))
 	if write_err != OK:
@@ -99,7 +99,11 @@ func _export_one(path: String) -> int:
 		return 2
 	var report_path := out_path.get_base_dir().path_join(
 		"%s.report.md" % out_path.get_file().get_basename())
-	_write_text(report_path, _render_report(report, out_path))
+	var report_err := _write_text(report_path, _render_report(report, out_path))
+	if report_err != OK:
+		printerr("  [IO] 无法写入报告 %s (err=%d)" % [report_path, report_err])
+		push_error("report.md 写入失败: %s" % report_path)
+		return 2
 
 	# 6. headless load() 解析验证（can_instantiate = 零解析错）
 	var script: GDScript = load(out_path)
@@ -114,6 +118,10 @@ func _export_one(path: String) -> int:
 		system.get("name", "?"), native, total, pct,
 		int(report.get("delegated_count", 0)),
 		(report.get("skipped_disabled_bindings", []) as Array).size(), out_path])
+	# 降级备案（M3 收口）：emit report 含 restart_degraded 清单则在成功行显著提示
+	var downgraded: Array = report.get("downgraded_restart_bindings", [])
+	if not downgraded.is_empty():
+		print("  降级备案: %s（详见 report）" % "、".join(PackedStringArray(downgraded)))
 	return 0
 
 

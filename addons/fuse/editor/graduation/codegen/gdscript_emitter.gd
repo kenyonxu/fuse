@@ -143,7 +143,7 @@ static func _collect_bindings(unit_node: Node, report: Dictionary) -> Array:
 		return [{
 			"key": "u1",
 			"event": unit_node.get("event_definition"),
-			"action_runner": unit_node.get("action_runner"),
+			"action_runner": _get_action_runner(unit_node),
 			"trigger_once": bool(unit_node.get("trigger_once")),
 			"cooldown_mode": int(unit_node.get("cooldown_mode")),
 			"cooldown_time": float(unit_node.get("cooldown_time")),
@@ -154,6 +154,19 @@ static func _collect_bindings(unit_node: Node, report: Dictionary) -> Array:
 		"detail": "未知单元形态（既非 Trigger 也非 MultiEventTrigger）：%s" % unit_node.get_class(),
 	})
 	return []
+
+
+## L2 主 ActionRunner：先节点自身，无则回退 Runner 子节点（宿主实现细节：
+## Trigger 的 Runner 子节点也是动作源——与 deriver/validator `_unit_action_runners`
+## 的归集语义对齐，M3 收口：三处取动作源的口径一致，防 L2 漏发射）
+static func _get_action_runner(node: Node) -> ActionRunner:
+	var ar = node.get("action_runner")
+	if ar == null:
+		for child in node.get_children():
+			if child is Runner and "action_runner" in child:
+				ar = child.action_runner
+				break
+	return ar as ActionRunner
 
 
 static func _collect_l4_bindings(unit_node: Node, report: Dictionary) -> Array:
@@ -167,9 +180,9 @@ static func _collect_l4_bindings(unit_node: Node, report: Dictionary) -> Array:
 			(report["skipped_disabled_bindings"] as Array).append("b%d" % i)
 			continue
 		if int(binding.get("retrigger_policy")) == EventBinding.RetriggerPolicy.RESTART:
-			# RESTART 降级为 SKIP（T7 ruling：金样例 game_flow b0 为 25s 间隔 OnInterval
-			# + ~3s 指令，运行中重触发实际不可达；取消重启需桥暴露 runner 句柄，超出 MVP）。
-			# 显著备案：report + 生成脚本头注释（非静默降级）。
+			# RESTART 降级为 SKIP（T7 ruling；M3 收口改中性备案）：生成器不重启
+			# 进行中的执行协程（取消重启需桥暴露 runner 句柄，超出 MVP）。
+			# 显著备案三处：report + 生成脚本头注释 + validator W_RESTART_DEGRADED。
 			(report["downgraded_restart_bindings"] as Array).append("b%d" % i)
 		var gate_once := bool(binding.get("trigger_once"))
 		var event_obj = binding.get("event")
@@ -302,9 +315,10 @@ static func _assemble(report: Dictionary, scene_path: String, delegated_json: Di
 	out += "# 回滚: 恢复源 Trigger → 移除本脚本\n"
 	var downgraded: Array = report.get("downgraded_restart_bindings", [])
 	if not downgraded.is_empty():
-		out += "# 降级备案: %s 的 RESTART retrigger 降级为 SKIP（运行中重触发忽略而非\n" \
+		# 中性表述（M3 收口）：不断言"语义差异不可达"，只陈述降级事实 + 人工确认义务
+		out += "# 降级备案: %s 该绑定生成时由 RESTART 降级为 SKIP（运行中重触发忽略\n" \
 			% "、".join(PackedStringArray(downgraded))
-		out += "#   重启；源绑定触发间隔远大于指令时长，语义差异实际不可达——采用前人工确认）\n"
+		out += "#   而非重启；请人工确认重触发时上一轮执行已完成）\n"
 	out += "# ============================================================\n"
 	out += "extends Node\n\n"
 	out += 'const FuseDelegation := preload("%s")\n\n' % DELEGATION_PATH

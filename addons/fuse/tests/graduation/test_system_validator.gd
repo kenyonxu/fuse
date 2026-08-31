@@ -40,6 +40,7 @@ func _ready() -> void:
 	_test_negative_emit_conflict()
 	_test_external_resolution()
 	_test_nested_unit_warning()
+	_test_restart_degraded_warning()
 	print("=== test_system_validator 完成（失败 %d）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -55,6 +56,9 @@ func _test_positive_game_flow() -> void:
 	_check(report["errors"] == 0, "正例 fixture 零 error（实际 %d：%s）" % [report["errors"], str(_codes(report))])
 	_check(_has_code(report, "W_SINGLETON_IN_COMPONENT"),
 		"game_flow 与 SpawnEnemy 同分量 → W_SINGLETON_IN_COMPONENT")
+	# game_flow b0（OnInterval 波次刷新）源 binding 为 RESTART → 降级备案 warning
+	_check(_has_code(report, "W_RESTART_DEGRADED"),
+		"game_flow b0 RESTART retrigger → W_RESTART_DEGRADED（生成时降级为 SKIP 提示）")
 	for f: Dictionary in report["findings"]:
 		if f["code"] == "I_CROSS_SCENE_EXTERNAL":
 			_check(f["severity"] == "info", "跨场景外联条目恒 info 级（%s）" % f["message"])
@@ -212,6 +216,43 @@ func _test_nested_unit_warning() -> void:
 	var report: Dictionary = SystemValidator.validate_data(draft)
 	_check(_has_code(report, "W_NESTED_UNIT"), "单元位于实例化子场景内 → W_NESTED_UNIT")
 	_check(report["errors"] == 0, "嵌套单元仅 warning 不阻断")
+	SystemValidator.clear_scene_cache()
+	root.queue_free()
+
+
+# ============================================================
+# W_RESTART_DEGRADED（正例：RESTART binding 提示；负例：SKIP binding 无）
+# ============================================================
+
+func _test_restart_degraded_warning() -> void:
+	var root := _inject_scene("res://test/ut_restart.tscn", "RestartScene")
+	var multi := MultiEventTrigger.new()
+	multi.name = "MultiTrig"
+	root.add_child(multi)
+	multi.set_owner(root)
+	var b_restart := EventBinding.new()
+	b_restart.event = OnReady.new()
+	b_restart.retrigger_policy = EventBinding.RetriggerPolicy.RESTART
+	b_restart.action_runner = ActionRunner.new()
+	var b_skip := EventBinding.new()
+	b_skip.event = OnReady.new()
+	b_skip.action_runner = ActionRunner.new()
+	multi.event_bindings = [b_restart, b_skip]
+
+	var draft := _draft("res://test/ut_restart.tscn", "MultiTrig", "L4")
+	var report: Dictionary = SystemValidator.validate_data(draft)
+	_check(_has_code(report, "W_RESTART_DEGRADED"),
+		"RESTART binding → W_RESTART_DEGRADED（提示人工确认重触发时上一轮已完成）")
+	_check(_codes(report).count("W_RESTART_DEGRADED") == 1,
+		"仅 RESTART binding 产出一条（SKIP binding 不产出）")
+	_check(report["errors"] == 0 and report["warnings"] == 1,
+		"W_RESTART_DEGRADED 为 warning 不阻断（errors=0，warnings=1）")
+	var msg: String = ""
+	for f: Dictionary in report["findings"]:
+		if f["code"] == "W_RESTART_DEGRADED":
+			msg = f["message"]
+	_check(msg.contains("降级为 SKIP") and msg.contains("人工确认"),
+		"warning message 含降级事实 + 人工确认义务: %s" % msg)
 	SystemValidator.clear_scene_cache()
 	root.queue_free()
 
