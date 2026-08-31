@@ -37,8 +37,9 @@ func _test_export_real_scene() -> void:
 	var inst := scene.instantiate()
 	add_child(inst)
 	var topology: Dictionary = InstructionAnalyzer.build_topology(inst)
-	# 显式 stem（≠ scene_name）证明产物名来自参数而非回退
-	var out_path: String = TopologyExport.export_to_json(topology, "user://topology_test", "explicit_stem")
+	# 显式 stem（≠ scene_name）证明产物名来自参数而非回退；source_scene 传入溯源路径
+	var out_path: String = TopologyExport.export_to_json(topology, "user://topology_test", "explicit_stem",
+		"res://demos/fuse/brickian/game_scene.tscn")
 	_check(not out_path.is_empty(), "导出成功返回路径")
 	if out_path.is_empty():
 		return
@@ -51,4 +52,7 @@ func _test_export_real_scene() -> void:
 		_check(parsed.has("triggers") and (parsed["triggers"] as Array).size() >= 1,
 			"triggers 非空（实际 %d）" % (parsed["triggers"] as Array).size())
 		_check(parsed.has("cross_references") and parsed.has("variable_analysis"), "关联与变量分析键在")
+		_check(str(parsed.get("source_scene", "")) == "res://demos/fuse/brickian/game_scene.tscn",
+			"source_scene 溯源字段写入（实际 %s）" % str(parsed.get("source_scene", "")))
+		_check(str(parsed.get("exported_at", "")).length() >= 19, "exported_at 时间戳写入")
 	inst.queue_free()
