@@ -108,6 +108,22 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/topology/export_
 # 用途：导出场景拓扑 JSON（产物名 = 场景文件茎），毕业导出器与调试共用
 ```
 
+### 毕业导出器 CLI（derive / validate / export）
+
+```bash
+# 场景拓扑 → System 草稿 JSON（kind 过滤 runner；草稿目录默认不入库）
+Godot --headless --path <项目路径> res://addons/fuse/editor/graduation/derive_systems.tscn -- --scene res://<scene.tscn> [--out res://fuse_generated/systems/drafts]
+# 退出码：0 = 成功；2 = 参数或 IO 错误
+
+# System JSON 离线校验（文件或目录，可多个）
+Godot --headless --path <项目路径> res://addons/fuse/editor/graduation/validate_system.tscn -- <file-or-dir>... [--report <out.json>]
+# 退出码：0 = 无 error；1 = 有 error finding；2 = 参数/IO 错误
+
+# 按 System 生成桥接模式 GDScript + 覆盖率报告（毕业产物在 fuse_generated/scripts/）
+Godot --headless --path <项目路径> res://addons/fuse/editor/graduation/export_system.tscn -- <system.json> [<system.json>...]
+# 退出码：0 = 全部成功；1 = 校验/生成/解析 error；2 = 参数/IO 错误
+```
+
 ## 代码风格指南
 
 ### 文件命名
