@@ -88,6 +88,7 @@ func _export_one(path: String) -> int:
 	if not errors.is_empty() or str(result.get("script_text", "")).is_empty():
 		for e: Dictionary in errors:
 			print("  [error] %s  %s" % [e.get("code", "?"), e.get("detail", "")])
+		_print_full_lists(report)  # 终审 I4：拒生成也打印完整降级/跳过清单
 		print("  ✗ 拒绝生成：发射器 error %d 项" % errors.size())
 		return 1
 
@@ -118,11 +119,24 @@ func _export_one(path: String) -> int:
 		system.get("name", "?"), native, total, pct,
 		int(report.get("delegated_count", 0)),
 		(report.get("skipped_disabled_bindings", []) as Array).size(), out_path])
-	# 降级备案（M3 收口）：emit report 含 restart_degraded 清单则在成功行显著提示
+	# 终审 I4：成功路径同样打印完整清单（非仅数量）
+	_print_full_lists(report)
+	return 0
+
+
+## 完整降级/跳过清单（终审 I4）：downgraded / disabled / local 全委托三类，
+## 拒生成与成功路径共用——用户据打印即可核对全部非常规处置，无需另开 report
+func _print_full_lists(report: Dictionary) -> void:
 	var downgraded: Array = report.get("downgraded_restart_bindings", [])
 	if not downgraded.is_empty():
-		print("  降级备案: %s（详见 report）" % "、".join(PackedStringArray(downgraded)))
-	return 0
+		print("  降级 RESTART→SKIP: [%s]（详见 report）" % "、".join(PackedStringArray(downgraded)))
+	var skipped: Array = report.get("skipped_disabled_bindings", [])
+	if not skipped.is_empty():
+		print("  跳过 disabled bindings: [%s]（未发射任何指令）" % "、".join(PackedStringArray(skipped)))
+	var local_all: Array = report.get("local_delegated_bindings", [])
+	if not local_all.is_empty():
+		print("  LOCAL 整条委托: [%s]（LOCAL 变量单 ctx 贯穿，覆盖率数字因此下降）"
+			% "、".join(PackedStringArray(local_all)))
 
 
 func _write_text(path: String, text: String) -> int:
@@ -137,7 +151,9 @@ func _write_text(path: String, text: String) -> int:
 	return OK
 
 
-## 覆盖率报告 → markdown（emit.output_script 同目录 <stem>.report.md）
+## 覆盖率报告 → markdown（emit.output_script 同目录 <stem>.report.md）。
+## 风险行按 report 数据条件追加（终审 I3）：输入事件时序 / CheckAnyInput 即时
+## 探测 / 条件失败不进冷却偏差 / LOCAL 整条委托备案。
 func _render_report(report: Dictionary, out_path: String) -> String:
 	var unit: Dictionary = report.get("unit", {})
 	var total := int(report.get("total_instructions", 0))
@@ -146,6 +162,7 @@ func _render_report(report: Dictionary, out_path: String) -> String:
 	var delegated_names: Array = report.get("delegated_names", [])
 	var skipped: Array = report.get("skipped_disabled_bindings", [])
 	var downgraded: Array = report.get("downgraded_restart_bindings", [])
+	var local_all: Array = report.get("local_delegated_bindings", [])
 	var lines: Array[String] = []
 	lines.append("# 毕业导出报告 — %s\n" % report.get("system_name", "?"))
 	lines.append("- 源单元: `%s` (%s)" % [unit.get("node_path", "?"), unit.get("level", "?")])
@@ -156,7 +173,25 @@ func _render_report(report: Dictionary, out_path: String) -> String:
 	lines.append("- 跳过的 disabled bindings: %s" % (str(skipped) if not skipped.is_empty() else "无"))
 	lines.append("- RESTART→SKIP 降级 bindings: %s" \
 		% (str(downgraded) if not downgraded.is_empty() else "无"))
+	if not local_all.is_empty():
+		lines.append(("- LOCAL 整条委托 bindings: %s（binding 内 LOCAL 变量跨指令共享单 ctx，"
+			+ "与源 Fuse 一致；原生覆盖率数字因此下降）") % str(local_all))
 	lines.append("")
+	var risks: Array[String] = []
+	if bool(report.get("has_input_events", false)):
+		risks.append("- 含输入事件：输入处理阶段时序与 Fuse 可能不同（_unhandled_input，"
+			+ "Fuse 走事件实例输入回调）")
+	for key: String in report.get("check_any_input_bindings", []):
+		risks.append(("- binding %s：CheckAnyInput 即时探测语义（2×interval 窗口语义未复刻，"
+			+ "生成代码每滴答即时检查）") % key)
+	for key: String in report.get("cond_cooldown_deviation_bindings", []):
+		risks.append(("- binding %s：条件失败不进冷却（Fuse 在条件检查前已消耗冷却时间戳，"
+			+ "生成代码条件通过才 commit——条件反复失败的触发间隔比 Fuse 更密）") % key)
+	if not risks.is_empty():
+		lines.append("## 已知语义风险\n")
+		for risk: String in risks:
+			lines.append(risk)
+		lines.append("")
 	if not delegated_names.is_empty():
 		lines.append("## 委托清单（按生成顺序）\n")
 		for i: int in delegated_names.size():
