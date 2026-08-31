@@ -21,6 +21,7 @@ func _ready() -> void:
 	_test_variable_write_only_anomaly()
 	_test_variable_read_only_anomaly()
 	_test_no_cross_ref_when_single_trigger_write_read()
+	_test_cross_ref_when_two_triggers_write_read_same_var()
 	_teardown_scene()
 	print("\n=== 结果: %d 处失败 ===" % _fail)
 	if _fail > 0:
@@ -244,3 +245,48 @@ func _test_no_cross_ref_when_single_trigger_write_read() -> void:
 	_check(not x_entry.is_empty(), "global_x 在 variable_analysis 中")
 	if not x_entry.is_empty():
 		_check(x_entry[0].get("anomaly", "") == "normal", "anomaly=normal（既有写者又有读者，实际 %s）" % x_entry[0].get("anomaly", ""))
+
+
+## T1/T2 各自同指令写+读 global_rw → 模式合并为 read_write 后双方均进 writers 与 readers，
+## 跨 trigger 检测不得被合并削弱：write_to_read 边与 write_to_write 竞态预警都应产出
+func _test_cross_ref_when_two_triggers_write_read_same_var() -> void:
+	print("\n--- 双 Trigger 各自写+读：write_to_read 边 + write_to_write 预警并存 ---")
+	var inst1 := MockInst.new()
+	inst1.target_variable = "global_rw"
+	inst1.target_variable_scope = 2
+	inst1.from_variable = "global_rw"
+	inst1.from_variable_scope = 2
+	inst1.resource_name = "ReadWriteRW1"
+	var inst2 := MockInst.new()
+	inst2.target_variable = "global_rw"
+	inst2.target_variable_scope = 2
+	inst2.from_variable = "global_rw"
+	inst2.from_variable_scope = 2
+	inst2.resource_name = "ReadWriteRW2"
+	var t1 := _make_trigger("T1", [inst1])
+	var t2 := _make_trigger("T2", [inst2])
+	_setup_scene([t1, t2])
+
+	var topology := InstructionAnalyzer.build_topology(_scene_root)
+	var cross_refs: Array = topology.get("cross_references", [])
+	var write_to_read := cross_refs.filter(
+		func(r): return r.get("type", "") == "variable_write_to_read" and r.get("detail", "") == "global_rw")
+	var write_to_write := cross_refs.filter(
+		func(r): return r.get("type", "") == "variable_write_to_write" and r.get("detail", "") == "global_rw")
+
+	_check(not write_to_read.is_empty(), "含 variable_write_to_read 条目（实际 %d）" % write_to_read.size())
+	if not write_to_read.is_empty():
+		var r = write_to_read[0]
+		_check(r.get("from", "") == "T1" and r.get("to", "") == "T2", "from=T1 → to=T2（实际 %s → %s）" % [r.get("from", ""), r.get("to", "")])
+		_check(r.get("from_mode", "") == "read_write", "from_mode=read_write（合并后，实际 %s）" % r.get("from_mode", ""))
+		_check(r.get("to_mode", "") == "read_write", "to_mode=read_write（合并后，实际 %s）" % r.get("to_mode", ""))
+	_check(not write_to_write.is_empty(), "含 variable_write_to_write 竞态预警（实际 %d）" % write_to_write.size())
+	if not write_to_write.is_empty():
+		var rw = write_to_write[0]
+		_check(rw.get("warning", false) == true, "warning=true")
+		_check(rw.get("from", "") == "T1" and rw.get("to", "") == "T2", "from=T1 → to=T2（实际 %s → %s）" % [rw.get("from", ""), rw.get("to", "")])
+
+	var analysis: Array = topology.get("variable_analysis", [])
+	var rw_entry := analysis.filter(func(a): return a.get("name", "") == "global_rw")
+	if not rw_entry.is_empty():
+		_check(rw_entry[0].get("anomaly", "") == "normal", "anomaly=normal（实际 %s）" % rw_entry[0].get("anomaly", ""))

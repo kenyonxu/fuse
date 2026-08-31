@@ -530,22 +530,27 @@ static func build_topology(scene_root: Node) -> Dictionary:
 	# mode 来自 _infer_variable_mode: write（target_）/ read（from_）/ read_write（其他）
 	var global_vars_usage := {}
 	for report in all_reports.values():
-		var seen := {}  # 同 trigger 内同 vname 去重（_extract_variables 可能重复提取）
+		# 同 trigger 内同 vname 多条目按 mode 并集聚合（_extract_variables 可能重复提取；
+		# 单指令可能 target_=write 与 from_=read 同名变量，first-wins 去重会丢弃 read 条目）
+		# 合并规则：不同 mode 相遇 → read_write；同 mode 保持
+		var merged_modes := {}  # vname → 聚合后 mode
 		# 收集 trigger 级 + event_bindings 级（MultiEventTrigger）的全局变量
 		var all_global_vars: Array = report.variables.global.duplicate()
 		for binding in report.get("event_bindings", []):
 			all_global_vars.append_array(binding.get("variables", {}).get("global", []))
 		for var_entry in all_global_vars:
 			var vname: String = var_entry.name
-			if seen.has(vname):
-				continue
-			seen[vname] = true
 			var mode: String = var_entry.get("mode", "read_write")
+			var prev_mode: String = merged_modes.get(vname, "")
+			if not prev_mode.is_empty() and prev_mode != mode:
+				mode = "read_write"
+			merged_modes[vname] = mode
+		for vname in merged_modes:
 			if not global_vars_usage.has(vname):
 				global_vars_usage[vname] = []
 			global_vars_usage[vname].append({
 				"trigger_name": report.trigger_name,
-				"mode": mode
+				"mode": merged_modes[vname]
 			})
 
 	# E3 §3.3: 跨 Trigger 变量关联生成
