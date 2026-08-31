@@ -47,6 +47,9 @@ test_*.txt
 # Fuse topology problem reports (auto-generated)
 fuse_reports/
 
+# Fuse 毕业导出器 System 草稿（自动生成；定稿金样例才入库）
+fuse_generated/systems/drafts/
+
 # Graphify - local state (machine-specific, not meaningful to share)
 graphify-out/cache/
 graphify-out/.graphify_python
