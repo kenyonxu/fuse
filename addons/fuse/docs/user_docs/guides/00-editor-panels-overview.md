@@ -17,7 +17,7 @@ Fuse 在 Godot 编辑器中集成了多个专属界面，分别覆盖：**Fuse T
 
 ## Fuse Topology 主屏
 
-Fuse 插件在编辑器主屏注册了 **"Fuse" Tab**（与 2D / 3D / Script 并列），提供全场景的 Trigger 拓扑总览，是 Fuse 编辑器集成的**顶级入口**。
+Fuse 插件在编辑器主屏注册了 **"Fuse" Tab**（与 2D / 3D / Script 并列），提供全场景的 Fuse 单元拓扑总览（Trigger / MultiEventTrigger / Runner 三类单元，Runner 以绿色区分、第二列显示其绑定信号名），是 Fuse 编辑器集成的**顶级入口**。
 
 **文件:** `editor/topology/fuse_topology.gd`（依赖 `fuse_graph_builder.gd`、`fuse_graph_node.gd`、`analysis/instruction_analyzer.gd`）
 
@@ -32,7 +32,7 @@ Fuse 插件在编辑器主屏注册了 **"Fuse" Tab**（与 2D / 3D / Script 并
 ### 界面布局
 
 ```
-[Fuse 场景拓扑]                                    [🔄 刷新]
+[Fuse 场景拓扑] [问题过滤▾] [搜索：单元/指令/变量…] [🔄 刷新] [导出问题报告] [导出 JSON]
 ┌────────────────────────┬─────────────────────────────────┐
 │ Trigger          事件   │  详情（BBCode 富文本）            │
 │ ├ Trigger(OnKey)  on_key│  选中 Trigger → Trigger 概要     │
@@ -51,6 +51,8 @@ Fuse 插件在编辑器主屏注册了 **"Fuse" Tab**（与 2D / 3D / Script 并
 | **右侧详情面板** | BBCode 富文本：选中 Trigger 显示概要，选中指令显示指令详情（参数/依赖/引用） |
 | **全局关联扫描** | `cross_ref_label` 标注跨 Trigger 的变量 / 信号 / 节点引用关联 |
 | **刷新** | 重新扫描当前场景，重建 Trigger 树与详情 |
+| **搜索过滤** | banner 搜索框：按单元名 / 指令类型 / 变量名 / 信号名匹配（大小写不敏感，与问题过滤正交叠加，0.5s 防抖） |
+| **Runner 单元** | L3 Runner（信号绑定单元）作为独立单元显示，绿色标注，第二列显示 signal_name；RunRunner 调用边（`run` 类型）计入全局关联 |
 
 ### 问题标注（静态分析）
 
@@ -74,6 +76,14 @@ Topology 顶部 banner 提供问题过滤 OptionButton：
 | **无** | 关闭问题标注，纯拓扑视图 |
 
 配合问题计数（Trigger 行后缀 `(2 错误, 1 警告)`）可快速定位问题集中区域。
+
+### 搜索过滤
+
+banner 搜索框实时过滤单元树（防抖 0.5s）：匹配面包括**单元名、指令类型名（含嵌套与 event_bindings 链）、三层变量名、signal_binding 信号名、signals 列表**——"哪个单元在用 `hp`"这类查询一步到位。空文本显示全部；无匹配时显示灰字提示。与问题过滤下拉正交叠加。
+
+### 拓扑 JSON 导出
+
+「导出 JSON」按钮 / headless CLI（`export_topology.tscn -- --scene res://<场景>`）把拓扑 report 落盘为 JSON（默认 `res://fuse_reports/topology/<场景文件名>.json`），内含 `source_scene` 溯源路径、`exported_at` 时间戳、全部单元 / 跨单元关联 / 变量分析。它是毕业导出器的 ground truth 工件，也可用于跨场景检索与 AI 上下文素材。
 
 ### 跨 Trigger 关联
 

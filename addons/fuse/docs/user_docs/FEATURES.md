@@ -10,9 +10,9 @@ Fuse 是 Godot 4.6 的可视化编程插件，通过 Inspector 配置事件、�
 
 | 组件 | 数量 | 分类 |
 |------|------|------|
-| 指令 (Instruction) | 133 | 17 个分类 |
-| 事件 (Event) | 62 | 14 个分类 |
-| 条件 (Condition) | 49 | 14 个分类 |
+| 指令 (Instruction) | 182 | 17 个分类 |
+| 事件 (Event) | 70 | 14 个分类 |
+| 条件 (Condition) | 55 | 14 个分类 |
 | 编辑器工具 | 35 | Inspector / 生成器 / 调试 |
 
 ## 触发体系
@@ -104,8 +104,16 @@ Fuse 是 Godot 4.6 的可视化编程插件，通过 Inspector 配置事件、�
   - **选中保持** — 刷新后自动恢复之前选中的 Trigger / 指令条目
   - **双击跳转** — 双击 Trigger → Inspector 跳转到场景节点；双击指令 → Inspector 显示指令 Resource
   - **问题过滤** — OptionButton 三档：全部 / 仅错误 / 无
+  - **搜索过滤** — 按单元名 / 指令类型 / 变量名 / 信号名实时过滤
+  - **Runner 单元覆盖** — L3 Runner 独立显示（绿色），RunRunner 调用边入关联扫描
+  - **拓扑 JSON 导出** — 溯源字段 + 全量关联，毕业导出器的 ground truth
   - **主题图标** — 使用 Godot 主题图标，跟随编辑器明暗主题
   - **Inspector 问题计数** — 数据流按钮角标显示该 Trigger 的问题数，展开卡片查看分级详情
+- **毕业导出器** — 拓扑推导 System 工件（可审阅 JSON IR）→ 生成 GDScript：
+  - **混合指令委托** — 常用指令原生直译，其余运行时委托，毕业是梯度不是门槛
+  - **非破坏性** — 源 Trigger 不动，生成物带采用/回滚说明
+  - **校验门禁** — 11 codes + topology_digest 漂移检测 + 竞态确认
+  - **金样例** — `fuse_generated/scripts/`（L4/L2 各一份，行为级验证）
 
 ## 本地化
 
