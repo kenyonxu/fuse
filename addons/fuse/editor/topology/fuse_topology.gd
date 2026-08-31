@@ -23,6 +23,8 @@ var _cross_ref_label: RichTextLabel
 var _refresh_btn: Button
 var _last_topology: Dictionary = {}
 var _filter_mode: int = FILTER_ALL
+var _search_input: LineEdit  # 拓扑增强 Task 3: 搜索框
+var _filter_text: String = ""  # 拓扑增强 Task 3: 当前搜索词（空 = 不过滤）
 
 const _REFRESH_DEBOUNCE := 0.5
 var _refresh_timer: Timer
@@ -52,6 +54,13 @@ func _init() -> void:
 	filter_option.select(_filter_mode)
 	filter_option.item_selected.connect(_on_filter_changed)
 	banner.add_child(filter_option)
+
+	# 拓扑增强 Task 3: 搜索框（单元 / 指令 / 变量 / 信号）
+	_search_input = LineEdit.new()
+	_search_input.placeholder_text = "搜索：单元 / 指令 / 变量"
+	_search_input.custom_minimum_size = Vector2(180, 0)
+	_search_input.text_changed.connect(_on_search_changed)
+	banner.add_child(_search_input)
 
 	banner.add_spacer(true)
 
@@ -136,6 +145,13 @@ func _init() -> void:
 func _on_filter_changed(item_index: int) -> void:
 	_filter_mode = item_index
 	refresh()
+
+
+## 拓扑增强 Task 3: 搜索输入变化 → 记录过滤词并复用防抖刷新
+## （搜索框仅在面板可见时可输入，无需 request_refresh 的 visible 检查，直接 start）
+func _on_search_changed(text: String) -> void:
+	_filter_text = text
+	_refresh_timer.start()
 
 
 ## 请求刷新（防抖：0.5s 内多次请求合并为 1 次；未显示时不刷新）
@@ -300,9 +316,12 @@ func refresh() -> void:
 		report["problems"] = _index_problems(analysis.problems)
 
 	# 填充 Trigger 列表（主场景 + 嵌套场景分组）
+	# 拓扑增强 Task 3: 搜索过滤在收集时统一应用——嵌套组内全被滤掉则该组自然不建
 	var main_reports: Array = []
 	var nested_groups: Dictionary = {}  # scene_source → [reports]
 	for report in topology.triggers:
+		if not report_matches_filter(report, _filter_text):
+			continue
 		if report.get("is_nested", false):
 			var source: String = report.get("scene_source", "?")
 			if not nested_groups.has(source):
@@ -312,8 +331,10 @@ func refresh() -> void:
 			main_reports.append(report)
 
 	# 主场景 Trigger
+	var has_visible: bool = false
 	for report in main_reports:
 		_create_trigger_tree_item(root, report)
+		has_visible = true
 
 	# 嵌套场景分组
 	for source in nested_groups:
@@ -323,6 +344,14 @@ func refresh() -> void:
 		group_item.set_custom_color(0, Color(0.5, 0.7, 1.0))
 		for report in nested_groups[source]:
 			_create_trigger_tree_item(group_item, report)
+		has_visible = true
+
+	# 拓扑增强 Task 3: 过滤后全空 → 灰字提示项（不可选）
+	if not has_visible:
+		var empty_note: TreeItem = _tree.create_item(root)
+		empty_note.set_text(0, "(无匹配)")
+		empty_note.set_selectable(0, false)
+		empty_note.set_custom_color(0, Color.GRAY)
 
 	# 全局关联
 	_refresh_cross_references(topology)
@@ -853,6 +882,61 @@ static func _build_variable_parts(report: Dictionary) -> PackedStringArray:
 	if not global_names.is_empty():
 		parts.append("[global] " + ", ".join(global_names))
 	return parts
+
+
+# ============================================================
+# 搜索过滤（拓扑增强 Task 3 — static 匹配，headless 可测）
+# ============================================================
+
+## 搜索过滤：单元名 / 变量名（三层 + event_binding）/ 指令类型名
+## （instructions_flat + instructions_tree 递归 + event_binding 指令链）
+## / 信号名（signal_binding.signal_name + signals[].signal）
+## 大小写不敏感子串匹配；空文本恒过
+static func report_matches_filter(report: Dictionary, text: String) -> bool:
+	if text.is_empty():
+		return true
+	var needle: String = text.to_lower()
+	if str(report.get("trigger_name", "")).to_lower().contains(needle):
+		return true
+	var sb: Dictionary = report.get("signal_binding", {})
+	if str(sb.get("signal_name", "")).to_lower().contains(needle):
+		return true
+	for sig in report.get("signals", []):
+		if str(sig.get("signal", "")).to_lower().contains(needle):
+			return true
+	for scope in ["local", "scope", "global"]:
+		for v in report.get("variables", {}).get(scope, []):
+			var vn: Variant = v.get("name", v) if v is Dictionary else v
+			if str(vn).to_lower().contains(needle):
+				return true
+	for binding in report.get("event_bindings", []):
+		for scope in ["local", "scope", "global"]:
+			for v in binding.get("variables", {}).get(scope, []):
+				var bvn: Variant = v.get("name", v) if v is Dictionary else v
+				if str(bvn).to_lower().contains(needle):
+					return true
+		# MultiEventTrigger 的指令链只存在于 event_bindings（顶层列表为空），需一并扫描
+		if _tree_has(binding.get("instructions_flat", []), needle):
+			return true
+		if _tree_has(binding.get("instructions_tree", []), needle):
+			return true
+	if _tree_has(report.get("instructions_flat", []), needle):
+		return true
+	return _tree_has(report.get("instructions_tree", []), needle)
+
+
+## 指令列表递归匹配（flat 条目 {name, prefix}；tree 节点 {name, inst, children}）
+## 条目字段名实测自 instruction_analyzer.gd _analyze_instructions：flat/tree 均用 "name"
+static func _tree_has(entries: Array, needle: String) -> bool:
+	for entry in entries:
+		if entry is Dictionary:
+			var n: String = str(entry.get("name", entry.get("type", "")))
+			if n.to_lower().contains(needle):
+				return true
+			for child_list in entry.get("children", {}).values():
+				if child_list is Array and _tree_has(child_list, needle):
+					return true
+	return false
 
 
 # ============================================================
