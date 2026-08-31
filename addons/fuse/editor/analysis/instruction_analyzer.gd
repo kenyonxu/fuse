@@ -30,6 +30,7 @@ static func analyze_trigger(trigger: Node) -> Dictionary:
 		"trigger_name": trigger.name,
 		"trigger_path": str(trigger.get_path()),
 		"trigger_type": _get_node_type_name(trigger),
+		"kind": "trigger",
 		"event": {},
 		"event_bindings": [],
 		"nodes": [],
@@ -42,6 +43,7 @@ static func analyze_trigger(trigger: Node) -> Dictionary:
 
 	# MultiEventTrigger：遍历 event_bindings
 	if trigger.get("event_bindings") != null:
+		report["kind"] = "multi"
 		report["event_bindings"] = _analyze_event_bindings(trigger)
 		# 信号提取
 		_extract_signals(trigger, report)
@@ -68,6 +70,34 @@ static func analyze_trigger(trigger: Node) -> Dictionary:
 	# 提取信号信息：优先 Runner 子节点，再查 trigger 自身信号
 	_extract_signals(trigger, report)
 
+	return report
+
+
+## 分析 Runner（L3 信号绑定单元）：无 event/cooldown，指令与变量分析与 Trigger 同构
+## report 键结构与 analyze_trigger 对齐（event 恒空），额外携带 signal_binding 摘要
+static func analyze_runner(runner: Node) -> Dictionary:
+	var report := {
+		"trigger_name": runner.name,
+		"trigger_path": str(runner.get_path()),
+		"trigger_type": "Runner",
+		"kind": "runner",
+		"event": {},
+		"event_bindings": [],
+		"nodes": [],
+		"variables": {"local": [], "scope": [], "global": []},
+		"signals": [],
+		"instructions_flat": [],
+		"instructions_tree": [],
+		"provided_locals": [],
+		"signal_binding": {
+			"signal_name": str(runner.get("signal_name") if runner.get("signal_name") != null else ""),
+			"target_node": str(runner.get("target_node") if runner.get("target_node") != null else ""),
+		},
+	}
+	var action_runner = runner.get("action_runner")
+	if action_runner == null:
+		return report
+	_analyze_instructions(action_runner.instructions, report, "", report["instructions_tree"])
 	return report
 
 
@@ -419,6 +449,7 @@ static func _find_child_of_type(parent: Node, type_name: String) -> Node:
 # ============================================================
 
 ## 扫描场景所有 Trigger，构建全局关系图
+## topology.triggers 键名不改——现含 Trigger/MultiEventTrigger/Runner 单元，消费方按 report.kind 判别
 static func build_topology(scene_root: Node) -> Dictionary:
 	var topology := {
 		"scene_name": scene_root.name,
@@ -427,6 +458,8 @@ static func build_topology(scene_root: Node) -> Dictionary:
 		"variable_analysis": []
 	}
 	var all_reports := {}
+	# 单元名 → Node 局部映射（run 边构建直取节点指令用；不进 topology 返回值——JSON 导出不持节点引用）
+	var node_by_name := {}
 	var triggers: Array[Node] = scene_root.find_children("*", "Trigger")
 	triggers.append_array(scene_root.find_children("*", "MultiEventTrigger"))
 
@@ -441,6 +474,27 @@ static func build_topology(scene_root: Node) -> Dictionary:
 		else:
 			report["scene_source"] = "main"
 		all_reports[trigger.name] = report
+		node_by_name[trigger.name] = trigger
+		topology.triggers.append(report)
+
+	# Runner（L3）单元：跳过已扫描 Trigger/MultiEventTrigger 的直接子 Runner
+	# （_get_action_runner 会把 Trigger 的 Runner 子节点当动作源——那是宿主的实现细节，非独立单元）
+	var scanned := {}
+	for trigger in triggers:
+		scanned[trigger.get_instance_id()] = true
+	for runner in scene_root.find_children("*", "Runner"):
+		if not runner is Runner or scanned.has(runner.get_parent().get_instance_id()):
+			continue
+		var report := analyze_runner(runner)
+		report["trigger_path"] = scene_root.name + "/" + str(scene_root.get_path_to(runner))
+		var is_nested: bool = runner.owner != null and runner.owner != scene_root
+		report["is_nested"] = is_nested
+		if is_nested:
+			report["scene_source"] = runner.owner.name
+		else:
+			report["scene_source"] = "main"
+		all_reports[runner.name] = report
+		node_by_name[runner.name] = runner
 		topology.triggers.append(report)
 
 	# 跨 Trigger 关联：信号连接
@@ -456,6 +510,20 @@ static func build_topology(scene_root: Node) -> Dictionary:
 						"from": t1_name, "to": t2_name,
 						"type": "signal", "detail": signal_info.signal
 					})
+
+	# RunRunner 调用边：单元指令树中的 RunRunner.target_runner 指向目标单元
+	# （对节点直取指令递归扫描，避免 report 树形状耦合；同向多指令指向同一目标只出一条边）
+	for t1_name in all_reports:
+		var source_node: Node = node_by_name.get(t1_name, null)
+		if source_node == null:
+			continue
+		for t2_name in all_reports:
+			if t1_name == t2_name:
+				continue
+			if _node_calls_unit(source_node, t2_name):
+				topology.cross_references.append({
+					"from": t1_name, "to": t2_name, "type": "run", "detail": "RunRunner"
+				})
 
 	# E3: 全局变量读写方向收集
 	# global_vars_usage: { vname: [{trigger_name, mode}, ...] }
@@ -487,6 +555,44 @@ static func build_topology(scene_root: Node) -> Dictionary:
 	_build_variable_analysis(global_vars_usage, topology)
 
 	return topology
+
+
+## 单元（Trigger/MultiEventTrigger/Runner）的指令是否调用目标 Runner 单元
+## 路径 1：单元主 ActionRunner（Trigger.action_runner / Runner.action_runner / Runner 子节点）
+## 路径 2：MultiEventTrigger 的 event_bindings[].action_runner
+static func _node_calls_unit(source: Node, target_name: String) -> bool:
+	if target_name.is_empty():
+		return false
+	var action_runner = _get_action_runner(source)
+	if action_runner != null and _instructions_call_unit(action_runner.instructions, target_name):
+		return true
+	var bindings = source.get("event_bindings")
+	if bindings != null:
+		for binding in bindings:
+			if binding == null:
+				continue
+			var binding_ar = binding.get("action_runner")
+			if binding_ar != null and _instructions_call_unit(binding_ar.instructions, target_name):
+				return true
+	return false
+
+
+## 递归扫描指令数组（含 _SUB_INSTRUCTIONS 嵌套字段）中的 RunRunner，
+## target_runner 是否包含目标单元名
+static func _instructions_call_unit(instructions: Array, target_name: String) -> bool:
+	for inst in instructions:
+		if inst == null:
+			continue
+		if inst is RunRunner:
+			var t: String = str(inst.get("target_runner"))
+			if t.contains(target_name):
+				return true
+		for sub_key in _SUB_INSTRUCTIONS:
+			if sub_key in inst:
+				var sub: Array = inst.get(sub_key)
+				if _instructions_call_unit(sub, target_name):
+					return true
+	return false
 
 
 ## E3: 基于全局变量读写方向生成跨 Trigger 关联条目

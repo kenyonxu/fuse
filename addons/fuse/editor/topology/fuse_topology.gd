@@ -334,14 +334,21 @@ func refresh() -> void:
 # ============================================================
 
 ## 创建 Trigger Tree 项（含指令子树 / EventBinding 子项）
+## Runner 单元（kind=runner）也在树中：事件列显示 signal_binding 的信号名 + 绿色区分
 func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> void:
 	var tname: String = report.get("trigger_name", "?")
 	var ttype: String = report.get("trigger_type", "?")
 	var event_info: Dictionary = report.get("event", {})
+	var kind: String = report.get("kind", "trigger")
 
 	var t_item: TreeItem = _tree.create_item(parent_item)
 	t_item.set_text(0, "%s (%s)" % [tname, ttype])
-	t_item.set_text(1, event_info.get("resource_name", ""))
+	if kind == "runner":
+		var sb: Dictionary = report.get("signal_binding", {})
+		t_item.set_text(1, sb.get("signal_name", ""))
+		t_item.set_custom_color(0, Color(0.6, 0.9, 0.7))
+	else:
+		t_item.set_text(1, event_info.get("resource_name", ""))
 	t_item.set_metadata(0, {"type": "trigger", "report": report})
 
 	# 问题汇总标注（按 report.problems.summary + E6 过滤模式）
