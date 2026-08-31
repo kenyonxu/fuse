@@ -4,8 +4,8 @@
 # 原生覆盖率: 3/28 (11%) | 委托: CrossfadeToMusic, LoadGlobalVariables, PauseGame, GetPosition, MathOperation, GetAllChildrenPosition, WarmUpPool, WarmUpPool, WarmUpPool, WarmUpPool, WarmUpPool, WarmUpPool, WarmUpPool, WarmUpPool, RunRunner, MathOperation, MathOperation, SetVariable, SendEvent, IfThen, MathOperation, PauseGame, IfElse, MathOperation, IfElse
 # 采用: 禁用源 Trigger 节点 → 本脚本挂到同路径节点 → 运行验证
 # 回滚: 恢复源 Trigger → 移除本脚本
-# 降级备案: b0 的 RESTART retrigger 降级为 SKIP（运行中重触发忽略而非
-#   重启；源绑定触发间隔远大于指令时长，语义差异实际不可达——采用前人工确认）
+# 降级备案: b0 该绑定生成时由 RESTART 降级为 SKIP（运行中重触发忽略
+#   而非重启；请人工确认重触发时上一轮执行已完成）
 # ============================================================
 extends Node
 
