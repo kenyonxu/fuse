@@ -1,0 +1,110 @@
+{
+	"acknowledged_warnings": [],
+	"description": "砖块射击主循环：接收敌死/玩家死/全灭事件，驱动波次推进、敌机刷新与计分结算（L4 多事件单元 GameManager/GameFlow）。",
+	"emit": {
+		"native_instructions": [],
+		"output_script": "res://fuse_generated/scripts/game_flow.gd"
+	},
+	"externals": {
+		"events_in": [
+			{
+				"name": "EnemyDie",
+				"outside_producers": true
+			},
+			{
+				"name": "PlayerDie",
+				"outside_producers": true
+			},
+			{
+				"name": "AllEnemyDied",
+				"outside_producers": true
+			}
+		],
+		"events_out": [
+			{
+				"name": "ScoreUpdate",
+				"outside_consumers": true
+			},
+			{
+				"name": "AllEnemyDied",
+				"outside_consumers": true
+			},
+			{
+				"name": "GameEnd",
+				"outside_consumers": true
+			},
+			{
+				"name": "StartCountDown",
+				"outside_consumers": true
+			}
+		],
+		"variables": [
+			{
+				"name": "event_score",
+				"scope": "local",
+				"shared_outside": false
+			},
+			{
+				"name": "c_score",
+				"scope": "local",
+				"shared_outside": false
+			},
+			{
+				"name": "start_pos",
+				"scope": "scope",
+				"shared_outside": false
+			},
+			{
+				"name": "current_wave",
+				"scope": "scope",
+				"shared_outside": true
+			},
+			{
+				"name": "spawn_pos",
+				"scope": "scope",
+				"shared_outside": true
+			},
+			{
+				"name": "enemy_count",
+				"scope": "scope",
+				"shared_outside": true
+			},
+			{
+				"name": "current_score",
+				"scope": "scope",
+				"shared_outside": false
+			},
+			{
+				"name": "player_life",
+				"scope": "scope",
+				"shared_outside": true
+			},
+			{
+				"name": "instance_id",
+				"scope": "scope",
+				"shared_outside": true
+			},
+			{
+				"name": "score_list",
+				"scope": "global",
+				"shared_outside": true
+			}
+		]
+	},
+	"format_version": "1.0",
+	"name": "game_flow",
+	"source": {
+		"derived_at": "2026-08-31T15:38:38",
+		"derived_from": "res://demos/fuse/brickian/game_scene.tscn",
+		"topology_digest": "f231f7bf"
+	},
+	"units": [
+		{
+			"id": "u1",
+			"kind": "multi",
+			"level": "L4",
+			"node_path": "GameManager/GameFlow",
+			"scene": "res://demos/fuse/brickian/game_scene.tscn"
+		}
+	]
+}

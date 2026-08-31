@@ -12,7 +12,7 @@ extends RefCounted
 ##     完整生成脚本（头注释/委托数据块/门控复刻/事件接线/teardown）+ 覆盖率报告。
 ##
 ## 门控复刻：入口函数首行 FuseDelegation.gate_allows（trigger_once/cooldown 三值快照），
-## 运行中忽略（SKIP retrigger）由 await 协程自然串行承担；RESTART 首版拒生成。
+## 运行中忽略（SKIP retrigger）由 await 协程自然串行承担；RESTART 降级为 SKIP 并备案（T7）。
 ## 事件接线形态由 EventMapper 产出（四类白名单事件外整 System 拒生成）。
 
 const PresetValueCodec := preload("res://addons/fuse/core/serialization/preset_value_codec.gd")
@@ -67,6 +67,7 @@ static func emit_system(system: Dictionary, unit_node: Node, scene_path: String)
 		"delegated_count": 0,
 		"delegated_names": [] as Array[String],
 		"skipped_disabled_bindings": [] as Array[String],
+		"downgraded_restart_bindings": [] as Array[String],
 		"errors": [] as Array[Dictionary],
 	}
 	var errors: Array = report["errors"]
@@ -166,11 +167,10 @@ static func _collect_l4_bindings(unit_node: Node, report: Dictionary) -> Array:
 			(report["skipped_disabled_bindings"] as Array).append("b%d" % i)
 			continue
 		if int(binding.get("retrigger_policy")) == EventBinding.RetriggerPolicy.RESTART:
-			(report["errors"] as Array).append({
-				"code": "E_EVENT_UNSUPPORTED",
-				"detail": "binding b%d：RESTART retrigger_policy 未支持（首版拒生成）" % i,
-			})
-			continue
+			# RESTART 降级为 SKIP（T7 ruling：金样例 game_flow b0 为 25s 间隔 OnInterval
+			# + ~3s 指令，运行中重触发实际不可达；取消重启需桥暴露 runner 句柄，超出 MVP）。
+			# 显著备案：report + 生成脚本头注释（非静默降级）。
+			(report["downgraded_restart_bindings"] as Array).append("b%d" % i)
 		var gate_once := bool(binding.get("trigger_once"))
 		var event_obj = binding.get("event")
 		if event_obj != null and event_obj is OnReceiveEvent:
@@ -300,6 +300,11 @@ static func _assemble(report: Dictionary, scene_path: String, delegated_json: Di
 	out += "# 原生覆盖率: %d/%d (%d%%) | 委托: %s\n" % [native, total, pct, delegated_desc]
 	out += "# 采用: 禁用源 Trigger 节点 → 本脚本挂到同路径节点 → 运行验证\n"
 	out += "# 回滚: 恢复源 Trigger → 移除本脚本\n"
+	var downgraded: Array = report.get("downgraded_restart_bindings", [])
+	if not downgraded.is_empty():
+		out += "# 降级备案: %s 的 RESTART retrigger 降级为 SKIP（运行中重触发忽略而非\n" \
+			% "、".join(PackedStringArray(downgraded))
+		out += "#   重启；源绑定触发间隔远大于指令时长，语义差异实际不可达——采用前人工确认）\n"
 	out += "# ============================================================\n"
 	out += "extends Node\n\n"
 	out += 'const FuseDelegation := preload("%s")\n\n' % DELEGATION_PATH

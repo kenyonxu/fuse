@@ -135,7 +135,7 @@ static func _map_interval(ev: OnInterval, key: String) -> Dictionary:
 
 	var setup_lines: Array[String] = [
 		"%s = Timer.new()" % timer_var,
-		"%s.wait_time = %s" % [timer_var, str(ev.interval_seconds)],
+		"%s.wait_time = %s" % [timer_var, _first_interval_expr(ev)],
 		"%s.one_shot = %s" % [timer_var, str(ev.use_random_interval).to_lower()],
 		"%s.timeout.connect(_on_interval_%s)" % [timer_var, key],
 		"add_child(%s)" % timer_var,
@@ -159,11 +159,23 @@ static func _map_interval(ev: OnInterval, key: String) -> Dictionary:
 		tick_lines.append("if FuseDelegation.check_condition(self, %s, {}, %s):" % [stop_json, extras])
 		tick_lines.append(TAB + "_stop_interval_%s()" % key)
 		tick_lines.append(TAB + "return")
+	if ev.max_repeats > 0:
+		# 最后一拍当帧停 Timer（对齐 on_interval：递增后达 max_repeats 即 timer.stop()，
+		# 此前实现要等下一拍兜底才停——触发次数等价，停拍时机提前一拍）
+		tick_lines.append("if %s >= %d:" % [repeats_var, ev.max_repeats])
+		tick_lines.append(TAB + "_stop_interval_%s()" % key)
 	tick_lines.append("_on_%s({})" % key)
 	if ev.use_random_interval:
-		tick_lines.append("%s.wait_time = randf_range(%s, %s)" \
-			% [timer_var, str(ev.min_interval_seconds), str(ev.max_interval_seconds)])
-		tick_lines.append("%s.start()" % timer_var)
+		if ev.max_repeats > 0:
+			# 最后一拍不重启（对齐 on_interval 的 not is_last_trigger 守卫）
+			tick_lines.append("if %s < %d:" % [repeats_var, ev.max_repeats])
+			tick_lines.append(TAB + "%s.wait_time = randf_range(%s, %s)" \
+				% [timer_var, str(ev.min_interval_seconds), str(ev.max_interval_seconds)])
+			tick_lines.append(TAB + "%s.start()" % timer_var)
+		else:
+			tick_lines.append("%s.wait_time = randf_range(%s, %s)" \
+				% [timer_var, str(ev.min_interval_seconds), str(ev.max_interval_seconds)])
+			tick_lines.append("%s.start()" % timer_var)
 
 	var wiring := "\n\nvar %s: Timer = null\nvar %s: int = 0\n\n" % [timer_var, repeats_var]
 	wiring += "func _setup_interval_%s() -> void:\n%s" % [key, _indent_block(_join_lines(setup_lines))]
@@ -215,6 +227,15 @@ static func _map_receive(ev: OnReceiveEvent, key: String) -> Dictionary:
 # ============================================================
 # 工具
 # ============================================================
+
+## 首次间隔表达式：随机模式首拍即 randf_range（对齐 on_interval._create_timer
+## 的 wait_time = _get_next_interval()——原实现误用 interval_seconds 字段值）；
+## 固定模式直设 interval_seconds
+static func _first_interval_expr(ev: OnInterval) -> String:
+	if ev.use_random_interval:
+		return "randf_range(%s, %s)" % [str(ev.min_interval_seconds), str(ev.max_interval_seconds)]
+	return str(ev.interval_seconds)
+
 
 ## 行列表 → 单个代码块（行间换行，不加缩进）
 static func _join_lines(lines: Array[String]) -> String:

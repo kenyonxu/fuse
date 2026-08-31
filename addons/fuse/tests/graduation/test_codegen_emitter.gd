@@ -304,6 +304,40 @@ func _test_map_interval() -> void:
 	_check(wiring2.contains('"repeat_count": _repeats_u1'),
 		"OnInterval 滴答检查注入 repeat_count extras（对齐 on_interval 独立 ctx）: %s" % wiring2.substr(0, 200))
 
+	# T7 ruling：随机模式首拍间隔对齐 on_interval._create_timer 的
+	# _get_next_interval()（randf_range），而非 interval_seconds 字段值
+	var rnd := OnInterval.new()
+	rnd.interval_seconds = 1.0
+	rnd.use_random_interval = true
+	rnd.min_interval_seconds = 0.3
+	rnd.max_interval_seconds = 0.8
+	var mr: Dictionary = EventMapper.map_event(rnd, "u1")
+	var rw: String = mr.get("wiring_code", "")
+	_check(rw.contains("wait_time = randf_range(0.3, 0.8)"),
+		"OnInterval 随机模式首拍即 randf_range（对齐 on_interval 首拍随机）: %s" % rw.substr(0, 160))
+	_check(not rw.contains("wait_time = 1.0"),
+		"OnInterval 随机模式不用 interval_seconds 作首拍")
+
+	# T7 ruling：最后一拍当帧停 Timer（对齐 on_interval 递增后达 max_repeats 即停）
+	# + 随机模式最后一拍不重启（对齐 not is_last_trigger 守卫）
+	var fin := OnInterval.new()
+	fin.interval_seconds = 0.5
+	fin.max_repeats = 3
+	fin.use_random_interval = true
+	fin.min_interval_seconds = 0.2
+	fin.max_interval_seconds = 0.4
+	var mf: Dictionary = EventMapper.map_event(fin, "u1")
+	var fw: String = mf.get("wiring_code", "")
+	var tick := fw.get_slice("func _on_interval_u1() -> void:", 1)
+	var i_entry := tick.find("_on_u1({})")
+	var i_guard := tick.find("if _repeats_u1 < 3:")
+	var i_restart := tick.find(".start()")
+	var before_entry := tick.substr(0, i_entry).strip_edges()
+	_check(i_entry >= 0 and before_entry.ends_with("_stop_interval_u1()"),
+		"OnInterval 最后一拍当帧先停 Timer 再触发入口（此前下一拍才兜底停）: %s" % before_entry.substr(before_entry.length() - 60))
+	_check(i_guard >= 0 and i_guard > i_entry and i_restart > i_guard,
+		"OnInterval 随机重启带 not-last 守卫（最后一拍不重启）: %s" % tick.substr(0, 200))
+
 
 func _test_map_receive() -> void:
 	var ev := OnReceiveEvent.new()
@@ -511,7 +545,8 @@ func _test_emit_system_rejections() -> void:
 	_check(errs_ev.any(func(e): return e.get("code", "") == "E_EVENT_UNSUPPORTED"),
 		"事件拒生成归 E_EVENT_UNSUPPORTED: %s" % str(errs_ev))
 
-	# RESTART retrigger_policy 拒生成
+	# RESTART retrigger_policy：T7 起降级为 SKIP 并备案（金样例 game_flow b0 实需），
+	# 不再拒生成
 	var multi := MultiEventTrigger.new()
 	multi.name = "MultiRestart"
 	root.add_child(multi)
@@ -523,10 +558,12 @@ func _test_emit_system_rejections() -> void:
 	multi.event_bindings = [b]
 	var res_restart: Dictionary = GdscriptEmitter.emit_system(
 		_make_system("multi_restart", "MultiRestart", "L4"), multi, "res://test_fixture.tscn")
-	_check(res_restart.get("script_text", "x") == "", "RESTART retrigger_policy 拒生成")
-	var errs_restart: Array = res_restart.get("report", {}).get("errors", [])
-	_check(errs_restart.any(func(e): return str(e.get("detail", "")).contains("RESTART")),
-		"RESTART 拒生成 report 标注: %s" % str(errs_restart))
+	_check(res_restart.get("script_text", "") != "", "RESTART 降级 SKIP 后仍生成")
+	var report_r: Dictionary = res_restart.get("report", {})
+	var downgraded: Array = report_r.get("downgraded_restart_bindings", [])
+	_check(downgraded == ["b0"], "RESTART 降级入 report: %s" % str(downgraded))
+	_check(str(res_restart.get("script_text", "")).contains("降级备案: b0"),
+		"RESTART 降级在生成脚本头注释显著备案")
 	root.queue_free()
 
 

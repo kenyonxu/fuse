@@ -1,0 +1,29 @@
+{
+	"acknowledged_warnings": [],
+	"description": "标题画面提示文字呼吸动画：固定 1.3s 间隔对 TitleHint 淡入淡出，检测到任意输入后停止（L2 单元 Control/TitleHint/HintBreath，OnInterval 带 CheckAnyInput 停止条件）。",
+	"emit": {
+		"native_instructions": [],
+		"output_script": "res://fuse_generated/scripts/hint_breath.gd"
+	},
+	"externals": {
+		"events_in": [],
+		"events_out": [],
+		"variables": []
+	},
+	"format_version": "1.0",
+	"name": "hint_breath",
+	"source": {
+		"derived_at": "2026-08-31T16:40:53",
+		"derived_from": "res://demos/fuse/brickian/title_scene.tscn",
+		"topology_digest": "5f43b3e5"
+	},
+	"units": [
+		{
+			"id": "u1",
+			"kind": "trigger",
+			"level": "L2",
+			"node_path": "Control/TitleHint/HintBreath",
+			"scene": "res://demos/fuse/brickian/title_scene.tscn"
+		}
+	]
+}
