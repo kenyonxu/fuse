@@ -4,6 +4,17 @@
 **状态：** 已实现（2026-08-31，M0-M3 验收达标）
 **上下文：** 落实价值评估文档第四轮修订（`2026-08-15-ai-era-value-assessment.md` §5 建议 4、§8）——桥梁定位的出口桥板。前身讨论：2026-08-30 圆桌（切面粒度 / System 工件 / 指令覆盖 / 采用机制均已定）。
 
+**执行中修订记录（2026-08-31 实现定案，正文与实现冲突处以本块为准）：**
+
+1. **桥接面为五桥而非四桥**：增 `check_condition(node, cond_json, event_args, extras)`（`BaseCondition.check(ctx)` 统一入口实存；OnInterval 的 stop_condition 原生复刻与 binding 条件检查共用此桥）。API 核实结论：`ExecutionContext.new(node)` 可脱离 Trigger 构建（B19 修复）；`await ActionRunner.run(ctx)` 合法但 **run 结束会 cleanup ctx**——桥每次触发新建。
+2. **run() 的协程契约重构**：Godot 4.7 static 函数内 await 实例协程存在恢复时序缺陷（实测 static 链 0.06s vs instance 链 0.198s），`FuseDelegation.run` 改为 call_deferred + 终态中继信号（完成/失败/取消三路合一）+ 静态保活集合（防 RefCounted GC），返回值可 await。
+3. **门控两阶段**：`gate_check`（纯检查）/ `gate_commit`（消耗）拆分——对齐 trigger.gd:216"条件通过才消耗 trigger_once"语义；`gate_allows` 保留合一兼容。
+4. **RESTART retrigger 降级 SKIP**（T7 裁定）：spec 原文未提 RESTART；实现不拒生成而是降级为 SKIP 语义，配 `W_RESTART_DEGRADED` 校验警告 + CLI 提示 + 中性化备案文案（"请人工确认该绑定重触发时上一轮已完成"）。
+5. **LOCAL 变量连续性 → 整 binding 全委托**（终审 C1 裁定）：源 Fuse 一次触发内整条指令链共享一个 ExecutionContext（local 变量存于其中）；逐指令分段委托会静默丢弃 local。裁定：binding 内任一指令（含嵌套/条件/SendEvent `$var` 引用）读写 LOCAL → 整条 binding 全委托单段。代价是原生覆盖率下降（金样例 game_flow 3/28→1/28），语义保真优先。
+6. **SKIP retrigger 由 busy 卫语句显式复刻**（终审 C2）：await 协程并不"自然串行"——每入口函数置位/终态复位/重入忽略。
+7. **topology_digest 漂移校验**（终审 I2）：validator 比对实测 digest，不符报 error；digest 计算剔除 signal 边（随 `_ready` 连接时序漂移，且为既有死代码）。
+8. derive 报告落盘 `_derive_report.json`（warnings 四元组可供人工构造 acknowledged_warnings）；export 的 report.md 含条件风险行（输入时序 / CheckAnyInput 探测窗口 / 条件失败不进冷却）；拒生成路径打印完整降级/跳过清单。
+
 ---
 
 ## 1. 目标与范围
@@ -194,7 +205,7 @@ func _exit_tree() -> void:
 | OnInputAction | `_unhandled_input()`（action 名与触发模式保真） |
 | OnInterval | `Timer`（interval/随机区间/max_repeats/stop_condition 保真；stop_condition 为条件对象时纳入委托数据） |
 | OnReceiveEvent | 总线订阅（`_ready` 订阅 / `_exit_tree` 退订） |
-| 其余事件类型 | **整事件委托**：事件对象进委托数据，由桥接面驱动（MVP 不逐个写原生映射） |
+| 其余事件类型 | **拒生成**（`E_EVENT_UNSUPPORTED`）：MVP 不实现整事件委托的运行时驱动（RuntimeEventInstance 路径复杂度过高，2026-08-31 实现裁定），白名单四类之外的 System 直接拒绝生成并列出事件清单 |
 
 门控保真：`trigger_once`（标志位）、`cooldown_mode/cooldown_time`（时间戳检查函数）在生成代码中显式实现，语义对齐 `BaseTrigger`。
 
