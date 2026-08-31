@@ -101,9 +101,14 @@
 
 ```
 1. topology = InstructionAnalyzer.build_topology(scene_root)
-2. 连通分量计算（用 cross_references 的 signal/variable 边做并查集）——
-   MVP 仅用于报告标注（"此单元与 X/Y 同分量，建议二期物化"），草稿仍按单例产出
-3. 对每个非嵌套 trigger（is_nested==true 的跳过并在报告中说明：需到子场景内推导）：
+2. 连通分量计算（并查集）——MVP 仅用于报告标注（"此单元与 X/Y 同分量，建议二期物化"），草稿仍按单例产出。
+   数据源注意（2026-08-30 拓扑增强后回填）：cross_references 的 signal 边**实际失效**（既有缺陷：
+   `_extract_signals` 把 Runner 绑定记到接收方 trigger、target 指向自身，边构建只在子串撞名时偶然命中）；
+   可靠数据源为各单元 report 的 `signals[]`（含 runner_name）与 runner 单元的 `signal_binding`，
+   加上新增的 `run` 边（RunRunner 调用）与 `variable_write_to_read` / `variable_write_to_write` 变量边
+3. 对每个非嵌套 trigger（is_nested==true 的跳过并在报告中说明：需到子场景内推导）。
+   注（2026-08-30 拓扑增强后回填）：`topology.triggers` 现含三类 `kind`（trigger / multi / runner），
+   MVP deriver 按 kind 过滤、跳过 runner 单元——Runner 扫描已落地，L3 推导可作为一期扩展直接放开：
    a. units = [该 trigger]
    b. events_out/in：从该单元的 SendEvent 指令与 OnReceiveEvent 事件提取，
       outside_consumers/producers 由分量内是否有对端判定
@@ -214,7 +219,7 @@ Godot --headless --path . res://addons/fuse/editor/graduation/export_system.tscn
 
 1. **解析级**（MVP 硬门禁）：生成脚本 headless `load()` 零解析错误（test 场景驱动，退出码门禁）
 2. **结构级**：就绪报告断言——覆盖率数字与委托清单和 System 的 units 内容一致；委托数据块重建后指令数与源 preset 一致（防静默丢失，对齐闭环 E_ROUNDTRIP_LOSS 思想）
-3. **金样例**：挑 2 个真实场景单元生成并入库产物，测试断言其解析通过 + 报告内容稳定（回归基线）——建议 game_scene 的 `GameManager/GameFlow`（L4 MultiEventTrigger）与 title_scene 的 `Control/TitleHint/HintBreath`（L2 Trigger）。注意拓扑只扫 Trigger/MultiEventTrigger，L1/L3 单元（ActionRunner/Runner，如 SpawnEnemy）**不在 MVP 推导范围**，报告中如实标注
+3. **金样例**：挑 2 个真实场景单元生成并入库产物，测试断言其解析通过 + 报告内容稳定（回归基线）——建议 game_scene 的 `GameManager/GameFlow`（L4 MultiEventTrigger）与 title_scene 的 `Control/TitleHint/HintBreath`（L2 Trigger）。注意拓扑扫描覆盖 Trigger/MultiEventTrigger 与 Runner 三类单元，但 MVP 推导按 kind 过滤、仅取 trigger/multi（L3 的 Runner 已入拓扑，其推导可作为一期扩展直接放开，报告中如实标注）
 4. System 校验器自身：正例/负例 fixture（缺确认的竞态、幽灵节点、版本错）断言 error code
 
 ## 9. 风险与开放问题
@@ -225,6 +230,7 @@ Godot --headless --path . res://addons/fuse/editor/graduation/export_system.tscn
 4. **cooldown 的 PER_OBJECT 语义**：依赖 Fuse 内部按对象状态，桥接实现需核实其存储位置；若过于内部，MVP 该模式降级为 GLOBAL 并在报告中标注语义偏差。
 5. **委托数据内嵌 NodePath**：委托指令的相对路径以挂载节点为锚——采用说明必须要求挂载到源 Trigger 同路径，报告强调。
 6. **二期依赖**：物化模式（多单元）不做，但 System 格式/校验器不得写死"恒 1 单元"的假设（数组遍历而非下标访问）。
+7. **`run` 边目标误命中**：`_node_calls_unit` 的目标匹配当前为子串 contains——`../SpawnLogic` 会误命中名为 `Spawn` 的单元。毕业 deriver 消费 `run` 边前，须将其改为 NodePath 最后一段精确比对（已列为毕业计划前置任务）。
 
 ## 10. 里程碑
 

@@ -100,6 +100,14 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/eval_r
 - 测试场景结尾用 `get_tree().quit(1 if _fail > 0 else 0)` 约定退出码，headless 运行可直接做门禁判断
 - 触及 `preset_value_codec` 的任务须例行跑 `res://addons/fuse/tests/serialization/test_preset_nested_serde.tscn`（全量序列化往返较慢，需 `--quit-after 600`）
 
+### export_topology CLI（拓扑 ground truth 导出）
+
+```bash
+Godot --headless --path <项目路径> res://addons/fuse/editor/topology/export_topology.tscn -- --scene res://<scene.tscn> [--out res://fuse_reports/topology]
+# 退出码：0 = 成功；2 = 参数或 IO 错误
+# 用途：导出场景拓扑 JSON（产物名 = 场景文件茎），毕业导出器与调试共用
+```
+
 ## 代码风格指南
 
 ### 文件命名
