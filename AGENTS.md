@@ -114,8 +114,10 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/topology/export_
 # 场景拓扑 → System 草稿 JSON（kind 过滤 runner；草稿目录默认不入库）
 Godot --headless --path <项目路径> res://addons/fuse/editor/graduation/derive_systems.tscn -- --scene res://<scene.tscn> [--out res://fuse_generated/systems/drafts]
 # 退出码：0 = 成功；2 = 参数或 IO 错误
+# 另落盘 <out>/_derive_report.json（skipped/components/warnings_by_unit 四元组，
+# 据此可构造草稿的 acknowledged_warnings）
 
-# System JSON 离线校验（文件或目录，可多个）
+# System JSON 离线校验（文件或目录，可多个；含 topology_digest 漂移检测）
 Godot --headless --path <项目路径> res://addons/fuse/editor/graduation/validate_system.tscn -- <file-or-dir>... [--report <out.json>]
 # 退出码：0 = 无 error；1 = 有 error finding；2 = 参数/IO 错误
 

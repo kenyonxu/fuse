@@ -36,7 +36,7 @@ const _COMPONENT_EDGE_TYPES := ["run", "variable_write_to_read", "variable_write
 ##   }}
 static func derive_systems(scene_root: Node, scene_path: String) -> Dictionary:
 	var topology: Dictionary = InstructionAnalyzer.build_topology(scene_root)
-	var digest := _topology_digest(topology)
+	var digest := topology_digest(topology)
 
 	# —— 全拓扑汇总（externals 边界判定原料；含嵌套与 runner 单元——它们仍是
 	#    运行中的变量使用者。注：单元名做 key，同名单元会被覆盖——
@@ -173,9 +173,18 @@ static func _unique_system_name(trigger_name: String, used_names: Dictionary) ->
 ## topology 摘要指纹（十六进制；变更检测用途，非加密）。
 ## 先 sanitize 再 str：裸 topology 的 instructions_tree 持对象引用，
 ## 直接转字符串会带入 instance id，同场景两次推导指纹会漂移。
-## 另归一化场景根名（trigger_path 首段 / scene_name）：同一场景二次实例化
-## 会被 Godot 自动改名（如 GameScene2），属实例化噪音而非拓扑变更。
-static func _topology_digest(topology: Dictionary) -> String:
+## 归一化项：
+## - 场景根名（trigger_path 首段 / scene_name）：同一场景二次实例化会被 Godot
+##   自动改名（如 GameScene2），属实例化噪音而非拓扑变更；
+## - signal 边（triggers[].signals + cross_references 的 type=="signal" 条目）：
+##   signal 连接在运行时按 _ready 时序出现（实测 title_scene 的
+##   OnHintBreathStopped 订阅 HintBreath.event_stopped——attach 后立即构建与
+##   隔帧构建拓扑在该字段上漂移），且 signal 边为既有死代码（spec §4.2，
+##   不参与分量）——摘要口径剔除，保证 deriver/validator 实测环境差异下
+##   指纹确定（终审 I2 实测发现）。
+## 公开 static（终审 I2）：SystemValidator 校验 source.topology_digest 时直接
+## 调本函数——同一实现，杜绝 deriver/validator 两处同构漂移。
+static func topology_digest(topology: Dictionary) -> String:
 	var normalized: Dictionary = TopologyExport.sanitize_for_json(topology)
 	normalized["scene_name"] = ""
 	for report: Dictionary in normalized.get("triggers", []):
@@ -183,6 +192,12 @@ static func _topology_digest(topology: Dictionary) -> String:
 		var idx := tp.find("/")
 		if idx >= 0:
 			report["trigger_path"] = tp.substr(idx + 1)
+		report["signals"] = []
+	var stable_refs: Array = []
+	for ref: Dictionary in normalized.get("cross_references", []):
+		if str(ref.get("type", "")) != "signal":
+			stable_refs.append(ref)
+	normalized["cross_references"] = stable_refs
 	return "%x" % str(normalized).hash()
 
 

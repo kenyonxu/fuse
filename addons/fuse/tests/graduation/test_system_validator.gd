@@ -41,6 +41,7 @@ func _ready() -> void:
 	_test_external_resolution()
 	_test_nested_unit_warning()
 	_test_restart_degraded_warning()
+	_test_topology_digest_check()
 	print("=== test_system_validator 完成（失败 %d）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -253,6 +254,48 @@ func _test_restart_degraded_warning() -> void:
 			msg = f["message"]
 	_check(msg.contains("降级为 SKIP") and msg.contains("人工确认"),
 		"warning message 含降级事实 + 人工确认义务: %s" % msg)
+	SystemValidator.clear_scene_cache()
+	root.queue_free()
+
+
+# ============================================================
+# E_TOPOLOGY_DIGEST_MISMATCH / I_DIGEST_MISSING（终审 I2 正负例）
+# ============================================================
+
+## 负例：指纹不符 → error；正例：SystemDeriver.topology_digest 实算值 → 通过；
+## 缺失 → info 不阻断。digest 由 deriver 公开 static 实算（同一实现）。
+func _test_topology_digest_check() -> void:
+	var root := _inject_scene("res://test/ut_digest.tscn", "DigestScene")
+	_make_race_fixture(root)
+
+	# 负例：声明伪造指纹 → error（推导后场景已漂移的等价形态）
+	var draft := _draft("res://test/ut_digest.tscn", "TrigA", "L2")
+	draft["source"]["topology_digest"] = "deadbeef"
+	var report: Dictionary = SystemValidator.validate_data(draft)
+	_check(_has_code(report, "E_TOPOLOGY_DIGEST_MISMATCH"),
+		"topology_digest=deadbeef 与实测不符 → E_TOPOLOGY_DIGEST_MISMATCH")
+	_check(report["errors"] > 0, "指纹不符计 error（阻断生成）")
+
+	# 正例：deriver 同一实算函数产出 → 无 mismatch finding
+	var actual: String = SystemDeriver.topology_digest(
+		InstructionAnalyzer.build_topology(root))
+	draft["source"]["topology_digest"] = actual
+	var ok_report: Dictionary = SystemValidator.validate_data(draft)
+	_check(not _has_code(ok_report, "E_TOPOLOGY_DIGEST_MISMATCH"),
+		"digest 与实测一致 → 无 mismatch（deriver/validator 同一实现）")
+	var mismatch_still: bool = _has_code(ok_report, "I_DIGEST_MISSING")
+	_check(not mismatch_still, "digest 非空不再报缺失 info")
+
+	# 缺失（手写草稿）→ info 不阻断
+	draft["source"]["topology_digest"] = ""
+	var missing: Dictionary = SystemValidator.validate_data(draft)
+	_check(_has_code(missing, "I_DIGEST_MISSING"),
+		"topology_digest 缺失 → I_DIGEST_MISSING info")
+	var digest_errors: int = 0
+	for f: Dictionary in missing["findings"]:
+		if f["code"] == "I_DIGEST_MISSING":
+			digest_errors += 1 if f["severity"] == "error" else 0
+	_check(digest_errors == 0, "缺失为 info 不计 error")
 	SystemValidator.clear_scene_cache()
 	root.queue_free()
 

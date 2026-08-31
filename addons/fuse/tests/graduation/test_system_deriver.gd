@@ -34,6 +34,7 @@ func _ready() -> void:
 	_test_components_run_and_variable_edges()
 	_test_components_signal_edge_excluded()
 	_test_digest_stability()
+	_test_cli_report_file()
 	print("=== test_system_deriver 完成（失败 %d）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -362,3 +363,51 @@ func _test_digest_stability() -> void:
 	var digest_c: String = SystemDeriver.derive_systems(root, "res://test/fixture_digest.tscn")["drafts"][0]["source"]["topology_digest"]
 	_check(digest_c != digest_a, "不同拓扑 digest 不同")
 	root.queue_free()
+
+
+# ============================================================
+# derive CLI 报告落盘（终审 I1：_derive_report.json + warnings_by_unit 四元组）
+# ============================================================
+
+## 双 Trigger 共写 global "score" 的竞态 fixture → 推导报告含可构造
+## acknowledged_warnings 的完整四元组条目；CLI 的 write_report_file 为
+## 独立 static（场景 _ready 会 quit 进程，测试直接断言其落盘行为）
+func _test_cli_report_file() -> void:
+	const DeriveCli := preload("res://addons/fuse/editor/graduation/derive_systems_cli.gd")
+	var root := _make_fixture_root("FixtureCliReport")
+	var ta := _make_trigger(root, "TrigA")
+	var ara := ActionRunner.new()
+	ara.instructions = [_make_set_global("score")]
+	ta.action_runner = ara
+	var tb := _make_trigger(root, "TrigB")
+	var arb := ActionRunner.new()
+	arb.instructions = [_make_set_global("score")]
+	tb.action_runner = arb
+
+	var result: Dictionary = SystemDeriver.derive_systems(root, "res://test/fixture_cli.tscn")
+	root.queue_free()
+	var out_dir := "user://grad_derive_report_ut"
+	var err: int = DeriveCli.write_report_file(out_dir, result["report"])
+	_check(err == OK, "write_report_file 落盘成功（err=%d）" % err)
+	var path := out_dir + "/_derive_report.json"
+	_check(FileAccess.file_exists(path), "_derive_report.json 写入 out_dir")
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	_check(parsed is Dictionary, "_derive_report.json 可解析")
+	if not (parsed is Dictionary):
+		return
+	var payload: Dictionary = parsed
+	for key: String in ["skipped_runner", "skipped_nested", "components", "warnings_by_unit"]:
+		_check(payload.has(key), "报告含 %s（用户可据此构造 acknowledged_warnings）" % key)
+	var warnings: Dictionary = payload.get("warnings_by_unit", {})
+	_check(not warnings.is_empty(), "双写竞态 fixture 产出 warnings_by_unit 条目")
+	var tuple_ok := true
+	var saw_entry := false
+	for unit: String in warnings:
+		for entry_v: Variant in warnings[unit]:
+			saw_entry = true
+			var entry: Dictionary = entry_v if entry_v is Dictionary else {}
+			if not entry.has_all(["type", "from", "to", "detail"]):
+				tuple_ok = false
+	_check(saw_entry and tuple_ok,
+		"warnings_by_unit 条目为 type/from/to/detail 四元组（可整条拷入 acknowledged_warnings）")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))

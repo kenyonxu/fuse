@@ -14,10 +14,12 @@ extends RefCounted
 ## codes（spec §5）：
 ##   E_FORMAT_VERSION / E_UNIT_NOT_FOUND / E_UNIT_LEVEL_MISMATCH /
 ##   E_EXTERNAL_UNRESOLVED / E_WARNING_NOT_ACKNOWLEDGED / E_EMIT_TARGET_CONFLICT /
+##   E_TOPOLOGY_DIGEST_MISMATCH（终审 I2：拓扑指纹不符——推导后场景已变更）/
 ##   W_SINGLETON_IN_COMPONENT / W_NESTED_UNIT / W_RESTART_DEGRADED（M3 收口：
 ##   RESTART retrigger 生成时降级为 SKIP 的人工确认提示，warning 不阻断）
 ## 另有 info 级：I_CROSS_SCENE_EXTERNAL（跨场景依赖从宽提示）、
-##   I_OVERWRITE_GENERATED（覆盖本导出器旧生成物）、I_NOT_SYSTEM（目录递归时跳过非 System JSON）
+##   I_OVERWRITE_GENERATED（覆盖本导出器旧生成物）、I_NOT_SYSTEM（目录递归时跳过非 System JSON）、
+##   I_DIGEST_MISSING（source.topology_digest 缺失，手写草稿提示不阻断）
 ##
 ## 拓扑核对需实例化场景（同场景多 System 只 load 一次，缓存实例常驻到进程结束）；
 ## MVP 从宽：events_in 生产者仅在同场景拓扑内核对，跨场景依赖降为 info 不计 error。
@@ -178,6 +180,9 @@ static func _validate_units(data: Dictionary, findings: Array) -> void:
 			findings.append(_finding("E_UNIT_NOT_FOUND", "error", upath + ".node_path",
 				"node_path '%s' 在场景 %s 中解析不到节点" % [node_path, scene_path]))
 			continue  # 级联防护：level/拓扑核对均依赖节点
+		if i == 0:
+			# 拓扑指纹是场景级属性，只核一次（MVP 单单元；多单元同场景重复核无增益）
+			_check_topology_digest(data, ctx, findings)
 		# level 与节点实取比对（非四类节点 detect 为空，跳过防误报）
 		var declared: String = str(unit.get("level", ""))
 		var actual_level: String = FusePresetSerializer.detect_level(node)
@@ -190,6 +195,24 @@ static func _validate_units(data: Dictionary, findings: Array) -> void:
 		_check_warnings_acknowledged(data, unit_name, ctx, upath, findings)
 		_check_externals(data, unit_name, ctx, upath, findings)
 		_check_retrigger_policies(node, upath, findings)
+
+
+## 拓扑指纹核对（终审 I2）：source.topology_digest 与当前拓扑实测 digest 不符 →
+## error——草稿推导后场景拓扑已漂移，externals 边界/竞态核对的地基失效，需重新
+## derive。digest 算法直接调 SystemDeriver.topology_digest（同一实现，防三处同构
+## 漂移）。摘要缺失（手写草稿常见）→ info 不阻断。
+static func _check_topology_digest(data: Dictionary, ctx: Dictionary, findings: Array) -> void:
+	var declared := str(_as_dict(data.get("source", {})).get("topology_digest", ""))
+	if declared.is_empty():
+		findings.append(_finding("I_DIGEST_MISSING", "info", "$.source.topology_digest",
+			"topology_digest 缺失（手写草稿？）——建议经 derive_systems 产出以启用漂移检测"))
+		return
+	var actual := SystemDeriver.topology_digest(ctx["topology"])
+	if actual != declared:
+		findings.append(_finding("E_TOPOLOGY_DIGEST_MISMATCH", "error",
+			"$.source.topology_digest",
+			"拓扑指纹不符：声明 %s 但当前场景实测 %s（推导后场景已变更，需重新 derive）"
+			% [declared, actual]))
 
 
 # 嵌套单元（位于实例化子场景内）——生成目标与挂载点需人工确认，不阻断
