@@ -31,6 +31,8 @@ func _ready() -> void:
 	_test_tween_delegated()
 	_test_set_variable_native_and_copy_delegated()
 	_test_math_operation_native()
+	_test_math_operation_modulo_fmod()
+	_test_math_operation_divide_by_zero()
 	_test_send_event_native_and_ref_delegated()
 	_test_show_hide_ui_native()
 	_test_set_ui_text_native()
@@ -44,7 +46,9 @@ func _ready() -> void:
 	_test_emit_system_l4_multi_and_disabled()
 	_test_emit_system_mixed_native_delegated()
 	_test_emit_system_rejections()
+	_test_emit_system_conditions_gate_phases()
 	_test_parse_smoke_all_event_kinds()
+	_test_parse_smoke_modulo_and_conditions()
 	print("=== test_codegen_emitter 完成（失败 %d）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -116,6 +120,51 @@ func _test_math_operation_native() -> void:
 		"MathOperation 结果经桥写回: %s" % block)
 	_check(block.contains(" + "), "MathOperation ADD 运算符直译: %s" % block)
 	_check(not block.contains("await FuseDelegation.run"), "MathOperation 原生非委托")
+
+
+func _test_math_operation_modulo_fmod() -> void:
+	var m := MathOperation.new()
+	m.operation_type = MathOperation.OperationType.MODULO
+	m.operand_a_source = MathOperation.OperandASource.VALUE
+	m.operand_a_value = 7.0
+	m.operand_b_source = MathOperation.OperandBSource.VALUE
+	m.operand_b_value = 3.0
+	m.save_to_variable = "rem"
+	var block: String = GdscriptEmitter.emit_instruction(m, "\t")
+	_check(block.contains("fmod("), "MathOperation MODULO 用 fmod（%% 仅支持 int）: %s" % block)
+	_check(not block.contains(" % "), "MODULO 不生成 %% 运算符: %s" % block)
+
+
+func _test_math_operation_divide_by_zero() -> void:
+	var m := MathOperation.new()
+	m.operation_type = MathOperation.OperationType.DIVIDE
+	m.operand_a_source = MathOperation.OperandASource.VALUE
+	m.operand_a_value = 10.0
+	m.operand_b_source = MathOperation.OperandBSource.VALUE
+	m.operand_b_value = 0.0
+	m.save_to_variable = "ratio"
+	var block: String = GdscriptEmitter.emit_instruction(m, "\t")
+	_check(block.contains("if is_zero_approx("), "DIVIDE 除零守卫（对齐 Fuse RUNTIME_ERROR）: %s" % block)
+	_check(block.contains("push_error(") and block.contains("return"),
+		"除零报错并中断后续指令: %s" % block)
+	var mod := MathOperation.new()
+	mod.operation_type = MathOperation.OperationType.MODULO
+	mod.operand_a_source = MathOperation.OperandASource.VALUE
+	mod.operand_a_value = 7.0
+	mod.operand_b_source = MathOperation.OperandBSource.VALUE
+	mod.operand_b_value = 3.0
+	mod.save_to_variable = "rem"
+	var mod_block: String = GdscriptEmitter.emit_instruction(mod, "\t")
+	_check(mod_block.contains("is_zero_approx("), "MODULO 同享除零守卫")
+	var add := MathOperation.new()
+	add.operation_type = MathOperation.OperationType.ADD
+	add.operand_a_source = MathOperation.OperandASource.VALUE
+	add.operand_a_value = 1.0
+	add.operand_b_source = MathOperation.OperandBSource.VALUE
+	add.operand_b_value = 2.0
+	add.save_to_variable = "sum"
+	var add_block: String = GdscriptEmitter.emit_instruction(add, "\t")
+	_check(not add_block.contains("is_zero_approx("), "ADD 不生成除零守卫")
 
 
 func _test_send_event_native_and_ref_delegated() -> void:
@@ -252,6 +301,8 @@ func _test_map_interval() -> void:
 	var wiring2: String = m2.get("wiring_code", "")
 	_check(wiring2.contains("FuseDelegation.check_condition(self, {"),
 		"OnInterval stop_condition 仍原生（每滴 check_condition）: %s" % wiring2.substr(0, 120))
+	_check(wiring2.contains('"repeat_count": _repeats_u1'),
+		"OnInterval 滴答检查注入 repeat_count extras（对齐 on_interval 独立 ctx）: %s" % wiring2.substr(0, 200))
 
 
 func _test_map_receive() -> void:
@@ -476,6 +527,124 @@ func _test_emit_system_rejections() -> void:
 	var errs_restart: Array = res_restart.get("report", {}).get("errors", [])
 	_check(errs_restart.any(func(e): return str(e.get("detail", "")).contains("RESTART")),
 		"RESTART 拒生成 report 标注: %s" % str(errs_restart))
+	root.queue_free()
+
+
+## 带条件 binding 的入口：两阶段门控（gate_check → 条件（注入 event_args）→
+## gate_commit → 执行）——对齐 Fuse"条件通过才消耗 trigger_once"（trigger.gd:216）
+func _test_emit_system_conditions_gate_phases() -> void:
+	var root := Node.new()
+	root.name = "FixtureScene"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigCond"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	ar.instructions = [Print.new()]
+	trigger.action_runner = ar
+	var receive := OnReceiveEvent.new()
+	receive.event_name = "score_changed"
+	trigger.event_definition = receive
+	trigger.trigger_once = true
+	var cond := CheckVariable.new()
+	cond.variable_name = "event_score"
+	cond.expected_value = 7
+	trigger.conditions = [cond]
+	trigger.use_conditions = true
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_cond", "TrigCond", "L2"), trigger, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+	var lines := text.split("\n")
+	var i_check := -1
+	var i_cond := -1
+	var i_commit := -1
+	for i: int in lines.size():
+		if lines[i].contains("FuseDelegation.gate_check(_gate"):
+			i_check = i
+		elif lines[i].contains("FuseDelegation.check_condition(self, _cond, event_args)"):
+			i_cond = i
+		elif lines[i].contains("FuseDelegation.gate_commit(_gate"):
+			i_commit = i
+	_check(i_check >= 0, "条件 binding 生成 gate_check（纯检查）")
+	_check(i_cond >= 0, "条件检查调用注入 event_args: %s" % str(i_cond))
+	_check(i_commit >= 0, "条件通过后 gate_commit 消耗")
+	_check(i_check >= 0 and i_cond >= 0 and i_commit >= 0 and i_check < i_cond and i_cond < i_commit,
+		"两阶段顺序：check → 条件 → commit")
+	_check(not text.contains("gate_allows"), "条件 binding 不再用合一 gate_allows")
+	_check(text.contains("const _CONDITIONS_U1"), "条件常量生成")
+	root.queue_free()
+
+
+## 冒烟补充：MODULO 原生 + 条件两阶段门控产物 load() 零解析错
+func _test_parse_smoke_modulo_and_conditions() -> void:
+	var root := Node.new()
+	root.name = "SmokeScene2"
+	add_child(root)
+
+	# MODULO + DIVIDE 原生（fmod/除零守卫分支的可编译性）
+	var t1 := Trigger.new()
+	t1.name = "SmokeModulo"
+	root.add_child(t1)
+	t1.set_owner(root)
+	var ar1 := ActionRunner.new()
+	var mod := MathOperation.new()
+	mod.operation_type = MathOperation.OperationType.MODULO
+	mod.operand_a_source = MathOperation.OperandASource.VALUE
+	mod.operand_a_value = 7.0
+	mod.operand_b_source = MathOperation.OperandBSource.VALUE
+	mod.operand_b_value = 3.0
+	mod.save_to_variable = "rem"
+	var div := MathOperation.new()
+	div.operation_type = MathOperation.OperationType.DIVIDE
+	div.operand_a_source = MathOperation.OperandASource.VALUE
+	div.operand_a_value = 10.0
+	div.operand_b_source = MathOperation.OperandBSource.VALUE
+	div.operand_b_value = 4.0
+	div.save_to_variable = "ratio"
+	ar1.instructions = [mod, div]
+	t1.action_runner = ar1
+	t1.event_definition = OnReady.new()
+	_smoke_load(_make_system("smoke_modulo", "SmokeModulo", "L2"), t1)
+
+	# 带条件 binding（两阶段门控 + event_args 条件）+ OnInterval stop_condition（extras 注入）
+	var t2 := Trigger.new()
+	t2.name = "SmokeCondInterval"
+	root.add_child(t2)
+	t2.set_owner(root)
+	var ar2 := ActionRunner.new()
+	ar2.instructions = [Print.new()]
+	t2.action_runner = ar2
+	var receive := OnReceiveEvent.new()
+	receive.event_name = "smoke_evt"
+	t2.event_definition = receive
+	t2.trigger_once = true
+	var cond := CheckVariable.new()
+	cond.variable_name = "event_score"
+	cond.expected_value = 7
+	t2.conditions = [cond]
+	t2.use_conditions = true
+	_smoke_load(_make_system("smoke_cond", "SmokeCondInterval", "L2"), t2)
+
+	var t3 := Trigger.new()
+	t3.name = "SmokeStopCond"
+	root.add_child(t3)
+	t3.set_owner(root)
+	var ar3 := ActionRunner.new()
+	ar3.instructions = [Print.new()]
+	t3.action_runner = ar3
+	var interval := OnInterval.new()
+	interval.interval_seconds = 1.0
+	interval.max_repeats = 5
+	var stop := CheckVariable.new()
+	stop.variable_name = "repeat_count"
+	stop.comparison_operator = CheckVariable.ComparisonOperator.GREATER_EQUAL
+	stop.expected_value = 3
+	interval.stop_condition = stop
+	t3.event_definition = interval
+	_smoke_load(_make_system("smoke_stop_cond", "SmokeStopCond", "L2"), t3)
+
 	root.queue_free()
 
 

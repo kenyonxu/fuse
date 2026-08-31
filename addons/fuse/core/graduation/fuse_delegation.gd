@@ -102,12 +102,22 @@ static func set_var(node: Node, name: String, value: Variant, scope: String) -> 
 ## node 兼任 target 与 trigger：BaseCondition.check 的 scope 变量 NEAREST 搜索
 ## 依赖 context.trigger 向上查找 ScopeVariableContainer，双参构造对齐真实
 ## Trigger 运行时语义。重建失败（未知类型等）返回 false，不中断生成脚本。
-static func check_condition(node: Node, cond_json: Dictionary) -> bool:
+## event_args 以 event_<key> 写入 ctx（对齐 run() 的事件参数同步，OnReceiveEvent
+## 条件引用 event_xxx 的核心用法）；extras 以原名写入 ctx（OnInterval 滴答注入
+## repeat_count/max_repeats/is_last_trigger 等，对齐 on_interval 的独立检查 ctx）。
+static func check_condition(node: Node, cond_json: Dictionary,
+		event_args: Dictionary = {}, extras: Dictionary = {}) -> bool:
 	var cond: BaseCondition = PresetValueCodec.deserialize_condition(cond_json)
 	if cond == null:
 		push_warning("[FuseDelegation] 条件重建失败: %s" % str(cond_json.get("type", "?")))
 		return false
 	var ctx := ExecutionContext.new(node, node)
+	ctx.set_variable("event_source", node)
+	ctx.set_variable("triggered_node", node)
+	for key: Variant in event_args:
+		ctx.set_variable("event_%s" % key, event_args[key])
+	for key: Variant in extras:
+		ctx.set_variable(key, extras[key])
 	return cond.check(ctx)
 
 
@@ -141,11 +151,11 @@ static func unsubscribe(subscription: Variant) -> void:
 		bus.unsubscribe(subscription)
 
 
-## 门控（检查并更新）：复刻 BaseTrigger._check_cooldown + trigger_once 语义。
-## state 由生成脚本持有（成员 Dictionary）；key 为触发器绑定键。
-## trigger_once 已触发 -> false；GLOBAL/PER_OBJECT 冷却未到 -> false；
-## 放行则记录时间戳与 once 标记。时间源 Time.get_ticks_msec()/1000.0。
-static func gate_allows(state: Dictionary, key: String, trigger_once: bool,
+## 门控纯检查（不消耗状态）：复刻 BaseTrigger._check_cooldown + trigger_once 判定。
+## trigger_once 已触发 -> false；GLOBAL/PER_OBJECT 冷却未到 -> false；否则 true。
+## 与 gate_commit 配对实现两阶段语义（对齐 Trigger"条件通过才消耗 trigger_once"，
+## trigger.gd:216）——条件失败时只 check 不 commit，后续触发仍放行。
+static func gate_check(state: Dictionary, key: String, trigger_once: bool,
 		cooldown_mode: int, cooldown_time: float, object_id: int) -> bool:
 	var once_key := "%s:once" % key
 	if trigger_once and state.get(once_key, false):
@@ -157,15 +167,38 @@ static func gate_allows(state: Dictionary, key: String, trigger_once: bool,
 				var last: float = state.get("%s:last" % key, -1e9)
 				if now - last < cooldown_time:
 					return false
-				state["%s:last" % key] = now
 			COOLDOWN_PER_OBJECT:
 				var per: Dictionary = state.get("%s:objects" % key, {})
 				var last_o: float = per.get(object_id, -1e9)
 				if now - last_o < cooldown_time:
 					return false
+	return true
+
+
+## 门控消耗：写 once 标记与冷却时间戳（条件通过后调用）。
+## once 标记无条件写入（gate_check 仅在 trigger_once=true 时读取，多余写入无副作用）。
+static func gate_commit(state: Dictionary, key: String,
+		cooldown_mode: int, cooldown_time: float, object_id: int) -> void:
+	if cooldown_mode != COOLDOWN_NONE and cooldown_time > 0.0:
+		var now := Time.get_ticks_msec() / 1000.0
+		match cooldown_mode:
+			COOLDOWN_GLOBAL:
+				state["%s:last" % key] = now
+			COOLDOWN_PER_OBJECT:
+				var per: Dictionary = state.get("%s:objects" % key, {})
 				per[object_id] = now
 				state["%s:objects" % key] = per
-	state[once_key] = true
+	state["%s:once" % key] = true
+
+
+## 门控（检查并消耗）：gate_check + gate_commit 合一。
+## 无条件绑定可直接用；带条件的绑定应分别调用 gate_check / gate_commit
+## 以复刻"条件通过才消耗"语义。时间源 Time.get_ticks_msec()/1000.0。
+static func gate_allows(state: Dictionary, key: String, trigger_once: bool,
+		cooldown_mode: int, cooldown_time: float, object_id: int) -> bool:
+	if not gate_check(state, key, trigger_once, cooldown_mode, cooldown_time, object_id):
+		return false
+	gate_commit(state, key, cooldown_mode, cooldown_time, object_id)
 	return true
 
 

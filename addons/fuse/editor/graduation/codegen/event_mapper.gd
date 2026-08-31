@@ -151,7 +151,12 @@ static func _map_interval(ev: OnInterval, key: String) -> Dictionary:
 		tick_lines.append(TAB + "return")
 	tick_lines.append("%s += 1" % repeats_var)
 	if not stop_json.is_empty():
-		tick_lines.append("if FuseDelegation.check_condition(self, %s):" % stop_json)
+		# 滴答检查 ctx 注入 repeat_count/max_repeats/is_last_trigger
+		# （对齐 on_interval.gd 的独立检查 ctx；CheckAnyInput 型分支不复刻——报告备案）
+		var last_expr := "%s >= %d" % [repeats_var, ev.max_repeats] if ev.max_repeats > 0 else "false"
+		var extras := '{"repeat_count": %s, "max_repeats": %d, "is_last_trigger": %s}' \
+			% [repeats_var, ev.max_repeats, last_expr]
+		tick_lines.append("if FuseDelegation.check_condition(self, %s, {}, %s):" % [stop_json, extras])
 		tick_lines.append(TAB + "_stop_interval_%s()" % key)
 		tick_lines.append(TAB + "return")
 	tick_lines.append("_on_%s({})" % key)

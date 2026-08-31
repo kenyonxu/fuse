@@ -20,6 +20,8 @@ func _ready() -> void:
 	await _test_event_bridge()
 	await _test_gate()
 	await _test_check_condition()
+	_test_gate_two_phase()
+	_test_check_condition_event_args()
 	print("=== FuseDelegation 测试完成（失败 %d）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -136,3 +138,53 @@ func _test_check_condition() -> void:
 	_check(not FuseDelegation.check_condition(holder, {"type": "NoSuchCondition"}), "未知条件类型返回 false")
 	holder.queue_free()
 	scope_parent.queue_free()
+
+
+## 门控两阶段：gate_check 纯检查不消耗（模拟"once + 条件首次失败"——
+## 不 commit 则第二次仍放行，对齐 Trigger 条件通过才消耗 trigger_once）；
+## gate_commit 写 once 标记与冷却时间戳；gate_allows 保持 check+commit 合一。
+func _test_gate_two_phase() -> void:
+	var state := {}
+	_check(FuseDelegation.gate_check(state, "b0", true, 0, 0.0, 1), "gate_check 未消耗前放行")
+	_check(FuseDelegation.gate_check(state, "b0", true, 0, 0.0, 1), "gate_check 纯检查可重复调用（条件失败不消耗）")
+	FuseDelegation.gate_commit(state, "b0", 0, 0.0, 1)
+	_check(not FuseDelegation.gate_check(state, "b0", true, 0, 0.0, 1), "commit 后 once 拒绝")
+	var state2 := {}
+	_check(FuseDelegation.gate_check(state2, "b0", false, 1, 10.0, 7), "冷却纯检查放行")
+	_check(FuseDelegation.gate_check(state2, "b0", false, 1, 10.0, 7), "纯检查不写冷却时间戳")
+	FuseDelegation.gate_commit(state2, "b0", 1, 10.0, 7)
+	_check(not FuseDelegation.gate_check(state2, "b0", false, 1, 10.0, 7), "commit 后冷却生效")
+	var state3 := {}
+	_check(FuseDelegation.gate_allows(state3, "b0", true, 0, 0.0, 1), "gate_allows 合一首次放行")
+	_check(not FuseDelegation.gate_allows(state3, "b0", true, 0, 0.0, 1), "gate_allows 合一二次拒绝")
+
+
+## check_condition 的事件参数注入：event_args 以 event_<key> 写 ctx
+## （OnReceiveEvent 条件引用 event_xxx 的核心用法）；extras 以原名写 ctx
+## （OnInterval 滴答的 repeat_count/max_repeats/is_last_trigger）。
+func _test_check_condition_event_args() -> void:
+	var holder := Node.new()
+	add_child(holder)
+	var json_evt: Dictionary = {
+		"type": "CheckVariable",
+		"variable_name": "event_score",
+		"variable_scope": 0,
+		"comparison_operator": 0,
+		"expected_value": 7,
+	}
+	_check(FuseDelegation.check_condition(holder, json_evt, {"score": 7}),
+		"event_args 注入 event_score 条件通过")
+	_check(not FuseDelegation.check_condition(holder, json_evt, {"score": 8}),
+		"event_score 不匹配条件拒绝")
+	_check(not FuseDelegation.check_condition(holder, json_evt),
+		"无 event_args 时条件不通过（event_score 未注入）")
+	var json_extra: Dictionary = {
+		"type": "CheckVariable",
+		"variable_name": "repeat_count",
+		"variable_scope": 0,
+		"comparison_operator": 4,
+		"expected_value": 3,
+	}
+	_check(FuseDelegation.check_condition(holder, json_extra, {}, {"repeat_count": 5}),
+		"extras 注入 repeat_count 条件通过（GREATER_EQUAL）")
+	holder.queue_free()

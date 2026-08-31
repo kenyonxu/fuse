@@ -202,16 +202,24 @@ static func _emit_entry_function(b: Dictionary, whitelist: Array,
 		delegated_json: Dictionary, report: Dictionary) -> String:
 	var key := str(b["key"])
 	var body := _emit_instruction_body(b, whitelist, delegated_json, report)
+	var gate_args := '"%s", %s, %d, %s, get_instance_id()' \
+		% [key, str(bool(b["trigger_once"])).to_lower(), int(b["cooldown_mode"]),
+			_fmt_float(float(b["cooldown_time"]))]
 	var lines: Array[String] = []
 	lines.append("func _on_%s(event_args: Dictionary = {}) -> void:" % key)
-	lines.append(TAB + 'if not FuseDelegation.gate_allows(_gate, "%s", %s, %d, %s, get_instance_id()):' \
-		% [key, str(bool(b["trigger_once"])).to_lower(), int(b["cooldown_mode"]),
-			_fmt_float(float(b["cooldown_time"]))])
-	lines.append(TAB + TAB + "return")
 	if _has_conditions(b):
+		# 两阶段门控（对齐 Fuse"条件通过才消耗 trigger_once"，trigger.gd:216）：
+		# gate_check 纯检查 → 条件（注入 event_args）→ gate_commit 写状态 → 执行
+		lines.append(TAB + "if not FuseDelegation.gate_check(_gate, %s):" % gate_args)
+		lines.append(TAB + TAB + "return")
 		lines.append(TAB + "for _cond: Dictionary in _CONDITIONS_%s:" % key.to_upper())
-		lines.append(TAB + TAB + "if not FuseDelegation.check_condition(self, _cond):")
+		lines.append(TAB + TAB + "if not FuseDelegation.check_condition(self, _cond, event_args):")
 		lines.append(TAB + TAB + TAB + "return")
+		lines.append(TAB + "FuseDelegation.gate_commit(_gate, \"%s\", %d, %s, get_instance_id())" \
+			% [key, int(b["cooldown_mode"]), _fmt_float(float(b["cooldown_time"]))])
+	else:
+		lines.append(TAB + "if not FuseDelegation.gate_allows(_gate, %s):" % gate_args)
+		lines.append(TAB + TAB + "return")
 	lines.append(body)
 	return "\n".join(lines)
 
@@ -439,10 +447,19 @@ static func _emit_math_operation(inst: BaseInstruction, indent: String, key: Str
 			return ""
 	var a_var := "_m_%s_a" % key
 	var b_var := "_m_%s_b" % key
+	var needs_zero_guard := op == "/" or op == "%"
+	# MODULO 用 fmod（GDScript 4 的 % 仅支持 int，对齐 Fuse 原实现 fmod）
+	var expr := "%s %s %s" % [a_var, op, b_var] if op != "%" else "fmod(%s, %s)" % [a_var, b_var]
 	var lines := "%svar %s: float = %s\n" % [indent, a_var, a_expr]
 	lines += "%svar %s: float = %s\n" % [indent, b_var, b_expr]
-	lines += '%sFuseDelegation.set_var(self, "%s", %s %s %s, "%s")' \
-		% [indent, m.save_to_variable, a_var, op, b_var, save_scope]
+	if needs_zero_guard:
+		# 除零对齐 Fuse RUNTIME_ERROR 中断语义：报错并 return（后续指令不再执行）
+		lines += "%sif is_zero_approx(%s):\n" % [indent, b_var]
+		lines += "%s%spush_error(\"[Graduation] MathOperation 除零：save_to=%s\")\n" \
+			% [indent, TAB, m.save_to_variable]
+		lines += "%s%sreturn\n" % [indent, TAB]
+	lines += '%sFuseDelegation.set_var(self, "%s", %s, "%s")' \
+		% [indent, m.save_to_variable, expr, save_scope]
 	return lines
 
 
