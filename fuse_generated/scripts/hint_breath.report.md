@@ -8,6 +8,10 @@
 - 跳过的 disabled bindings: 无
 - RESTART→SKIP 降级 bindings: 无
 
+## 已知语义风险
+
+- binding u1：CheckAnyInput 即时探测语义（2×interval 窗口语义未复刻，生成代码每滴答即时检查）
+
 ## 委托清单（按生成顺序）
 
 1. TweenFadeIn

@@ -10,10 +10,11 @@ extends Node
 const FuseDelegation := preload("res://addons/fuse/core/graduation/fuse_delegation.gd")
 
 # ---- 委托数据块（PresetValueCodec 重建为 BaseInstruction）----
-const _DELEGATED := {"u1_d0":[{"duration":0.5,"easing_type":1,"from_alpha":0.0,"target_custom_scope_id":"","target_node":"..","target_scope":0,"target_scope_source":0,"target_target_node_path":"","target_variable":"","to_alpha":1.0,"trans_type":1,"type":"TweenFadeIn","use_physics_process":false,"use_variable_for_target":false}],"u1_d1":[{"auto_free":false,"duration":0.5,"easing_type":1,"target_custom_scope_id":"","target_node":"..","target_scope":0,"target_scope_source":0,"target_target_node_path":"","target_variable":"","trans_type":3,"type":"TweenFadeOut","use_physics_process":false,"use_variable_for_target":false}]}
+const _DELEGATED := {"u1_d0":[{"duration":0.5,"easing_type":1,"from_alpha":0.0,"target_custom_scope_id":"","target_node":"..","target_scope":0,"target_scope_source":0,"target_target_node_path":"","target_variable":"","to_alpha":1.0,"trans_type":1,"type":"TweenFadeIn","use_physics_process":false,"use_variable_for_target":false},{"auto_free":false,"duration":0.5,"easing_type":1,"target_custom_scope_id":"","target_node":"..","target_scope":0,"target_scope_source":0,"target_target_node_path":"","target_variable":"","trans_type":3,"type":"TweenFadeOut","use_physics_process":false,"use_variable_for_target":false}]}
 
 var _delegated := {}
 var _gate := {}
+var _busy_u1 := false
 
 func _ready() -> void:
 	_delegated = FuseDelegation.build_delegated(_DELEGATED)
@@ -24,10 +25,17 @@ func _exit_tree() -> void:
 
 
 func _on_u1(event_args: Dictionary = {}) -> void:
+	if _busy_u1:
+		return
 	if not FuseDelegation.gate_allows(_gate, "u1", false, 0, 1.0, get_instance_id()):
 		return
+	_busy_u1 = true
+	await _body_u1(event_args)
+	_busy_u1 = false
+
+
+func _body_u1(event_args: Dictionary) -> void:
 	await FuseDelegation.run(self, _delegated["u1_d0"], 0, event_args)
-	await FuseDelegation.run(self, _delegated["u1_d1"], 0, event_args)
 
 
 var _timer_u1: Timer = null

@@ -31,6 +31,7 @@ func _ready() -> void:
 	_test_tween_delegated()
 	_test_set_variable_native_and_copy_delegated()
 	_test_math_operation_native()
+	_test_math_operation_local_delegated()
 	_test_math_operation_modulo_fmod()
 	_test_math_operation_divide_by_zero()
 	_test_send_event_native_and_ref_delegated()
@@ -48,8 +49,12 @@ func _ready() -> void:
 	_test_emit_system_mixed_native_delegated()
 	_test_emit_system_rejections()
 	_test_emit_system_conditions_gate_phases()
+	_test_emit_system_local_whole_delegated()
+	_test_emit_system_segments_merged()
+	_test_report_risk_fields()
 	_test_parse_smoke_all_event_kinds()
 	_test_parse_smoke_modulo_and_conditions()
+	_test_parse_smoke_local_busy()
 	print("=== test_codegen_emitter 完成（失败 %d）===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
 
@@ -103,6 +108,15 @@ func _test_set_variable_native_and_copy_delegated() -> void:
 	_check(line2.strip_edges().begins_with("await FuseDelegation.run"),
 		"SetVariable 变量复制模式委托（set_with_another_variable）: %s" % line2)
 
+	# 终审 C1：LOCAL 目标委托（原生写进即抛的临时 ctx 必丢失）
+	var local_target := SetVariable.new()
+	local_target.target_variable = "tmp"
+	local_target.target_variable_scope = BaseVariable.VariableScope.LOCAL
+	local_target.new_value = 1
+	var line3: String = GdscriptEmitter.emit_instruction(local_target, "\t")
+	_check(line3.strip_edges().begins_with("await FuseDelegation.run"),
+		"SetVariable LOCAL 目标委托（终审 C1）: %s" % line3)
+
 
 func _test_math_operation_native() -> void:
 	var m := MathOperation.new()
@@ -111,16 +125,45 @@ func _test_math_operation_native() -> void:
 	m.operand_a_value = 2.0
 	m.operand_b_source = MathOperation.OperandBSource.VARIABLE
 	m.operand_b_variable = "bonus"
-	m.operand_b_scope = BaseVariable.VariableScope.LOCAL
+	m.operand_b_scope = BaseVariable.VariableScope.GLOBAL
 	m.save_to_variable = "score"
-	m.save_to_scope = BaseVariable.VariableScope.LOCAL
+	m.save_to_scope = BaseVariable.VariableScope.GLOBAL
 	var block: String = GdscriptEmitter.emit_instruction(m, "\t")
-	_check(block.contains('FuseDelegation.get_var(self, "bonus", "local")'),
+	_check(block.contains('FuseDelegation.get_var(self, "bonus", "global")'),
 		"MathOperation 变量操作数经桥读取: %s" % block)
 	_check(block.contains('FuseDelegation.set_var(self, "score",'),
 		"MathOperation 结果经桥写回: %s" % block)
 	_check(block.contains(" + "), "MathOperation ADD 运算符直译: %s" % block)
 	_check(not block.contains("await FuseDelegation.run"), "MathOperation 原生非委托")
+
+
+## 终审 C1：LOCAL 层变量操作的原生发射一律降级委托——原生行写 LOCAL 进即抛的
+## 临时 ctx（写=静默丢失）、读恒 miss 后回退 global 同名变量（读到错值）
+func _test_math_operation_local_delegated() -> void:
+	var save_local := MathOperation.new()
+	save_local.operation_type = MathOperation.OperationType.ADD
+	save_local.operand_a_source = MathOperation.OperandASource.VALUE
+	save_local.operand_a_value = 2.0
+	save_local.operand_b_source = MathOperation.OperandBSource.VALUE
+	save_local.operand_b_value = 3.0
+	save_local.save_to_variable = "score"
+	save_local.save_to_scope = BaseVariable.VariableScope.LOCAL
+	var block: String = GdscriptEmitter.emit_instruction(save_local, "\t")
+	_check(block.strip_edges().begins_with("await FuseDelegation.run"),
+		"MathOperation 写回 LOCAL → 委托（原生写进即抛 ctx 必丢失）: %s" % block)
+
+	var read_local := MathOperation.new()
+	read_local.operation_type = MathOperation.OperationType.ADD
+	read_local.operand_a_source = MathOperation.OperandASource.VARIABLE
+	read_local.operand_a_variable = "bonus"
+	read_local.operand_a_scope = BaseVariable.VariableScope.LOCAL
+	read_local.operand_b_source = MathOperation.OperandBSource.VALUE
+	read_local.operand_b_value = 3.0
+	read_local.save_to_variable = "score"
+	read_local.save_to_scope = BaseVariable.VariableScope.GLOBAL
+	var block2: String = GdscriptEmitter.emit_instruction(read_local, "\t")
+	_check(block2.strip_edges().begins_with("await FuseDelegation.run"),
+		"MathOperation LOCAL 操作数 → 委托（原生读恒 miss 回退 global 同名错值）: %s" % block2)
 
 
 func _test_math_operation_modulo_fmod() -> void:
@@ -131,6 +174,7 @@ func _test_math_operation_modulo_fmod() -> void:
 	m.operand_b_source = MathOperation.OperandBSource.VALUE
 	m.operand_b_value = 3.0
 	m.save_to_variable = "rem"
+	m.save_to_scope = BaseVariable.VariableScope.GLOBAL
 	var block: String = GdscriptEmitter.emit_instruction(m, "\t")
 	_check(block.contains("fmod("), "MathOperation MODULO 用 fmod（%% 仅支持 int）: %s" % block)
 	_check(not block.contains(" % "), "MODULO 不生成 %% 运算符: %s" % block)
@@ -144,6 +188,7 @@ func _test_math_operation_divide_by_zero() -> void:
 	m.operand_b_source = MathOperation.OperandBSource.VALUE
 	m.operand_b_value = 0.0
 	m.save_to_variable = "ratio"
+	m.save_to_scope = BaseVariable.VariableScope.GLOBAL
 	var block: String = GdscriptEmitter.emit_instruction(m, "\t")
 	_check(block.contains("if is_zero_approx("), "DIVIDE 除零守卫（对齐 Fuse RUNTIME_ERROR）: %s" % block)
 	_check(block.contains("push_error(") and block.contains("return"),
@@ -155,6 +200,7 @@ func _test_math_operation_divide_by_zero() -> void:
 	mod.operand_b_source = MathOperation.OperandBSource.VALUE
 	mod.operand_b_value = 3.0
 	mod.save_to_variable = "rem"
+	mod.save_to_scope = BaseVariable.VariableScope.GLOBAL
 	var mod_block: String = GdscriptEmitter.emit_instruction(mod, "\t")
 	_check(mod_block.contains("is_zero_approx("), "MODULO 同享除零守卫")
 	var add := MathOperation.new()
@@ -164,6 +210,7 @@ func _test_math_operation_divide_by_zero() -> void:
 	add.operand_b_source = MathOperation.OperandBSource.VALUE
 	add.operand_b_value = 2.0
 	add.save_to_variable = "sum"
+	add.save_to_scope = BaseVariable.VariableScope.GLOBAL
 	var add_block: String = GdscriptEmitter.emit_instruction(add, "\t")
 	_check(not add_block.contains("is_zero_approx("), "ADD 不生成除零守卫")
 
@@ -417,6 +464,11 @@ func _test_emit_system_l2_golden() -> void:
 	_check(text.contains("FuseDelegation.teardown(self)"), "_exit_tree teardown")
 	_check(text.contains('print("graduated")'), "Print 原生行")
 	_check(text.contains("_on_u1.call_deferred()"), "OnReady delay=0 入口 call_deferred")
+	_check(text.contains("var _busy_u1 := false"), "busy 卫语句状态变量声明（终审 C2）")
+	_check(text.contains("\tif _busy_u1:\n\t\treturn\n"),
+		"入口首行 busy 卫语句（复刻 trigger.gd:172-174 SKIP retrigger）")
+	_check(text.contains("await _body_u1(event_args)"),
+		"入口经独立 body 函数执行（busy 直线序复位）")
 	_check(result.get("native_count", -1) == 1, "native_count = 1")
 	_check((result.get("delegated_names", []) as Array).is_empty(), "无委托指令")
 	var report: Dictionary = result.get("report", {})
@@ -525,7 +577,7 @@ func _test_emit_system_mixed_native_delegated() -> void:
 	var text: String = result.get("script_text", "")
 	_check(result.get("native_count", -1) == 2, "混合序列 native_count=2")
 	_check(text.contains('print("before")') and text.contains('print("after")'), "原生行保留")
-	_check(text.contains('await FuseDelegation.run(self, _delegated["u1_d1"],'),
+	_check(text.contains('await FuseDelegation.run(self, _delegated["u1_d0"],'),
 		"混合序列委托段交错发射: %s" % text.get_slice("await Fuse", 1).substr(0, 60))
 	var lines := text.split("\n")
 	var i_before := -1
@@ -540,7 +592,7 @@ func _test_emit_system_mixed_native_delegated() -> void:
 			i_after = i
 	_check(i_before >= 0 and i_before < i_delegated and i_delegated < i_after,
 		"原生/委托/原生按原顺序交错")
-	_check(text.contains('"u1_d1":[{'), "_DELEGATED 内嵌委托指令 JSON")
+	_check(text.contains('"u1_d0":[{'), "_DELEGATED 内嵌委托指令 JSON")
 	root.queue_free()
 
 
@@ -651,6 +703,151 @@ func _test_emit_system_conditions_gate_phases() -> void:
 	root.queue_free()
 
 
+## 终审 C1：binding 含 LOCAL 用途（SetVariable LOCAL 目标 + SendEvent $引用）→
+## 整条 binding 全委托单段（一个 ctx 贯穿），无任何原生行
+func _test_emit_system_local_whole_delegated() -> void:
+	var root := Node.new()
+	root.name = "FixtureLocal"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigLocal"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	var set_local := SetVariable.new()
+	set_local.target_variable = "c_x"
+	set_local.target_variable_scope = BaseVariable.VariableScope.LOCAL
+	set_local.new_value = 42
+	var send_ref := SendEvent.new()
+	send_ref.event_name = "score_changed"
+	send_ref.event_args = {"score": "$c_x"}
+	var nativeable := Print.new()
+	nativeable.message = "still_delegated"
+	ar.instructions = [set_local, send_ref, nativeable]
+	trigger.action_runner = ar
+	var receive := OnReceiveEvent.new()
+	receive.event_name = "enemy_die"
+	trigger.event_definition = receive
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_local", "TrigLocal", "L2"), trigger, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+	var report: Dictionary = result.get("report", {})
+	_check((report.get("local_delegated_bindings", []) as Array) == ["u1"],
+		"LOCAL 用途 binding 入 report.local_delegated_bindings: %s"
+		% str(report.get("local_delegated_bindings")))
+	_check(text.count("await FuseDelegation.run(") == 1,
+		"整条 binding 单段 run（一个 ctx 贯穿，实测 %d 段）" % text.count("await FuseDelegation.run("))
+	_check(not text.contains('print("still_delegated")'),
+		"LOCAL binding 内白名单可原生指令也全委托")
+	var delegated_json := _extract_delegated_json(text)
+	_check(delegated_json.size() == 1 and (delegated_json["u1_d0"] as Array).size() == 3,
+		"单段委托数据块含全部 3 条顶层指令")
+	_check(report.get("native_count", -1) == 0 and report.get("delegated_count", -1) == 3,
+		"report 覆盖率：native=0，delegated=3")
+	_check(text.contains("LOCAL 连续性: u1"), "头注释 LOCAL 连续性备案行")
+	root.queue_free()
+
+
+## 终审 C1(a/d)：无 LOCAL 用途 binding——连续委托指令合并为单段（原生行切段，
+## 背靠背同帧执行缓解逐指令摊帧）
+func _test_emit_system_segments_merged() -> void:
+	var root := Node.new()
+	root.name = "FixtureMerge"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigMerge"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	var tween: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	var tween2: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	var tween3: BaseInstruction = load("res://addons/fuse/instructions/tween/tween_move_to.gd").new()
+	var wait_mid := Wait.new()
+	wait_mid.wait_time = 0.1
+	var p_start := Print.new()
+	p_start.message = "start"
+	ar.instructions = [p_start, tween, tween2, wait_mid, tween3]
+	trigger.action_runner = ar
+	trigger.event_definition = OnReady.new()
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_merge", "TrigMerge", "L2"), trigger, "res://test_fixture.tscn")
+	var text: String = result.get("script_text", "")
+	var delegated_json := _extract_delegated_json(text)
+	_check(delegated_json.size() == 2,
+		"委托-委托连续合并单段、原生 Wait 切段后余下单段（实测 %d 段）" % delegated_json.size())
+	_check((delegated_json["u1_d0"] as Array).size() == 2,
+		"首段合并 2 条连续委托指令（tween+tween2 同 ctx 同帧背靠背）")
+	_check((delegated_json["u1_d1"] as Array).size() == 1, "末段 1 条")
+	var report: Dictionary = result.get("report", {})
+	_check(report.get("native_count", -1) == 2 and report.get("delegated_count", -1) == 3,
+		"混合计数：native=2（print/wait），delegated=3（tween×3）")
+	root.queue_free()
+
+
+## 终审 I3：report 风险原料（输入事件 / CheckAnyInput stop_condition / 条件+冷却偏差）
+func _test_report_risk_fields() -> void:
+	var root := Node.new()
+	root.name = "FixtureRisk"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "TrigRisk"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	ar.instructions = [Print.new()]
+	trigger.action_runner = ar
+	var interval := OnInterval.new()
+	interval.interval_seconds = 2.0
+	var stop := CheckAnyInput.new()
+	interval.stop_condition = stop
+	trigger.event_definition = interval
+	trigger.cooldown_mode = BaseTrigger.CooldownMode.GLOBAL_COOLDOWN
+	trigger.cooldown_time = 1.5
+	var cond := CheckVariable.new()
+	cond.variable_name = "event_score"
+	cond.expected_value = 7
+	trigger.conditions = [cond]
+	trigger.use_conditions = true
+
+	var result: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_risk", "TrigRisk", "L2"), trigger, "res://test_fixture.tscn")
+	var report: Dictionary = result.get("report", {})
+	_check((report.get("check_any_input_bindings", []) as Array) == ["u1"],
+		"CheckAnyInput stop_condition 入 report（即时探测语义风险行原料）")
+	_check((report.get("cond_cooldown_deviation_bindings", []) as Array) == ["u1"],
+		"条件+冷却并存 binding 入 report（条件失败不进冷却偏差原料）")
+	_check(bool(report.get("has_input_events", true)) == false,
+		"OnInterval 非 input 事件不置 has_input_events")
+
+	var input_trig := Trigger.new()
+	input_trig.name = "TrigInput"
+	root.add_child(input_trig)
+	input_trig.set_owner(root)
+	var ar2 := ActionRunner.new()
+	ar2.instructions = [Print.new()]
+	input_trig.action_runner = ar2
+	var input_ev := OnInputAction.new()
+	input_ev.target_input_action = "jump"
+	input_trig.event_definition = input_ev
+	var result2: Dictionary = GdscriptEmitter.emit_system(
+		_make_system("trig_input", "TrigInput", "L2"), input_trig, "res://test_fixture.tscn")
+	_check(bool(result2.get("report", {}).get("has_input_events", false)),
+		"OnInputAction 事件置 has_input_events（_unhandled_input 时序风险行原料）")
+	root.queue_free()
+
+
+## 产物文本 → _DELEGATED 常量解析（金样例守恒测试同款提取）
+func _extract_delegated_json(text: String) -> Dictionary:
+	for line: String in text.split("\n"):
+		if line.begins_with("const _DELEGATED := "):
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("const _DELEGATED := "))
+			if parsed is Dictionary:
+				return parsed
+	return {}
+
+
 ## 冒烟补充：MODULO 原生 + 条件两阶段门控产物 load() 零解析错
 func _test_parse_smoke_modulo_and_conditions() -> void:
 	var root := Node.new()
@@ -719,6 +916,35 @@ func _test_parse_smoke_modulo_and_conditions() -> void:
 	t3.event_definition = interval
 	_smoke_load(_make_system("smoke_stop_cond", "SmokeStopCond", "L2"), t3)
 
+	root.queue_free()
+
+
+## 冒烟补充（终审 C1/C2）：LOCAL 整条委托 + busy 卫语句 + 独立 body 函数产物
+## load() 零解析错（行为级验证见 test_codegen_behavior.gd）
+func _test_parse_smoke_local_busy() -> void:
+	var root := Node.new()
+	root.name = "SmokeScene3"
+	add_child(root)
+	var trigger := Trigger.new()
+	trigger.name = "SmokeLocalBusy"
+	root.add_child(trigger)
+	trigger.set_owner(root)
+	var ar := ActionRunner.new()
+	var set_local := SetVariable.new()
+	set_local.target_variable = "c_x"
+	set_local.target_variable_scope = BaseVariable.VariableScope.LOCAL
+	set_local.new_value = 42
+	var send_ref := SendEvent.new()
+	send_ref.event_name = "smoke_evt"
+	send_ref.event_args = {"v": "$c_x"}
+	var wait := Wait.new()
+	wait.wait_time = 0.1
+	ar.instructions = [set_local, wait, send_ref]
+	trigger.action_runner = ar
+	var receive := OnReceiveEvent.new()
+	receive.event_name = "smoke_evt"
+	trigger.event_definition = receive
+	_smoke_load(_make_system("smoke_local_busy", "SmokeLocalBusy", "L2"), trigger)
 	root.queue_free()
 
 

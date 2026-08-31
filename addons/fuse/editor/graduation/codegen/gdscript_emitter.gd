@@ -11,9 +11,27 @@ extends RefCounted
 ##   - emit_system(system, unit_node, scene_path)：System JSON + 源单元节点 →
 ##     完整生成脚本（头注释/委托数据块/门控复刻/事件接线/teardown）+ 覆盖率报告。
 ##
-## 门控复刻：入口函数首行 FuseDelegation.gate_allows（trigger_once/cooldown 三值快照），
-## 运行中忽略（SKIP retrigger）由 await 协程自然串行承担；RESTART 降级为 SKIP 并备案（T7）。
+## LOCAL 连续性（终审 C1）：binding 指令树任一处读写 LOCAL 层变量（含嵌套子指令、
+## 内嵌条件对象、SendEvent $var 引用）→ 整条 binding 全委托为单段 run——一个
+## ExecutionContext 贯穿整条顶层序列，与源 Fuse 单 Trigger 单 ctx 语义一致；
+## 无 LOCAL 用途的 binding 照常发射白名单原生行，连续委托指令合并为单段
+## （背靠背同帧执行，缓解逐指令一段的摊帧）。原生发射器对 LOCAL 层变量操作
+## 一律返回 "" 降级委托（_scope_literal 仅放行 global——原生行写 LOCAL 进的是
+## 即抛的临时 ctx、读恒 miss 后回退 global 同名变量，均为静默错值）。
+##
+## 门控复刻：入口函数首行 busy 卫语句 + FuseDelegation.gate_*（trigger_once/cooldown
+## 三值快照）。运行中重触发忽略（SKIP retrigger，trigger.gd:172-174）由 busy 卫语句
+## 复刻——注意此前的"await 协程自然串行承担"论断不成立（终审 C2：协程仅串行化
+## 单次调用内的段序列，并发调用各自启动新协程并行）。busy 置位 → await _body_ →
+## 复位为直线序；body 收敛为独立函数使中途 return 不泄漏 busy（return 只结束 body
+## 协程，await 正常完成）；GDScript 无 finally，body 内运行时异常中断协程的路径
+## 接受不复位（终审备案）。RESTART 降级为 SKIP 并备案（T7）——busy 卫语句使
+## "降级为 SKIP"在运行中重触发时真正兑现。
 ## 事件接线形态由 EventMapper 产出（四类白名单事件外整 System 拒生成）。
+
+## 控制流指令的嵌套指令字段（与 SystemDeriver._SUB_INSTRUCTIONS 对齐）
+const _SUB_INSTRUCTIONS := ["instructions", "true_instructions", "false_instructions",
+	"else_instructions", "loop_instructions"]
 
 const PresetValueCodec := preload("res://addons/fuse/core/serialization/preset_value_codec.gd")
 const EventMapper := preload("res://addons/fuse/editor/graduation/codegen/event_mapper.gd")
@@ -68,6 +86,10 @@ static func emit_system(system: Dictionary, unit_node: Node, scene_path: String)
 		"delegated_names": [] as Array[String],
 		"skipped_disabled_bindings": [] as Array[String],
 		"downgraded_restart_bindings": [] as Array[String],
+		"local_delegated_bindings": [] as Array[String],
+		"has_input_events": false,
+		"check_any_input_bindings": [] as Array[String],
+		"cond_cooldown_deviation_bindings": [] as Array[String],
 		"errors": [] as Array[Dictionary],
 	}
 	var errors: Array = report["errors"]
@@ -80,6 +102,7 @@ static func emit_system(system: Dictionary, unit_node: Node, scene_path: String)
 	var whitelist := _effective_whitelist(system)
 	var delegated_json := {}
 	var entry_funcs: Array[String] = []
+	var busy_keys: Array[String] = []
 	var const_lines: Array[String] = []
 	var setup_lines: Array[String] = []
 	var teardown_lines: Array[String] = []
@@ -102,7 +125,9 @@ static func emit_system(system: Dictionary, unit_node: Node, scene_path: String)
 			wiring_blocks.append(str(mapped["wiring_code"]))
 		if not str(mapped.get("input_branch", "")).is_empty():
 			input_branches.append(str(mapped["input_branch"]))
+		_collect_report_risks(b, mapped, report)
 		entry_funcs.append(_emit_entry_function(b, whitelist, delegated_json, report))
+		busy_keys.append(str(b["key"]))
 		var cond_const := _emit_conditions_const(b)
 		if not cond_const.is_empty():
 			const_lines.append(cond_const)
@@ -112,11 +137,27 @@ static func emit_system(system: Dictionary, unit_node: Node, scene_path: String)
 
 	return {
 		"script_text": _assemble(report, scene_path, delegated_json, const_lines,
-			setup_lines, teardown_lines, entry_funcs, input_branches, wiring_blocks),
+			setup_lines, teardown_lines, entry_funcs, input_branches, wiring_blocks, busy_keys),
 		"native_count": report["native_count"],
 		"delegated_names": report["delegated_names"],
 		"report": report,
 	}
+
+
+## report.md 风险行原料（终审 I3，由 export CLI 渲染）：
+## - 输入事件（_unhandled_input 时序）；
+## - OnInterval stop_condition 为 CheckAnyInput（即时探测语义未复刻）；
+## - 条件 + 冷却并存的 binding（两阶段门控"条件失败不进冷却"与源 Fuse
+##   _check_cooldown 检查即消耗的偏差，base_trigger.gd:138/153）。
+static func _collect_report_risks(b: Dictionary, mapped: Dictionary, report: Dictionary) -> void:
+	var key := str(b["key"])
+	if str(mapped.get("mode", "")) == "input":
+		report["has_input_events"] = true
+	var params: Dictionary = mapped.get("params", {})
+	if str(params.get("stop_condition_type", "")) == "CheckAnyInput":
+		(report["check_any_input_bindings"] as Array).append(key)
+	if _has_conditions(b) and int(b["cooldown_mode"]) != 0 and float(b["cooldown_time"]) > 0.0:
+		(report["cond_cooldown_deviation_bindings"] as Array).append(key)
 
 
 # ============================================================
@@ -208,9 +249,13 @@ static func _effective_whitelist(system: Dictionary) -> Array:
 
 
 # ============================================================
-# 入口函数（统一触发入口 + 门控复刻 + 条件检查 + 指令体）
+# 入口函数（busy 卫语句 + 门控复刻 + 条件检查 + 独立 body 函数）
 # ============================================================
 
+## 入口 = busy 卫语句（复刻 trigger.gd:172-174 的 SKIP retrigger）+ 门控（两阶段
+## 或合一）+ busy 置位 → await 独立 body 函数 → 复位。body 独立成函数使中途
+## return（如 MathOperation 原生除零守卫）只结束 body 协程、await 照常完成，
+## busy 必复位；body 内运行时异常中断协程的路径接受不复位（GDScript 无 finally）。
 static func _emit_entry_function(b: Dictionary, whitelist: Array,
 		delegated_json: Dictionary, report: Dictionary) -> String:
 	var key := str(b["key"])
@@ -220,6 +265,8 @@ static func _emit_entry_function(b: Dictionary, whitelist: Array,
 			_fmt_float(float(b["cooldown_time"]))]
 	var lines: Array[String] = []
 	lines.append("func _on_%s(event_args: Dictionary = {}) -> void:" % key)
+	lines.append(TAB + "if _busy_%s:" % key)
+	lines.append(TAB + TAB + "return")
 	if _has_conditions(b):
 		# 两阶段门控（对齐 Fuse"条件通过才消耗 trigger_once"，trigger.gd:216）：
 		# gate_check 纯检查 → 条件（注入 event_args）→ gate_commit 写状态 → 执行
@@ -233,38 +280,97 @@ static func _emit_entry_function(b: Dictionary, whitelist: Array,
 	else:
 		lines.append(TAB + "if not FuseDelegation.gate_allows(_gate, %s):" % gate_args)
 		lines.append(TAB + TAB + "return")
+	lines.append(TAB + "_busy_%s = true" % key)
+	lines.append(TAB + "await _body_%s(event_args)" % key)
+	lines.append(TAB + "_busy_%s = false" % key)
+	lines.append("")
+	lines.append("")
+	lines.append("func _body_%s(event_args: Dictionary) -> void:" % key)
 	lines.append(body)
 	return "\n".join(lines)
 
 
-## 指令序列 → 入口体：白名单原生行与委托段按原顺序交错
+## 指令序列 → body 体。
+## LOCAL 用途 → 整条 binding 全委托单段（一个 ctx 贯穿，终审 C1）；
+## 否则白名单原生行 + 连续委托指令合并段按原顺序交错（原生行切段，
+## 段内多指令单 ctx 且背靠背同帧执行）。
 static func _emit_instruction_body(b: Dictionary, whitelist: Array,
 		delegated_json: Dictionary, report: Dictionary) -> String:
 	var runner = b.get("action_runner")
 	var instructions: Array = runner.get("instructions") if runner != null else []
 	var mode := int(runner.get("execution_mode")) if runner != null else 0
-	var body_lines: Array[String] = []
-	var seq := 0
+	if instructions == null or instructions.is_empty():
+		return TAB + "pass"
+	if _uses_local_variables(instructions):
+		return _emit_whole_delegated(b, instructions, mode, delegated_json, report)
+	return _emit_mixed(b, whitelist, instructions, mode, delegated_json, report)
+
+
+## 整条 binding 单段全委托：全部顶层指令序列化进一个数组、一段 run 执行——
+## LOCAL 变量存于该段唯一 ctx，跨指令读写与源 Fuse 单 Trigger 单 ctx 语义一致。
+## 嵌套指令随顶层指令的委托 JSON 整体重建（白名单原生指令无嵌套）。
+static func _emit_whole_delegated(b: Dictionary, instructions: Array, mode: int,
+		delegated_json: Dictionary, report: Dictionary) -> String:
+	(report["local_delegated_bindings"] as Array).append(str(b["key"]))
+	var all: Array = []
+	for inst in instructions:
+		if inst == null:
+			continue
+		report["total_instructions"] = int(report["total_instructions"]) + 1
+		report["delegated_count"] = int(report["delegated_count"]) + 1
+		(report["delegated_names"] as Array).append(_class_of(inst))
+		all.append(PresetValueCodec.serialize_instruction(inst))
+	if all.is_empty():
+		return TAB + "pass"
+	var key := "%s_d0" % str(b["key"])
+	delegated_json[key] = all
+	return _delegation_line(TAB, key, mode)
+
+
+## 混合发射：先逐指令定原生/委托（两遍渲染避免 lambda 捕获语义），再把
+## 连续委托指令合并为一段（中间夹原生行时切段——原生行经桥读写 global/scope
+## 服务，跨段连续性仅 LOCAL 需要，而 LOCAL 用途已被整条委托路径接管）。
+static func _emit_mixed(b: Dictionary, whitelist: Array, instructions: Array,
+		mode: int, delegated_json: Dictionary, report: Dictionary) -> String:
+	var bkey := str(b["key"])
+	var items: Array = []  # [{native: String} | {delegated: Dictionary, cls: String}]
+	var naming := 0  # 原生临时变量命名用槽位号（段键独立编号，互不冲突）
 	for inst in instructions:
 		if inst == null:
 			continue
 		report["total_instructions"] = int(report["total_instructions"]) + 1
 		var cls := _class_of(inst)
-		var delegated_key := "%s_d%d" % [str(b["key"]), seq]
 		var line := ""
 		if whitelist.has(cls):
 			var emitter: Callable = _emitters().get(cls, Callable())
 			if emitter.is_valid():
-				line = str(emitter.call(inst, TAB, delegated_key))
+				line = str(emitter.call(inst, TAB, "%s_d%d" % [bkey, naming]))
 		if line.is_empty():
-			delegated_json[delegated_key] = [PresetValueCodec.serialize_instruction(inst)]
-			line = _delegation_line(TAB, delegated_key, mode)
-			report["delegated_count"] = int(report["delegated_count"]) + 1
-			(report["delegated_names"] as Array).append(cls)
+			items.append({"delegated": PresetValueCodec.serialize_instruction(inst), "cls": cls})
 		else:
 			report["native_count"] = int(report["native_count"]) + 1
-		body_lines.append(line)
-		seq += 1
+			items.append({"native": line})
+		naming += 1
+
+	var body_lines: Array[String] = []
+	var seg := 0
+	var idx := 0
+	while idx < items.size():
+		if (items[idx] as Dictionary).has("native"):
+			body_lines.append(str((items[idx] as Dictionary)["native"]))
+			idx += 1
+			continue
+		var seg_json: Array = []
+		while idx < items.size() and not (items[idx] as Dictionary).has("native"):
+			var item: Dictionary = items[idx]
+			seg_json.append(item["delegated"])
+			report["delegated_count"] = int(report["delegated_count"]) + 1
+			(report["delegated_names"] as Array).append(str(item["cls"]))
+			idx += 1
+		var key := "%s_d%d" % [bkey, seg]
+		seg += 1
+		delegated_json[key] = seg_json
+		body_lines.append(_delegation_line(TAB, key, mode))
 	if body_lines.is_empty():
 		return TAB + "pass"
 	return "\n".join(body_lines)
@@ -275,6 +381,116 @@ static func _has_conditions(b: Dictionary) -> bool:
 	for cond in raw_conditions:
 		if cond != null:
 			return true
+	return false
+
+
+# ============================================================
+# LOCAL 用途探测（终审 C1 整条委托的判据）
+# ============================================================
+
+## binding 指令树是否读写 LOCAL 层变量：递归含嵌套子指令（控制流分支）与
+## 内嵌条件对象（随 runner ctx 检查），另计 SendEvent $var 引用（$x 从 ctx
+## local 层解析，send_event.gd _resolve_args）。
+## 属性判定与 InstructionAnalyzer._extract_variables 的命名启发式**逐条对齐**
+## （变量属性名模式、配对 scope 回退链、scope 属性缺失默认 LOCAL 的口径）——
+## 修改 analyzer 对应逻辑时必须同步本三函数（同步义务同 validator 对 deriver）。
+## 差异点（保守加严）：analyzer 对配对缺失且带 scope_source 的属性归 SCOPE，
+## 本探测在此形态下若指令另有悬挂 LOCAL *_scope 属性（如 InstantiateScene 的
+## target_variable ↔ save_to_scope 非链式配对）仍保守归 LOCAL——漏判 LOCAL 会
+## 静默错值（终审 C1 的根因），过判仅多委托（controller ruling：覆盖率可降）。
+static func _uses_local_variables(instructions: Array) -> bool:
+	if instructions == null:
+		return false
+	for inst in instructions:
+		if inst == null:
+			continue
+		if _obj_uses_local(inst):
+			return true
+		for sub_key in _SUB_INSTRUCTIONS:
+			if sub_key in inst and _uses_local_variables(inst.get(sub_key)):
+				return true
+	return false
+
+
+## 单个指令/条件对象是否有 LOCAL 层变量用途
+static func _obj_uses_local(obj: Resource) -> bool:
+	var has_unresolved := false
+	for prop in obj.get_property_list():
+		var pname: String = prop.get("name", "")
+		if prop.get("type", 0) != TYPE_STRING or not _is_variable_prop(pname):
+			continue
+		var name_val: Variant = obj.get(pname)
+		if name_val == null or str(name_val).is_empty():
+			continue
+		var raw_scope: Variant = _find_scope_prop(obj, pname)
+		if raw_scope == null:
+			if "scope_source" in obj:
+				# analyzer 口径：scope_source 组件的变量归 SCOPE——先记下，
+				# 由下方悬挂 LOCAL 保守网裁定（防链式配对覆盖不到的组件）
+				has_unresolved = true
+			else:
+				return true  # 配对彻底缺失且无 scope_source：analyzer 口径默认 LOCAL
+		elif int(raw_scope) == BaseVariable.VariableScope.LOCAL:
+			return true
+	if obj is SendEvent and _send_event_refs_local(obj as SendEvent):
+		return true
+	# 保守网：配对未解析的非空变量属性 + 指令上存在悬挂 LOCAL *_scope 属性
+	# （链式配对覆盖不到的组件内配对，如实名 InstantiateScene save_to_scope）
+	if has_unresolved and _has_dangling_local_scope(obj):
+		return true
+	# 控制流指令内嵌条件对象（IfThen.condition 等）：随 runner ctx 检查
+	for prop in obj.get_property_list():
+		var sub: Variant = obj.get(String(prop.get("name", "")))
+		if sub is BaseCondition and _obj_uses_local(sub as Resource):
+			return true
+	return false
+
+
+## 指令上是否存在值为 LOCAL 的 *_scope 后缀属性（悬挂网判据，不限配对）
+static func _has_dangling_local_scope(obj: Resource) -> bool:
+	for prop in obj.get_property_list():
+		var pname: String = prop.get("name", "")
+		if not pname.ends_with("_scope") or prop.get("type", 0) != TYPE_INT:
+			continue
+		var scope_val: Variant = obj.get(pname)
+		if scope_val != null and int(scope_val) == BaseVariable.VariableScope.LOCAL:
+			return true
+	return false
+
+
+## SendEvent 的 event_args 是否含 $var 引用（$x → ctx local 层）
+static func _send_event_refs_local(s: SendEvent) -> bool:
+	for key: Variant in s.event_args:
+		var value: Variant = s.event_args[key]
+		if value is String and (value as String).begins_with("$"):
+			return true
+	return false
+
+
+## 变量属性 → 实际存在的配对 scope 属性值；回退链与 analyzer 一致
+## （*_variable_scope → 去 _name 后缀 → 去 _variable 后缀）。**不含** analyzer 的
+## scope_source 回退与 LOCAL 默认（那两层语义由调用方处置）；返回 null = 配对缺失
+static func _find_scope_prop(obj: Resource, pname: String) -> Variant:
+	var scope_val: Variant = obj.get(pname + "_scope")
+	if scope_val == null and pname.ends_with("_name"):
+		scope_val = obj.get(pname.substr(0, pname.length() - 5) + "_scope")
+	if scope_val == null and pname.ends_with("_variable"):
+		scope_val = obj.get(pname.substr(0, pname.length() - 9) + "_scope")
+	return scope_val
+
+
+## 变量属性名判定（与 InstructionAnalyzer._is_variable_prop 对齐）
+static func _is_variable_prop(pname: String) -> bool:
+	if pname.ends_with("_variable"):
+		return true
+	if pname.ends_with("_variable_name"):
+		return true
+	if pname == "variable_name":
+		return true
+	if pname == "compare_variable":
+		return true
+	if pname == "source_variable":
+		return true
 	return false
 
 
@@ -298,7 +514,8 @@ static func _emit_conditions_const(b: Dictionary) -> String:
 
 static func _assemble(report: Dictionary, scene_path: String, delegated_json: Dictionary,
 		const_lines: Array, setup_lines: Array, teardown_lines: Array,
-		entry_funcs: Array, input_branches: Array, wiring_blocks: Array) -> String:
+		entry_funcs: Array, input_branches: Array, wiring_blocks: Array,
+		busy_keys: Array) -> String:
 	var unit: Dictionary = report.get("unit", {})
 	var total := int(report["total_instructions"])
 	var native := int(report["native_count"])
@@ -319,6 +536,12 @@ static func _assemble(report: Dictionary, scene_path: String, delegated_json: Di
 		out += "# 降级备案: %s 该绑定生成时由 RESTART 降级为 SKIP（运行中重触发忽略\n" \
 			% "、".join(PackedStringArray(downgraded))
 		out += "#   而非重启；请人工确认重触发时上一轮执行已完成）\n"
+	var local_all: Array = report.get("local_delegated_bindings", [])
+	if not local_all.is_empty():
+		# LOCAL 连续性（终审 C1）：这些 binding 因 LOCAL 变量用途整条委托单段
+		out += "# LOCAL 连续性: %s 因 LOCAL 变量用途整条委托单段 run（一个 ctx 贯穿\n" \
+			% "、".join(PackedStringArray(local_all))
+		out += "#   整条顶层序列，LOCAL 变量跨指令读写与源 Fuse 一致）\n"
 	out += "# ============================================================\n"
 	out += "extends Node\n\n"
 	out += 'const FuseDelegation := preload("%s")\n\n' % DELEGATION_PATH
@@ -326,7 +549,11 @@ static func _assemble(report: Dictionary, scene_path: String, delegated_json: Di
 	out += "const _DELEGATED := %s\n" % JSON.stringify(delegated_json)
 	for const_line: String in const_lines:
 		out += "\n%s\n" % const_line
-	out += "\nvar _delegated := {}\nvar _gate := {}\n\n"
+	out += "\nvar _delegated := {}\nvar _gate := {}\n"
+	# busy 卫语句状态（每入口一个；SKIP retrigger 复刻，终审 C2）
+	for busy_key: String in busy_keys:
+		out += "var _busy_%s := false\n" % busy_key
+	out += "\n"
 	out += "func _ready() -> void:\n"
 	out += TAB + "_delegated = FuseDelegation.build_delegated(_DELEGATED)\n"
 	for setup: String in setup_lines:
@@ -423,7 +650,8 @@ static func _emit_send_event(inst: BaseInstruction, indent: String, _key: String
 
 
 ## SetVariable：仅字面量模式（set_with_another_variable == false）且
-## new_value 可直译且目标作用域为 LOCAL/GLOBAL 时原生；其余委托
+## new_value 可直译且目标作用域为 GLOBAL 时原生；其余委托（LOCAL 目标委托，
+## 终审 C1——原生行写 LOCAL 进即抛的临时 ctx 必丢失）
 static func _emit_set_variable(inst: BaseInstruction, indent: String, _key: String) -> String:
 	var s := inst as SetVariable
 	if s.set_with_another_variable or s.target_variable.is_empty():
@@ -438,7 +666,8 @@ static func _emit_set_variable(inst: BaseInstruction, indent: String, _key: Stri
 		% [indent, s.target_variable, value_literal, scope]
 
 
-## MathOperation：操作数与写回的作用域均为 LOCAL/GLOBAL 时原生（SCOPE 语义委托）
+## MathOperation：操作数与写回的作用域均为 GLOBAL 时原生（LOCAL 委托——终审 C1，
+## 原生读写 LOCAL 均错值；SCOPE 语义委托）
 static func _emit_math_operation(inst: BaseInstruction, indent: String, key: String) -> String:
 	var m := inst as MathOperation
 	if m.save_to_variable.is_empty():
@@ -482,7 +711,8 @@ static func _emit_math_operation(inst: BaseInstruction, indent: String, key: Str
 	return lines
 
 
-## 操作数表达式：VALUE → 字面量；VARIABLE → 桥读取（仅 LOCAL/GLOBAL）
+## 操作数表达式：VALUE → 字面量；VARIABLE → 桥读取（仅 GLOBAL，LOCAL/SCOPE 返回
+## "" 使整条指令降级委托——终审 C1）
 static func _operand_expr(m: MathOperation, is_a: bool) -> String:
 	var source: int = int(m.operand_a_source if is_a else m.operand_b_source)
 	var value_source_enum: int = MathOperation.OperandASource.VALUE if is_a \
@@ -590,13 +820,12 @@ static func _is_jsonable(value: Variant) -> bool:
 	return false
 
 
-## VariableScope 枚举 → 桥 scope 字符串；SCOPE 返回 ""（变量语义走 Fuse 完整路径更稳）
+## VariableScope 枚举 → 桥 scope 字面量。仅放行 global——LOCAL 返回 ""（终审 C1：
+## 原生行写 LOCAL 进的是即抛的临时 ctx，读恒 miss 后回退 global 同名变量，均为
+## 静默错值——LOCAL 变量操作一律委托）；SCOPE 同理返回 ""（完整 Fuse 路径委托）。
 static func _scope_literal(scope: int) -> String:
-	match scope:
-		BaseVariable.VariableScope.LOCAL:
-			return "local"
-		BaseVariable.VariableScope.GLOBAL:
-			return "global"
+	if scope == BaseVariable.VariableScope.GLOBAL:
+		return "global"
 	return ""
 
 

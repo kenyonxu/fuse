@@ -1,7 +1,7 @@
 # addons/fuse/tests/graduation/test_codegen_golden.gd
 extends Node
 
-## 金样例测试（T7 M2 收口）
+## 金样例测试（T7 M2 收口；终审 C1/C2 后基线更新）
 ##
 ## 1. 首跑 Wait 探针（controller ruling 1）：进程内第一次 await
 ##    FuseDelegation.run(Wait 0.5) 的时长语义断言 + 根因数据打印。
@@ -11,7 +11,9 @@ extends Node
 ## 2. 金样例（game_flow L4 / hint_breath L2）生成脚本 load() 解析零错 + 委托结构在。
 ## 3. 覆盖率数字钉死（对账入库 report.md）。
 ## 4. 结构级守恒（controller ruling 5）：源场景单元序列化指令总数（含嵌套与
-##    bindings，排除 disabled）== 委托块条目数 + 原生发射数——防静默丢失。
+##    bindings，排除 disabled）== 委托 JSON 内指令数 + 原生发射数——防静默丢失。
+##    终审 C1 起委托形态 = 段（LOCAL 用途 binding 整条全委托 + 连续委托合并），
+##    守恒按段内指令数计，另钉段数、busy 卫语句、LOCAL 备案与 I3 风险行。
 
 ## 控制流指令的嵌套指令字段（与 SystemDeriver._SUB_INSTRUCTIONS 对齐）
 const _SUB_KEYS := ["instructions", "true_instructions", "false_instructions",
@@ -19,17 +21,22 @@ const _SUB_KEYS := ["instructions", "true_instructions", "false_instructions",
 
 ## 金样例钉死基线（export CLI 实际生成产物；重跑生成若数字漂移，本测试挂）。
 ## 口径：total = 源场景全量指令数（含嵌套）；top = 顶层槽位数（emitter 发射单位，
-## 嵌套指令作为委托 JSON 的一部分随顶层指令整体重建——白名单原生指令均无嵌套）
+## 嵌套指令作为委托 JSON 的一部分随顶层指令整体重建）；
+## delegated = 委托 JSON 内顶层指令数（终审 C1 后 LOCAL 用途 binding 整条全委托 +
+## 连续委托合并段——b2/b3 全委托使 b3 原本原生的 2 个 Wait 转委托，native 由 3 降 1）；
+## segments = _DELEGATED 条目数（委托段数；连续委托合并后远小于逐指令一段）
 const GOLDEN := {
 	"game_flow": {
 		"scene": "res://demos/fuse/brickian/game_scene.tscn",
 		"node_path": "GameManager/GameFlow",
-		"delegated": 25, "native": 3, "top": 28, "total": 40,
+		"delegated": 27, "native": 1, "top": 28, "total": 40, "segments": 6,
+		"local_bindings": ["b2", "b3"],
 	},
 	"hint_breath": {
 		"scene": "res://demos/fuse/brickian/title_scene.tscn",
 		"node_path": "Control/TitleHint/HintBreath",
-		"delegated": 2, "native": 0, "top": 2, "total": 2,
+		"delegated": 2, "native": 0, "top": 2, "total": 2, "segments": 1,
+		"local_bindings": [],
 	},
 }
 
@@ -128,7 +135,8 @@ func _test_golden_structure_count() -> void:
 		_check(src_top == int(pinned["top"]),
 			"%s 源场景顶层槽位数 == %d（实测 %d）" % [system_name, pinned["top"], src_top])
 
-		# 2) 产物对账——顶层守恒：委托块条目数 + 原生数 == 顶层槽位（防槽位静默丢失）
+		# 2) 产物对账——顶层守恒：委托 JSON 内顶层指令数 + 原生数 == 顶层槽位
+		#    （防槽位静默丢失；终审 C1 后连续委托合并段，条目数≠指令数）
 		var text := FileAccess.get_file_as_string(
 			"res://fuse_generated/scripts/%s.gd" % system_name)
 		var delegated_json := {}
@@ -138,12 +146,22 @@ func _test_golden_structure_count() -> void:
 					line.trim_prefix("const _DELEGATED := "))
 				if parsed is Dictionary:
 					delegated_json = parsed
-		var delegated_count: int = delegated_json.size()
+		var delegated_count: int = 0
+		for entries_v: Variant in delegated_json.values():
+			if entries_v is Array:
+				delegated_count += (entries_v as Array).size()
 		var coverage := _parse_report_coverage(
 			"res://fuse_generated/scripts/%s.report.md" % system_name)
 
+		_check(delegated_json.size() == int(pinned["segments"]),
+			"%s 委托段数 == %d（实测 %d；连续委托合并+LOCAL 整条委托）"
+			% [system_name, pinned["segments"], delegated_json.size()])
+		_check(text.count("await FuseDelegation.run(") == int(pinned["segments"]),
+			"%s 入口体 run 行数 == 段数 %d（实测 %d）"
+			% [system_name, pinned["segments"], text.count("await FuseDelegation.run(")])
 		_check(delegated_count == int(pinned["delegated"]),
-			"%s 委托块条目数 == %d（实测 %d）" % [system_name, pinned["delegated"], delegated_count])
+			"%s 委托 JSON 内顶层指令数 == %d（实测 %d）"
+			% [system_name, pinned["delegated"], delegated_count])
 		_check(coverage[0] == int(pinned["native"]) and coverage[1] == int(pinned["top"]),
 			"%s report.md 覆盖率钉死 %d/%d（实测 %s）"
 			% [system_name, pinned["native"], pinned["top"], str(coverage)])
@@ -161,8 +179,35 @@ func _test_golden_structure_count() -> void:
 			"%s 全量守恒：源全量 %d == 委托 JSON 内 %d + 原生 %d（嵌套不丢失）"
 			% [system_name, src_total, json_inst_total, coverage[0]])
 		_check((delegated_json.values() as Array).all(
-			func(v): return v is Array and (v as Array).size() == 1),
-			"%s 委托块每条目恰 1 条指令（逐指令委托形态）" % system_name)
+			func(v): return v is Array and (v as Array).size() >= 1),
+			"%s 委托块每段至少 1 条指令（合并段为多指令长数组）" % system_name)
+
+		# 4) 终审 C1/C2 结构断言：LOCAL 整条委托备案 + 每入口 busy 卫语句
+		var local_line := ""
+		if text.contains("LOCAL 连续性: "):
+			local_line = text.get_slice("LOCAL 连续性: ", 1).get_slice(" ", 0)
+		var expect_local := "、".join(PackedStringArray(pinned["local_bindings"]))
+		_check(local_line == expect_local,
+			"%s 头注释 LOCAL 整条委托清单 == %s（实测 %s）"
+			% [system_name, str(pinned["local_bindings"]), local_line])
+		var entry_keys: Array[String] = []
+		for line: String in text.split("\n"):
+			if line.begins_with("func _on_"):
+				var fn := line.trim_prefix("func _on_").get_slice("(", 0)
+				if not fn.begins_with("interval") and not fn.begins_with("evt"):
+					entry_keys.append(fn)
+		for key: String in entry_keys:
+			_check(text.contains("if _busy_%s:" % key)
+				and text.contains("await _body_%s(event_args)" % key)
+				and text.contains("_busy_%s = false" % key),
+				"%s 入口 %s busy 卫语句三件套（置位检查/await body/复位）在" % [system_name, key])
+
+		# 5) 终审 I3：hint_breath 的 CheckAnyInput 风险行入 report.md
+		if system_name == "hint_breath":
+			var report_md := FileAccess.get_file_as_string(
+				"res://fuse_generated/scripts/hint_breath.report.md")
+			_check(report_md.contains("CheckAnyInput 即时探测语义"),
+				"hint_breath report.md 含 CheckAnyInput 风险行（I3）")
 
 
 ## report.md 的"- 原生覆盖率: **n/t (p%)**"行 → [native, total]；解析失败 [-1, -1]

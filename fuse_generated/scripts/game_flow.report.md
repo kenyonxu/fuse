@@ -3,10 +3,11 @@
 - 源单元: `GameManager/GameFlow` (L4)
 - 生成脚本: `res://fuse_generated/scripts/game_flow.gd`（本报告同目录）
 - 指令总数: 28（含 bindings，不含 disabled 跳过项）
-- 原生覆盖率: **3/28 (11%)**
-- 委托指令: 25 项（经 FuseDelegation 桥执行）
+- 原生覆盖率: **1/28 (4%)**
+- 委托指令: 27 项（经 FuseDelegation 桥执行）
 - 跳过的 disabled bindings: 无
 - RESTART→SKIP 降级 bindings: ["b0"]
+- LOCAL 整条委托 bindings: ["b2", "b3"]（binding 内 LOCAL 变量跨指令共享单 ctx，与源 Fuse 一致；原生覆盖率数字因此下降）
 
 ## 委托清单（按生成顺序）
 
@@ -31,10 +32,12 @@
 19. SendEvent
 20. IfThen
 21. MathOperation
-22. PauseGame
-23. IfElse
-24. MathOperation
+22. Wait
+23. PauseGame
+24. Wait
 25. IfElse
+26. MathOperation
+27. IfElse
 
 ## 采用与回滚
 

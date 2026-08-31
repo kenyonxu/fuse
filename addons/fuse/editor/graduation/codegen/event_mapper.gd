@@ -130,8 +130,11 @@ static func _map_interval(ev: OnInterval, key: String) -> Dictionary:
 	var timer_var := "_timer_%s" % key
 	var repeats_var := "_repeats_%s" % key
 	var stop_json := ""
+	var stop_type := ""
 	if ev.stop_condition != null:
 		stop_json = JSON.stringify(PresetValueCodec.serialize_condition(ev.stop_condition))
+		var stop_script: GDScript = ev.stop_condition.get_script() as GDScript
+		stop_type = stop_script.get_global_name() if stop_script != null else ""
 
 	var setup_lines: Array[String] = [
 		"%s = Timer.new()" % timer_var,
@@ -194,6 +197,7 @@ static func _map_interval(ev: OnInterval, key: String) -> Dictionary:
 			"min_interval_seconds": ev.min_interval_seconds,
 			"max_interval_seconds": ev.max_interval_seconds,
 			"has_stop_condition": ev.stop_condition != null,
+			"stop_condition_type": stop_type,
 		},
 		"setup_code": "_setup_interval_%s()" % key if ev.auto_start else "",
 		"teardown_code": "",
