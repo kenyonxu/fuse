@@ -32,11 +32,13 @@ static func sanitize_for_json(value: Variant) -> Variant:
 		return arr
 	return value
 
-## 导出 topology 到 <out_dir>/<scene_name>.json，返回路径（失败 ""）
-static func export_to_json(topology: Dictionary, out_dir: String) -> String:
+## 导出 topology 到 <out_dir>/<file_stem>.json，返回路径（失败 ""）。
+## file_stem 为空时回退 topology.scene_name（根节点名）；
+## 调用方（CLI/面板）应传场景文件茎，避免同根节点名场景互相覆盖产物。
+static func export_to_json(topology: Dictionary, out_dir: String, file_stem: String = "") -> String:
 	DirAccess.make_dir_recursive_absolute(out_dir)
-	var file_name: String = str(topology.get("scene_name", "scene"))
-	var path := out_dir.path_join(file_name + ".json")
+	var stem: String = file_stem if file_stem != "" else str(topology.get("scene_name", "scene"))
+	var path := out_dir.path_join(stem + ".json")
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
 		push_error("[TopologyExport] 无法写入 %s (err=%d)" % [path, FileAccess.get_open_error()])

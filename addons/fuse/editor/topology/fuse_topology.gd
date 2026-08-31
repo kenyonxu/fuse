@@ -1175,7 +1175,9 @@ func _on_export_json() -> void:
 		_detail.append_text("[color=red](未打开场景，无法导出)[/color]")
 		return
 	var topology: Dictionary = InstructionAnalyzer.build_topology(scene_root)
-	var path: String = TopologyExport.export_to_json(topology, "res://fuse_reports/topology")
+	# 产物名用场景文件茎（未保存场景 scene_file_path 为空 → 回退 scene_name）
+	var stem: String = scene_root.scene_file_path.get_file().get_basename()
+	var path: String = TopologyExport.export_to_json(topology, "res://fuse_reports/topology", stem)
 	if path.is_empty():
 		_detail.append_text("[color=red](导出失败，见输出面板)[/color]")
 	else:

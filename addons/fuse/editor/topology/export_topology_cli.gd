@@ -34,7 +34,7 @@ func _ready() -> void:
 	var inst := scene.instantiate()
 	add_child(inst)
 	var topology: Dictionary = InstructionAnalyzer.build_topology(inst)
-	var path: String = TopologyExport.export_to_json(topology, out_dir)
+	var path: String = TopologyExport.export_to_json(topology, out_dir, scene_path.get_file().get_basename())
 	inst.queue_free()
 	if path.is_empty():
 		get_tree().quit(2)

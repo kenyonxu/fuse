@@ -37,10 +37,13 @@ func _test_export_real_scene() -> void:
 	var inst := scene.instantiate()
 	add_child(inst)
 	var topology: Dictionary = InstructionAnalyzer.build_topology(inst)
-	var out_path: String = TopologyExport.export_to_json(topology, "user://topology_test")
+	# 显式 stem（≠ scene_name）证明产物名来自参数而非回退
+	var out_path: String = TopologyExport.export_to_json(topology, "user://topology_test", "explicit_stem")
 	_check(not out_path.is_empty(), "导出成功返回路径")
 	if out_path.is_empty():
 		return
+	_check(out_path.get_file() == "explicit_stem.json",
+		"显式 file_stem 决定文件名（实际 %s）" % out_path.get_file())
 	var text := FileAccess.get_file_as_string(out_path)
 	var parsed: Variant = JSON.parse_string(text)
 	_check(parsed is Dictionary, "导出文件是合法 JSON")

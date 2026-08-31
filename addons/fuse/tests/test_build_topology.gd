@@ -26,7 +26,7 @@ func _ready() -> void:
 	print("\n=== 结果: %d 处失败 ===" % _fail)
 	if _fail > 0:
 		push_error("build_topology 测试失败: %d 处" % _fail)
-	get_tree().quit()
+	get_tree().quit(1 if _fail > 0 else 0)
 
 
 func _check(cond: bool, msg: String) -> void:
