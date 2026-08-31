@@ -158,7 +158,7 @@ CLI：`Godot --headless --path . res://addons/fuse/editor/graduation/validate_sy
 # ============================================================
 extends Node
 
-const FuseDelegation := preload("res://addons/fuse/editor/graduation/fuse_delegation.gd")
+const FuseDelegation := preload("res://addons/fuse/core/graduation/fuse_delegation.gd")
 
 # ---- 委托数据块（PresetValueCodec 在 _ready 重建为 BaseInstruction）----
 const _DELEGATED_BINDINGS := {
@@ -200,7 +200,7 @@ func _exit_tree() -> void:
 
 ### 6.5 原生发射器白名单（初始集，实现期可调）
 
-按"高频 + 直译无歧义"选：`Wait`、`Print`、`SendEvent`（走事件桥）、`SetVariable`/`SetGlobalVariables`/`LoadGlobalVariables`（走变量桥）、`MathOperation`、`ShowHideUI`、`SetUIText`。约 8-10 个起步；其余全部委托。白名单外但结构简单的（IfThen/IfElse/ForEach）**首版不做原生**——控制流的原生直译与委托分支混合的语义边界复杂，留给二期。
+按"高频 + 直译无歧义"选：`Wait`、`Print`、`SendEvent`（走事件桥）、`SetVariable`/`SaveGlobalVariables`/`LoadGlobalVariables`（走变量桥）、`MathOperation`、`ShowHideUI`、`SetUIText`。约 8-10 个起步；其余全部委托。白名单外但结构简单的（IfThen/IfElse/ForEach）**首版不做原生**——控制流的原生直译与委托分支混合的语义边界复杂，留给二期。
 
 ## 7. CLI 入口（对齐既有三件套模式）
 
