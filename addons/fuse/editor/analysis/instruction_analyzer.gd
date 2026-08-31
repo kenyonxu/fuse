@@ -583,14 +583,17 @@ static func _node_calls_unit(source: Node, target_name: String) -> bool:
 
 
 ## 递归扫描指令数组（含 _SUB_INSTRUCTIONS 嵌套字段）中的 RunRunner，
-## target_runner 是否包含目标单元名
+## target_runner NodePath 最后一段是否等于目标单元名（精确比对；
+## 子串 contains 会把 "SpawnLogic" 误命中到名为 "Spawn" 的单元）
 static func _instructions_call_unit(instructions: Array, target_name: String) -> bool:
 	for inst in instructions:
 		if inst == null:
 			continue
 		if inst is RunRunner:
 			var t: String = str(inst.get("target_runner"))
-			if t.contains(target_name):
+			var parts := t.split("/")
+			var last_seg: String = parts[parts.size() - 1] if parts.size() > 0 else ""
+			if last_seg == target_name:
 				return true
 		for sub_key in _SUB_INSTRUCTIONS:
 			if sub_key in inst:

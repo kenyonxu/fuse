@@ -71,5 +71,34 @@ func _ready() -> void:
 	var races: Array = topology.cross_references.filter(func(e): return e.get("type") == "variable_write_to_write")
 	_check(races.any(func(e): return str(e.get("detail")) == "score"), "score 双写竞态预警覆盖 runner 单元")
 	root.queue_free()
+	_test_run_edge_no_substring_collision()
 	print("=== 结果: %d 失败 ===" % _fail)
 	get_tree().quit(1 if _fail > 0 else 0)
+
+
+## run 边目标匹配为 NodePath 末段精确比对（毕业 deriver 前置语义）
+## "SpawnLogic" 不应误命中名为 "Spawn" 的单元（旧子串 contains 会产出 2 条边）
+func _test_run_edge_no_substring_collision() -> void:
+	var root := Node.new()
+	root.name = "CollisionScene"
+	add_child(root)
+	var t := Trigger.new()
+	t.name = "TrigA"
+	root.add_child(t)
+	t.set_owner(root)  # find_children(owned=true) 需要显式 owner
+	var ar := ActionRunner.new()
+	var run_inst := RunRunner.new()
+	run_inst.target_runner = NodePath("../SpawnLogic")  # 指向 SpawnLogic，不指向 Spawn
+	ar.instructions = [run_inst]
+	t.action_runner = ar
+	for n in ["Spawn", "SpawnLogic"]:
+		var r := Runner.new()
+		r.name = n
+		root.add_child(r)
+		r.set_owner(root)
+		r.action_runner = ActionRunner.new()
+	var topology: Dictionary = InstructionAnalyzer.build_topology(root)
+	var run_edges: Array = topology.cross_references.filter(func(e): return e.get("type") == "run")
+	_check(run_edges.size() == 1 and run_edges[0].get("to") == "SpawnLogic",
+		"run 边精确命中 SpawnLogic 且不误命中 Spawn（实际 %s）" % str(run_edges.map(func(e): return e.get("to"))))
+	root.queue_free()
