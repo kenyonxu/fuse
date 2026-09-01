@@ -20,9 +20,9 @@ Fuse 是一个 Godot 4.7 可视化编程 / 事件系统插件。原型侧：Even
 
 ## 核心特性
 
-- **306 个即用组件**：70 种事件（输入、碰撞、动画、信号、生命周期…）× 182 种指令（变量、流程、动画、物理、UI、导航…）× 55 种条件（支持复合条件与表达式求值）——完整清单见 `addons/fuse/preset_ai_context/components.json`
+- **310 个即用组件**：70 种事件（输入、碰撞、动画、信号、生命周期…）× 185 种指令（变量、流程、动画、物理、UI、导航…）× 55 种条件（支持复合条件与表达式求值）——完整清单见 `addons/fuse/preset_ai_context/components.json`
 - **变量系统**：global / local / scope 三层变量，运行时监视与编辑
-- **Preset AI 生成闭环**：schema 化组件清单（306 组件 + 条件参数门控）+ 离线校验器（四层规则、退出码门禁）+ eval 回归基线——AI 生成的每一份 preset 都可静态验证
+- **Preset AI 生成闭环**：schema 化组件清单（310 组件 + 条件参数门控）+ 离线校验器（四层规则、退出码门禁）+ eval 回归基线——AI 生成的每一份 preset 都可静态验证
 - **场景拓扑面板**：主屏 Tab 可视化全场景 Fuse 单元（Trigger / MultiEventTrigger / Runner）与跨单元关联（事件、RunRunner 调用、变量读写、竞态预警），支持搜索过滤与 JSON 导出
 - **AI 交接工件**：拓扑导出 + System 划分（JSON IR），供给用户的 AI agent 编写脱离 Fuse 的代码（详见下节）
 - **实验性代码导出器**：拓扑 → System 工件 → GDScript（与 Fuse 运行时共存的混合委托模式）
