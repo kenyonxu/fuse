@@ -1016,7 +1016,7 @@ func reset():
 static func _get_condition_metadata() -> ConditionMetadata:
 	var metadata = ConditionMetadata.new()
 	metadata.name_key = "FUSE_CONDITION_CHECK_VARIABLE_NAME"
-	metadata.category_key = "FUSE_CATEGORY_VARIABLE_OPERATIONS"
+	metadata.category_key = "FUSE_CATEGORY_VARIABLES"
 	metadata.description_key = "FUSE_CONDITION_CHECK_VARIABLE_DESC"
 	metadata.keywords = ["variable", "变量", "check", "检查", "compare", "比较", "equals", "等于", "value", "值", "condition", "条件", "scope", "作用域", "local", "本地", "global", "全局"]
 	metadata.builtin_icon = "LocalVariable"

@@ -95,7 +95,6 @@ FUSE_LOG_EXECUTION_COMPLETED,指令执行完成,Instruction execution completed
 
 示例：
 ```csv
-FUSE_CATEGORY_VARIABLE,变量,Variable
 FUSE_CATEGORY_FLOW_CONTROL,流程控制,Flow Control
 FUSE_CATEGORY_ANIMATION,动画,Animation
 FUSE_CATEGORY_INPUT,输入,Input

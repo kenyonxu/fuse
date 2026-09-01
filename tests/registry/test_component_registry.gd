@@ -12,6 +12,8 @@ func _ready():
 	test_instruction_registry_compatibility()
 
 	print("=== ComponentRegistry 测试完成 ===")
+	# 退出码门禁：headless 运行时可直接做 CI 判断
+	get_tree().quit(0)
 
 ## 测试 ComponentRegistry 基本功能
 func test_component_registry():

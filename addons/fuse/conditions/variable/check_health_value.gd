@@ -287,7 +287,7 @@ func set_parameters(parameters: Dictionary):
 static func _get_condition_metadata() -> ConditionMetadata:
 	var metadata = ConditionMetadata.new()
 	metadata.name_key = "FUSE_CONDITION_HEALTH_VALUE_NAME"
-	metadata.category_key = "FUSE_CATEGORY_VARIABLE"
+	metadata.category_key = "FUSE_CATEGORY_VARIABLES"
 	metadata.description_key = "FUSE_CONDITION_HEALTH_VALUE_DESC"
 	metadata.keywords = ["生命值", "health", "HP", "变量", "variable", "等于"]
 	metadata.builtin_icon = "Heart"

@@ -114,7 +114,7 @@ _set_error_localized(
 static func get_metadata() -> InstructionMetadata:
     var metadata = InstructionMetadata.new()
     metadata.name_key = "FUSE_INSTRUCTION_SET_VARIABLE_NAME"
-    metadata.category_key = "FUSE_CATEGORY_VARIABLE"
+    metadata.category_key = "FUSE_CATEGORY_VARIABLES"
     metadata.description_key = "FUSE_INSTRUCTION_SET_VARIABLE_DESC"
     return metadata
 

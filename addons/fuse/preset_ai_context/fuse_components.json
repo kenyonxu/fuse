@@ -2602,7 +2602,7 @@
   {
     "builtin_icon": "PlayCustom",
     "category": "instruction",
-    "category_key": "FUSE_CATEGORY_SCENE_MANAGEMENT",
+    "category_key": "FUSE_CATEGORY_SCENE",
     "description_key": "FUSE_INSTRUCTION_CHANGE_SCENE_DESC",
     "icon_name": "",
     "keywords": [
@@ -6121,7 +6121,7 @@
   {
     "builtin_icon": "Heart",
     "category": "condition",
-    "category_key": "FUSE_CATEGORY_VARIABLE",
+    "category_key": "FUSE_CATEGORY_VARIABLES",
     "description_key": "FUSE_CONDITION_HEALTH_VALUE_DESC",
     "icon_name": "",
     "keywords": [
@@ -6138,7 +6138,7 @@
   {
     "builtin_icon": "LocalVariable",
     "category": "condition",
-    "category_key": "FUSE_CATEGORY_VARIABLE_OPERATIONS",
+    "category_key": "FUSE_CATEGORY_VARIABLES",
     "description_key": "FUSE_CONDITION_CHECK_VARIABLE_DESC",
     "icon_name": "",
     "keywords": [
@@ -6189,7 +6189,7 @@
   {
     "builtin_icon": "Heart",
     "category": "condition",
-    "category_key": "FUSE_CATEGORY_VARIABLE",
+    "category_key": "FUSE_CATEGORY_VARIABLES",
     "description_key": "FUSE_CONDITION_COMPARE_HEALTH_THRESHOLD_DESC",
     "icon_name": "",
     "keywords": [

@@ -30,7 +30,7 @@ func _init():
 static func _get_instruction_metadata() -> InstructionMetadata:
 	var metadata = InstructionMetadata.new()
 	metadata.name_key = "FUSE_INSTRUCTION_CHANGE_SCENE_NAME"
-	metadata.category_key = "FUSE_CATEGORY_SCENE_MANAGEMENT"
+	metadata.category_key = "FUSE_CATEGORY_SCENE"
 	metadata.description_key = "FUSE_INSTRUCTION_CHANGE_SCENE_DESC"
 	metadata.keywords = ["change scene", "load scene", "switch", "transition", "切换", "加载"]
 	metadata.builtin_icon = "PlayCustom"

@@ -319,7 +319,7 @@ func set_parameters(parameters: Dictionary):
 static func _get_condition_metadata() -> ConditionMetadata:
 	var metadata = ConditionMetadata.new()
 	metadata.name_key = "FUSE_CONDITION_COMPARE_HEALTH_THRESHOLD_NAME"
-	metadata.category_key = "FUSE_CATEGORY_VARIABLE"
+	metadata.category_key = "FUSE_CATEGORY_VARIABLES"
 	metadata.description_key = "FUSE_CONDITION_COMPARE_HEALTH_THRESHOLD_DESC"
 	metadata.keywords = ["生命值", "health", "HP", "阈值", "threshold", "对比", "compare", "小于", "大于"]
 	metadata.builtin_icon = "Heart"

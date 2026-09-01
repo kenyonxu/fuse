@@ -18507,7 +18507,7 @@
     {
       "default": [],
       "hint": 23,
-      "hint_string": "17/17:InputEventAction",
+      "hint_string": "4/31:",
       "is_nested_instructions": false,
       "name": "combo_sequence",
       "type": 28,
