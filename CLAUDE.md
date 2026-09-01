@@ -12,17 +12,13 @@
 
 ## 与 AI 协作要点
 
-1. **使用对应技能创建 Fuse 组件**
-   - Instruction → `/fuse-instruction-generator`
-   - Event → `/fuse-event-generator`
-   - Condition → `/fuse-condition-generator`
-2. **Godot 开发相关技能**
-   - `/godot` - Godot 文件格式、架构模式、CLI 工具
-   - `/godot-gdscript-patterns` - 状态机、对象池、组件系统等模式
-   - `/gdscript-validate` - 编辑 GDScript 后验证代码
-3. **提供上下文** - 说明修改哪个系统
-4. **明确目标** - 清晰描述要实现的功能
-5. **引用文件** - 提到具体文件路径或类名
+1. **使用对应技能创建 Fuse 组件**（skill 统一收纳于 `addons/fuse/agent_skills/`，直接 Read 对应 SKILL.md 并遵循；完整清单见 [AGENTS.md](AGENTS.md)）
+   - Instruction → `addons/fuse/agent_skills/fuse-instruction-generator/SKILL.md`
+   - Event → `addons/fuse/agent_skills/fuse-event-generator/SKILL.md`
+   - Condition → `addons/fuse/agent_skills/fuse-condition-generator/SKILL.md`
+2. **提供上下文** - 说明修改哪个系统
+3. **明确目标** - 清晰描述要实现的功能
+4. **引用文件** - 提到具体文件路径或类名
 
 ## 环境配置
 
@@ -37,11 +33,12 @@
 ```
 fuse/
 ├── addons/
-│   └── fuse/            # 可视化编程系统
-├── docs/                # 项目文档
+│   └── fuse/            # 可视化编程系统（agent_skills/ 含组件生成规范 skill）
 ├── demos/               # 演示场景
-└── plans/               # 开发计划
+└── fuse_generated/      # 毕业导出定稿金样例（systems/drafts 草稿不入库）
 ```
+
+`docs/`、`plans/`、`tools/` 等为本地开发目录，不入库（见 .gitignore）。
 
 ## 核心系统快速参考
 
@@ -57,7 +54,7 @@ fuse/
 - `ActionRunner` - 动作运行器
 
 **详细文档：** [addons/fuse/docs/](addons/fuse/docs/)
-**多线程支持：** [addons/fuse/docs/multithreading.md](addons/fuse/docs/multithreading.md)
+**多线程支持：** [addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md](addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md)
 
 ## 代码规范摘要
 
@@ -83,7 +80,6 @@ fuse/
 - 不使用 `class_name` 作为变量名（保留字）
 - 使用 `@abstract` 标记抽象类和方法
 - **Lambda 函数：** 简单回调可用，复杂逻辑提取方法
-  - 详见：[docs/coding-standards/gdscript-lambda.md](docs/coding-standards/gdscript-lambda.md)
 
 ## 开发工作流
 
@@ -117,7 +113,6 @@ static func get_metadata() -> Dictionary:
 - 避免在 `_get_property_list()` 中访问节点
 - 使用 `get("property")` 而非 `get_material()`
 - 使用 `call_deferred()` 延迟节点操作
-- 详见：[docs/development/editor-issues.md](docs/development/editor-issues.md)
 
 ### 资源管理
 
@@ -133,21 +128,14 @@ static func get_metadata() -> Dictionary:
 
 ### 开发技能
 
-| 技能 | 用途 | 触发方式 |
-|------|------|----------|
-| Godot 核心 | 文件格式、架构模式、CLI | `/godot` |
-| GDScript 模式 | 状态机、对象池、组件系统 | `/godot-gdscript-patterns` |
-| GDScript 验证 | 编辑后验证代码 | `/gdscript-validate` |
+组件生成规范 skill（Instruction / Event / Condition / 本地化 / preset / RuntimeInstance 迁移 / handoff 打包）统一收纳于 `addons/fuse/agent_skills/`，使用方式与完整清单见 [AGENTS.md](AGENTS.md)。
 
 ### 内部文档
 
 | 系统 | 路径 |
 |------|------|
 | Fuse 系统 | [addons/fuse/docs/](addons/fuse/docs/) |
-| Fuse 多线程 | [addons/fuse/docs/multithreading.md](addons/fuse/docs/multithreading.md) |
-| 编辑器问题 | [docs/development/editor-issues.md](docs/development/editor-issues.md) |
-| Lambda 规范 | [docs/coding-standards/gdscript-lambda.md](docs/coding-standards/gdscript-lambda.md) |
-| Godot API 参考 | [docs/godot/](docs/godot/) |
+| Fuse 多线程（开发向） | [addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md](addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md) |
 
 ### 外部参考
 
@@ -156,13 +144,13 @@ static func get_metadata() -> Dictionary:
 
 ---
 
-**最后更新:** 2026-07-06 | **Godot 版本:** 4.7 | **主分支:** master
+**最后更新:** 2026-09-01 | **Godot 版本:** 4.7 | **主分支:** master
 
 ## graphify
 
-This project has a graphify knowledge graph at graphify-out/.
+This project has a graphify knowledge graph at graphify-out/ (本地生成、不入库；fresh clone 后运行 `graphify update .` 重建).
 
 Rules:
-- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
+- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure (if present)
 - If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
 - After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)

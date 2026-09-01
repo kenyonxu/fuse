@@ -27,6 +27,13 @@ tmp*.*
 .mcp.json
 QWEN.md
 .clef-work/
+.zcode/
+
+# 根目录遗留 skills（已由 addons/fuse/agent_skills/ 统一收纳取代，2026-09-01）
+/skills/
+
+# 开发期一次性存档（图标挑选器网页快照等）
+/@icons picker.html
 
 # Backup and temporary directories
 backups/
@@ -51,14 +58,13 @@ fuse_reports/
 fuse_generated/systems/drafts/
 
 # Graphify - local state (machine-specific, not meaningful to share)
-graphify-out/cache/
-graphify-out/.graphify_python
-graphify-out/cost.json
-graphify-out/manifest.json
-graphify-out/20*/
+# 知识图谱是 graphify 生成物（单份 graph.json 约 28MB，仓库曾跟踪 4 份共约 106MB），
+# fresh clone 后跑 `graphify update .` 即可重建；整目录不入库
+/graphify-out/
 
 # Python cache and tool output
 __pycache__/
+.ruff_cache/
 *.pyc
 *.pyo
 tools/check_results.txt
