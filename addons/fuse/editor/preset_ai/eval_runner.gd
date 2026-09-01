@@ -189,7 +189,7 @@ static func _write_reports(dir: String, iteration: String, results: Array, summa
 
 # system prompt 素材：skill 文档 + 上下文清单（与 fuse-preset-generator skill 一致）
 const _PROMPT_FILES := [
-	"res://.claude/skills/fuse-preset-generator/SKILL.md",
+	"res://addons/fuse/agent_skills/fuse-preset-generator/SKILL.md",
 	"res://addons/fuse/preset_ai_context/preset_structure_cheatsheet.md",
 	"res://addons/fuse/preset_ai_context/skill_workflow_brief.md",
 	"res://addons/fuse/preset_ai_context/fuse_components.json",

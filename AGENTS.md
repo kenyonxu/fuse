@@ -8,19 +8,19 @@
 
 ## 配套生成 skill（创建组件前必读）⚠️
 
-`.claude/skills/` 下有本工程的组件生成规范（Claude Code 目录格式，ZCode 的 Skill 工具注册表不含它们）。**创建/修改以下内容前，必须先读对应 SKILL.md 并遵循其模板、命名规范与验证清单**：
+`addons/fuse/agent_skills/` 下有本工程的组件生成规范 skill（工具中立目录，2026-09-01 自 `.claude/skills/` 迁入统一；ZCode 的 Skill 工具注册表不含它们）。**创建/修改以下内容前，必须先读对应 SKILL.md 并遵循其模板、命名规范与验证清单**：
 
 | 任务 | 必读 |
 |------|------|
-| 新建/修改指令（Instruction） | `.claude/skills/fuse-instruction-generator/SKILL.md` |
-| 新建/修改事件（Event） | `.claude/skills/fuse-event-generator/SKILL.md` |
-| 新建/修改条件（Condition） | `.claude/skills/fuse-condition-generator/SKILL.md` |
-| 本地化改动 | `.claude/skills/fuse-localization-fixer/SKILL.md` |
-| 生成 preset | `.claude/skills/fuse-preset-generator/SKILL.md` |
-| 事件迁移 RuntimeInstance | `.claude/skills/fuse_event_runtime_instance_migration/SKILL.md` |
+| 新建/修改指令（Instruction） | `addons/fuse/agent_skills/fuse-instruction-generator/SKILL.md` |
+| 新建/修改事件（Event） | `addons/fuse/agent_skills/fuse-event-generator/SKILL.md` |
+| 新建/修改条件（Condition） | `addons/fuse/agent_skills/fuse-condition-generator/SKILL.md` |
+| 本地化改动 | `addons/fuse/agent_skills/fuse-localization-fixer/SKILL.md` |
+| 生成 preset | `addons/fuse/agent_skills/fuse-preset-generator/SKILL.md` |
+| 事件迁移 RuntimeInstance | `addons/fuse/agent_skills/fuse_event_runtime_instance_migration/SKILL.md` |
 | 毕业交接打包（handoff bundle） | `addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md` |
 
-`addons/fuse/agent_skills/` 下的 skill 面向插件使用者（随 `addons/fuse/` 分发、工具中立），与上表面向本仓库开发的 `.claude/skills/` 不同；用户项目通过其 AGENTS.md 指路使用。
+`agent_skills/` 目录统一收纳全部 skill 并随 `addons/fuse/` 分发、工具中立（任何能读文件的 AI agent 均可按"Read 该 SKILL.md 并遵循"使用）：前六项面向本仓库开发，`fuse-handoff-packer` 面向插件使用者（毕业交接打包，用户项目通过其 AGENTS.md 指路使用）。
 
 即使 Skill 工具无法直接调用，也应以"Read 该 SKILL.md 并遵循"的方式使用——规范中的必需方法、命名禁则（如类名不加 Instruction 后缀）、双执行路径要求与验证清单是硬约束。
 

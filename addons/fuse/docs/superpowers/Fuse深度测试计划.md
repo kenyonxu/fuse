@@ -70,7 +70,7 @@ demos/fuse/deep_tests/
 
 ### 第 1 步：生成 preset —— 必须用工程自带技能
 
-⚠️ **`.claude/skills/fuse-preset-generator/SKILL.md`**（ZCode 的 Skill 工具注册表不含它，以 Read 该 SKILL.md 并遵循的方式使用）：
+⚠️ **`addons/fuse/agent_skills/fuse-preset-generator/SKILL.md`**（ZCode 的 Skill 工具注册表不含它，以 Read 该 SKILL.md 并遵循的方式使用）：
 
 1. 先读技能指定的两份结构文档：`preset_ai_context/preset_structure_cheatsheet.md` + `skill_workflow_brief.md`
 2. 组件选择不靠记忆——从 `preset_ai_context/fuse_components.json` 按 `category_key`（如 `FUSE_CATEGORY_ANIMATION`）过滤出该类目**全部**组件，逐个进 preset；参数查 `fuse_component_schemas.json`，枚举查 `fuse_enums.json`

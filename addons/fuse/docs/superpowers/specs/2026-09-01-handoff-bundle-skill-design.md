@@ -13,11 +13,11 @@
 - **零引擎代码**：不写 GDScript 打包器、不加 CLI、不动 `addons/fuse` 运行时——打包的交互确认、语义裁剪、模板挑选由 LLM 执行（确定性打包器是用代码模拟 agent 已有的能力，违背方向修订的立论）
 - skill **不生成代码**：bundle 只供给上下文，写代码是接包 agent 的事
 - 不做编辑器 UI、不做回放测试（验收用静态清单）
-- 不迁移 `.claude/skills/` 下现有 6 个开发 skill（后续可选迁移项，另行决定）
+- 不迁移 `.claude/skills/` 下现有 6 个开发 skill（后续可选迁移项，另行决定）——**✅ 后续裁决（2026-09-01 收尾后）：6 个开发 skill 已迁入 `addons/fuse/agent_skills/` 统一收纳，`.claude/skills/` 目录移除**
 
 ## 2. 定位与原则
 
-与入桥侧对称：入桥 = `.claude/skills/fuse-preset-generator`（AI 读 `preset_ai_context` 写 preset 进 Fuse）；出桥 = 本 skill（AI 读拓扑/System/preset 打包交接件出 Fuse）。**Fuse 的角色收缩为事实源**：`export_topology` / `derive_systems` / `validate_system` CLI 与 `preset_ai_context` 三 JSON 全部已存在，本 skill 纯消费。
+与入桥侧对称：入桥 = `agent_skills/fuse-preset-generator`（AI 读 `preset_ai_context` 写 preset 进 Fuse；2026-09-01 自 `.claude/skills/` 迁入）；出桥 = 本 skill（AI 读拓扑/System/preset 打包交接件出 Fuse）。**Fuse 的角色收缩为事实源**：`export_topology` / `derive_systems` / `validate_system` CLI 与 `preset_ai_context` 三 JSON 全部已存在，本 skill 纯消费。
 
 三条设计原则：
 
@@ -41,7 +41,7 @@ addons/fuse/agent_skills/fuse-handoff-packer/
 ```
 
 - **放 `addons/fuse/agent_skills/` 而非 `.claude/skills/`**：本 skill 的使用者是用户自己游戏项目里的 agent；用户安装 Fuse = 复制 `addons/fuse/`，skill 随插件到达，且不被 Claude Code 专属目录绑定
-- **触发方式**：用户项目根的 AGENTS.md（或任何 agent 指令文件）加一行指路——"要毕业 Fuse 系统时，读 `addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md` 并遵循"；安装文档提供这行文案。与现有 `.claude/skills/` 的"Read 该 SKILL.md 并遵循"用法一致
+- **触发方式**：用户项目根的 AGENTS.md（或任何 agent 指令文件）加一行指路——"要毕业 Fuse 系统时，读 `addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md` 并遵循"；安装文档提供这行文案。与既有 skill 的"Read 该 SKILL.md 并遵循"用法一致
 
 ## 4. SKILL.md 交互流程（七步）
 
