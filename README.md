@@ -40,7 +40,7 @@ Godot --headless --path . res://addons/fuse/editor/graduation/derive_systems.tsc
 Godot --headless --path . res://addons/fuse/editor/graduation/validate_system.tscn -- <system.json>
 ```
 
-把拓扑 JSON + System JSON + 相关 preset 交给你的 AI agent，即可开始编写脱离 Fuse 的代码；Fuse 侧源 Trigger 保持不动，随时可回滚。一键打包交接工件（handoff bundle：System + 拓扑 + preset + 组件 schema + 语义契约）规划中。
+把拓扑 JSON + System JSON + 相关 preset 交给你的 AI agent，即可开始编写脱离 Fuse 的代码；Fuse 侧源 Trigger 保持不动，随时可回滚。一键打包交接工件由随插件分发的 **fuse-handoff-packer skill** 完成（`addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md`，工具中立，任何 AI agent 均可执行）：它与你交互确认系统与模板后产出 `fuse_generated/handoff/<系统名>/` 自包含交接包（系统划分 / 拓扑 / preset / 语义契约 / 验收清单 / 组件 schema / 基建模板）。样例见 `fuse_generated/handoff/game_flow/`。
 
 > **实验性**：毕业导出器（`export_system` CLI）可直接生成与 Fuse 运行时共存的 GDScript——白名单指令原生直译，其余委托执行。它不是推荐出口（生成代码仍依赖 Fuse 运行时），保留作参考实现，详见[毕业导出器指南](addons/fuse/docs/user_docs/guides/57-graduation-exporter-guide.md)。
 
@@ -73,6 +73,7 @@ Event（何时）──▶ Instruction（做什么）──▶ Condition（是�
 1. 将 `addons/fuse/` 复制到你的 Godot 4.7 项目的 `addons/` 目录
 2. 项目设置 → 插件 → 启用 "Fuse Visual Programming"
 3. （可选）启用 autoload：`FuseEventBus`、`FuseRuntimeBridge`
+4. （毕业交接）你的 AI agent 需要读 `addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md`——建议在你项目的 AGENTS.md / CLAUDE.md 等指令文件中加一行指路
 
 ## 系统要求
 

@@ -75,6 +75,8 @@ Godot --headless --path . res://addons/fuse/editor/graduation/export_system.tscn
 
 出口主线已转向 **AI 交接工件**（handoff bundle：System + 拓扑 + preset + 组件 schema + 语义契约，打包供给用户的 AI agent 编写脱离 Fuse 的代码）。本导出器验证过的语义结论——busy 卫语句复刻 SKIP 重触发、LOCAL 变量需要单 ctx 贯穿的连续性、"条件通过才消耗 trigger_once"的两阶段门控——将沉淀为交接工件的**语义契约**部分，指导 AI agent 写出行为等价的代码。多单元物化、白名单扩充等原二期项随主线转移不再推进。
 
+**出口主线已落地**：`addons/fuse/agent_skills/fuse-handoff-packer/`——交互式交接打包 skill，产出脱离 Fuse 编码所需的自包含 bundle（样例 `fuse_generated/handoff/game_flow/`）。本导出器（实验性 GDScript 生成）的语义结论已沉淀进 bundle 的语义契约。
+
 ## 相关文档
 
 - 设计 spec：[2026-08-30-preset-gdscript-graduation-design.md](../../superpowers/specs/2026-08-30-preset-gdscript-graduation-design.md)（含执行中修订记录）

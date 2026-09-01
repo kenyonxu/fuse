@@ -18,6 +18,9 @@
 | 本地化改动 | `.claude/skills/fuse-localization-fixer/SKILL.md` |
 | 生成 preset | `.claude/skills/fuse-preset-generator/SKILL.md` |
 | 事件迁移 RuntimeInstance | `.claude/skills/fuse_event_runtime_instance_migration/SKILL.md` |
+| 毕业交接打包（handoff bundle） | `addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md` |
+
+`addons/fuse/agent_skills/` 下的 skill 面向插件使用者（随 `addons/fuse/` 分发、工具中立），与上表面向本仓库开发的 `.claude/skills/` 不同；用户项目通过其 AGENTS.md 指路使用。
 
 即使 Skill 工具无法直接调用，也应以"Read 该 SKILL.md 并遵循"的方式使用——规范中的必需方法、命名禁则（如类名不加 Instruction 后缀）、双执行路径要求与验证清单是硬约束。
 

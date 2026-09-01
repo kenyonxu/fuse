@@ -85,6 +85,8 @@ banner 搜索框实时过滤单元树（防抖 0.5s）：匹配面包括**单元
 
 「导出 JSON」按钮 / headless CLI（`export_topology.tscn -- --scene res://<场景>`）把拓扑 report 落盘为 JSON（默认 `res://fuse_reports/topology/<场景文件名>.json`），内含 `source_scene` 溯源路径、`exported_at` 时间戳、全部单元 / 跨单元关联 / 变量分析。它是出口侧交接工件的 ground truth（供给用户的 AI agent 编写脱离 Fuse 的代码），也可用于跨场景检索与 AI 上下文素材。
 
+该 JSON 也是 handoff bundle 交接包的拓扑快照来源（由 `fuse-handoff-packer` skill 消费）。
+
 ### 跨 Trigger 关联
 
 Topology 详情面板自动扫描跨 Trigger 的变量 / 信号引用关联：
