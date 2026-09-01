@@ -2,6 +2,14 @@
 
 Fuse 是一个 Godot 4.7 可视化编程 / 事件系统插件。原型侧：Event / Instruction / Condition 三类砖块（Brick）在 Inspector 里搭建与调节游戏逻辑，AI 可直接生成合规的 preset JSON；出口侧：拓扑与 preset 产出结构化交接工件（System 划分 + 行为规格），交给**你自己的 AI agent** 编写脱离 Fuse 的工程代码——不写代码的用户留在 Fuse 运行时继续调参，源 Trigger 始终不动，随时可回滚。
 
+**5 分钟上手**：跟着[快速开始指南](addons/fuse/docs/user_docs/quick_start.md)创建你的第一个 Fuse 单元。
+
+## 适合谁
+
+- **不写代码的创作者**：用 Inspector 拖滑块搭逻辑、调参数——攻击节奏、UI 呼吸动画，"调"比"写"快
+- **AI 辅助开发者**：AI 生成 preset JSON（schema 约束+离线校验），人只做审阅与调节
+- **工程团队**：原型在 Fuse 里验证跑通后，交接工件交给 AI agent 生成脱离 Fuse 的工程代码
+
 ## 为什么是"桥梁"
 
 可视化脚本系统最常被拒绝采用的理由不是表达力，而是"会不会被套牢"。Fuse 的答案是一条双向都安全的桥：
@@ -12,9 +20,7 @@ Fuse 是一个 Godot 4.7 可视化编程 / 事件系统插件。原型侧：Even
 
 ## 核心特性
 
-- **事件驱动**：70 种事件（输入、碰撞、动画、信号、生命周期…）
-- **指令编排**：182 种指令（变量、流程、动画、物理、UI、导航…）
-- **条件分支**：55 种条件，支持复合条件与表达式求值
+- **306 个即用组件**：70 种事件（输入、碰撞、动画、信号、生命周期…）× 182 种指令（变量、流程、动画、物理、UI、导航…）× 55 种条件（支持复合条件与表达式求值）——完整清单见 `addons/fuse/preset_ai_context/components.json`
 - **变量系统**：global / local / scope 三层变量，运行时监视与编辑
 - **Preset AI 生成闭环**：schema 化组件清单（306 组件 + 条件参数门控）+ 离线校验器（四层规则、退出码门禁）+ eval 回归基线——AI 生成的每一份 preset 都可静态验证
 - **场景拓扑面板**：主屏 Tab 可视化全场景 Fuse 单元（Trigger / MultiEventTrigger / Runner）与跨单元关联（事件、RunRunner 调用、变量读写、竞态预警），支持搜索过滤与 JSON 导出
@@ -82,6 +88,7 @@ Event（何时）──▶ Instruction（做什么）──▶ Condition（是�
 
 ## 文档
 
+- [快速开始（5 分钟上手）](addons/fuse/docs/user_docs/quick_start.md)
 - [系统文档](addons/fuse/docs/system_docs/)
 - [用户文档](addons/fuse/docs/user_docs/)
 - [开发者文档](addons/fuse/docs/dev_docs/)
