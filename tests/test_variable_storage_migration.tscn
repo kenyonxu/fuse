@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_variable_storage_migration"]
+
+[ext_resource type="Script" path="res://tests/test_variable_storage_migration.gd" id="1"]
+
+[node name="TestVariableStorageMigration" type="Node"]
+script = ExtResource("1")

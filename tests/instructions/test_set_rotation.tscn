@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_set_rotation"]
+
+[ext_resource type="Script" path="res://tests/instructions/test_set_rotation.gd" id="1"]
+
+[node name="TestSetRotation" type="Node3D"]
+script = ExtResource("1")

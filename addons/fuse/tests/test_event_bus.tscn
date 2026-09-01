@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://dy06gr2vwl2b8"]
-
-[ext_resource type="Script" uid="uid://crsl8d4id3e5c" path="res://addons/fuse/tests/test_event_bus.gd" id="1"]
-
-[node name="TestEventBus" type="Node" unique_id=1306898544]
-script = ExtResource("1")

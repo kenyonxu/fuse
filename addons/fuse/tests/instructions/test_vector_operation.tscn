@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bv8cqm6jyqxnu"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_vector_operation.gd" id="1"]
-
-[node name="TestVectorOperation" type="Node"]
-script = ExtResource("1")

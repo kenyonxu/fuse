@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bricks_stage4_integration_test"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_stage4_integration.gd" id="1_test4"]
-
-[node name="TestStage4Integration" type="Node"]
-script = ExtResource("1_test4")

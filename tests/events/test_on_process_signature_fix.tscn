@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/events/test_on_process_signature_fix.gd" id="1"]
+
+[node name="TestOnProcessSignatureFix" type="Node"]
+script = ExtResource("1")

@@ -441,11 +441,11 @@ FUSE_ERROR_XXX_ERROR,错误消息,Error message
 
 **Step 3.1: 创建测试场景文件**
 
-创建 `addons/fuse/tests/instructions/test_<instruction_name>.tscn`
+创建 `tests/instructions/test_<instruction_name>.tscn`
 
 **Step 3.2: 创建测试脚本**
 
-创建 `addons/fuse/tests/instructions/test_<instruction_name>.gd`
+创建 `tests/instructions/test_<instruction_name>.gd`
 
 ### Step 4: 测试验证
 

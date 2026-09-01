@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_on_physics_process"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/events/test_on_physics_process.gd" id="1"]
-
-[node name="TestOnPhysicsProcess" type="Node"]
-script = ExtResource("1")

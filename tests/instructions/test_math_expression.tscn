@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_math_expression"]
+
+[ext_resource type="Script" path="res://tests/instructions/test_math_expression.gd" id="1_test_math_expression"]
+
+[node name="TestMathExpression" type="Node"]
+script = ExtResource("1_test_math_expression")

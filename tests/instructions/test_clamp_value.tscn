@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_clamp_value"]
+
+[ext_resource type="Script" path="res://tests/test_clamp_value.gd" id="1_test_clamp_value"]
+
+[node name="TestClampValue" type="Node"]
+script = ExtResource("1_test_clamp_value")

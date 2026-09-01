@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cx7vk3n9m2y8wl"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_if_else.gd" id="1"]
-
-[node name="TestIfElseInstruction" type="Node"]
-script = ExtResource("1")

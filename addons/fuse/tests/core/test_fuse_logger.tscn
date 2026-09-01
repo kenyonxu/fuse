@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://cndkmohb63cdd"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/core/test_fuse_logger.gd" id="1"]
-
-[node name="TestFuseLogger" type="Node"]
-script = ExtResource("1")

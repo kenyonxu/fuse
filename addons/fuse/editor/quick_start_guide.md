@@ -171,7 +171,7 @@ tracker.record_custom_event("user_action", {
 
 - 查看完整的使用指南：`tools_usage_guide.md`
 - 运行演示场景：`demos/editor_tools_demo.gd`
-- 查看测试示例：`addons/fuse/tests/editor_tools_test.gd`
+- 查看测试示例：`tests/editor_tools_test.gd`
 - 检查插件配置：`addons/fuse/plugin.gd`
 
 **祝您开发愉快！** 🚀

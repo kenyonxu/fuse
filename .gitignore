@@ -138,4 +138,4 @@ fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/*
 !fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/sample_l4_multi.json
 
 # 测试运行期生成的迷你 fixture workspace（test_eval_runner 自建自清）
-addons/fuse/tests/preset_ai/fixtures/
+tests/preset_ai/fixtures/

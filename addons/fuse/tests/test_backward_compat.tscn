@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://backward_compat_test"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_backward_compat.gd" id="1"]
-
-[node name="TestBackwardCompat" type="Node"]
-script = ExtResource("1")

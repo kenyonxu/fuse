@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_type_compatibility"]
+
+[ext_resource type="Script" path="res://tests/test_type_compatibility.gd" id="1_test_type_compatibility"]
+
+[node name="TestTypeCompatibility" type="Node"]
+script = ExtResource("1_test_type_compatibility")

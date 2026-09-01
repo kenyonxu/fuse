@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_stage3_runtime_localization"]
+
+[ext_resource type="Script" path="res://tests/test_stage3_runtime_localization.gd" id="1"]
+
+[node name="TestStage3RuntimeLocalization" type="Node"]
+script = ExtResource("1")

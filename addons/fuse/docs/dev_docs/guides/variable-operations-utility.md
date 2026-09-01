@@ -672,7 +672,7 @@ _log_error("GlobalVariableAssistant 实例为空")
 
 ### 单元测试结构
 
-测试文件：`addons/fuse/tests/unit/test_variable_operations.gd`
+测试文件：`tests/unit/test_variable_operations.gd`
 
 **测试覆盖：**
 1. ✅ LOCAL 变量读取/设置
@@ -733,7 +733,7 @@ func test_get_variable_default_value():
 
 ```bash
 # 在 Godot 编辑器中
-1. 打开测试场景: addons/fuse/tests/unit/test_variable_operations.tscn
+1. 打开测试场景: tests/unit/test_variable_operations.tscn
 2. 按 F5 运行测试
 3. 查看 GUT 测试结果面板
 ```

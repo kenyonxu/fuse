@@ -404,11 +404,11 @@ FUSE_LOG_EVENT_XXX_TRIGGERED,事件已触发,Event triggered
 
 **Step 3.1: 创建测试场景文件**
 
-创建 `addons/fuse/tests/events/test_on_<event_name>.tscn`
+创建 `tests/events/test_on_<event_name>.tscn`
 
 **Step 3.2: 创建测试脚本**
 
-创建 `addons/fuse/tests/events/test_on_<event_name>.gd`
+创建 `tests/events/test_on_<event_name>.gd`
 
 ### Step 4: 测试验证
 

@@ -1,5 +1,5 @@
 @icon("res://addons/fuse/icons/builtin/ZoomReset.png")
-# 文件：addons/fuse/tests/count_instruction.gd
+# 文件：tests/count_instruction.gd
 @tool
 extends BaseInstruction
 class_name Count

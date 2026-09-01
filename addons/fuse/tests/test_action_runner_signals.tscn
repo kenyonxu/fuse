@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bricks_test_action_runner_signals"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_action_runner_signals.gd" id="1_test_action_runner_signals"]
-
-[node name="TestActionRunnerSignals" type="Node"]
-script = ExtResource("1_test_action_runner_signals")

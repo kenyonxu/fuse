@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bfktrxmoyhnbr"]
+
+[ext_resource type="Script" path="res://tests/events/test_on_tree_changed.gd" id="1"]
+
+[node name="TestOnTreeChanged" type="Node2D"]
+script = ExtResource("1")

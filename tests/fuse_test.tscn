@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccnarpa175n8u"]
+
+[ext_resource type="Script" uid="uid://ykbacbwm27wp" path="res://tests/test_sync_optimization.gd" id="1_8lyrn"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_8lyrn")

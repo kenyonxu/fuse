@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvqnm8dxdjyqo"]
+
+[ext_resource type="Script" path="res://tests/instructions/test_find_node.gd" id="1_0k2vy"]
+
+[node name="TestFindNodeInstruction" type="Node"]
+script = ExtResource("1_0k2vy")
+
+[node name="TestParent" type="Node" parent="."]
+
+[node name="Child1" type="Node2D" parent="TestParent"]
+position = Vector2(100, 100)
+
+[node name="Child2" type="Node2D" parent="TestParent"]
+position = Vector2(200, 200)
+
+[node name="Child3" type="Node3D" parent="TestParent"]
+
+[node name="SubContainer" type="Node" parent="TestParent"]
+
+[node name="GrandChild1" type="Node2D" parent="TestParent/SubContainer"]
+position = Vector2(50, 50)
+
+[node name="GrandChild2" type="Sprite2D" parent="TestParent/SubContainer"]
+
+[node name="TestGroupMember1" type="Node" parent="."]
+groups = ["test_group"]
+
+[node name="TestGroupMember2" type="Node2D" parent="."]
+groups = ["test_group"]
+position = Vector2(300, 300)

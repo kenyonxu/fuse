@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_on_input_action_composite"]
+
+[ext_resource type="Script" path="res://tests/events/test_on_input_action_composite.gd" id="1"]
+
+[node name="TestOnInputActionComposite" type="Node"]
+script = ExtResource("1")
+
+[node name="Player" type="CharacterBody2D" parent="."]

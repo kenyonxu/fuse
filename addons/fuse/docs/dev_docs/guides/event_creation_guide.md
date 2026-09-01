@@ -1289,12 +1289,12 @@ FUSE_ERROR_YOUR_EVENT_ERROR,错误消息,Error message
 
 **Step 4.1: 创建测试场景文件**
 
-创建 `addons/fuse/tests/events/test_<event_name>.tscn`：
+创建 `tests/events/test_<event_name>.tscn`：
 
 ```gdscript
 [gd_scene load_steps=2 format=3 uid="uid://test_xxx"]
 
-[ext_resource type="Script" path="res://addons/fuse/tests/events/test_xxx.gd" id="1"]
+[ext_resource type="Script" path="res://tests/events/test_xxx.gd" id="1"]
 
 [node name="TestXxx" type="Node"]
 script = ExtResource("1")
@@ -1304,7 +1304,7 @@ script = ExtResource("1")
 
 **Step 4.2: 创建测试脚本**
 
-创建 `addons/fuse/tests/events/test_on_<event_name>.gd`：
+创建 `tests/events/test_on_<event_name>.gd`：
 
 ```gdscript
 extends Node

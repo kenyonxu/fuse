@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtesttriggermerger"]
+
+[ext_resource type="Script" path="res://tests/test_trigger_merger/test_trigger_merger.gd" id="1"]
+
+[node name="TestTriggerMerger" type="Node"]
+script = ExtResource("1")

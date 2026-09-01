@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://by24p71n4qemf"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_trigger_splitter/test_trigger_splitter.gd" id="1"]
-
-[node name="TestTriggerSplitter" type="Node"]
-script = ExtResource("1")

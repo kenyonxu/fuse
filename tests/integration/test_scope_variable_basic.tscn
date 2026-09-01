@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dhjry7diay464"]
+
+[ext_resource type="Script" path="res://tests/integration/test_scope_variable_basic.gd" id="1_XXXXX"]
+
+[node name="TestScopeVariableBasic" type="Node"]
+script = ExtResource("1_XXXXX")

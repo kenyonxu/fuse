@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bk8i7qxqh6n6y"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_pause_game.gd" id="1"]
-
-[node name="TestPauseGame" type="Node"]
-script = ExtResource("1")

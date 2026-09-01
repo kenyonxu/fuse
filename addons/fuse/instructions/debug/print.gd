@@ -1,5 +1,5 @@
 @icon("res://addons/fuse/icons/builtin/Debug.png")
-# 文件：addons/fuse/tests/print_instruction.gd
+# 文件：tests/print_instruction.gd
 @tool
 extends BaseInstruction
 class_name Print

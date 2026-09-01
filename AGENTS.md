@@ -33,13 +33,13 @@
 ```gdscript
 # 运行单个测试场景：
 # 1. 打开 Godot 编辑器
-# 2. 打开测试场景（如 res://addons/fuse/tests/conditions/test_conditions.tscn）
+# 2. 打开测试场景（如 res://tests/conditions/test_conditions.tscn）
 # 3. 按 F5 运行场景
 
 # 以编程方式运行测试：
 extends Node
 func _ready():
-    var test_script = load("res://addons/fuse/tests/conditions/test_conditions.gd")
+    var test_script = load("res://tests/conditions/test_conditions.gd")
     var test_instance = test_script.new()
     add_child(test_instance)
     if test_instance.has_method("run_tests"):
@@ -101,7 +101,7 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/preset_ai/eval_r
 
 惯例：
 - 测试场景结尾用 `get_tree().quit(1 if _fail > 0 else 0)` 约定退出码，headless 运行可直接做门禁判断
-- 触及 `preset_value_codec` 的任务须例行跑 `res://addons/fuse/tests/serialization/test_preset_nested_serde.tscn`（全量序列化往返较慢，需 `--quit-after 600`）
+- 触及 `preset_value_codec` 的任务须例行跑 `res://tests/serialization/test_preset_nested_serde.tscn`（全量序列化往返较慢，需 `--quit-after 600`）
 
 ### export_topology CLI（拓扑 ground truth 导出）
 
@@ -383,8 +383,8 @@ func _test_edge_cases():
 
 ## 测试约定
 
-- 测试文件：`addons/[system]/tests/test_*.gd`
-- 测试场景：`addons/[system]/tests/test_*.tscn`
+- 测试文件：`tests/<分类>/test_*.gd`（tests 位于仓库根级、不入 addons/fuse——发布到 Asset Store 的插件目录不含测试）
+- 测试场景：`tests/<分类>/test_*.tscn`
 - 测试方法：`test_*()` 或私有测试用 `_*test_*()`
 - 使用 `print()` 输出测试信息
 - 使用 `push_error()` 标记测试失败

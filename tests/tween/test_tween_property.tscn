@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_tween_property"]
+
+[ext_resource type="Script" path="res://tests/tween/test_tween_property.gd" id="1_0xyza"]
+
+[node name="TestTweenProperty" type="Node2D"]
+script = ExtResource("1_0xyza")
+
+[node name="TestSprite" type="Sprite2D" parent="."]
+position = Vector2(200, 200)
+modulate = Color(1, 1, 1, 1)
+
+[node name="TestLabel" type="Label" parent="."]
+offset_left = 200.0
+offset_top = 350.0
+offset_right = 400.0
+offset_bottom = 380.0
+text = "Test Label"
+
+[node name="InfoLabel" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 820.0
+offset_bottom = 250.0
+theme_override_font_sizes/font_size = 14
+text = "Tween Property Test
+Press 1: Test position animation
+Press 2: Test scale animation
+Press 3: Test rotation animation
+Press 4: Test color animation
+Press 5: Test modulate alpha animation
+Press 6: Test label text animation
+Press 7: Test position with auto_free"

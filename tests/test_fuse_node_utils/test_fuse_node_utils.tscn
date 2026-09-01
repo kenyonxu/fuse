@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtestfusenodeutils"]
+
+[ext_resource type="Script" path="res://tests/test_fuse_node_utils/test_fuse_node_utils.gd" id="1"]
+
+[node name="TestFuseNodeUtils" type="Node"]
+script = ExtResource("1")

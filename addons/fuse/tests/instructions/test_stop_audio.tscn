@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_stop_audio"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_stop_audio.gd" id="1"]
-
-[node name="TestStopAudio" type="Node"]
-script = ExtResource("1")

@@ -261,7 +261,7 @@ func _heavy_work(arg):
     return result
 ```
 
-⚠️ 现状：截至本次分析，`FuseTaskManager` 仅在 `addons/fuse/tests/threading/` 中被调用，运行时代码（events/instructions/conditions/triggers）未直接使用。`FuseThreadingConfig.use_thread_pool_for_saving` / `enable_resource_preload` 等开关在核心代码中**找不到消费者**。
+⚠️ 现状：截至本次分析，`FuseTaskManager` 仅在 `tests/threading/` 中被调用，运行时代码（events/instructions/conditions/triggers）未直接使用。`FuseThreadingConfig.use_thread_pool_for_saving` / `enable_resource_preload` 等开关在核心代码中**找不到消费者**。
 
 ### 5.3 模式 C：手动加锁保护共享数据（API 已就绪，运行时未接入）
 

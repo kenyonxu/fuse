@@ -326,11 +326,11 @@ FUSE_CONDITION_XXX_DESC,条件描述,Condition description
 
 **Step 3.1: 创建测试场景文件**
 
-创建 `addons/fuse/tests/conditions/test_check_<condition_name>.tscn`
+创建 `tests/conditions/test_check_<condition_name>.tscn`
 
 **Step 3.2: 创建测试脚本**
 
-创建 `addons/fuse/tests/conditions/test_check_<condition_name>.gd`
+创建 `tests/conditions/test_check_<condition_name>.gd`
 
 ### Step 4: 测试验证
 

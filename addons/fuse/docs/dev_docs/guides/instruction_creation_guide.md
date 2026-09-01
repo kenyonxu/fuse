@@ -1339,12 +1339,12 @@ FUSE_ERROR_XXX_ERROR,错误消息,Error message
 
 **Step 3.1: 创建测试场景文件**
 
-创建 `addons/fuse/tests/instructions/test_<instruction_name>.tscn`：
+创建 `tests/instructions/test_<instruction_name>.tscn`：
 
 ```gdscript
 [gd_scene load_steps=2 format=3 uid="uid://test_xxx"]
 
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_xxx.gd" id="1"]
+[ext_resource type="Script" path="res://tests/instructions/test_xxx.gd" id="1"]
 
 [node name="TestXxx" type="Node3D"]
 script = ExtResource("1")
@@ -1358,7 +1358,7 @@ position = Vector3(0, 0, 0)
 
 **Step 3.2: 创建测试脚本**
 
-创建 `addons/fuse/tests/instructions/test_<instruction_name>.gd`：
+创建 `tests/instructions/test_<instruction_name>.gd`：
 
 ```gdscript
 extends Node3D

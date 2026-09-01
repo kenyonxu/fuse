@@ -55,7 +55,7 @@
 - **位置**：`addons/fuse/core/base/variable_context.gd`（precompile_variable_access / set_variable_by_index / set_variable）
 - **修复**：两条写入路径同步索引数组（`set_variable(name)` 路径也同步 `_variable_array`）
 - **commit**：`4adf15b`
-- **测试**：`addons/fuse/tests/core/test_variable_context_index_sync.tscn`
+- **测试**：`tests/core/test_variable_context_index_sync.tscn`
 
 ### B7. VariableContext SCOPE→LOCAL 静默 fallback — 中 ✅
 - **位置**：`variable_context.gd`（_set_scope_variable / _get_scope_variable）
@@ -76,7 +76,7 @@
 - **位置**：`addons/fuse/core/base_trigger.gd`（object_cooldowns）
 - **修复**：增加过期条目清理（_check_cooldown 路径自动清理已过期条目）
 - **commit**：`0bd037b`
-- **测试**：`addons/fuse/tests/core/test_base_trigger_cooldown_cleanup.tscn`
+- **测试**：`tests/core/test_base_trigger_cooldown_cleanup.tscn`
 
 ### B13. BaseTrigger 冷却 info 日志噪声 — 低 ✅
 - **位置**：`base_trigger.gd`
@@ -104,14 +104,14 @@
 - **现象**：`_diagnostics` 与 `_variable_context` 创建语句缩进在 `if trigger_node:` 块内，导致 `ExecutionContext.new(target, null)` 时子系统未被创建，后续 `set_variable` 报 Nil
 - **修复**：缩进提到块外，target-only 构造也创建子系统
 - **commit**：`1ffe707`
-- **测试**：`addons/fuse/tests/core/test_execution_context_init.tscn`
+- **测试**：`tests/core/test_execution_context_init.tscn`
 
 ### 镜像 bug（新发现）multi_event_trigger object_cooldowns 泄漏 — 低 ✅
 - **位置**：`addons/fuse/core/multi_event_trigger.gd`
 - **现象**：B12 同款问题在 MultiEventTrigger 中复现（`object_cooldowns` 字典在 PER_OBJECT_COOLDOWN 模式下持续累积）
 - **修复**：复用 B12 清理逻辑
 - **commit**：`9f61cef`
-- **测试**：`addons/fuse/tests/core/test_multi_event_trigger_cooldown_cleanup.tscn`
+- **测试**：`tests/core/test_multi_event_trigger_cooldown_cleanup.tscn`
 
 ---
 

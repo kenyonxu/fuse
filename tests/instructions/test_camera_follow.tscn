@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bvhraj4m7k5n2"]
+
+[ext_resource type="Script" path="res://tests/instructions/test_camera_follow.gd" id="1"]
+
+[sub_resource type="Camera2D" id="Camera2D_1"]
+position_smoothing_enabled = true
+
+[node name="TestCameraFollow" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Player" type="Node2D" parent="."]
+position = Vector2(0, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, 0)
+position_smoothing_enabled = SubResource("Camera2D_1")

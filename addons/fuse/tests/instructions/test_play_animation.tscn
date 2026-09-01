@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8vn8qm3jy8wk"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_play_animation.gd" id="1"]
-
-[node name="TestPlayAnimation" type="Node"]
-script = ExtResource("1")

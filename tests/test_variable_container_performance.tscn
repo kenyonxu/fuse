@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_variable_container_performance"]
+
+[ext_resource type="Script" path="res://tests/test_variable_container_performance.gd" id="1_test_variable_container_performance"]
+
+[node name="TestVariableContainerPerformance" type="Node"]
+script = ExtResource("1_test_variable_container_performance")

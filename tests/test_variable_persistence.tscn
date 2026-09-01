@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bricks_test_variable_persistence"]
+
+[ext_resource type="Script" path="res://tests/test_variable_persistence.gd" id="1_test_variable_persistence"]
+
+[node name="TestVariablePersistence" type="Node"]
+script = ExtResource("1_test_variable_persistence")

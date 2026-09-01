@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_wait_until"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_wait_until.gd" id="1"]
-
-[node name="TestWaitUntil" type="Node"]
-script = ExtResource("1")

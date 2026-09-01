@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bnnwskwcbjwob"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_variable_refactoring.gd" id="1_0k2vr"]
-
-[node name="TestVariableRefactoring" type="Node"]
-script = ExtResource("1_0k2vr")

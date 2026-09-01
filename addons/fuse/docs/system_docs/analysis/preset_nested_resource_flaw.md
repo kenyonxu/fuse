@@ -390,7 +390,7 @@ static func _serialize_value(value: Variant) -> Variant:
 
 - **状态**: 已修复
 - **修复提交**: 见 `PresetValueCodec` 引入及相关序列化器改造
-- **验证**: `addons/fuse/tests/serialization/test_preset_nested_serde.gd` 覆盖 IfElse、CheckAll、OnInterval 的 round-trip；现有 IfElse / 复合条件 / OnInterval 测试通过。
+- **验证**: `tests/serialization/test_preset_nested_serde.gd` 覆盖 IfElse、CheckAll、OnInterval 的 round-trip；现有 IfElse / 复合条件 / OnInterval 测试通过。
 
 修复后：
 - L2 preset JSON 可内联 `IfElse`、`IfThen`、`ForLoop`、`ForEach`、`WhileLoop`、`RunConditionCheck`。

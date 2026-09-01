@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bqvn8y7xkmk2l"]
-
-[ext_resource type="Script" uid="uid://cf0pyhegwhcbm" path="res://addons/fuse/tests/conditions/test_phase1_integration.gd" id="1_0v7xe"]
-
-[node name="TestPhase1Integration" type="Node2D"]
-script = ExtResource("1_0v7xe")

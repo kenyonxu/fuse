@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_break_loop"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/instructions/test_break_loop.gd" id="1"]
-
-[node name="TestBreakLoop" type="Node"]
-script = ExtResource("1")

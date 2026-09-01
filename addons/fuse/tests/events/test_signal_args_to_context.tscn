@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/events/test_signal_args_to_context.gd" id="1"]
-
-[node name="TestSignalArgsToContext" type="Node"]
-script = ExtResource("1")

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://test_variable_container_dual_write_config"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_variable_container_dual_write_config.gd" id="1"]
-
-[node name="TestVariableContainerDualWriteConfig" type="Node"]
-script = ExtResource("1")

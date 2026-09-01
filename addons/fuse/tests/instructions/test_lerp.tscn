@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bricks_test_lerp"]
-
-[ext_resource type="Script" path="res://addons/fuse/tests/test_lerp.gd" id="1_test_lerp"]
-
-[node name="TestLerp" type="Node"]
-script = ExtResource("1_test_lerp")
