@@ -6,7 +6,7 @@
 ## 1. 触发与重入
 - 每个**触发器 binding** 同一时刻只跑一条执行链：Trigger 单 runner；MultiEventTrigger 每个 binding 各有独立 runner，不同 binding 之间可并发。
 - 执行中再次触发（同一 binding）：默认**忽略（SKIP）**。
-- L4 MultiEventTrigger 的单个 binding 可配置 RESTART：**取消当前执行并重启**；取消动作推迟到该次触发的条件检查通过之后才发生。
+- L4 MultiEventTrigger 的单个 binding 可配置 RESTART：**取消当前执行并重启**；取消动作推迟到该次触发的条件检查通过之后才发生。重启的新一轮执行经 `call_deferred` 推迟到**帧末**才启动（旧执行取消后需收尾：顺序协程同步唤醒、并行等待为帧轮询需等一帧），等价实现必须保证新执行不与旧执行的状态收尾竞争。（源：core/multi_event_trigger.gd:299-304）
 - trigger_once：生命周期内只生效一次，已触发的再触发直接忽略（Trigger 按节点记一次；MultiEventTrigger 按各 binding 分别记一次）。
 
 ## 2. 门控消耗时机（易错点）
@@ -36,7 +36,24 @@
 |----|---------|-------------|
 | local | 单次执行链内 | 触发处理函数的局部状态（一次调用的局部变量/字典） |
 | scope | 节点邻域共享（沿树向上搜索 ScopeVariableContainer） | 挂在共同祖先节点上的共享组件 |
-| global | 全游戏持久，可存档/读档 | autoload 单例（见 templates/global_state.gd） |
+| global | 全游戏持久；可存档/读档（粒度见下） | autoload 单例（见 templates/global_state.gd） |
+
+**读取回退链**（写不回退，唯一例外是 scope 缺容器，见下）：
+| 读取 scope | 查找顺序 |
+|-----------|---------|
+| local | ctx 局部变量 → **miss 回落 global 同名变量** → default |
+| scope | 沿树向上找 ScopeVariableContainer → **缺容器时回退读 LOCAL**（并发 error，不再回落 global） |
+| global | 仅查全局服务 → default |
+
+- 写入：local / global 各写各层，无回退；**scope 写缺容器时回退写入 LOCAL**（并发 error）。
+- `has_variable` 的存在性判定同样按 local → global 顺序。
+- （源：core/base/variable_context.gd:89-119,144-161,184-200,238-247）
+
+**global 存档粒度**：全局变量带 `persistent` 标志（默认 false）。两条保存路径粒度不同——
+- 显式 SaveGlobalVariables 指令：`save_scope` 参数可选 **ALL（默认，全部保存）** 或 PERSISTENT_ONLY（仅 persistent）；
+- GlobalVariableAssistant 的自动保存（变更延迟定时器 / 退出清理）**只保存 persistent 变量**；
+- LoadGlobalVariables 整份加载，无范围参数。
+- （源：core/base/base_variable.gd:45；instructions/variables/save_global_variables.gd:42,125-129；core/global_variable_assistant.gd:126-132,406-410,441-470；instructions/variables/load_global_variables.gd:97）
 
 ## 7. 等价性自检表（写完代码逐条对照）
 - [ ] 重触发行为与源一致（默认 SKIP；源配 RESTART 的 binding 是否实现了取消重启）
