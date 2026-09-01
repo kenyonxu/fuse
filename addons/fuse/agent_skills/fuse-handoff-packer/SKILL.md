@@ -76,6 +76,8 @@
 | `components.json` | 收集 preset 中出现的全部 `type` → 从 `fuse_component_schemas.json` 抽对应键为 `{组件名: 参数表}`；从 `fuse_components.json` 按 `type` 键过滤出条目（category / keywords 可读；注意 `description_key` 是本地化键名如 FUSE_INSTRUCTION_..._DESC，不是说明文本，勿直接当描述输出）；枚举值从 `fuse_enums.json` 抽涉及的枚举。**preset 中出现但 schema 缺失的组件**：照常打包 preset 原文，并在 README-for-agent.md 标注"该组件无 schema，按 JSON 原文理解" |
 | `templates/*.gd` | 拷贝用户确认后的模板 |
 
+模板拷贝后对 bundle 内每个 .gd 跑一次 `--check-only` 解析验证（命令与管道纪律同步骤 2），失败即中止并报告。
+
 ### 7 交付
 向用户报告：bundle 路径、内容摘要（单元/事件/变量/断言数）、下一句提示——
 "把该目录交给你的 AI agent；要求它交付前逐条核对 acceptance.md 并回标"。

@@ -46,7 +46,7 @@ func warm_up() -> void:
 ## 从池中取一个实例（池空且未达上限则新建；达上限返回 null）
 func acquire() -> Node:
 	while not _pool.is_empty():
-		var node := _pool.pop_back()
+		var node: Node = _pool.pop_back()
 		if is_instance_valid(node):
 			node.set_process(true)
 			if node is CanvasItem:
