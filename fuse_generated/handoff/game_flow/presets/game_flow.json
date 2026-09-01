@@ -1,0 +1,643 @@
+{
+	"category": "gameplay",
+	"description": "",
+	"display_name": "GameFlow",
+	"event_bindings": [
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"bus": "Music",
+						"continue_during_pause": true,
+						"crossfade_duration": 2.0,
+						"music_path": "uid://bi1lb4nvpv6gn",
+						"type": "CrossfadeToMusic",
+						"volume": 1.0
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"auto_start": true,
+				"emit_repeat_count": false,
+				"interval_seconds": 51.0,
+				"max_interval_seconds": 2.0,
+				"max_repeats": 0,
+				"min_interval_seconds": 0.5,
+				"stop_condition": null,
+				"trigger_on_start": true,
+				"type": "OnInterval",
+				"use_random_interval": false
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_path": "",
+						"load_source": 0,
+						"type": "LoadGlobalVariables"
+					},
+					{
+						"pause_menu_parent": "",
+						"pause_menu_scene": "",
+						"show_pause_menu": false,
+						"type": "PauseGame",
+						"ui_node_path": "../../GameSceneCanvas"
+					},
+					{
+						"custom_scope_id": "",
+						"save_to_scope": 1,
+						"save_to_variable": "start_pos",
+						"scope_source": 0,
+						"target": "../../Game_Layer/PlayerShip",
+						"target_custom_scope_id": "",
+						"target_scope": 0,
+						"target_scope_source": 0,
+						"target_target_node_path": "",
+						"target_variable": "",
+						"type": "GetPosition",
+						"use_global_position": true,
+						"use_variable": false
+					},
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "current_wave",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 0,
+						"save_to_scope": 1,
+						"save_to_variable": "current_wave",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"recursive": false,
+						"result_scope": 1,
+						"result_variable": "spawn_pos",
+						"scope_source": 0,
+						"target_custom_scope_id": "",
+						"target_node": "../../Game_Layer/Markers",
+						"target_scope": 0,
+						"target_scope_source": 0,
+						"target_target_node_path": "",
+						"target_variable": "",
+						"type": "GetAllChildrenPosition",
+						"use_global_position": true,
+						"use_variable_for_target": false
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://bmfgotihlmfkw",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://cq7h6ykrfu4kv",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://ctimwhiu78cr8",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 100,
+						"pool_initial_size": 300,
+						"pool_max_size": 500,
+						"scene_path": "uid://bd83gfasoidja",
+						"type": "WarmUpPool",
+						"warm_up_count": 300,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://b4e65c431qgjd",
+						"type": "WarmUpPool",
+						"warm_up_count": 20,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 100,
+						"scene_path": "uid://pvuvnyrhmc36",
+						"type": "WarmUpPool",
+						"warm_up_count": 10,
+						"warm_up_mode": 1
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 10,
+						"pool_max_size": 10,
+						"scene_path": "uid://c3b28ywrqiogw",
+						"type": "WarmUpPool",
+						"warm_up_count": 3,
+						"warm_up_mode": 0
+					},
+					{
+						"batch_delay": 0.1,
+						"batch_size": 5,
+						"pool_initial_size": 20,
+						"pool_max_size": 30,
+						"scene_path": "uid://dadlwb08j675g",
+						"type": "WarmUpPool",
+						"warm_up_count": 10,
+						"warm_up_mode": 0
+					},
+					{
+						"custom_scope_id": "",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "Wait",
+						"value_source": 0,
+						"wait_time": 0.1
+					},
+					{
+						"context_node_path": "",
+						"custom_scope_id": "",
+						"result_variable_name": "",
+						"result_variable_scope": 0,
+						"scope_source": 0,
+						"store_result": false,
+						"target_node_path": "",
+						"target_runner": "../SpawnEnemy",
+						"type": "RunRunner",
+						"wait_for_completion": true
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"delay_seconds": 0.0,
+				"type": "OnReady"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "enemy_count",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 1,
+						"save_to_scope": 1,
+						"save_to_variable": "enemy_count",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "current_score",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope": 0,
+						"operand_b_scope_source": 0,
+						"operand_b_source": 1,
+						"operand_b_target_node_path": "",
+						"operand_b_variable": "event_score",
+						"operation_type": 0,
+						"save_to_scope": 1,
+						"save_to_variable": "current_score",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"from_scope_source": 0,
+						"from_variable": "current_score",
+						"from_variable_scope": 1,
+						"scope_source": 0,
+						"set_with_another_variable": true,
+						"target_node_path": "",
+						"target_variable": "c_score",
+						"target_variable_scope": 0,
+						"type": "SetVariable"
+					},
+					{
+						"deferred": false,
+						"event_args": {
+							"score": "$c_score"
+						},
+						"event_name": "ScoreUpdate",
+						"type": "SendEvent"
+					},
+					{
+						"condition": {
+							"auto_convert_types": true,
+							"cache_context_changes": true,
+							"cache_duration": 1.0,
+							"case_sensitive": true,
+							"check_with_another_variable": false,
+							"compare_custom_scope_id": "",
+							"compare_scope_source": 0,
+							"compare_target_node_path": "",
+							"compare_variable": "",
+							"compare_variable_scope": 0,
+							"comparison_operator": 3,
+							"custom_scope_id": "",
+							"enable_cache": false,
+							"enabled": true,
+							"expected_value": 1,
+							"hash_all_variables": false,
+							"negate_result": false,
+							"scope_source": 0,
+							"target_node_path": "",
+							"treat_empty_as_null": false,
+							"type": "CheckVariable",
+							"variable_name": "enemy_count",
+							"variable_scope": 1
+						},
+						"instructions": [
+							{
+								"deferred": false,
+								"event_args": {},
+								"event_name": "AllEnemyDied",
+								"type": "SendEvent"
+							}
+						],
+						"sequence_mode": 1,
+						"type": "IfThen"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"event_name": "EnemyDie",
+				"local_var_prefix": "event_",
+				"store_args_to_local": true,
+				"trigger_once": false,
+				"type": "OnReceiveEvent"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "player_life",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 1,
+						"save_to_scope": 1,
+						"save_to_variable": "player_life",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"custom_scope_id": "",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "Wait",
+						"value_source": 0,
+						"wait_time": 0.5
+					},
+					{
+						"pause_menu_parent": "",
+						"pause_menu_scene": "",
+						"show_pause_menu": false,
+						"type": "PauseGame",
+						"ui_node_path": "../../GameSceneCanvas"
+					},
+					{
+						"custom_scope_id": "",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "Wait",
+						"value_source": 0,
+						"wait_time": 0.1
+					},
+					{
+						"condition": {
+							"auto_convert_types": true,
+							"cache_context_changes": true,
+							"cache_duration": 1.0,
+							"case_sensitive": true,
+							"check_with_another_variable": false,
+							"compare_custom_scope_id": "",
+							"compare_scope_source": 0,
+							"compare_target_node_path": "",
+							"compare_variable": "",
+							"compare_variable_scope": 0,
+							"comparison_operator": 3,
+							"custom_scope_id": "",
+							"enable_cache": false,
+							"enabled": true,
+							"expected_value": 0,
+							"hash_all_variables": false,
+							"negate_result": false,
+							"scope_source": 0,
+							"target_node_path": "",
+							"treat_empty_as_null": false,
+							"type": "CheckVariable",
+							"variable_name": "player_life",
+							"variable_scope": 1
+						},
+						"false_instructions": [
+							{
+								"deferred": false,
+								"event_args": {},
+								"event_name": "StartCountDown",
+								"type": "SendEvent"
+							},
+							{
+								"custom_scope_id": "",
+								"scope_source": 0,
+								"target_node_path": "",
+								"type": "Wait",
+								"value_source": 0,
+								"wait_time": 2.0
+							},
+							{
+								"custom_scope_id": "",
+								"parent_node": "",
+								"position_mode": 1,
+								"position_scope": 1,
+								"position_scope_source": 0,
+								"position_variable": "start_pos",
+								"save_instance_id": false,
+								"save_to_scope": 0,
+								"scene_path": "uid://c37gfmeoqbajm",
+								"scope_source": 0,
+								"spawn_offset": "(0.0, 0.0, 0.0)",
+								"spawn_position": "(0.0, 0.0, 0.0)",
+								"target_node_path": "",
+								"target_variable": "instance_id",
+								"type": "InstantiateScene",
+								"use_object_pool": false
+							},
+							{
+								"custom_scope_id": "",
+								"scope_source": 0,
+								"target_node_path": "",
+								"type": "Wait",
+								"value_source": 0,
+								"wait_time": 1.0
+							},
+							{
+								"close_pause_menu": false,
+								"pause_menu_node": "",
+								"type": "ResumeGame",
+								"ui_node_path": "../../GameSceneCanvas"
+							}
+						],
+						"sequence_mode": 1,
+						"true_instructions": [
+							{
+								"condition": {
+									"auto_convert_types": true,
+									"cache_context_changes": true,
+									"cache_duration": 1.0,
+									"case_sensitive": true,
+									"check_with_another_variable": false,
+									"compare_custom_scope_id": "",
+									"compare_scope_source": 0,
+									"compare_target_node_path": "",
+									"compare_variable": "",
+									"compare_variable_scope": 0,
+									"comparison_operator": 2,
+									"custom_scope_id": "",
+									"enable_cache": false,
+									"enabled": true,
+									"expected_value": 0,
+									"hash_all_variables": false,
+									"negate_result": false,
+									"scope_source": 0,
+									"target_node_path": "",
+									"treat_empty_as_null": false,
+									"type": "CheckVariable",
+									"variable_name": "current_score",
+									"variable_scope": 1
+								},
+								"instructions": [
+									{
+										"array_custom_scope_id": "",
+										"array_scope": 2,
+										"array_scope_source": 0,
+										"array_target_node_path": "",
+										"array_variable": "score_list",
+										"element_custom_scope_id": "",
+										"element_from_variable": "current_score",
+										"element_from_variable_scope": 1,
+										"element_scope_source": 0,
+										"element_target_node_path": "",
+										"element_value": null,
+										"group_name": "",
+										"source_type": 0,
+										"target_node_path": "",
+										"type": "ArrayAdd",
+										"use_element_from_variable": true
+									}
+								],
+								"sequence_mode": 1,
+								"type": "IfThen"
+							},
+							{
+								"deferred": false,
+								"event_args": {
+									"end": "loss"
+								},
+								"event_name": "GameEnd",
+								"type": "SendEvent"
+							}
+						],
+						"type": "IfElse"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"event_name": "PlayerDie",
+				"local_var_prefix": "event_",
+				"store_args_to_local": true,
+				"trigger_once": false,
+				"type": "OnReceiveEvent"
+			}
+		},
+		{
+			"action_runner": {
+				"execution_mode": 0,
+				"instructions": [
+					{
+						"custom_scope_id": "",
+						"operand_a_custom_scope_id": "",
+						"operand_a_scope": 1,
+						"operand_a_scope_source": 0,
+						"operand_a_source": 1,
+						"operand_a_variable": "current_wave",
+						"operand_b_custom_scope_id": "",
+						"operand_b_scope_source": 0,
+						"operand_b_source": 0,
+						"operand_b_target_node_path": "",
+						"operand_b_value": 1.0,
+						"operation_type": 0,
+						"save_to_scope": 1,
+						"save_to_variable": "current_wave",
+						"scope_source": 0,
+						"target_node_path": "",
+						"type": "MathOperation"
+					},
+					{
+						"condition": {
+							"auto_convert_types": true,
+							"cache_context_changes": true,
+							"cache_duration": 1.0,
+							"case_sensitive": true,
+							"check_with_another_variable": false,
+							"compare_custom_scope_id": "",
+							"compare_scope_source": 0,
+							"compare_target_node_path": "",
+							"compare_variable": "",
+							"compare_variable_scope": 0,
+							"comparison_operator": 5,
+							"custom_scope_id": "",
+							"enable_cache": false,
+							"enabled": true,
+							"expected_value": 3,
+							"hash_all_variables": false,
+							"negate_result": false,
+							"scope_source": 0,
+							"target_node_path": "",
+							"treat_empty_as_null": false,
+							"type": "CheckVariable",
+							"variable_name": "current_wave",
+							"variable_scope": 1
+						},
+						"false_instructions": [
+							{
+								"deferred": false,
+								"event_args": {
+									"end": "win"
+								},
+								"event_name": "GameEnd",
+								"type": "SendEvent"
+							}
+						],
+						"sequence_mode": 1,
+						"true_instructions": [
+							{
+								"pause_menu_parent": "",
+								"pause_menu_scene": "",
+								"show_pause_menu": false,
+								"type": "PauseGame",
+								"ui_node_path": "../../GameSceneCanvas"
+							},
+							{
+								"context_node_path": "",
+								"custom_scope_id": "",
+								"result_variable_name": "",
+								"result_variable_scope": 0,
+								"scope_source": 0,
+								"store_result": false,
+								"target_node_path": "",
+								"target_runner": "../SpawnEnemy",
+								"type": "RunRunner",
+								"wait_for_completion": false
+							}
+						],
+						"type": "IfElse"
+					}
+				]
+			},
+			"binding_config": {
+				"cooldown_mode": 0,
+				"cooldown_time": 1.0,
+				"enabled": true,
+				"trigger_once": false
+			},
+			"event": {
+				"event_name": "AllEnemyDied",
+				"local_var_prefix": "event_",
+				"store_args_to_local": false,
+				"trigger_once": false,
+				"type": "OnReceiveEvent"
+			}
+		}
+	],
+	"format_version": "2.0",
+	"icon_name": "",
+	"level": "L4",
+	"trigger_config": {
+		"use_parallel_condition_evaluation": true
+	},
+	"variables": {
+		"global": [],
+		"local": [],
+		"scope": []
+	}
+}

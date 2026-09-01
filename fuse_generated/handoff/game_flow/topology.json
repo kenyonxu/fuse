@@ -1,0 +1,2895 @@
+{
+	"cross_references": [
+		{
+			"detail": "RunRunner",
+			"from": "GameFlow",
+			"to": "SpawnEnemy",
+			"type": "run"
+		},
+		{
+			"detail": "score_list",
+			"from": "GameFlow",
+			"from_mode": "read_write",
+			"to": "OnGameEnd",
+			"to_mode": "read",
+			"type": "variable_write_to_read"
+		}
+	],
+	"exported_at": "2026-09-01T12:34:52",
+	"scene_name": "GameScene",
+	"source_scene": "res://demos/fuse/brickian/game_scene.tscn",
+	"triggers": [
+		{
+			"event": {
+				"resource_name": "间隔执行: 50.0s - 自动开始 立即触发 无限重复",
+				"type": "OnInterval"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "移动到 [..] (0.0, 900.0) (本地) (50.00s)",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "TweenMoveTo",
+						"resource_name": "移动到 [..] (0.0, 900.0) (本地) (50.00s)"
+					},
+					"name": "移动到 [..] (0.0, 900.0) (本地) (50.00s)"
+				}
+			],
+			"is_nested": false,
+			"kind": "trigger",
+			"nodes": [
+				".."
+			],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "Trigger",
+			"trigger_path": "GameScene/BG_Layer/Dynamic/RedPlanet/Trigger",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {
+				"resource_name": "当 任何物体 进入 .. 时触发",
+				"type": "OnArea2DEnter"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "设置变量 [ID:EnemyManager] 'MoveDirect' = false",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetVariable",
+						"resource_name": "设置变量 [ID:EnemyManager] 'MoveDirect' = false"
+					},
+					"name": "设置变量 [ID:EnemyManager] 'MoveDirect' = false"
+				}
+			],
+			"is_nested": false,
+			"kind": "trigger",
+			"nodes": [
+				".."
+			],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "OnArea2DEnter",
+			"trigger_path": "GameScene/Game_Layer/LevelBoundry/BoundryLeft/OnArea2DEnter",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": [
+					{
+						"mode": "write",
+						"name": "MoveDirect",
+						"scope_id": "EnemyManager",
+						"source": 1,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "当 任何物体 进入 .. 时触发",
+				"type": "OnArea2DEnter"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "设置变量 [ID:EnemyManager] 'MoveDirect' = true",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetVariable",
+						"resource_name": "设置变量 [ID:EnemyManager] 'MoveDirect' = true"
+					},
+					"name": "设置变量 [ID:EnemyManager] 'MoveDirect' = true"
+				}
+			],
+			"is_nested": false,
+			"kind": "trigger",
+			"nodes": [
+				".."
+			],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "OnArea2DEnter",
+			"trigger_path": "GameScene/Game_Layer/LevelBoundry/BoundryRight/OnArea2DEnter",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": [
+					{
+						"mode": "write",
+						"name": "MoveDirect",
+						"scope_id": "EnemyManager",
+						"source": 1,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "On Ready With Delay: 0.1",
+				"type": "OnReady"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "打印: Hello, World!",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "Print",
+						"resource_name": "打印: Hello, World!"
+					},
+					"name": "打印: Hello, World!"
+				}
+			],
+			"is_nested": false,
+			"kind": "trigger",
+			"nodes": [],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "OnReady",
+			"trigger_path": "GameScene/Game_Layer/EnemyFormation/Logic/OnReady",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {
+				"resource_name": "间隔执行: 1.0s - 自动开始 间隔后触发 无限重复",
+				"type": "OnInterval"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "If/Else MoveDirect [最近作用域] EQUALS false [真:1 [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "相对移动 '../..' [局部] 偏移 (0.0",
+					"prefix": "  "
+				},
+				{
+					"name": "相对移动 '../..' [局部] 偏移 (0.0",
+					"prefix": "  "
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {
+						"else": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "MoveBy",
+									"resource_name": "相对移动 '../..' [局部] 偏移 (0.0"
+								},
+								"name": "相对移动 '../..' [局部] 偏移 (0.0"
+							}
+						],
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "MoveBy",
+									"resource_name": "相对移动 '../..' [局部] 偏移 (0.0"
+								},
+								"name": "相对移动 '../..' [局部] 偏移 (0.0"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfElse",
+						"resource_name": "If/Else MoveDirect [最近作用域] EQUALS false [真:1 [异步]"
+					},
+					"name": "If/Else MoveDirect [最近作用域] EQUALS false [真:1 [异步]"
+				}
+			],
+			"is_nested": false,
+			"kind": "trigger",
+			"nodes": [
+				"../.."
+			],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "MoveOnInterval",
+			"trigger_path": "GameScene/Game_Layer/EnemyFormation/Logic/MoveOnInterval",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": [
+					{
+						"mode": "read",
+						"name": "MoveDirect",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "变量间隔: 变量: interval 默认: 默认: 1.5s - 自动初始化变量 自动开始 间隔后触发 无限重复",
+				"type": "OnIntervalWithVariable"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "条件检查: ANY (2 个条件) (真:停止执行",
+					"prefix": ""
+				},
+				{
+					"name": "If/Then current_wave [ID:GameManager] EQUALS 3 [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "设置变量 [[本地]] 'target_interval' = 0.5",
+					"prefix": "  "
+				},
+				{
+					"name": "If/Then current_wave [ID:GameManager] EQUALS 2 [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "设置变量 [[本地]] 'target_interval' = 1.0",
+					"prefix": "  "
+				},
+				{
+					"name": "If/Then current_wave [ID:GameManager] EQUALS 1 [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "设置变量 [[本地]] 'target_interval' = 1.5",
+					"prefix": "  "
+				},
+				{
+					"name": "获取子节点数量 → Enemies → current_enemy [[本地]]",
+					"prefix": ""
+				},
+				{
+					"name": "'{local:target_interval} - (...' → interval [Float]",
+					"prefix": ""
+				},
+				{
+					"name": "查找节点 [按名称] (未指定搜索值) 在子节点中 -> [未指定变量]",
+					"prefix": ""
+				},
+				{
+					"name": "获取位置 player [LOCAL] → player_pos [LOCAL]",
+					"prefix": ""
+				},
+				{
+					"name": "随机点 [2D] @[player_pos] ±(100, 100) → player_pos [最近作用域]",
+					"prefix": ""
+				},
+				{
+					"name": "获取随机子节点 → Enemies → child [[本地]]",
+					"prefix": ""
+				},
+				{
+					"name": "获取位置 child [LOCAL] → child_pos [LOCAL]",
+					"prefix": ""
+				},
+				{
+					"name": "实例化 'enemy_bullet.tscn' 从变量 [[本地]] child_pos 偏移 (0.0 [池化]",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "RunConditionCheck",
+						"resource_name": "条件检查: ANY (2 个条件) (真:停止执行"
+					},
+					"name": "条件检查: ANY (2 个条件) (真:停止执行"
+				},
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "SetVariable",
+									"resource_name": "设置变量 [[本地]] 'target_interval' = 0.5"
+								},
+								"name": "设置变量 [[本地]] 'target_interval' = 0.5"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then current_wave [ID:GameManager] EQUALS 3 [1 个指令] [异步]"
+					},
+					"name": "If/Then current_wave [ID:GameManager] EQUALS 3 [1 个指令] [异步]"
+				},
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "SetVariable",
+									"resource_name": "设置变量 [[本地]] 'target_interval' = 1.0"
+								},
+								"name": "设置变量 [[本地]] 'target_interval' = 1.0"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then current_wave [ID:GameManager] EQUALS 2 [1 个指令] [异步]"
+					},
+					"name": "If/Then current_wave [ID:GameManager] EQUALS 2 [1 个指令] [异步]"
+				},
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "SetVariable",
+									"resource_name": "设置变量 [[本地]] 'target_interval' = 1.5"
+								},
+								"name": "设置变量 [[本地]] 'target_interval' = 1.5"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then current_wave [ID:GameManager] EQUALS 1 [1 个指令] [异步]"
+					},
+					"name": "If/Then current_wave [ID:GameManager] EQUALS 1 [1 个指令] [异步]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetChildCount",
+						"resource_name": "获取子节点数量 → Enemies → current_enemy [[本地]]"
+					},
+					"name": "获取子节点数量 → Enemies → current_enemy [[本地]]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "MathExpression",
+						"resource_name": "'{local:target_interval} - (...' → interval [Float]"
+					},
+					"name": "'{local:target_interval} - (...' → interval [Float]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "FindNode",
+						"resource_name": "查找节点 [按名称] (未指定搜索值) 在子节点中 -> [未指定变量]"
+					},
+					"name": "查找节点 [按名称] (未指定搜索值) 在子节点中 -> [未指定变量]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetPosition",
+						"resource_name": "获取位置 player [LOCAL] → player_pos [LOCAL]"
+					},
+					"name": "获取位置 player [LOCAL] → player_pos [LOCAL]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetRandomPointInRange",
+						"resource_name": "随机点 [2D] @[player_pos] ±(100, 100) → player_pos [最近作用域]"
+					},
+					"name": "随机点 [2D] @[player_pos] ±(100, 100) → player_pos [最近作用域]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetRandomChild",
+						"resource_name": "获取随机子节点 → Enemies → child [[本地]]"
+					},
+					"name": "获取随机子节点 → Enemies → child [[本地]]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetPosition",
+						"resource_name": "获取位置 child [LOCAL] → child_pos [LOCAL]"
+					},
+					"name": "获取位置 child [LOCAL] → child_pos [LOCAL]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "InstantiateScene",
+						"resource_name": "实例化 'enemy_bullet.tscn' 从变量 [[本地]] child_pos 偏移 (0.0 [池化]"
+					},
+					"name": "实例化 'enemy_bullet.tscn' 从变量 [[本地]] child_pos 偏移 (0.0 [池化]"
+				}
+			],
+			"is_nested": false,
+			"kind": "trigger",
+			"nodes": [
+				"../../Enemies"
+			],
+			"provided_locals": [
+				"interval"
+			],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "RandomFireOnInterval",
+			"trigger_path": "GameScene/Game_Layer/EnemyFormation/Logic/RandomFireOnInterval",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "read_write",
+						"name": "interval",
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "write",
+						"name": "target_interval",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "target_interval",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "target_interval",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "current_enemy",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "write",
+						"name": "current_enemy",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "write",
+						"name": "interval",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "write",
+						"name": "interval",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read_write",
+						"name": "player",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "read_write",
+						"name": "player",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "read",
+						"name": "player",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "player_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read",
+						"name": "player",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "player_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read",
+						"name": "player_pos",
+						"source_prop": "origin_variable"
+					},
+					{
+						"mode": "read",
+						"name": "player_pos",
+						"source_prop": "origin_variable"
+					},
+					{
+						"mode": "write",
+						"name": "child",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "write",
+						"name": "child",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "read",
+						"name": "child",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "child_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read",
+						"name": "child",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "child_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read",
+						"name": "child_pos",
+						"source_prop": "position_variable"
+					},
+					{
+						"mode": "read",
+						"name": "child_pos",
+						"source_prop": "position_variable"
+					}
+				],
+				"scope": [
+					{
+						"mode": "read",
+						"name": "current_wave",
+						"scope_id": "GameManager",
+						"source": 1,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "current_wave",
+						"scope_id": "GameManager",
+						"source": 1,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "current_wave",
+						"scope_id": "GameManager",
+						"source": 1,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "write",
+						"name": "player_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "write",
+						"name": "player_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "当指定的任意输入动作被按下时触发。发出合并后的输入向量。 [左, 右] (30 FPS)",
+				"type": "OnInputActionComposite"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "设置变量 [最近作用域] 'input_dir' 从'input_vector [[本地]]'复制",
+					"prefix": ""
+				},
+				{
+					"name": "If/Then input_vector [[本地]] NOT_EQUALS (0.0, 0.0) [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "移动 ../../.. 直接 速度: 200.0",
+					"prefix": "  "
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetVariable",
+						"resource_name": "设置变量 [最近作用域] 'input_dir' 从'input_vector [[本地]]'复制"
+					},
+					"name": "设置变量 [最近作用域] 'input_dir' 从'input_vector [[本地]]'复制"
+				},
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "MoveCharacterBody2DComposite",
+									"resource_name": "移动 ../../.. 直接 速度: 200.0"
+								},
+								"name": "移动 ../../.. 直接 速度: 200.0"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then input_vector [[本地]] NOT_EQUALS (0.0, 0.0) [1 个指令] [异步]"
+					},
+					"name": "If/Then input_vector [[本地]] NOT_EQUALS (0.0, 0.0) [1 个指令] [异步]"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../../.."
+			],
+			"provided_locals": [
+				"input_vector",
+				"last_input_vector"
+			],
+			"scene_source": "PlayerShip",
+			"signals": [],
+			"trigger_name": "Movement",
+			"trigger_path": "GameScene/Game_Layer/PlayerShip/Logic/Control/Movement",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "read",
+						"name": "input_vector",
+						"source_prop": "from_variable"
+					},
+					{
+						"mode": "read",
+						"name": "input_vector",
+						"source_prop": "variable_name"
+					}
+				],
+				"scope": [
+					{
+						"mode": "write",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "输入动作: Jump [刚按下时]",
+				"type": "OnInputAction"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "获取位置 ../../.. → ship_position [LOCAL]",
+					"prefix": ""
+				},
+				{
+					"name": "设置变量 [最近作用域] 'instance_id' = 0",
+					"prefix": ""
+				},
+				{
+					"name": "实例化 'player_ship_bullet.tscn' 从变量 [[本地]] ship_position 偏移 (0.0 → instance_id [最近作用域] [池化]",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetPosition",
+						"resource_name": "获取位置 ../../.. → ship_position [LOCAL]"
+					},
+					"name": "获取位置 ../../.. → ship_position [LOCAL]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetVariable",
+						"resource_name": "设置变量 [最近作用域] 'instance_id' = 0"
+					},
+					"name": "设置变量 [最近作用域] 'instance_id' = 0"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "InstantiateScene",
+						"resource_name": "实例化 'player_ship_bullet.tscn' 从变量 [[本地]] ship_position 偏移 (0.0 → instance_id [最近作用域] [池化]"
+					},
+					"name": "实例化 'player_ship_bullet.tscn' 从变量 [[本地]] ship_position 偏移 (0.0 → instance_id [最近作用域] [池化]"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../../.."
+			],
+			"provided_locals": [],
+			"scene_source": "PlayerShip",
+			"signals": [],
+			"trigger_name": "Fire",
+			"trigger_path": "GameScene/Game_Layer/PlayerShip/Logic/Control/Fire",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "write",
+						"name": "ship_position",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "write",
+						"name": "ship_position",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read",
+						"name": "ship_position",
+						"source_prop": "position_variable"
+					},
+					{
+						"mode": "read",
+						"name": "ship_position",
+						"source_prop": "position_variable"
+					}
+				],
+				"scope": [
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: PlayerHit",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "获取位置 ../../.. → my_pos [LOCAL]",
+					"prefix": ""
+				},
+				{
+					"name": "实例化 'bullet_explode.tscn' 从变量 [[本地]] my_pos [池化]",
+					"prefix": ""
+				},
+				{
+					"name": "发送事件: PlayerDie",
+					"prefix": ""
+				},
+				{
+					"name": "释放 '../../..'",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetPosition",
+						"resource_name": "获取位置 ../../.. → my_pos [LOCAL]"
+					},
+					"name": "获取位置 ../../.. → my_pos [LOCAL]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "InstantiateScene",
+						"resource_name": "实例化 'bullet_explode.tscn' 从变量 [[本地]] my_pos [池化]"
+					},
+					"name": "实例化 'bullet_explode.tscn' 从变量 [[本地]] my_pos [池化]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SendEvent",
+						"resource_name": "发送事件: PlayerDie"
+					},
+					"name": "发送事件: PlayerDie"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "QueueFreeNode",
+						"resource_name": "释放 '../../..'"
+					},
+					"name": "释放 '../../..'"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../../.."
+			],
+			"provided_locals": [],
+			"scene_source": "PlayerShip",
+			"signals": [],
+			"trigger_name": "OnHit",
+			"trigger_path": "GameScene/Game_Layer/PlayerShip/Logic/Control/OnHit",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "write",
+						"name": "my_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "write",
+						"name": "my_pos",
+						"source_prop": "save_to_variable"
+					},
+					{
+						"mode": "read",
+						"name": "my_pos",
+						"source_prop": "position_variable"
+					},
+					{
+						"mode": "read",
+						"name": "my_pos",
+						"source_prop": "position_variable"
+					}
+				],
+				"scope": [
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "间隔执行: 0.033s - 自动开始 间隔后触发 无限重复",
+				"type": "OnInterval"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "If/Then input_dir.x > 0.0 [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个",
+					"prefix": "  "
+				},
+				{
+					"name": "If/Then input_dir.x < 0.0 [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个",
+					"prefix": "  "
+				},
+				{
+					"name": "If/Then input_dir.x == 0.0 [1 个指令] [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个",
+					"prefix": "  "
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "RunTargetNodeFunction",
+									"resource_name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个"
+								},
+								"name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then input_dir.x > 0.0 [1 个指令] [异步]"
+					},
+					"name": "If/Then input_dir.x > 0.0 [1 个指令] [异步]"
+				},
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "RunTargetNodeFunction",
+									"resource_name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个"
+								},
+								"name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then input_dir.x < 0.0 [1 个指令] [异步]"
+					},
+					"name": "If/Then input_dir.x < 0.0 [1 个指令] [异步]"
+				},
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "RunTargetNodeFunction",
+									"resource_name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个"
+								},
+								"name": "运行节点函数 → PlayerShipVisual 调用: play 参数: 3 个"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then input_dir.x == 0.0 [1 个指令] [异步]"
+					},
+					"name": "If/Then input_dir.x == 0.0 [1 个指令] [异步]"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../../../PlayerShipVisual"
+			],
+			"provided_locals": [],
+			"scene_source": "PlayerShip",
+			"signals": [],
+			"trigger_name": "ChangeVisualByDirection",
+			"trigger_path": "GameScene/Game_Layer/PlayerShip/Logic/Visual/ChangeVisualByDirection",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": [
+					{
+						"mode": "read",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "input_dir",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "variable_name"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: PlayerDie",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "If/Then player_life [ID:GameManager] GREATER_THAN -1 [2 个指令] [同步]",
+					"prefix": ""
+				},
+				{
+					"name": "获取最后子节点 → PlayerLife → target [[本地]]",
+					"prefix": "  "
+				},
+				{
+					"name": "释放 target [[本地]]",
+					"prefix": "  "
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "GetLastChild",
+									"resource_name": "获取最后子节点 → PlayerLife → target [[本地]]"
+								},
+								"name": "获取最后子节点 → PlayerLife → target [[本地]]"
+							},
+							{
+								"children": {},
+								"inst": {
+									"__object__": "QueueFreeNode",
+									"resource_name": "释放 target [[本地]]"
+								},
+								"name": "释放 target [[本地]]"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfThen",
+						"resource_name": "If/Then player_life [ID:GameManager] GREATER_THAN -1 [2 个指令] [同步]"
+					},
+					"name": "If/Then player_life [ID:GameManager] GREATER_THAN -1 [2 个指令] [同步]"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../../PlayerLife"
+			],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnPlayerDie",
+			"trigger_path": "GameScene/GameSceneCanvas/HUD/MarginContainer/HBoxContainer/logic/OnPlayerDie",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "write",
+						"name": "target",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "write",
+						"name": "target",
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "read",
+						"name": "target",
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "read",
+						"name": "target",
+						"source_prop": "target_variable"
+					}
+				],
+				"scope": [
+					{
+						"mode": "read",
+						"name": "player_life",
+						"scope_id": "GameManager",
+						"source": 1,
+						"source_prop": "variable_name"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: PlayerAdd",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [],
+			"instructions_tree": [],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnPlayerAdd",
+			"trigger_path": "GameScene/GameSceneCanvas/HUD/MarginContainer/HBoxContainer/logic/OnPlayerAdd",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: ScoreUpdate",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "设置文本 → CurrentScore (event_score [LOCAL])",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetUIText",
+						"resource_name": "设置文本 → CurrentScore (event_score [LOCAL])"
+					},
+					"name": "设置文本 → CurrentScore (event_score [LOCAL])"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../../Score/CurrentScore"
+			],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnScoreUpdate",
+			"trigger_path": "GameScene/GameSceneCanvas/HUD/MarginContainer/HBoxContainer/logic/OnScoreUpdate",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "read_write",
+						"name": "event_score",
+						"source_prop": "text_variable"
+					},
+					{
+						"mode": "read_write",
+						"name": "event_score",
+						"source_prop": "text_variable"
+					}
+				],
+				"scope": []
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: StartCountDown",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "显示 UI → ..",
+					"prefix": ""
+				},
+				{
+					"name": "设置文本 → CountDownText (直接文本)",
+					"prefix": ""
+				},
+				{
+					"name": "等待 1.0 秒",
+					"prefix": ""
+				},
+				{
+					"name": "设置文本 → CountDownText (直接文本)",
+					"prefix": ""
+				},
+				{
+					"name": "等待 1.0 秒",
+					"prefix": ""
+				},
+				{
+					"name": "设置文本 → CountDownText (直接文本)",
+					"prefix": ""
+				},
+				{
+					"name": "等待 1.0 秒",
+					"prefix": ""
+				},
+				{
+					"name": "设置文本 → CountDownText (直接文本)",
+					"prefix": ""
+				},
+				{
+					"name": "显示 UI → ..",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "ShowHideUI",
+						"resource_name": "显示 UI → .."
+					},
+					"name": "显示 UI → .."
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetUIText",
+						"resource_name": "设置文本 → CountDownText (直接文本)"
+					},
+					"name": "设置文本 → CountDownText (直接文本)"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "Wait",
+						"resource_name": "等待 1.0 秒"
+					},
+					"name": "等待 1.0 秒"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetUIText",
+						"resource_name": "设置文本 → CountDownText (直接文本)"
+					},
+					"name": "设置文本 → CountDownText (直接文本)"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "Wait",
+						"resource_name": "等待 1.0 秒"
+					},
+					"name": "等待 1.0 秒"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetUIText",
+						"resource_name": "设置文本 → CountDownText (直接文本)"
+					},
+					"name": "设置文本 → CountDownText (直接文本)"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "Wait",
+						"resource_name": "等待 1.0 秒"
+					},
+					"name": "等待 1.0 秒"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SetUIText",
+						"resource_name": "设置文本 → CountDownText (直接文本)"
+					},
+					"name": "设置文本 → CountDownText (直接文本)"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "ShowHideUI",
+						"resource_name": "显示 UI → .."
+					},
+					"name": "显示 UI → .."
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"..",
+				"../CountDownText"
+			],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnStartCountDown",
+			"trigger_path": "GameScene/GameSceneCanvas/CountDown/OnStartCountDown",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: GameEnd",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "保存全局变量 [助手资源] [仅持久化]",
+					"prefix": ""
+				},
+				{
+					"name": "If/Else event_end [[本地]] EQUALS win [真:1 [异步]",
+					"prefix": ""
+				},
+				{
+					"name": "设置文本 → Label (直接文本)",
+					"prefix": "  "
+				},
+				{
+					"name": "设置文本 → Label (直接文本)",
+					"prefix": "  "
+				},
+				{
+					"name": "显示 UI → ..",
+					"prefix": ""
+				},
+				{
+					"name": "打印变量 'score_list' [[全局]]",
+					"prefix": ""
+				},
+				{
+					"name": "For Each (score_list) -> item 索引=index [0 个指令]",
+					"prefix": ""
+				},
+				{
+					"name": "实例化 'score_entry.tscn' 到 ScoreList 在位置 (0.0 [池化]",
+					"prefix": "  "
+				},
+				{
+					"name": "等待 0.1 秒",
+					"prefix": "  "
+				},
+				{
+					"name": "发送事件: score_spawn",
+					"prefix": "  "
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SaveGlobalVariables",
+						"resource_name": "保存全局变量 [助手资源] [仅持久化]"
+					},
+					"name": "保存全局变量 [助手资源] [仅持久化]"
+				},
+				{
+					"children": {
+						"else": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "SetUIText",
+									"resource_name": "设置文本 → Label (直接文本)"
+								},
+								"name": "设置文本 → Label (直接文本)"
+							}
+						],
+						"then": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "SetUIText",
+									"resource_name": "设置文本 → Label (直接文本)"
+								},
+								"name": "设置文本 → Label (直接文本)"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "IfElse",
+						"resource_name": "If/Else event_end [[本地]] EQUALS win [真:1 [异步]"
+					},
+					"name": "If/Else event_end [[本地]] EQUALS win [真:1 [异步]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "ShowHideUI",
+						"resource_name": "显示 UI → .."
+					},
+					"name": "显示 UI → .."
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "PrintVariableValue",
+						"resource_name": "打印变量 'score_list' [[全局]]"
+					},
+					"name": "打印变量 'score_list' [[全局]]"
+				},
+				{
+					"children": {
+						"loop": [
+							{
+								"children": {},
+								"inst": {
+									"__object__": "InstantiateScene",
+									"resource_name": "实例化 'score_entry.tscn' 到 ScoreList 在位置 (0.0 [池化]"
+								},
+								"name": "实例化 'score_entry.tscn' 到 ScoreList 在位置 (0.0 [池化]"
+							},
+							{
+								"children": {},
+								"inst": {
+									"__object__": "Wait",
+									"resource_name": "等待 0.1 秒"
+								},
+								"name": "等待 0.1 秒"
+							},
+							{
+								"children": {},
+								"inst": {
+									"__object__": "SendEvent",
+									"resource_name": "发送事件: score_spawn"
+								},
+								"name": "发送事件: score_spawn"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "ForEach",
+						"resource_name": "For Each (score_list) -> item 索引=index [0 个指令]"
+					},
+					"name": "For Each (score_list) -> item 索引=index [0 个指令]"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				"../Label",
+				"..",
+				"../MarginContainer/ScoreList"
+			],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnGameEnd",
+			"trigger_path": "GameScene/GameSceneCanvas/GameEnd/OnGameEnd",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [
+					{
+						"mode": "read",
+						"name": "score_list",
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "score_list",
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "score_list",
+						"source_prop": "array_variable"
+					},
+					{
+						"mode": "read",
+						"name": "score_list",
+						"source_prop": "array_variable"
+					}
+				],
+				"local": [
+					{
+						"mode": "read",
+						"name": "event_end",
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "write",
+						"name": "item",
+						"source_prop": "item_variable"
+					},
+					{
+						"mode": "write",
+						"name": "index",
+						"source_prop": "index_variable"
+					},
+					{
+						"mode": "write",
+						"name": "item",
+						"source_prop": "item_variable"
+					},
+					{
+						"mode": "write",
+						"name": "index",
+						"source_prop": "index_variable"
+					}
+				],
+				"scope": [
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					}
+				]
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: ShowWave",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "显示 UI → ..",
+					"prefix": ""
+				},
+				{
+					"name": "淡入 [..] alpha: 0.0→1.0 (0.50s)",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "ShowHideUI",
+						"resource_name": "显示 UI → .."
+					},
+					"name": "显示 UI → .."
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "TweenFadeIn",
+						"resource_name": "淡入 [..] alpha: 0.0→1.0 (0.50s)"
+					},
+					"name": "淡入 [..] alpha: 0.0→1.0 (0.50s)"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				".."
+			],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnShowWave",
+			"trigger_path": "GameScene/GameSceneCanvas/WaveIncoming/OnShowWave",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {
+				"resource_name": "接收事件: HideWave",
+				"type": "OnReceiveEvent"
+			},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "显示 UI → ..",
+					"prefix": ""
+				},
+				{
+					"name": "淡出 [..] (0.50s)",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "ShowHideUI",
+						"resource_name": "显示 UI → .."
+					},
+					"name": "显示 UI → .."
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "TweenFadeOut",
+						"resource_name": "淡出 [..] (0.50s)"
+					},
+					"name": "淡出 [..] (0.50s)"
+				}
+			],
+			"is_nested": true,
+			"kind": "trigger",
+			"nodes": [
+				".."
+			],
+			"provided_locals": [],
+			"scene_source": "GameSceneCanvas",
+			"signals": [],
+			"trigger_name": "OnHideWave",
+			"trigger_path": "GameScene/GameSceneCanvas/WaveIncoming/OnHideWave",
+			"trigger_type": "Trigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {},
+			"event_bindings": [
+				{
+					"enabled": true,
+					"event": {
+						"resource_name": "间隔执行: 25.0s - 自动开始 立即触发 无限重复",
+						"type": "OnInterval"
+					},
+					"index": 0,
+					"instructions_flat": [
+						{
+							"name": "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)",
+							"prefix": ""
+						}
+					],
+					"instructions_tree": [
+						{
+							"children": {},
+							"inst": {
+								"__object__": "CrossfadeToMusic",
+								"resource_name": "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)"
+							},
+							"name": "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)"
+						}
+					],
+					"nodes": [],
+					"provided_locals": [],
+					"variables": {
+						"global": [],
+						"local": [],
+						"scope": []
+					}
+				},
+				{
+					"enabled": true,
+					"event": {
+						"resource_name": "On Ready With Delay: 0.0",
+						"type": "OnReady"
+					},
+					"index": 1,
+					"instructions_flat": [
+						{
+							"name": "加载全局变量 [助手资源]",
+							"prefix": ""
+						},
+						{
+							"name": "暂停游戏 (仅暂停)",
+							"prefix": ""
+						},
+						{
+							"name": "获取位置 PlayerShip → start_pos [SCOPE] [最近作用域]",
+							"prefix": ""
+						},
+						{
+							"name": "current_wave [SCOPE] + 1.0",
+							"prefix": ""
+						},
+						{
+							"name": "获取子节点位置 Markers [global] → spawn_pos [SCOPE] [最近作用域]",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'player_ship_bullet.tscn' ×20 [分批: 5/批",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'bullet_explode.tscn' ×20 [分批: 5/批",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'enemy_explode.tscn' ×20 [分批: 5/批",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'enemy_bullet.tscn' ×300 [分批: 100/批",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'bullet_explode_enemy.tscn' ×20 [分批: 5/批",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'score_entry.tscn' ×10 [分批: 5/批",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'enemy_ship_01.tscn' ×3",
+							"prefix": ""
+						},
+						{
+							"name": "预热 'enemy_ship_03.tscn' ×10",
+							"prefix": ""
+						},
+						{
+							"name": "等待 0.1 秒",
+							"prefix": ""
+						},
+						{
+							"name": "运行 Runner '../SpawnEnemy' 等待完成",
+							"prefix": ""
+						}
+					],
+					"instructions_tree": [
+						{
+							"children": {},
+							"inst": {
+								"__object__": "LoadGlobalVariables",
+								"resource_name": "加载全局变量 [助手资源]"
+							},
+							"name": "加载全局变量 [助手资源]"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "PauseGame",
+								"resource_name": "暂停游戏 (仅暂停)"
+							},
+							"name": "暂停游戏 (仅暂停)"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "GetPosition",
+								"resource_name": "获取位置 PlayerShip → start_pos [SCOPE] [最近作用域]"
+							},
+							"name": "获取位置 PlayerShip → start_pos [SCOPE] [最近作用域]"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "MathOperation",
+								"resource_name": "current_wave [SCOPE] + 1.0"
+							},
+							"name": "current_wave [SCOPE] + 1.0"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "GetAllChildrenPosition",
+								"resource_name": "获取子节点位置 Markers [global] → spawn_pos [SCOPE] [最近作用域]"
+							},
+							"name": "获取子节点位置 Markers [global] → spawn_pos [SCOPE] [最近作用域]"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'player_ship_bullet.tscn' ×20 [分批: 5/批"
+							},
+							"name": "预热 'player_ship_bullet.tscn' ×20 [分批: 5/批"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'bullet_explode.tscn' ×20 [分批: 5/批"
+							},
+							"name": "预热 'bullet_explode.tscn' ×20 [分批: 5/批"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'enemy_explode.tscn' ×20 [分批: 5/批"
+							},
+							"name": "预热 'enemy_explode.tscn' ×20 [分批: 5/批"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'enemy_bullet.tscn' ×300 [分批: 100/批"
+							},
+							"name": "预热 'enemy_bullet.tscn' ×300 [分批: 100/批"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'bullet_explode_enemy.tscn' ×20 [分批: 5/批"
+							},
+							"name": "预热 'bullet_explode_enemy.tscn' ×20 [分批: 5/批"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'score_entry.tscn' ×10 [分批: 5/批"
+							},
+							"name": "预热 'score_entry.tscn' ×10 [分批: 5/批"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'enemy_ship_01.tscn' ×3"
+							},
+							"name": "预热 'enemy_ship_01.tscn' ×3"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "WarmUpPool",
+								"resource_name": "预热 'enemy_ship_03.tscn' ×10"
+							},
+							"name": "预热 'enemy_ship_03.tscn' ×10"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "Wait",
+								"resource_name": "等待 0.1 秒"
+							},
+							"name": "等待 0.1 秒"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "RunRunner",
+								"resource_name": "运行 Runner '../SpawnEnemy' 等待完成"
+							},
+							"name": "运行 Runner '../SpawnEnemy' 等待完成"
+						}
+					],
+					"nodes": [
+						"../../GameSceneCanvas",
+						"../../Game_Layer/PlayerShip",
+						"../../Game_Layer/Markers",
+						"../SpawnEnemy"
+					],
+					"provided_locals": [],
+					"variables": {
+						"global": [],
+						"local": [],
+						"scope": [
+							{
+								"mode": "write",
+								"name": "start_pos",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "write",
+								"name": "start_pos",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read_write",
+								"name": "spawn_pos",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "result_variable"
+							},
+							{
+								"mode": "read_write",
+								"name": "spawn_pos",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "result_variable"
+							}
+						]
+					}
+				},
+				{
+					"enabled": true,
+					"event": {
+						"resource_name": "接收事件: EnemyDie",
+						"type": "OnReceiveEvent"
+					},
+					"index": 2,
+					"instructions_flat": [
+						{
+							"name": "enemy_count [SCOPE] - 1.0",
+							"prefix": ""
+						},
+						{
+							"name": "current_score [SCOPE] + event_score [LOCAL]",
+							"prefix": ""
+						},
+						{
+							"name": "设置变量 [[本地]] 'c_score' 从'current_score [最近作用域]'复制",
+							"prefix": ""
+						},
+						{
+							"name": "发送事件: ScoreUpdate",
+							"prefix": ""
+						},
+						{
+							"name": "If/Then enemy_count [最近作用域] LESS_THAN 1 [1 个指令] [异步]",
+							"prefix": ""
+						},
+						{
+							"name": "发送事件: AllEnemyDied",
+							"prefix": "  "
+						}
+					],
+					"instructions_tree": [
+						{
+							"children": {},
+							"inst": {
+								"__object__": "MathOperation",
+								"resource_name": "enemy_count [SCOPE] - 1.0"
+							},
+							"name": "enemy_count [SCOPE] - 1.0"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "MathOperation",
+								"resource_name": "current_score [SCOPE] + event_score [LOCAL]"
+							},
+							"name": "current_score [SCOPE] + event_score [LOCAL]"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "SetVariable",
+								"resource_name": "设置变量 [[本地]] 'c_score' 从'current_score [最近作用域]'复制"
+							},
+							"name": "设置变量 [[本地]] 'c_score' 从'current_score [最近作用域]'复制"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "SendEvent",
+								"resource_name": "发送事件: ScoreUpdate"
+							},
+							"name": "发送事件: ScoreUpdate"
+						},
+						{
+							"children": {
+								"then": [
+									{
+										"children": {},
+										"inst": {
+											"__object__": "SendEvent",
+											"resource_name": "发送事件: AllEnemyDied"
+										},
+										"name": "发送事件: AllEnemyDied"
+									}
+								]
+							},
+							"inst": {
+								"__object__": "IfThen",
+								"resource_name": "If/Then enemy_count [最近作用域] LESS_THAN 1 [1 个指令] [异步]"
+							},
+							"name": "If/Then enemy_count [最近作用域] LESS_THAN 1 [1 个指令] [异步]"
+						}
+					],
+					"nodes": [],
+					"provided_locals": [],
+					"variables": {
+						"global": [],
+						"local": [
+							{
+								"mode": "read",
+								"name": "event_score",
+								"source_prop": "operand_b_variable"
+							},
+							{
+								"mode": "read",
+								"name": "event_score",
+								"source_prop": "operand_b_variable"
+							},
+							{
+								"mode": "write",
+								"name": "c_score",
+								"source_prop": "target_variable"
+							}
+						],
+						"scope": [
+							{
+								"mode": "read",
+								"name": "enemy_count",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "enemy_count",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "enemy_count",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "enemy_count",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_score",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "current_score",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_score",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "current_score",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_score",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "from_variable"
+							},
+							{
+								"mode": "read",
+								"name": "enemy_count",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "variable_name"
+							}
+						]
+					}
+				},
+				{
+					"enabled": true,
+					"event": {
+						"resource_name": "接收事件: PlayerDie",
+						"type": "OnReceiveEvent"
+					},
+					"index": 3,
+					"instructions_flat": [
+						{
+							"name": "player_life [SCOPE] - 1.0",
+							"prefix": ""
+						},
+						{
+							"name": "等待 0.5 秒",
+							"prefix": ""
+						},
+						{
+							"name": "暂停游戏 (仅暂停)",
+							"prefix": ""
+						},
+						{
+							"name": "等待 0.1 秒",
+							"prefix": ""
+						},
+						{
+							"name": "If/Else player_life [最近作用域] LESS_THAN 0 [真:2 [异步]",
+							"prefix": ""
+						},
+						{
+							"name": "If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [异步]",
+							"prefix": "  "
+						},
+						{
+							"name": "Array Add 数组 score_list ← 变量 current_score",
+							"prefix": "    "
+						},
+						{
+							"name": "发送事件: GameEnd",
+							"prefix": "  "
+						},
+						{
+							"name": "发送事件: StartCountDown",
+							"prefix": "  "
+						},
+						{
+							"name": "等待 2.0 秒",
+							"prefix": "  "
+						},
+						{
+							"name": "实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos",
+							"prefix": "  "
+						},
+						{
+							"name": "等待 1.0 秒",
+							"prefix": "  "
+						},
+						{
+							"name": "恢复游戏",
+							"prefix": "  "
+						}
+					],
+					"instructions_tree": [
+						{
+							"children": {},
+							"inst": {
+								"__object__": "MathOperation",
+								"resource_name": "player_life [SCOPE] - 1.0"
+							},
+							"name": "player_life [SCOPE] - 1.0"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "Wait",
+								"resource_name": "等待 0.5 秒"
+							},
+							"name": "等待 0.5 秒"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "PauseGame",
+								"resource_name": "暂停游戏 (仅暂停)"
+							},
+							"name": "暂停游戏 (仅暂停)"
+						},
+						{
+							"children": {},
+							"inst": {
+								"__object__": "Wait",
+								"resource_name": "等待 0.1 秒"
+							},
+							"name": "等待 0.1 秒"
+						},
+						{
+							"children": {
+								"else": [
+									{
+										"children": {},
+										"inst": {
+											"__object__": "SendEvent",
+											"resource_name": "发送事件: StartCountDown"
+										},
+										"name": "发送事件: StartCountDown"
+									},
+									{
+										"children": {},
+										"inst": {
+											"__object__": "Wait",
+											"resource_name": "等待 2.0 秒"
+										},
+										"name": "等待 2.0 秒"
+									},
+									{
+										"children": {},
+										"inst": {
+											"__object__": "InstantiateScene",
+											"resource_name": "实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos"
+										},
+										"name": "实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos"
+									},
+									{
+										"children": {},
+										"inst": {
+											"__object__": "Wait",
+											"resource_name": "等待 1.0 秒"
+										},
+										"name": "等待 1.0 秒"
+									},
+									{
+										"children": {},
+										"inst": {
+											"__object__": "ResumeGame",
+											"resource_name": "恢复游戏"
+										},
+										"name": "恢复游戏"
+									}
+								],
+								"then": [
+									{
+										"children": {
+											"then": [
+												{
+													"children": {},
+													"inst": {
+														"__object__": "ArrayAdd",
+														"resource_name": "Array Add 数组 score_list ← 变量 current_score"
+													},
+													"name": "Array Add 数组 score_list ← 变量 current_score"
+												}
+											]
+										},
+										"inst": {
+											"__object__": "IfThen",
+											"resource_name": "If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [异步]"
+										},
+										"name": "If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [异步]"
+									},
+									{
+										"children": {},
+										"inst": {
+											"__object__": "SendEvent",
+											"resource_name": "发送事件: GameEnd"
+										},
+										"name": "发送事件: GameEnd"
+									}
+								]
+							},
+							"inst": {
+								"__object__": "IfElse",
+								"resource_name": "If/Else player_life [最近作用域] LESS_THAN 0 [真:2 [异步]"
+							},
+							"name": "If/Else player_life [最近作用域] LESS_THAN 0 [真:2 [异步]"
+						}
+					],
+					"nodes": [
+						"../../GameSceneCanvas"
+					],
+					"provided_locals": [],
+					"variables": {
+						"global": [
+							{
+								"mode": "read_write",
+								"name": "score_list",
+								"source_prop": "array_variable"
+							},
+							{
+								"mode": "read_write",
+								"name": "score_list",
+								"source_prop": "array_variable"
+							}
+						],
+						"local": [],
+						"scope": [
+							{
+								"mode": "read",
+								"name": "player_life",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "player_life",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "player_life",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "player_life",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "player_life",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "variable_name"
+							},
+							{
+								"mode": "read",
+								"name": "current_score",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "variable_name"
+							},
+							{
+								"mode": "read_write",
+								"name": "current_score",
+								"source_prop": "element_from_variable"
+							},
+							{
+								"mode": "read_write",
+								"name": "current_score",
+								"source_prop": "element_from_variable"
+							},
+							{
+								"mode": "write",
+								"name": "instance_id",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "target_variable"
+							},
+							{
+								"mode": "read",
+								"name": "start_pos",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "position_variable"
+							},
+							{
+								"mode": "read",
+								"name": "start_pos",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "position_variable"
+							},
+							{
+								"mode": "write",
+								"name": "instance_id",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "target_variable"
+							}
+						]
+					}
+				},
+				{
+					"enabled": true,
+					"event": {
+						"resource_name": "接收事件: AllEnemyDied",
+						"type": "OnReceiveEvent"
+					},
+					"index": 4,
+					"instructions_flat": [
+						{
+							"name": "current_wave [SCOPE] + 1.0",
+							"prefix": ""
+						},
+						{
+							"name": "If/Else current_wave [最近作用域] LESS_EQUAL 3 [真:2 [异步]",
+							"prefix": ""
+						},
+						{
+							"name": "暂停游戏 (仅暂停)",
+							"prefix": "  "
+						},
+						{
+							"name": "运行 Runner '../SpawnEnemy' 立即返回",
+							"prefix": "  "
+						},
+						{
+							"name": "发送事件: GameEnd",
+							"prefix": "  "
+						}
+					],
+					"instructions_tree": [
+						{
+							"children": {},
+							"inst": {
+								"__object__": "MathOperation",
+								"resource_name": "current_wave [SCOPE] + 1.0"
+							},
+							"name": "current_wave [SCOPE] + 1.0"
+						},
+						{
+							"children": {
+								"else": [
+									{
+										"children": {},
+										"inst": {
+											"__object__": "SendEvent",
+											"resource_name": "发送事件: GameEnd"
+										},
+										"name": "发送事件: GameEnd"
+									}
+								],
+								"then": [
+									{
+										"children": {},
+										"inst": {
+											"__object__": "PauseGame",
+											"resource_name": "暂停游戏 (仅暂停)"
+										},
+										"name": "暂停游戏 (仅暂停)"
+									},
+									{
+										"children": {},
+										"inst": {
+											"__object__": "RunRunner",
+											"resource_name": "运行 Runner '../SpawnEnemy' 立即返回"
+										},
+										"name": "运行 Runner '../SpawnEnemy' 立即返回"
+									}
+								]
+							},
+							"inst": {
+								"__object__": "IfElse",
+								"resource_name": "If/Else current_wave [最近作用域] LESS_EQUAL 3 [真:2 [异步]"
+							},
+							"name": "If/Else current_wave [最近作用域] LESS_EQUAL 3 [真:2 [异步]"
+						}
+					],
+					"nodes": [
+						"../../GameSceneCanvas",
+						"../SpawnEnemy"
+					],
+					"provided_locals": [],
+					"variables": {
+						"global": [],
+						"local": [],
+						"scope": [
+							{
+								"mode": "read",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "operand_a_variable"
+							},
+							{
+								"mode": "write",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "save_to_variable"
+							},
+							{
+								"mode": "read",
+								"name": "current_wave",
+								"scope_id": "",
+								"source": 0,
+								"source_prop": "variable_name"
+							}
+						]
+					}
+				}
+			],
+			"instructions_flat": [],
+			"instructions_tree": [],
+			"is_nested": false,
+			"kind": "multi",
+			"nodes": [],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signals": [],
+			"trigger_name": "GameFlow",
+			"trigger_path": "GameScene/GameManager/GameFlow",
+			"trigger_type": "MultiEventTrigger",
+			"variables": {
+				"global": [],
+				"local": [],
+				"scope": []
+			}
+		},
+		{
+			"event": {},
+			"event_bindings": [],
+			"instructions_flat": [
+				{
+					"name": "发送事件: ShowWave",
+					"prefix": ""
+				},
+				{
+					"name": "For Each (spawn_pos) -> item 索引=index [0 个指令]",
+					"prefix": ""
+				},
+				{
+					"name": "If/Else index [[本地]] EQUALS 0 [真:1 [异步]",
+					"prefix": "  "
+				},
+				{
+					"name": "实例化 'enemy_ship_01.tscn' 到 Enemies 从变量 [[本地]] item [池化]",
+					"prefix": "    "
+				},
+				{
+					"name": "实例化 'enemy_ship_03.tscn' 到 Enemies 从变量 [[本地]] item [池化]",
+					"prefix": "    "
+				},
+				{
+					"name": "等待 0.5 秒",
+					"prefix": "  "
+				},
+				{
+					"name": "获取组节点数量 'enemies' → enemy_count [最近作用域]",
+					"prefix": ""
+				},
+				{
+					"name": "发送事件: HideWave",
+					"prefix": ""
+				},
+				{
+					"name": "恢复游戏",
+					"prefix": ""
+				}
+			],
+			"instructions_tree": [
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SendEvent",
+						"resource_name": "发送事件: ShowWave"
+					},
+					"name": "发送事件: ShowWave"
+				},
+				{
+					"children": {
+						"loop": [
+							{
+								"children": {
+									"else": [
+										{
+											"children": {},
+											"inst": {
+												"__object__": "InstantiateScene",
+												"resource_name": "实例化 'enemy_ship_03.tscn' 到 Enemies 从变量 [[本地]] item [池化]"
+											},
+											"name": "实例化 'enemy_ship_03.tscn' 到 Enemies 从变量 [[本地]] item [池化]"
+										}
+									],
+									"then": [
+										{
+											"children": {},
+											"inst": {
+												"__object__": "InstantiateScene",
+												"resource_name": "实例化 'enemy_ship_01.tscn' 到 Enemies 从变量 [[本地]] item [池化]"
+											},
+											"name": "实例化 'enemy_ship_01.tscn' 到 Enemies 从变量 [[本地]] item [池化]"
+										}
+									]
+								},
+								"inst": {
+									"__object__": "IfElse",
+									"resource_name": "If/Else index [[本地]] EQUALS 0 [真:1 [异步]"
+								},
+								"name": "If/Else index [[本地]] EQUALS 0 [真:1 [异步]"
+							},
+							{
+								"children": {},
+								"inst": {
+									"__object__": "Wait",
+									"resource_name": "等待 0.5 秒"
+								},
+								"name": "等待 0.5 秒"
+							}
+						]
+					},
+					"inst": {
+						"__object__": "ForEach",
+						"resource_name": "For Each (spawn_pos) -> item 索引=index [0 个指令]"
+					},
+					"name": "For Each (spawn_pos) -> item 索引=index [0 个指令]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "GetGroupCount",
+						"resource_name": "获取组节点数量 'enemies' → enemy_count [最近作用域]"
+					},
+					"name": "获取组节点数量 'enemies' → enemy_count [最近作用域]"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "SendEvent",
+						"resource_name": "发送事件: HideWave"
+					},
+					"name": "发送事件: HideWave"
+				},
+				{
+					"children": {},
+					"inst": {
+						"__object__": "ResumeGame",
+						"resource_name": "恢复游戏"
+					},
+					"name": "恢复游戏"
+				}
+			],
+			"is_nested": false,
+			"kind": "runner",
+			"nodes": [
+				"../../Game_Layer/EnemyFormation/Enemies",
+				"../../GameSceneCanvas"
+			],
+			"provided_locals": [],
+			"scene_source": "main",
+			"signal_binding": {
+				"signal_name": "",
+				"target_node": ""
+			},
+			"signals": [],
+			"trigger_name": "SpawnEnemy",
+			"trigger_path": "GameScene/GameManager/SpawnEnemy",
+			"trigger_type": "Runner",
+			"variables": {
+				"global": [],
+				"local": [
+					{
+						"mode": "write",
+						"name": "item",
+						"source_prop": "item_variable"
+					},
+					{
+						"mode": "write",
+						"name": "index",
+						"source_prop": "index_variable"
+					},
+					{
+						"mode": "write",
+						"name": "item",
+						"source_prop": "item_variable"
+					},
+					{
+						"mode": "write",
+						"name": "index",
+						"source_prop": "index_variable"
+					},
+					{
+						"mode": "read",
+						"name": "index",
+						"source_prop": "variable_name"
+					},
+					{
+						"mode": "read",
+						"name": "item",
+						"source_prop": "position_variable"
+					},
+					{
+						"mode": "read",
+						"name": "item",
+						"source_prop": "position_variable"
+					},
+					{
+						"mode": "read",
+						"name": "item",
+						"source_prop": "position_variable"
+					},
+					{
+						"mode": "read",
+						"name": "item",
+						"source_prop": "position_variable"
+					}
+				],
+				"scope": [
+					{
+						"mode": "read",
+						"name": "spawn_pos",
+						"source_prop": "array_variable"
+					},
+					{
+						"mode": "read",
+						"name": "spawn_pos",
+						"source_prop": "array_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "write",
+						"name": "instance_id",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "target_variable"
+					},
+					{
+						"mode": "read_write",
+						"name": "enemy_count",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "result_variable"
+					},
+					{
+						"mode": "read_write",
+						"name": "enemy_count",
+						"scope_id": "",
+						"source": 0,
+						"source_prop": "result_variable"
+					}
+				]
+			}
+		}
+	],
+	"variable_analysis": [
+		{
+			"anomaly": "normal",
+			"name": "score_list",
+			"readers": [
+				{
+					"mode": "read",
+					"trigger_name": "OnGameEnd"
+				},
+				{
+					"mode": "read_write",
+					"trigger_name": "GameFlow"
+				}
+			],
+			"writers": [
+				{
+					"mode": "read_write",
+					"trigger_name": "GameFlow"
+				}
+			]
+		}
+	]
+}

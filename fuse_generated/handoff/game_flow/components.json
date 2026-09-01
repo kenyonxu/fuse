@@ -1,0 +1,1865 @@
+{
+ "format_version": "1.0",
+ "system": "game_flow",
+ "note": "本文件由 fuse-handoff-packer 从 Fuse 侧三份组件上下文 JSON 提取，只收录 presets/game_flow.json 中出现过的组件 type。schema 参数表中 requires 字段为参数门控（父参数取指定值时该参数才生效）。keywords 为检索关键词（含中文），不含人类可读描述文本。",
+ "enums": {
+  "CooldownMode": {
+   "GLOBAL_COOLDOWN": 1,
+   "NONE": 0,
+   "PER_OBJECT_COOLDOWN": 2
+  },
+  "ExecutionMode": {
+   "PARALLEL": 1,
+   "SEQUENTIAL": 0
+  },
+  "ScopeSource": {
+   "CUSTOM_ID": 1,
+   "NEAREST": 0,
+   "TARGET_NODE": 3,
+   "TRIGGER_SCOPE": 2
+  },
+  "SequenceMode": {
+   "ASYNCHRONOUS": 1,
+   "SYNCHRONOUS": 0
+  },
+  "VariableScope": {
+   "GLOBAL": 2,
+   "LOCAL": 0,
+   "SCOPE": 1
+  }
+ },
+ "components": {
+  "CrossfadeToMusic": {
+   "category": "instruction",
+   "keywords": [
+    "crossfade",
+    "music",
+    "bgm",
+    "transition",
+    "淡入淡出",
+    "音乐",
+    "切换"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 13,
+     "hint_string": "*.mp3,*.ogg,*.wav",
+     "is_nested_instructions": false,
+     "name": "music_path",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 1.0,
+     "hint": 1,
+     "hint_string": "0,1,0.01",
+     "is_nested_instructions": false,
+     "name": "volume",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": "Master",
+     "hint": 2,
+     "hint_string": "Master,SFX,Music,Voice,Ambient,ClefMaster,clef_ch_0,clef_ch_1,clef_ch_2,clef_ch_3,clef_ch_4,clef_ch_5,clef_ch_6,clef_ch_7,clef_ch_8,clef_ch_9,clef_ch_10,clef_ch_11,clef_ch_12,clef_ch_13,clef_ch_14,clef_ch_15",
+     "is_nested_instructions": false,
+     "name": "bus",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "continue_during_pause",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": 3.0,
+     "hint": 1,
+     "hint_string": "0.1,10,0.1,or_greater",
+     "is_nested_instructions": false,
+     "name": "crossfade_duration",
+     "type": 3,
+     "type_name": "float"
+    }
+   ]
+  },
+  "LoadGlobalVariables": {
+   "category": "instruction",
+   "keywords": [
+    "加载",
+    "全局",
+    "变量",
+    "资源",
+    "存档",
+    "读档",
+    "load",
+    "global",
+    "variable",
+    "resource",
+    "save file"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_path",
+     "requires": {
+      "load_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Assistant Resource,Custom Path",
+     "is_nested_instructions": false,
+     "name": "load_source",
+     "type": 2,
+     "type_name": "int"
+    }
+   ]
+  },
+  "PauseGame": {
+   "category": "instruction",
+   "keywords": [
+    "pause",
+    "game",
+    "menu",
+    "stop",
+    "暂停",
+    "游戏",
+    "菜单",
+    "停止"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "pause_menu_scene",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "pause_menu_parent",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "ui_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "show_pause_menu",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "GetPosition": {
+   "category": "instruction",
+   "keywords": [
+    "position",
+    "get",
+    "location",
+    "transform",
+    "获取位置",
+    "读取位置",
+    "坐标"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "target_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "target_scope_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_custom_scope_id",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_target_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "requires": {
+      "save_to_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "requires": {
+      "save_to_scope": 1,
+      "scope_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "save_target_node_path",
+     "requires": {
+      "save_to_scope": 1,
+      "scope_source": 3
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_variable",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": "",
+     "hint": 26,
+     "hint_string": "Node2D,Node3D",
+     "is_nested_instructions": false,
+     "name": "target",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "save_to_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "save_to_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_global_position",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "MathOperation": {
+   "category": "instruction",
+   "keywords": [
+    "math",
+    "arithmetic",
+    "add",
+    "subtract",
+    "multiply",
+    "divide",
+    "modulo",
+    "数学",
+    "运算",
+    "加减乘除"
+   ],
+   "schema": [
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "operand_a_scope_source",
+     "requires": {
+      "operand_a_scope": 1,
+      "operand_a_source": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "operand_a_custom_scope_id",
+     "requires": {
+      "operand_a_scope": 1,
+      "operand_a_scope_source": 1,
+      "operand_a_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "operand_a_target_node_path",
+     "requires": {
+      "operand_a_scope": 1,
+      "operand_a_scope_source": 3,
+      "operand_a_source": 1
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "operand_b_scope_source",
+     "requires": {
+      "operand_b_scope": 1,
+      "operand_b_source": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "operand_b_custom_scope_id",
+     "requires": {
+      "operand_b_scope": 1,
+      "operand_b_scope_source": 1,
+      "operand_b_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "operand_b_target_node_path",
+     "requires": {
+      "operand_b_scope": 1,
+      "operand_b_scope_source": 3,
+      "operand_b_source": 1
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "requires": {
+      "save_to_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "requires": {
+      "save_to_scope": 1,
+      "scope_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "requires": {
+      "save_to_scope": 1,
+      "scope_source": 3
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Add,Subtract,Multiply,Divide,Modulo",
+     "is_nested_instructions": false,
+     "name": "operation_type",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "VALUE,Variable",
+     "is_nested_instructions": false,
+     "name": "operand_a_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0.0,
+     "hint": 1,
+     "hint_string": "-99999,99999,0.001,or_less,or_greater",
+     "is_nested_instructions": false,
+     "name": "operand_a_value",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "VALUE,Variable",
+     "is_nested_instructions": false,
+     "name": "operand_b_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0.0,
+     "hint": 1,
+     "hint_string": "-99999,99999,0.001,or_less,or_greater",
+     "is_nested_instructions": false,
+     "name": "operand_b_value",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": "math_result",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "save_to_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "save_to_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "operand_a_variable",
+     "requires": {
+      "operand_a_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "operand_a_scope",
+     "requires": {
+      "operand_a_source": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "operand_b_variable",
+     "requires": {
+      "operand_b_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "operand_b_scope",
+     "requires": {
+      "operand_b_source": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    }
+   ]
+  },
+  "GetAllChildrenPosition": {
+   "category": "instruction",
+   "keywords": [
+    "children",
+    "position",
+    "nodes",
+    "get",
+    "child",
+    "子节点",
+    "位置",
+    "坐标",
+    "获取"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "target_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "target_scope_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_custom_scope_id",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_target_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "requires": {
+      "result_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "requires": {
+      "result_scope": 1,
+      "scope_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "save_target_node_path",
+     "requires": {
+      "result_scope": 1,
+      "scope_source": 3
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_variable_for_target",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": "",
+     "hint": 26,
+     "hint_string": "Node",
+     "is_nested_instructions": false,
+     "name": "target_node",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "recursive",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_global_position",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "result_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "result_scope",
+     "type": 2,
+     "type_name": "int"
+    }
+   ]
+  },
+  "WarmUpPool": {
+   "category": "instruction",
+   "keywords": [
+    "warmup",
+    "pool",
+    "preload",
+    "cache",
+    "预热",
+    "池",
+    "预加载"
+   ],
+   "schema": [
+    {
+     "default": 5,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "batch_size",
+     "requires": {
+      "warm_up_mode": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0.1,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "batch_delay",
+     "requires": {
+      "warm_up_mode": 1
+     },
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": "",
+     "hint": 13,
+     "hint_string": "*.tscn,*.scn",
+     "is_nested_instructions": false,
+     "name": "scene_path",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 10,
+     "hint": 1,
+     "hint_string": "1,500,1",
+     "is_nested_instructions": false,
+     "name": "warm_up_count",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Immediate,Batch",
+     "is_nested_instructions": false,
+     "name": "warm_up_mode",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 20,
+     "hint": 1,
+     "hint_string": "1,500,1",
+     "is_nested_instructions": false,
+     "name": "pool_initial_size",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 100,
+     "hint": 1,
+     "hint_string": "10,1000,10",
+     "is_nested_instructions": false,
+     "name": "pool_max_size",
+     "type": 2,
+     "type_name": "int"
+    }
+   ]
+  },
+  "Wait": {
+   "category": "instruction",
+   "keywords": [
+    "等待",
+    "延时",
+    "异步",
+    "计时",
+    "暂停",
+    "wait",
+    "delay",
+    "async",
+    "timer",
+    "pause"
+   ],
+   "schema": [
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "requires": {
+      "time_scope": 1,
+      "value_source": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "requires": {
+      "scope_source": 1,
+      "time_scope": 1,
+      "value_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "requires": {
+      "scope_source": 3,
+      "time_scope": 1,
+      "value_source": 1
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Direct,Variable",
+     "is_nested_instructions": false,
+     "name": "value_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 1.0,
+     "hint": 1,
+     "hint_string": "0.1,60.0,0.1,or_greater",
+     "is_nested_instructions": false,
+     "name": "wait_time",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "wait_time_variable",
+     "requires": {
+      "value_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "time_scope",
+     "requires": {
+      "value_source": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    }
+   ]
+  },
+  "RunRunner": {
+   "category": "instruction",
+   "keywords": [
+    "runner",
+    "执行",
+    "触发",
+    "action",
+    "run",
+    "execute",
+    "trigger",
+    "runner"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "result_variable_name",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "result_variable_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 26,
+     "hint_string": "Runner",
+     "is_nested_instructions": false,
+     "name": "target_runner",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "wait_for_completion",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "context_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "store_result",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "SetVariable": {
+   "category": "instruction",
+   "keywords": [
+    "变量",
+    "设置",
+    "赋值",
+    "复制",
+    "类型检查",
+    "Variant",
+    "variable",
+    "set",
+    "assign",
+    "copy",
+    "type check"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "requires": {
+      "target_variable_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "requires": {
+      "scope_source": 1,
+      "target_variable_scope": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "requires": {
+      "scope_source": 3,
+      "target_variable_scope": 1
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "set_with_another_variable",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": null,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "new_value",
+     "type": 0,
+     "type_name": "type_0"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "target_variable_scope",
+     "type": 2,
+     "type_name": "int"
+    }
+   ]
+  },
+  "SendEvent": {
+   "category": "instruction",
+   "keywords": [
+    "event",
+    "send",
+    "broadcast",
+    "signal",
+    "trigger",
+    "事件",
+    "发送",
+    "广播",
+    "信号"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "event_name",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": {},
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "event_args",
+     "type": 27,
+     "type_name": "Dictionary"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "deferred",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "IfThen": {
+   "category": "instruction",
+   "keywords": [
+    "如果",
+    "那么",
+    "条件",
+    "判断",
+    "单分支",
+    "if",
+    "then",
+    "condition",
+    "branch"
+   ],
+   "schema": [
+    {
+     "default": 1,
+     "hint": 2,
+     "hint_string": "Synchronous:0,Asynchronous:1",
+     "is_nested_instructions": false,
+     "name": "sequence_mode",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": null,
+     "hint": 17,
+     "hint_string": "BaseCondition",
+     "is_nested_instructions": false,
+     "name": "condition",
+     "type": 24,
+     "type_name": "Object"
+    },
+    {
+     "default": [],
+     "hint": 17,
+     "hint_string": "BaseInstruction",
+     "is_nested_instructions": true,
+     "name": "instructions",
+     "type": 28,
+     "type_name": "Array"
+    }
+   ]
+  },
+  "CheckVariable": {
+   "category": "condition",
+   "keywords": [
+    "variable",
+    "变量",
+    "check",
+    "检查",
+    "compare",
+    "比较",
+    "equals",
+    "等于",
+    "value",
+    "值",
+    "condition",
+    "条件",
+    "scope",
+    "作用域",
+    "local",
+    "本地",
+    "global",
+    "全局"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "variable_name",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "requires": {
+      "variable_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "requires": {
+      "scope_source": 1,
+      "variable_scope": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "requires": {
+      "scope_source": 3,
+      "variable_scope": 1
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "compare_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "compare_variable_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "compare_scope_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "compare_custom_scope_id",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "compare_target_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": null,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "expected_value",
+     "type": 0,
+     "type_name": "type_0"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "variable_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Equals,Not Equals,Greater Than,Less Than,Greater Equal,Less Equal,Contains,Not Contains,Is Empty,Is Not Empty,Is Null,Is Not Null,Is True,Is False,Matches Pattern",
+     "is_nested_instructions": false,
+     "name": "comparison_operator",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "check_with_another_variable",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "case_sensitive",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "auto_convert_types",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "treat_empty_as_null",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "enabled",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "negate_result",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "enable_cache",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": 1.0,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "cache_duration",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "cache_context_changes",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "hash_all_variables",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "IfElse": {
+   "category": "instruction",
+   "keywords": [
+    "如果",
+    "否则",
+    "条件",
+    "判断",
+    "分支",
+    "if",
+    "else",
+    "condition",
+    "branch"
+   ],
+   "schema": [
+    {
+     "default": 1,
+     "hint": 2,
+     "hint_string": "Synchronous:0,Asynchronous:1",
+     "is_nested_instructions": false,
+     "name": "sequence_mode",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": null,
+     "hint": 17,
+     "hint_string": "BaseCondition",
+     "is_nested_instructions": false,
+     "name": "condition",
+     "type": 24,
+     "type_name": "Object"
+    },
+    {
+     "default": [],
+     "hint": 17,
+     "hint_string": "BaseInstruction",
+     "is_nested_instructions": true,
+     "name": "true_instructions",
+     "type": 28,
+     "type_name": "Array"
+    },
+    {
+     "default": [],
+     "hint": 17,
+     "hint_string": "BaseInstruction",
+     "is_nested_instructions": true,
+     "name": "false_instructions",
+     "type": 28,
+     "type_name": "Array"
+    }
+   ]
+  },
+  "ArrayAdd": {
+   "category": "instruction",
+   "keywords": [
+    "数组",
+    "添加",
+    "push_back",
+    "array",
+    "add",
+    "append",
+    "元素"
+   ],
+   "schema": [
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "array_scope_source",
+     "requires": {
+      "array_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "array_custom_scope_id",
+     "requires": {
+      "array_scope": 1,
+      "array_scope_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "array_target_node_path",
+     "requires": {
+      "array_scope": 1,
+      "array_scope_source": 3
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "group_name",
+     "requires": {
+      "source_type": 2
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "requires": {
+      "source_type": 1
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": null,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "element_value",
+     "type": 0,
+     "type_name": "type_0"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "element_from_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "element_from_variable_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "element_scope_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "element_custom_scope_id",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "element_target_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Variable,NodeChildren,NodeGroup",
+     "is_nested_instructions": false,
+     "name": "source_type",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "array_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local,Scope,Global",
+     "is_nested_instructions": false,
+     "name": "array_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_element_from_variable",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "InstantiateScene": {
+   "category": "instruction",
+   "keywords": [
+    "instantiate",
+    "spawn",
+    "create",
+    "scene",
+    "实例化",
+    "生成",
+    "创建"
+   ],
+   "schema": [
+    {
+     "default": "instance_id",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_variable",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "save_to_scope",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "scope_source",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "custom_scope_id",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "target_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "position_variable",
+     "requires": {
+      "position_mode": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Local:0,Scope:1,Global:2",
+     "is_nested_instructions": false,
+     "name": "position_scope",
+     "requires": {
+      "position_mode": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Nearest:0,Custom Id:1,Trigger Scope:2,Target Node:3",
+     "is_nested_instructions": false,
+     "name": "position_scope_source",
+     "requires": {
+      "position_mode": 1,
+      "position_scope": 1
+     },
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "position_custom_scope_id",
+     "requires": {
+      "position_mode": 1,
+      "position_scope": 1,
+      "position_scope_source": 1
+     },
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "position_target_node_path",
+     "requires": {
+      "position_mode": 1,
+      "position_scope": 1,
+      "position_scope_source": 3
+     },
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 13,
+     "hint_string": "*.tscn,*.scn",
+     "is_nested_instructions": false,
+     "name": "scene_path",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "parent_node",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": 0,
+     "hint": 2,
+     "hint_string": "Manual,Variable",
+     "is_nested_instructions": false,
+     "name": "position_mode",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": "(0.0, 0.0, 0.0)",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "spawn_position",
+     "type": 9,
+     "type_name": "Vector3"
+    },
+    {
+     "default": "(0.0, 0.0, 0.0)",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "spawn_offset",
+     "type": 9,
+     "type_name": "Vector3"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "save_instance_id",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_object_pool",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  },
+  "ResumeGame": {
+   "category": "instruction",
+   "keywords": [
+    "resume",
+    "game",
+    "unpause",
+    "menu",
+    "time",
+    "恢复",
+    "游戏",
+    "取消暂停",
+    "菜单",
+    "时间"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "pause_menu_node",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "ui_node_path",
+     "type": 22,
+     "type_name": "NodePath"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "close_pause_menu",
+     "type": 1,
+     "type_name": "bool"
+    }
+   ]
+  }
+ }
+}
