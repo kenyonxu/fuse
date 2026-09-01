@@ -14,6 +14,7 @@ signal event_sent(event_name: String, args: Dictionary)
 
 # event_name -> Array[Dictionary]（条目形如 {"cb": Callable, "id": int}）
 var _subscribers := {}
+var _next_id := 0
 
 
 ## 发送总线事件：先广播 event_sent 信号，再同步调用全部订阅者
@@ -35,8 +36,9 @@ func subscribe(event_name: String, callback: Callable) -> Dictionary:
 	if not _subscribers.has(event_name):
 		_subscribers[event_name] = []
 	var list: Array = _subscribers[event_name]
-	var sub := {"event_name": event_name, "id": list.size()}
-	list.append({"cb": callback, "id": sub.id})
+	list.append({"cb": callback, "id": _next_id})
+	var sub := {"event_name": event_name, "id": _next_id}
+	_next_id += 1
 	return sub
 
 

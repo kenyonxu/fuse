@@ -10,7 +10,7 @@ extends Node
 enum WarmUpMode { IMMEDIATE, BATCH }
 
 @export var scene_path: String = ""
-@export var pool_initial_size: int = 10
+@export var pool_initial_size: int = 10  ## 初始池规模下限（与 warm_up_count 取大者为预热目标）
 @export var pool_max_size: int = 100
 @export var warm_up_count: int = 10
 @export var warm_up_mode: WarmUpMode = WarmUpMode.IMMEDIATE
@@ -26,11 +26,18 @@ func warm_up() -> void:
 	if scene_path.is_empty():
 		push_warning("[object_pool] scene_path 为空，跳过预热")
 		return
-	var remaining := warm_up_count
+	var remaining := maxi(warm_up_count, pool_initial_size)
 	while remaining > 0:
 		var n: int = mini(batch_size, remaining) if warm_up_mode == WarmUpMode.BATCH else remaining
 		for i in n:
-			_spawn_one()
+			var node := _create_instance()
+			if node == null:
+				continue
+			if _pool.size() < pool_max_size:
+				_pool.append(node)
+				node.set_process(false)
+				if node is CanvasItem:
+					node.hide()
 		remaining -= n
 		if warm_up_mode == WarmUpMode.BATCH and remaining > 0:
 			await get_tree().create_timer(batch_delay).timeout
@@ -38,12 +45,20 @@ func warm_up() -> void:
 
 ## 从池中取一个实例（池空且未达上限则新建；达上限返回 null）
 func acquire() -> Node:
-	if not _pool.is_empty():
+	while not _pool.is_empty():
 		var node := _pool.pop_back()
 		if is_instance_valid(node):
+			node.set_process(true)
+			if node is CanvasItem:
+				node.show()
 			return node
 	if _created < pool_max_size:
-		return _spawn_one()
+		var node := _create_instance()
+		if node != null:
+			node.set_process(true)
+			if node is CanvasItem:
+				node.show()
+		return node
 	push_warning("[object_pool] 池已达上限 %d，acquire 返回 null" % pool_max_size)
 	return null
 
@@ -61,18 +76,12 @@ func release(node: Node) -> void:
 		node.queue_free()
 
 
-func _spawn_one() -> Node:
+## 创建一个新实例（不入池、不隐藏；调用方负责生命周期）
+func _create_instance() -> Node:
 	var scene: PackedScene = load(scene_path)
 	if scene == null:
 		push_error("[object_pool] 无法加载场景: %s" % scene_path)
 		return null
 	var node := scene.instantiate()
 	_created += 1
-	if _pool.size() < pool_max_size:
-		_pool.append(node)
-		node.set_process(false)
-		if node is CanvasItem:
-			node.hide()
-		return null
-	# 池满：直接返回实例交由调用方管理（计入 created）
 	return node
