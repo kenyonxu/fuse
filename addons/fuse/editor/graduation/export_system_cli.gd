@@ -2,6 +2,8 @@
 extends Node
 
 ## 毕业导出 CLI 入口（M2 收口，spec §7）
+## ⚠️ 实验特性（2026-09-01 方向修订）：出口主线为 AI 交接工件（derive/validate
+## 为主线部件）；本 CLI 的 GDScript 生成降级为实验特性，生成代码仍依赖 Fuse 运行时。
 ## 用法: godot --headless --path . res://addons/fuse/editor/graduation/export_system.tscn \
 ##        -- <system.json> [<system.json>...]
 ## 单个 System 流程：读 JSON → SystemValidator.validate_system（有 error 拒生成）→

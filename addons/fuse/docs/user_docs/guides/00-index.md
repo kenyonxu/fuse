@@ -109,7 +109,7 @@
 | 54 | [全局变量管理指南](54-global-variables-guide.md) | 全局变量持久化与存档 |
 | 55 | [预设系统使用指南](55-preset-system-guide.md) | 工作流导出/导入/复用 |
 | 56 | [变量监视器使用指南](56-variable-watcher-guide.md) | 实时变量监控/编辑/折线图 |
-| 57 | [毕业导出器使用指南](57-graduation-exporter-guide.md) | 拓扑→System→GDScript 晋升 |
+| 57 | [毕业导出器使用指南](57-graduation-exporter-guide.md) | GDScript 导出（实验特性） |
 
 ---
 
@@ -132,7 +132,7 @@
 ### 进阶路径
 
 ```
-05 表达式 → 45 复合条件 → 34 Event Bus → 54 全局变量 → 55 预设系统 → 57 毕业导出器（原型晋升代码）
+05 表达式 → 45 复合条件 → 34 Event Bus → 54 全局变量 → 55 预设系统 → 57 GDScript 导出（实验特性）
 ```
 
 ### 调试排障路径

@@ -106,10 +106,11 @@ Fuse 是 Godot 4.6 的可视化编程插件，通过 Inspector 配置事件、�
   - **问题过滤** — OptionButton 三档：全部 / 仅错误 / 无
   - **搜索过滤** — 按单元名 / 指令类型 / 变量名 / 信号名实时过滤
   - **Runner 单元覆盖** — L3 Runner 独立显示（绿色），RunRunner 调用边入关联扫描
-  - **拓扑 JSON 导出** — 溯源字段 + 全量关联，毕业导出器的 ground truth
+  - **拓扑 JSON 导出** — 溯源字段 + 全量关联，交接工件的 ground truth
   - **主题图标** — 使用 Godot 主题图标，跟随编辑器明暗主题
   - **Inspector 问题计数** — 数据流按钮角标显示该 Trigger 的问题数，展开卡片查看分级详情
-- **毕业导出器** — 拓扑推导 System 工件（可审阅 JSON IR）→ 生成 GDScript：
+- **AI 交接工件（出口主线）** — 拓扑导出 + System 划分（可审阅 JSON IR），供给**用户的 AI agent** 编写脱离 Fuse 的工程代码
+- **毕业导出器（实验特性）** — 拓扑推导 System 工件 → 生成 GDScript（生成代码依赖 Fuse 运行时，保留作参考实现）：
   - **混合指令委托** — 常用指令原生直译，其余运行时委托，毕业是梯度不是门槛
   - **非破坏性** — 源 Trigger 不动，生成物带采用/回滚说明
   - **校验门禁** — 11 codes + topology_digest 漂移检测 + 竞态确认

@@ -1,6 +1,8 @@
-# 毕业导出器使用指南
+# 毕业导出器使用指南（实验特性）
 
-毕业导出器提供**从 Fuse 原型到工程代码的晋升路径**：从场景拓扑推导出 System（系统）工件，按 System 生成可读、可验证、与 Fuse 运行时共存的 GDScript。它是"非破坏性"的——导出器只产出新文件，不改场景、不动源 Trigger；回滚就是反向操作。
+> **方向修订（2026-09-01）**：Fuse 的出口主线已调整为 **AI 交接工件**——拓扑 + System 划分 + preset 供给**用户自己的 AI agent** 编写脱离 Fuse 的代码，Fuse 不代写代码（`derive_systems` / `validate_system` CLI 仍为主线部件）。本指南描述的 **GDScript 生成（`export_system`）降级为实验特性**：生成代码仍依赖 Fuse 运行时（FuseDelegation + 组件类 + autoload），不是"脱离 Fuse"的导出；保留作参考实现与语义等价性研究的素材。主线工作流见 [README](../../../../README.md) 的"从原型到工程代码"。
+
+毕业导出器提供**从 Fuse 原型到 GDScript 的实验性导出路径**：从场景拓扑推导出 System（系统）工件，按 System 生成可读、可验证、与 Fuse 运行时共存的 GDScript。它是"非破坏性"的——导出器只产出新文件，不改场景、不动源 Trigger；回滚就是反向操作。
 
 > 适用场景：某块游戏逻辑已在 Fuse 里调稳（攻击时序、UI 呼吸、关卡流转），需要交给程序员接管或脱离可视化层维护时，用毕业导出器把它"毕业"为 GDScript。仍在频繁调参的逻辑建议留在 Fuse 侧——Inspector 拖滑块的反馈环更短。
 
@@ -69,10 +71,9 @@ Godot --headless --path . res://addons/fuse/editor/graduation/export_system.tscn
 5. **LOCAL 变量与整条委托**：binding 内任一指令（含嵌套）读写 LOCAL 变量时，整条 binding 全部走运行时委托以保证变量连续性——覆盖率下降是代价，语义保真是目的
 6. **不支持的事件/配置**：白名单四类事件（OnReady/OnInputAction/OnInterval/OnReceiveEvent）之外的事件类型、L3 Runner 单元、PARALLEL 混合原生行切批等场景会被拒绝生成并列出清单
 
-## 二期展望
+## 后续方向
 
-- **多单元物化模式**：同一连通分量的多个单元一起毕业时，共享变量物化为脚本成员、事件对转为直调（System 格式已按多单元设计）
-- 白名单指令扩充、行为等价性评测（生成的代码 vs Fuse 运行时对照）
+出口主线已转向 **AI 交接工件**（handoff bundle：System + 拓扑 + preset + 组件 schema + 语义契约，打包供给用户的 AI agent 编写脱离 Fuse 的代码）。本导出器验证过的语义结论——busy 卫语句复刻 SKIP 重触发、LOCAL 变量需要单 ctx 贯穿的连续性、"条件通过才消耗 trigger_once"的两阶段门控——将沉淀为交接工件的**语义契约**部分，指导 AI agent 写出行为等价的代码。多单元物化、白名单扩充等原二期项随主线转移不再推进。
 
 ## 相关文档
 

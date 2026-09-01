@@ -110,6 +110,8 @@ Godot --headless --path <项目路径> res://addons/fuse/editor/topology/export_
 
 ### 毕业导出器 CLI（derive / validate / export）
 
+> 2026-09-01 方向修订：**出口主线为 AI 交接工件**——derive / validate 为主线部件（拓扑 + System 划分 + preset 供给用户的 AI agent 写脱离 Fuse 的代码，handoff bundle 打包规划中）；`export_system`（GDScript 生成）为**实验特性**，非主线出口，生成代码仍依赖 Fuse 运行时。
+
 ```bash
 # 场景拓扑 → System 草稿 JSON（kind 过滤 runner；草稿目录默认不入库）
 Godot --headless --path <项目路径> res://addons/fuse/editor/graduation/derive_systems.tscn -- --scene res://<scene.tscn> [--out res://fuse_generated/systems/drafts]

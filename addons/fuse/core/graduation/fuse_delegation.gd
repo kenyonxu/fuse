@@ -4,6 +4,10 @@ extends RefCounted
 
 ## 毕业导出器桥接面——生成脚本的唯一运行时依赖
 ##
+## ⚠️ 实验特性（2026-09-01 方向修订）：出口主线已改为 AI 交接工件（供给用户的
+## AI agent 写脱离 Fuse 的代码）；本桥所属的 GDScript 生成路径降级为实验特性，
+## 保留作参考实现。经此桥执行的指令仍依赖 Fuse 运行时（组件类/变量服务/总线）。
+##
 ## 五桥：指令（PresetValueCodec 重建 + ActionRunner 执行）/
 ## 变量（临时 ExecutionContext）/ 事件（FuseEventBus 透传）/
 ## 门控（自包含复刻 BaseTrigger 语义）/ 条件（重建 BaseCondition 后统一 check 入口）。
