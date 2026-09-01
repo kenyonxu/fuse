@@ -8,7 +8,7 @@
 1. **事件序列**：每个 SendEvent 的 event_name、顺序、参数值；`$var` 引用需注明
    解析来源变量（例：`args.score = $c_score ← local 变量 c_score 当前值`）。
 2. **变量终值**：SetVariable / MathOperation 的写入目标、期望值、所在分支条件。
-3. **触发-效果对**：每个 binding 一行摘要——「OnReceiveEvent X → 扣命 → 若命=0 → GameEnd(“loss”)」。
+3. **触发-效果对**：每个 binding 一行摘要——「OnReceiveEvent X → 扣命 → 若命=0 → GameEnd("loss")」。
 4. **时序约束**：Wait 链与时长、OnInterval 周期、冷却时长、跨指令延迟。
 5. **边界条件**：重触发行为（SKIP / RESTART）、trigger_once、条件失败后的重试约束。
 
