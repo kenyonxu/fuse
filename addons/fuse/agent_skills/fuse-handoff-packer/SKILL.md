@@ -43,7 +43,7 @@
 引导用户提供系统涉及单元的 preset JSON：
 - 已导出 → 直接用（通常在用户项目的 preset 目录）
 - 未导出 → 指引用户在编辑器中选中对应 Trigger / Runner / MultiEventTrigger 节点，
-  点 Inspector 的 **📦 导出** 按钮（详细步骤见 Fuse 的 55 号预设指南）
+  点 Inspector 的 **📦 导出** 按钮（详细步骤见 `addons/fuse/docs/user_docs/guides/55-preset-system-guide.md`）
 - 补充路径：需要节点层级 / NodePath 锚点时直接读源 `.tscn` 文本核对
   （preset 是行为规格主体，.tscn 只用于结构核对）
 
@@ -60,7 +60,7 @@
 |---------------|----------|------------------|
 | SendEvent / OnReceiveEvent | `templates/event_bus.gd` | FuseEventBus 总线 |
 | WarmUpPool | `templates/object_pool.gd` | 对象池系统 |
-| global 层变量（读写 scope="global"） | `templates/global_state.gd` | global 变量层 / 存读档 |
+| 变量层枚举取 Global 值（如 variable_scope/save_to_scope/target_variable_scope 的整数枚举，hint 序 Local,Scope,Global）或 preset 顶层 variables.global 非空 | `templates/global_state.gd` | global 变量层 / 存读档 |
 无匹配依赖则不带 templates/ 目录（向用户说明）。
 
 ### 6 打包
@@ -73,7 +73,7 @@
 | `semantics.md` | 拷贝 `assets/semantics.md` |
 | `README-for-agent.md` | 按 `assets/README-for-agent.tpl` 填充 `{{占位符}}`（意图/范围/事件变量摘要从 system.json 提取） |
 | `acceptance.md` | 按 `assets/acceptance-guide.md` 指引从 preset 现场提炼 |
-| `components.json` | 收集 preset 中出现的全部 `type` → 从 `fuse_component_schemas.json` 抽对应条目为 `{组件名: 参数表}`；再从 `fuse_components.json`（list）按 name 过滤出条目数组的说明信息（category / description 键名）；枚举值从 `fuse_enums.json` 抽涉及的枚举。**preset 中出现但 schema 缺失的组件**：照常打包 preset 原文，并在 README-for-agent.md 标注"该组件无 schema，按 JSON 原文理解" |
+| `components.json` | 收集 preset 中出现的全部 `type` → 从 `fuse_component_schemas.json` 抽对应键为 `{组件名: 参数表}`；从 `fuse_components.json` 按 `type` 键过滤出条目（category / keywords 可读；注意 `description_key` 是本地化键名如 FUSE_INSTRUCTION_..._DESC，不是说明文本，勿直接当描述输出）；枚举值从 `fuse_enums.json` 抽涉及的枚举。**preset 中出现但 schema 缺失的组件**：照常打包 preset 原文，并在 README-for-agent.md 标注"该组件无 schema，按 JSON 原文理解" |
 | `templates/*.gd` | 拷贝用户确认后的模板 |
 
 ### 7 交付
@@ -82,5 +82,5 @@
 
 ## 失败分支速查
 - derive 校验 error → 与用户解决后重跑（步骤 2）
-- 用户不会导出 preset → 指 55 号指南的导出小节
+- 用户不会导出 preset → 指 `addons/fuse/docs/user_docs/guides/55-preset-system-guide.md` 的导出小节
 - Godot CLI 无输出/挂起 → 检查是否忘了输出重定向到文件
