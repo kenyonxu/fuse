@@ -88,6 +88,106 @@
     }
    ]
   },
+  "OnInterval": {
+   "category": "event",
+   "keywords": [
+    "interval",
+    "间隔",
+    "timer",
+    "定时器",
+    "repeat",
+    "重复",
+    "schedule",
+    "调度",
+    "periodic",
+    "周期",
+    "frequency",
+    "频率"
+   ],
+   "schema": [
+    {
+     "default": 0,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "max_repeats",
+     "type": 2,
+     "type_name": "int"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "auto_start",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "trigger_on_start",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "emit_repeat_count",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "use_random_interval",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": null,
+     "hint": 17,
+     "hint_string": "BaseCondition",
+     "is_nested_instructions": false,
+     "name": "stop_condition",
+     "type": 24,
+     "type_name": "Object"
+    },
+    {
+     "default": 1.0,
+     "hint": 1,
+     "hint_string": "0.001,3600.0,0.001",
+     "is_nested_instructions": false,
+     "name": "interval_seconds",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": 0.5,
+     "hint": 1,
+     "hint_string": "0.001,3600.0,0.001",
+     "is_nested_instructions": false,
+     "name": "min_interval_seconds",
+     "type": 3,
+     "type_name": "float"
+    },
+    {
+     "default": 2.0,
+     "hint": 1,
+     "hint_string": "0.001,3600.0,0.001",
+     "is_nested_instructions": false,
+     "name": "max_interval_seconds",
+     "type": 3,
+     "type_name": "float"
+    }
+   ]
+  },
   "LoadGlobalVariables": {
    "category": "instruction",
    "keywords": [
@@ -1000,6 +1100,31 @@
     }
    ]
   },
+  "OnReady": {
+   "category": "event",
+   "keywords": [
+    "ready",
+    "初始化",
+    "启动",
+    "start",
+    "init",
+    "scene",
+    "场景",
+    "lifecycle",
+    "生命周期"
+   ],
+   "schema": [
+    {
+     "default": 0.0,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "delay_seconds",
+     "type": 3,
+     "type_name": "float"
+    }
+   ]
+  },
   "SetVariable": {
    "category": "instruction",
    "keywords": [
@@ -1175,6 +1300,59 @@
      "name": "instructions",
      "type": 28,
      "type_name": "Array"
+    }
+   ]
+  },
+  "OnReceiveEvent": {
+   "category": "event",
+   "keywords": [
+    "event",
+    "receive",
+    "listen",
+    "subscribe",
+    "事件",
+    "接收",
+    "监听",
+    "订阅",
+    "bus",
+    "总线"
+   ],
+   "schema": [
+    {
+     "default": "",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "event_name",
+     "type": 4,
+     "type_name": "String"
+    },
+    {
+     "default": false,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "trigger_once",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": true,
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "store_args_to_local",
+     "type": 1,
+     "type_name": "bool"
+    },
+    {
+     "default": "event_",
+     "hint": 0,
+     "hint_string": "",
+     "is_nested_instructions": false,
+     "name": "local_var_prefix",
+     "type": 4,
+     "type_name": "String"
     }
    ]
   },

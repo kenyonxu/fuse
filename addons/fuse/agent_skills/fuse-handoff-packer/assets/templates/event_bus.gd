@@ -20,7 +20,8 @@ var _next_id := 0
 ## 发送总线事件：先广播 event_sent 信号，再同步调用全部订阅者
 func send_event(event_name: String, args: Dictionary = {}) -> void:
 	event_sent.emit(event_name, args)
-	var list: Array = _subscribers.get(event_name, [])
+	# 复制一份再遍历：回调内 unsubscribe 修改原数组会导致 remove_at 跳条目
+	var list: Array = (_subscribers.get(event_name, []) as Array).duplicate()
 	for entry in list:
 		if entry.cb.is_valid():
 			entry.cb.call(args)

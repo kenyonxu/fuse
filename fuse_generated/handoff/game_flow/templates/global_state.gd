@@ -28,6 +28,8 @@ func erase_value(name: String) -> void:
 
 
 ## 存档（对应 SaveGlobalVariables：全部 global 变量写盘）
+## 注意：Fuse 的 SaveGlobalVariables 配 PERSISTENT_ONLY 时仅存 persistent 变量；
+## 本模板 save_state 恒存全部，等价实现按 preset 配置自行加过滤。
 func save_state() -> bool:
 	var cfg := ConfigFile.new()
 	for key in _values:

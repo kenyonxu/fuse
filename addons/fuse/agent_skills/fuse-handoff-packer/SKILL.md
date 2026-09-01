@@ -55,7 +55,7 @@
 ```
 
 ### 5 模板确认
-扫描 preset JSON 中出现的指令 `type` 集合，按下表推荐基建模板，展示给用户确认增删：
+扫描 preset 全树的 `type` 集合（指令与事件组件），按下表推荐基建模板，展示给用户确认增删：
 | preset 中出现 | 推荐模板 | 对齐的 Fuse 概念 |
 |---------------|----------|------------------|
 | SendEvent / OnReceiveEvent | `templates/event_bus.gd` | FuseEventBus 总线 |
@@ -73,7 +73,7 @@
 | `semantics.md` | 拷贝 `assets/semantics.md` |
 | `README-for-agent.md` | 按 `assets/README-for-agent.tpl` 填充 `{{占位符}}`（意图/范围/事件变量摘要从 system.json 提取） |
 | `acceptance.md` | 按 `assets/acceptance-guide.md` 指引从 preset 现场提炼 |
-| `components.json` | 收集 preset 中出现的全部 `type` → 从 `fuse_component_schemas.json` 抽对应键为 `{组件名: 参数表}`；从 `fuse_components.json` 按 `type` 键过滤出条目（category / keywords 可读；注意 `description_key` 是本地化键名如 FUSE_INSTRUCTION_..._DESC，不是说明文本，勿直接当描述输出）；枚举值从 `fuse_enums.json` 抽涉及的枚举。**preset 中出现但 schema 缺失的组件**：照常打包 preset 原文，并在 README-for-agent.md 标注"该组件无 schema，按 JSON 原文理解" |
+| `components.json` | 收集 preset 全树出现的全部 `type`（**包括 events 定义的事件组件 type**，事件组件同样在 schemas JSON 中）→ 从 `fuse_component_schemas.json` 抽对应键为 `{组件名: 参数表}`；从 `fuse_components.json` 按 `type` 键过滤出条目（category / keywords 可读；注意 `description_key` 是本地化键名如 FUSE_INSTRUCTION_..._DESC，不是说明文本，勿直接当描述输出）；枚举值从 `fuse_enums.json` 抽涉及的枚举。自检：components 产物键数应等于 preset 全树 type 集合大小。**preset 中出现但 schema 缺失的组件**：照常打包 preset 原文，并在 README-for-agent.md 标注"该组件无 schema，按 JSON 原文理解" |
 | `templates/*.gd` | 拷贝用户确认后的模板 |
 
 模板拷贝后对 bundle 内每个 .gd 跑一次 `--check-only` 解析验证（命令与管道纪律同步骤 2），失败即中止并报告。

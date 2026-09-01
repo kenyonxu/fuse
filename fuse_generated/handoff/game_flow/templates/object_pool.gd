@@ -5,6 +5,7 @@
 ##   warm_up_mode  IMMEDIATE 一次性预热 / BATCH 按 batch_size 分批、批间 batch_delay 秒
 ##   warm_up_count 预热实例总数；pool_initial_size / pool_max_size 池容量上下限
 ## 用法：作为节点 add_child 后调用 warm_up()；取用 acquire()，归还 release(node)。
+## 注意：池中实例不在场景树内——acquire() 取出后需自行 add_child 才会渲染/参与场景。
 extends Node
 
 enum WarmUpMode { IMMEDIATE, BATCH }
@@ -30,6 +31,9 @@ func warm_up() -> void:
 	while remaining > 0:
 		var n: int = mini(batch_size, remaining) if warm_up_mode == WarmUpMode.BATCH else remaining
 		for i in n:
+			# 池已达上限：继续预热只会产生不入池的孤儿实例，直接结束
+			if _pool.size() >= pool_max_size:
+				return
 			var node := _create_instance()
 			if node == null:
 				continue
