@@ -1,5 +1,10 @@
 # Fuse — Godot 可视化逻辑插件：从 AI 原型到工程代码的非破坏性桥梁
 
+[![爱发电](https://img.shields.io/badge/赞助-爱发电-ff69b4?style=flat-square)](https://afdian.com/a/kai2045)
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?style=flat-square&logo=paypal)](https://www.paypal.com/paypalme/kai2045)
+
+📖 中文 | [English](README.en.md)
+
 Fuse 是一个 Godot 4.7 可视化编程 / 事件系统插件。原型侧：Event / Instruction / Condition 三类砖块（Brick）在 Inspector 里搭建与调节游戏逻辑，AI 可直接生成合规的 preset JSON；出口侧：拓扑与 preset 产出结构化交接工件（System 划分 + 行为规格），交给**你自己的 AI agent** 编写脱离 Fuse 的工程代码——不写代码的用户留在 Fuse 运行时继续调参，源 Trigger 始终不动，随时可回滚。
 
 **5 分钟上手**：跟着[快速开始指南](addons/fuse/docs/zh_CN/user_docs/quick_start.md)创建你的第一个 Fuse 单元。
@@ -102,3 +107,5 @@ MIT License — 详见 [LICENSE](LICENSE)
 
 - GitHub 仓库：https://github.com/kenyonxu/fuse
 - 问题反馈：https://github.com/kenyonxu/fuse/issues
+- 更新日志：[CHANGELOG](addons/fuse/CHANGELOG.md) · [English](addons/fuse/CHANGELOG.en.md)
+- 赞助支持：[爱发电](https://afdian.com/a/kai2045) · [PayPal](https://www.paypal.com/paypalme/kai2045)
