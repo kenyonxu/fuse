@@ -241,7 +241,7 @@ Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger
 - [全局变量管理器](guides/global_variable_manager_v2.md) — 全局变量系统
 - [全局变量持久化](guides/global-variable-persistence-guide.md) — 存档与读取
 - [表达式系统](guides/expression-guide.md) — 运行时表达式计算
-- [Event Bus 指南](guides/event_bus_guide.md) — 跨场景事件通信
+- [Event Bus 指南](guides/34-event-bus-guide.md) — 跨场景事件通信
 
 ### 最佳实践
 

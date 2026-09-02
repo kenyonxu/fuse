@@ -59,7 +59,7 @@ GlobalVariableAssistant 自动存档）、最佳实践。
 | # | 章节 | 内容 | 来源 |
 |---|------|------|------|
 | 1 | 概述 | 全局变量的作用、管理+持久化整体架构 | 合并概述段 |
-| 2 | 概念准备 | 三层变量系统简介（Local/Scope/Global） | `variable_system_guide.md` 中精简引用 |
+| 2 | 概念准备 | 三层变量系统简介（Local/Scope/Global） | `variable-system-guide.md` 中精简引用 |
 | 3 | 快速开始 | 创建变量 → 设置值 → 保存 → 加载的完整流程 | 重写，融合两份文档的快速开始 |
 | 4 | GlobalVariableManager 使用 | 单例模式、变量 CRUD、信号监听 | 从 `global_variable_manager_v2.md` 提取 |
 | 5 | 持久化系统 | SaveGlobalVariables（保存目标/范围）、LoadGlobalVariables（加载来源） | 从 `persistence-guide.md` 提取并扩展 |
@@ -502,7 +502,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 | **scene** | 1 | CheckPreloadStatus | `conditions/scene/check_preload_status.gd` |
 | **ui** | 1 | CheckUIVisible | `conditions/ui/check_ui_visible.gd` |
 
-以及 `variable` 类别中的非核心条件（核心变量比较已在 `variable_system_guide.md` 覆盖）：
+以及 `variable` 类别中的非核心条件（核心变量比较已在 `variable-system-guide.md` 覆盖）：
 
 | 补充 | 条件数 | 条件名称 |
 |------|--------|---------|
@@ -527,7 +527,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 - 各小类之间用标题层级区分，避免信息密度过大
 - 条件数较少（每类 1-2 个），无需为每类单独成篇
 - 以距离、导航、渲染、UI 等"补充型条件"的 quick reference 定位
-- 与 `animation-guide.md`、`physics-guide.md` 等大类的条件指南不重复：`variable` 类只取 CheckHealthValue 等补充条件，核心 CompareVariable 已在 `variable_system_guide.md` 覆盖
+- 与 `animation-guide.md`、`physics-guide.md` 等大类的条件指南不重复：`variable` 类只取 CheckHealthValue 等补充条件，核心 CompareVariable 已在 `variable-system-guide.md` 覆盖
 - `conditions/composite/` 已有 `composite-conditions-guide.md` 独立文档，不纳入此合集
 
 ---
@@ -567,7 +567,7 @@ Phase 4（P2 补充新增 → 锦上添花）
 | `physics-guide.md` | 5 物理指令 + 10 物理事件 | P1-E 只有物理**条件**（7个），不重复指令/事件 |
 | `input-events-guide.md` | 12 输入事件 | P1-C 只有输入**条件**（6个），不重复事件 |
 | `animation-guide.md` | 动画指令 | P2-A 只有动画**条件**（5个），不重复指令 |
-| `variable_system_guide.md` | 三层变量系统 | 合并 A 只覆盖 GlobalVariableManager 和持久化，不重复变量基础概念 |
+| `variable-system-guide.md` | 三层变量系统 | 合并 A 只覆盖 GlobalVariableManager 和持久化，不重复变量基础概念 |
 | `composite-conditions-guide.md` | 4 组合条件 | P2-C 不包含 composite/ 目录的条件 |
 | `transform-guide.md` | 7 变换指令 | P0-A 不包含 transform/ 目录的指令 |
 
@@ -583,7 +583,7 @@ Phase 4（P2 补充新增 → 锦上添花）
 - `camera/` — 6 指令（已有 `camera-guide.md`）
 - `debug/` — 3 指令（已有 `debugging-guide.md`、`breakpoint-guide.md`）
 - `dictionaries/` — 17 指令（已有 `dictionary-operations-guide.md`）
-- `event/` — 1 指令（引用 `event_bus_guide.md`）
+- `event/` — 1 指令（引用 `event-bus-guide.md`）
 - `flow_control/` — 12 指令（已有 `flow-control-guide.md`）
 - `math/` — 8 指令（已有 `math-vector-guide.md`、`expression-guide.md`）
 - `movement/` — 1 指令（已有 `movement-system-guide.md`）
@@ -598,13 +598,13 @@ Phase 4（P2 补充新增 → 锦上添花）
 - `transform/` — 7 指令（已有 `transform-guide.md`）
 - `tween/` — 14 指令（已有 `tween-animation-guide.md`）
 - `ui/` — 6 指令（已有 `ui-guide.md`）
-- `variables/` — 9 指令（已有 `variable_system_guide.md` + 合并 A）
+- `variables/` — 9 指令（已有 `variable-system-guide.md` + 合并 A）
 
 ### Events（全部 60+）
 
 - `animation/` — 6 事件（已有 `animation-guide.md`）
 - `audio/` — 4 事件（已有 `audio-guide.md`）
-- `event/` — 1 事件（已有 `event_bus_guide.md`）
+- `event/` — 1 事件（已有 `event-bus-guide.md`）
 - `gameplay/` — 2 事件
 - `input/` — 12 事件（已有 `input-events-guide.md`）
 - `lifecycle/` — **7 事件（P0-B 待新增）**
@@ -615,7 +615,7 @@ Phase 4（P2 补充新增 → 锦上添花）
 - `timing/` — **4 事件（P1-A 待新增）**
 - `tween/` — 1 事件（已有 `tween-animation-guide.md`）
 - `ui/` — 7 事件（已有 `ui-guide.md`）
-- `variable/` — 1 事件（已有 `variable_system_guide.md`）
+- `variable/` — 1 事件（已有 `variable-system-guide.md`）
 
 ### Conditions（全部 50+）
 
@@ -636,7 +636,7 @@ Phase 4（P2 补充新增 → 锦上添花）
 - `system/` — 2 条件（→ P2-C 综合合集）
 - `time/` — **4 条件（P2-B 待新增）**
 - `ui/` — 1 条件（→ P2-C 综合合集）
-- `variable/` — 5 条件（部分在 `variable_system_guide.md`，剩余 → P2-C 综合合集）
+- `variable/` — 5 条件（部分在 `variable-system-guide.md`，剩余 → P2-C 综合合集）
 
 ---
 

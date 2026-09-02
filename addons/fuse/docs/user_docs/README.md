@@ -21,7 +21,7 @@
 
 | 编号 | 文档 | 说明 |
 |------|------|------|
-| 01 | [变量系统指南](guides/01-variable_system_guide.md) | 变量系统整体使用 |
+| 01 | [变量系统指南](guides/01-variable-system-guide.md) | 变量系统整体使用 |
 | 02 | [触发器选择](guides/02-trigger-selection-guide.md) | 触发器选型与配置 |
 | 03 | [Runner 指南](guides/03-runner-guide.md) | Runner 执行模型 |
 | 04 | [多事件触发器](guides/04-multi-event-trigger-guide.md) | MultiEventTrigger 配置 |
@@ -64,7 +64,7 @@
 | 31 | [计时事件](guides/31-timing-events-guide.md) | 计时相关事件 |
 | 32 | [输入事件](guides/32-input-events-guide.md) | 输入事件处理 |
 | 33 | [节点事件](guides/33-node-events-guide.md) | 节点相关事件 |
-| 34 | [Event Bus](guides/34-event_bus_guide.md) | 全局事件通信 |
+| 34 | [Event Bus](guides/34-event-bus-guide.md) | 全局事件通信 |
 
 #### 条件（40-46）
 
@@ -83,19 +83,20 @@
 | 编号 | 文档 | 说明 |
 |------|------|------|
 | 50 | [场景预加载](guides/50-scene-preloading-guide.md) | 预加载优化 |
-| 51 | [对象池系统](guides/51-object_pool_system_guide.md) | 对象池使用 |
+| 51 | [对象池系统](guides/51-object-pool-system-guide.md) | 对象池使用 |
 | 52 | [多线程优化](guides/52-multithreading-optimization.md) | 多线程执行 |
-| 53 | [图标管理器](guides/53-icon_manager_guide.md) | 图标配置与管理 |
+| 53 | [图标管理器](guides/53-icon-manager-guide.md) | 图标配置与管理 |
 | 54 | [全局变量指南](guides/54-global-variables-guide.md) | 全局变量使用 |
 
 ---
 
-## 🎯 最佳实践（2 篇）
+## 🎯 最佳实践（3 篇）
 
 | 文档 | 说明 |
 |------|------|
 | [创建自定义事件](best_practices/custom_event.md) | 事件基类、自定义步骤、参数、测试 |
 | [创建自定义指令](best_practices/custom_instruction.md) | 指令基类、自定义步骤、异步、错误处理 |
+| [创建自定义条件](best_practices/custom_condition.md) | 条件基类、模板方法、线程安全、缓存 |
 
 ---
 
@@ -104,8 +105,8 @@
 ### 我想…
 - **上手 Fuse** → [快速开始](quick_start.md)
 - **做动画/特效** → [Tween 补间动画](guides/18-tween-animation-guide.md) · [动画指南](guides/12-animation-guide.md)
-- **Trigger 间通信** → [Event Bus](guides/34-event_bus_guide.md)
-- **创建自定义组件** → [自定义事件](best_practices/custom_event.md) · [自定义指令](best_practices/custom_instruction.md)
+- **Trigger 间通信** → [Event Bus](guides/34-event-bus-guide.md)
+- **创建自定义组件** → [自定义事件](best_practices/custom_event.md) · [自定义指令](best_practices/custom_instruction.md) · [自定义条件](best_practices/custom_condition.md)
 - **调试** → [调试指南](guides/25-debugging-guide.md) · [断点](guides/26-breakpoint-guide.md)
 
 > 开发者创建组件的完整流程另见 [../dev_docs/guides/](../dev_docs/guides/)（事件/指令/条件创建指南）。
