@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/fuse-logger-guide.md)
+
 # FuseLogger 日志系统开发指南
 
 > **目标**: 为开发者提供 FuseLogger 统一日志系统的完整开发指引，包括日志级别控制、本地化日志、组件级过滤和性能优化。

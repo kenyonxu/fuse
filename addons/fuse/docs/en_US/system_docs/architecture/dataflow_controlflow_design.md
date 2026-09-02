@@ -1,58 +1,58 @@
-> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/dataflow_controlflow_design.md)
+> 🌐 [**中文版**](../../../zh_CN/system_docs/architecture/dataflow_controlflow_design.md) | English
 
-# 数据流和控制流详细设计
+# Data Flow and Control Flow Detailed Design
 
-## 目录
-1. [数据流设计](#1-数据流设计)
-2. [控制流设计](#2-控制流设计)
-3. [执行引擎](#3-执行引擎)
-4. [异步处理机制](#4-异步处理机制)
-5. [错误处理和恢复](#5-错误处理和恢复)
-6. [性能优化策略](#6-性能优化策略)
+## Table of Contents
+1. [Data Flow Design](#1-data-flow-design)
+2. [Control Flow Design](#2-control-flow-design)
+3. [Execution Engine](#3-execution-engine)
+4. [Asynchronous Processing Mechanism](#4-asynchronous-processing-mechanism)
+5. [Error Handling and Recovery](#5-error-handling-and-recovery)
+6. [Performance Optimization Strategies](#6-performance-optimization-strategies)
 
 ---
 
-## 1. 数据流设计
+## 1. Data Flow Design
 
-### 1.1 数据流概述
+### 1.1 Data Flow Overview
 
-数据流是可视化编程系统中数据在各个组件之间传递的路径和机制。设计原则包括：
+Data flow is the path and mechanism by which data travels between components in the visual programming system. The design principles include:
 
-- **类型安全**：确保数据传递的类型安全
-- **上下文隔离**：不同执行上下文之间的数据隔离
-- **高效传递**：最小化数据复制和转换开销
-- **可追踪性**：支持数据流的追踪和调试
+- **Type safety**: Ensure type-safe data passing
+- **Context isolation**: Data isolation between different execution contexts
+- **Efficient passing**: Minimize the overhead of data copying and conversion
+- **Traceability**: Support tracing and debugging of the data flow
 
-### 1.2 数据流架构
+### 1.2 Data Flow Architecture
 
 ```mermaid
 graph TB
-    subgraph "数据源 (Data Sources)"
-        TriggerData[触发器数据]
-        InputData[输入数据]
-        SensorData[传感器数据]
-        ExternalData[外部数据]
+    subgraph "Data Sources"
+        TriggerData[Trigger Data]
+        InputData[Input Data]
+        SensorData[Sensor Data]
+        ExternalData[External Data]
     end
     
-    subgraph "数据处理 (Data Processing)"
-        ContextProcessor[上下文处理器]
-        DataTransformer[数据转换器]
-        DataValidator[数据验证器]
-        DataFilter[数据过滤器]
+    subgraph "Data Processing"
+        ContextProcessor[Context Processor]
+        DataTransformer[Data Transformer]
+        DataValidator[Data Validator]
+        DataFilter[Data Filter]
     end
     
-    subgraph "数据存储 (Data Storage)"
-        LocalVars[局部变量]
-        TriggerVars[触发器变量]
-        GlobalVars[全局变量]
-        TempData[临时数据]
+    subgraph "Data Storage"
+        LocalVars[Local Variables]
+        TriggerVars[Trigger Variables]
+        GlobalVars[Global Variables]
+        TempData[Temporary Data]
     end
     
-    subgraph "数据消费 (Data Consumers)"
-        Instructions[指令系统]
-        Conditions[条件系统]
-        Actions[动作系统]
-        UIComponents[UI组件]
+    subgraph "Data Consumers"
+        Instructions[Instruction System]
+        Conditions[Condition System]
+        Actions[Action System]
+        UIComponents[UI Components]
     end
     
     TriggerData --> ContextProcessor
@@ -75,20 +75,20 @@ graph TB
     TempData --> UIComponents
 ```
 
-### 1.3 执行上下文系统
+### 1.3 Execution Context System
 
 ```gdscript
 @tool
 class_name ExecutionContext extends RefCounted
 
-## 上下文配置
+## Context configuration
 class ContextConfig:
     var enable_data_tracking: bool = false
     var enable_performance_monitoring: bool = false
     var enable_debug_logging: bool = false
     var max_data_history: int = 100
 
-## 上下文数据
+## Context data
 var trigger: BaseTrigger
 var target: Node
 var local_variables: Dictionary = {}
@@ -96,23 +96,23 @@ var global_variables: VariableContainer
 var temporary_data: Dictionary = {}
 var data_history: Array[Dictionary] = []
 
-## 执行状态
+## Execution state
 var execution_id: String
 var start_time: float
 var current_time: float
 var is_cancelled: bool = false
 var cancellation_reason: String = ""
 
-## 性能监控
+## Performance monitoring
 var performance_data: Dictionary = {}
 var memory_usage: Array[float] = []
 
-## 信号
+## Signals
 signal data_changed(key: String, old_value: Variant, new_value: Variant)
 signal context_cancelled(reason: String)
 signal execution_completed
 
-## 配置
+## Configuration
 var config: ContextConfig
 
 func _init(trigger_node: BaseTrigger = null, target_node: Node = null, context_config: ContextConfig = null):
@@ -124,44 +124,44 @@ func _init(trigger_node: BaseTrigger = null, target_node: Node = null, context_c
     start_time = Time.get_ticks_msec() / 1000.0
     current_time = start_time
     
-    # 初始化全局变量容器
+    # Initialize the global variable container
     global_variables = VariableManager.get_global_variables()
 
-## 生成执行ID
+## Generate an execution ID
 func _generate_execution_id() -> String:
     return "exec_%d_%d" % [Time.get_ticks_msec(), randi()]
 
-## 获取变量值（支持作用域链）
+## Get a variable value (supports the scope chain)
 func get_variable(name: String, default_value = null) -> Variant:
     var value = null
     
-    # 1. 检查临时数据
+    # 1. Check temporary data
     if temporary_data.has(name):
         value = temporary_data[name]
     
-    # 2. 检查局部变量
+    # 2. Check local variables
     elif local_variables.has(name):
         value = local_variables[name]
     
-    # 3. 检查触发器变量
+    # 3. Check trigger variables
     elif trigger and trigger.local_variables and trigger.local_variables.has(name):
         value = trigger.local_variables.get(name)
     
-    # 4. 检查全局变量
+    # 4. Check global variables
     elif global_variables and global_variables.has(name):
         value = global_variables.get(name)
     
-    # 5. 返回默认值
+    # 5. Return the default value
     else:
         value = default_value
     
-    # 记录数据访问
+    # Record the data access
     if config.enable_data_tracking:
         _record_data_access(name, value)
     
     return value
 
-## 设置变量值（智能作用域选择）
+## Set a variable value (smart scope selection)
 func set_variable(name: String, value: Variant, scope: String = "auto") -> bool:
     var old_value = get_variable(name)
     var success = false
@@ -179,41 +179,41 @@ func set_variable(name: String, value: Variant, scope: String = "auto") -> bool:
         "temporary":
             temporary_data[name] = value
             success = true
-        "auto":  # 自动选择最佳作用域
+        "auto":  # Automatically select the best scope
             success = _auto_assign_variable_scope(name, value)
         _:
             push_error("Invalid variable scope: %s" % scope)
             return false
     
     if success:
-        # 记录数据变化
+        # Record the data change
         if config.enable_data_tracking:
             _record_data_change(name, old_value, value, scope)
         
-        # 发出变化信号
+        # Emit the change signal
         data_changed.emit(name, old_value, value)
         
-        # 性能监控
+        # Performance monitoring
         if config.enable_performance_monitoring:
             _update_performance_metrics(name, value)
     
     return success
 
-## 自动分配变量作用域
+## Automatically assign the variable scope
 func _auto_assign_variable_scope(name: String, value: Variant) -> bool:
-    # 优先级：临时 > 局部 > 触发器 > 全局
+    # Priority: temporary > local > trigger > global
     
-    # 如果变量名以"temp_"开头，分配到临时作用域
+    # If the variable name starts with "temp_", assign it to the temporary scope
     if name.begins_with("temp_"):
         temporary_data[name] = value
         return true
     
-    # 如果变量是基础类型且值较小，分配到局部作用域
+    # If the variable is a basic type with a small value, assign it to the local scope
     if _is_simple_type(value) and _is_small_value(value):
         local_variables[name] = value
         return true
     
-    # 如果变量已存在于某个作用域，更新该作用域
+    # If the variable already exists in a scope, update that scope
     if local_variables.has(name):
         local_variables[name] = value
         return true
@@ -222,15 +222,15 @@ func _auto_assign_variable_scope(name: String, value: Variant) -> bool:
     elif global_variables and global_variables.has(name):
         return global_variables.set(name, value)
     
-    # 默认分配到局部作用域
+    # Assign to the local scope by default
     local_variables[name] = value
     return true
 
-## 检查是否为简单类型
+## Check whether the value is a simple type
 func _is_simple_type(value: Variant) -> bool:
     return value is bool or value is int or value is float or value is String
 
-## 检查是否为小值
+## Check whether the value is small
 func _is_small_value(value: Variant) -> bool:
     if value is String:
         return (value as String).length() < 100
@@ -240,7 +240,7 @@ func _is_small_value(value: Variant) -> bool:
         return (value as Dictionary).size() < 10
     return true
 
-## 记录数据访问
+## Record a data access
 func _record_data_access(name: String, value: Variant):
     var access_record = {
         "type": "access",
@@ -250,7 +250,7 @@ func _record_data_access(name: String, value: Variant):
     }
     _add_to_data_history(access_record)
 
-## 记录数据变化
+## Record a data change
 func _record_data_change(name: String, old_value: Variant, new_value: Variant, scope: String):
     var change_record = {
         "type": "change",
@@ -262,15 +262,15 @@ func _record_data_change(name: String, old_value: Variant, new_value: Variant, s
     }
     _add_to_data_history(change_record)
 
-## 添加到数据历史
+## Add to the data history
 func _add_to_data_history(record: Dictionary):
     data_history.append(record)
     
-    # 限制历史记录数量
+    # Cap the number of history records
     if data_history.size() > config.max_data_history:
         data_history.pop_front()
 
-## 更新性能指标
+## Update performance metrics
 func _update_performance_metrics(name: String, value: Variant):
     current_time = Time.get_ticks_msec() / 1000.0
     
@@ -286,7 +286,7 @@ func _update_performance_metrics(name: String, value: Variant):
     metrics.last_access = current_time
     metrics.total_size += _estimate_value_size(value)
 
-## 估算值大小
+## Estimate the value size
 func _estimate_value_size(value: Variant) -> int:
     match typeof(value):
         TYPE_BOOL:
@@ -304,17 +304,17 @@ func _estimate_value_size(value: Variant) -> int:
         _:
             return 32
 
-## 请求取消执行
+## Request execution cancellation
 func request_cancel(reason: String = ""):
     is_cancelled = true
     cancellation_reason = reason
     context_cancelled.emit(reason)
 
-## 检查是否已取消
+## Check whether execution is cancelled
 func is_execution_cancelled() -> bool:
     return is_cancelled
 
-## 获取执行统计
+## Get execution statistics
 func get_execution_stats() -> Dictionary:
     return {
         "execution_id": execution_id,
@@ -329,11 +329,11 @@ func get_execution_stats() -> Dictionary:
         "performance_data": performance_data
     }
 
-## 清理临时数据
+## Clear temporary data
 func cleanup_temporary_data():
     temporary_data.clear()
 
-## 克隆上下文
+## Clone the context
 func clone() -> ExecutionContext:
     var new_context = ExecutionContext.new(trigger, target, config)
     new_context.local_variables = local_variables.duplicate(true)
@@ -344,37 +344,37 @@ func clone() -> ExecutionContext:
 
 ---
 
-## 2. 控制流设计
+## 2. Control Flow Design
 
-### 2.1 控制流概述
+### 2.1 Control Flow Overview
 
-控制流定义了可视化编程系统中指令和条件的执行顺序和逻辑。设计特点包括：
+Control flow defines the execution order and logic of instructions and conditions in the visual programming system. Design characteristics include:
 
-- **灵活的流程控制**：支持顺序、分支、循环等多种流程
-- **异步执行支持**：原生支持异步操作和等待
-- **条件分支**：基于条件的动态流程控制
-- **错误恢复**：支持异常处理和流程恢复
+- **Flexible flow control**: Supports sequential, branch, loop, and other flows
+- **Asynchronous execution support**: Native support for asynchronous operations and awaiting
+- **Conditional branching**: Dynamic flow control driven by conditions
+- **Error recovery**: Supports exception handling and flow recovery
 
-### 2.2 控制流类型
+### 2.2 Control Flow Types
 
 ```mermaid
 graph TB
-    subgraph "基本流程 (Basic Flows)"
-        SequentialFlow[顺序流程]
-        BranchFlow[分支流程]
-        LoopFlow[循环流程]
+    subgraph "Basic Flows"
+        SequentialFlow[Sequential Flow]
+        BranchFlow[Branch Flow]
+        LoopFlow[Loop Flow]
     end
     
-    subgraph "高级流程 (Advanced Flows)"
-        ParallelFlow[并行流程]
-        StateMachineFlow[状态机流程]
-        EventDrivenFlow[事件驱动流程]
+    subgraph "Advanced Flows"
+        ParallelFlow[Parallel Flow]
+        StateMachineFlow[State Machine Flow]
+        EventDrivenFlow[Event-Driven Flow]
     end
     
-    subgraph "特殊流程 (Special Flows)"
-        ConditionalFlow[条件流程]
-        ExceptionFlow[异常处理流程]
-        CleanupFlow[清理流程]
+    subgraph "Special Flows"
+        ConditionalFlow[Conditional Flow]
+        ExceptionFlow[Exception Handling Flow]
+        CleanupFlow[Cleanup Flow]
     end
     
     SequentialFlow --> BranchFlow
@@ -388,13 +388,13 @@ graph TB
     ExceptionFlow --> CleanupFlow
 ```
 
-### 2.3 流程控制器
+### 2.3 Flow Controller
 
 ```gdscript
 @tool
 class_name FlowController extends RefCounted
 
-## 流程类型
+## Flow types
 enum FlowType {
     SEQUENTIAL,
     BRANCH,
@@ -404,7 +404,7 @@ enum FlowType {
     EVENT_DRIVEN
 }
 
-## 流程状态
+## Flow states
 enum FlowState {
     IDLE,
     RUNNING,
@@ -414,14 +414,14 @@ enum FlowState {
     CANCELLED
 }
 
-## 流程执行结果
+## Flow execution result
 class FlowResult:
     var state: FlowState
     var output_data: Dictionary = {}
     var error_message: String = ""
     var execution_time: float = 0.0
 
-## 流程配置
+## Flow configuration
 class FlowConfig:
     var enable_debugging: bool = false
     var enable_profiling: bool = false
@@ -437,7 +437,7 @@ var config: FlowConfig
 func _init(flow_config: FlowConfig = null):
     config = flow_config if flow_config else FlowConfig.new()
 
-## 执行流程
+## Execute a flow
 func execute_flow(
     flow_type: FlowType,
     flow_data: Dictionary,
@@ -453,14 +453,14 @@ func execute_flow(
     flow_executor.context = context
     flow_executor.config = config
     
-    # 添加到流程栈
+    # Push onto the flow stack
     flow_stack.append(flow_executor)
     current_flow = flow_executor
     
-    # 执行流程
+    # Execute the flow
     var result = await flow_executor.execute()
     
-    # 从流程栈移除
+    # Pop from the flow stack
     flow_stack.erase(flow_executor)
     if flow_stack.size() > 0:
         current_flow = flow_stack[-1]
@@ -469,7 +469,7 @@ func execute_flow(
     
     return result
 
-## 创建流程执行器
+## Create a flow executor
 func _create_flow_executor(flow_type: FlowType, flow_data: Dictionary) -> FlowExecutor:
     match flow_type:
         FlowType.SEQUENTIAL:
@@ -486,22 +486,22 @@ func _create_flow_executor(flow_type: FlowType, flow_data: Dictionary) -> FlowEx
             return EventDrivenFlowExecutor.new(flow_data)
     return null
 
-## 暂停当前流程
+## Pause the current flow
 func pause_current_flow():
     if current_flow:
         current_flow.pause()
 
-## 恢复当前流程
+## Resume the current flow
 func resume_current_flow():
     if current_flow:
         current_flow.resume()
 
-## 取消当前流程
+## Cancel the current flow
 func cancel_current_flow(reason: String = ""):
     if current_flow:
         current_flow.cancel(reason)
 
-## 获取流程状态
+## Get the flow status
 func get_flow_status() -> Dictionary:
     return {
         "current_flow": current_flow,
@@ -509,7 +509,7 @@ func get_flow_status() -> Dictionary:
         "stack_trace": _get_stack_trace()
     }
 
-## 获取堆栈跟踪
+## Get the stack trace
 func _get_stack_trace() -> Array[Dictionary]:
     var trace = []
     
@@ -525,24 +525,24 @@ func _get_stack_trace() -> Array[Dictionary]:
     return trace
 ```
 
-### 2.4 流程执行器基类
+### 2.4 Flow Executor Base Class
 
 ```gdscript
 @tool
 class_name FlowExecutor extends RefCounted
 
-## 流程数据
+## Flow data
 var flow_data: Dictionary = {}
 var context: ExecutionContext = null
 var config: FlowController.FlowConfig = null
 
-## 执行状态
+## Execution state
 var state: FlowController.FlowState = FlowController.FlowState.IDLE
 var start_time: float = 0.0
 var execution_time: float = 0.0
 var error_message: String = ""
 
-## 信号
+## Signals
 signal flow_started()
 signal flow_completed(result: FlowController.FlowResult)
 signal flow_paused()
@@ -550,42 +550,42 @@ signal flow_resumed()
 signal flow_cancelled(reason: String)
 signal flow_error(error_message: String)
 
-## 执行流程（子类实现）
+## Execute the flow (implemented by subclasses)
 func execute() -> FlowController.FlowResult:
     push_error("execute() must be implemented by subclass")
     return null
 
-## 暂停流程
+## Pause the flow
 func pause():
     if state == FlowController.FlowState.RUNNING:
         state = FlowController.FlowState.PAUSED
         flow_paused.emit()
 
-## 恢复流程
+## Resume the flow
 func resume():
     if state == FlowController.FlowState.PAUSED:
         state = FlowController.FlowState.RUNNING
         flow_resumed.emit()
 
-## 取消流程
+## Cancel the flow
 func cancel(reason: String = ""):
     state = FlowController.FlowState.CANCELLED
     error_message = reason
     flow_cancelled.emit(reason)
 
-## 获取流程类型
+## Get the flow type
 func get_flow_type() -> String:
     return "Base"
 
-## 获取状态
+## Get the state
 func get_state() -> FlowController.FlowState:
     return state
 
-## 获取执行时间
+## Get the execution time
 func get_execution_time() -> float:
     return execution_time
 
-## 创建执行结果
+## Create the execution result
 func _create_result(result_state: FlowController.FlowState) -> FlowController.FlowResult:
     var result = FlowController.FlowResult.new()
     result.state = result_state
@@ -593,13 +593,13 @@ func _create_result(result_state: FlowController.FlowState) -> FlowController.Fl
     result.execution_time = execution_time
     return result
 
-## 开始执行
+## Start execution
 func _start_execution():
     state = FlowController.FlowState.RUNNING
     start_time = Time.get_ticks_msec() / 1000.0
     flow_started.emit()
 
-## 完成执行
+## Complete execution
 func _complete_execution(result_state: FlowController.FlowState) -> FlowController.FlowResult:
     execution_time = Time.get_ticks_msec() / 1000.0 - start_time
     state = result_state
@@ -609,20 +609,20 @@ func _complete_execution(result_state: FlowController.FlowState) -> FlowControll
     
     return result
 
-## 处理错误
+## Handle an error
 func _handle_error(error: String):
     state = FlowController.FlowState.ERROR
     error_message = error
     flow_error.emit(error)
 ```
 
-### 2.5 顺序流程执行器
+### 2.5 Sequential Flow Executor
 
 ```gdscript
 @tool
 class_name SequentialFlowExecutor extends FlowExecutor
 
-## 顺序流程数据
+## Sequential flow data
 class SequentialFlowData:
     var instructions: Array[BaseInstruction] = []
     var stop_on_error: bool = true
@@ -634,7 +634,7 @@ func _init(data: Dictionary):
     flow_data = data
     flow_config = SequentialFlowData.new()
     
-    # 解析流程数据
+    # Parse the flow data
     if data.has("instructions"):
         flow_config.instructions = data["instructions"]
     if data.has("stop_on_error"):
@@ -648,7 +648,7 @@ func execute() -> FlowController.FlowResult:
     var last_result = true
     
     for i in range(flow_config.instructions.size()):
-        # 检查是否已取消
+        # Check whether execution is cancelled
         if context.is_execution_cancelled():
             return _complete_execution(FlowController.FlowState.CANCELLED)
         
@@ -656,15 +656,15 @@ func execute() -> FlowController.FlowResult:
         if not instruction:
             continue
         
-        # 执行指令
+        # Execute the instruction
         instruction.execute(context)
         await instruction.finished
         
-        # 检查指令结果
+        # Check the instruction result
         var instruction_result = _get_instruction_result(instruction)
         last_result = instruction_result
         
-        # 处理停止条件
+        # Handle the stop conditions
         if flow_config.stop_on_error and not instruction_result:
             return _complete_execution(FlowController.FlowState.ERROR)
         
@@ -676,20 +676,20 @@ func execute() -> FlowController.FlowResult:
 func get_flow_type() -> String:
     return "Sequential"
 
-## 获取指令执行结果
+## Get the instruction execution result
 func _get_instruction_result(instruction: BaseInstruction) -> bool:
-    # 这里可以根据指令类型和上下文判断执行结果
-    # 简化实现：假设所有指令都成功
+    # The execution result could be derived from the instruction type and context here
+    # Simplified implementation: assume all instructions succeed
     return true
 ```
 
-### 2.6 分支流程执行器
+### 2.6 Branch Flow Executor
 
 ```gdscript
 @tool
 class_name BranchFlowExecutor extends FlowExecutor
 
-## 分支流程数据
+## Branch flow data
 class BranchFlowData:
     var condition: BaseCondition
     var true_instructions: Array[BaseInstruction] = []
@@ -702,7 +702,7 @@ func _init(data: Dictionary):
     flow_data = data
     flow_config = BranchFlowData.new()
     
-    # 解析流程数据
+    # Parse the flow data
     if data.has("condition"):
         flow_config.condition = data["condition"]
     if data.has("true_instructions"):
@@ -715,16 +715,16 @@ func _init(data: Dictionary):
 func execute() -> FlowController.FlowResult:
     _start_execution()
     
-    # 检查是否已取消
+    # Check whether execution is cancelled
     if context.is_execution_cancelled():
         return _complete_execution(FlowController.FlowState.CANCELLED)
     
-    # 评估条件
+    # Evaluate the condition
     var condition_result = false
     if flow_config.condition:
         condition_result = flow_config.condition.check(context)
     
-    # 选择执行的分支
+    # Select the branch to execute
     var instructions_to_execute: Array[BaseInstruction] = []
     
     match flow_config.default_branch:
@@ -737,9 +737,9 @@ func execute() -> FlowController.FlowResult:
         _:
             instructions_to_execute = flow_config.true_instructions if condition_result else flow_config.false_instructions
     
-    # 执行选定的指令
+    # Execute the selected instructions
     for instruction in instructions_to_execute:
-        # 检查是否已取消
+        # Check whether execution is cancelled
         if context.is_execution_cancelled():
             return _complete_execution(FlowController.FlowState.CANCELLED)
         
@@ -754,24 +754,24 @@ func get_flow_type() -> String:
 
 ---
 
-## 3. 执行引擎
+## 3. Execution Engine
 
-### 3.1 执行引擎概述
+### 3.1 Execution Engine Overview
 
-执行引擎是可视化编程系统的核心运行时，负责协调指令、条件、变量和触发器的执行。设计特点：
+The execution engine is the core runtime of the visual programming system, responsible for coordinating the execution of instructions, conditions, variables, and triggers. Design characteristics:
 
-- **统一执行模型**：提供统一的执行接口和模型
-- **异步优先**：原生支持异步执行和等待
-- **资源管理**：智能管理执行资源和内存
-- **性能监控**：内置性能监控和分析功能
+- **Unified execution model**: Provides a unified execution interface and model
+- **Async-first**: Native support for asynchronous execution and awaiting
+- **Resource management**: Intelligently manages execution resources and memory
+- **Performance monitoring**: Built-in performance monitoring and profiling
 
-### 3.2 执行引擎架构
+### 3.2 Execution Engine Architecture
 
 ```gdscript
 @tool
 class_name ExecutionEngine extends Node
 
-## 执行引擎配置
+## Execution engine configuration
 class EngineConfig:
     var max_concurrent_executions: int = 10
     var enable_profiling: bool = false
@@ -779,7 +779,7 @@ class EngineConfig:
     var execution_timeout: float = 30.0
     var enable_gc_optimization: bool = true
 
-## 执行状态
+## Execution state
 enum ExecutionState {
     IDLE,
     RUNNING,
@@ -790,16 +790,16 @@ enum ExecutionState {
 var config: EngineConfig
 var current_state: ExecutionState = ExecutionState.IDLE
 
-## 执行管理
+## Execution management
 var active_executions: Dictionary = {}  # execution_id -> ExecutionContext
 var execution_queue: Array[Dictionary] = []
 var execution_history: Array[Dictionary] = []
 
-## 性能监控
+## Performance monitoring
 var performance_monitor: PerformanceMonitor = null
 var resource_monitor: ResourceMonitor = null
 
-## 信号
+## Signals
 signal execution_started(execution_id: String)
 signal execution_completed(execution_id: String, result: Dictionary)
 signal execution_failed(execution_id: String, error: String)
@@ -809,7 +809,7 @@ func _ready():
     config = EngineConfig.new()
     _setup_monitors()
 
-## 设置监控器
+## Set up the monitors
 func _setup_monitors():
     if config.enable_profiling:
         performance_monitor = PerformanceMonitor.new()
@@ -818,7 +818,7 @@ func _setup_monitors():
         resource_monitor = ResourceMonitor.new()
         add_child(resource_monitor)
 
-## 执行动作序列
+## Execute an action sequence
 func execute_action_runner(
     action_runner: ActionRunner,
     trigger: BaseTrigger,
@@ -826,66 +826,66 @@ func execute_action_runner(
 ) -> String:
     var execution_id = _generate_execution_id()
     
-    # 创建执行上下文
+    # Create the execution context
     var context = ExecutionContext.new(trigger, target)
     
-    # 添加到活动执行列表
+    # Add to the active execution list
     active_executions[execution_id] = context
     
-    # 发出开始信号
+    # Emit the start signal
     execution_started.emit(execution_id)
     
-    # 执行动作序列
+    # Execute the action sequence
     _execute_action_runner_async(action_runner, context, execution_id)
     
     return execution_id
 
-## 异步执行动作序列
+## Execute an action sequence asynchronously
 func _execute_action_runner_async(
     action_runner: ActionRunner,
     context: ExecutionContext,
     execution_id: String
 ):
-    # 检查并发限制
+    # Check the concurrency limit
     if active_executions.size() >= config.max_concurrent_executions:
         _queue_execution(action_runner, context, execution_id)
         return
     
-    # 设置超时
+    # Set up the timeout
     var timeout_timer = Timer.new()
     timeout_timer.wait_time = config.execution_timeout
     timeout_timer.timeout.connect(_on_execution_timeout.bind(execution_id))
     timeout_timer.autostart = true
     add_child(timeout_timer)
     
-    # 开始性能监控
+    # Start performance monitoring
     if performance_monitor:
         performance_monitor.start_monitoring(execution_id)
     
     try:
-        # 执行动作序列
+        # Execute the action sequence
         action_runner.run(context)
         await action_runner.action_completed
         
-        # 执行成功
+        # Execution succeeded
         _on_execution_success(execution_id, context)
         
     except:
-        # 执行失败
+        # Execution failed
         var error_message = "Execution failed: " + str(get_stack())
         _on_execution_error(execution_id, error_message)
     
     finally:
-        # 清理资源
+        # Clean up resources
         timeout_timer.queue_free()
         
         if performance_monitor:
             performance_monitor.stop_monitoring(execution_id)
         
-        # 处理队列中的下一个执行
+        # Process the next queued execution
         _process_execution_queue()
 
-## 执行成功处理
+## Handle successful execution
 func _on_execution_success(execution_id: String, context: ExecutionContext):
     var result = {
         "execution_id": execution_id,
@@ -895,27 +895,27 @@ func _on_execution_success(execution_id: String, context: ExecutionContext):
         "execution_time": Time.get_ticks_msec() / 1000.0 - context.start_time
     }
     
-    # 记录执行历史
+    # Record in the execution history
     _record_execution(execution_id, result)
     
-    # 移除活动执行
+    # Remove from active executions
     active_executions.erase(execution_id)
     
-    # 发出完成信号
+    # Emit the completion signal
     execution_completed.emit(execution_id, result)
 
-## 执行错误处理
+## Handle execution errors
 func _on_execution_error(execution_id: String, error_message: String):
-    # 记录错误
+    # Log the error
     push_error("Execution error [%s]: %s" % [execution_id, error_message])
     
-    # 移除活动执行
+    # Remove from active executions
     active_executions.erase(execution_id)
     
-    # 发出失败信号
+    # Emit the failure signal
     execution_failed.emit(execution_id, error_message)
 
-## 执行超时处理
+## Handle execution timeout
 func _on_execution_timeout(execution_id: String):
     var context = active_executions.get(execution_id)
     if context:
@@ -923,7 +923,7 @@ func _on_execution_timeout(execution_id: String):
     
     _on_execution_error(execution_id, "Execution timeout")
 
-## 队列执行
+## Queue an execution
 func _queue_execution(
     action_runner: ActionRunner,
     context: ExecutionContext,
@@ -936,7 +936,7 @@ func _queue_execution(
         "queue_time": Time.get_ticks_msec() / 1000.0
     })
 
-## 处理执行队列
+## Process the execution queue
 func _process_execution_queue():
     if execution_queue.is_empty():
         return
@@ -951,7 +951,7 @@ func _process_execution_queue():
         queued_execution.execution_id
     )
 
-## 记录执行
+## Record an execution
 func _record_execution(execution_id: String, result: Dictionary):
     var record = {
         "execution_id": execution_id,
@@ -961,15 +961,15 @@ func _record_execution(execution_id: String, result: Dictionary):
     
     execution_history.append(record)
     
-    # 限制历史记录数量
+    # Cap the number of history records
     if execution_history.size() > 1000:
         execution_history.pop_front()
 
-## 生成执行ID
+## Generate an execution ID
 func _generate_execution_id() -> String:
     return "exec_%d_%d" % [Time.get_ticks_msec(), randi()]
 
-## 获取执行统计
+## Get execution statistics
 func get_execution_statistics() -> Dictionary:
     var stats = {
         "current_state": current_state,
@@ -981,7 +981,7 @@ func get_execution_statistics() -> Dictionary:
         "performance_summary": {}
     }
     
-    # 计算成功率和平均执行时间
+    # Compute the success rate and average execution time
     if execution_history.size() > 0:
         var success_count = 0
         var total_time = 0.0
@@ -995,32 +995,32 @@ func get_execution_statistics() -> Dictionary:
         stats.success_rate = float(success_count) / execution_history.size() * 100.0
         stats.average_execution_time = total_time / execution_history.size()
     
-    # 性能摘要
+    # Performance summary
     if performance_monitor:
         stats.performance_summary = performance_monitor.get_summary()
     
     return stats
 
-## 暂停引擎
+## Pause the engine
 func pause_engine():
     current_state = ExecutionState.PAUSED
     engine_state_changed.emit(current_state)
 
-## 恢复引擎
+## Resume the engine
 func resume_engine():
     current_state = ExecutionState.RUNNING
     engine_state_changed.emit(current_state)
 
-## 停止引擎
+## Stop the engine
 func stop_engine():
     current_state = ExecutionState.STOPPING
     
-    # 取消所有活动执行
+    # Cancel all active executions
     for execution_id in active_executions.keys():
         var context = active_executions[execution_id]
         context.request_cancel("Engine stopping")
     
-    # 清空队列
+    # Clear the queue
     execution_queue.clear()
     
     engine_state_changed.emit(current_state)
@@ -1028,15 +1028,15 @@ func stop_engine():
 
 ---
 
-## 4. 异步处理机制
+## 4. Asynchronous Processing Mechanism
 
-### 4.1 异步处理器
+### 4.1 Asynchronous Processor
 
 ```gdscript
 @tool
 class_name AsyncProcessor extends RefCounted
 
-## 异步任务状态
+## Async task states
 enum AsyncTaskStatus {
     PENDING,
     RUNNING,
@@ -1045,7 +1045,7 @@ enum AsyncTaskStatus {
     CANCELLED
 }
 
-## 异步任务
+## Async task
 class AsyncTask:
     var task_id: String
     var callable: Callable
@@ -1057,7 +1057,7 @@ class AsyncTask:
     var end_time: float = 0.0
     var timeout: float = -1  # -1 = no timeout
 
-## 处理器配置
+## Processor configuration
 class ProcessorConfig:
     var max_concurrent_tasks: int = 50
     var default_timeout: float = 30.0
@@ -1069,7 +1069,7 @@ var active_tasks: Dictionary = {}  # task_id -> AsyncTask
 var task_queue: Array[AsyncTask] = []
 var completed_tasks: Array[AsyncTask] = []
 
-## 信号
+## Signals
 signal task_started(task_id: String)
 signal task_completed(task_id: String, result: Variant)
 signal task_failed(task_id: String, error: String)
@@ -1078,7 +1078,7 @@ signal task_cancelled(task_id: String)
 func _init(processor_config: ProcessorConfig = null):
     config = processor_config if processor_config else ProcessorConfig.new()
 
-## 提交异步任务
+## Submit an async task
 func submit_task(callable: Callable, args: Array = [], timeout: float = -1) -> String:
     var task = AsyncTask.new()
     task.task_id = _generate_task_id()
@@ -1086,21 +1086,21 @@ func submit_task(callable: Callable, args: Array = [], timeout: float = -1) -> S
     task.args = args
     task.timeout = timeout if timeout > 0 else config.default_timeout
     
-    # 添加到队列
+    # Add to the queue
     task_queue.append(task)
     
-    # 尝试立即执行
+    # Try to execute immediately
     _process_task_queue()
     
     return task.task_id
 
-## 处理任务队列
+## Process the task queue
 func _process_task_queue():
     while not task_queue.is_empty() and active_tasks.size() < config.max_concurrent_tasks:
         var task = task_queue.pop_front()
         _execute_task(task)
 
-## 执行任务
+## Execute a task
 func _execute_task(task: AsyncTask):
     active_tasks[task.task_id] = task
     task.status = AsyncTaskStatus.RUNNING
@@ -1108,18 +1108,18 @@ func _execute_task(task: AsyncTask):
     
     task_started.emit(task.task_id)
     
-    # 设置超时
+    # Set up the timeout
     if task.timeout > 0:
         var timeout_timer = get_tree().create_timer(task.timeout)
         timeout_timer.timeout.connect(_on_task_timeout.bind(task.task_id))
     
-    # 异步执行任务
+    # Execute the task asynchronously
     _execute_task_async(task)
 
-## 异步执行任务
+## Execute a task asynchronously
 func _execute_task_async(task: AsyncTask):
     try:
-        # 执行可调用对象
+        # Invoke the callable
         task.result = await task.callable.callv(task.args)
         task.status = AsyncTaskStatus.COMPLETED
         task.end_time = Time.get_ticks_msec() / 1000.0
@@ -1134,16 +1134,16 @@ func _execute_task_async(task: AsyncTask):
         task_failed.emit(task.task_id, task.error_message)
     
     finally:
-        # 从活动任务中移除
+        # Remove from active tasks
         active_tasks.erase(task.task_id)
         
-        # 添加到完成任务
+        # Add to completed tasks
         completed_tasks.append(task)
         
-        # 处理队列中的下一个任务
+        # Process the next queued task
         _process_task_queue()
 
-## 任务超时处理
+## Handle task timeout
 func _on_task_timeout(task_id: String):
     var task = active_tasks.get(task_id)
     if task and task.status == AsyncTaskStatus.RUNNING:
@@ -1155,7 +1155,7 @@ func _on_task_timeout(task_id: String):
         
         active_tasks.erase(task_id)
 
-## 取消任务
+## Cancel a task
 func cancel_task(task_id: String) -> bool:
     var task = active_tasks.get(task_id)
     if task:
@@ -1167,7 +1167,7 @@ func cancel_task(task_id: String) -> bool:
         active_tasks.erase(task_id)
         return true
     
-    # 检查队列中的任务
+    # Check the queued tasks
     for i in range(task_queue.size()):
         if task_queue[i].task_id == task_id:
             task_queue.remove_at(i)
@@ -1175,11 +1175,11 @@ func cancel_task(task_id: String) -> bool:
     
     return false
 
-## 等待任务完成
+## Wait for a task to complete
 func wait_for_task(task_id: String) -> Variant:
     var task = active_tasks.get(task_id)
     if not task:
-        # 检查已完成的任务
+        # Check the completed tasks
         for completed_task in completed_tasks:
             if completed_task.task_id == task_id:
                 if completed_task.status == AsyncTaskStatus.COMPLETED:
@@ -1189,7 +1189,7 @@ func wait_for_task(task_id: String) -> Variant:
                     return null
         return null
     
-    # 等待任务完成
+    # Wait for the task to complete
     while task.status == AsyncTaskStatus.RUNNING or task.status == AsyncTaskStatus.PENDING:
         await get_tree().process_frame
     
@@ -1201,7 +1201,7 @@ func wait_for_task(task_id: String) -> Variant:
     
     return null
 
-## 批量等待任务
+## Wait for multiple tasks
 func wait_for_tasks(task_ids: Array[String]) -> Array[Variant]:
     var results = []
     
@@ -1211,11 +1211,11 @@ func wait_for_tasks(task_ids: Array[String]) -> Array[Variant]:
     
     return results
 
-## 生成任务ID
+## Generate a task ID
 func _generate_task_id() -> String:
     return "task_%d_%d" % [Time.get_ticks_msec(), randi()]
 
-## 获取处理器状态
+## Get the processor status
 func get_processor_status() -> Dictionary:
     return {
         "active_tasks": active_tasks.size(),
@@ -1225,7 +1225,7 @@ func get_processor_status() -> Dictionary:
         "total_processed": completed_tasks.size()
     }
 
-## 清理已完成的任务
+## Clean up completed tasks
 func cleanup_completed_tasks(max_keep: int = 100):
     if completed_tasks.size() > max_keep:
         completed_tasks = completed_tasks.slice(-max_keep)
@@ -1233,15 +1233,15 @@ func cleanup_completed_tasks(max_keep: int = 100):
 
 ---
 
-## 5. 错误处理和恢复
+## 5. Error Handling and Recovery
 
-### 5.1 错误处理系统
+### 5.1 Error Handling System
 
 ```gdscript
 @tool
 class_name ErrorHandler extends RefCounted
 
-## 错误类型
+## Error types
 enum ErrorType {
     VALIDATION_ERROR,
     EXECUTION_ERROR,
@@ -1251,7 +1251,7 @@ enum ErrorType {
     UNKNOWN_ERROR
 }
 
-## 错误严重程度
+## Error severity
 enum ErrorSeverity {
     LOW,
     MEDIUM,
@@ -1259,7 +1259,7 @@ enum ErrorSeverity {
     CRITICAL
 }
 
-## 错误信息
+## Error info
 class ErrorInfo:
     var error_type: ErrorType
     var severity: ErrorSeverity
@@ -1269,7 +1269,7 @@ class ErrorInfo:
     var timestamp: float
     var recovery_suggestions: Array[String] = []
 
-## 错误恢复策略
+## Error recovery strategies
 enum RecoveryStrategy {
     IGNORE,
     RETRY,
@@ -1278,7 +1278,7 @@ enum RecoveryStrategy {
     CUSTOM
 }
 
-## 错误处理器配置
+## Error handler configuration
 class ErrorHandlerConfig:
     var enable_logging: bool = true
     var enable_recovery: bool = true
@@ -1290,7 +1290,7 @@ var config: ErrorHandlerConfig
 var error_history: Array[ErrorInfo] = []
 var recovery_strategies: Dictionary = {}
 
-## 信号
+## Signals
 signal error_occurred(error_info: ErrorInfo)
 signal error_recovered(error_info: ErrorInfo, strategy: RecoveryStrategy)
 signal recovery_failed(error_info: ErrorInfo)
@@ -1299,7 +1299,7 @@ func _init(error_handler_config: ErrorHandlerConfig = null):
     config = error_handler_config if error_handler_config else ErrorHandlerConfig.new()
     _setup_default_recovery_strategies()
 
-## 设置默认恢复策略
+## Set up the default recovery strategies
 func _setup_default_recovery_strategies():
     recovery_strategies[ErrorType.VALIDATION_ERROR] = RecoveryStrategy.FALLBACK
     recovery_strategies[ErrorType.EXECUTION_ERROR] = RecoveryStrategy.RETRY
@@ -1308,7 +1308,7 @@ func _setup_default_recovery_strategies():
     recovery_strategies[ErrorType.LOGIC_ERROR] = RecoveryStrategy.ABORT
     recovery_strategies[ErrorType.UNKNOWN_ERROR] = RecoveryStrategy.IGNORE
 
-## 处理错误
+## Handle an error
 func handle_error(
     error_type: ErrorType,
     severity: ErrorSeverity,
@@ -1323,24 +1323,24 @@ func handle_error(
     error_info.stack_trace = get_stack()
     error_info.timestamp = Time.get_ticks_msec() / 1000.0
     
-    # 生成恢复建议
+    # Generate recovery suggestions
     error_info.recovery_suggestions = _generate_recovery_suggestions(error_info)
     
-    # 记录错误
+    # Log the error
     error_history.append(error_info)
     
-    # 限制错误历史记录数量
+    # Cap the number of error history records
     if error_history.size() > 1000:
         error_history.pop_front()
     
-    # 记录日志
+    # Write the log entry
     if config.enable_logging:
         _log_error(error_info)
     
-    # 发出错误信号
+    # Emit the error signal
     error_occurred.emit(error_info)
     
-    # 尝试恢复
+    # Attempt recovery
     if config.enable_recovery:
         var recovery_result = await _attempt_recovery(error_info)
         if recovery_result:
@@ -1350,7 +1350,7 @@ func handle_error(
     
     return error_info
 
-## 生成恢复建议
+## Generate recovery suggestions
 func _generate_recovery_suggestions(error_info: ErrorInfo) -> Array[String]:
     var suggestions = []
     
@@ -1387,7 +1387,7 @@ func _generate_recovery_suggestions(error_info: ErrorInfo) -> Array[String]:
     
     return suggestions
 
-## 尝试恢复
+## Attempt recovery
 func _attempt_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     var strategy = recovery_strategies.get(error_info.error_type, RecoveryStrategy.IGNORE)
     
@@ -1405,7 +1405,7 @@ func _attempt_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     
     return strategy
 
-## 重试恢复
+## Retry recovery
 func _retry_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     if error_info.context:
         var retry_count = error_info.context.get_variable("_retry_count", 0)
@@ -1413,10 +1413,10 @@ func _retry_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
         if retry_count < config.max_retry_count:
             error_info.context.set_variable("_retry_count", retry_count + 1)
             
-            # 等待重试延迟
+            # Wait for the retry delay
             await get_tree().create_timer(config.retry_delay).timeout
             
-            # 重新执行
+            # Execute again
             if error_info.context.trigger and error_info.context.trigger.action_runner:
                 error_info.context.trigger.action_runner.run(error_info.context)
                 await error_info.context.trigger.action_runner.action_completed
@@ -1425,33 +1425,33 @@ func _retry_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     
     return RecoveryStrategy.ABORT
 
-## 回退恢复
+## Fallback recovery
 func _fallback_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
-    # 实现回退逻辑
+    # Fallback logic implementation
     if error_info.context:
         var fallback_action = error_info.context.get_variable("_fallback_action")
         if fallback_action:
-            # 执行回退动作
+            # Execute the fallback action
             print("Executing fallback action: %s" % fallback_action)
             return RecoveryStrategy.FALLBACK
     
     return RecoveryStrategy.IGNORE
 
-## 中止恢复
+## Abort recovery
 func _abort_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     if error_info.context:
         error_info.context.request_cancel("Error recovery: " + error_info.message)
     
     return RecoveryStrategy.ABORT
 
-## 忽略恢复
+## Ignore recovery
 func _ignore_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     print("Ignoring error: %s" % error_info.message)
     return RecoveryStrategy.IGNORE
 
-## 自定义恢复
+## Custom recovery
 func _custom_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
-    # 实现自定义恢复逻辑
+    # Custom recovery logic implementation
     var custom_recovery_func = error_info.context.get_variable("_custom_recovery_func") if error_info.context else null
     
     if custom_recovery_func and custom_recovery_func is Callable:
@@ -1460,7 +1460,7 @@ func _custom_recovery(error_info: ErrorInfo) -> RecoveryStrategy:
     
     return RecoveryStrategy.IGNORE
 
-## 记录错误日志
+## Write the error log
 func _log_error(error_info: ErrorInfo):
     var severity_str = ErrorSeverity.keys()[error_info.severity]
     var type_str = ErrorType.keys()[error_info.error_type]
@@ -1475,7 +1475,7 @@ func _log_error(error_info: ErrorInfo):
         ErrorSeverity.HIGH, ErrorSeverity.CRITICAL:
             push_error(log_message)
 
-## 获取错误统计
+## Get error statistics
 func get_error_statistics() -> Dictionary:
     var stats = {
         "total_errors": error_history.size(),
@@ -1484,7 +1484,7 @@ func get_error_statistics() -> Dictionary:
         "recent_errors": []
     }
     
-    # 统计错误类型
+    # Tally error types
     for error_info in error_history:
         var type_str = ErrorType.keys()[error_info.error_type]
         stats.error_types[type_str] = stats.error_types.get(type_str, 0) + 1
@@ -1492,7 +1492,7 @@ func get_error_statistics() -> Dictionary:
         var severity_str = ErrorSeverity.keys()[error_info.severity]
         stats.severity_distribution[severity_str] = stats.severity_distribution.get(severity_str, 0) + 1
     
-    # 最近的错误
+    # Most recent errors
     var recent_count = min(10, error_history.size())
     for i in range(recent_count):
         var error_info = error_history[error_history.size() - recent_count + i]
@@ -1508,15 +1508,15 @@ func get_error_statistics() -> Dictionary:
 
 ---
 
-## 6. 性能优化策略
+## 6. Performance Optimization Strategies
 
-### 6.1 性能监控器
+### 6.1 Performance Monitor
 
 ```gdscript
 @tool
 class_name PerformanceMonitor extends Node
 
-## 性能指标
+## Performance metrics
 class PerformanceMetrics:
     var execution_id: String
     var start_time: float
@@ -1529,17 +1529,17 @@ class PerformanceMetrics:
 
 var active_monitors: Dictionary = {}  # execution_id -> PerformanceMetrics
 var monitoring_enabled: bool = false
-var update_interval: float = 0.1  # 监控更新间隔
+var update_interval: float = 0.1  # Monitoring update interval
 var monitor_timer: Timer = null
 
-## 信号
+## Signals
 signal performance_update(execution_id: String, metrics: PerformanceMetrics)
 signal performance_warning(execution_id: String, warning: String)
 
 func _ready():
     _setup_monitor_timer()
 
-## 设置监控定时器
+## Set up the monitor timer
 func _setup_monitor_timer():
     monitor_timer = Timer.new()
     monitor_timer.wait_time = update_interval
@@ -1547,7 +1547,7 @@ func _setup_monitor_timer():
     monitor_timer.autostart = false
     add_child(monitor_timer)
 
-## 开始监控
+## Start monitoring
 func start_monitoring(execution_id: String):
     var metrics = PerformanceMetrics.new()
     metrics.execution_id = execution_id
@@ -1559,7 +1559,7 @@ func start_monitoring(execution_id: String):
         monitoring_enabled = true
         monitor_timer.start()
 
-## 停止监控
+## Stop monitoring
 func stop_monitoring(execution_id: String):
     var metrics = active_monitors.get(execution_id)
     if metrics:
@@ -1572,43 +1572,43 @@ func stop_monitoring(execution_id: String):
         monitoring_enabled = false
         monitor_timer.stop()
 
-## 更新所有监控器
+## Update all monitors
 func _update_all_monitors():
     for execution_id in active_monitors.keys():
         _update_monitor(execution_id)
 
-## 更新单个监控器
+## Update a single monitor
 func _update_monitor(execution_id: String):
     var metrics = active_monitors.get(execution_id)
     if not metrics:
         return
     
-    # 记录内存使用
+    # Record memory usage
     var memory_usage = OS.get_static_memory_usage_by_type()[OS.MEMORY_TYPE_STATIC]
     metrics.memory_usage.append(memory_usage)
     
-    # 记录帧时间
+    # Record the frame time
     var frame_time = get_process_delta_time()
     metrics.frame_times.append(frame_time)
     
-    # 检查性能警告
+    # Check performance warnings
     _check_performance_warnings(execution_id, metrics)
 
-## 检查性能警告
+## Check performance warnings
 func _check_performance_warnings(execution_id: String, metrics: PerformanceMetrics):
-    # 检查内存使用
+    # Check memory usage
     if metrics.memory_usage.size() > 0:
         var current_memory = metrics.memory_usage[-1]
         if current_memory > 100 * 1024 * 1024:  # 100MB
             performance_warning.emit(execution_id, "High memory usage: %.1f MB" % (current_memory / (1024 * 1024)))
     
-    # 检查帧时间
+    # Check frame times
     if metrics.frame_times.size() > 0:
         var current_frame_time = metrics.frame_times[-1]
         if current_frame_time > 0.1:  # 100ms
             performance_warning.emit(execution_id, "Long frame time: %.1f ms" % (current_frame_time * 1000))
 
-## 获取监控数据
+## Get monitoring data
 func get_data(execution_id: String) -> Dictionary:
     var metrics = active_monitors.get(execution_id)
     if not metrics:
@@ -1630,7 +1630,7 @@ func get_data(execution_id: String) -> Dictionary:
         "peak_frame_time": _calculate_peak(metrics.frame_times)
     }
 
-## 计算平均值
+## Compute the average
 func _calculate_average(values: Array[float]) -> float:
     if values.is_empty():
         return 0.0
@@ -1641,7 +1641,7 @@ func _calculate_average(values: Array[float]) -> float:
     
     return sum / values.size()
 
-## 计算峰值
+## Compute the peak
 func _calculate_peak(values: Array[float]) -> float:
     if values.is_empty():
         return 0.0
@@ -1653,7 +1653,7 @@ func _calculate_peak(values: Array[float]) -> float:
     
     return peak
 
-## 获取性能摘要
+## Get the performance summary
 func get_summary() -> Dictionary:
     var summary = {
         "active_monitors": active_monitors.size(),
@@ -1682,35 +1682,35 @@ func get_summary() -> Dictionary:
 
 ---
 
-## 总结
+## Summary
 
-数据流和控制流是可视化编程系统的执行核心，本设计提供了：
+Data flow and control flow are the execution core of the visual programming system. This design provides:
 
-1. **完整的数据流架构**：支持多层数据处理、类型安全和上下文隔离
-2. **灵活的控制流系统**：支持顺序、分支、循环、并行等多种流程控制
-3. **强大的执行引擎**：提供统一执行模型、资源管理和性能监控
-4. **先进的异步处理**：支持任务队列、并发控制和超时处理
-5. **完善的错误处理**：提供错误分类、恢复策略和自动重试
-6. **全面的性能优化**：内置性能监控、资源管理和优化建议
+1. **Complete data flow architecture**: Supports multi-layer data processing, type safety, and context isolation
+2. **Flexible control flow system**: Supports sequential, branch, loop, parallel, and other flow control
+3. **Powerful execution engine**: Provides a unified execution model, resource management, and performance monitoring
+4. **Advanced asynchronous processing**: Supports task queues, concurrency control, and timeout handling
+5. **Robust error handling**: Provides error classification, recovery strategies, and automatic retries
+6. **Comprehensive performance optimization**: Built-in performance monitoring, resource management, and optimization advice
 
-这个数据流和控制流设计既保持了高性能，又提供了强大的功能和良好的扩展性，为整个可视化编程系统提供了可靠的执行基础。
+This data flow and control flow design maintains high performance while delivering powerful capabilities and good extensibility, providing a reliable execution foundation for the entire visual programming system.
 
 ---
 
-## 架构更新（2026-03）
+## Architecture Updates (2026-03)
 
-### 变量系统重构
-- VariableContainer 已标记 @deprecated
-- 新工具类：VariableOperations（统一变量访问）、VariableScopeUtils（作用域工具）
-- ScopeVariableContainer / ScopeVariableManager（作用域变量系统）
-- GlobalVariableAssistant / GlobalVariableManager（全局变量系统）
+### Variable System Refactoring
+- VariableContainer has been marked @deprecated
+- New utility classes: VariableOperations (unified variable access), VariableScopeUtils (scope utilities)
+- ScopeVariableContainer / ScopeVariableManager (scoped variable system)
+- GlobalVariableAssistant / GlobalVariableManager (global variable system)
 
-### 控制流扩展
-- WhileLoop、ForEach、Count、WaitUntil 等新循环指令
-- IfThen / IfElse 条件分支
-- RunRunner 支持指令复用
+### Control Flow Extensions
+- New loop instructions such as WhileLoop, ForEach, Count, and WaitUntil
+- IfThen / IfElse conditional branching
+- RunRunner supports instruction reuse
 
-### 运行时实例集成
-- ExecutionContext 现在通过 RuntimeActionRunnerInstance 管理
-- 变量快照方法支持断点调试
-- 循环标志栈支持嵌套循环控制
+### Runtime Instance Integration
+- ExecutionContext is now managed through RuntimeActionRunnerInstance
+- Variable snapshot methods support breakpoint debugging
+- Loop flag stack supports nested loop control

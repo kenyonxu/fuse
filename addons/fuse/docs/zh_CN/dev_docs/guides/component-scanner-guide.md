@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/component-scanner-guide.md)
+
 # FuseComponentScanner 组件扫描器开发指南
 
 > **目标**: 为开发者提供 FuseComponentScanner 组件扫描注册机制的完整开发指引，包括扫描、注册、元数据验证和撤销注册。

@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/object-pool-guide.md)
+
 # Fuse 对象池系统开发指南
 
 > **目标**: 为开发者提供 Fuse 对象池系统的完整开发指引，包括池化管理、场景实例复用、触发器和变量的状态重置。

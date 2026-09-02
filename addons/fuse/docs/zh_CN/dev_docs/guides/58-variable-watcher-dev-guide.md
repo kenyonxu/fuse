@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/58-variable-watcher-dev-guide.md)
+
 # 变量监视器开发指南
 
 > **目标**: 为开发者提供 `FuseVariableWatcher` 的架构说明与扩展指引，覆盖数据源接入、轮询刷新机制、UI 构建模式、Stage 7 功能（双击编辑/折线图/静态声明/快照）的实现细节与性能设计。
