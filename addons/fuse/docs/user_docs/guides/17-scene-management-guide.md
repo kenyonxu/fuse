@@ -157,7 +157,7 @@ AddSceneAsChild → scene_path: "res://scenes/effects/explosion.tscn"
 | 3 | FAILED | 加载失败 |
 | 4 | TIMEOUT | 加载超时 |
 
-配合 `CheckPreloadStatus` 条件使用，详见 [场景预加载系统](scene-preloading-guide.md)。
+配合 `CheckPreloadStatus` 条件使用，详见 [场景预加载系统](50-scene-preloading-guide.md)。
 
 ### 使用示例
 
@@ -294,5 +294,5 @@ ChangeScene → scene_path: VARIABLE (current_level)
 ---
 
 **相关文档:**
-- [场景预加载系统](scene-preloading-guide.md) - PreloadSceneInstruction 和 CheckPreloadStatus 的详细使用流程
-- [表达式系统使用指南](expression-guide.md) - 表达式条件与变量操作
+- [场景预加载系统](50-scene-preloading-guide.md) - PreloadSceneInstruction 和 CheckPreloadStatus 的详细使用流程
+- [表达式系统使用指南](05-expression-guide.md) - 表达式条件与变量操作

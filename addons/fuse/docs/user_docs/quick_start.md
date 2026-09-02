@@ -46,7 +46,7 @@ Fuse 提供三种组件来响应事件并执行指令。根据你的需求选择
 | **Trigger** | 需要事件过滤、触发控制（trigger_once / 冷却） | 中 |
 | **MultiEventTrigger** | 同一节点上有多个事件-动作绑定 | 高 |
 
-> 不确定用哪个？查阅 [触发器选型指南](guides/trigger-selection-guide.md)。
+> 不确定用哪个？查阅 [触发器选型指南](guides/02-trigger-selection-guide.md)。
 
 ### 步骤 2：添加节点到场景
 
@@ -165,13 +165,13 @@ Fuse 提供三种组件来响应事件并执行指令。根据你的需求选择
 
 ### 触发器组件
 
-Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger-selection-guide.md)：
+Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/02-trigger-selection-guide.md)：
 
 | 组件 | 说明 | 详细文档 |
 |------|------|---------|
 | **Runner** | 轻量信号绑定 + 代码调用 | [Runner 指南](guides/03-runner-guide.md) |
 | **Trigger** | 带 Event 的标准触发器 | — |
-| **MultiEventTrigger** | 多事件合并触发器 | [MultiEventTrigger 指南](guides/multi-event-trigger-guide.md) |
+| **MultiEventTrigger** | 多事件合并触发器 | [MultiEventTrigger 指南](guides/04-multi-event-trigger-guide.md) |
 
 ---
 
@@ -221,26 +221,26 @@ Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger
 
 ### 指南文档
 
-- [触发器选型指南](guides/trigger-selection-guide.md) — Runner / Trigger / MultiEventTrigger 怎么选
+- [触发器选型指南](guides/02-trigger-selection-guide.md) — Runner / Trigger / MultiEventTrigger 怎么选
 - [Runner 使用指南](guides/03-runner-guide.md) — 信号绑定与代码调用详解
-- [MultiEventTrigger 使用指南](guides/multi-event-trigger-guide.md) — 多事件合并与拆分
+- [MultiEventTrigger 使用指南](guides/04-multi-event-trigger-guide.md) — 多事件合并与拆分
 
 ### 系统指南
 
-- [输入事件指南](guides/input-events-guide.md) — 键盘、鼠标、手柄
-- [物理系统指南](guides/physics-guide.md) — 碰撞、射线检测
-- [动画系统指南](guides/animation-guide.md) — 动画事件与控制
+- [输入事件指南](guides/32-input-events-guide.md) — 键盘、鼠标、手柄
+- [物理系统指南](guides/14-physics-guide.md) — 碰撞、射线检测
+- [动画系统指南](guides/12-animation-guide.md) — 动画事件与控制
 - [UI 系统指南](guides/15-ui-guide.md) — 按钮焦点、文本输入、值变化
-- [Tween 补间动画指南](guides/tween-animation-guide.md) — 渐变、弹性动画
+- [Tween 补间动画指南](guides/18-tween-animation-guide.md) — 渐变、弹性动画
 - [音频系统指南](guides/13-audio-guide.md) — 音效播放与控制
-- [流程控制指南](guides/flow-control-guide.md) — 条件分支、循环、等待
-- [断点指令指南](guides/breakpoint-guide.md) — 调试用断点指令
+- [流程控制指南](guides/23-flow-control-guide.md) — 条件分支、循环、等待
+- [断点指令指南](guides/26-breakpoint-guide.md) — 调试用断点指令
 
 ### 变量与表达式
 
 - [全局变量管理器](guides/54-global-variables-guide.md) — 全局变量系统
-- [全局变量持久化](guides/global-variable-persistence-guide.md) — 存档与读取
-- [表达式系统](guides/expression-guide.md) — 运行时表达式计算
+- [全局变量持久化](guides/54-global-variables-guide.md) — 存档与读取
+- [表达式系统](guides/05-expression-guide.md) — 运行时表达式计算
 - [Event Bus 指南](guides/34-event-bus-guide.md) — 跨场景事件通信
 
 ### 最佳实践
@@ -259,7 +259,7 @@ Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger
 
 ### Q: Runner 和 Trigger 该用哪个？
 
-**A**: 简单信号绑定用 Runner，需要事件过滤或触发控制用 Trigger。详见 [触发器选型指南](guides/trigger-selection-guide.md)。
+**A**: 简单信号绑定用 Runner，需要事件过滤或触发控制用 Trigger。详见 [触发器选型指南](guides/02-trigger-selection-guide.md)。
 
 ### Q: 如何调试 Fuse 逻辑？
 

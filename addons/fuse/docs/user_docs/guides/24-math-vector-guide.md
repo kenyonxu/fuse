@@ -1,6 +1,6 @@
 # 数学/向量指令使用指南
 
-Fuse 数学/向量系统提供 6 个数值计算指令，覆盖基础四则运算、线性插值、范围限制、向量运算、随机数生成和随机点生成。表达式类指令（MathExpression、StringExpression）请参阅 [表达式系统使用指南](expression-guide.md)。
+Fuse 数学/向量系统提供 6 个数值计算指令，覆盖基础四则运算、线性插值、范围限制、向量运算、随机数生成和随机点生成。表达式类指令（MathExpression、StringExpression）请参阅 [表达式系统使用指南](05-expression-guide.md)。
 
 ## 指令列表
 
@@ -376,5 +376,5 @@ ClampValue → value: VARIABLE (distance), min: 0, max: 100
 ---
 
 **相关文档:**
-- [表达式系统使用指南](expression-guide.md) - MathExpression、StringExpression、ExpressionCondition
-- [变换系统使用指南](transform-guide.md) - SetPosition、MoveBy、LookAt 等节点变换指令
+- [表达式系统使用指南](05-expression-guide.md) - MathExpression、StringExpression、ExpressionCondition
+- [变换系统使用指南](10-transform-guide.md) - SetPosition、MoveBy、LookAt 等节点变换指令

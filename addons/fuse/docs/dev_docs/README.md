@@ -2,7 +2,7 @@
 
 面向 Fuse 系统开发者的技术指南：如何创建事件 / 指令 / 条件，如何使用运行时架构、编辑器集成与各类专项工具。
 
-> 用户向使用文档见 [../user_docs/](../user_docs/)；架构与系统级设计见 [../system_docs/](../system_docs/)；历史实现计划与报告见 [../archive/](../archive/)。
+> 用户向使用文档见 [../user_docs/](../user_docs/)；架构与系统级设计见 [../system_docs/](../system_docs/)。
 
 ---
 
@@ -71,12 +71,12 @@
 - 组件分析：[BaseEvent](../system_docs/analysis/base_event_analysis.md) · [BaseInstruction](../system_docs/analysis/base_instruction_analysis.md) · [BaseCondition](../system_docs/analysis/base_condition_analysis.md) · [BaseVariable](../system_docs/analysis/base_variable_analysis.md) · [ExecutionContext](../system_docs/analysis/execution_context_analysis.md) · [ActionRunner](../system_docs/analysis/action_runner_analysis.md)
 
 ### 用户向使用指南（../user_docs/guides/）
-- [变量系统指南](../user_docs/guides/variable_system_guide.md) · [全局变量管理器 V2](../user_docs/guides/global_variable_manager_v2.md) · [全局变量持久化](../user_docs/guides/global-variable-persistence-guide.md)
-- [指令生成器](../user_docs/guides/instruction-generator-guide.md) · [Runner](../user_docs/guides/runner-guide.md) · [多事件触发器](../user_docs/guides/multi-event-trigger-guide.md) · [事件总线](../user_docs/guides/event_bus_guide.md)
-- [多线程优化](../user_docs/guides/multithreading-optimization.md) · [表达式](../user_docs/guides/expression-guide.md) · [调试](../user_docs/guides/debugging-guide.md) · [图标管理器](../user_docs/guides/icon_manager_guide.md)
+- [变量系统指南](../user_docs/guides/01-variable-system-guide.md) · [全局变量管理器 V2](../user_docs/guides/54-global-variables-guide.md) · [全局变量持久化](../user_docs/guides/54-global-variables-guide.md)
+- [指令生成器](../user_docs/guides/06-instruction-generator-guide.md) · [Runner](../user_docs/guides/03-runner-guide.md) · [多事件触发器](../user_docs/guides/04-multi-event-trigger-guide.md) · [事件总线](../user_docs/guides/34-event-bus-guide.md)
+- [多线程优化](../user_docs/guides/52-multithreading-optimization.md) · [表达式](../user_docs/guides/05-expression-guide.md) · [调试](../user_docs/guides/25-debugging-guide.md) · [图标管理器](../user_docs/guides/53-icon-manager-guide.md)
 
-### 历史归档（../archive/）
-历史实现计划、阶段性报告、设计提案与迁移文档。仅供参考，**非当前实现的权威来源**——以本目录指南和 `system_docs/` 为准。
+### 历史归档
+历史实现计划、阶段性报告、设计提案与迁移文档归档于本地 `../archive/` 目录（不入库，见 .gitignore）。仅供参考，**非当前实现的权威来源**——以本目录指南和 `system_docs/` 为准。
 
 ---
 
@@ -97,5 +97,5 @@
 
 ---
 
-**最后更新**：2026-07-07
+**最后更新**：2026-09-02
 **维护者**：Fuse 开发团队

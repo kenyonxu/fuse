@@ -137,5 +137,5 @@ MathExpression → 表达式: distance(vec2(0, 0), vec2({local:player_x}, {local
 ---
 
 **相关文档:**
-- [移动系统指南](movement-system-guide.md)
-- [Node Operations 指令指南](node-operations-guide.md)
+- [移动系统指南](11-movement-system-guide.md)
+- [Node Operations 指令指南](20-node-operations-guide.md)

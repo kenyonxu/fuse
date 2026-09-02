@@ -51,7 +51,7 @@ dev_docs/
 | `archive/quit_instruction_implementation_plan.md` | ❌ 同上 |
 | `event_system/` `instruction_system/` `localization/` `variable_system/` | ❌ 4 个专题目录均不存在 |
 | `../user_docs/guides/variable_system_v2_migration.md` | ❌ 不存在 |
-| `../user_docs/guides/global_variable_manager_v2.md` | ✅ 存在 |
+| `../user_docs/guides/54-global-variables-guide.md` | ✅ 存在 |
 | `../system_docs/architecture/variable_system_design.md` | ✅ 存在 |
 | `../system_docs/architecture/editor_tools_design.md` | ✅ 存在 |
 | `../system_docs/architecture/godot_integration_design.md` | ✅ 存在 |

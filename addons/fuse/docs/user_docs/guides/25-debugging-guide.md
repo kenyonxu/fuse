@@ -179,7 +179,7 @@ variable_scope: Global
 
 断点指令有完整的使用指南，请参阅:
 
-**[断点指令详细指南](breakpoint-guide.md)**
+**[断点指令详细指南](26-breakpoint-guide.md)**
 
 该指南包含:
 - 快速开始
@@ -311,7 +311,7 @@ variable_scope: Global
 3. 运行场景，观察输出窗口中的变量快照
 4. 如需暂停，开启 `pause_execution`
 5. 在输出窗口中分析变量状态，按 Enter 继续
-6. 详细用法参阅 [断点指南](breakpoint-guide.md)
+6. 详细用法参阅 [断点指南](26-breakpoint-guide.md)
 
 ### 工作流 3: 性能分析
 

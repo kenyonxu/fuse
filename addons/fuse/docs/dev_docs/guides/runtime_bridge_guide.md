@@ -23,7 +23,7 @@
 
 ## 系统概述
 
-`FuseRuntimeBridge` 是一个**双模式 TCP 桥接器**，负责在 Godot 编辑器进程和运行的游戏进程之间传递变量快照数据。使编辑器的调试工具（如 VariableWatcher）能够实时查看运行中游戏的变量状态。
+`FuseRuntimeBridge` 是一个**双模式 TCP 桥接器**，负责在 Godot 编辑器进程和运行的游戏进程之间传递变量快照数据。使编辑器的调试工具（如 FuseVariableWatcher）能够实时查看运行中游戏的变量状态。
 
 > **Autoload 单例约定**
 > `FuseRuntimeBridge` 通过 Autoload 注册为全局单例（无 `class_name`），只能用 Autoload 名 `FuseRuntimeBridge` 直接访问。
@@ -61,7 +61,7 @@
 │  │  (变量快照缓存)     │      │              │  │  _collect_runners()│     │
 │  └────────────────────┘      │              │  └────────────────────┘     │
 │        ↕                     │              │        ↕                    │
-│  VariableWatcher             │              │  Runner 节点                │
+│  FuseVariableWatcher        │              │  Runner 节点                │
 │  (变量监视器)                 │              │  (current_execution_context)│
 └──────────────────────────────┘              └──────────────────────────────┘
 ```
@@ -117,7 +117,7 @@ const PUSH_INTERVAL := 0.5        # 推送间隔（秒）
 func get_cached_vars() -> Dictionary
 ```
 
-这是唯一的公开方法，供编辑器工具（如 VariableWatcher）读取缓存数据。
+这是唯一的公开方法，供编辑器工具（如 FuseVariableWatcher）读取缓存数据。
 
 ### 生命周期
 
@@ -198,7 +198,7 @@ while "\n" found:
 
 ### 编辑器变量监视
 
-`VariableWatcher` 编辑器面板调用 `FuseRuntimeBridge.get_cached_vars()` 获取运行中的变量快照：
+`FuseVariableWatcher` 编辑器面板调用 `FuseRuntimeBridge.get_cached_vars()` 获取运行中的变量快照：
 
 ```gdscript
 # addons/fuse/editor/debugging/variable_watcher.gd

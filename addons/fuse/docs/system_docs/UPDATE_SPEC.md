@@ -84,7 +84,7 @@ system_docs/
 
 | README 引用 | 状态 |
 |------------|------|
-| `../user_docs/guides/global_variable_manager_v2.md` | ✅ |
+| `../user_docs/guides/54-global-variables-guide.md` | ✅ |
 | `../user_docs/best_practices/custom_event.md` | ✅ |
 | `../dev_docs/reports/variable_storage_phase1-2_report.md` | ❌ dev_docs 无 reports/ |
 | `../dev_docs/reports/localization_coverage_report.md` | ❌ 同上 |
@@ -144,7 +144,7 @@ system_docs/
 
 **保留（已核实有效）：**
 - 全部 9 篇 architecture 与 8 篇已列 analysis 的链接
-- `../user_docs/guides/global_variable_manager_v2.md`、`../user_docs/best_practices/custom_event.md`
+- `../user_docs/guides/54-global-variables-guide.md`、`../user_docs/best_practices/custom_event.md`
 
 ### 4.2 修复 analysis/ 系统性 .gd 引用（重点，~50 处）
 

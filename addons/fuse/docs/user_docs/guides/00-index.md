@@ -156,7 +156,7 @@
 | 预设系统开发 | [dev_docs/guides/57-preset-system-dev-guide.md](../../dev_docs/guides/57-preset-system-dev-guide.md) |
 | 变量监视器开发 | [dev_docs/guides/58-variable-watcher-dev-guide.md](../../dev_docs/guides/58-variable-watcher-dev-guide.md) |
 | 全局变量开发 | [dev_docs/guides/59-global-variables-dev-guide.md](../../dev_docs/guides/59-global-variables-dev-guide.md) |
-| 多线程 | [multithreading.md](../../multithreading.md) |
+| 多线程 | [multithreading.md](../../user_docs/guides/52-multithreading-optimization.md) |
 
 ---
 

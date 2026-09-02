@@ -320,7 +320,7 @@ VariableOperations.set_variable(
 | SCOPE | ScopeVariableContainer | 节点生命周期 |
 | GLOBAL | GlobalVariableManager | 游戏进程 |
 
-详见 [变量系统使用指南](../../user_docs/guides/01-variable_system_guide.md)。
+详见 [变量系统使用指南](../../user_docs/guides/01-variable-system-guide.md)。
 
 ---
 
@@ -344,7 +344,7 @@ gvm.set_variable_value_thread_safe("progress", 0.75)
 var batch := gvm.get_variables_batch_thread_safe(["hp", "mp", "exp"])
 ```
 
-> **注意**: 直接访问 `get_variable()` / `add_variable()` 非线程安全。多线程场景必须使用 `_thread_safe` 系列。详见 [multithreading.md](../../multithreading.md)。
+> **注意**: 直接访问 `get_variable()` / `add_variable()` 非线程安全。多线程场景必须使用 `_thread_safe` 系列。详见 [multithreading.md](../../user_docs/guides/52-multithreading-optimization.md)。
 
 ---
 
@@ -493,7 +493,7 @@ func _ready():
 - [预设系统开发者指南](57-preset-system-dev-guide.md)
 - [变量监视器开发指南](58-variable-watcher-dev-guide.md)
 - [变量操作工具类](variable-operations-utility.md)
-- [多线程支持](../../multithreading.md)
+- [多线程支持](../../user_docs/guides/52-multithreading-optimization.md)
 
 ---
 

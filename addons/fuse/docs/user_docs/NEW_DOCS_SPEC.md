@@ -8,7 +8,7 @@
 ## 目录
 
 1. [合并项 A：全局变量管理指南（覆盖管理 + 持久化）](#合并项-a全局变量管理指南覆盖管理--持久化)
-2. [合并项 B：坐标系统概念 → 并入 transform-guide.md](#合并项-b坐标系统概念--并入-transform-guidemd)
+2. [合并项 B：坐标系统概念 → 并入 10-transform-guide.md](#合并项-b坐标系统概念--并入-transform-guidemd)
 3. [P0 新增项 A：Node Operations 指令指南](#p0a-node-operations-指令指南)
 4. [P0 新增项 B：Lifecycle 事件指南](#p0b-lifecycle-事件指南)
 5. [P1 新增项 A：Timing 事件指南](#p1a-timing-事件指南)
@@ -30,8 +30,8 @@
 
 | 源文档 | 路径 | 行数 |
 |--------|------|------|
-| global_variable_manager_v2.md | `user_docs/guides/global_variable_manager_v2.md` | 533 |
-| global-variable-persistence-guide.md | `user_docs/guides/global-variable-persistence-guide.md` | 214 |
+| 54-global-variables-guide.md | `user_docs/guides/54-global-variables-guide.md` | 533 |
+| 54-global-variables-guide.md | `user_docs/guides/54-global-variables-guide.md` | 214 |
 
 ### 目标读者
 
@@ -59,14 +59,14 @@ GlobalVariableAssistant 自动存档）、最佳实践。
 | # | 章节 | 内容 | 来源 |
 |---|------|------|------|
 | 1 | 概述 | 全局变量的作用、管理+持久化整体架构 | 合并概述段 |
-| 2 | 概念准备 | 三层变量系统简介（Local/Scope/Global） | `variable-system-guide.md` 中精简引用 |
+| 2 | 概念准备 | 三层变量系统简介（Local/Scope/Global） | `01-variable-system-guide.md` 中精简引用 |
 | 3 | 快速开始 | 创建变量 → 设置值 → 保存 → 加载的完整流程 | 重写，融合两份文档的快速开始 |
-| 4 | GlobalVariableManager 使用 | 单例模式、变量 CRUD、信号监听 | 从 `global_variable_manager_v2.md` 提取 |
+| 4 | GlobalVariableManager 使用 | 单例模式、变量 CRUD、信号监听 | 从 `54-global-variables-guide.md` 提取 |
 | 5 | 持久化系统 | SaveGlobalVariables（保存目标/范围）、LoadGlobalVariables（加载来源） | 从 `persistence-guide.md` 提取并扩展 |
 | 6 | GlobalVariableResource | 资源文件配置、持久化标记、自定义路径 | 合并 |
-| 7 | GlobalVariableAssistant | 助手节点配置、自动保存、场景集成 | 从 `global_variable_manager_v2.md` 提取 |
+| 7 | GlobalVariableAssistant | 助手节点配置、自动保存、场景集成 | 从 `54-global-variables-guide.md` 提取 |
 | 8 | 完整示例 | 多存档槽位、自动保存、跨场景共享状态 | 合并 |
-| 9 | 调试与监控 | get_debug_info()、get_statistics()、变量变化监听 | 从 `global_variable_manager_v2.md` 提取 |
+| 9 | 调试与监控 | get_debug_info()、get_statistics()、变量变化监听 | 从 `54-global-variables-guide.md` 提取 |
 | 10 | 最佳实践 | 命名规范、初始化模式、保存策略、性能优化 | 合并并精简 |
 | 11 | 常见问题 | 文件不存在、路径错误、权限不足 | 从 `persistence-guide.md` 提取并扩展 |
 
@@ -74,26 +74,26 @@ GlobalVariableAssistant 自动存档）、最佳实践。
 
 ### 合并后的文件名建议
 
-`global-variables-guide.md`（删除 `global_variable_manager_v2.md` 和 `global-variable-persistence-guide.md`）
+`global-variables-guide.md`（删除 `54-global-variables-guide.md` 和 `54-global-variables-guide.md`）
 
 ### 注意事项
 
-- `global_variable_manager_v2.md` 中包含大量 GDScript API 示例（add_variable/get_variable 等），保留但精简
-- `global-variable-persistence-guide.md` 中关于 `FusePoolManager`、`load_resource` 的章节保持独立
+- `54-global-variables-guide.md` 中包含大量 GDScript API 示例（add_variable/get_variable 等），保留但精简
+- `54-global-variables-guide.md` 中关于 `FusePoolManager`、`load_resource` 的章节保持独立
 - 两层合并时注意去重概述段和示例节
-- **删除** `global_variable_manager_v2.md` 中与持久化无关的冗余内容（如重复的 BaseVariable 创建示例）
+- **删除** `54-global-variables-guide.md` 中与持久化无关的冗余内容（如重复的 BaseVariable 创建示例）
 
 ---
 
-## 合并项 B：坐标系统概念 → 并入 transform-guide.md
+## 合并项 B：坐标系统概念 → 并入 10-transform-guide.md
 
 ### 状态
 
 | 源文档 | 路径 | 行数 | 处置 |
 |--------|------|------|------|
 | coordinate_systems_guide.md | `user_docs/guides/coordinate_systems_guide.md` | 284 | 合并到 transform-guide，删除源文件 |
-| transform-guide.md | `user_docs/guides/transform-guide.md` | 64 | 接受前置章节 |
-| movement-system-guide.md | `user_docs/guides/movement-system-guide.md` | 227 | 不动 |
+| 10-transform-guide.md | `user_docs/guides/10-transform-guide.md` | 64 | 接受前置章节 |
+| 11-movement-system-guide.md | `user_docs/guides/11-movement-system-guide.md` | 227 | 不动 |
 
 ### 目标读者
 
@@ -101,10 +101,10 @@ GlobalVariableAssistant 自动存档）、最佳实践。
 
 ### 覆盖范围
 
-Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 transform-guide.md 的"概念准备"
+Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 10-transform-guide.md 的"概念准备"
 前置章节。movement-system-guide 已有独立的物理运动内容，不受影响。
 
-### 章节大纲（transform-guide.md 新结构）
+### 章节大纲（10-transform-guide.md 新结构）
 
 | # | 章节 | 内容 | 预计行数 |
 |---|------|------|----------|
@@ -122,14 +122,14 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 
 ### 合并后文件名
 
-`transform-guide.md`（删除 `coordinate_systems_guide.md`）
+`10-transform-guide.md`（删除 `coordinate_systems_guide.md`）
 
 ### 注意事项
 
 - 保留 `coordinate_systems_guide.md` 中"Godot 官方文档"的外部链接
 - 删除 `coordinate_systems_guide.md` 中已有的死链（transform_instructions.md、3d_game_development.md）
-- 合并后 transform-guide.md 的指令表格应引用前置章节的坐标概念
-- movement-system-guide.md 不受影响，其内容不涉及坐标空间概念讲解
+- 合并后 10-transform-guide.md 的指令表格应引用前置章节的坐标概念
+- 11-movement-system-guide.md 不受影响，其内容不涉及坐标空间概念讲解
 
 ---
 
@@ -196,7 +196,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 
 ### 参考风格
 
-采用与 `transform-guide.md` 一致的指令功能表格式 + `scene-management-guide.md` 的用例编排方式。
+采用与 `10-transform-guide.md` 一致的指令功能表格式 + `17-scene-management-guide.md` 的用例编排方式。
 
 ---
 
@@ -236,7 +236,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 
 ### 参考风格
 
-采用与 `input-events-guide.md` 一致的事件表格分组的风格（分组展示、按触发时机分类）。
+采用与 `32-input-events-guide.md` 一致的事件表格分组的风格（分组展示、按触发时机分类）。
 
 ---
 
@@ -274,7 +274,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 
 ### 参考风格
 
-表格对比 + 文字详解 + 用例伪代码（类似 `input-events-guide.md` 的格式）。
+表格对比 + 文字详解 + 用例伪代码（类似 `32-input-events-guide.md` 的格式）。
 
 ---
 
@@ -502,7 +502,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 | **scene** | 1 | CheckPreloadStatus | `conditions/scene/check_preload_status.gd` |
 | **ui** | 1 | CheckUIVisible | `conditions/ui/check_ui_visible.gd` |
 
-以及 `variable` 类别中的非核心条件（核心变量比较已在 `variable-system-guide.md` 覆盖）：
+以及 `variable` 类别中的非核心条件（核心变量比较已在 `01-variable-system-guide.md` 覆盖）：
 
 | 补充 | 条件数 | 条件名称 |
 |------|--------|---------|
@@ -527,7 +527,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 - 各小类之间用标题层级区分，避免信息密度过大
 - 条件数较少（每类 1-2 个），无需为每类单独成篇
 - 以距离、导航、渲染、UI 等"补充型条件"的 quick reference 定位
-- 与 `animation-guide.md`、`physics-guide.md` 等大类的条件指南不重复：`variable` 类只取 CheckHealthValue 等补充条件，核心 CompareVariable 已在 `variable-system-guide.md` 覆盖
+- 与 `12-animation-guide.md`、`14-physics-guide.md` 等大类的条件指南不重复：`variable` 类只取 CheckHealthValue 等补充条件，核心 CompareVariable 已在 `01-variable-system-guide.md` 覆盖
 - `conditions/composite/` 已有 `composite-conditions-guide.md` 独立文档，不纳入此合集
 
 ---
@@ -537,7 +537,7 @@ Global/Local 坐标空间的概念讲解、决策树、最佳实践 → 作为 t
 ```
 Phase 1（合并项 → 清理现状）
   ├── 1. 合并 A：global-variables-guide.md（覆盖管理+持久化）
-  └── 2. 合并 B：坐标系统概念并入 transform-guide.md
+  └── 2. 合并 B：坐标系统概念并入 10-transform-guide.md
 
 Phase 2（P0 核心新增 → 覆盖高需求主题）
   ├── 3. Node Operations 指令指南 (21指令)
@@ -564,12 +564,12 @@ Phase 4（P2 补充新增 → 锦上添花）
 
 | 现有文档 | 已有内容 | 新文档不重复的范围 |
 |---------|---------|------------------|
-| `physics-guide.md` | 5 物理指令 + 10 物理事件 | P1-E 只有物理**条件**（7个），不重复指令/事件 |
-| `input-events-guide.md` | 12 输入事件 | P1-C 只有输入**条件**（6个），不重复事件 |
-| `animation-guide.md` | 动画指令 | P2-A 只有动画**条件**（5个），不重复指令 |
-| `variable-system-guide.md` | 三层变量系统 | 合并 A 只覆盖 GlobalVariableManager 和持久化，不重复变量基础概念 |
+| `14-physics-guide.md` | 5 物理指令 + 10 物理事件 | P1-E 只有物理**条件**（7个），不重复指令/事件 |
+| `32-input-events-guide.md` | 12 输入事件 | P1-C 只有输入**条件**（6个），不重复事件 |
+| `12-animation-guide.md` | 动画指令 | P2-A 只有动画**条件**（5个），不重复指令 |
+| `01-variable-system-guide.md` | 三层变量系统 | 合并 A 只覆盖 GlobalVariableManager 和持久化，不重复变量基础概念 |
 | `composite-conditions-guide.md` | 4 组合条件 | P2-C 不包含 composite/ 目录的条件 |
-| `transform-guide.md` | 7 变换指令 | P0-A 不包含 transform/ 目录的指令 |
+| `10-transform-guide.md` | 7 变换指令 | P0-A 不包含 transform/ 目录的指令 |
 
 ---
 
@@ -577,45 +577,45 @@ Phase 4（P2 补充新增 → 锦上添花）
 
 ### Instructions（全部 120+）
 
-- `animation/` — 9 指令（已有 `animation-guide.md`）
+- `animation/` — 9 指令（已有 `12-animation-guide.md`）
 - `arrays/` — 17 指令（已有 `array-operations-guide.md`）
 - `audio/` — 8 指令（已有 `audio-guide.md`）
 - `camera/` — 6 指令（已有 `camera-guide.md`）
-- `debug/` — 3 指令（已有 `debugging-guide.md`、`breakpoint-guide.md`）
+- `debug/` — 3 指令（已有 `debugging-guide.md`、`26-breakpoint-guide.md`）
 - `dictionaries/` — 17 指令（已有 `dictionary-operations-guide.md`）
 - `event/` — 1 指令（引用 `event-bus-guide.md`）
-- `flow_control/` — 12 指令（已有 `flow-control-guide.md`）
-- `math/` — 8 指令（已有 `math-vector-guide.md`、`expression-guide.md`）
-- `movement/` — 1 指令（已有 `movement-system-guide.md`）
+- `flow_control/` — 12 指令（已有 `23-flow-control-guide.md`）
+- `math/` — 8 指令（已有 `math-vector-guide.md`、`05-expression-guide.md`）
+- `movement/` — 1 指令（已有 `11-movement-system-guide.md`）
 - `navigation/` — 1 指令（P2-C 中涉及）
 - `node_operations/` — **21 指令（P0-A 待新增）**
-- `physics/` — 9 指令（已有 `physics-guide.md`）
+- `physics/` — 9 指令（已有 `14-physics-guide.md`）
 - `rendering/` — 5 指令
-- `scene/` — 5 指令（已有 `scene-management-guide.md`、`scene-preloading-guide.md`）
+- `scene/` — 5 指令（已有 `17-scene-management-guide.md`、`50-scene-preloading-guide.md`）
 - `string/` — 6 指令
 - `system/` — 3 指令
 - `time/` — 2 指令
-- `transform/` — 7 指令（已有 `transform-guide.md`）
-- `tween/` — 14 指令（已有 `tween-animation-guide.md`）
+- `transform/` — 7 指令（已有 `10-transform-guide.md`）
+- `tween/` — 14 指令（已有 `18-tween-animation-guide.md`）
 - `ui/` — 6 指令（已有 `ui-guide.md`）
-- `variables/` — 9 指令（已有 `variable-system-guide.md` + 合并 A）
+- `variables/` — 9 指令（已有 `01-variable-system-guide.md` + 合并 A）
 
 ### Events（全部 60+）
 
-- `animation/` — 6 事件（已有 `animation-guide.md`）
+- `animation/` — 6 事件（已有 `12-animation-guide.md`）
 - `audio/` — 4 事件（已有 `audio-guide.md`）
 - `event/` — 1 事件（已有 `event-bus-guide.md`）
 - `gameplay/` — 2 事件
-- `input/` — 12 事件（已有 `input-events-guide.md`）
+- `input/` — 12 事件（已有 `32-input-events-guide.md`）
 - `lifecycle/` — **7 事件（P0-B 待新增）**
 - `navigation/` — 1 事件
 - `node/` — **4 事件（P1-B 待新增）**
-- `physics/` — 10 事件（已有 `physics-guide.md`）
-- `scene/` — 4 事件（已有 `scene-management-guide.md`）
+- `physics/` — 10 事件（已有 `14-physics-guide.md`）
+- `scene/` — 4 事件（已有 `17-scene-management-guide.md`）
 - `timing/` — **4 事件（P1-A 待新增）**
-- `tween/` — 1 事件（已有 `tween-animation-guide.md`）
+- `tween/` — 1 事件（已有 `18-tween-animation-guide.md`）
 - `ui/` — 7 事件（已有 `ui-guide.md`）
-- `variable/` — 1 事件（已有 `variable-system-guide.md`）
+- `variable/` — 1 事件（已有 `01-variable-system-guide.md`）
 
 ### Conditions（全部 50+）
 
@@ -636,7 +636,7 @@ Phase 4（P2 补充新增 → 锦上添花）
 - `system/` — 2 条件（→ P2-C 综合合集）
 - `time/` — **4 条件（P2-B 待新增）**
 - `ui/` — 1 条件（→ P2-C 综合合集）
-- `variable/` — 5 条件（部分在 `variable-system-guide.md`，剩余 → P2-C 综合合集）
+- `variable/` — 5 条件（部分在 `01-variable-system-guide.md`，剩余 → P2-C 综合合集）
 
 ---
 

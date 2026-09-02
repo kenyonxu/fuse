@@ -95,7 +95,7 @@
 - [多线程开发指南](../dev_docs/guides/multithreading-developer-guide.md) · [变量操作工具](../dev_docs/guides/variable-operations-utility.md)
 
 ### 用户文档（../user_docs/）
-- [全局变量管理器 V2](../user_docs/guides/global_variable_manager_v2.md) · [变量系统指南](../user_docs/guides/variable_system_guide.md)
+- [全局变量管理器 V2](../user_docs/guides/54-global-variables-guide.md) · [变量系统指南](../user_docs/guides/01-variable-system-guide.md)
 - [创建自定义事件](../user_docs/best_practices/custom_event.md)（扩展实践）
 
 ### 历史归档（../archive/）

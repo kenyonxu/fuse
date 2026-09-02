@@ -11,30 +11,30 @@
 - [快速开始指南](user_docs/quick_start.md) - 5分钟上手 Fuse 系统
 
 **核心指南**：
-- [全局变量管理器 V2](user_docs/guides/global_variable_manager_v2.md) - 全局变量系统使用指南
-- [全局变量持久化](user_docs/guides/global-variable-persistence-guide.md) - 存档/读档功能
-- [表达式系统指南](user_docs/guides/expression-guide.md) - MathExpression、StringExpression、ExpressionCondition
-- [断点指令指南](user_docs/guides/breakpoint-guide.md) - BreakpointInstruction 调试工具
-- [场景预加载指南](user_docs/guides/scene-preloading-guide.md) - 异步场景预加载
-- [指令生成器](user_docs/guides/instruction-generator-guide.md) - 自动生成节点指令
+- [全局变量管理器 V2](user_docs/guides/54-global-variables-guide.md) - 全局变量系统使用指南
+- [全局变量持久化](user_docs/guides/54-global-variables-guide.md) - 存档/读档功能
+- [表达式系统指南](user_docs/guides/05-expression-guide.md) - MathExpression、StringExpression、ExpressionCondition
+- [断点指令指南](user_docs/guides/26-breakpoint-guide.md) - BreakpointInstruction 调试工具
+- [场景预加载指南](user_docs/guides/50-scene-preloading-guide.md) - 异步场景预加载
+- [指令生成器](user_docs/guides/06-instruction-generator-guide.md) - 自动生成节点指令
 
 **操作指南**：
-- [Array 操作](user_docs/guides/array-operations-guide.md) - 18 个数组操作指令
-- [Dictionary 操作](user_docs/guides/dictionary-operations-guide.md) - 16 个字典操作指令
-- [流程控制](user_docs/guides/flow-control-guide.md) - 条件分支、循环、等待、游戏暂停
-- [复合条件](user_docs/guides/composite-conditions-guide.md) - AND/OR/NOT 逻辑组合
-- [输入事件](user_docs/guides/input-events-guide.md) - 键盘、鼠标、触摸、手柄事件
+- [Array 操作](user_docs/guides/21-array-operations-guide.md) - 18 个数组操作指令
+- [Dictionary 操作](user_docs/guides/22-dictionary-operations-guide.md) - 16 个字典操作指令
+- [流程控制](user_docs/guides/23-flow-control-guide.md) - 条件分支、循环、等待、游戏暂停
+- [复合条件](user_docs/guides/45-composite-conditions-guide.md) - AND/OR/NOT 逻辑组合
+- [输入事件](user_docs/guides/32-input-events-guide.md) - 键盘、鼠标、触摸、手柄事件
 
 **系统指南**：
-- [物理系统](user_docs/guides/physics-guide.md) - 物理指令与碰撞事件
-- [音频系统](user_docs/guides/audio-guide.md) - 音效、音乐与音频事件
-- [相机系统](user_docs/guides/camera-guide.md) - 跟随、缩放、震动、限制
-- [变换操作](user_docs/guides/transform-guide.md) - 位置、旋转、缩放、朝向
-- [UI 操作](user_docs/guides/ui-guide.md) - 文本、纹理、进度条、显示/隐藏
-- [动画系统](user_docs/guides/animation-guide.md) - 播放、停止、混合、动画事件
-- [调试系统](user_docs/guides/debugging-guide.md) - Print、断点、执行追踪、调试可视化
-- [MultiEventTrigger](user_docs/guides/multi-event-trigger-guide.md) - 多事件合并触发器、上下文菜单合并/拆分
-- [Runner](user_docs/guides/runner-guide.md) - 信号绑定执行器、awaitable 执行、程序化调用
+- [物理系统](user_docs/guides/14-physics-guide.md) - 物理指令与碰撞事件
+- [音频系统](user_docs/guides/13-audio-guide.md) - 音效、音乐与音频事件
+- [相机系统](user_docs/guides/16-camera-guide.md) - 跟随、缩放、震动、限制
+- [变换操作](user_docs/guides/10-transform-guide.md) - 位置、旋转、缩放、朝向
+- [UI 操作](user_docs/guides/15-ui-guide.md) - 文本、纹理、进度条、显示/隐藏
+- [动画系统](user_docs/guides/12-animation-guide.md) - 播放、停止、混合、动画事件
+- [调试系统](user_docs/guides/25-debugging-guide.md) - Print、断点、执行追踪、调试可视化
+- [MultiEventTrigger](user_docs/guides/04-multi-event-trigger-guide.md) - 多事件合并触发器、上下文菜单合并/拆分
+- [Runner](user_docs/guides/03-runner-guide.md) - 信号绑定执行器、awaitable 执行、程序化调用
 
 **最新功能 (Phase 2)**：
 - ✅ 14 个新条件（动画、时间、节点、物理、变量）
@@ -56,7 +56,7 @@
 - [变量系统设计](system_docs/architecture/variable_system_design.md) - 变量系统架构
 - [指令系统设计](system_docs/architecture/instruction_system_design.md) - 指令执行机制
 - [条件系统设计](system_docs/architecture/condition_system_design.md) - 条件判断系统
-- [共享变量实现](system_docs/architecture/shared_variable_implementation_design.md) - 变量共享机制
+- [共享变量实现](system_docs/architecture/variable_system_design.md) - 变量共享机制
 - [Godot 集成设计](system_docs/architecture/godot_integration_design.md) - 与 Godot 深度集成
 - [编辑器工具设计](system_docs/architecture/editor_tools_design.md) - 编辑器工具
 - [事件：按键输入](system_docs/architecture/event_on_input_key_design.md) - 按键事件设计
@@ -88,8 +88,7 @@
 - [指令创建指南](dev_docs/guides/instruction_creation_guide.md) - 自定义指令开发
 - [图标系统](dev_docs/guides/icon_system.md) - 图标资源体系
 
-**归档文档**：
-- 开发历程文档已归档到 [dev_docs/archive/](dev_docs/archive/) 目录
+**归档文档**：开发历程文档已归档到本地 `dev_docs/archive/` 目录（不入库）
 
 ---
 
@@ -127,7 +126,7 @@
 ### 下一步
 
 - 阅读 [快速开始指南](user_docs/quick_start.md) 了解详细步骤
-- 查看 [全局变量管理器指南](user_docs/guides/global_variable_manager_v2.md) 学习变量管理
+- 查看 [全局变量管理器指南](user_docs/guides/54-global-variables-guide.md) 学习变量管理
 - 参考 [最佳实践](user_docs/best_practices/) 创建自定义组件
 
 ---
@@ -152,7 +151,7 @@
 ### 游戏设计师
 从这里开始：
 - [快速开始指南](user_docs/quick_start.md)
-- [全局变量管理器 V2](user_docs/guides/global_variable_manager_v2.md)
+- [全局变量管理器 V2](user_docs/guides/54-global-variables-guide.md)
 
 ### 游戏开发者
 推荐阅读：
@@ -169,7 +168,7 @@
 实现参考：
 - [指令系统设计](system_docs/architecture/instruction_system_design.md)
 - [指令系统设计](system_docs/architecture/instruction_system_design.md)
-- [变量存储实现报告](dev_docs/reports/variable_storage_phase1-2_report.md)
+- 变量存储实现报告：本地 `archive/reports/`（不入库）
 
 ---
 

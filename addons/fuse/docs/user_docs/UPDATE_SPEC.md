@@ -29,36 +29,36 @@ user_docs/
 ├── quick_start.md               321 行  快速开始
 ├── UPDATE_SPEC.md               本文件
 ├── guides/                      31 篇使用指南
-│   ├── variable_system_guide.md            594 行
-│   ├── global_variable_manager_v2.md       533 行
-│   ├── tween-animation-guide.md            631 行
-│   ├── animation-guide.md                  534 行
+│   ├── 01-variable-system-guide.md            594 行
+│   ├── 54-global-variables-guide.md       533 行
+│   ├── 18-tween-animation-guide.md            631 行
+│   ├── 12-animation-guide.md                  534 行
 │   ├── icon_manager_guide.md               492 行
 │   ├── object_pool_system_guide.md         411 行
-│   ├── expression-guide.md                 407 行
+│   ├── 05-expression-guide.md                 407 行
 │   ├── math-vector-guide.md                380 行
 │   ├── debugging-guide.md                  358 行
-│   ├── scene-management-guide.md           298 行
+│   ├── 17-scene-management-guide.md           298 行
 │   ├── coordinate_systems_guide.md         284 行
 │   ├── instruction-generator-guide.md      258 行
 │   ├── event_bus_guide.md                  238 行
-│   ├── movement-system-guide.md            227 行
-│   ├── trigger-selection-guide.md          218 行
-│   ├── global-variable-persistence-guide.md 214 行
-│   ├── scene-preloading-guide.md           195 行
-│   ├── breakpoint-guide.md                 186 行
-│   ├── multi-event-trigger-guide.md        143 行
+│   ├── 11-movement-system-guide.md            227 行
+│   ├── 02-trigger-selection-guide.md          218 行
+│   ├── 54-global-variables-guide.md 214 行
+│   ├── 50-scene-preloading-guide.md           195 行
+│   ├── 26-breakpoint-guide.md                 186 行
+│   ├── 04-multi-event-trigger-guide.md        143 行
 │   ├── runner-guide.md                     141 行
 │   ├── multithreading-optimization.md      133 行
-│   ├── input-events-guide.md               128 行
-│   ├── physics-guide.md                    112 行
+│   ├── 32-input-events-guide.md               128 行
+│   ├── 14-physics-guide.md                    112 行
 │   ├── composite-conditions-guide.md       102 行
-│   ├── flow-control-guide.md                99 行
+│   ├── 23-flow-control-guide.md                99 行
 │   ├── ui-guide.md                          98 行
 │   ├── dictionary-operations-guide.md       98 行
 │   ├── audio-guide.md                       91 行
 │   ├── array-operations-guide.md            91 行
-│   ├── transform-guide.md                   64 行
+│   ├── 10-transform-guide.md                   64 行
 │   └── camera-guide.md                      59 行
 └── best_practices/              2 篇
     ├── custom_instruction.md             1250 行
@@ -100,15 +100,15 @@ user_docs/
 | coordinate_systems_guide.md | `../guides/3d_game_development.md` | ❌ 无（删除） |
 | event_bus_guide.md | `../reference/instructions/send_event.md` | ❌ reference 目录不存在（删除或改指） |
 | event_bus_guide.md | `../reference/events/on_receive_event.md` | ❌ 同上 |
-| global-variable-persistence-guide.md | `variable_system_v2_migration.md` | 改指 `../../archive/archive/variable_system_v2_migration.md` |
+| 54-global-variables-guide.md | `variable_system_v2_migration.md` | 改指 `../../archive/archive/variable_system_v2_migration.md` |
 | icon_manager_guide.md | `../../development/icon_system.md`（×2） | 改 `../../dev_docs/guides/icon_system.md` |
 | multithreading-optimization.md | `../dev/multithreading-developer-guide.md` | 改 `../../dev_docs/guides/multithreading-developer-guide.md` |
-| tween-animation-guide.md | `../../../../docs/tween-common-patterns.md` | ❌ 无（删除） |
-| tween-animation-guide.md | `../roadmap/...tween-instruction-roadmap.md` | archive 有（名不同：`bricks-tween`），改指或删除 |
-| tween-animation-guide.md | `../development/instruction_creation_guide.md` | 改 `../../dev_docs/guides/instruction_creation_guide.md` |
-| variable_system_guide.md | `../system_docs/architecture/variable_system_design.md` | 层级少一级，改 `../../system_docs/architecture/variable_system_design.md` |
-| variable_system_guide.md | `../system_docs/api/variable_operations.md` | ❌ system_docs 无 api/（删除） |
-| variable_system_guide.md | `../system_docs/api/variable_scope_utils.md` | ❌ 同上 |
+| 18-tween-animation-guide.md | `../../../../docs/tween-common-patterns.md` | ❌ 无（删除） |
+| 18-tween-animation-guide.md | `../roadmap/...tween-instruction-roadmap.md` | archive 有（名不同：`bricks-tween`），改指或删除 |
+| 18-tween-animation-guide.md | `../development/instruction_creation_guide.md` | 改 `../../dev_docs/guides/instruction_creation_guide.md` |
+| 01-variable-system-guide.md | `../system_docs/architecture/variable_system_design.md` | 层级少一级，改 `../../system_docs/architecture/variable_system_design.md` |
+| 01-variable-system-guide.md | `../system_docs/api/variable_operations.md` | ❌ system_docs 无 api/（删除） |
+| 01-variable-system-guide.md | `../system_docs/api/variable_scope_utils.md` | ❌ 同上 |
 
 #### D. best_practices/custom_event.md（1 处）
 

@@ -397,7 +397,7 @@ Godot 原生资源格式，可直接 `load()` 获取 `FusePreset` 实例。包�
 
 ## 预设的毕业出口
 
-预设的生命周期现在有来也有去：**去程**是 AI 生成 / 手工导出 → 离线校验 → 导入复用（本文档主题）；**归程**是 AI 交接工件——场景中调稳的 Trigger 逻辑经拓扑推导为 System 工件（系统划分），连同 preset（行为规格）交给**你自己的 AI agent** 编写脱离 Fuse 的工程代码，源 Trigger 保持不动、随时回滚（详见 [README](../../../../README.md) 的"从原型到工程代码"）。另有一个**实验性**毕业导出器可直接生成与 Fuse 运行时共存的 GDScript：[毕业导出器使用指南](57-graduation-exporter-guide.md)。
+预设的生命周期现在有来也有去：**去程**是 AI 生成 / 手工导出 → 离线校验 → 导入复用（本文档主题）；**归程**是 AI 交接工件——场景中调稳的 Trigger 逻辑经拓扑推导为 System 工件（系统划分），连同 preset（行为规格）交给**你自己的 AI agent** 编写脱离 Fuse 的工程代码，源 Trigger 保持不动、随时回滚（详见 [README](../../../../../README.md) 的"从原型到工程代码"）。另有一个**实验性**毕业导出器可直接生成与 Fuse 运行时共存的 GDScript：[毕业导出器使用指南](57-graduation-exporter-guide.md)。
 
 ---
 

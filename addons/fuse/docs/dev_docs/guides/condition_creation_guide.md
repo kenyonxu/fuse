@@ -1,6 +1,7 @@
 # 创建 Fuse 条件指南
 
 > **目标**: 为开发者提供完整的 Fuse 条件创建指引，基于现有条件实现经验和最佳实践。
+> **权威规范**: 组件生成的最终权威是 [fuse-condition-generator skill](../../../agent_skills/fuse-condition-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
 
 **适用对象**: Fuse 系统开发者、贡献者
 
