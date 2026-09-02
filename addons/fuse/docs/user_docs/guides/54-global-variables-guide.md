@@ -24,7 +24,7 @@ Fuse 变量系统分为三层：
 | **Scope 变量** | 执行上下文 (Trigger Scope、Custom ID、Target Node) | 跨指令数据传递 |
 | **Global 变量** | 全局 (游戏进程生命周期) | 跨场景持久化游戏状态 |
 
-本指南聚焦 **Global 变量**的管理与持久化。完整变量系统见 `variable_system_guide.md`。
+本指南聚焦 **Global 变量**的管理与持久化。完整变量系统见 `variable-system-guide.md`。
 
 ---
 
@@ -320,5 +320,5 @@ func _ready():
 ---
 
 **相关文档:**
-- [变量系统指南](variable_system_guide.md)
+- [变量系统指南](variable-system-guide.md)
 - [场景管理指南](scene-management-guide.md)

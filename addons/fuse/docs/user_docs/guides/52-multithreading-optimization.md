@@ -30,14 +30,7 @@ Use Parallel Condition Evaluation: ✓
 
 ## 性能提升
 
-| 条件数量 | 串行耗时 | 并行耗时 | 提升 |
-|----------|----------|----------|------|
-| 5 个 | ~0.5ms | ~0.5ms | 无（太少） |
-| 20 个 | ~2ms | ~0.8ms | 2.5x |
-| 50 个 | ~5ms | ~1.5ms | 3.3x |
-| 100 个 | ~10ms | ~2.5ms | 4x |
-
-条件越多，提升越明显。少于 8 个条件时，提升不大。
+条件越多，并行收益越明显——两位数的条件并行评估通常能把判断耗时压到串行的几分之一，上百个条件时差距进一步拉开。条件很少时收益有限（线程调度本身有开销），但也不会更慢。
 
 ## 场景预加载
 
@@ -88,7 +81,7 @@ Use Parallel Condition Evaluation: ✓
 |------|--------|------|
 | Enable Multithreading | ✓ | 全局开关 |
 | Parallel Condition Evaluation | ✓ | 并行评估条件 |
-| Max Parallel Conditions | 4 | 同时执行的最大条件数 |
+| Max Parallel Conditions | 8（上限 16） | 并行度上限——同时进入工作线程的最大条件数 |
 | Timeout Per Condition | 0.1s | 单个条件的超时时间 |
 | Enable Resource Preload | ✓ | 启用场景预加载 |
 
@@ -96,11 +89,7 @@ Use Parallel Condition Evaluation: ✓
 
 ### 游戏变慢了？
 
-检查条件数量。少于 8 个条件时，串行可能更快。在配置中提高阈值：
-
-```
-Min Conditions For Parallel: 8
-```
+先确认是条件评估的问题（Topology 面板 / 变量监视器定位耗时点）。如果是，按需调整：调低 `Max Parallel Conditions`（并行度过高时线程调度开销可能吃掉收益），或直接关掉 `Parallel Condition Evaluation` 开关整体回退串行——两个开关随时可切换，不影响逻辑正确性。
 
 ### 某些条件不执行？
 
@@ -123,7 +112,7 @@ Preload Timeout: 30.0  （30秒）
 
 ## 兼容性
 
-- Godot 4.5+
+- Godot 4.7+
 - 不影响现有项目
 - 可随时关闭多线程功能
 - 所有旧触发器继续正常工作

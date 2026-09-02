@@ -344,6 +344,6 @@ Inspector 底部出现一行按钮：
 **相关文档:**
 - [预设系统使用指南](55-preset-system-guide.md)
 - [变量监视器使用指南](56-variable-watcher-guide.md)
-- [变量系统指南](01-variable_system_guide.md)
+- [变量系统指南](01-variable-system-guide.md)
 - [调试系统指南](25-debugging-guide.md)
 - [断点指南](26-breakpoint-guide.md)

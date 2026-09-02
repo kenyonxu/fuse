@@ -403,7 +403,7 @@ Godot 原生资源格式，可直接 `load()` 获取 `FusePreset` 实例。包�
 
 **相关文档:**
 - [毕业导出器使用指南（实验性 GDScript 导出）](57-graduation-exporter-guide.md)
-- [变量系统指南](01-variable_system_guide.md)
+- [变量系统指南](01-variable-system-guide.md)
 - [编辑器面板总览](00-editor-panels-overview.md)
 - [触发器选择指南](02-trigger-selection-guide.md)
 - [Runner 指南](03-runner-guide.md)

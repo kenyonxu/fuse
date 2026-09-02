@@ -289,6 +289,10 @@ variable_scope: Global
 - execution_history: 完整执行记录
 - stats: 执行统计
 
+### 变量监视器（Variable Watcher）
+
+调试的第一站往往是变量而非指令：逻辑不按预期执行时，先开变量监视器实时看变量值变化——支持按作用域分标签页查看、双击编辑、历史折线图录制与快照导出，比盲猜或加 Print 指令快得多。完整用法见 [变量监视器指南](56-variable-watcher-guide.md)。
+
 ---
 
 ## 调试工作流

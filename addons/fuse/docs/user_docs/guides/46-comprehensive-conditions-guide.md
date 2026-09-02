@@ -16,7 +16,7 @@
 | scene | 1 | CheckPreloadStatus | `conditions/scene/check_preload_status.gd` |
 | ui | 1 | CheckUIVisible | `conditions/ui/check_ui_visible.gd` |
 
-**补充：variable 类**中的非核心条件（核心变量比较已覆盖在 `variable_system_guide.md`）：
+**补充：variable 类**中的非核心条件（核心变量比较已覆盖在 `variable-system-guide.md`）：
 
 | 补充 | 条件数 | 条件名称 |
 |------|--------|---------|
@@ -391,7 +391,7 @@ OnInterval → interval_seconds: 10.0
 5. **距离开销**：`CheckDistance` 每次调用计算欧几里得距离，高频使用时考虑降低调用频率。
 
 **相关文档不重复的范围：**
-- 核心变量比较（`CompareVariable`、`CheckVariable`）→ 见 `variable_system_guide.md`
+- 核心变量比较（`CompareVariable`、`CheckVariable`）→ 见 `variable-system-guide.md`
 - 组合条件（`CheckAll`、`CheckAny`、`CheckNot`、`CheckComposite`）→ 见 `composite-conditions-guide.md`
 - 数组条件 → 见 `array-operations-guide.md`
 - 字典条件 → 见 `dictionary-operations-guide.md`
