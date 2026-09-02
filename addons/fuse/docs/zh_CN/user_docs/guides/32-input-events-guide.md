@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/32-input-events-guide.md)
+
 # 输入事件指南
 
 Fuse 提供 12 个输入事件，覆盖键盘、鼠标、触摸、游戏手柄和文本输入等所有输入方式。

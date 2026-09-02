@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/30-lifecycle-events-guide.md)
+
 # Lifecycle 事件指南
 
 ## 概述

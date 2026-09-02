@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/17-scene-management-guide.md)
+
 # 场景管理指令使用指南
 
 Fuse 场景管理系统提供 6 个指令，覆盖场景切换、重新加载、场景路径获取、子节点实例化、预加载和后台加载等完整的场景操作链路。

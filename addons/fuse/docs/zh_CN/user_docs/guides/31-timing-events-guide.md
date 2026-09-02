@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/31-timing-events-guide.md)
+
 # Timing 事件指南
 
 ## 概述

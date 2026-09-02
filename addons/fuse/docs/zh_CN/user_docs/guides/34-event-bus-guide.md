@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/34-event-bus-guide.md)
+
 # Event Bus 用户指南
 
 Event Bus（事件总线）是 Fuse 可视化编程系统的全局事件通信机制，允许不同 Trigger 之间通过自定义事件进行通信。

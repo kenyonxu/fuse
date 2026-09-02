@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/18-tween-animation-guide.md)
+
 # Tween 补间动画使用指南
 
 > Fuse 可视化编程系统的 Tween 动画指令完整使用指南

@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/42-physics-conditions-guide.md)
+
 # Physics 条件指南
 
 ## 概述

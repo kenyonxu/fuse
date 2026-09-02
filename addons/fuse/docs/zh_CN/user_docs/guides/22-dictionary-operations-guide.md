@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/22-dictionary-operations-guide.md)
+
 # Dictionary 操作指南
 
 Fuse 提供 16 个 Dictionary 操作指令，涵盖键值对增删、嵌套路径访问、JSON 转换和数学运算等场景。

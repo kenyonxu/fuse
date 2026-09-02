@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/23-flow-control-guide.md)
+
 # 流程控制指南
 
 Fuse 提供 14 个流程控制指令，用于实现条件分支、循环、游戏暂停和指令嵌套调用等逻辑。

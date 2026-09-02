@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/21-array-operations-guide.md)
+
 # Array 操作指南
 
 Fuse 提供 18 个 Array 操作指令，涵盖元素增删、查找、排序、数值统计和向量运算等场景。大多数指令支持负索引（从末尾计数）。

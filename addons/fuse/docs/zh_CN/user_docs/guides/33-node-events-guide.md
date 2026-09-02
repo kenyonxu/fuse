@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/33-node-events-guide.md)
+
 # Node 事件指南
 
 ## 概述

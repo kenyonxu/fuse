@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/40-input-conditions-guide.md)
+
 # Input 条件指南
 
 ## 概述

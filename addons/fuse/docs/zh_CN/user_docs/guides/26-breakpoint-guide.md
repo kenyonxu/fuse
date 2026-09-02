@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/26-breakpoint-guide.md)
+
 # 断点指令使用指南
 
 BreakpointInstruction 是 Fuse 的调试工具指令。将它插入指令列表中，执行到该位置时会输出变量快照到 Godot 输出窗口，可选暂停执行以检查状态。

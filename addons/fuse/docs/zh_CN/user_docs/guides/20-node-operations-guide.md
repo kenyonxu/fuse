@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/20-node-operations-guide.md)
+
 # Node Operations 指令指南
 
 ## 概述

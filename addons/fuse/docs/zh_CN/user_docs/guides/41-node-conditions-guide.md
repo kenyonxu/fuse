@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/41-node-conditions-guide.md)
+
 # Node 条件指南
 
 ## 概述
