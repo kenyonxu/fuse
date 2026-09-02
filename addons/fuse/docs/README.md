@@ -1,94 +1,28 @@
 # Fuse 可视化编程系统 - 文档中心
 
-欢迎来到 Fuse 系统文档中心！Fuse 是一个功能强大的可视化编程系统，让游戏开发变得更简单、更直观。
+Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition 三类砖块在 Inspector 里搭逻辑，AI 可生成 preset，调稳的系统可"毕业"为脱离插件的工程代码——从原型到代码的非破坏性桥梁。
 
 ## 📚 文档分类
 
-### 📖 [用户文档](user_docs/)
-面向游戏设计师和开发者，提供使用指南和最佳实践。
+三个子目录各有自己的 README 作为完整导航，本页只做导览。
 
-**快速开始**：
-- [快速开始指南](user_docs/quick_start.md) - 5分钟上手 Fuse 系统
+### 📖 [用户文档](user_docs/)（[完整索引](user_docs/README.md)）
 
-**核心指南**：
-- [全局变量管理器 V2](user_docs/guides/54-global-variables-guide.md) - 全局变量系统使用指南
-- [全局变量持久化](user_docs/guides/54-global-variables-guide.md) - 存档/读档功能
-- [表达式系统指南](user_docs/guides/05-expression-guide.md) - MathExpression、StringExpression、ExpressionCondition
-- [断点指令指南](user_docs/guides/26-breakpoint-guide.md) - BreakpointInstruction 调试工具
-- [场景预加载指南](user_docs/guides/50-scene-preloading-guide.md) - 异步场景预加载
-- [指令生成器](user_docs/guides/06-instruction-generator-guide.md) - 自动生成节点指令
+面向使用者。三条内容线：
 
-**操作指南**：
-- [Array 操作](user_docs/guides/21-array-operations-guide.md) - 18 个数组操作指令
-- [Dictionary 操作](user_docs/guides/22-dictionary-operations-guide.md) - 16 个字典操作指令
-- [流程控制](user_docs/guides/23-flow-control-guide.md) - 条件分支、循环、等待、游戏暂停
-- [复合条件](user_docs/guides/45-composite-conditions-guide.md) - AND/OR/NOT 逻辑组合
-- [输入事件](user_docs/guides/32-input-events-guide.md) - 键盘、鼠标、触摸、手柄事件
+- **Introductions 系列**（16 篇）：从总览到 AI 协作与毕业交接的完整教程路径，入口 [01-总览篇](user_docs/Introductions/01-总览篇.md)
+- **使用指南**（40 余篇）：按编号分段覆盖变量、触发器、表达式、各指令域、事件、条件与高级主题，入口 [00-index](user_docs/guides/00-index.md)
+- **最佳实践**（5 篇）：自定义组件三部曲（[事件](user_docs/best_practices/custom_event.md) / [指令](user_docs/best_practices/custom_instruction.md) / [条件](user_docs/best_practices/custom_condition.md)）+ 用户实践两篇（[Preset 复用与 AI 协作](user_docs/best_practices/preset_reuse.md) / [触发器组织与竞态规避](user_docs/best_practices/trigger_organization.md)）
 
-**系统指南**：
-- [物理系统](user_docs/guides/14-physics-guide.md) - 物理指令与碰撞事件
-- [音频系统](user_docs/guides/13-audio-guide.md) - 音效、音乐与音频事件
-- [相机系统](user_docs/guides/16-camera-guide.md) - 跟随、缩放、震动、限制
-- [变换操作](user_docs/guides/10-transform-guide.md) - 位置、旋转、缩放、朝向
-- [UI 操作](user_docs/guides/15-ui-guide.md) - 文本、纹理、进度条、显示/隐藏
-- [动画系统](user_docs/guides/12-animation-guide.md) - 播放、停止、混合、动画事件
-- [调试系统](user_docs/guides/25-debugging-guide.md) - Print、断点、执行追踪、调试可视化
-- [MultiEventTrigger](user_docs/guides/04-multi-event-trigger-guide.md) - 多事件合并触发器、上下文菜单合并/拆分
-- [Runner](user_docs/guides/03-runner-guide.md) - 信号绑定执行器、awaitable 执行、程序化调用
+首次使用从 [快速开始指南](user_docs/quick_start.md) 进入。
 
-**最新功能 (Phase 2)**：
-- ✅ 14 个新条件（动画、时间、节点、物理、变量）
-- ✅ Expression System（表达式系统）
+### 🏗️ [系统文档](system_docs/)（[完整索引](system_docs/README.md)）
 
-**最佳实践**：
-- [创建自定义事件](user_docs/best_practices/custom_event.md) - 扩展事件系统
-- [创建自定义指令](user_docs/best_practices/custom_instruction.md) - 创建自定义指令
+面向架构师与核心开发者：架构设计（9 篇，如 [可视化编程系统架构](system_docs/architecture/visual_programming_system_architecture.md)、[数据流与控制流](system_docs/architecture/dataflow_controlflow_design.md)）与 20 余篇机制分析报告（2026-07-07 经全量文档审计逐篇核对代码，各篇头部带分析时点注记）。
 
----
+### 👨‍💻 [开发文档](dev_docs/)（[完整索引](dev_docs/README.md)）
 
-### 🏗️ [系统文档](system_docs/)
-面向系统架构师和核心开发者，提供架构设计和分析报告。
-
-**架构设计** (9 篇文档)：
-- [可视化编程系统架构](system_docs/architecture/visual_programming_system_architecture.md) - 完整架构设计
-- [完整设计总结](system_docs/architecture/visual_programming_complete_design_summary.md) - 系统设计总结
-- [数据流与控制流](system_docs/architecture/dataflow_controlflow_design.md) - 执行流程设计
-- [变量系统设计](system_docs/architecture/variable_system_design.md) - 变量系统架构
-- [指令系统设计](system_docs/architecture/instruction_system_design.md) - 指令执行机制
-- [条件系统设计](system_docs/architecture/condition_system_design.md) - 条件判断系统
-- [共享变量实现](system_docs/architecture/variable_system_design.md) - 变量共享机制
-- [Godot 集成设计](system_docs/architecture/godot_integration_design.md) - 与 Godot 深度集成
-- [编辑器工具设计](system_docs/architecture/editor_tools_design.md) - 编辑器工具
-- [事件：按键输入](system_docs/architecture/event_on_input_key_design.md) - 按键事件设计
-
-**分析报告** (12 篇文档)：
-- [Fuse 架构优势分析](system_docs/analysis/fuse_architecture_advantages_analysis.md) - **核心优势与设计权衡**
-- [Fuse 架构分析](system_docs/analysis/fuse_architecture_analysis.md) - 系统架构分析
-- [核心系统分析](system_docs/analysis/fuse_core_analysis_report.md) - 核心组件分析
-- [ActionRunner 分析](system_docs/analysis/action_runner_analysis.md) - 动作执行器分析
-- [BaseInstruction 分析](system_docs/analysis/base_instruction_analysis.md) - 指令基类分析
-- [BaseCondition 分析](system_docs/analysis/base_condition_analysis.md) - 条件基类分析
-- [BaseTrigger 分析](system_docs/analysis/base_trigger_analysis.md) - 触发器基类分析
-- [BaseVariable 分析](system_docs/analysis/base_variable_analysis.md) - 变量基类分析
-- [ExecutionContext 分析](system_docs/analysis/execution_context_analysis.md) - 执行上下文分析
-- [BaseEvent 分析](system_docs/analysis/base_event_analysis.md) - 事件基类分析
-- [MultiEventTrigger 分析](system_docs/analysis/multi_event_trigger_analysis.md) - 多事件触发器分析
-- [Runner 分析](system_docs/analysis/runner_analysis.md) - Runner 节点分析
-
----
-
-### 👨‍💻 [开发文档](dev_docs/)
-面向 Fuse 系统开发者，提供技术设计和实现细节。
-
-**开发指南**：
-- [条件属性显示](dev_docs/guides/conditional-property-display-guide.md) - 属性显示控制
-- [运行时指令实例](dev_docs/guides/runtime-instruction-instance-guide.md) - 运行时指令实例机制
-- [条件创建指南](dev_docs/guides/condition-creation-guide.md) - 自定义条件开发
-- [事件创建指南](dev_docs/guides/event-creation-guide.md) - 自定义事件开发
-- [指令创建指南](dev_docs/guides/instruction-creation-guide.md) - 自定义指令开发
-- [图标系统](dev_docs/guides/icon-system-guide.md) - 图标资源体系
-
-**归档文档**：开发历程文档已归档到本地 `dev_docs/archive/` 目录（不入库）
+面向贡献者：组件创建指南（[事件](dev_docs/guides/event-creation-guide.md) / [指令](dev_docs/guides/instruction-creation-guide.md) / [条件](dev_docs/guides/condition-creation-guide.md)，配套 agent_skills 生成 skill 为规范权威）、运行时架构（RuntimeInstance、[Event RuntimeInstance 迁移](dev_docs/guides/runtime-instance-migration-guide.md)、多线程）、基础设施（Event Bus、序列化、图标、对象池）。历史归档在本地 `archive/`（不入库）。
 
 ---
 
@@ -96,96 +30,72 @@
 
 ### 5 分钟上手 Fuse
 
-1. **创建触发器节点**
-   ```
-   在场景中添加 "BaseTrigger" 节点
-   ```
-
-2. **配置动作序列**
-   ```
-   在 Trigger 的 Inspector 中创建 ActionRunner 资源
-   ```
-
-3. **添加指令**
-   ```
-   向 ActionRunner 的 instructions 数组添加指令
-   ```
-
-4. **测试运行**
-   ```
-   运行场景，触发事件执行指令
-   ```
+1. **创建触发器节点**：场景中添加 Trigger / MultiEventTrigger / Runner（三者的选型见[触发器选型指南](user_docs/guides/02-trigger-selection-guide.md)）
+2. **配置动作序列**：在 Trigger 的 Inspector 中创建 ActionRunner 资源
+3. **添加指令**：向 ActionRunner 的 instructions 数组添加指令
+4. **测试运行**：运行场景，事件触发即执行
 
 ### 基本概念
 
-- **事件 (Event)**：触发动作的条件，如按键、碰撞、信号等
-- **指令 (Instruction)**：要执行的操作，如移动节点、播放音效等
-- **变量 (Variable)**：存储数据，支持全局和局部作用域
-- **触发器 (Trigger)**：事件的入口点，管理指令执行
+- **事件 (Event)**：决定逻辑在什么时机触发——按键、碰撞、信号、生命周期
+- **指令 (Instruction)**：触发后执行的操作——移动节点、播放音效、流程控制
+- **条件 (Condition)**：执行前的判断——变量比较、复合逻辑（AND/OR/NOT）
+- **变量 (Variable)**：三层作用域（LOCAL / SCOPE / GLOBAL）存储数据
+- **触发器 (Trigger)**：事件入口，管理指令执行与防抖
 
 ### 下一步
 
-- 阅读 [快速开始指南](user_docs/quick_start.md) 了解详细步骤
-- 查看 [全局变量管理器指南](user_docs/guides/54-global-variables-guide.md) 学习变量管理
-- 参考 [最佳实践](user_docs/best_practices/) 创建自定义组件
+- [快速开始指南](user_docs/quick_start.md) 详细步骤
+- [01-总览篇](user_docs/Introductions/01-总览篇.md) 系统性入门
+- [最佳实践](user_docs/best_practices/) 创建自定义组件
 
 ---
 
 ## 📊 系统状态
 
-### 版本信息
-- **当前版本**: Fuse 1.0.0
+- **当前版本**: Fuse 1.0.0（见 `addons/fuse/plugin.cfg`）
 - **Godot 兼容**: 4.7+
-- **最后更新**: 2026-07-07
-- **文档版本**: 1.4.0
-
-### 文档统计
-- **用户文档**: ~27 篇（含快速开始、最佳实践、指南）
-- **系统文档**: ~21 篇（架构 + 分析）
-- **开发文档**: ~6 篇（开发指南）
+- **组件规模**: 310 个即用组件（70 事件 × 185 指令 × 55 条件，以 `addons/fuse/preset_ai_context/fuse_components.json` 为准）
+- **文档规模**: 全树约 130 篇（各子目录明细见其 README）
 
 ---
 
 ## 🎯 按角色查找文档
 
-### 游戏设计师
-从这里开始：
-- [快速开始指南](user_docs/quick_start.md)
-- [全局变量管理器 V2](user_docs/guides/54-global-variables-guide.md)
+### 游戏设计师（不写代码）
+[快速开始指南](user_docs/quick_start.md) → [Introductions 系列](user_docs/Introductions/01-总览篇.md) → [变量系统](user_docs/guides/01-variable-system-guide.md)
 
-### 游戏开发者
-推荐阅读：
-- [创建自定义事件](user_docs/best_practices/custom_event.md)
-- [创建自定义指令](user_docs/best_practices/custom_instruction.md)
+### AI 辅助开发者
+[Preset 复用与 AI 协作实践](user_docs/best_practices/preset_reuse.md) → [AI 协作与毕业交接](user_docs/Introductions/16-AI协作与毕业交接.md)
+
+### 游戏开发者（扩展组件）
+[创建自定义事件](user_docs/best_practices/custom_event.md) · [指令](user_docs/best_practices/custom_instruction.md) · [条件](user_docs/best_practices/custom_condition.md)
 
 ### 系统架构师
-深入理解：
-- [可视化编程系统架构](system_docs/architecture/visual_programming_system_architecture.md)
-- [数据流与控制流](system_docs/architecture/dataflow_controlflow_design.md)
-- [Fuse 架构分析](system_docs/analysis/fuse_architecture_analysis.md)
+[可视化编程系统架构](system_docs/architecture/visual_programming_system_architecture.md) → [数据流与控制流](system_docs/architecture/dataflow_controlflow_design.md) → [Fuse 架构优势分析](system_docs/analysis/fuse_architecture_advantages_analysis.md)
 
 ### 核心开发者
-实现参考：
-- [指令系统设计](system_docs/architecture/instruction_system_design.md)
-- [指令系统设计](system_docs/architecture/instruction_system_design.md)
-- 变量存储实现报告：本地 `archive/reports/`（不入库）
+[指令系统设计](system_docs/architecture/instruction_system_design.md) → [RuntimeInstructionInstance 指南](dev_docs/guides/runtime-instruction-instance-guide.md) → [多线程开发指南](dev_docs/guides/multithreading-developer-guide.md)
 
 ---
 
 ## 📖 相关资源
 
-### 外部参考
 - [Game Creator 文档](https://gamecreator.io/) - 可视化编程参考
 - [Godot 官方文档](https://docs.godotengine.org/) - Godot API 参考
-
-### 开发资源
-- [项目开发规范](../../../CLAUDE.md) - 代码规范和开发指南
-- [测试场景](../../tests/) - 系统测试场景
+- [项目开发规范](../../../CLAUDE.md) / [AGENTS.md](../../../AGENTS.md) - 代码规范和开发指南
+- [测试场景](../../../../tests/) - 系统测试（仓库根级，不随插件分发）
 - [演示场景](../../../demos/) - 功能演示
 
 ---
 
 ## 📝 文档更新日志
+
+### v1.5.0 (2026-09-02)
+- ✅ 根 README 回归导览本位：明细导航交还各子目录 README（根页罗列明细曾致 27 处断链与三套过期统计）
+- ✅ 补 Introductions 系列与最佳实践新篇入口；角色入口增加 AI 辅助开发者线
+- ✅ 基本概念补 Condition 与 SCOPE 作用域；快速开始改为三触发器表述
+- ✅ 修正 tests 链接（已迁仓库根）；统计改为抗漂移口径（指向权威源）
 
 ### v1.4.0 (2026-07-07)
 - ✅ 重组文档目录：仅保留 system_docs / dev_docs / user_docs
@@ -195,56 +105,31 @@
 ### v1.3.0 (2026-03-19)
 - ✅ 文档审计与清理：删除 7 个临时文件，归档 19 个过时文档
 - ✅ 归档过时的 Trigger 系统设计文档（已迁移到 Event 模式）
-- ✅ 归档未实现的扩展性设计文档
-- ✅ 归档已完成的迁移指南和变量容器分析
-- ✅ 更新 README 文档索引和统计
-- ✅ 新增 12 个用户指南（Array/Dict/Physics/Audio/Camera/Transform/UI/FlowControl/CompositeConditions/InputEvents/Animation/Debugging）
-- ✅ 新增 BaseEvent / MultiEventTrigger / Runner 技术分析文档
+- ✅ 新增 12 个用户指南与 BaseEvent / MultiEventTrigger / Runner 技术分析
 
 ### v1.2.0 (2026-03-19)
 - ✅ 添加断点指令使用指南（BreakpointInstruction）
 
 ### v1.1.0 (2026-03-18)
-- ✅ 更新版本信息至 Fuse 0.6.0
-- ✅ 添加 Expression System 用户指南
-- ✅ 添加场景预加载指南（PreloadSceneInstruction + CheckPreloadStatus）
-- ✅ 添加全局变量持久化指南（LoadGlobalVariables + SaveGlobalVariables）
-- ✅ 添加指令生成器指南
-- ✅ 更新 Phase 2 条件实现状态
-- ✅ 归档旧路线图文档（2026-01-24 ~ 2026-01-29）
-- ✅ 归档已完成的任务报告（Task-6, Task-9, Scope Source）
-- ✅ 删除过时的 multithreading.md（已由 dev/multithreading-developer-guide.md 取代）
+- ✅ 添加 Expression System / 场景预加载 / 全局变量持久化 / 指令生成器指南
+- ✅ 归档旧路线图与已完成任务报告
 
 ### v1.0.0 (2026-01-25)
 - ✅ 创建主文档中心和导航系统
-- ✅ 添加用户文档、系统文档、开发文档分类
-- ✅ 创建设计提案目录导航
-- ✅ 添加按角色查找文档功能
-- ✅ 整合所有现有文档索引
-- ✅ 添加快速开始指南
-- ✅ 建立相关资源链接
 
 ---
 
 ## 🤝 贡献指南
 
-### 文档贡献
-欢迎改进文档！请参考：
-- 使用清晰的中文表达
-- 提供代码示例和使用场景
-- 包含图表和流程图（如适用）
-- 保持文档与代码同步
+欢迎改进文档：
+- 使用清晰的中文表达，提供代码示例和使用场景
+- 新增文档在所属子目录 README 登记（各目录有自定登记规范）
+- 保持文档与代码同步；数字口径以权威源为准（组件数见 `preset_ai_context/fuse_components.json`）
 
-### 报告问题
-如果发现文档错误或需要补充：
-- 在项目中创建 Issue
-- 说明文档路径和问题描述
-- 提供改进建议
+发现问题请在项目 Issue 中注明文档路径与问题描述。
 
 ---
 
 **文档维护**: Fuse 开发团队
-**最后更新**: 2026-07-07
-**文档版本**: 1.4.0
-
-如有任何问题或建议，请通过项目 Issue 联系我们。
+**最后更新**: 2026-09-02
+**文档版本**: 1.5.0
