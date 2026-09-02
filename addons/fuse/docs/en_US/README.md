@@ -58,7 +58,7 @@ For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs
 - **Current version**: Fuse 1.0.0 (see `addons/fuse/plugin.cfg`)
 - **Godot compatibility**: 4.7+
 - **Component count**: 310 ready-to-use components (70 events × 185 instructions × 55 conditions; authoritative source: `addons/fuse/preset_ai_context/fuse_components.json`)
-- **Documentation size**: roughly 130 articles across the whole tree (see each subdirectory's README for details)
+- **Documentation size**: roughly 130 articles in the Chinese tree, plus a complete English mirror of user_docs (69 articles); see each subdirectory's README for details
 
 ---
 

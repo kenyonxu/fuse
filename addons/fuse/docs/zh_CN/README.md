@@ -57,7 +57,7 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 - **当前版本**: Fuse 1.0.0（见 `addons/fuse/plugin.cfg`）
 - **Godot 兼容**: 4.7+
 - **组件规模**: 310 个即用组件（70 事件 × 185 指令 × 55 条件，以 `addons/fuse/preset_ai_context/fuse_components.json` 为准）
-- **文档规模**: 全树约 130 篇（各子目录明细见其 README）
+- **文档规模**: 中文全树约 130 篇，另有 en_US 英文镜像 user_docs 全量 69 篇（各子目录明细见其 README）
 
 ---
 
