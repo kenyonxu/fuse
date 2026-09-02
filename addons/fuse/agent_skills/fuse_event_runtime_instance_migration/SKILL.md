@@ -413,7 +413,7 @@ func get_default_runtime_state() -> Dictionary:
 - [ ] 确认 Event 有运行时状态变量
 - [ ] 确认 Event 可能被多个节点共享
 - [ ] 备份原始 Event 文件
-- [ ] 阅读 [完整迁移指南](addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md)
+- [ ] 阅读 [完整迁移指南](../../docs/dev_docs/guides/runtime-instance-migration-guide.md)
 
 迁移步骤：
 - [ ] 1. 识别所有运行时状态变量
@@ -442,7 +442,7 @@ func get_default_runtime_state() -> Dictionary:
 ## - _last_trigger_time: float - 最后触发时间
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md
+## 相关文档: ../../docs/dev_docs/guides/runtime-instance-migration-guide.md
 class_name OnMyEvent
 extends BaseEvent
 ```
@@ -450,9 +450,9 @@ extends BaseEvent
 ## 参考资源
 
 ### 核心文档
-- **完整迁移指南**：[addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md](addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md)
-- **快速开始指南**：[docs/plans/event-migration-quick-start.md](docs/plans/event-migration-quick-start.md)
-- **重构执行摘要**：[docs/plans/2025-02-03-runtime-instance-refactoring-execution-summary.md](docs/plans/2025-02-03-runtime-instance-refactoring-execution-summary.md)
+- **完整迁移指南**：[../../docs/dev_docs/guides/runtime-instance-migration-guide.md](../../docs/dev_docs/guides/runtime-instance-migration-guide.md)
+- **快速开始**：按本 skill「迁移步骤」顺序执行
+- **重构执行摘要**：已并入完整迁移指南结论章（../../docs/dev_docs/guides/runtime-instance-migration-guide.md）
 
 ### API 文档
 - **RuntimeEventInstance API**：`addons/fuse/core/runtime_event_instance.gd`

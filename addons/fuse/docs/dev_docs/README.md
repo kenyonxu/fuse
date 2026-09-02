@@ -21,6 +21,7 @@
 | 指南 | 说明 |
 |------|------|
 | [RuntimeInstructionInstance 指南](guides/runtime-instruction-instance-guide.md) | 运行时状态隔离、超时机制、暂停 / 恢复、信号连接管理 |
+| [Event RuntimeInstance 迁移指南](guides/runtime-instance-migration-guide.md) | 自声明状态模式迁移步骤、`_emit_triggered` 改造（fuse_event_runtime_instance_migration skill 的配套详述） |
 | [多线程开发指南](guides/multithreading-developer-guide.md) | 多线程执行模型、线程安全约束 |
 
 ### 编辑器集成
