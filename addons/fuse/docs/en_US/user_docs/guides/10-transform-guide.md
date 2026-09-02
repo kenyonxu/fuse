@@ -140,4 +140,4 @@ MathExpression → expression: distance(vec2(0, 0), vec2({local:player_x}, {loca
 
 **Related docs:**
 - [Movement System Guide](11-movement-system-guide.md)
-- [Node Operations Instruction Guide (Chinese)](../../../zh_CN/user_docs/guides/20-node-operations-guide.md)
+- [Node Operations Instruction Guide](20-node-operations-guide.md)

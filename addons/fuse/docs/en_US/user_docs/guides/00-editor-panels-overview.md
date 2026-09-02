@@ -2,7 +2,7 @@
 
 # Editor Panels Overview
 
-Fuse integrates several dedicated interfaces into the Godot editor, covering: the **Fuse Topology main screen tab** (whole-scene Trigger topology overview + problem annotations), **Inspector enhancements** (data flow card + preset operations), the **scope variable editor**, and the **bottom-dock variable watcher** ([56-variable-watcher-guide](../../../zh_CN/user_docs/guides/56-variable-watcher-guide.md) (Chinese)). This document serves as the entry reference for all editor panels.
+Fuse integrates several dedicated interfaces into the Godot editor, covering: the **Fuse Topology main screen tab** (whole-scene Trigger topology overview + problem annotations), **Inspector enhancements** (data flow card + preset operations), the **scope variable editor**, and the **bottom-dock variable watcher** ([56-variable-watcher-guide](56-variable-watcher-guide.md) (Chinese)). This document serves as the entry reference for all editor panels.
 
 ---
 
@@ -192,7 +192,7 @@ Data Flow
 
 ### Preset Operations
 
-Below the data flow card are preset export/import buttons; for detailed operations see the [Preset System Guide](../../../zh_CN/user_docs/guides/55-preset-system-guide.md) (Chinese).
+Below the data flow card are preset export/import buttons; for detailed operations see the [Preset System Guide](55-preset-system-guide.md) (Chinese).
 
 #### Export
 
@@ -344,8 +344,8 @@ How the three panels cooperate inside the editor:
 ---
 
 **Related docs:**
-- [Preset System Guide](../../../zh_CN/user_docs/guides/55-preset-system-guide.md) (Chinese)
-- [Variable Watcher Guide](../../../zh_CN/user_docs/guides/56-variable-watcher-guide.md) (Chinese)
+- [Preset System Guide](55-preset-system-guide.md) (Chinese)
+- [Variable Watcher Guide](56-variable-watcher-guide.md) (Chinese)
 - [Variable System Guide](01-variable-system-guide.md)
-- [Debugging System Guide](../../../zh_CN/user_docs/guides/25-debugging-guide.md) (Chinese)
-- [Breakpoint Guide](../../../zh_CN/user_docs/guides/26-breakpoint-guide.md) (Chinese)
+- [Debugging System Guide](25-debugging-guide.md) (Chinese)
+- [Breakpoint Guide](26-breakpoint-guide.md) (Chinese)

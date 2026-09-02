@@ -61,7 +61,7 @@ When the [instruction generator](06-instruction-generator-guide.md) generates in
 
 ### Bound a Variable but No Value Comes Through?
 
-Nine times out of ten the scope is wrong: the variable is in GLOBAL, but LOCAL was chosen when binding. First use the [variable watcher](../../../zh_CN/user_docs/guides/56-variable-watcher-guide.md) (editor bottom dock, tabs per scope) to confirm which layer the variable actually lives in, then come back and align the scope dropdown.
+Nine times out of ten the scope is wrong: the variable is in GLOBAL, but LOCAL was chosen when binding. First use the [variable watcher](56-variable-watcher-guide.md) (editor bottom dock, tabs per scope) to confirm which layer the variable actually lives in, then come back and align the scope dropdown.
 
 ### Runtime Reports "Variable Not Found" but the Watcher Shows It?
 
@@ -78,4 +78,4 @@ The checkbox's current state decides: checked = read the variable at runtime (th
 - [Variable System Guide](01-variable-system-guide.md) —— full rules of the three-layer variables
 - [Expression System Usage Guide](05-expression-guide.md) —— computed dynamic sources
 - [Instruction Generator Usage Guide](06-instruction-generator-guide.md) —— generating the variable-binding version of instructions
-- [Variable Watcher Guide](../../../zh_CN/user_docs/guides/56-variable-watcher-guide.md) —— the first-choice tool for runtime variable troubleshooting
+- [Variable Watcher Guide](56-variable-watcher-guide.md) —— the first-choice tool for runtime variable troubleshooting

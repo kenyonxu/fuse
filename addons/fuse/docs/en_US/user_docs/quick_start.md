@@ -48,7 +48,7 @@ Fuse provides three components for responding to events and executing instructio
 | **Trigger** | Needs event filtering or trigger control (trigger_once / cooldown) | Medium |
 | **MultiEventTrigger** | Multiple event-action bindings on the same node | High |
 
-> Not sure which to use? See the [Trigger Selection Guide (Chinese)](../../zh_CN/user_docs/guides/02-trigger-selection-guide.md).
+> Not sure which to use? See the [Trigger Selection Guide](guides/02-trigger-selection-guide.md).
 
 ### Step 2: Add Nodes to the Scene
 
@@ -167,13 +167,13 @@ Conditions control whether instructions execute:
 
 ### Trigger Components
 
-Fuse provides three trigger components; see the [Trigger Selection Guide (Chinese)](../../zh_CN/user_docs/guides/02-trigger-selection-guide.md) for details:
+Fuse provides three trigger components; see the [Trigger Selection Guide](guides/02-trigger-selection-guide.md) for details:
 
 | Component | Description | Detailed Docs |
 |------|------|---------|
-| **Runner** | Lightweight signal binding + code calls | [Runner Guide (Chinese)](../../zh_CN/user_docs/guides/03-runner-guide.md) |
+| **Runner** | Lightweight signal binding + code calls | [Runner Guide](guides/03-runner-guide.md) |
 | **Trigger** | Standard trigger with an Event | — |
-| **MultiEventTrigger** | Multi-event merged trigger | [MultiEventTrigger Guide (Chinese)](../../zh_CN/user_docs/guides/04-multi-event-trigger-guide.md) |
+| **MultiEventTrigger** | Multi-event merged trigger | [MultiEventTrigger Guide](guides/04-multi-event-trigger-guide.md) |
 
 ---
 
@@ -223,32 +223,32 @@ When a node needs to respond to multiple events:
 
 ### Guides
 
-- [Trigger Selection Guide (Chinese)](../../zh_CN/user_docs/guides/02-trigger-selection-guide.md) — How to choose between Runner / Trigger / MultiEventTrigger
-- [Runner Guide (Chinese)](../../zh_CN/user_docs/guides/03-runner-guide.md) — Signal binding and code calls in detail
-- [MultiEventTrigger Guide (Chinese)](../../zh_CN/user_docs/guides/04-multi-event-trigger-guide.md) — Merging and splitting multiple events
+- [Trigger Selection Guide](guides/02-trigger-selection-guide.md) — How to choose between Runner / Trigger / MultiEventTrigger
+- [Runner Guide](guides/03-runner-guide.md) — Signal binding and code calls in detail
+- [MultiEventTrigger Guide](guides/04-multi-event-trigger-guide.md) — Merging and splitting multiple events
 
 ### System Guides
 
-- [Input Events Guide (Chinese)](../../zh_CN/user_docs/guides/32-input-events-guide.md) — Keyboard, mouse, gamepad
-- [Physics System Guide (Chinese)](../../zh_CN/user_docs/guides/14-physics-guide.md) — Collisions, raycasting
-- [Animation System Guide (Chinese)](../../zh_CN/user_docs/guides/12-animation-guide.md) — Animation events and control
-- [UI System Guide (Chinese)](../../zh_CN/user_docs/guides/15-ui-guide.md) — Button focus, text input, value changes
-- [Tween Animation Guide (Chinese)](../../zh_CN/user_docs/guides/18-tween-animation-guide.md) — Fades, elastic animations
-- [Audio System Guide (Chinese)](../../zh_CN/user_docs/guides/13-audio-guide.md) — Sound playback and control
-- [Flow Control Guide (Chinese)](../../zh_CN/user_docs/guides/23-flow-control-guide.md) — Conditional branches, loops, waits
-- [Breakpoint Instruction Guide (Chinese)](../../zh_CN/user_docs/guides/26-breakpoint-guide.md) — Breakpoint instructions for debugging
+- [Input Events Guide](guides/32-input-events-guide.md) — Keyboard, mouse, gamepad
+- [Physics System Guide](guides/14-physics-guide.md) — Collisions, raycasting
+- [Animation System Guide](guides/12-animation-guide.md) — Animation events and control
+- [UI System Guide](guides/15-ui-guide.md) — Button focus, text input, value changes
+- [Tween Animation Guide](guides/18-tween-animation-guide.md) — Fades, elastic animations
+- [Audio System Guide](guides/13-audio-guide.md) — Sound playback and control
+- [Flow Control Guide](guides/23-flow-control-guide.md) — Conditional branches, loops, waits
+- [Breakpoint Instruction Guide](guides/26-breakpoint-guide.md) — Breakpoint instructions for debugging
 
 ### Variables and Expressions
 
-- [Global Variables Manager (Chinese)](../../zh_CN/user_docs/guides/54-global-variables-guide.md) — The global variable system
-- [Global Variable Persistence (Chinese)](../../zh_CN/user_docs/guides/54-global-variables-guide.md) — Saving and loading
-- [Expression System (Chinese)](../../zh_CN/user_docs/guides/05-expression-guide.md) — Runtime expression evaluation
-- [Event Bus Guide (Chinese)](../../zh_CN/user_docs/guides/34-event-bus-guide.md) — Cross-scene event communication
+- [Global Variables Manager](guides/54-global-variables-guide.md) — The global variable system
+- [Global Variable Persistence](guides/54-global-variables-guide.md) — Saving and loading
+- [Expression System](guides/05-expression-guide.md) — Runtime expression evaluation
+- [Event Bus Guide](guides/34-event-bus-guide.md) — Cross-scene event communication
 
 ### Best Practices
 
-- [Creating Custom Instructions (Chinese)](../../zh_CN/user_docs/best_practices/custom_instruction.md) — Extend the instruction system
-- [Creating Custom Events (Chinese)](../../zh_CN/user_docs/best_practices/custom_event.md) — Extend the event system
+- [Creating Custom Instructions](best_practices/custom_instruction.md) — Extend the instruction system
+- [Creating Custom Events](best_practices/custom_event.md) — Extend the event system
 
 ### System Docs
 
@@ -261,7 +261,7 @@ When a node needs to respond to multiple events:
 
 ### Q: Should I use Runner or Trigger?
 
-**A**: Use Runner for simple signal binding, and Trigger when you need event filtering or trigger control. See the [Trigger Selection Guide (Chinese)](../../zh_CN/user_docs/guides/02-trigger-selection-guide.md) for details.
+**A**: Use Runner for simple signal binding, and Trigger when you need event filtering or trigger control. See the [Trigger Selection Guide](guides/02-trigger-selection-guide.md) for details.
 
 ### Q: How do I debug Fuse logic?
 

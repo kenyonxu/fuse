@@ -81,6 +81,6 @@ The main exit path has shifted to **AI handoff artifacts** (handoff bundle: Syst
 
 ## Related Docs
 
-- Mainline exit walkthrough (user-facing): [16-AI协作与毕业交接](../../../zh_CN/user_docs/Introductions/16-AI协作与毕业交接.md) (Chinese)
+- Mainline exit walkthrough (user-facing): [16-AI协作与毕业交接](../Introductions/16-ai-collaboration-and-graduation-handoff.md) (Chinese)
 - Scene topology panel: [00-editor-panels-overview.md](00-editor-panels-overview.md)
 - Preset system (outbound trip): [55-preset-system-guide.md](55-preset-system-guide.md)

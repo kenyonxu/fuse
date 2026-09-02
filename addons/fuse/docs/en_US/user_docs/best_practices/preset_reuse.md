@@ -6,7 +6,7 @@
 
 Presets are the "building-block" form of Fuse logic: a tuned piece of Trigger logic is exported as JSON and imported into any project for reuse, and AI can generate it directly from the schema. This practices guide answers two questions — **how to write presets that AI generates well and that humans migrate smoothly**, and **how to fit AI into a generate-validate-tune loop**.
 
-For the operational side (which panels to click, the export/import flow), see the [Preset System Guide (Chinese)](../../../zh_CN/user_docs/guides/55-preset-system-guide.md); this article only covers "how to do it well".
+For the operational side (which panels to click, the export/import flow), see the [Preset System Guide](../guides/55-preset-system-guide.md); this article only covers "how to do it well".
 
 ## 1. Granularity: One Interaction Unit per Preset
 
@@ -58,7 +58,7 @@ The metadata fields at the head of the preset JSON determine its discoverability
 All friction in cross-project preset migration comes from two kinds of dependencies; prioritize accordingly:
 
 1. **Variable dependencies** (most controllable): use LOCAL variables for intermediate values that only flow inside the preset, so the dependency list shrinks to the real inputs and outputs. A preset with ten GLOBAL dependencies is nearly unreusable; change it to "read 2 globals, write 1 global, everything else LOCAL", and migration becomes a matter of filling in three variable names
-2. **NodePath dependencies** (mappable): it does not matter if target nodes live at different paths in the new scene — the [three-level mapping (Chinese)](../../../zh_CN/user_docs/guides/55-preset-system-guide.md) at import time (node name → type → hierarchy approximation) generates suggestions, but **node naming itself must be readable**: `Hurtbox` maps far more reliably than `Area2D7`
+2. **NodePath dependencies** (mappable): it does not matter if target nodes live at different paths in the new scene — the [three-level mapping](../guides/55-preset-system-guide.md) at import time (node name → type → hierarchy approximation) generates suggestions, but **node naming itself must be readable**: `Hurtbox` maps far more reliably than `Area2D7`
 
 Anti-pattern checklist:
 
@@ -110,7 +110,7 @@ Check the scope: the preset declared GLOBAL, but your project created SCOPE. A s
 
 ### The AI-generated preset passes validation but behaves incorrectly at runtime?
 
-Validation checks legality, not semantics. First open the [variable watcher (Chinese)](../../../zh_CN/user_docs/guides/56-variable-watcher-guide.md) and watch the variable flow; most problems are a wrong variable scope or a misreading of when the event fires — describe the watcher's observations back to the AI and let it locate the issue.
+Validation checks legality, not semantics. First open the [variable watcher](../guides/56-variable-watcher-guide.md) and watch the variable flow; most problems are a wrong variable scope or a misreading of when the event fires — describe the watcher's observations back to the AI and let it locate the issue.
 
 ### A preset exported from another project fails all NodePath mappings?
 
@@ -120,7 +120,7 @@ Most likely the original scene's node names are unreadable (`Area2D3` and the li
 
 **Related docs:**
 
-- [Preset System Guide (Chinese)](../../../zh_CN/user_docs/guides/55-preset-system-guide.md) — the operational side of export/import/mapping
+- [Preset System Guide](../guides/55-preset-system-guide.md) — the operational side of export/import/mapping
 - [Variable Binding Guide](../guides/07-variable-binding-guide.md) — the parameter dual track, the way to reduce path dependencies
-- [AI Collaboration and Graduation Handoff (Chinese)](../../../zh_CN/user_docs/Introductions/16-AI协作与毕业交接.md) — where presets sit in the "bridge" big picture
+- [AI Collaboration and Graduation Handoff](../Introductions/16-ai-collaboration-and-graduation-handoff.md) — where presets sit in the "bridge" big picture
 - [Trigger Organization and Race-Condition Avoidance](trigger_organization.md) — organization practices once presets land back in a scene

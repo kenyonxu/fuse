@@ -243,5 +243,5 @@ Once the checklist passes, do the final alignment against the complete spec in t
 
 - [Custom Event Creation Best Practices](custom_event.md)
 - [Custom Instruction Creation Best Practices](custom_instruction.md)
-- [Comprehensive Conditions Guide (Chinese)](../../../zh_CN/user_docs/guides/46-comprehensive-conditions-guide.md)
-- [Multithreading Optimization Guide (Chinese)](../../../zh_CN/user_docs/guides/52-multithreading-optimization.md)
+- [Comprehensive Conditions Guide](../guides/46-comprehensive-conditions-guide.md)
+- [Multithreading Optimization Guide](../guides/52-multithreading-optimization.md)

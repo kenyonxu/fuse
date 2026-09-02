@@ -23,38 +23,38 @@ Usage guides, tutorials, and best practices for game designers and developers.
 
 | # | Document | Description |
 |------|------|------|
-| 01 | [Variable System Guide (Chinese)](../../zh_CN/user_docs/guides/01-variable-system-guide.md) | Using the variable system as a whole |
-| 02 | [Trigger Selection (Chinese)](../../zh_CN/user_docs/guides/02-trigger-selection-guide.md) | Trigger selection and configuration |
-| 03 | [Runner Guide (Chinese)](../../zh_CN/user_docs/guides/03-runner-guide.md) | Runner execution model |
-| 04 | [Multi-Event Trigger (Chinese)](../../zh_CN/user_docs/guides/04-multi-event-trigger-guide.md) | MultiEventTrigger configuration |
-| 05 | [Expression Guide (Chinese)](../../zh_CN/user_docs/guides/05-expression-guide.md) | Expression evaluation |
-| 06 | [Instruction Generator (Chinese)](../../zh_CN/user_docs/guides/06-instruction-generator-guide.md) | Auto-generating instructions |
+| 01 | [Variable System Guide](guides/01-variable-system-guide.md) | Using the variable system as a whole |
+| 02 | [Trigger Selection](guides/02-trigger-selection-guide.md) | Trigger selection and configuration |
+| 03 | [Runner Guide](guides/03-runner-guide.md) | Runner execution model |
+| 04 | [Multi-Event Trigger](guides/04-multi-event-trigger-guide.md) | MultiEventTrigger configuration |
+| 05 | [Expression Guide](guides/05-expression-guide.md) | Expression evaluation |
+| 06 | [Instruction Generator](guides/06-instruction-generator-guide.md) | Auto-generating instructions |
 
 ### 🔵 Layer 2: Core systems (10-18)
 
 | # | Document | Description |
 |------|------|------|
-| 10 | [Transform Guide (Chinese)](../../zh_CN/user_docs/guides/10-transform-guide.md) | Transform operations |
-| 11 | [Movement System (Chinese)](../../zh_CN/user_docs/guides/11-movement-system-guide.md) | Node movement |
-| 12 | [Animation Guide (Chinese)](../../zh_CN/user_docs/guides/12-animation-guide.md) | AnimationPlayer usage |
-| 13 | [Audio Guide (Chinese)](../../zh_CN/user_docs/guides/13-audio-guide.md) | Audio playback |
-| 14 | [Physics Guide (Chinese)](../../zh_CN/user_docs/guides/14-physics-guide.md) | Physics operations |
-| 15 | [UI Guide (Chinese)](../../zh_CN/user_docs/guides/15-ui-guide.md) | UI operations |
-| 16 | [Camera Guide (Chinese)](../../zh_CN/user_docs/guides/16-camera-guide.md) | Camera control |
-| 17 | [Scene Management (Chinese)](../../zh_CN/user_docs/guides/17-scene-management-guide.md) | Scene loading/switching |
-| 18 | [Tween Animation (Chinese)](../../zh_CN/user_docs/guides/18-tween-animation-guide.md) | Tween shake/tween effects |
+| 10 | [Transform Guide](guides/10-transform-guide.md) | Transform operations |
+| 11 | [Movement System](guides/11-movement-system-guide.md) | Node movement |
+| 12 | [Animation Guide](guides/12-animation-guide.md) | AnimationPlayer usage |
+| 13 | [Audio Guide](guides/13-audio-guide.md) | Audio playback |
+| 14 | [Physics Guide](guides/14-physics-guide.md) | Physics operations |
+| 15 | [UI Guide](guides/15-ui-guide.md) | UI operations |
+| 16 | [Camera Guide](guides/16-camera-guide.md) | Camera control |
+| 17 | [Scene Management](guides/17-scene-management-guide.md) | Scene loading/switching |
+| 18 | [Tween Animation](guides/18-tween-animation-guide.md) | Tween shake/tween effects |
 
 ### 🟡 Layer 3: Instruction operations (20-26)
 
 | # | Document | Description |
 |------|------|------|
-| 20 | [Node Operations (Chinese)](../../zh_CN/user_docs/guides/20-node-operations-guide.md) | Node instruction operations |
-| 21 | [Array Operations (Chinese)](../../zh_CN/user_docs/guides/21-array-operations-guide.md) | Array instructions |
-| 22 | [Dictionary Operations (Chinese)](../../zh_CN/user_docs/guides/22-dictionary-operations-guide.md) | Dictionary instructions |
-| 23 | [Flow Control (Chinese)](../../zh_CN/user_docs/guides/23-flow-control-guide.md) | Branching, loops, waiting |
-| 24 | [Math and Vectors (Chinese)](../../zh_CN/user_docs/guides/24-math-vector-guide.md) | Vector math |
-| 25 | [Debugging Guide (Chinese)](../../zh_CN/user_docs/guides/25-debugging-guide.md) | Debugging tools and techniques |
-| 26 | [Breakpoint Debugging (Chinese)](../../zh_CN/user_docs/guides/26-breakpoint-guide.md) | Using breakpoints |
+| 20 | [Node Operations](guides/20-node-operations-guide.md) | Node instruction operations |
+| 21 | [Array Operations](guides/21-array-operations-guide.md) | Array instructions |
+| 22 | [Dictionary Operations](guides/22-dictionary-operations-guide.md) | Dictionary instructions |
+| 23 | [Flow Control](guides/23-flow-control-guide.md) | Branching, loops, waiting |
+| 24 | [Math and Vectors](guides/24-math-vector-guide.md) | Vector math |
+| 25 | [Debugging Guide](guides/25-debugging-guide.md) | Debugging tools and techniques |
+| 26 | [Breakpoint Debugging](guides/26-breakpoint-guide.md) | Using breakpoints |
 
 ### 🟠 Layer 4: Events and conditions
 
@@ -62,33 +62,33 @@ Usage guides, tutorials, and best practices for game designers and developers.
 
 | # | Document | Description |
 |------|------|------|
-| 30 | [Lifecycle Events (Chinese)](../../zh_CN/user_docs/guides/30-lifecycle-events-guide.md) | Node lifecycle events |
-| 31 | [Timing Events (Chinese)](../../zh_CN/user_docs/guides/31-timing-events-guide.md) | Timing-related events |
-| 32 | [Input Events (Chinese)](../../zh_CN/user_docs/guides/32-input-events-guide.md) | Input event handling |
-| 33 | [Node Events (Chinese)](../../zh_CN/user_docs/guides/33-node-events-guide.md) | Node-related events |
-| 34 | [Event Bus (Chinese)](../../zh_CN/user_docs/guides/34-event-bus-guide.md) | Global event communication |
+| 30 | [Lifecycle Events](guides/30-lifecycle-events-guide.md) | Node lifecycle events |
+| 31 | [Timing Events](guides/31-timing-events-guide.md) | Timing-related events |
+| 32 | [Input Events](guides/32-input-events-guide.md) | Input event handling |
+| 33 | [Node Events](guides/33-node-events-guide.md) | Node-related events |
+| 34 | [Event Bus](guides/34-event-bus-guide.md) | Global event communication |
 
 #### Conditions (40-46)
 
 | # | Document | Description |
 |------|------|------|
-| 40 | [Input Conditions (Chinese)](../../zh_CN/user_docs/guides/40-input-conditions-guide.md) | Input detection conditions |
-| 41 | [Node Conditions (Chinese)](../../zh_CN/user_docs/guides/41-node-conditions-guide.md) | Node state conditions |
-| 42 | [Physics Conditions (Chinese)](../../zh_CN/user_docs/guides/42-physics-conditions-guide.md) | Physics detection conditions |
-| 43 | [Animation Conditions (Chinese)](../../zh_CN/user_docs/guides/43-animation-conditions-guide.md) | Animation state conditions |
-| 44 | [Time Conditions (Chinese)](../../zh_CN/user_docs/guides/44-time-conditions-guide.md) | Time-related conditions |
-| 45 | [Composite Conditions (Chinese)](../../zh_CN/user_docs/guides/45-composite-conditions-guide.md) | Composite condition configuration |
-| 46 | [Conditions Compendium (Chinese)](../../zh_CN/user_docs/guides/46-comprehensive-conditions-guide.md) | Complete condition reference |
+| 40 | [Input Conditions](guides/40-input-conditions-guide.md) | Input detection conditions |
+| 41 | [Node Conditions](guides/41-node-conditions-guide.md) | Node state conditions |
+| 42 | [Physics Conditions](guides/42-physics-conditions-guide.md) | Physics detection conditions |
+| 43 | [Animation Conditions](guides/43-animation-conditions-guide.md) | Animation state conditions |
+| 44 | [Time Conditions](guides/44-time-conditions-guide.md) | Time-related conditions |
+| 45 | [Composite Conditions](guides/45-composite-conditions-guide.md) | Composite condition configuration |
+| 46 | [Conditions Compendium](guides/46-comprehensive-conditions-guide.md) | Complete condition reference |
 
 ### 🔴 Layer 5: Advanced (50-54)
 
 | # | Document | Description |
 |------|------|------|
-| 50 | [Scene Preloading (Chinese)](../../zh_CN/user_docs/guides/50-scene-preloading-guide.md) | Preloading optimization |
-| 51 | [Object Pool System (Chinese)](../../zh_CN/user_docs/guides/51-object-pool-system-guide.md) | Using the object pool |
-| 52 | [Multithreading Optimization (Chinese)](../../zh_CN/user_docs/guides/52-multithreading-optimization.md) | Multithreaded execution |
-| 53 | [Icon Manager (Chinese)](../../zh_CN/user_docs/guides/53-icon-manager-guide.md) | Icon configuration and management |
-| 54 | [Global Variables Guide (Chinese)](../../zh_CN/user_docs/guides/54-global-variables-guide.md) | Using global variables |
+| 50 | [Scene Preloading](guides/50-scene-preloading-guide.md) | Preloading optimization |
+| 51 | [Object Pool System](guides/51-object-pool-system-guide.md) | Using the object pool |
+| 52 | [Multithreading Optimization](guides/52-multithreading-optimization.md) | Multithreaded execution |
+| 53 | [Icon Manager](guides/53-icon-manager-guide.md) | Icon configuration and management |
+| 54 | [Global Variables Guide](guides/54-global-variables-guide.md) | Using global variables |
 
 ---
 
@@ -96,11 +96,11 @@ Usage guides, tutorials, and best practices for game designers and developers.
 
 | Document | Description |
 |------|------|
-| [Create a Custom Event (Chinese)](../../zh_CN/user_docs/best_practices/custom_event.md) | Event base class, custom steps, parameters, testing |
-| [Create a Custom Instruction (Chinese)](../../zh_CN/user_docs/best_practices/custom_instruction.md) | Instruction base class, custom steps, async, error handling |
-| [Create a Custom Condition (Chinese)](../../zh_CN/user_docs/best_practices/custom_condition.md) | Condition base class, template methods, thread safety, caching |
-| [Preset Reuse and AI Collaboration (Chinese)](../../zh_CN/user_docs/best_practices/preset_reuse.md) | Granularity, minimal dependencies, the AI generate-validate-tune loop |
-| [Trigger Organization and Race Avoidance (Chinese)](../../zh_CN/user_docs/best_practices/trigger_organization.md) | Write-write race definition, five avoidance techniques, organizing large scenes |
+| [Create a Custom Event](best_practices/custom_event.md) | Event base class, custom steps, parameters, testing |
+| [Create a Custom Instruction](best_practices/custom_instruction.md) | Instruction base class, custom steps, async, error handling |
+| [Create a Custom Condition](best_practices/custom_condition.md) | Condition base class, template methods, thread safety, caching |
+| [Preset Reuse and AI Collaboration](best_practices/preset_reuse.md) | Granularity, minimal dependencies, the AI generate-validate-tune loop |
+| [Trigger Organization and Race Avoidance](best_practices/trigger_organization.md) | Write-write race definition, five avoidance techniques, organizing large scenes |
 
 ---
 
@@ -108,12 +108,12 @@ Usage guides, tutorials, and best practices for game designers and developers.
 
 ### I want to…
 - **Get started with Fuse** → [Quick Start](quick_start.md)
-- **Make animations/effects** → [Tween Animation (Chinese)](../../zh_CN/user_docs/guides/18-tween-animation-guide.md) · [Animation Guide (Chinese)](../../zh_CN/user_docs/guides/12-animation-guide.md)
-- **Communication between Triggers** → [Event Bus (Chinese)](../../zh_CN/user_docs/guides/34-event-bus-guide.md)
-- **Create custom components** → [custom event (Chinese)](../../zh_CN/user_docs/best_practices/custom_event.md) · [custom instruction (Chinese)](../../zh_CN/user_docs/best_practices/custom_instruction.md) · [custom condition (Chinese)](../../zh_CN/user_docs/best_practices/custom_condition.md)
-- **Reuse logic / have AI generate presets** → [Preset Reuse and AI Collaboration (Chinese)](../../zh_CN/user_docs/best_practices/preset_reuse.md)
-- **Scene getting large and triggers need tidying** → [Trigger Organization and Race Avoidance (Chinese)](../../zh_CN/user_docs/best_practices/trigger_organization.md)
-- **Debug** → [Debugging Guide (Chinese)](../../zh_CN/user_docs/guides/25-debugging-guide.md) · [breakpoints (Chinese)](../../zh_CN/user_docs/guides/26-breakpoint-guide.md)
+- **Make animations/effects** → [Tween Animation](guides/18-tween-animation-guide.md) · [Animation Guide](guides/12-animation-guide.md)
+- **Communication between Triggers** → [Event Bus](guides/34-event-bus-guide.md)
+- **Create custom components** → [custom event](best_practices/custom_event.md) · [custom instruction](best_practices/custom_instruction.md) · [custom condition](best_practices/custom_condition.md)
+- **Reuse logic / have AI generate presets** → [Preset Reuse and AI Collaboration](best_practices/preset_reuse.md)
+- **Scene getting large and triggers need tidying** → [Trigger Organization and Race Avoidance](best_practices/trigger_organization.md)
+- **Debug** → [Debugging Guide](guides/25-debugging-guide.md) · [breakpoints](guides/26-breakpoint-guide.md)
 
 > For the full developer workflow of creating components, see also [dev_docs/guides (Chinese)](../../zh_CN/dev_docs/guides/) (event/instruction/condition creation guides).
 

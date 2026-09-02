@@ -159,7 +159,7 @@ Preload scene resources in the background to avoid runtime hitches.
 | 3 | FAILED | Loading failed |
 | 4 | TIMEOUT | Loading timed out |
 
-Use together with the `CheckPreloadStatus` condition; see [Scene Preloading System (Chinese)](../../../zh_CN/user_docs/guides/50-scene-preloading-guide.md) for details.
+Use together with the `CheckPreloadStatus` condition; see [Scene Preloading System](50-scene-preloading-guide.md) for details.
 
 ### Usage Examples
 
@@ -296,5 +296,5 @@ ChangeScene → scene_path: VARIABLE (current_level)
 ---
 
 **Related docs:**
-- [Scene Preloading System (Chinese)](../../../zh_CN/user_docs/guides/50-scene-preloading-guide.md) - Detailed usage flow of PreloadSceneInstruction and CheckPreloadStatus
+- [Scene Preloading System](50-scene-preloading-guide.md) - Detailed usage flow of PreloadSceneInstruction and CheckPreloadStatus
 - [Expression System Usage Guide](05-expression-guide.md) - Expression conditions and variable operations

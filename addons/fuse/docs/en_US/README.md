@@ -12,9 +12,9 @@ Each of the three subdirectories has its own README as full navigation; this pag
 
 For users. Three content tracks:
 
-- **Introductions series** (16 articles): the complete tutorial path from overview to AI collaboration and graduation handoff; entry point [01-Overview (Chinese)](../zh_CN/user_docs/Introductions/01-总览篇.md)
+- **Introductions series** (16 articles): the complete tutorial path from overview to AI collaboration and graduation handoff; entry point [01-Overview](user_docs/Introductions/01-overview.md)
 - **Usage guides** (40+ articles): numbered installments covering variables, triggers, expressions, each instruction domain, events, conditions, and advanced topics; entry point [00-index](user_docs/guides/00-index.md)
-- **Best practices** (5 articles): the custom-component trilogy ([event (Chinese)](../zh_CN/user_docs/best_practices/custom_event.md) / [instruction (Chinese)](../zh_CN/user_docs/best_practices/custom_instruction.md) / [condition (Chinese)](../zh_CN/user_docs/best_practices/custom_condition.md)) plus two user-practice articles ([Preset reuse and AI collaboration (Chinese)](../zh_CN/user_docs/best_practices/preset_reuse.md) / [Trigger organization and race avoidance (Chinese)](../zh_CN/user_docs/best_practices/trigger_organization.md))
+- **Best practices** (5 articles): the custom-component trilogy ([event](user_docs/best_practices/custom_event.md) / [instruction](user_docs/best_practices/custom_instruction.md) / [condition](user_docs/best_practices/custom_condition.md)) plus two user-practice articles ([Preset reuse and AI collaboration](user_docs/best_practices/preset_reuse.md) / [Trigger organization and race avoidance](user_docs/best_practices/trigger_organization.md))
 
 First-time users should enter through the [Quick Start Guide](user_docs/quick_start.md).
 
@@ -32,7 +32,7 @@ For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs
 
 ### Get started with Fuse in 5 minutes
 
-1. **Create a trigger node**: add Trigger / MultiEventTrigger / Runner to the scene (see the [Trigger Selection Guide (Chinese)](../zh_CN/user_docs/guides/02-trigger-selection-guide.md) for how to choose among the three)
+1. **Create a trigger node**: add Trigger / MultiEventTrigger / Runner to the scene (see the [Trigger Selection Guide](user_docs/guides/02-trigger-selection-guide.md) for how to choose among the three)
 2. **Configure the action sequence**: create an ActionRunner resource in the Trigger's Inspector
 3. **Add instructions**: add instructions to the ActionRunner's instructions array
 4. **Test run**: run the scene; the logic executes when the event fires
@@ -48,8 +48,8 @@ For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs
 ### Next steps
 
 - [Quick Start Guide](user_docs/quick_start.md) for detailed steps
-- [01-Overview (Chinese)](../zh_CN/user_docs/Introductions/01-总览篇.md) for a systematic introduction
-- [Best practices (Chinese)](../zh_CN/user_docs/best_practices/) for creating custom components
+- [01-Overview](user_docs/Introductions/01-overview.md) for a systematic introduction
+- [Best practices](user_docs/best_practices) for creating custom components
 
 ---
 
@@ -65,13 +65,13 @@ For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs
 ## 🎯 Find documentation by role
 
 ### Game designers (no coding)
-[Quick Start Guide](user_docs/quick_start.md) → [Introductions series (Chinese)](../zh_CN/user_docs/Introductions/01-总览篇.md) → [Variable system (Chinese)](../zh_CN/user_docs/guides/01-variable-system-guide.md)
+[Quick Start Guide](user_docs/quick_start.md) → [Introductions series](user_docs/Introductions/01-overview.md) → [Variable system](user_docs/guides/01-variable-system-guide.md)
 
 ### AI-assisted developers
-[Preset reuse and AI collaboration practice (Chinese)](../zh_CN/user_docs/best_practices/preset_reuse.md) → [AI collaboration and graduation handoff (Chinese)](../zh_CN/user_docs/Introductions/16-AI协作与毕业交接.md)
+[Preset reuse and AI collaboration practice](user_docs/best_practices/preset_reuse.md) → [AI collaboration and graduation handoff](user_docs/Introductions/16-ai-collaboration-and-graduation-handoff.md)
 
 ### Game developers (extending components)
-[Create a custom event (Chinese)](../zh_CN/user_docs/best_practices/custom_event.md) · [instruction (Chinese)](../zh_CN/user_docs/best_practices/custom_instruction.md) · [condition (Chinese)](../zh_CN/user_docs/best_practices/custom_condition.md)
+[Create a custom event](user_docs/best_practices/custom_event.md) · [instruction](user_docs/best_practices/custom_instruction.md) · [condition](user_docs/best_practices/custom_condition.md)
 
 ### System architects
 [Visual Programming System Architecture (Chinese)](../zh_CN/system_docs/architecture/visual_programming_system_architecture.md) → [Dataflow and Control Flow Design (Chinese)](../zh_CN/system_docs/architecture/dataflow_controlflow_design.md) → [Fuse Architecture Advantages Analysis (Chinese)](../zh_CN/system_docs/analysis/fuse_architecture_advantages_analysis.md)

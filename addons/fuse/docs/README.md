@@ -10,7 +10,7 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 
 ## 🇺🇸 [English Documentation (en_US)](en_US/README.md)
 
-English mirror: navigation layer and all user-facing guides are available; developer docs and system docs remain Chinese-only for now (marked in the English navigation).
+English mirror: complete user documentation (quick start, guides, Introductions series, best practices). Developer docs and system docs remain Chinese-only for now (marked in the English navigation).
 
 ---
 

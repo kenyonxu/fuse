@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/Introductions/14-topology-main-screen.md)
+
 # 一张图看懂全场景逻辑：Fuse Topology 拓扑主屏与静态分析
 
 上一篇我们用断点、执行追踪和变量监视器把单点调试做到了 IDE 级别。但调试有个前提——你得先知道问题出在哪个 Trigger。项目里有几十个场景、上百个 Trigger 互相通过 Event Bus 联动时，"去哪查"本身就变成了最大的成本。Fuse 的答案是给整个项目装一个上帝视角：Fuse Topology 拓扑主屏。看完这篇你会明白它不只是一张好看的图——它是一个内置的静态分析器，在你没运行游戏的时候就能把"未声明变量""NodePath 失效""写写竞态"这些问题直接标红，还能告诉你哪个 Trigger 写了变量、哪个 Trigger 读了它。可视化系统的工程化护城河，从这一屏开始成型。

@@ -24,7 +24,7 @@ When two Triggers fire in the same or adjacent frames (on-hit damage × pickup h
 
 ### Investigation Tools
 
-The race warnings (yellow 🔥) on the Topology main screen list every write-write conflict pair and the shared variable names. The [Topology guide (Chinese)](../../../zh_CN/user_docs/Introductions/14-Topology拓扑主屏.md) details the panel operations — this article is about what to do after you see the 🔥.
+The race warnings (yellow 🔥) on the Topology main screen list every write-write conflict pair and the shared variable names. The [Topology guide](../Introductions/14-topology-main-screen.md) details the panel operations — this article is about what to do after you see the 🔥.
 
 ## 2. Five Ways to Avoid Races
 
@@ -112,7 +112,7 @@ A manual call makes the code side a "code-side writer" that participates in race
 
 **Related docs:**
 
-- [Topology Main Screen (Chinese)](../../../zh_CN/user_docs/Introductions/14-Topology拓扑主屏.md) — panel operations for race warnings
+- [Topology Main Screen](../Introductions/14-topology-main-screen.md) — panel operations for race warnings
 - [Variable System Guide](../guides/01-variable-system-guide.md) — the complete rules of scope isolation
 - [Trigger Selection Guide](../guides/02-trigger-selection-guide.md) — choosing among the three trigger types
 - [Preset Reuse and AI Collaboration Practices](preset_reuse.md) — building-block reuse of unit logic and cross-project migration
