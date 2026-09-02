@@ -293,7 +293,7 @@ The execution history is exported to a JSON file, containing:
 
 ### Variable Watcher
 
-Debugging often starts with variables rather than instructions: when logic does not behave as expected, open the Variable Watcher first to watch variable values change in real time — it supports tab-per-scope viewing, double-click editing, history line-chart recording, and snapshot export, which is much faster than guessing blindly or adding Print instructions. For full usage see the [Variable Watcher Guide](56-variable-watcher-guide.md) (Chinese).
+Debugging often starts with variables rather than instructions: when logic does not behave as expected, open the Variable Watcher first to watch variable values change in real time — it supports tab-per-scope viewing, double-click editing, history line-chart recording, and snapshot export, which is much faster than guessing blindly or adding Print instructions. For full usage see the [Variable Watcher Guide](56-variable-watcher-guide.md).
 
 ---
 

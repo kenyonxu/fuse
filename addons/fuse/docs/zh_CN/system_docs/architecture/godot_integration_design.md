@@ -1,4 +1,4 @@
-> 🌐 中文 | [**English**](../../en_US/system_docs/architecture/godot_integration_design.md)
+> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/godot_integration_design.md)
 
 # Godot特性集成设计方案
 

@@ -18,13 +18,13 @@ For users. Three content tracks:
 
 First-time users should enter through the [Quick Start Guide](user_docs/quick_start.md).
 
-### 🏗️ [System documentation (Chinese)](../zh_CN/system_docs/) ([Full index (Chinese)](../zh_CN/system_docs/README.md))
+### 🏗️ [System documentation](system_docs) ([Full index](system_docs/README.md))
 
-For architects and core developers: architecture design (9 articles, e.g. [Visual Programming System Architecture (Chinese)](../zh_CN/system_docs/architecture/visual_programming_system_architecture.md), [Dataflow and Control Flow Design (Chinese)](../zh_CN/system_docs/architecture/dataflow_controlflow_design.md)) and 20+ mechanism analysis reports (each article was verified against the code during a full documentation audit on 2026-07-07, with an analysis-time note at the head of each article).
+For architects and core developers: architecture design (9 articles, e.g. [Visual Programming System Architecture](system_docs/architecture/visual_programming_system_architecture.md), [Dataflow and Control Flow Design](system_docs/architecture/dataflow_controlflow_design.md)) and 20+ mechanism analysis reports (each article was verified against the code during a full documentation audit on 2026-07-07, with an analysis-time note at the head of each article).
 
-### 👨‍💻 [Development documentation (Chinese)](../zh_CN/dev_docs/) ([Full index (Chinese)](../zh_CN/dev_docs/README.md))
+### 👨‍💻 [Development documentation](dev_docs) ([Full index](dev_docs/README.md))
 
-For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs/guides/event-creation-guide.md) / [instruction (Chinese)](../zh_CN/dev_docs/guides/instruction-creation-guide.md) / [condition (Chinese)](../zh_CN/dev_docs/guides/condition-creation-guide.md); the accompanying agent_skills generation skills are the normative authority), runtime architecture (RuntimeInstance, [Event RuntimeInstance migration (Chinese)](../zh_CN/dev_docs/guides/runtime-instance-migration-guide.md), multithreading), and infrastructure (Event Bus, serialization, icons, object pool). Historical archives live in the local `archive/` (not committed).
+For contributors: component creation guides ([event](dev_docs/guides/event-creation-guide.md) / [instruction](dev_docs/guides/instruction-creation-guide.md) / [condition](dev_docs/guides/condition-creation-guide.md); the accompanying agent_skills generation skills are the normative authority), runtime architecture (RuntimeInstance, [Event RuntimeInstance migration](dev_docs/guides/runtime-instance-migration-guide.md), multithreading), and infrastructure (Event Bus, serialization, icons, object pool). Historical archives live in the local `archive/` (not committed).
 
 ---
 
@@ -58,7 +58,7 @@ For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs
 - **Current version**: Fuse 1.0.0 (see `addons/fuse/plugin.cfg`)
 - **Godot compatibility**: 4.7+
 - **Component count**: 310 ready-to-use components (70 events × 185 instructions × 55 conditions; authoritative source: `addons/fuse/preset_ai_context/fuse_components.json`)
-- **Documentation size**: roughly 130 articles in the Chinese tree, plus a complete English mirror of user_docs (69 articles); see each subdirectory's README for details
+- **Documentation size**: 130 articles in the Chinese tree plus a 121-article English mirror (everything except process documents is bilingual); see each subdirectory's README for details
 
 ---
 
@@ -74,10 +74,10 @@ For contributors: component creation guides ([event (Chinese)](../zh_CN/dev_docs
 [Create a custom event](user_docs/best_practices/custom_event.md) · [instruction](user_docs/best_practices/custom_instruction.md) · [condition](user_docs/best_practices/custom_condition.md)
 
 ### System architects
-[Visual Programming System Architecture (Chinese)](../zh_CN/system_docs/architecture/visual_programming_system_architecture.md) → [Dataflow and Control Flow Design (Chinese)](../zh_CN/system_docs/architecture/dataflow_controlflow_design.md) → [Fuse Architecture Advantages Analysis (Chinese)](../zh_CN/system_docs/analysis/fuse_architecture_advantages_analysis.md)
+[Visual Programming System Architecture](system_docs/architecture/visual_programming_system_architecture.md) → [Dataflow and Control Flow Design](system_docs/architecture/dataflow_controlflow_design.md) → [Fuse Architecture Advantages Analysis](system_docs/analysis/fuse_architecture_advantages_analysis.md)
 
 ### Core developers
-[Instruction System Design (Chinese)](../zh_CN/system_docs/architecture/instruction_system_design.md) → [RuntimeInstructionInstance Guide (Chinese)](../zh_CN/dev_docs/guides/runtime-instruction-instance-guide.md) → [Multithreading Developer Guide (Chinese)](../zh_CN/dev_docs/guides/multithreading-developer-guide.md)
+[Instruction System Design](system_docs/architecture/instruction_system_design.md) → [RuntimeInstructionInstance Guide](dev_docs/guides/runtime-instruction-instance-guide.md) → [Multithreading Developer Guide](dev_docs/guides/multithreading-developer-guide.md)
 
 ---
 

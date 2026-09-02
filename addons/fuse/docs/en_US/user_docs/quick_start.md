@@ -252,8 +252,8 @@ When a node needs to respond to multiple events:
 
 ### System Docs
 
-- [Visual Programming System Architecture (Chinese)](../../zh_CN/system_docs/architecture/visual_programming_complete_design_summary.md) — System design overview
-- [Instruction System Design (Chinese)](../../zh_CN/system_docs/architecture/instruction_system_design.md) — Instruction execution mechanism
+- [Visual Programming System Architecture](../system_docs/architecture/visual_programming_complete_design_summary.md) — System design overview
+- [Instruction System Design](../system_docs/architecture/instruction_system_design.md) — Instruction execution mechanism
 
 ---
 
@@ -300,8 +300,8 @@ await runner.wait_completed()  # 等待执行完成
 ### Documentation Resources
 
 - [User Documentation Index](README.md) — All user documentation
-- [System Docs (Chinese)](../../zh_CN/system_docs/README.md) — In-depth technical documentation
-- [Developer Docs (Chinese)](../../zh_CN/dev_docs/README.md) — Developer documentation
+- [System Docs](../system_docs/README.md) — In-depth technical documentation
+- [Developer Docs](../dev_docs/README.md) — Developer documentation
 
 ### Example Projects
 

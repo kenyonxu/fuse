@@ -96,7 +96,7 @@
 
 ## 不翻译清单
 
-各目录 `UPDATE_SPEC.md`、`NEW_DOCS_SPEC.md`（一次性整理规格，过程性文档）。
+各目录 `UPDATE_SPEC.md`、`NEW_DOCS_SPEC.md`（一次性整理规格）与 `CODE_ISSUES.md`、`FIX_SPEC.md`、`AUDIT_REPORT_2026-07-07.md`（过程性审计产物，均 zh-only）。
 
 ## 单篇翻译检查清单
 

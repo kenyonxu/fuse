@@ -70,7 +70,7 @@ These icons can be used directly in the `builtin_icon` field:
 - `Add`, `Remove`, `Save`, `Load`
 - `File`, `Folder`, `Search`, `Tools`, `Settings`
 
-The full list has 1,011 icons; see [icon-system-guide.md](../../../zh_CN/dev_docs/guides/icon-system-guide.md) (Chinese).
+The full list has 1,011 icons; see [icon-system-guide.md](../../dev_docs/guides/icon-system-guide.md).
 
 ## Custom Icon Library
 
@@ -489,6 +489,6 @@ A: Yes! `default_icon_library.tres` is a standard Godot Resource file:
 
 ## Next Steps
 
-- [icon-system-guide.md](../../../zh_CN/dev_docs/guides/icon-system-guide.md) (Chinese) - full technical documentation and API reference
+- [icon-system-guide.md](../../dev_docs/guides/icon-system-guide.md) - full technical documentation and API reference
 - [custom_instruction.md](../best_practices/custom_instruction.md) - creating custom instructions
 - [custom_event.md](../best_practices/custom_event.md) - creating custom events

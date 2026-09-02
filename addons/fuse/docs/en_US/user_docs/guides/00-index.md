@@ -14,7 +14,7 @@
 
 - Guides are organized into **numbered sections**: `00-0x` getting started ∥ `1x-2x` core systems ∥ `25-26` debugging ∥ `3x` events ∥ `4x` conditions ∥ `5x` advanced topics
 - For recommended reading paths, see [Recommended Learning Paths](#-recommended-learning-paths) at the end of this page
-- Developer documentation (component creation, architecture principles) lives in the [dev_docs/ (Chinese)](../../../zh_CN/dev_docs/) directory
+- Developer documentation (component creation, architecture principles) lives in the [dev_docs/](../../dev_docs) directory
 
 ---
 
@@ -152,12 +152,12 @@ To **extend Fuse itself** (create custom instructions/events/conditions, underst
 
 | Topic | Path |
 |------|------|
-| Instruction creation | [dev_docs/guides/instruction-creation-guide.md (Chinese)](../../../zh_CN/dev_docs/guides/instruction-creation-guide.md) |
-| Event creation | [dev_docs/guides/event-creation-guide.md (Chinese)](../../../zh_CN/dev_docs/guides/event-creation-guide.md) |
-| Condition creation | [dev_docs/guides/condition-creation-guide.md (Chinese)](../../../zh_CN/dev_docs/guides/condition-creation-guide.md) |
-| Preset system development | [dev_docs/guides/57-preset-system-dev-guide.md (Chinese)](../../../zh_CN/dev_docs/guides/57-preset-system-dev-guide.md) |
-| Variable watcher development | [dev_docs/guides/58-variable-watcher-dev-guide.md (Chinese)](../../../zh_CN/dev_docs/guides/58-variable-watcher-dev-guide.md) |
-| Global variables development | [dev_docs/guides/59-global-variables-dev-guide.md (Chinese)](../../../zh_CN/dev_docs/guides/59-global-variables-dev-guide.md) |
+| Instruction creation | [dev_docs/guides/instruction-creation-guide.md](../../dev_docs/guides/instruction-creation-guide.md) |
+| Event creation | [dev_docs/guides/event-creation-guide.md](../../dev_docs/guides/event-creation-guide.md) |
+| Condition creation | [dev_docs/guides/condition-creation-guide.md](../../dev_docs/guides/condition-creation-guide.md) |
+| Preset system development | [dev_docs/guides/57-preset-system-dev-guide.md](../../dev_docs/guides/57-preset-system-dev-guide.md) |
+| Variable watcher development | [dev_docs/guides/58-variable-watcher-dev-guide.md](../../dev_docs/guides/58-variable-watcher-dev-guide.md) |
+| Global variables development | [dev_docs/guides/59-global-variables-dev-guide.md](../../dev_docs/guides/59-global-variables-dev-guide.md) |
 | Multithreading | [multithreading.md](52-multithreading-optimization.md) |
 
 ---

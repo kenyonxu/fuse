@@ -610,7 +610,7 @@ Use the **Tween Property** instruction:
 ## References
 
 ### Internal docs
-- [Fuse Instruction Development Guide (Chinese)](../../../zh_CN/dev_docs/guides/instruction-creation-guide.md)
+- [Fuse Instruction Development Guide](../../dev_docs/guides/instruction-creation-guide.md)
 
 ### External resources
 - [Godot Official Documentation - Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html)

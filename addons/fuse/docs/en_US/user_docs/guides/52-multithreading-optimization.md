@@ -121,4 +121,4 @@ Large scenes need more time to load.
 
 ## Technical Details
 
-Want to know more? See the [developer guide](../../../zh_CN/dev_docs/guides/multithreading-developer-guide.md) (Chinese).
+Want to know more? See the [developer guide](../../dev_docs/guides/multithreading-developer-guide.md).

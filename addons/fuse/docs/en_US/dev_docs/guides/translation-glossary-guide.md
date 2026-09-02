@@ -96,7 +96,7 @@ Since 2026-09-02, the Introductions file names in the zh tree have been angliciz
 
 ## Do-Not-Translate List
 
-`UPDATE_SPEC.md` and `NEW_DOCS_SPEC.md` in each directory (one-off organization specs; provisional documents).
+`UPDATE_SPEC.md` and `NEW_DOCS_SPEC.md` in each directory (one-off organization specs) plus `CODE_ISSUES.md`, `FIX_SPEC.md` and `AUDIT_REPORT_2026-07-07.md` (process audit artifacts, all zh-only).
 
 ## Per-Document Translation Checklist
 

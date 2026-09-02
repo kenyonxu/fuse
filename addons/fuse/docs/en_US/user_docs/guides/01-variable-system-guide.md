@@ -556,7 +556,7 @@ PrintVariableValue:
 
 ## Reference Resources
 
-- **Full architecture document:** [Variable System Design Document](../../../zh_CN/system_docs/architecture/variable_system_design.md) (Chinese)
+- **Full architecture document:** [Variable System Design Document](../../system_docs/architecture/variable_system_design.md)
 - **Example scene:** `addons/fuse/demos/variable_system_demo.tscn`
 
 ## Quick Reference

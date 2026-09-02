@@ -560,7 +560,7 @@ func get_default_runtime_state() -> Dictionary:
 
 ## Related Resources
 
-- [Runtime Instance Analysis (Chinese)](../../../zh_CN/dev_docs/guides/runtime-instruction-instance-guide.md) - The trigger trio architecture and state isolation
+- [Runtime Instance Analysis](runtime-instruction-instance-guide.md) - The trigger trio architecture and state isolation
 - Background on the Event resource sharing problem: see the "Overview" section of this document and the historical analysis (local archive)
 - Quick start: just follow the "Migration Steps" section of this document in order
 - [RuntimeEventInstance API](../../../../core/runtime_event_instance.gd) - Core class

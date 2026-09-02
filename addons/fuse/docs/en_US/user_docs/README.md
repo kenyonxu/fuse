@@ -4,7 +4,7 @@
 
 Usage guides, tutorials, and best practices for game designers and developers.
 
-> For architecture and system design see [system_docs (Chinese)](../../zh_CN/system_docs/); for development-oriented guides see [dev_docs (Chinese)](../../zh_CN/dev_docs/); historical documents live in the local `archive/`.
+> For architecture and system design see [system_docs](../system_docs); for development-oriented guides see [dev_docs](../dev_docs); historical documents live in the local `archive/`.
 
 ---
 
@@ -115,18 +115,18 @@ Usage guides, tutorials, and best practices for game designers and developers.
 - **Scene getting large and triggers need tidying** → [Trigger Organization and Race Avoidance](best_practices/trigger_organization.md)
 - **Debug** → [Debugging Guide](guides/25-debugging-guide.md) · [breakpoints](guides/26-breakpoint-guide.md)
 
-> For the full developer workflow of creating components, see also [dev_docs/guides (Chinese)](../../zh_CN/dev_docs/guides/) (event/instruction/condition creation guides).
+> For the full developer workflow of creating components, see also [dev_docs/guides](../dev_docs/guides) (event/instruction/condition creation guides).
 
 ---
 
 ## 🔗 Cross-directory resources
 
 ### System documentation (../system_docs/)
-- [Visual Programming System Architecture (Chinese)](../../zh_CN/system_docs/architecture/visual_programming_system_architecture.md) · [Variable System Design (Chinese)](../../zh_CN/system_docs/architecture/variable_system_design.md)
-- [Component analyses (Chinese)](../../zh_CN/system_docs/analysis/) (BaseEvent / BaseInstruction / BaseCondition / BaseVariable, etc.)
+- [Visual Programming System Architecture](../system_docs/architecture/visual_programming_system_architecture.md) · [Variable System Design](../system_docs/architecture/variable_system_design.md)
+- [Component analyses](../system_docs/analysis) (BaseEvent / BaseInstruction / BaseCondition / BaseVariable, etc.)
 
 ### Development documentation (../dev_docs/)
-- [Development guides index (Chinese)](../../zh_CN/dev_docs/guides/) (event/instruction/condition/multithreading/icon-system creation guides, etc.)
+- [Development guides index](../dev_docs/guides) (event/instruction/condition/multithreading/icon-system creation guides, etc.)
 
 ### Historical archive (../archive/)
 Early usage guides (e.g. the variable system V2 migration), roadmaps, and stage plans have all been archived. For reference only — **the guides in this directory are authoritative**.
