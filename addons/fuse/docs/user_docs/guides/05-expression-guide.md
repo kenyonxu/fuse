@@ -22,6 +22,8 @@ Fuse 提供三个基于 Godot `Expression` 引擎的表达式组件，覆盖数�
 
 变量名规则：以字母或下划线开头，只能包含字母、数字和下划线。
 
+> 提示：参数只需要**引用**一个变量而不需要计算时，不必走表达式——指令参数的变量绑定双轨更直接，见[变量绑定使用指南](07-variable-binding-guide.md)。
+
 ```
 # 合法
 {local:hp}  {scope:player_name}  {global:max_count}  {local:_temp}

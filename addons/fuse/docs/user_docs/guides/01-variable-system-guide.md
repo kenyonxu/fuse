@@ -590,3 +590,5 @@ ScopeSource.TARGET_NODE     # 目标节点的容器
 ```
 
 就这样！掌握了 LOCAL、SCOPE、GLOBAL 三层变量系统，你就可以在 Fuse 可视化编程中灵活管理数据了。记住：优先 LOCAL，必要时 SCOPE，慎用 GLOBAL。
+
+变量的下一站是"用"：让指令参数在运行时从变量读取——直接值/变量双轨的用法见[变量绑定使用指南](07-variable-binding-guide.md)。

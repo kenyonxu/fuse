@@ -16,7 +16,7 @@
 
 ---
 
-## 🚀 入门基础（00-06）
+## 🚀 入门基础（00-07）
 
 首次接触 Fuse 从这里开始：认识面板、变量、触发器三件套。
 
@@ -29,6 +29,7 @@
 | 04 | [MultiEventTrigger 使用指南](04-multi-event-trigger-guide.md) | 多事件组合触发器 |
 | 05 | [表达式系统使用指南](05-expression-guide.md) | 在指令参数中书写动态表达式 |
 | 06 | [指令生成器使用指南](06-instruction-generator-guide.md) | 用生成器快速脚手架自定义指令 |
+| 07 | [变量绑定使用指南](07-variable-binding-guide.md) | 指令参数的直接值/变量双轨 |
 
 ---
 
