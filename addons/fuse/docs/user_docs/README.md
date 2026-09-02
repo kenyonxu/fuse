@@ -90,13 +90,15 @@
 
 ---
 
-## 🎯 最佳实践（3 篇）
+## 🎯 最佳实践（5 篇）
 
 | 文档 | 说明 |
 |------|------|
 | [创建自定义事件](best_practices/custom_event.md) | 事件基类、自定义步骤、参数、测试 |
 | [创建自定义指令](best_practices/custom_instruction.md) | 指令基类、自定义步骤、异步、错误处理 |
 | [创建自定义条件](best_practices/custom_condition.md) | 条件基类、模板方法、线程安全、缓存 |
+| [Preset 复用与 AI 协作](best_practices/preset_reuse.md) | 粒度、依赖最小化、AI 生成-校验-调参循环 |
+| [触发器组织与竞态规避](best_practices/trigger_organization.md) | 写写竞态定义、规避五法、大场景组织 |
 
 ---
 
@@ -107,6 +109,8 @@
 - **做动画/特效** → [Tween 补间动画](guides/18-tween-animation-guide.md) · [动画指南](guides/12-animation-guide.md)
 - **Trigger 间通信** → [Event Bus](guides/34-event-bus-guide.md)
 - **创建自定义组件** → [自定义事件](best_practices/custom_event.md) · [自定义指令](best_practices/custom_instruction.md) · [自定义条件](best_practices/custom_condition.md)
+- **复用逻辑 / 让 AI 生成 preset** → [Preset 复用与 AI 协作](best_practices/preset_reuse.md)
+- **场景变大想理清触发器** → [触发器组织与竞态规避](best_practices/trigger_organization.md)
 - **调试** → [调试指南](guides/25-debugging-guide.md) · [断点](guides/26-breakpoint-guide.md)
 
 > 开发者创建组件的完整流程另见 [../dev_docs/guides/](../dev_docs/guides/)（事件/指令/条件创建指南）。
