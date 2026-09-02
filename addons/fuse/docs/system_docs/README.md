@@ -92,7 +92,7 @@
 
 ### 开发文档（../dev_docs/）
 - [开发文档总览](../dev_docs/README.md) · [开发指南目录](../dev_docs/guides/)
-- [多线程开发指南](../dev_docs/guides/multithreading-developer-guide.md) · [变量操作工具](../dev_docs/guides/variable-operations-utility.md)
+- [多线程开发指南](../dev_docs/guides/multithreading-developer-guide.md) · [变量操作工具](../dev_docs/guides/variable-operations-guide.md)
 
 ### 用户文档（../user_docs/）
 - [全局变量管理器 V2](../user_docs/guides/54-global-variables-guide.md) · [变量系统指南](../user_docs/guides/01-variable-system-guide.md)

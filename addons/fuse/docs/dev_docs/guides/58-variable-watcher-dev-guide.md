@@ -437,7 +437,7 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 **参考文档**:
 - [变量监视器使用指南](../../user_docs/guides/56-variable-watcher-guide.md)
 - [全局变量开发指南](59-global-variables-dev-guide.md)
-- [Runtime Bridge 开发指南](runtime_bridge_guide.md)
+- [Runtime Bridge 开发指南](runtime-bridge-guide.md)
 - [调试系统用户指南](../../user_docs/guides/25-debugging-guide.md)
 
 ---

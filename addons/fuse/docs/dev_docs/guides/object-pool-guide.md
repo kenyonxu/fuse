@@ -453,9 +453,9 @@ pool_manager.warm_up_pool("res://scenes/enemy_wave.tscn", 10)
 
 ## 参考文档
 
-- [ActionRunner 开发指南](action_runner_guide.md)
-- [RuntimeInstructionInstance 指南](runtime_instruction_instance_guide.md)
-- [ExecutionContext 与 Diagnostics 指南](execution_context_diagnostics_guide.md)
+- [ActionRunner 开发指南](action-runner-guide.md)
+- [RuntimeInstructionInstance 指南](runtime-instruction-instance-guide.md)
+- [ExecutionContext 与 Diagnostics 指南](execution-context-diagnostics-guide.md)
 
 ---
 

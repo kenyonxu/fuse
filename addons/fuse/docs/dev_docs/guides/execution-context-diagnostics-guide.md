@@ -538,11 +538,11 @@ ExecutionContext 是 `RefCounted`，不是 `Node`，其 `_init` 中无法使用 
 
 ## 参考文档
 
-- [FuseLogger 日志系统指南](fuse_logger_guide.md)
-- [ActionRunner 开发指南](action_runner_guide.md)
-- [RuntimeBridge 开发指南](runtime_bridge_guide.md)
-- [FuseEventBus 开发指南](event_bus_guide.md)
-- [指令创建指南](instruction_creation_guide.md)
+- [FuseLogger 日志系统指南](fuse-logger-guide.md)
+- [ActionRunner 开发指南](action-runner-guide.md)
+- [RuntimeBridge 开发指南](runtime-bridge-guide.md)
+- [FuseEventBus 开发指南](event-bus-guide.md)
+- [指令创建指南](instruction-creation-guide.md)
 
 ---
 

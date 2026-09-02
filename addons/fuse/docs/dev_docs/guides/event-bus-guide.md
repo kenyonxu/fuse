@@ -406,10 +406,10 @@ func _on_scene_changed():
 
 ## 参考文档
 
-- [RuntimeBridge 开发指南](runtime_bridge_guide.md)
-- [ExecutionContext 与 Diagnostics 指南](execution_context_diagnostics_guide.md)
-- [FuseLogger 日志系统指南](fuse_logger_guide.md)
-- [事件创建指南](event_creation_guide.md)
+- [RuntimeBridge 开发指南](runtime-bridge-guide.md)
+- [ExecutionContext 与 Diagnostics 指南](execution-context-diagnostics-guide.md)
+- [FuseLogger 日志系统指南](fuse-logger-guide.md)
+- [事件创建指南](event-creation-guide.md)
 
 ---
 

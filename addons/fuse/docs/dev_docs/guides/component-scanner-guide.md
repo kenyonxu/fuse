@@ -430,11 +430,11 @@ print("已注册指令: %d" % instructions.size())
 
 ## 参考文档
 
-- [指令创建指南](instruction_creation_guide.md)
-- [事件创建指南](event_creation_guide.md)
-- [条件创建指南](condition_creation_guide.md)
-- [图标系统指南](icon_system.md)
-- [FuseEventBus 开发指南](event_bus_guide.md)
+- [指令创建指南](instruction-creation-guide.md)
+- [事件创建指南](event-creation-guide.md)
+- [条件创建指南](condition-creation-guide.md)
+- [图标系统指南](icon-system-guide.md)
+- [FuseEventBus 开发指南](event-bus-guide.md)
 
 ---
 

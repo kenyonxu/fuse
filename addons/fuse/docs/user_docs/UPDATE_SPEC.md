@@ -41,7 +41,7 @@ user_docs/
 │   ├── 17-scene-management-guide.md           298 行
 │   ├── coordinate_systems_guide.md         284 行
 │   ├── instruction-generator-guide.md      258 行
-│   ├── event_bus_guide.md                  238 行
+│   ├── event-bus-guide.md                  238 行
 │   ├── 11-movement-system-guide.md            227 行
 │   ├── 02-trigger-selection-guide.md          218 行
 │   ├── 54-global-variables-guide.md 214 行
@@ -80,7 +80,7 @@ user_docs/
 | 死链 | 实际去向 |
 |------|----------|
 | `guides/variable_system_v2_migration.md`（×3） | `docs/archive/archive/variable_system_v2_migration.md` |
-| `../development/instruction_creation_guide.md`（×2） | `../dev_docs/guides/instruction_creation_guide.md`（development 目录已重组为 dev_docs） |
+| `../development/instruction-creation-guide.md`（×2） | `../dev_docs/guides/instruction-creation-guide.md`（development 目录已重组为 dev_docs） |
 | `../../../../docs/plans/2026-01-26-fuse-phase2-instruction-plan.md` | ❌ archive 亦无（删除） |
 | `../roadmap/2026-01-25-instruction-evaluation-report-v2.md` | `docs/archive/archive/roadmap/` |
 | `../dev_docs/reports/variable_storage_phase1-2_report.md` | ❌ dev_docs 无 reports/（删除） |
@@ -98,14 +98,14 @@ user_docs/
 |------|------|------|
 | coordinate_systems_guide.md | `../guides/transform_instructions.md` | ❌ 无（删除引用） |
 | coordinate_systems_guide.md | `../guides/3d_game_development.md` | ❌ 无（删除） |
-| event_bus_guide.md | `../reference/instructions/send_event.md` | ❌ reference 目录不存在（删除或改指） |
-| event_bus_guide.md | `../reference/events/on_receive_event.md` | ❌ 同上 |
+| event-bus-guide.md | `../reference/instructions/send_event.md` | ❌ reference 目录不存在（删除或改指） |
+| event-bus-guide.md | `../reference/events/on_receive_event.md` | ❌ 同上 |
 | 54-global-variables-guide.md | `variable_system_v2_migration.md` | 改指 `../../archive/archive/variable_system_v2_migration.md` |
-| icon_manager_guide.md | `../../development/icon_system.md`（×2） | 改 `../../dev_docs/guides/icon_system.md` |
+| icon_manager_guide.md | `../../development/icon-system-guide.md`（×2） | 改 `../../dev_docs/guides/icon-system-guide.md` |
 | multithreading-optimization.md | `../dev/multithreading-developer-guide.md` | 改 `../../dev_docs/guides/multithreading-developer-guide.md` |
 | 18-tween-animation-guide.md | `../../../../docs/tween-common-patterns.md` | ❌ 无（删除） |
 | 18-tween-animation-guide.md | `../roadmap/...tween-instruction-roadmap.md` | archive 有（名不同：`bricks-tween`），改指或删除 |
-| 18-tween-animation-guide.md | `../development/instruction_creation_guide.md` | 改 `../../dev_docs/guides/instruction_creation_guide.md` |
+| 18-tween-animation-guide.md | `../development/instruction-creation-guide.md` | 改 `../../dev_docs/guides/instruction-creation-guide.md` |
 | 01-variable-system-guide.md | `../system_docs/architecture/variable_system_design.md` | 层级少一级，改 `../../system_docs/architecture/variable_system_design.md` |
 | 01-variable-system-guide.md | `../system_docs/api/variable_operations.md` | ❌ system_docs 无 api/（删除） |
 | 01-variable-system-guide.md | `../system_docs/api/variable_scope_utils.md` | ❌ 同上 |

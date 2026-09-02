@@ -297,10 +297,10 @@ func _connect_client() -> void:
 
 ## 参考文档
 
-- [ExecutionContext 与 Diagnostics 指南](execution_context_diagnostics_guide.md)
-- [FuseLogger 日志系统指南](fuse_logger_guide.md)
-- [FuseEventBus 开发指南](event_bus_guide.md)
-- [ActionRunner 开发指南](action_runner_guide.md)
+- [ExecutionContext 与 Diagnostics 指南](execution-context-diagnostics-guide.md)
+- [FuseLogger 日志系统指南](fuse-logger-guide.md)
+- [FuseEventBus 开发指南](event-bus-guide.md)
+- [ActionRunner 开发指南](action-runner-guide.md)
 
 ---
 

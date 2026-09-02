@@ -81,12 +81,12 @@
 面向 Fuse 系统开发者，提供技术设计和实现细节。
 
 **开发指南**：
-- [条件属性显示](dev_docs/guides/conditional_property_display.md) - 属性显示控制
-- [运行时指令实例](dev_docs/guides/runtime_instruction_instance_guide.md) - 运行时指令实例机制
-- [条件创建指南](dev_docs/guides/condition_creation_guide.md) - 自定义条件开发
-- [事件创建指南](dev_docs/guides/event_creation_guide.md) - 自定义事件开发
-- [指令创建指南](dev_docs/guides/instruction_creation_guide.md) - 自定义指令开发
-- [图标系统](dev_docs/guides/icon_system.md) - 图标资源体系
+- [条件属性显示](dev_docs/guides/conditional-property-display-guide.md) - 属性显示控制
+- [运行时指令实例](dev_docs/guides/runtime-instruction-instance-guide.md) - 运行时指令实例机制
+- [条件创建指南](dev_docs/guides/condition-creation-guide.md) - 自定义条件开发
+- [事件创建指南](dev_docs/guides/event-creation-guide.md) - 自定义事件开发
+- [指令创建指南](dev_docs/guides/instruction-creation-guide.md) - 自定义指令开发
+- [图标系统](dev_docs/guides/icon-system-guide.md) - 图标资源体系
 
 **归档文档**：开发历程文档已归档到本地 `dev_docs/archive/` 目录（不入库）
 

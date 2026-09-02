@@ -608,7 +608,7 @@ On Quest Accepted → Cancel Pulse Animation
 ## 参考资源
 
 ### 内部文档
-- [Fuse 指令开发指南](../../dev_docs/guides/instruction_creation_guide.md)
+- [Fuse 指令开发指南](../../dev_docs/guides/instruction-creation-guide.md)
 
 ### 外部资源
 - [Godot 官方文档 - Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html)

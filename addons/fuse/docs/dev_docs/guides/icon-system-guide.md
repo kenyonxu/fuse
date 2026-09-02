@@ -417,9 +417,9 @@ metadata.icon_name = "Script"
 
 ## 参考文档
 
-- [指令创建指南](instruction_creation_guide.md)
-- [事件创建指南](event_creation_guide.md)
-- [条件创建指南](condition_creation_guide.md)
+- [指令创建指南](instruction-creation-guide.md)
+- [事件创建指南](event-creation-guide.md)
+- [条件创建指南](condition-creation-guide.md)
 - [Fuse 架构总览](../../system_docs/architecture/visual_programming_system_architecture.md)
 
 ---

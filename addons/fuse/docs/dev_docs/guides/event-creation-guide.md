@@ -203,7 +203,7 @@ metadata.icon = preload("res://icon.png")  # 直接指定纹理
 - **生命周期**: `Refresh`, `Loop`, `Animation`
 - **通用**: `Script`, `Node`, `File`, `Folder`
 
-**完整列表**: 参考 [icon_system.md](icon_system.md)
+**完整列表**: 参考 [icon-system-guide.md](icon-system-guide.md)
 
 ### 图标配置步骤
 

@@ -99,7 +99,7 @@ metadata.icon = preload("res://icon.png")  # 直接指定纹理
 - **音频**: `AudioStreamPlayer`, `Play`, `Stop`, `VolumeCurve`
 - **场景**: `MakePacked`, `PackedScene`
 
-**完整列表**: 参考 [icon_system.md](icon_system.md)
+**完整列表**: 参考 [icon-system-guide.md](icon-system-guide.md)
 
 ### 图标配置步骤
 

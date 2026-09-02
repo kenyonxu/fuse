@@ -468,11 +468,11 @@ func run(context: ExecutionContext):
 
 ## 参考文档
 
-- [ExecutionContext 与 Diagnostics 指南](execution_context_diagnostics_guide.md)
-- [FuseLogger 日志系统指南](fuse_logger_guide.md)
-- [对象池系统指南](object_pool_guide.md)
-- [指令创建指南](instruction_creation_guide.md)
-- [RuntimeInstructionInstance 指南](runtime_instruction_instance_guide.md)
+- [ExecutionContext 与 Diagnostics 指南](execution-context-diagnostics-guide.md)
+- [FuseLogger 日志系统指南](fuse-logger-guide.md)
+- [对象池系统指南](object-pool-guide.md)
+- [指令创建指南](instruction-creation-guide.md)
+- [RuntimeInstructionInstance 指南](runtime-instruction-instance-guide.md)
 
 ---
 

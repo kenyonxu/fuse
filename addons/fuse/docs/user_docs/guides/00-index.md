@@ -150,9 +150,9 @@
 
 | 主题 | 路径 |
 |------|------|
-| 指令创建 | [dev_docs/guides/instruction_creation_guide.md](../../dev_docs/guides/instruction_creation_guide.md) |
-| 事件创建 | [dev_docs/guides/event_creation_guide.md](../../dev_docs/guides/event_creation_guide.md) |
-| 条件创建 | [dev_docs/guides/condition_creation_guide.md](../../dev_docs/guides/condition_creation_guide.md) |
+| 指令创建 | [dev_docs/guides/instruction-creation-guide.md](../../dev_docs/guides/instruction-creation-guide.md) |
+| 事件创建 | [dev_docs/guides/event-creation-guide.md](../../dev_docs/guides/event-creation-guide.md) |
+| 条件创建 | [dev_docs/guides/condition-creation-guide.md](../../dev_docs/guides/condition-creation-guide.md) |
 | 预设系统开发 | [dev_docs/guides/57-preset-system-dev-guide.md](../../dev_docs/guides/57-preset-system-dev-guide.md) |
 | 变量监视器开发 | [dev_docs/guides/58-variable-watcher-dev-guide.md](../../dev_docs/guides/58-variable-watcher-dev-guide.md) |
 | 全局变量开发 | [dev_docs/guides/59-global-variables-dev-guide.md](../../dev_docs/guides/59-global-variables-dev-guide.md) |

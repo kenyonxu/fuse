@@ -441,10 +441,10 @@ _log_debug_localized("FUSE_LOG_STATUS", {"a": a, "b": b, "c": c})
 
 ## 参考文档
 
-- [ExecutionContext 与 Diagnostics 指南](execution_context_diagnostics_guide.md)
-- [ActionRunner 开发指南](action_runner_guide.md)
-- [FuseEventBus 开发指南](event_bus_guide.md)
-- [RuntimeBridge 开发指南](runtime_bridge_guide.md)
+- [ExecutionContext 与 Diagnostics 指南](execution-context-diagnostics-guide.md)
+- [ActionRunner 开发指南](action-runner-guide.md)
+- [FuseEventBus 开发指南](event-bus-guide.md)
+- [RuntimeBridge 开发指南](runtime-bridge-guide.md)
 
 ---
 

@@ -534,7 +534,7 @@ preset.variables = preset.collect_variables()  # 必须刷新
 - [预设系统使用指南](../../user_docs/guides/55-preset-system-guide.md)
 - [全局变量开发指南](59-global-variables-dev-guide.md)
 - [变量监视器开发指南](58-variable-watcher-dev-guide.md)
-- [指令创建指南](instruction_creation_guide.md)
+- [指令创建指南](instruction-creation-guide.md)
 
 ---
 

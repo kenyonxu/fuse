@@ -12,52 +12,52 @@
 
 | 指南 | 说明 |
 |------|------|
-| [事件创建指南](guides/event_creation_guide.md) | `BaseEvent` 子类化、`RuntimeEventInstance` 状态隔离、信号管理、完整模板与常见陷阱 |
-| [指令创建指南](guides/instruction_creation_guide.md) | `BaseInstruction` 子类化、执行方法、参数与本地化 |
-| [条件创建指南](guides/condition_creation_guide.md) | `BaseCondition` 子类化、复合条件、验证逻辑 |
+| [事件创建指南](guides/event-creation-guide.md) | `BaseEvent` 子类化、`RuntimeEventInstance` 状态隔离、信号管理、完整模板与常见陷阱 |
+| [指令创建指南](guides/instruction-creation-guide.md) | `BaseInstruction` 子类化、执行方法、参数与本地化 |
+| [条件创建指南](guides/condition-creation-guide.md) | `BaseCondition` 子类化、复合条件、验证逻辑 |
 
 ### 运行时架构
 
 | 指南 | 说明 |
 |------|------|
-| [RuntimeInstructionInstance 指南](guides/runtime_instruction_instance_guide.md) | 运行时状态隔离、超时机制、暂停 / 恢复、信号连接管理 |
+| [RuntimeInstructionInstance 指南](guides/runtime-instruction-instance-guide.md) | 运行时状态隔离、超时机制、暂停 / 恢复、信号连接管理 |
 | [多线程开发指南](guides/multithreading-developer-guide.md) | 多线程执行模型、线程安全约束 |
 
 ### 编辑器集成
 
 | 指南 | 说明 |
 |------|------|
-| [条件属性显示](guides/conditional_property_display.md) | `_validate_property()`、Inspector 属性动态显示与条件判断 |
-| [图标系统设计](guides/icon_system.md) | 图标注册、配置方式、内置图标命名参考 |
+| [条件属性显示](guides/conditional-property-display-guide.md) | `_validate_property()`、Inspector 属性动态显示与条件判断 |
+| [图标系统设计](guides/icon-system-guide.md) | 图标注册、配置方式、内置图标命名参考 |
 
 ### 专项开发
 
 | 指南 | 说明 |
 |------|------|
-| [数组指令开发](guides/array-instructions-development.md) | `element_value` 属性、变量变化通知、翻译键命名、调试日志 |
-| [变量操作工具](guides/variable-operations-utility.md) | 变量读写工具 API 与用法 |
+| [数组指令开发](guides/array-instructions-guide.md) | `element_value` 属性、变量变化通知、翻译键命名、调试日志 |
+| [变量操作工具](guides/variable-operations-guide.md) | 变量读写工具 API 与用法 |
 
 ---
 
 ## 🎯 任务导向入口
 
 ### 我想新建一个事件 / 指令 / 条件
-→ [事件创建](guides/event_creation_guide.md) · [指令创建](guides/instruction_creation_guide.md) · [条件创建](guides/condition_creation_guide.md)
+→ [事件创建](guides/event-creation-guide.md) · [指令创建](guides/instruction-creation-guide.md) · [条件创建](guides/condition-creation-guide.md)
 
 ### 我要让组件支持运行时状态或暂停 / 恢复
-→ [RuntimeInstructionInstance 指南](guides/runtime_instruction_instance_guide.md)
+→ [RuntimeInstructionInstance 指南](guides/runtime-instruction-instance-guide.md)
 
 ### 我要并发执行或关心线程安全
 → [多线程开发指南](guides/multithreading-developer-guide.md)
 
 ### 我要让 Inspector 属性随条件动态显示
-→ [条件属性显示](guides/conditional_property_display.md)
+→ [条件属性显示](guides/conditional-property-display-guide.md)
 
 ### 我要为组件配置图标
-→ [图标系统设计](guides/icon_system.md)
+→ [图标系统设计](guides/icon-system-guide.md)
 
 ### 我在开发数组类指令或调试变量变化通知
-→ [数组指令开发](guides/array-instructions-development.md) · [变量操作工具](guides/variable-operations-utility.md)
+→ [数组指令开发](guides/array-instructions-guide.md) · [变量操作工具](guides/variable-operations-guide.md)
 
 ---
 

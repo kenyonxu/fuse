@@ -12,7 +12,7 @@
 - **导航失效**：README 引用的 `reports/`、`archive/`、专题子目录、`proposals/` 全部不存在
 - **统计失真**：文档数量、分类与实际严重不符
 - **阶段描述过时**：Phase 1–5 描述与当前实现状态脱节
-- **guide 内部死链**：`event_creation_guide.md` 引用已归档的迁移文档
+- **guide 内部死链**：`event-creation-guide.md` 引用已归档的迁移文档
 
 本 spec 定义一次性清理任务，使 `dev_docs/` 恢复准确、可导航、可维护。
 
@@ -27,15 +27,15 @@ dev_docs/
 ├── README.md                          # 过时，待重写
 ├── UPDATE_SPEC.md                     # 本文件
 └── guides/                            # 9 篇开发指南（共 ~10643 行）
-    ├── event_creation_guide.md            2124 行  事件创建
-    ├── instruction_creation_guide.md      2155 行  指令创建
-    ├── condition_creation_guide.md        2045 行  条件创建
-    ├── icon_system.md                     2061 行  图标系统设计
-    ├── variable-operations-utility.md      939 行  变量操作工具
-    ├── conditional_property_display.md     581 行  条件属性显示（Inspector）
+    ├── event-creation-guide.md            2124 行  事件创建
+    ├── instruction-creation-guide.md      2155 行  指令创建
+    ├── condition-creation-guide.md        2045 行  条件创建
+    ├── icon-system-guide.md                     2061 行  图标系统设计
+    ├── variable-operations-guide.md      939 行  变量操作工具
+    ├── conditional-property-display-guide.md     581 行  条件属性显示（Inspector）
     ├── multithreading-developer-guide.md   289 行  多线程开发
-    ├── runtime_instruction_instance_guide.md 236 行  RuntimeInstructionInstance
-    └── array-instructions-development.md   213 行  数组指令开发
+    ├── runtime-instruction-instance-guide.md 236 行  RuntimeInstructionInstance
+    └── array-instructions-guide.md   213 行  数组指令开发
 ```
 
 ### 2.2 README 引用的无效路径（死链清单）
@@ -60,7 +60,7 @@ dev_docs/
 
 ### 2.3 guide 内部死链
 
-- `guides/event_creation_guide.md:1026` 引用 `addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md` → 不存在
+- `guides/event-creation-guide.md:1026` 引用 `addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md` → 不存在
 
 ### 2.4 README 统计错误
 
@@ -100,21 +100,21 @@ dev_docs/
 
 ```
 ### 核心组件创建
-- 事件创建指南          guides/event_creation_guide.md
-- 指令创建指南          guides/instruction_creation_guide.md
-- 条件创建指南          guides/condition_creation_guide.md
+- 事件创建指南          guides/event-creation-guide.md
+- 指令创建指南          guides/instruction-creation-guide.md
+- 条件创建指南          guides/condition-creation-guide.md
 
 ### 运行时架构
-- RuntimeInstructionInstance 指南   guides/runtime_instruction_instance_guide.md
+- RuntimeInstructionInstance 指南   guides/runtime-instruction-instance-guide.md
 - 多线程开发指南                     guides/multithreading-developer-guide.md
 
 ### 编辑器集成
-- 条件属性显示（Inspector）  guides/conditional_property_display.md
-- 图标系统设计              guides/icon_system.md
+- 条件属性显示（Inspector）  guides/conditional-property-display-guide.md
+- 图标系统设计              guides/icon-system-guide.md
 
 ### 专项开发
-- 数组指令开发              guides/array-instructions-development.md
-- 变量操作工具              guides/variable-operations-utility.md
+- 数组指令开发              guides/array-instructions-guide.md
+- 变量操作工具              guides/variable-operations-guide.md
 ```
 
 **跨目录资源（仅保留经核实的有效链接）：**
@@ -134,7 +134,7 @@ dev_docs/
 - "编辑器扩展"：conditional_property_display + icon_system
 - 移除所有指向已删 reports 的顺序建议
 
-### 4.2 修复 `guides/event_creation_guide.md`
+### 4.2 修复 `guides/event-creation-guide.md`
 
 - 行 1026：将 `addons/fuse/docs/dev_docs/archive/migration-guide-to-runtime-instance.md` 改为指向 `docs/archive/` 下实际位置，或删除该"相关文档"行（若 archive 中也无此文件——已确认不存在，建议直接删除该注释行）
 
@@ -143,15 +143,15 @@ dev_docs/
 执行全量死链扫描后，**实际发现 20 处既存跨 guide 死链**（超出原识别范围），全部处置完毕：
 
 **机械修复（11 处，目标存在、路径层级 / 目录名 / 扩展名写错）：**
-- `array-instructions-development.md`：`array_add.gd` 路径少一级
-- `condition_creation_guide.md`：`icon_system.md`、`multithreading-developer-guide.md` 改同级；`base_condition.gd` 路径修正
-- `event_creation_guide.md`：`icon_system.md` 改同级；`base_event.gd` 路径修正
-- `instruction_creation_guide.md`：`icon_system.md` 改同级；`variable_system_design.md` 路径少一级
-- `variable-operations-utility.md`：`set/get_scope_variable`、`check_variable` 由 `.md` 改 `.gd` 并修正路径
+- `array-instructions-guide.md`：`array_add.gd` 路径少一级
+- `condition-creation-guide.md`：`icon-system-guide.md`、`multithreading-developer-guide.md` 改同级；`base_condition.gd` 路径修正
+- `event-creation-guide.md`：`icon-system-guide.md` 改同级；`base_event.gd` 路径修正
+- `instruction-creation-guide.md`：`icon-system-guide.md` 改同级；`variable_system_design.md` 路径少一级
+- `variable-operations-guide.md`：`set/get_scope_variable`、`check_variable` 由 `.md` 改 `.gd` 并修正路径
 
 **删除 / 改写（9 处，目标全项目不存在）：**
-- `icon_system.md`：「C. 相关文档」3 个旧链接（`index.md`、`instruction_development.md`、`editor_extensions.md`）改写为真实同目录 guide 与架构文档
-- `variable-operations-utility.md`：「相关文档」6 个 `./` 架构文档引用改写为真实的 `system_docs/` 设计 / 分析文档
+- `icon-system-guide.md`：「C. 相关文档」3 个旧链接（`index.md`、`instruction_development.md`、`editor_extensions.md`）改写为真实同目录 guide 与架构文档
+- `variable-operations-guide.md`：「相关文档」6 个 `./` 架构文档引用改写为真实的 `system_docs/` 设计 / 分析文档
 
 ---
 
@@ -170,7 +170,7 @@ dev_docs/
 - [x] `README.md` 内所有 `../system_docs/**`、`../user_docs/**` 链接经核实存在
 - [x] 无任何指向 `reports/`、`proposals/`、dev_docs 内 `archive/`、4 个专题目录的链接
 - [x] 文档统计数字与 `guides/` 实际文件数一致（9 篇）
-- [x] `event_creation_guide.md` 的 migration 死链已处理（5 处）
+- [x] `event-creation-guide.md` 的 migration 死链已处理（5 处）
 - [x] 全量扫描 9 篇 guide + README，**零断裂引用**（含额外修复的 20 处既存死链）
 - [x] 最后更新日期改为 2026-07-07
 
@@ -178,7 +178,7 @@ dev_docs/
 
 ## 7. 执行顺序
 
-1. 修复 `event_creation_guide.md:1026`（小改动，先清死链）
+1. 修复 `event-creation-guide.md:1026`（小改动，先清死链）
 2. 全量扫描其余 8 篇 guide 的跨文件引用，记录问题
 3. 重写 `README.md`（按 4.1 章节）
 4. 按验收标准逐项核对
@@ -190,12 +190,12 @@ dev_docs/
 
 | Guide | 主题 | 适用场景 |
 |-------|------|----------|
-| event_creation_guide | BaseEvent 子类化、RuntimeInstance、信号管理 | 新建事件 |
-| instruction_creation_guide | BaseInstruction 子类化、执行方法 | 新建指令 |
-| condition_creation_guide | BaseCondition 子类化、复合条件 | 新建条件 |
+| event-creation-guide | BaseEvent 子类化、RuntimeInstance、信号管理 | 新建事件 |
+| instruction-creation-guide | BaseInstruction 子类化、执行方法 | 新建指令 |
+| condition-creation-guide | BaseCondition 子类化、复合条件 | 新建条件 |
 | runtime_instruction_instance_guide | 运行时状态隔离、超时、暂停/恢复 | 状态化指令 |
 | multithreading-developer-guide | 多线程执行、线程安全 | 并发场景 |
 | conditional_property_display | `_validate_property`、Inspector 动态显示 | 编辑器属性 |
 | icon_system | 图标注册、配置、内置图标引用 | 组件图标 |
 | array-instructions-development | element_value、变量变化通知、翻译键 | 数组类指令 |
-| variable-operations-utility | 变量读写工具 API | 变量交互 |
+| variable-operations-guide | 变量读写工具 API | 变量交互 |

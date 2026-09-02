@@ -492,7 +492,7 @@ func _ready():
 - [全局变量管理指南](../../user_docs/guides/54-global-variables-guide.md)
 - [预设系统开发者指南](57-preset-system-dev-guide.md)
 - [变量监视器开发指南](58-variable-watcher-dev-guide.md)
-- [变量操作工具类](variable-operations-utility.md)
+- [变量操作工具类](variable-operations-guide.md)
 - [多线程支持](../../user_docs/guides/52-multithreading-optimization.md)
 
 ---
