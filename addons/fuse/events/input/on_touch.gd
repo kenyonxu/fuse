@@ -10,7 +10,7 @@ class_name OnTouch
 ## - 无运行时状态（纯输入事件处理，状态由触摸事件本身携带）
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 监听触摸屏输入事件
 

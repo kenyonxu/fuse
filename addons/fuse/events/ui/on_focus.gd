@@ -10,7 +10,7 @@ class_name OnFocus
 ## - _is_monitoring: bool - 监控状态
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 ##
 ## 监听 Control 节点焦点进入/离开
 

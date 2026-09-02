@@ -13,7 +13,7 @@ class_name OnNodeInstance
 ## - _parent_node_ref: Node - 父节点引用
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 场景路径
 @export var scene_path: String = "":
@@ -36,7 +36,7 @@ class_name OnNodeInstance
 ## - _parent_node_ref: Node - 父节点引用
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 更新资源名称（必需）
 func _update_resource_name():

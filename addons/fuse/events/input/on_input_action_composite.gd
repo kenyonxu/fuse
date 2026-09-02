@@ -9,7 +9,7 @@ class_name OnInputActionComposite extends BaseEvent
 ## 发出合并后的输入向量，支持对角线移动
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 向上移动的 InputAction 名称
 var action_up: String = "":

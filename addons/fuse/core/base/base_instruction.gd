@@ -323,7 +323,7 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 ## 组件自描述（供 InstructionAnalyzer 静态分析使用）
 ##
 ## 由 codegen 脚本自动生成子类覆写，请勿手动编辑。
-## 详见 docs/roadmap/2026-06-26-stage6.5-implementation-plan.md
+## 详见 addons/fuse/docs/zh_CN/system_docs/architecture/editor_tools_design.md
 ## 默认实现返回空，未 codegen 的组件由 InstructionAnalyzer 静默降级处理。
 
 ## 返回该指令读写的变量引用。

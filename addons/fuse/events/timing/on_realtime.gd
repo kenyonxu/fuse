@@ -13,7 +13,7 @@ class_name OnRealtime
 ## - _trigger_count: int - 触发次数计数器
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 触发间隔（秒）
 @export_range(0.1, 3600.0, 0.1) var interval_seconds: float = 1.0:

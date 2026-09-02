@@ -10,7 +10,7 @@ class_name OnAudioFinished
 ## - (此 Event 无额外状态变量，仅有节点引用)
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 音频播放完成事件
 ##

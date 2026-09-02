@@ -54,7 +54,7 @@ fuse/
 - `ActionRunner` - 动作运行器
 
 **详细文档：** [addons/fuse/docs/](addons/fuse/docs/)
-**多线程支持：** [addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md](addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md)
+**多线程支持：** [addons/fuse/docs/zh_CN/dev_docs/guides/multithreading-developer-guide.md](addons/fuse/docs/zh_CN/dev_docs/guides/multithreading-developer-guide.md)
 
 ## 代码规范摘要
 
@@ -135,7 +135,7 @@ static func get_metadata() -> Dictionary:
 | 系统 | 路径 |
 |------|------|
 | Fuse 系统 | [addons/fuse/docs/](addons/fuse/docs/) |
-| Fuse 多线程（开发向） | [addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md](addons/fuse/docs/dev_docs/guides/multithreading-developer-guide.md) |
+| Fuse 多线程（开发向） | [addons/fuse/docs/zh_CN/dev_docs/guides/multithreading-developer-guide.md](addons/fuse/docs/zh_CN/dev_docs/guides/multithreading-developer-guide.md) |
 
 ### 外部参考
 

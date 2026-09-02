@@ -20,7 +20,7 @@ class_name OnIntervalWithVariable
 ## - _current_repeat_count: int - 当前重复次数
 ## - _last_input_time: float - 最近一次输入的时间戳
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 内部常量：最小间隔时间（约30fps，防止过快触发导致性能问题）
 const MIN_INTERVAL: float = 0.033

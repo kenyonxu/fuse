@@ -14,7 +14,7 @@ class_name OnInterval
 ## - _current_repeat_count: int - 当前重复次数
 ## - _last_input_time: float - 最近一次输入的时间戳
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 间隔时间（秒）- 仅当 use_random_interval = false 时使用
 var interval_seconds: float = 1.0:

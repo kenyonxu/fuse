@@ -13,7 +13,7 @@ class_name OnTouchSwipe
 ## - _is_touching: bool - 是否正在触摸
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 触摸滑动手势事件
 ##

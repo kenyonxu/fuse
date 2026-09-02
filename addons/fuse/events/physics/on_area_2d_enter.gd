@@ -20,7 +20,7 @@ class_name OnArea2DEnter extends BaseEvent
 ## 状态变量:
 ## - _triggered_bodies: Array - 已触发的物体列表
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 # 🔧 Area 节点引用
 var _area_node: Area2D

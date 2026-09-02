@@ -10,7 +10,7 @@ class_name OnOverlappingBodies
 ## - _has_triggered: bool - 是否已触发（用于 trigger_once 模式）
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 区域内重叠物体数量变化事件
 ##

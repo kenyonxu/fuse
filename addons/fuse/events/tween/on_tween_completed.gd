@@ -10,7 +10,7 @@ class_name OnTweenCompleted
 ## - _is_monitoring: bool - 是否正在监听
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 目标 Tween 节点路径
 @export var tween_node_path: NodePath = NodePath(""):

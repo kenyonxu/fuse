@@ -11,7 +11,7 @@ class_name OnAudioStarted
 ## - _has_triggered_once: bool - 是否已触发过一次
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 当音频开始播放时触发
 ##

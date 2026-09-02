@@ -12,7 +12,7 @@ class_name OnBackgroundLoadProgress
 ## - _load_started: bool - 是否已经开始加载
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 ##
 ## 后台加载进度事件
 ##

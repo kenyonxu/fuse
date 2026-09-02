@@ -12,7 +12,7 @@ class_name OnMouseButton
 ## - _last_click_time: float - 最近一次点击的时间戳
 ## - _click_count: int - 当前点击次数（用于双击检测）
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 鼠标按键类型
 enum CustomMouseButton {

@@ -10,7 +10,7 @@ class_name OnScreenEnteredExited
 ## - _was_on_screen: bool - 上次是否在屏幕上
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 屏幕进入/离开事件
 ##

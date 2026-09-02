@@ -11,7 +11,7 @@ class_name OnRaycastHit
 ## - _last_collider: Object - 最后检测到的碰撞体
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 射线检测到碰撞体时触发
 ##

@@ -2,7 +2,7 @@
 
 Fuse 是一个 Godot 4.7 可视化编程 / 事件系统插件。原型侧：Event / Instruction / Condition 三类砖块（Brick）在 Inspector 里搭建与调节游戏逻辑，AI 可直接生成合规的 preset JSON；出口侧：拓扑与 preset 产出结构化交接工件（System 划分 + 行为规格），交给**你自己的 AI agent** 编写脱离 Fuse 的工程代码——不写代码的用户留在 Fuse 运行时继续调参，源 Trigger 始终不动，随时可回滚。
 
-**5 分钟上手**：跟着[快速开始指南](addons/fuse/docs/user_docs/quick_start.md)创建你的第一个 Fuse 单元。
+**5 分钟上手**：跟着[快速开始指南](addons/fuse/docs/zh_CN/user_docs/quick_start.md)创建你的第一个 Fuse 单元。
 
 ## 适合谁
 
@@ -48,7 +48,7 @@ Godot --headless --path . res://addons/fuse/editor/graduation/validate_system.ts
 
 把拓扑 JSON + System JSON + 相关 preset 交给你的 AI agent，即可开始编写脱离 Fuse 的代码；Fuse 侧源 Trigger 保持不动，随时可回滚。一键打包交接工件由随插件分发的 **fuse-handoff-packer skill** 完成（`addons/fuse/agent_skills/fuse-handoff-packer/SKILL.md`，工具中立，任何 AI agent 均可执行）：它与你交互确认系统与模板后产出 `fuse_generated/handoff/<系统名>/` 自包含交接包（系统划分 / 拓扑 / preset / 语义契约 / 验收清单 / 组件 schema / 基建模板）。样例见 `fuse_generated/handoff/game_flow/`。
 
-> **实验性**：毕业导出器（`export_system` CLI）可直接生成与 Fuse 运行时共存的 GDScript——白名单指令原生直译，其余委托执行。它不是推荐出口（生成代码仍依赖 Fuse 运行时），保留作参考实现，详见[毕业导出器指南](addons/fuse/docs/user_docs/guides/57-graduation-exporter-guide.md)。
+> **实验性**：毕业导出器（`export_system` CLI）可直接生成与 Fuse 运行时共存的 GDScript——白名单指令原生直译，其余委托执行。它不是推荐出口（生成代码仍依赖 Fuse 运行时），保留作参考实现，详见[毕业导出器指南](addons/fuse/docs/zh_CN/user_docs/guides/57-graduation-exporter-guide.md)。
 
 ## 架构
 
@@ -88,11 +88,11 @@ Event（何时）──▶ Instruction（做什么）──▶ Condition（是�
 
 ## 文档
 
-- [快速开始（5 分钟上手）](addons/fuse/docs/user_docs/quick_start.md)
-- [系统文档](addons/fuse/docs/system_docs/)
-- [用户文档](addons/fuse/docs/user_docs/)
-- [开发者文档](addons/fuse/docs/dev_docs/)
-- [多线程指南](addons/fuse/docs/dev_docs/multithreading-developer-guide.md)
+- [快速开始（5 分钟上手）](addons/fuse/docs/zh_CN/user_docs/quick_start.md)
+- [系统文档](addons/fuse/docs/zh_CN/system_docs/)
+- [用户文档](addons/fuse/docs/zh_CN/user_docs/)
+- [开发者文档](addons/fuse/docs/zh_CN/dev_docs/)
+- [多线程指南](addons/fuse/docs/zh_CN/dev_docs/guides/multithreading-developer-guide.md)
 
 ## 许可证
 

@@ -15,7 +15,7 @@ class_name OnVariableChanged
 ## - _last_value: Variant - 上次的值
 ## - _is_monitoring: bool - 是否正在监听
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 # 预加载工具类
 

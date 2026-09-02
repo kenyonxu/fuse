@@ -12,7 +12,7 @@ class_name OnAnimationLoop
 ## - _has_looped: Dictionary - 跟踪动画是否已循环 {anim_name: bool}
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 动画循环事件
 ##

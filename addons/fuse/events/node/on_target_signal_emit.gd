@@ -13,7 +13,7 @@
 ## - is_refreshing: bool - 防止刷新循环的锁
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 ##
 @tool
 @icon("res://addons/fuse/icons/builtin/Signals.png")

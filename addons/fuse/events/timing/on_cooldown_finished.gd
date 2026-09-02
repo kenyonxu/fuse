@@ -13,7 +13,7 @@ class_name OnCooldownFinished
 ## - _is_completed: bool - 是否已完成冷却
 ## - _is_running: bool - 是否正在冷却中
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 冷却时间（秒）
 @export var cooldown_seconds: float = 1.0:

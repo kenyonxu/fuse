@@ -10,7 +10,7 @@ class_name OnGamepadAxis
 ## - _last_value: float - 最后的轴值，用于判断触发条件
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 监听游戏手柄轴输入变化
 

@@ -11,7 +11,7 @@ class_name OnArea2DExited
 ## - _triggered_bodies: Array - 已触发的物体列表
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 当物体离开 2D 区域时触发的事件
 ## 设计师必须指定 Area2D 节点的路径（相对于 Trigger 节点）

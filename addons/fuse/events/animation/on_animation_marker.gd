@@ -11,7 +11,7 @@ class_name OnAnimationMarker
 ## - _last_position: float - 上次播放位置
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 动画标记到达事件
 ##

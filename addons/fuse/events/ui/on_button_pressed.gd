@@ -10,7 +10,7 @@ class_name OnButtonPressed
 ## - 无（此事件是纯信号转发，无需额外状态变量）
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 ##
 ## UI 按钮按下事件
 ##

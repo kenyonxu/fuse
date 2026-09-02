@@ -10,7 +10,7 @@ class_name OnAnimationStarted
 ## - _triggered_animations: Dictionary - 跟踪已触发的动画（key: 动画名, value: 是否已触发）
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 动画开始事件
 ##

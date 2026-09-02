@@ -10,7 +10,7 @@ class_name OnInputAction extends BaseEvent
 ## - owner_node_ref: WeakRef - owner_node 的弱引用
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 触发模式选项
 enum TriggerMode {

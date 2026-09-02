@@ -84,7 +84,7 @@ func _get_property_list() -> Array[Dictionary]:
 ## - _is_key_pressed: bool - 按键是否按下
 ## - _has_triggered: bool - 是否已触发
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 # 缓存按键事件类型本地化字符串
 static var _cached_key_event_types: String = ""

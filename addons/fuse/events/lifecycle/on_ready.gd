@@ -7,7 +7,7 @@ class_name OnReady extends BaseEvent
 ## 状态变量:
 ## - _timer: Timer - 定时器节点（已迁移到 RuntimeInstance 状态）
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 延迟触发时间（秒），0表示立即触发
 @export var delay_seconds: float = 0.0:

@@ -11,7 +11,7 @@ class_name OnTimer
 ## 状态变量:
 ## - _current_repeat_count: int - 当前重复次数
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 等待时间（秒）
 @export var wait_time: float = 1.0:

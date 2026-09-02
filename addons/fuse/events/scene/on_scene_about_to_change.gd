@@ -12,7 +12,7 @@ class_name OnSceneAboutToChange
 ## - _is_monitoring: bool - 是否正在监控场景
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 是否传递场景路径
 @export var _subscription: Variant = null

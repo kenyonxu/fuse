@@ -14,7 +14,7 @@ class_name OnSceneLoaded
 ## - _is_monitoring: bool - 监听状态，跟踪是否正在监听场景树变化
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 场景路径（空字符串表示当前场景）
 @export var scene_path: String = "":

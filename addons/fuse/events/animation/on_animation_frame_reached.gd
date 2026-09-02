@@ -11,7 +11,7 @@ class_name OnAnimationFrameReached
 ## - _has_triggered: bool → "has_triggered" - 是否已触发过事件
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 动画播放到指定帧时触发
 ##

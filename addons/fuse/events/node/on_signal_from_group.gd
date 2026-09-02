@@ -30,7 +30,7 @@ class_name OnSignalFromGroup
 ## - _connected_nodes: Array - 已连接信号的节点列表
 ## - _is_monitoring: bool - 是否正在监听
 ##
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 缓存 owner_node 引用，用于访问节点
 var _owner_node_ref: Node = null

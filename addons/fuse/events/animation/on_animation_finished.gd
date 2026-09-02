@@ -10,7 +10,7 @@ class_name OnAnimationFinished
 ## - 无额外状态变量（纯信号转发事件）
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 动画完成事件
 ##

@@ -10,7 +10,7 @@ class_name OnGamepadButton
 ## - _has_triggered: bool - 是否已触发（虽然当前未使用，但保留用于未来扩展）
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 游戏手柄按键事件
 ##

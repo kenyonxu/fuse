@@ -43,7 +43,7 @@
 引导用户提供系统涉及单元的 preset JSON：
 - 已导出 → 直接用（通常在用户项目的 preset 目录）
 - 未导出 → 指引用户在编辑器中选中对应 Trigger / Runner / MultiEventTrigger 节点，
-  点 Inspector 的 **📦 导出** 按钮（详细步骤见 `addons/fuse/docs/user_docs/guides/55-preset-system-guide.md`）
+  点 Inspector 的 **📦 导出** 按钮（详细步骤见 `addons/fuse/docs/zh_CN/user_docs/guides/55-preset-system-guide.md`）
 - 补充路径：需要节点层级 / NodePath 锚点时直接读源 `.tscn` 文本核对
   （preset 是行为规格主体，.tscn 只用于结构核对）
 
@@ -84,5 +84,5 @@
 
 ## 失败分支速查
 - derive 校验 error → 与用户解决后重跑（步骤 2）
-- 用户不会导出 preset → 指 `addons/fuse/docs/user_docs/guides/55-preset-system-guide.md` 的导出小节
+- 用户不会导出 preset → 指 `addons/fuse/docs/zh_CN/user_docs/guides/55-preset-system-guide.md` 的导出小节
 - Godot CLI 无输出/挂起 → 检查是否忘了输出重定向到文件

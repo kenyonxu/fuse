@@ -14,7 +14,7 @@ class_name OnSoundListened
 ## - _has_triggered_once: bool - 是否已触发一次
 ##
 ## 架构版本: 自声明状态模式 v2.0
-## 相关文档: addons/fuse/docs/migration-guide-to-runtime-instance.md
+## 相关文档: addons/fuse/docs/zh_CN/dev_docs/guides/runtime-instance-migration-guide.md
 
 ## 声源节点路径（AudioStreamPlayer2D/3D）
 @export var sound_source_path: NodePath = NodePath(""):

@@ -8,10 +8,9 @@ class_name RunTargetNodeFunction
 ##            添加场景加载顺序保护
 ##            统一运行时节点解析为 context.get_node()
 ##            移除不再需要的辅助方法 (_find_node_by_name, _get_target_node)
-##            参考: addons/fuse/docs/development/fuse-component-fix-guide.md
 ## - 2026-02-11: 为 result_variable_scope 添加三层变量系统支持
 ##            添加 ScopeSource 枚举和相关属性
-##            参考: addons/fuse/docs/system_docs/architecture/variable_system_design.md
+##            参考: addons/fuse/docs/zh_CN/system_docs/architecture/variable_system_design.md
 
 ## 性能监控变量
 var _performance_stats: Dictionary = {
