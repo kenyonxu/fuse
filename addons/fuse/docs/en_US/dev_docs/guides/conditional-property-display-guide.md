@@ -1,113 +1,113 @@
-> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/conditional-property-display-guide.md)
+> 🌐 [**中文版**](../../../zh_CN/dev_docs/guides/conditional-property-display-guide.md) | English
 
-# Godot 条件化属性显示实现指南
+# Implementing Conditional Property Display in Godot
 
-## 概述
+## Overview
 
-本指南详细介绍了在 Godot 中实现条件化属性显示的完整方法，特别针对 Fuse Visual Programming 系统中的自定义 Instruction 类。通过使用 `_validate_property()` 方法，您可以创建动态的编辑器界面，根据用户的选择显示或禁用相关属性。
+This guide describes in detail the complete approach to implementing conditional property display in Godot, with a focus on custom Instruction classes in the Fuse Visual Programming system. By using the `_validate_property()` method, you can create a dynamic editor interface that shows or disables related properties based on the user's choices.
 
-## 目录
+## Table of Contents
 
-1. [背景与问题](#背景与问题)
-2. [解决方案概述](#解决方案概述)
-3. [核心实现方法](#核心实现方法)
-4. [完整实现示例](#完整实现示例)
-5. [属性使用标志详解](#属性使用标志详解)
-6. [高级用法](#高级用法)
-7. [性能对比](#性能对比)
-8. [常见问题与解决方案](#常见问题与解决方案)
-9. [最佳实践总结](#最佳实践总结)
-
----
-
-## 背景与问题
-
-### 传统方法的局限性
-
-在 Godot 中实现条件化属性显示，传统方法包括：
-
-1. **手动属性管理**：使用 `_get()` 和 `_set()` 方法手动管理属性
-2. **动态属性列表**：通过 `_get_property_list()` 动态生成属性列表
-3. **Inspector 插件**：创建专门的编辑器插件
-
-这些方法存在以下问题：
-- 代码复杂度高
-- 性能开销大
-- 用户体验不佳（属性完全消失）
-- 维护困难
-
-### 理想的解决方案
-
-理想的条件化属性显示应该：
-- 属性变灰而不是消失
-- 实时响应用户操作
-- 性能高效
-- 代码简洁易维护
+1. [Background and Problem](#background-and-problem)
+2. [Solution Overview](#solution-overview)
+3. [Core Implementation](#core-implementation)
+4. [Complete Implementation Example](#complete-implementation-example)
+5. [Property Usage Flags in Detail](#property-usage-flags-in-detail)
+6. [Advanced Usage](#advanced-usage)
+7. [Performance Comparison](#performance-comparison)
+8. [Common Issues and Solutions](#common-issues-and-solutions)
+9. [Best Practices Summary](#best-practices-summary)
 
 ---
 
-## 解决方案概述
+## Background and Problem
 
-### 核心思想
+### Limitations of Traditional Approaches
 
-使用 Godot 的 `_validate_property()` 方法，在属性显示前对其进行验证和修改，实现条件化显示。
+To implement conditional property display in Godot, the traditional approaches include:
 
-### 技术优势
+1. **Manual property management**: managing properties manually with the `_get()` and `_set()` methods
+2. **Dynamic property lists**: generating the property list dynamically via `_get_property_list()`
+3. **Inspector plugins**: building a dedicated editor plugin
 
-1. **更好的用户体验**：属性变灰而不是消失，用户能看到所有可用选项
-2. **性能更优**：不需要重建整个属性列表，只验证需要验证的属性
-3. **逻辑更清晰**：每个属性的条件判断独立，易于调试和维护
-4. **符合标准实践**：使用 Godot 推荐的属性验证方法
+These approaches have the following problems:
+- High code complexity
+- Large performance overhead
+- Poor user experience (properties disappear entirely)
+- Hard to maintain
+
+### The Ideal Solution
+
+Ideal conditional property display should:
+- Gray out properties instead of hiding them
+- Respond to user actions in real time
+- Be performant
+- Keep the code concise and maintainable
 
 ---
 
-## 核心实现方法
+## Solution Overview
 
-### 1. 基本结构
+### Core Idea
+
+Use Godot's `_validate_property()` method to validate and modify properties before they are displayed, achieving conditional display.
+
+### Technical Advantages
+
+1. **Better user experience**: properties are grayed out rather than disappearing, so users can see all available options
+2. **Better performance**: no need to rebuild the whole property list; only the properties that need validation are validated
+3. **Clearer logic**: each property's condition check is independent, easy to debug and maintain
+4. **Standard practice**: uses Godot's recommended property validation method
+
+---
+
+## Core Implementation
+
+### 1. Basic Structure
 
 ```gdscript
 @tool
 extends BaseInstruction
 class_name ConditionalDisplayExample
 
-# 基础属性（始终显示）
+# Base properties (always shown)
 @export var target_variable: String = ""
 @export var scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
-# 控制属性（带 setter，触发属性更新）
+# Control property (with a setter that triggers property updates)
 @export var set_with_another_variable: bool = false:
     set(value):
         if set_with_another_variable != value:
             set_with_another_variable = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发属性验证
+            notify_property_list_changed()  # triggers property validation
 
-# 条件属性（始终导出，但根据条件禁用）
+# Conditional properties (always exported, but disabled based on conditions)
 @export var from_variable: String = ""
 @export var from_variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 @export var new_value: int = 0
 ```
 
-### 2. 关键方法实现
+### 2. Key Method Implementation
 
-#### `_validate_property()` 方法
+#### The `_validate_property()` Method
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-    # 当 set_with_another_variable = false 时，禁用源变量属性
+    # When set_with_another_variable = false, disable the source variable properties
     if not set_with_another_variable:
         if property.name == "from_variable":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
         elif property.name == "from_variable_scope":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
-    
-    # 当 set_with_another_variable = true 时，禁用新值属性
+
+    # When set_with_another_variable = true, disable the new value property
     if set_with_another_variable:
         if property.name == "new_value":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 ```
 
-#### 触发机制
+#### Trigger Mechanism
 
 ```gdscript
 @export var set_with_another_variable: bool = false:
@@ -115,57 +115,57 @@ func _validate_property(property: Dictionary) -> void:
         if set_with_another_variable != value:
             set_with_another_variable = value
             _update_resource_name()
-            notify_property_list_changed()  # 关键：触发属性验证
+            notify_property_list_changed()  # key: triggers property validation
 ```
 
 ---
 
-## 完整实现示例
+## Complete Implementation Example
 
-### SetIntVariableInstruction 完整实现
+### Complete SetIntVariableInstruction Implementation
 
 ```gdscript
 @tool
 extends BaseInstruction
 class_name SetIntVariableInstruction
 
-# 基础属性（始终显示）
+# Base properties (always shown)
 @export var target_variable: String = ""
 @export var scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
-# 控制属性（带 setter，触发属性更新）
+# Control property (with a setter that triggers property updates)
 @export var set_with_another_variable: bool = false:
     set(value):
         if set_with_another_variable != value:
             set_with_another_variable = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # triggers the Inspector update
 
-# 条件属性（始终导出，但根据条件禁用）
+# Conditional properties (always exported, but disabled based on conditions)
 @export var from_variable: String = ""
 @export var from_variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 @export var new_value: int = 0
 
-# 实现条件化检视器显示
+# Implement conditional Inspector display
 func _validate_property(property: Dictionary) -> void:
-    # 当 set_with_another_variable = false 时，禁用源变量属性
+    # When set_with_another_variable = false, disable the source variable properties
     if not set_with_another_variable:
         if property.name == "from_variable":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
         elif property.name == "from_variable_scope":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
-    
-    # 当 set_with_another_variable = true 时，禁用新值属性
+
+    # When set_with_another_variable = true, disable the new value property
     if set_with_another_variable:
         if property.name == "new_value":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 
-# 更新资源名称以反映当前配置
+# Update the resource name to reflect the current configuration
 func _update_resource_name():
     if target_variable.is_empty():
         resource_name = "设置变量: 未指定"
         return
-    
+
     var operation_desc = ""
     if set_with_another_variable:
         if from_variable.is_empty():
@@ -174,10 +174,10 @@ func _update_resource_name():
             operation_desc = "从[%s]复制" % from_variable
     else:
         operation_desc = "设置为%d" % new_value
-    
+
     resource_name = "设置 %s.%s %s" % [scope, target_variable, operation_desc]
 
-# 其他必要方法...
+# Other required methods...
 func _setup_metadata():
     metadata.name = "设置整数变量"
     metadata.description = "为指定名称的变量设置整数值，支持从另一个变量复制或直接设置新值"
@@ -187,86 +187,86 @@ func _setup_metadata():
 
 func execute(context: ExecutionContext):
     _start_execution(context)
-    
-    # 参数验证
+
+    # Parameter validation
     if target_variable.is_empty():
         set_error("目标变量名称不能为空", FuseError.ErrorType.VALIDATION_ERROR)
         finished.emit()
         return
-    
-    # 确定要设置的值
+
+    # Determine the value to set
     var value_to_set: int
     if set_with_another_variable:
-        # 从另一个变量获取值
+        # Get the value from another variable
         if from_variable.is_empty():
             set_error("源变量名称不能为空", FuseError.ErrorType.VALIDATION_ERROR)
             finished.emit()
             return
-        
+
         value_to_set = _get_variable_value(context, from_variable, from_variable_scope)
         if value_to_set == null:
             set_error("无法找到源变量: %s" % from_variable, FuseError.ErrorType.VALIDATION_ERROR)
             finished.emit()
             return
     else:
-        # 使用新值
+        # Use the new value
         value_to_set = new_value
-    
-    # 设置目标变量
+
+    # Set the target variable
     var success = _set_variable_value(context, target_variable, scope, value_to_set)
     if not success:
         set_error("无法设置变量: %s" % target_variable, FuseError.ErrorType.RUNTIME_ERROR)
         finished.emit()
         return
-    
-    # 记录成功信息
+
+    # Log the success message
     var operation_type = "复制" if set_with_another_variable else "设置"
     _log_info("成功%s变量 %s 的值为 %d" % [operation_type, target_variable, value_to_set])
-    
+
     _on_execution_completed()
 
-# 辅助方法...
+# Helper methods...
 func _get_variable_value(context: ExecutionContext, variable_name: String, variable_scope: BaseVariable.VariableScope) -> int:
     if not context:
         return 0
-    
+
     var value = context.get_variable(variable_name, null)
     if value == null:
         return 0
-    
-    # 确保是整数类型
+
+    # Make sure it is an integer
     if typeof(value) != TYPE_INT:
         _log_warning("变量 %s 的类型不是整数，当前类型: %s" % [variable_name, typeof(value)])
         return 0
-    
+
     return value
 
 func _set_variable_value(context: ExecutionContext, variable_name: String, variable_scope: BaseVariable.VariableScope, value: int) -> bool:
     if not context:
         return false
-    
-    # 将枚举转换为字符串
+
+    # Convert the enum to a string
     var scope_str = "local" if variable_scope == BaseVariable.VariableScope.LOCAL else "global"
-    
-    # 尝试设置变量
+
+    # Try to set the variable
     var success = context.set_variable(variable_name, value, scope_str)
     return success
 
 func validate() -> Array[String]:
     var errors = []
-    
+
     if target_variable.is_empty():
         errors.append("目标变量名称不能为空")
-    
+
     if set_with_another_variable and from_variable.is_empty():
         errors.append("源变量名称不能为空")
-    
+
     return errors
 
 func get_description() -> String:
     var operation_type = "复制" if set_with_another_variable else "设置"
     var source_desc = from_variable if set_with_another_variable else str(new_value)
-    
+
     return "%s %s变量 %s.%s 为 %s" % [
         operation_type,
         "从" if set_with_another_variable else "",
@@ -283,7 +283,7 @@ func reset():
     super.reset()
     _log_debug("SetIntVariableInstruction 状态已重置")
 
-# 统一日志方法
+# Unified logging methods
 func _log_debug(message: String):
     FuseLogger.log_debug("SetIntVariableInstruction", log_level, message, target_variable)
 
@@ -299,57 +299,57 @@ func _log_error(message: String):
 
 ---
 
-## 属性使用标志详解
+## Property Usage Flags in Detail
 
-### 常用标志
+### Common Flags
 
 ```gdscript
-# 禁用属性（变灰）
+# Disable a property (grays it out)
 property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 
-# 隐藏属性（完全不可见）
+# Hide a property (completely invisible)
 property.usage = property.usage | PROPERTY_USAGE_NO_EDITOR
 
-# 只在编辑器中显示
+# Show only in the editor
 property.usage = property.usage | PROPERTY_USAGE_EDITOR
 
-# 标记为脚本变量
+# Mark as a script variable
 property.usage = property.usage | PROPERTY_USAGE_SCRIPT_VARIABLE
 
-# 标记为分类
+# Mark as a category
 property.usage = property.usage | PROPERTY_USAGE_CATEGORY
 
-# 标记为子组
+# Mark as a subgroup
 property.usage = property.usage | PROPERTY_USAGE_SUBGROUP
 
-# 标记为默认值
+# Mark as a default value
 property.usage = property.usage | PROPERTY_USAGE_DEFAULT
 ```
 
-### 标志组合使用
+### Combining Flags
 
 ```gdscript
-# 同时禁用和隐藏
+# Disable and hide at the same time
 property.usage = property.usage | PROPERTY_USAGE_READ_ONLY | PROPERTY_USAGE_NO_EDITOR
 
-# 设置为分类且只在编辑器中显示
+# Set as a category and show only in the editor
 property.usage = property.usage | PROPERTY_USAGE_CATEGORY | PROPERTY_USAGE_EDITOR
 ```
 
 ---
 
-## 高级用法
+## Advanced Usage
 
-### 1. 多条件判断
+### 1. Multiple Condition Checks
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-    # 多条件判断
+    # Multiple condition checks
     var should_disable_advanced = not advanced_mode_enabled
     var should_hide_deprecated = not show_deprecated_features
     var should_require_admin = user_role != "admin"
-    
-    # 根据多个条件控制属性
+
+    # Control properties based on multiple conditions
     match property.name:
         "advanced_property":
             if should_disable_advanced:
@@ -365,7 +365,7 @@ func _validate_property(property: Dictionary) -> void:
                 property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 ```
 
-### 2. 动态属性提示
+### 2. Dynamic Property Hints
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
@@ -380,11 +380,11 @@ func _validate_property(property: Dictionary) -> void:
                 property.hint_string = "需要在 API 模式下才能设置密钥"
 ```
 
-### 3. 属性分组和子组
+### 3. Property Groups and Subgroups
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-    # 动态设置属性分组
+    # Set property groups dynamically
     match property.name:
         "basic_settings":
             property.usage = property.usage | PROPERTY_USAGE_GROUP
@@ -399,97 +399,97 @@ func _validate_property(property: Dictionary) -> void:
 
 ---
 
-## 性能对比
+## Performance Comparison
 
-### 方法对比表
+### Method Comparison Table
 
-| 方法 | 性能 | 用户体验 | 代码复杂度 | 维护性 |
+| Method | Performance | User Experience | Code Complexity | Maintainability |
 |------|------|----------|------------|--------|
-| _validate_property() | 高 | 优秀 | 低 | 优秀 |
-| _get_property_list() | 中 | 一般 | 中 | 一般 |
-| 手动 _get/_set | 低 | 差 | 高 | 差 |
-| Inspector 插件 | 低 | 优秀 | 高 | 差 |
+| _validate_property() | High | Excellent | Low | Excellent |
+| _get_property_list() | Medium | Fair | Medium | Fair |
+| Manual _get/_set | Low | Poor | High | Poor |
+| Inspector plugin | Low | Excellent | High | Poor |
 
-### 性能测试示例
+### Performance Test Example
 
 ```gdscript
-# 测试 _validate_property() 性能
+# Benchmark _validate_property() performance
 func test_validate_property_performance():
     var instruction = SetIntVariableInstruction.new()
     var start_time = Time.get_ticks_msec()
-    
-    # 模拟 1000 次属性验证
+
+    # Simulate 1000 property validations
     for i in range(1000):
         instruction.set_with_another_variable = i % 2 == 0
         instruction.notify_property_list_changed()
-    
+
     var end_time = Time.get_ticks_msec()
     print("_validate_property() 性能测试: %d ms" % (end_time - start_time))
 ```
 
 ---
 
-## 常见问题与解决方案
+## Common Issues and Solutions
 
-### 1. 属性没有正确禁用
+### 1. Property Not Properly Disabled
 
-**问题**：属性没有变灰或隐藏
+**Problem**: the property is not grayed out or hidden
 
-**解决方案**：
-- 确保在 setter 中调用了 `notify_property_list_changed()`
-- 检查属性名称是否正确
-- 确认条件判断逻辑正确
+**Solution**:
+- Make sure `notify_property_list_changed()` is called in the setter
+- Check that the property name is correct
+- Confirm the condition check logic is correct
 
 ```gdscript
-# 错误示例
+# Wrong example
 @export var control_var: bool = false:
     set(value):
-        control_var = value  # 缺少 notify_property_list_changed()
+        control_var = value  # missing notify_property_list_changed()
 
-# 正确示例
+# Correct example
 @export var control_var: bool = false:
     set(value):
         if control_var != value:
             control_var = value
-            notify_property_list_changed()  # 必须调用
+            notify_property_list_changed()  # must be called
 ```
 
-### 2. 属性状态不一致
+### 2. Inconsistent Property State
 
-**问题**：属性状态与预期不符
+**Problem**: the property state does not match expectations
 
-**解决方案**：
-- 在 `_validate_property()` 中添加调试输出
-- 检查条件判断的逻辑
-- 确保所有相关属性都正确导出
+**Solution**:
+- Add debug output inside `_validate_property()`
+- Check the condition check logic
+- Make sure all related properties are properly exported
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-    # 调试输出
+    # Debug output
     print("验证属性: ", property.name)
     print("控制变量值: ", set_with_another_variable)
-    
-    # 验证逻辑
+
+    # Validation logic
     if not set_with_another_variable:
         if property.name == "from_variable":
             print("禁用 from_variable")
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 ```
 
-### 3. 性能问题
+### 3. Performance Issues
 
-**问题**：属性更新缓慢
+**Problem**: property updates are slow
 
-**解决方案**：
-- 避免在 `_validate_property()` 中执行重量级操作
-- 使用短路逻辑优化条件判断
-- 缓存计算结果
+**Solution**:
+- Avoid heavyweight operations inside `_validate_property()`
+- Use short-circuit logic to optimize condition checks
+- Cache computed results
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-    # 优化：先检查轻量级条件
+    # Optimization: check lightweight conditions first
     if set_with_another_variable:
-        # 只在需要时检查重量级条件
+        # Only check heavyweight conditions when needed
         if property.name in ["from_variable", "from_variable_scope"]:
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
     elif property.name == "new_value":
@@ -498,19 +498,19 @@ func _validate_property(property: Dictionary) -> void:
 
 ---
 
-## 最佳实践总结
+## Best Practices Summary
 
-### 1. 实现要点
+### 1. Implementation Essentials
 
-1. **使用 @export 导出所有属性**：确保所有属性都能被编辑器识别
-2. **关键属性添加 setter**：在 setter 中调用 `notify_property_list_changed()` 触发更新
-3. **实现 _validate_property()**：根据条件动态设置属性的 `PROPERTY_USAGE_READ_ONLY` 标志
-4. **更新资源名称**：在属性变化时更新 `resource_name` 以反映当前配置
+1. **Export all properties with @export**: ensures the editor recognizes every property
+2. **Add setters to key properties**: call `notify_property_list_changed()` inside the setter to trigger updates
+3. **Implement _validate_property()**: dynamically set the `PROPERTY_USAGE_READ_ONLY` flag based on conditions
+4. **Update the resource name**: update `resource_name` when properties change to reflect the current configuration
 
-### 2. 代码组织
+### 2. Code Organization
 
 ```gdscript
-# 1. 属性定义区域
+# 1. Property definition section
 @export var control_property: bool = false:
     set(value):
         if control_property != value:
@@ -520,40 +520,40 @@ func _validate_property(property: Dictionary) -> void:
 
 @export var dependent_property: String = ""
 
-# 2. 核心验证方法
+# 2. Core validation method
 func _validate_property(property: Dictionary) -> void:
-    # 清晰的条件判断逻辑
+    # Clear condition check logic
     if not control_property:
         if property.name == "dependent_property":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 
-# 3. 资源名称更新
+# 3. Resource name update
 func _update_resource_name():
-    # 根据当前状态更新显示名称
+    # Update the display name based on the current state
     resource_name = "配置: %s" % ("启用" if control_property else "禁用")
 ```
 
-### 3. 调试技巧
+### 3. Debugging Tips
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-    # 条件性调试输出
+    # Conditional debug output
     if OS.is_debug_build():
         print("验证属性: %s, 控制变量: %s" % [property.name, control_property])
-    
-    # 验证逻辑
+
+    # Validation logic
     if not control_property:
         if property.name == "dependent_property":
             property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 ```
 
-### 4. 扩展性考虑
+### 4. Extensibility Considerations
 
 ```gdscript
-# 支持多种控制条件
+# Support multiple control conditions
 func _validate_property(property: Dictionary) -> void:
     var should_disable = _should_disable_property(property.name)
-    
+
     if should_disable:
         property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 
@@ -571,14 +571,14 @@ func _should_disable_property(property_name: String) -> bool:
 
 ---
 
-## 结论
+## Conclusion
 
-使用 `_validate_property()` 方法实现条件化属性显示是 Godot 中的最佳实践。它提供了优秀的用户体验、高性能和简洁的代码结构。通过遵循本指南的最佳实践，您可以创建出直观、高效且易于维护的动态编辑器界面。
+Using the `_validate_property()` method to implement conditional property display is the best practice in Godot. It offers an excellent user experience, high performance, and a clean code structure. By following the best practices in this guide, you can create dynamic editor interfaces that are intuitive, efficient, and easy to maintain.
 
-这种方法特别适用于：
-- Fuse Visual Programming 系统中的自定义 Instruction
-- 需要复杂配置界面的插件
-- 具有多种操作模式的工具
-- 需要根据用户选择动态调整界面的应用
+This approach is particularly suitable for:
+- Custom Instructions in the Fuse Visual Programming system
+- Plugins that need complex configuration interfaces
+- Tools with multiple operation modes
+- Applications whose UI needs to adapt dynamically to user choices
 
-通过合理使用属性使用标志和条件判断，您可以创建出专业级的编辑器体验。
+By using property usage flags and condition checks properly, you can create a professional-grade editor experience.

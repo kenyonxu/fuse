@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/57-preset-system-dev-guide.md)
+
 # 预设系统开发者指南
 
 > **目标**: 为开发者提供 Fuse 预设系统的完整架构说明与扩展指引，覆盖 `FusePreset` 资源定义、序列化/反序列化管道、`PresetRegistry` 注册表、NodePath 映射以及与全局变量系统的交互。

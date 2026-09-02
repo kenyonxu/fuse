@@ -1,65 +1,65 @@
-> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/condition-creation-guide.md)
+> 🌐 [**中文版**](../../../zh_CN/dev_docs/guides/condition-creation-guide.md) | English
 
-# 创建 Fuse 条件指南
+# Fuse Condition Creation Guide
 
-> **目标**: 为开发者提供完整的 Fuse 条件创建指引，基于现有条件实现经验和最佳实践。
-> **权威规范**: 组件生成的最终权威是 [fuse-condition-generator skill](../../../../agent_skills/fuse-condition-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
+> **Goal**: Provide developers with a complete guide to creating Fuse conditions, based on existing condition implementation experience and best practices.
+> **Authoritative spec**: The final authority for component generation is the [fuse-condition-generator skill](../../../../agent_skills/fuse-condition-generator/SKILL.md) (templates, naming rules, and validation gates); this guide details its architectural principles.
 
-**适用对象**: Fuse 系统开发者、贡献者
+**Audience**: Fuse system developers and contributors
 
-**最后更新**: 2026-06-17
-
----
-
-## 📋 目录
-
-1. [条件 vs 事件 vs 指令](#条件-vs-事件-vs-指令)
-2. [命名规范](#命名规范)
-3. [图标规范](#图标规范)
-4. [必需实现的方法](#必需实现的方法)
-5. [可选实现的方法](#可选实现的方法)
-6. [条件特性](#条件特性)
-7. [变量操作（三层变量系统）](#变量操作三层变量系统)
-8. [完整条件模板](#完整条件模板)
-9. [创建步骤](#创建步骤)
-10. [最佳实践](#最佳实践)
-11. [常见陷阱](#常见陷阱)
-12. [测试规范](#测试规范)
+**Last updated**: 2026-06-17
 
 ---
 
-## 条件 vs 事件 vs 指令
+## 📋 Table of Contents
 
-理解 Condition、Event 和 Instruction 的区别是创建条件的第一步。
+1. [Conditions vs Events vs Instructions](#conditions-vs-events-vs-instructions)
+2. [Naming Conventions](#naming-conventions)
+3. [Icon Conventions](#icon-conventions)
+4. [Required Methods](#required-methods)
+5. [Optional Methods](#optional-methods)
+6. [Condition Features](#condition-features)
+7. [Variable Operations (Three-Layer Variable System)](#variable-operations-three-layer-variable-system)
+8. [Complete Condition Templates](#complete-condition-templates)
+9. [Creation Steps](#creation-steps)
+10. [Best Practices](#best-practices)
+11. [Common Pitfalls](#common-pitfalls)
+12. [Testing Standards](#testing-standards)
 
-| 特性 | Condition (条件) | Event (事件) | Instruction (指令) |
+---
+
+## Conditions vs Events vs Instructions
+
+Understanding the differences between Conditions, Events, and Instructions is the first step in creating a condition.
+
+| Feature | Condition | Event | Instruction |
 |------|-----------------|-------------|-------------------|
-| **用途** | 判断条件是否满足 | 监听条件，触发响应 | 执行具体动作 |
-| **核心方法** | `_evaluate_condition()` | `initialize()`/`terminate()` | `execute()` |
-| **返回值** | `bool` | 无（发信号） | 无（发信号） |
-| **调用方式** | 被动调用（被系统检查） | 被动触发 | 主动执行 |
-| **生命周期** | 无状态（或可缓存） | initialize → terminate | execute → 完成/取消/错误 |
-| **特性** | 支持取反、缓存、依赖追踪 | 信号管理 | 执行状态管理 |
-| **典型用途** | 变量比较、节点检查、状态判断 | 输入、碰撞、信号 | 移动、播放、设置变量 |
+| **Purpose** | Judge whether a condition is met | Listen for conditions, trigger responses | Execute concrete actions |
+| **Core method** | `_evaluate_condition()` | `initialize()`/`terminate()` | `execute()` |
+| **Return value** | `bool` | None (emits signals) | None (emits signals) |
+| **Invocation** | Called passively (checked by the system) | Triggered passively | Executed actively |
+| **Lifecycle** | Stateless (or cacheable) | initialize → terminate | execute → finished/cancelled/error |
+| **Features** | Negation, caching, dependency tracking | Signal management | Execution state management |
+| **Typical uses** | Variable comparison, node checks, state checks | Input, collision, signals | Movement, playback, variable setting |
 
-**核心区别**:
-- **Condition** 是"判断器" - 检查某个条件是否满足，返回布尔值
-- **Event** 是"监听器" - 等待某事发生，然后发出 `triggered` 信号
-- **Instruction** 是"执行器" - 执行某个动作，然后发出 `finished` 信号
+**Core differences**:
+- **Condition** is the "evaluator" - checks whether some condition is met and returns a boolean value
+- **Event** is the "listener" - waits for something to happen, then emits the `triggered` signal
+- **Instruction** is the "executor" - performs an action, then emits the `finished` signal
 
 ---
 
-## 命名规范
+## Naming Conventions
 
-**重要**: 所有 Fuse 条件遵循以下命名规范，基于功能类型使用不同的前缀。
+**Important**: All Fuse conditions follow the naming conventions below, using different prefixes based on function type.
 
-### 基于功能的命名规则
+### Function-Based Naming Rules
 
-条件根据功能类型使用不同的前缀，让命名更精确、更符合语义。
+Conditions use different prefixes based on function type, making names more precise and semantic.
 
-#### 检查类条件（Check）
+#### Check-Type Conditions (Check)
 
-用于检查某个状态/条件是否成立。
+Used to check whether a state/condition holds.
 
 ```
 文件名：   check_<描述>.gd
@@ -67,23 +67,23 @@
 条件类型： <描述>
 ```
 
-**示例**:
+**Example**:
 ```
 文件名：   check_node_exists.gd
 类名：     CheckNodeExists
 条件类型： "node_exists"
 ```
 
-**更多示例**:
-- `check_node_exists.gd` → `CheckNodeExists` - 检查节点是否存在
-- `check_node_property.gd` → `CheckNodeProperty` - 检查节点属性
-- `check_variable_exists.gd` → `CheckVariableExists` - 检查变量是否存在
-- `check_is_in_group.gd` → `CheckIsInGroup` - 检查是否在组中
-- `check_is_visible.gd` → `CheckIsVisible` - 检查是否可见
+**More examples**:
+- `check_node_exists.gd` → `CheckNodeExists` - checks whether a node exists
+- `check_node_property.gd` → `CheckNodeProperty` - checks a node property
+- `check_variable_exists.gd` → `CheckVariableExists` - checks whether a variable exists
+- `check_is_in_group.gd` → `CheckIsInGroup` - checks membership in a group
+- `check_is_visible.gd` → `CheckIsVisible` - checks visibility
 
-#### 对比类条件（Compare）
+#### Compare-Type Conditions (Compare)
 
-用于对比两个值的大小/关系。
+Used to compare two values or their relationship.
 
 ```
 文件名：   compare_<描述>.gd
@@ -91,48 +91,48 @@
 条件类型： <描述>
 ```
 
-**示例**:
+**Example**:
 ```
 文件名：   compare_variable.gd
 类名：     CompareVariable
 条件类型： "variable_comparison"
 ```
 
-**更多示例**:
-- `compare_variable.gd` → `CompareVariable` - 对比变量值
-- `compare_health.gd` → `CompareHealth` - 对比生命值
-- `compare_score.gd` → `CompareScore` - 对比分数
-- `compare_distance.gd` → `CompareDistance` - 对比距离
-- `compare_node_property.gd` → `CompareNodeProperty` - 对比节点属性
+**More examples**:
+- `compare_variable.gd` → `CompareVariable` - compares variable values
+- `compare_health.gd` → `CompareHealth` - compares health
+- `compare_score.gd` → `CompareScore` - compares score
+- `compare_distance.gd` → `CompareDistance` - compares distance
+- `compare_node_property.gd` → `CompareNodeProperty` - compares a node property
 
-### 命名规范总结
+### Naming Convention Summary
 
-| 类型 | 前缀 | 文件名格式 | 类名格式 | 用途 |
+| Type | Prefix | File name format | Class name format | Purpose |
 |------|------|-----------|---------|------|
-| **检查类** | `check_` | `check_<描述>.gd` | `Check<描述>` | 检查状态/条件 |
-| **对比类** | `compare_` | `compare_<描述>.gd` | `Compare<描述>` | 对比值的关系 |
+| **Check-type** | `check_` | `check_<描述>.gd` | `Check<描述>` | Check states/conditions |
+| **Compare-type** | `compare_` | `compare_<描述>.gd` | `Compare<描述>` | Compare value relationships |
 
-**命名规则**:
-- 文件名必须使用功能前缀（`check_` 或 `compare_`）
-- 文件名使用 `snake_case`
-- 类名使用 `PascalCase`，与前缀对应（`Check` 或 `Compare`）
-- 条件类型字符串使用 `snake_case`，不包含前缀
+**Naming rules**:
+- File names must use the function prefix (`check_` or `compare_`)
+- File names use `snake_case`
+- Class names use `PascalCase`, matching the prefix (`Check` or `Compare`)
+- Condition type strings use `snake_case`, without the prefix
 
-### 测试文件命名
+### Test File Naming
 
-- **测试脚本**: `test_<文件名>.gd`
-  - 例如：`test_check_node_exists.gd`, `test_compare_variable.gd`
-- **测试场景**: `test_<文件名>.tscn`
-  - 例如：`test_check_node_exists.tscn`, `test_compare_variable.tscn`
+- **Test script**: `test_<文件名>.gd`
+  - Examples: `test_check_node_exists.gd`, `test_compare_variable.gd`
+- **Test scene**: `test_<文件名>.tscn`
+  - Examples: `test_check_node_exists.tscn`, `test_compare_variable.tscn`
 
-### 统一性原则
+### Consistency Principles
 
-- 文件名、类名、测试文件名保持一致的基础名称
-- 必须使用功能前缀（`check_` 或 `compare_`）
-- 类名前缀（`Check` 或 `Compare`）与文件名前缀对应
-- 保持简洁可读
+- File name, class name, and test file name share the same base name
+- Must use the function prefix (`check_` or `compare_`)
+- The class name prefix (`Check` or `Compare`) matches the file name prefix
+- Keep names concise and readable
 
-**完整示例**:
+**Complete example**:
 ```
 检查类条件：
   文件名：     check_node_exists.gd
@@ -151,43 +151,43 @@
 
 ---
 
-## 图标规范
+## Icon Conventions
 
-**图标选择原则**: 每个条件都应该配置图标，提升用户体验和可视化效果。
+**Icon selection principle**: Every condition should have an icon configured, to improve user experience and visualization.
 
-### 图标配置方式
+### Icon Configuration Methods
 
-**推荐：使用 Godot 内置图标**
+**Recommended: use Godot builtin icons**
 ```gdscript
 metadata.builtin_icon = "KeyCurve"  # 使用 Godot 内置图标名称
 ```
 
-**备选：使用自定义图标库**
+**Alternative: use a custom icon library**
 ```gdscript
 metadata.custom_icon = "my_custom_icon"  # 使用导入的自定义图标
 ```
 
-**向后兼容**
+**Backward compatibility**
 ```gdscript
 metadata.icon_name = "KeyCurve"  # 旧方式，仍然有效
 metadata.icon = preload("res://icon.png")  # 直接指定纹理
 ```
 
-### 内置图标命名参考
+### Builtin Icon Name Reference
 
-**常用图标名称**：
-- **变量条件**: `KeyCurve`, `Hash`, `Array`, `Dictionary`
-- **节点条件**: `Node`, `NodePath`, `HostNode`, `Circle`
-- **物理条件**: `CollisionShape2D`, `CollisionShape3D`, `PhysicsBody2D`
-- **状态条件**: `CheckBox`, `Toggle`, `Check`, `Switch`
-- **数学条件**: `Math`, `Graph`, `Curve`, `CurveXY`
-- **通用**: `Script`, `File`, `Folder`, `Search`
+**Common icon names**:
+- **Variable conditions**: `KeyCurve`, `Hash`, `Array`, `Dictionary`
+- **Node conditions**: `Node`, `NodePath`, `HostNode`, `Circle`
+- **Physics conditions**: `CollisionShape2D`, `CollisionShape3D`, `PhysicsBody2D`
+- **State conditions**: `CheckBox`, `Toggle`, `Check`, `Switch`
+- **Math conditions**: `Math`, `Graph`, `Curve`, `CurveXY`
+- **General**: `Script`, `File`, `Folder`, `Search`
 
-**完整列表**: 参考 [icon-system-guide.md](icon-system-guide.md)
+**Full list**: See [icon-system-guide.md](icon-system-guide.md)
 
-### 图标配置步骤
+### Icon Configuration Steps
 
-在 `_get_condition_metadata()` 中配置图标：
+Configure the icon in `_get_condition_metadata()`:
 
 ```gdscript
 static func _get_condition_metadata() -> ConditionMetadata:
@@ -198,18 +198,18 @@ static func _get_condition_metadata() -> ConditionMetadata:
 
 ---
 
-## 必需实现的方法
+## Required Methods
 
-所有条件**必须**实现以下方法，否则会导致编译错误。
+All conditions **must** implement the following methods, otherwise compilation errors will occur.
 
-### 1. `_update_resource_name()` - 更新资源名称
+### 1. `_update_resource_name()` - Update Resource Name
 
-**标记**: `@abstract` - **必须实现**
+**Marker**: `@abstract` - **must implement**
 
 ```gdscript
-## 更新资源名称（必需）
+## Update the resource name (required)
 ##
-## 根据条件属性更新 resource_name，用于在编辑器检查器中显示
+## Updates resource_name from condition properties, for display in the editor Inspector
 func _update_resource_name():
     var parts = []
     parts.append("条件类型名称")
@@ -218,17 +218,17 @@ func _update_resource_name():
     resource_name = " ".join(parts)
 ```
 
-**作用**:
-- 在编辑器中显示有意义的条件名称
-- 方便用户识别和区分不同条件配置
+**Purpose**:
+- Displays a meaningful condition name in the editor
+- Makes it easy for users to identify and distinguish different condition configurations
 
-**示例**:
+**Example**:
 ```gdscript
-# 简单条件
+# Simple condition
 func _update_resource_name():
     resource_name = "变量比较: %s" % variable_name
 
-# 复杂条件
+# Complex condition
 func _update_resource_name():
     var op_symbol = _get_operator_symbol()
     resource_name = "%s %s %s" % [variable_name, op_symbol, str(threshold)]
@@ -236,28 +236,28 @@ func _update_resource_name():
 
 ---
 
-### 2. `_evaluate_condition()` - 评估条件
+### 2. `_evaluate_condition()` - Evaluate the Condition
 
-**标记**: `@abstract` - **必须实现**
+**Marker**: `@abstract` - **must implement**
 
 ```gdscript
-## 评估条件（必需）
+## Evaluate the condition (required)
 ##
-## 评估条件是否满足的核心方法
+## The core method that evaluates whether the condition is met
 ##
-## 参数：
-## - context: ExecutionContext - 执行上下文
+## Parameters:
+## - context: ExecutionContext - execution context
 ##
-## 返回：
-## - bool - 条件评估结果（true = 满足，false = 不满足）
+## Returns:
+## - bool - condition evaluation result (true = met, false = not met)
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 验证参数
+    # Validate parameters
     if some_parameter.is_empty():
         _log_error_localized("FUSE_ERROR_CONDITION_PARAM_EMPTY", {"param": "some_parameter"})
         _create_fuse_error_localized("FUSE_ERROR_CONDITION_PARAM_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {"param": "some_parameter"})
         return false
 
-    # 执行条件检查逻辑
+    # Perform the condition check logic
     var result = perform_check(context)
 
     _log_debug("条件评估: %s => %s" % [get_description(), result])
@@ -265,21 +265,21 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
     return result
 ```
 
-**作用**:
-- 核心的条件判断逻辑
-- 返回 `true` 表示条件满足，`false` 表示不满足
-- 系统会自动应用 `negate_result` 取反设置
-- 系统会自动处理缓存（如果启用）
+**Purpose**:
+- The core condition judgment logic
+- Returns `true` when the condition is met, `false` when not
+- The system automatically applies the `negate_result` negation setting
+- The system automatically handles caching (if enabled)
 
-**重要**:
-- 必须返回布尔值
-- 验证参数有效性
-- 记录日志
-- 不要在此处处理取反（系统自动处理）
+**Important**:
+- Must return a boolean value
+- Validate parameter validity
+- Log messages
+- Do not handle negation here (the system handles it automatically)
 
-**示例**:
+**Example**:
 ```gdscript
-# 简单条件
+# Simple condition
 func _evaluate_condition(context: ExecutionContext) -> bool:
     if variable_name.is_empty():
         return false
@@ -287,7 +287,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, variable_name, variable_scope, null)
     return value == expected_value
 
-# 复杂条件
+# Complex condition
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var node = context.get_node(target_path)
     if not node:
@@ -302,22 +302,22 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-### 3. `_compute_dependencies()` - 计算依赖
+### 3. `_compute_dependencies()` - Compute Dependencies
 
-**标记**: `@abstract` - **必须实现**
+**Marker**: `@abstract` - **must implement**
 
 ```gdscript
-## 计算依赖（必需）
+## Compute dependencies (required)
 ##
-## 返回此条件依赖的变量名列表
-## 用于缓存失效和依赖追踪
+## Returns the list of variable names this condition depends on
+## Used for cache invalidation and dependency tracking
 ##
-## 返回：
-## - Array[String] - 依赖的变量名列表
+## Returns:
+## - Array[String] - list of dependent variable names
 func _compute_dependencies() -> Array[String]:
     var deps: Array[String] = []
 
-    # 添加依赖的变量
+    # Add the dependent variables
     if not variable_name.is_empty():
         deps.append(variable_name)
 
@@ -327,60 +327,60 @@ func _compute_dependencies() -> Array[String]:
     return deps
 ```
 
-**作用**:
-- 声明条件依赖的变量
-- 用于智能缓存失效
-- 用于依赖追踪和优化
+**Purpose**:
+- Declares the variables the condition depends on
+- Used for smart cache invalidation
+- Used for dependency tracking and optimization
 
-**重要**:
-- 如果条件不依赖任何变量，返回空数组 `[]`
-- 只返回依赖的**变量名**，不是变量值
-- 用于缓存失效检测
+**Important**:
+- If the condition depends on no variables, return an empty array `[]`
+- Return only dependent **variable names**, not variable values
+- Used for cache invalidation detection
 
-**示例**:
+**Example**:
 ```gdscript
-# 依赖单个变量
+# Depends on a single variable
 func _compute_dependencies() -> Array[String]:
     if not variable_name.is_empty():
         return [variable_name]
     return []
 
-# 依赖多个变量
+# Depends on multiple variables
 func _compute_dependencies() -> Array[String]:
     return [var1, var2, var3]
 
-# 不依赖变量
+# No variable dependencies
 func _compute_dependencies() -> Array[String]:
     return []  # 例如：节点检查、时间检查等
 ```
 
 ---
 
-## 可选实现的方法
+## Optional Methods
 
-这些方法不是强制要求，但强烈建议实现以提供完整的功能。
+These methods are not mandatory, but implementing them is strongly recommended to provide full functionality.
 
-### 0. `_compute_thread_safety()` - 计算线程安全性（推荐）
+### 0. `_compute_thread_safety()` - Compute Thread Safety (Recommended)
 
 ```gdscript
-## 计算线程安全性（推荐）
+## Compute thread safety (recommended)
 ##
-## 判断条件是否可以在工作线程中并行评估。
-## 只有满足特定条件的条件才能标记为线程安全。
+## Determines whether the condition can be evaluated in parallel on worker threads.
+## Only conditions meeting specific criteria may be marked as thread-safe.
 ##
-## 返回：
-## - bool - true 表示线程安全，可参与并行评估
+## Returns:
+## - bool - true means thread-safe and eligible for parallel evaluation
 func _compute_thread_safety() -> bool:
 	if _thread_safety_computed:
 		return _thread_safety_cached
 
 	var is_safe := true
 
-	# 检查是否需要访问节点
+	# Check whether node access is needed
 	if uses_target_node:
 		is_safe = false
 
-	# 检查是否需要访问 ExecutionContext（SCOPE 作用域）
+	# Check whether ExecutionContext (SCOPE scope) is accessed
 	if variable_scope == BaseVariable.VariableScope.SCOPE:
 		is_safe = false
 
@@ -389,22 +389,22 @@ func _compute_thread_safety() -> bool:
 	return _thread_safety_cached
 ```
 
-**线程安全条件**：
-- ❌ **不访问节点** - 不调用 `get_node()`、`get_parent()`、`get_tree()`
-- ❌ **不访问 ExecutionContext 的 trigger/target** - 只使用变量快照
-- ✅ **只读取 LOCAL/GLOBAL 作用域变量** - 不依赖 SCOPE 作用域
-- ✅ **只调用线程安全的 API** - 如 `Input.is_action_*()`
+**Thread safety conditions**:
+- ❌ **No node access** - does not call `get_node()`, `get_parent()`, `get_tree()`
+- ❌ **No access to the ExecutionContext trigger/target** - uses only variable snapshots
+- ✅ **Reads only LOCAL/GLOBAL scope variables** - does not depend on the SCOPE scope
+- ✅ **Calls only thread-safe APIs** - such as `Input.is_action_*()`
 
-**线程安全检测模式**：
+**Thread safety detection patterns**:
 
-| 模式 | 示例 | 线程安全 |
+| Pattern | Example | Thread-safe |
 |------|------|---------|
-| **总是安全** | 输入检查、预加载状态检查 | ✅ |
-| **变量作用域相关** | LOCAL/GLOBAL 安全，SCOPE 不安全 | 部分 |
-| **节点访问** | 访问节点属性、子节点 | ❌ |
-| **复合条件** | 取决于所有子条件 | 递归检测 |
+| **Always safe** | Input checks, preloaded state checks | ✅ |
+| **Variable-scope dependent** | LOCAL/GLOBAL safe, SCOPE unsafe | Partial |
+| **Node access** | Accessing node properties, child nodes | ❌ |
+| **Composite conditions** | Depends on all sub-conditions | Recursive detection |
 
-**示例 - 输入条件（总是安全）**：
+**Example - Input condition (always safe)**:
 ```gdscript
 func _compute_thread_safety() -> bool:
 	if _thread_safety_computed:
@@ -415,7 +415,7 @@ func _compute_thread_safety() -> bool:
 	return _thread_safety_cached
 ```
 
-**示例 - 变量条件（作用域相关）**：
+**Example - Variable condition (scope-dependent)**:
 ```gdscript
 func _compute_thread_safety() -> bool:
 	if _thread_safety_computed:
@@ -423,11 +423,11 @@ func _compute_thread_safety() -> bool:
 
 	var is_safe := true
 
-	# SCOPE 作用域需要 ExecutionContext，不安全
+	# The SCOPE scope requires ExecutionContext — not thread-safe
 	if variable_scope == BaseVariable.VariableScope.SCOPE:
 		is_safe = false
 
-	# 如果比较另一个变量，也要检查其作用域
+	# If comparing against another variable, check its scope too
 	if is_safe and check_with_another_variable:
 		if compare_variable_scope == BaseVariable.VariableScope.SCOPE:
 			is_safe = false
@@ -437,7 +437,7 @@ func _compute_thread_safety() -> bool:
 	return _thread_safety_cached
 ```
 
-**示例 - 复合条件（递归检测）**：
+**Example - Composite condition (recursive detection)**:
 ```gdscript
 func _compute_thread_safety() -> bool:
 	if _thread_safety_computed:
@@ -454,23 +454,23 @@ func _compute_thread_safety() -> bool:
 	return _thread_safety_cached
 ```
 
-**重要提示**：
-- `_thread_safety_cached` 和 `_thread_safety_computed` 由 `BaseCondition` 提供
-- 必须使用缓存机制避免重复计算
-- 不确定时返回 `false`（保守策略）
-- 详见 [多线程开发者指南](multithreading-developer-guide.md)
+**Important notes**:
+- `_thread_safety_cached` and `_thread_safety_computed` are provided by `BaseCondition`
+- You must use the caching mechanism to avoid recomputation
+- When in doubt, return `false` (conservative strategy)
+- See [Multithreading Developer Guide](multithreading-developer-guide.md) for details
 
 ---
 
-### 1. `get_description()` - 获取条件描述
+### 1. `get_description()` - Get Condition Description
 
 ```gdscript
-## 获取条件描述（推荐）
+## Get the condition description (recommended)
 ##
-## 返回条件的描述信息，用于在日志和调试中显示
+## Returns the condition's description, shown in logs and debugging
 ##
-## 返回：
-## - String - 条件的描述信息
+## Returns:
+## - String - the condition description
 func get_description() -> String:
     if variable_name.is_empty():
         return "变量比较 (未设置变量)"
@@ -478,7 +478,7 @@ func get_description() -> String:
     return "%s %s %s" % [variable_name, operator, str(compare_value)]
 ```
 
-**示例**:
+**Example**:
 ```gdscript
 func get_description() -> String:
     match comparison_operator:
@@ -490,61 +490,61 @@ func get_description() -> String:
 
 ---
 
-### 2. `get_condition_type()` - 获取条件类型
+### 2. `get_condition_type()` - Get Condition Type
 
 ```gdscript
-## 获取条件类型（推荐）
+## Get the condition type (recommended)
 ##
-## 返回条件的唯一类型标识符
+## Returns the condition's unique type identifier
 ##
-## 返回：
-## - String - 条件类型名称
+## Returns:
+## - String - the condition type name
 func get_condition_type() -> String:
     return "your_condition_type"
 ```
 
-**命名建议**:
-- 使用 `snake_case`
-- 简洁且具有描述性
-- 例如：`"variable_comparison"`, `"node_exists"`, `"property_check"`
+**Naming suggestions**:
+- Use `snake_case`
+- Concise and descriptive
+- Examples: `"variable_comparison"`, `"node_exists"`, `"property_check"`
 
 ---
 
-### 3. `get_condition_category()` - 获取条件分类
+### 3. `get_condition_category()` - Get Condition Category
 
 ```gdscript
-## 获取条件分类（推荐）
+## Get the condition category (recommended)
 ##
-## 返回条件的分类信息，用于在编辑器中组织条件
+## Returns the condition's category, used to organize conditions in the editor
 ##
-## 返回：
-## - String - 条件分类名称
+## Returns:
+## - String - the condition category name
 func get_condition_category() -> String:
     return "your_category"
 ```
 
-**常用分类**:
-- `"variable"` - 变量相关条件
-- `"node"` - 节点相关条件
-- `"property"` - 属性相关条件
-- `"math"` - 数学相关条件
-- `"state"` - 状态相关条件
+**Common categories**:
+- `"variable"` - Variable-related conditions
+- `"node"` - Node-related conditions
+- `"property"` - Property-related conditions
+- `"math"` - Math-related conditions
+- `"state"` - State-related conditions
 
 ---
 
-### 4. `validate()` - 验证条件配置
+### 4. `validate()` - Validate Condition Configuration
 
 ```gdscript
-## 验证条件配置（推荐）
+## Validate the condition configuration (recommended)
 ##
-## 验证条件参数的有效性
+## Validates the validity of the condition parameters
 ##
-## 返回：
-## - Array[String] - 错误信息数组，如果为空则表示验证通过
+## Returns:
+## - Array[String] - array of error messages; empty means validation passed
 func validate() -> Array[String]:
     var errors = super.validate()
 
-    # 添加自定义验证
+    # Add custom validation
     if variable_name.is_empty():
         errors.append("变量名不能为空")
 
@@ -556,12 +556,12 @@ func validate() -> Array[String]:
 
 ---
 
-### 5. `get_parameters()` / `set_parameters()` - 参数序列化
+### 5. `get_parameters()` / `set_parameters()` - Parameter Serialization
 
 ```gdscript
-## 获取参数（可选）
+## Get the parameters (optional)
 ##
-## 返回条件的参数字典
+## Returns the condition's parameter dictionary
 func get_parameters() -> Dictionary:
     return {
         "variable_name": variable_name,
@@ -569,9 +569,9 @@ func get_parameters() -> Dictionary:
         "compare_value": compare_value
     }
 
-## 设置参数（可选）
+## Set the parameters (optional)
 ##
-## 从字典设置条件参数
+## Sets the condition parameters from a dictionary
 func set_parameters(parameters: Dictionary):
     if parameters.has("variable_name"):
         variable_name = parameters["variable_name"]
@@ -585,16 +585,16 @@ func set_parameters(parameters: Dictionary):
 
 ---
 
-### 6. `_get_condition_metadata()` - 获取条件元数据
+### 6. `_get_condition_metadata()` - Get Condition Metadata
 
 ```gdscript
-## 获取条件元数据（推荐）
+## Get the condition metadata (recommended)
 ##
-## 静态方法，返回条件的元数据信息
-## 用于条件选择器和编辑器显示
+## Static method, returns the condition's metadata
+## Used by the condition selector and editor display
 ##
-## 返回：
-## - ConditionMetadata - 条件元数据对象
+## Returns:
+## - ConditionMetadata - the condition metadata object
 static func _get_condition_metadata() -> ConditionMetadata:
     var metadata = ConditionMetadata.new()
     metadata.name_key = "FUSE_CONDITION_XXX_NAME"
@@ -607,30 +607,30 @@ static func _get_condition_metadata() -> ConditionMetadata:
 
 ---
 
-## 条件特性
+## Condition Features
 
-BaseCondition 提供了强大的内置特性，子类无需额外实现即可使用。
+BaseCondition provides powerful built-in features that subclasses can use without additional implementation.
 
-### 1. 结果取反
+### 1. Result Negation
 
 ```gdscript
 @export var negate_result: bool = false
 ```
 
-**作用**: 自动将条件结果取反，无需在代码中手动处理。
+**Purpose**: Automatically negates the condition result; no manual handling in code needed.
 
-**示例**:
+**Example**:
 ```gdscript
-# 条件：检查节点是否存在
-# 如果 negate_result = false: 节点存在时返回 true
-# 如果 negate_result = true: 节点不存在时返回 true
+# Condition: check whether a node exists
+# If negate_result = false: returns true when the node exists
+# If negate_result = true: returns true when the node does not exist
 
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var node = context.get_node(node_path)
     return node != null  # 系统会自动应用取反
 ```
 
-### 2. 结果缓存
+### 2. Result Caching
 
 ```gdscript
 @export var enable_cache: bool = false
@@ -638,38 +638,38 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 @export var cache_context_changes: bool = true
 ```
 
-**作用**: 缓存条件评估结果，提升性能。
+**Purpose**: Caches condition evaluation results to improve performance.
 
-**使用场景**:
-- 条件检查开销较大（如遍历大量节点）
-- 条件在短时间内不会变化
-- 需要频繁检查同一条件
+**Use cases**:
+- The condition check is expensive (e.g., traversing many nodes)
+- The condition does not change over short periods
+- The same condition needs to be checked frequently
 
-**自动失效**:
-- 超过 `cache_duration` 时间后失效
-- 依赖的变量变化后失效（如果 `cache_context_changes = true`）
+**Automatic invalidation**:
+- Expires after `cache_duration` elapses
+- Invalidated when a dependent variable changes (if `cache_context_changes = true`)
 
-### 3. 依赖追踪
+### 3. Dependency Tracking
 
 ```gdscript
 func get_dependencies() -> Array[String]:
-    # 自动缓存，避免重复计算
+    # Cached automatically to avoid recomputation
     if _cached_dependencies.is_empty():
         _cached_dependencies = _compute_dependencies()
     return _cached_dependencies
 ```
 
-**作用**: 自动追踪条件依赖的变量，用于缓存失效和优化。
+**Purpose**: Automatically tracks the variables the condition depends on, for cache invalidation and optimization.
 
-### 4. 启用/禁用
+### 4. Enable/Disable
 
 ```gdscript
 @export var enabled: bool = true
 ```
 
-**作用**: 禁用后，`check()` 方法始终返回 `false`。
+**Purpose**: When disabled, the `check()` method always returns `false`.
 
-### 5. 性能指标
+### 5. Performance Metrics
 
 ```gdscript
 var check_count: int = 0        # 检查次数
@@ -677,64 +677,64 @@ var last_check_time: float = 0.0 # 最后检查时间
 var last_result: bool = false    # 最后检查结果
 ```
 
-**作用**: 自动记录条件检查的性能指标。
+**Purpose**: Automatically records performance metrics for condition checks.
 
 ---
 
-## 变量操作（三层变量系统）
+## Variable Operations (Three-Layer Variable System)
 
-Fuse 系统使用**三层变量架构**，条件在评估时需要读取这些变量。理解如何正确访问变量是编写条件的关键。
+The Fuse system uses a **three-layer variable architecture**, and conditions need to read these variables during evaluation. Understanding how to access variables correctly is key to writing conditions.
 
-### 三层变量架构
+### Three-Layer Variable Architecture
 
-| 作用域 | 枚举值 | 存储位置 | 生命周期 | 用途 |
+| Scope | Enum value | Storage location | Lifecycle | Purpose |
 |--------|--------|----------|----------|------|
-| **LOCAL** | `VariableScope.LOCAL` (0) | ExecutionContext | 单次条件评估 | 临时数据、中间值 |
-| **SCOPE** | `VariableScope.SCOPE` (1) | ScopeVariableContainer | 节点生命周期 | 场景局部变量 |
-| **GLOBAL** | `VariableScope.GLOBAL` (2) | GlobalVariableResource | 游戏运行时 | 全局游戏状态 |
+| **LOCAL** | `VariableScope.LOCAL` (0) | ExecutionContext | Single condition evaluation | Temporary data, intermediate values |
+| **SCOPE** | `VariableScope.SCOPE` (1) | ScopeVariableContainer | Node lifetime | Scene-local variables |
+| **GLOBAL** | `VariableScope.GLOBAL` (2) | GlobalVariableResource | Game runtime | Global game state |
 
-### VariableOperations 工具类
+### The VariableOperations Utility Class
 
-使用 `VariableOperations` 工具类统一变量访问，**不要直接使用** `context.get_variable()` 或 `context.set_variable()`。
+Use the `VariableOperations` utility class for all variable access; **do not use** `context.get_variable()` or `context.set_variable()` directly.
 
-#### 读取变量
+#### Reading Variables
 
 ```gdscript
-## 从指定作用域读取变量
+## Read a variable from the specified scope
 ##
-## 参数：
-## - context: ExecutionContext - 执行上下文
-## - variable_name: String - 变量名
-## - scope: VariableScope - 变量作用域
-## - default_value: Variant = null - 默认值（变量不存在时返回）
+## Parameters:
+## - context: ExecutionContext - execution context
+## - variable_name: String - variable name
+## - scope: VariableScope - variable scope
+## - default_value: Variant = null - default value (returned when the variable does not exist)
 ##
-## 返回：
-## - Variant - 变量值，如果不存在则返回 default_value
+## Returns:
+## - Variant - the variable value, or default_value if it does not exist
 var value = VariableOperations.get_variable(context, "my_var", VariableScope.LOCAL)
 
-## 带默认值的读取
+## Read with a default value
 var health = VariableOperations.get_variable(context, "player_health", VariableScope.GLOBAL, 100)
 ```
 
-#### 检查变量存在性
+#### Checking Variable Existence
 
 ```gdscript
-## 检查变量是否存在
+## Check whether a variable exists
 ##
-## 参数：
-## - context: ExecutionContext - 执行上下文
-## - variable_name: String - 变量名
-## - scope: VariableScope - 变量作用域
+## Parameters:
+## - context: ExecutionContext - execution context
+## - variable_name: String - variable name
+## - scope: VariableScope - variable scope
 ##
-## 返回：
-## - bool - 变量是否存在
+## Returns:
+## - bool - whether the variable exists
 if VariableOperations.has_variable(context, "player_health", VariableScope.GLOBAL):
     var health = VariableOperations.get_variable(context, "player_health", VariableScope.GLOBAL)
 ```
 
-### 条件中的变量访问模式
+### Variable Access Patterns in Conditions
 
-#### 1. 固定作用域的条件
+#### 1. Conditions with a Fixed Scope
 
 ```gdscript
 @export var variable_name: String = "":
@@ -751,13 +751,13 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
         _create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
         return false
 
-    # 使用 VariableOperations 读取变量
+    # Read the variable with VariableOperations
     var value = VariableOperations.get_variable(context, variable_name, scope)
     if value == null:
         _create_fuse_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": variable_name})
         return false
 
-    # 执行比较
+    # Perform the comparison
     return float(value) > threshold
 
 func _compute_dependencies() -> Array[String]:
@@ -766,7 +766,7 @@ func _compute_dependencies() -> Array[String]:
     return []
 ```
 
-#### 2. 多作用域条件（带作用域选择器）
+#### 2. Multi-Scope Conditions (with Scope Selectors)
 
 ```gdscript
 @export var variable_name: String = "":
@@ -781,7 +781,7 @@ func _compute_dependencies() -> Array[String]:
 @export var use_global: bool = true
 
 func _get_effective_scope() -> BaseVariable.VariableScope:
-    ## 根据配置确定有效的作用域
+    ## Determine the effective scope from the configuration
     if use_local:
         return BaseVariable.VariableScope.LOCAL
     elif use_scope:
@@ -798,82 +798,82 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
     return value > threshold
 ```
 
-### VariableScopeUtils 工具类
+### The VariableScopeUtils Utility Class
 
-用于作用域枚举和字符串之间的转换：
+Used to convert between the scope enum and strings:
 
 ```gdscript
-## 将作用域枚举转换为小写字符串
+## Convert the scope enum to a lowercase string
 ##
 ## GLOBAL -> "global"
 ## SCOPE -> "scope"
 ## LOCAL -> "local"
 var scope_str = VariableScopeUtils.enum_to_string(BaseVariable.VariableScope.GLOBAL)
 
-## 获取作用域的本地化显示名称
+## Get the localized display name of a scope
 ##
-## 用于在 Inspector 中显示友好的作用域名称
+## Used to show a friendly scope name in the Inspector
 var display_name = VariableScopeUtils.enum_to_display_name(BaseVariable.VariableScope.SCOPE)
 ```
 
-### 条件中的变量最佳实践
+### Variable Best Practices in Conditions
 
-#### ✅ 好的做法
+#### ✅ Good Practices
 
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 1. 验证参数
+    # 1. Validate parameters
     if variable_name.is_empty():
         _create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
         return false
 
-    # 2. 使用 VariableOperations 读取变量
+    # 2. Read the variable with VariableOperations
     var value = VariableOperations.get_variable(context, variable_name, scope)
     if value == null:
         _create_fuse_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": variable_name})
         return false
 
-    # 3. 类型检查
+    # 3. Type check
     if not (value is int or value is float):
         _log_warning("变量类型不支持数值比较: %s" % type_string(typeof(value)))
         return false
 
-    # 4. 执行比较
+    # 4. Perform the comparison
     return float(value) > threshold
 ```
 
-#### ❌ 不好的做法
+#### ❌ Bad Practices
 
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # ❌ 直接使用 context.get_variable()，不推荐
+    # ❌ Directly using context.get_variable() — not recommended
     var value = context.get_variable(variable_name)
 
-    # ❌ 没有验证变量是否存在
-    # ❌ 没有类型检查
+    # ❌ No existence validation
+    # ❌ No type check
     return value > threshold
 ```
 
-### 条件中的变量声明依赖
+### Declaring Variable Dependencies in Conditions
 
-当条件依赖变量时，必须在 `_compute_dependencies()` 中声明：
+When a condition depends on variables, you must declare them in `_compute_dependencies()`:
 
 ```gdscript
 func _compute_dependencies() -> Array[String]:
-    # 返回依赖的变量名列表（不带作用域前缀）
+    # Return the list of dependent variable names (without scope prefixes)
     if not variable_name.is_empty():
         return [variable_name]
     return []
 ```
 
-**重要**:
-- 依赖只使用**变量名**，不包含作用域
-- 系统会自动追踪所有作用域中该变量的变化
-- 当变量变化时，缓存的评估结果会自动失效
+**Important**:
+- Dependencies use only the **variable name**, without any scope
+- The system automatically tracks changes to that variable across all scopes
+- When the variable changes, cached evaluation results are invalidated automatically
 
-### 测试中的变量操作
+### Variable Operations in Tests
 
-在条件测试中，使用 VariableOperations 设置测试变量：
+In condition tests, use VariableOperations to set test variables:
 
 ```gdscript
 func test_evaluation():
@@ -884,10 +884,10 @@ func test_evaluation():
     var context = ExecutionContext.new()
     add_child(context)
 
-    # 使用 VariableOperations 设置测试变量
+    # Set the test variable with VariableOperations
     VariableOperations.set_variable(context, "test_var", 100, BaseVariable.VariableScope.LOCAL)
 
-    # 检查条件
+    # Check the condition
     var result = condition.check(context)
     assert(result == true, "Condition should be true")
 
@@ -896,9 +896,9 @@ func test_evaluation():
 
 ---
 
-## 完整条件模板
+## Complete Condition Templates
 
-### 检查类条件模板
+### Check-Type Condition Template
 
 ```gdscript
 @tool
@@ -906,28 +906,28 @@ func test_evaluation():
 extends BaseCondition
 class_name CheckSimpleValue
 
-## 简单检查条件模板
+## Simple check condition template
 
-# 参数定义
+# Parameter definitions
 @export_group("Simple Condition")
 @export var target_value: int = 0:
     set(value):
         target_value = value
         clear_dependencies_cache()
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     resource_name = "变量值等于 %d" % target_value
 
-## 评估条件（必需）
+## Evaluate the condition (required)
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 验证参数
+    # Validate parameters
     if not context:
         _log_error_localized("FUSE_ERROR_CONTEXT_NULL_EVALUATE", {})
         _create_fuse_error_localized("FUSE_ERROR_CONTEXT_NULL_EVALUATE", FuseError.ErrorType.VALIDATION_ERROR)
         return false
 
-    # 获取变量值（使用 VariableOperations）
+    # Get the variable value (using VariableOperations)
     var var_name = "my_variable"
     var current_value = VariableOperations.get_variable(context, var_name, BaseVariable.VariableScope.LOCAL)
 
@@ -935,7 +935,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
         _log_warning("变量不存在: %s" % var_name)
         return false
 
-    # 执行比较
+    # Perform the comparison
     var result = current_value == target_value
 
     _log_debug("条件评估: %s (%d) == %d => %s" % [
@@ -944,43 +944,43 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
     return result
 
-## 计算依赖（必需）
+## Compute dependencies (required)
 func _compute_dependencies() -> Array[String]:
     return ["my_variable"]
 
-## 计算线程安全性（推荐）
+## Compute thread safety (recommended)
 ##
-## LOCAL 作用域是线程安全的，SCOPE 作用域不安全（需要 ExecutionContext）
+## The LOCAL scope is thread-safe; the SCOPE scope is not (requires ExecutionContext)
 func _compute_thread_safety() -> bool:
     if _thread_safety_computed:
         return _thread_safety_cached
 
-    # LOCAL 和 GLOBAL 作用域可以并行评估
+    # LOCAL and GLOBAL scopes can be evaluated in parallel
     _thread_safety_cached = true
     _thread_safety_computed = true
     return _thread_safety_cached
 
-## 获取条件描述（推荐）
+## Get the condition description (recommended)
 func get_description() -> String:
     return "变量值等于 %d" % target_value
 
-## 获取条件类型（推荐）
+## Get the condition type (recommended)
 func get_condition_type() -> String:
     return "simple_template"
 
-## 获取条件分类（推荐）
+## Get the condition category (recommended)
 func get_condition_category() -> String:
     return "template"
 
-## 验证条件配置（推荐）
+## Validate the condition configuration (recommended)
 func validate() -> Array[String]:
     var errors = super.validate()
 
-    # 这里可以添加额外的验证逻辑
+    # Additional validation logic can be added here
 
     return errors
 
-## 获取条件元数据（推荐）
+## Get the condition metadata (recommended)
 static func _get_condition_metadata() -> ConditionMetadata:
     var metadata = ConditionMetadata.new()
     metadata.name_key = "FUSE_CONDITION_SIMPLE_TEMPLATE_NAME"
@@ -993,7 +993,7 @@ static func _get_condition_metadata() -> ConditionMetadata:
 
 ---
 
-### 对比类条件模板
+### Compare-Type Condition Template
 
 ```gdscript
 @tool
@@ -1001,9 +1001,9 @@ static func _get_condition_metadata() -> ConditionMetadata:
 extends BaseCondition
 class_name CompareVariableThreshold
 
-## 变量阈值对比条件模板（多参数、多依赖）
+## Variable threshold comparison condition template (multiple parameters, multiple dependencies)
 
-# 参数定义
+# Parameter definitions
 @export_group("Complex Condition")
 @export var variable_name: String = "":
     set(value):
@@ -1019,7 +1019,7 @@ class_name CompareVariableThreshold
 
 @export var check_node_path: NodePath = NodePath("")
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     if variable_name.is_empty():
         resource_name = "复杂条件 (未设置变量)"
@@ -1028,32 +1028,32 @@ func _update_resource_name():
     var op_symbol = _get_operator_symbol()
     resource_name = "%s %s %.2f" % [variable_name, op_symbol, threshold]
 
-## 评估条件（必需）
+## Evaluate the condition (required)
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 1. 验证参数
+    # 1. Validate parameters
     if variable_name.is_empty():
         _log_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", {})
         _create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
         return false
 
-    # 2. 获取变量值（使用 VariableOperations）
+    # 2. Get the variable value (using VariableOperations)
     var var_value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.GLOBAL)
     if var_value == null:
         _log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
         _create_fuse_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": variable_name})
         return false
 
-    # 3. 检查节点（可选）
+    # 3. Check the node (optional)
     if not check_node_path.is_empty():
         var node = context.get_node(check_node_path)
         if not node:
             _log_warning("节点不存在: %s" % check_node_path)
             return false
 
-    # 4. 执行比较
+    # 4. Perform the comparison
     var result := false
 
-    # 将值转换为 float 进行比较
+    # Convert the values to float for comparison
     var var_float = float(var_value)
     var threshold_float = float(threshold)
 
@@ -1082,13 +1082,13 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
     return result
 
-## 计算依赖（必需）
+## Compute dependencies (required)
 func _compute_dependencies() -> Array[String]:
     if not variable_name.is_empty():
         return [variable_name]
     return []
 
-## 获取运算符符号
+## Get the operator symbol
 func _get_operator_symbol() -> String:
     match comparison_operator:
         0: return "=="
@@ -1098,7 +1098,7 @@ func _get_operator_symbol() -> String:
         4: return "<="
         _: return "?"
 
-## 获取条件描述（推荐）
+## Get the condition description (recommended)
 func get_description() -> String:
     if variable_name.is_empty():
         return "复杂条件 (未设置变量)"
@@ -1106,21 +1106,21 @@ func get_description() -> String:
     var op_symbol = _get_operator_symbol()
     var desc = "%s %s %.2f" % [variable_name, op_symbol, threshold]
 
-    # 限制描述长度
+    # Limit the description length
     if desc.length() > 50:
         desc = desc.substr(0, 47) + "..."
 
     return desc
 
-## 获取条件类型（推荐）
+## Get the condition type (recommended)
 func get_condition_type() -> String:
     return "complex_template"
 
-## 获取条件分类（推荐）
+## Get the condition category (recommended)
 func get_condition_category() -> String:
     return "template"
 
-## 验证条件配置（推荐）
+## Validate the condition configuration (recommended)
 func validate() -> Array[String]:
     var errors = super.validate()
 
@@ -1132,7 +1132,7 @@ func validate() -> Array[String]:
 
     return errors
 
-## 获取参数（可选）
+## Get the parameters (optional)
 func get_parameters() -> Dictionary:
     return {
         "variable_name": variable_name,
@@ -1141,7 +1141,7 @@ func get_parameters() -> Dictionary:
         "check_node_path": check_node_path
     }
 
-## 设置参数（可选）
+## Set the parameters (optional)
 func set_parameters(parameters: Dictionary):
     if parameters.has("variable_name"):
         variable_name = parameters["variable_name"]
@@ -1154,7 +1154,7 @@ func set_parameters(parameters: Dictionary):
 
     clear_dependencies_cache()
 
-## 获取条件元数据（推荐）
+## Get the condition metadata (recommended)
 static func _get_condition_metadata() -> ConditionMetadata:
     var metadata = ConditionMetadata.new()
     metadata.name_key = "FUSE_CONDITION_COMPLEX_TEMPLATE_NAME"
@@ -1167,11 +1167,11 @@ static func _get_condition_metadata() -> ConditionMetadata:
 
 ---
 
-## 创建步骤
+## Creation Steps
 
-### Step 1: 创建条件类骨架
+### Step 1: Create the Condition Class Skeleton
 
-创建条件文件 `addons/fuse/conditions/<your_condition_name>_condition.gd`：
+Create the condition file `addons/fuse/conditions/<your_condition_name>_condition.gd`:
 
 ```gdscript
 @tool
@@ -1179,58 +1179,58 @@ static func _get_condition_metadata() -> ConditionMetadata:
 extends BaseCondition
 class_name YourConditionName
 
-## 条件描述
+## Condition description
 
-# 参数定义
+# Parameter definitions
 @export_group("Your Condition")
 @export var your_property: String = ""
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     resource_name = "你的条件: %s" % your_property
 
-## 评估条件（必需）
+## Evaluate the condition (required)
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # TODO: 实现条件评估逻辑
+    # TODO: Implement the condition evaluation logic
     return false
 
-## 计算依赖（必需）
+## Compute dependencies (required)
 func _compute_dependencies() -> Array[String]:
     return []
 ```
 
-### Step 2: 实现核心方法
+### Step 2: Implement the Core Methods
 
-**2.1 实现 `_evaluate_condition()`**:
+**2.1 Implement `_evaluate_condition()`**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 1. 验证参数
+    # 1. Validate parameters
     if your_property.is_empty():
         _log_error_localized("FUSE_ERROR_CONDITION_PROPERTY_EMPTY", {"property": "your_property"})
         _create_fuse_error_localized("FUSE_ERROR_CONDITION_PROPERTY_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {"property": "your_property"})
         return false
 
-    # 2. 执行条件检查逻辑
+    # 2. Perform the condition check logic
     var result = perform_your_check(context, your_property)
 
-    # 3. 记录日志
+    # 3. Log
     _log_debug("条件评估: %s => %s" % [your_property, result])
 
     return result
 ```
 
-**2.2 实现 `_compute_dependencies()`**:
+**2.2 Implement `_compute_dependencies()`**:
 ```gdscript
 func _compute_dependencies() -> Array[String]:
-    # 返回依赖的变量名列表
+    # Return the list of dependent variable names
     if not your_property.is_empty():
         return [your_property]
     return []
 ```
 
-### Step 3: 添加本地化翻译
+### Step 3: Add Localization Translations
 
-在 `addons/fuse/localization/translations.csv` 添加：
+Add to `addons/fuse/localization/translations.csv`:
 
 ```csv
 key,zh_CN,en_US
@@ -1240,17 +1240,17 @@ FUSE_CONDITION_YOUR_CONDITION_DESC,条件描述,Condition description
 FUSE_ERROR_YOUR_CONDITION_ERROR,错误消息,Error message
 ```
 
-**注意**：
-- 使用 `NAME` 后缀表示条件名称
-- 使用 `DESC` 后缀表示条件描述
-- 使用 `ERROR_` 后缀表示错误消息
-- 所有占位符使用 `{variable_name}` 格式
+**Notes**:
+- Use the `NAME` suffix for condition names
+- Use the `DESC` suffix for condition descriptions
+- Use the `ERROR_` suffix for error messages
+- All placeholders use the `{variable_name}` format
 
-### Step 4: 创建测试场景
+### Step 4: Create the Test Scene
 
-**Step 4.1: 创建测试场景文件**
+**Step 4.1: Create the test scene file**
 
-创建 `tests/conditions/test_<condition_name>.tscn`：
+Create `tests/conditions/test_<condition_name>.tscn`:
 
 ```gdscript
 [gd_scene load_steps=2 format=3 uid="uid://test_xxx"]
@@ -1261,14 +1261,14 @@ FUSE_ERROR_YOUR_CONDITION_ERROR,错误消息,Error message
 script = ExtResource("1")
 ```
 
-**Step 4.2: 创建测试脚本**
+**Step 4.2: Create the test script**
 
-创建 `tests/conditions/test_<condition_name>.gd`：
+Create `tests/conditions/test_<condition_name>.gd`:
 
 ```gdscript
 extends Node
 
-## YourConditionName 条件测试
+## Tests for the YourConditionName condition
 
 func _ready():
     print("=== Testing YourConditionName ===")
@@ -1286,79 +1286,79 @@ func test_basic_functionality():
     var context = ExecutionContext.new()
     add_child(context)
 
-    # 设置变量（使用 VariableOperations）
+    # Set the variable (using VariableOperations)
     VariableOperations.set_variable(context, "test_var", 100, BaseVariable.VariableScope.LOCAL)
 
-    # 检查条件
+    # Check the condition
     var result = condition.check(context)
 
-    # 验证结果
+    # Verify the result
     assert(result == expected, "Condition should return expected value")
     print("  ✓ Test 1 passed\n")
 
-    # 清理
+    # Clean up
     context.queue_free()
 
 func test_edge_cases():
     print("Test 2: Edge cases")
-    # 测试边界情况...
+    # Test edge cases...
     print("  ✓ Test 2 passed\n")
 ```
 
-### Step 5: 测试验证
+### Step 5: Test and Verify
 
-1. 在 Godot 中打开测试场景
-2. 运行测试，确认所有测试用例通过
-3. 检查编辑器中的 Inspector 显示是否正确
-4. 验证本地化是否生效
-5. 验证缓存功能是否正常工作
-6. 验证取反功能是否正常工作
+1. Open the test scene in Godot
+2. Run the tests and confirm all test cases pass
+3. Check that the Inspector display in the editor is correct
+4. Verify that localization takes effect
+5. Verify that caching works correctly
+6. Verify that negation works correctly
 
 ---
 
-## 最佳实践
+## Best Practices
 
-### 1. 参数验证
+### 1. Parameter Validation
 
-**原则**: 在 `_evaluate_condition()` 开始时验证所有参数。
+**Principle**: Validate all parameters at the start of `_evaluate_condition()`.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 验证上下文
+    # Validate the context
     if not context:
         _create_fuse_error_localized("FUSE_ERROR_CONTEXT_NULL", FuseError.ErrorType.VALIDATION_ERROR, {})
         return false
 
-    # 验证参数
+    # Validate parameters
     if variable_name.is_empty():
         _create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
         return false
 
-    # 执行检查逻辑
+    # Perform the check logic
     ...
 ```
 
 ```gdscript
-# ❌ 不验证参数
+# ❌ Parameters not validated
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 直接使用参数，可能导致错误
+    # Using parameters directly may cause errors
     var value = context.get_variable(variable_name)  # variable_name 可能为空
     ...
 ```
 
 ---
 
-### 2. 依赖声明
+### 2. Dependency Declaration
 
-**原则**: 正确声明所有依赖的变量。
+**Principle**: Declare all dependent variables correctly.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func _compute_dependencies() -> Array[String]:
     var deps: Array[String] = []
 
-    # 添加所有依赖的变量
+    # Add all dependent variables
     if not var1.is_empty():
         deps.append(var1)
     if not var2.is_empty():
@@ -1368,26 +1368,26 @@ func _compute_dependencies() -> Array[String]:
 ```
 
 ```gdscript
-# ❌ 忘记声明依赖
+# ❌ Forgetting to declare dependencies
 func _compute_dependencies() -> Array[String]:
     return []  # 实际上使用了变量，但未声明
 ```
 
 ---
 
-### 3. 本地化错误
+### 3. Localized Errors
 
-**原则**: 使用本地化错误消息。
+**Principle**: Use localized error messages.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 if variable_name.is_empty():
     _create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
     return false
 ```
 
 ```gdscript
-# ❌ 硬编码错误消息
+# ❌ Hardcoded error message
 if variable_name.is_empty():
     _create_fuse_error("变量名不能为空", FuseError.ErrorType.VALIDATION_ERROR)
     return false
@@ -1395,12 +1395,12 @@ if variable_name.is_empty():
 
 ---
 
-### 4. 日志记录
+### 4. Logging
 
-**原则**: 使用适当的日志级别和本地化日志。
+**Principle**: Use appropriate log levels and localized logs.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func _evaluate_condition(context: ExecutionContext) -> bool:
     _log_debug("开始评估条件: %s" % get_description())
 
@@ -1412,16 +1412,16 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-### 5. 类型安全
+### 5. Type Safety
 
-**原则**: 使用类型注解和类型检查。
+**Principle**: Use type annotations and type checks.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.GLOBAL)
 
-    # 类型检查
+    # Type check
     if not typeof(value) in [TYPE_INT, TYPE_FLOAT]:
         _log_warning("变量类型不支持比较: %s" % type_string(typeof(value)))
         return false
@@ -1431,55 +1431,55 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-### 6. 使用取反特性
+### 6. Use the Negation Feature
 
-**原则**: 不要在代码中手动实现取反，使用内置的 `negate_result`。
+**Principle**: Do not implement negation manually in code; use the built-in `negate_result`.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 只返回正向条件
+    # Return only the positive condition
     return node != null
 
-# 用户可以在 Inspector 中设置 negate_result = true 来反转结果
+# Users can set negate_result = true in the Inspector to invert the result
 ```
 
 ```gdscript
-# ❌ 手动实现取反
+# ❌ Manually implementing negation
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 不要这样做，应该使用 negate_result
+    # Don't do this; use negate_result instead
     return not (node != null)
 ```
 
 ---
 
-### 7. 缓存优化
+### 7. Cache Optimization
 
-**原则**: 对于开销较大的条件检查，启用缓存。
+**Principle**: For expensive condition checks, enable caching.
 
 ```gdscript
-# 在 Inspector 中设置：
+# Set in the Inspector:
 # enable_cache = true
-# cache_duration = 1.0  # 缓存1秒
+# cache_duration = 1.0  # Cache for 1 second
 ```
 
-**适用场景**:
-- 遍历大量节点
-- 复杂的数学计算
-- 访问远程资源
+**Applicable scenarios**:
+- Traversing large numbers of nodes
+- Complex math computations
+- Accessing remote resources
 
 ---
 
-### 8. 描述长度限制
+### 8. Description Length Limits
 
-**原则**: 限制描述长度，避免 UI 显示问题。
+**Principle**: Limit description length to avoid UI display issues.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func get_description() -> String:
 	var desc = "很长的描述字符串..."
 
-	# 限制描述长度
+	# Limit the description length
 	if desc.length() > 50:
 		desc = desc.substr(0, 47) + "..."
 
@@ -1488,19 +1488,19 @@ func get_description() -> String:
 
 ---
 
-### 9. 线程安全实现
+### 9. Thread Safety Implementation
 
-**原则**: 正确实现 `_compute_thread_safety()` 以支持并行评估。
+**Principle**: Implement `_compute_thread_safety()` correctly to support parallel evaluation.
 
 ```gdscript
-# ✅ 好的做法 - 使用缓存机制
+# ✅ Good practice - uses the caching mechanism
 func _compute_thread_safety() -> bool:
 	if _thread_safety_computed:
 		return _thread_safety_cached
 
 	var is_safe := true
 
-	# 检查不安全因素
+	# Check for unsafe factors
 	if needs_node_access or uses_scope_variables:
 		is_safe = false
 
@@ -1510,32 +1510,32 @@ func _compute_thread_safety() -> bool:
 ```
 
 ```gdscript
-# ❌ 错误 - 不使用缓存
+# ❌ Wrong - no caching
 func _compute_thread_safety() -> bool:
 	return not needs_node_access  # 每次都重新计算
 ```
 
 ```gdscript
-# ❌ 错误 - 保守估计但实际不安全
+# ❌ Wrong - conservative estimate but actually unsafe
 func _compute_thread_safety() -> bool:
 	return true  # 但实际上访问了节点！
 ```
 
-**线程安全检查清单**：
-- [ ] 不调用 `get_node()`, `get_parent()`, `get_tree()`
-- [ ] 不访问 `context.trigger` 或 `context.target`
-- [ ] 只使用 LOCAL/GLOBAL 作用域变量
-- [ ] 不修改任何全局状态
-- [ ] 使用缓存机制避免重复计算
+**Thread safety checklist**:
+- [ ] Does not call `get_node()`, `get_parent()`, `get_tree()`
+- [ ] Does not access `context.trigger` or `context.target`
+- [ ] Uses only LOCAL/GLOBAL scope variables
+- [ ] Does not modify any global state
+- [ ] Uses the caching mechanism to avoid recomputation
 
-**原则**: 限制描述长度，避免 UI 显示问题。
+**Principle**: Limit description length to avoid UI display issues.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func get_description() -> String:
     var desc = "很长的描述字符串..."
 
-    # 限制描述长度
+    # Limit the description length
     if desc.length() > 50:
         desc = desc.substr(0, 47) + "..."
 
@@ -1544,31 +1544,31 @@ func get_description() -> String:
 
 ---
 
-## 常见陷阱
+## Common Pitfalls
 
-### 陷阱 1: 忘记实现必需方法
+### Pitfall 1: Forgetting to Implement Required Methods
 
-**问题**:
+**Problem**:
 ```gdscript
 @tool
 extends BaseCondition
 class_name MyCondition
 
-# ❌ 忘记实现 _update_resource_name()
-# ❌ 忘记实现 _evaluate_condition()
-# ❌ 忘记实现 _compute_dependencies()
+# ❌ Forgot to implement _update_resource_name()
+# ❌ Forgot to implement _evaluate_condition()
+# ❌ Forgot to implement _compute_dependencies()
 ```
 
-**后果**:
-- 编译错误（三个方法都是 `@abstract`）
+**Consequence**:
+- Compilation errors (all three methods are `@abstract`)
 
-**解决方案**:
+**Solution**:
 ```gdscript
 @tool
 extends BaseCondition
 class_name MyCondition
 
-# ✅ 实现所有必需方法
+# ✅ Implement all required methods
 func _update_resource_name():
     resource_name = "My Condition"
 
@@ -1581,74 +1581,74 @@ func _compute_dependencies() -> Array[String]:
 
 ---
 
-### 陷阱 2: 在 _evaluate_condition 中处理取反
+### Pitfall 2: Handling Negation in _evaluate_condition
 
-**问题**:
+**Problem**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var result = check_condition()
 
-    # ❌ 手动处理取反
+    # ❌ Manually handling negation
     if negate_result:
         result = not result
 
     return result
 ```
 
-**后果**: 取反被应用两次（一次在代码中，一次在基类中）。
+**Consequence**: Negation is applied twice (once in your code, once in the base class).
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # ✅ 只返回正向结果，基类会自动处理取反
+    # ✅ Return only the positive result; the base class applies negation automatically
     return check_condition()
 ```
 
 ---
 
-### 陷阱 3: 未声明依赖的变量
+### Pitfall 3: Not Declaring Dependent Variables
 
-**问题**:
+**Problem**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # 使用了变量 var1 和 var2
+    # Uses the variables var1 and var2
     var val1 = VariableOperations.get_variable(context, "var1", BaseVariable.VariableScope.LOCAL)
     var val2 = VariableOperations.get_variable(context, "var2", BaseVariable.VariableScope.LOCAL)
     return val1 > val2
 
-# ❌ 忘记在 _compute_dependencies 中声明
+# ❌ Forgot to declare in _compute_dependencies
 func _compute_dependencies() -> Array[String]:
     return []
 ```
 
-**后果**: 缓存可能不会正确失效。
+**Consequence**: The cache may not invalidate correctly.
 
-**解决方案**:
+**Solution**:
 ```gdscript
-# ✅ 正确声明依赖
+# ✅ Dependencies declared correctly
 func _compute_dependencies() -> Array[String]:
     return ["var1", "var2"]
 ```
 
 ---
 
-### 陷阱 4: 返回非布尔值
+### Pitfall 4: Returning a Non-Boolean Value
 
-**问题**:
+**Problem**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, "my_var", BaseVariable.VariableScope.LOCAL)
     return value  # ❌ 可能不是布尔值
 ```
 
-**后果**: 类型不匹配错误。
+**Consequence**: Type mismatch errors.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, "my_var", BaseVariable.VariableScope.LOCAL)
 
-    # ✅ 显式转换为布尔值
+    # ✅ Explicitly convert to a boolean
     if value is bool:
         return value
     elif value is int or value is float:
@@ -1661,22 +1661,22 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-### 陷阱 5: 不验证参数
+### Pitfall 5: Not Validating Parameters
 
-**问题**:
+**Problem**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # ❌ 直接使用参数，不验证
+    # ❌ Using parameters directly without validation
     var value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.GLOBAL)
     return value > threshold
 ```
 
-**后果**: 参数为空时运行时错误。
+**Consequence**: Runtime errors when parameters are empty.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
-    # ✅ 验证参数
+    # ✅ Validate parameters
     if variable_name.is_empty():
         _create_fuse_error_localized("FUSE_ERROR_VAR_NAME_EMPTY", FuseError.ErrorType.VALIDATION_ERROR, {})
         return false
@@ -1691,21 +1691,21 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-### 陷阱 6: 依赖缓存在设置参数后未清除
+### Pitfall 6: Dependency Cache Not Cleared After Setting Parameters
 
-**问题**:
+**Problem**:
 ```gdscript
 @export var variable_name: String = "":
     set(value):
         variable_name = value
-        # ❌ 忘记清除依赖缓存
+        # ❌ Forgot to clear the dependency cache
 
 @export var variable_name: String = ""
 ```
 
-**后果**: 依赖列表不会更新，缓存失效不正确。
+**Consequence**: The dependency list will not update and cache invalidation will be incorrect.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 @export var variable_name: String = "":
     set(value):
@@ -1715,23 +1715,23 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-### 陷阱 7: 描述过长导致 UI 问题
+### Pitfall 7: Overly Long Descriptions Causing UI Issues
 
-**问题**:
+**Problem**:
 ```gdscript
 func get_description() -> String:
-    # ❌ 描述可能非常长
+    # ❌ The description can be very long
     return "这是一个非常非常非常非常非常非常非常非常非常非常长的描述..."
 ```
 
-**后果**: UI 显示问题，文本被截断或重叠。
+**Consequence**: UI display issues; text is truncated or overlaps.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func get_description() -> String:
     var desc = "这是一个非常非常非常非常非常非常非常非常非常非常长的描述..."
 
-    # ✅ 限制描述长度
+    # ✅ Limit the description length
     if desc.length() > 50:
         desc = desc.substr(0, 47) + "..."
 
@@ -1740,24 +1740,24 @@ func get_description() -> String:
 
 ---
 
-### 陷阱 8: 不处理类型不匹配
+### Pitfall 8: Not Handling Type Mismatches
 
-**问题**:
+**Problem**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.GLOBAL)
-    # ❌ 直接比较，可能类型不匹配
+    # ❌ Direct comparison may have a type mismatch
     return value > threshold
 ```
 
-**后果**: 类型不匹配错误或意外的比较结果。
+**Consequence**: Type mismatch errors or unexpected comparison results.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.GLOBAL)
 
-    # ✅ 类型检查和转换
+    # ✅ Type check and conversion
     if not (value is int or value is float):
         _log_warning("变量类型不支持数值比较: %s" % type_string(typeof(value)))
         return false
@@ -1767,14 +1767,14 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 ---
 
-## 测试规范
+## Testing Standards
 
-### 测试文件结构
+### Test File Structure
 
 ```gdscript
 extends Node
 
-## ConditionName 条件测试
+## Tests for the ConditionName condition
 
 func _ready():
     print("=== Testing ConditionName ===")
@@ -1786,17 +1786,17 @@ func _ready():
     print("=== All ConditionName tests passed! ===")
 ```
 
-### 测试用例设计
+### Test Case Design
 
-**必需的测试**:
-1. **基本评估测试** - 验证条件正确评估
-2. **取反测试** - 验证 `negate_result` 功能
-3. **缓存测试** - 验证缓存功能正常工作
-4. **依赖测试** - 验证依赖声明正确
-5. **边界值测试** - 测试极端参数值
-6. **错误处理测试** - 验证错误情况被正确处理
+**Required tests**:
+1. **Basic evaluation test** - verifies the condition evaluates correctly
+2. **Negation test** - verifies the `negate_result` feature
+3. **Caching test** - verifies caching works correctly
+4. **Dependency test** - verifies dependencies are declared correctly
+5. **Boundary value test** - tests extreme parameter values
+6. **Error handling test** - verifies error cases are handled correctly
 
-**测试示例**:
+**Test example**:
 ```gdscript
 func test_evaluation():
     print("Test 1: Basic evaluation")
@@ -1808,11 +1808,11 @@ func test_evaluation():
     var context = ExecutionContext.new()
     add_child(context)
 
-    # 测试满足条件的情况（使用 VariableOperations）
+    # Test the condition being met (using VariableOperations)
     VariableOperations.set_variable(context, "test_var", 150, BaseVariable.VariableScope.LOCAL)
     assert(condition.check(context) == true, "Should be true when value > threshold")
 
-    # 测试不满足条件的情况
+    # Test the condition not being met
     VariableOperations.set_variable(context, "test_var", 50, BaseVariable.VariableScope.LOCAL)
     assert(condition.check(context) == false, "Should be false when value < threshold")
 
@@ -1832,7 +1832,7 @@ func test_negation():
     add_child(context)
 
     VariableOperations.set_variable(context, "test_var", 150, BaseVariable.VariableScope.LOCAL)
-    # 由于取反，原本返回 true 的现在返回 false
+    # Due to negation, what originally returned true now returns false
     assert(condition.check(context) == false, "Should be false with negation")
 
     print("  ✓ Test 2 passed\n")
@@ -1852,11 +1852,11 @@ func test_caching():
 
     VariableOperations.set_variable(context, "test_var", 100, BaseVariable.VariableScope.LOCAL)
 
-    # 第一次检查
+    # First check
     var result1 = condition.check(context)
     assert(condition.check_count == 1, "Should increment check count")
 
-    # 第二次检查（应该使用缓存）
+    # Second check (should hit the cache)
     var result2 = condition.check(context)
     assert(condition.check_count == 1, "Should use cache, not increment count")
 
@@ -1880,13 +1880,13 @@ func test_edge_cases():
     print("Test 5: Edge cases")
 
     var condition = MyCondition.new()
-    # 不设置变量名
+    # No variable name set
     condition.variable_name = ""
 
     var context = ExecutionContext.new()
     add_child(context)
 
-    # 应该返回 false（参数无效）
+    # Should return false (invalid parameters)
     assert(condition.check(context) == false, "Should return false with invalid parameters")
 
     print("  ✓ Test 5 passed\n")
@@ -1894,29 +1894,29 @@ func test_edge_cases():
     context.queue_free()
 ```
 
-### 测试断言
+### Test Assertions
 
 ```gdscript
-# 验证条件结果
+# Verify the condition result
 assert(condition.check(context) == expected, "Condition should return expected value")
 
-# 验证取反
+# Verify negation
 assert(condition.check(context) == not expected, "Condition should be negated")
 
-# 验证缓存
+# Verify caching
 assert(condition.check_count == expected_count, "Check count should match")
 
-# 验证依赖
+# Verify dependencies
 assert(condition.get_dependencies().size() == expected_size, "Dependency count should match")
 ```
 
 ---
 
-## 快速参考
+## Quick Reference
 
-### 常用代码片段
+### Common Code Snippets
 
-#### 变量检查
+#### Variable Check
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     if variable_name.is_empty():
@@ -1931,7 +1931,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
     return value == expected_value
 ```
 
-#### 节点检查
+#### Node Check
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     if node_path.is_empty():
@@ -1942,7 +1942,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
     if not node:
         return false
 
-    # 检查节点类型
+    # Check the node type
     if not node is NodeType:
         _log_warning("节点类型不匹配: %s" % node.get_class())
         return false
@@ -1950,21 +1950,21 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
     return true
 ```
 
-#### 数值比较
+#### Numeric Comparison
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var value = VariableOperations.get_variable(context, variable_name, BaseVariable.VariableScope.GLOBAL)
 
-    # 类型检查
+    # Type check
     if not (value is int or value is float):
         _log_warning("变量类型不支持数值比较: %s" % type_string(typeof(value)))
         return false
 
-    # 转换为 float
+    # Convert to float
     var value_float = float(value)
     var threshold_float = float(threshold)
 
-    # 比较
+    # Compare
     match comparison_operator:
         0: return is_equal_approx(value_float, threshold_float)
         1: return value_float > threshold_float
@@ -1974,75 +1974,75 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
         _: return false
 ```
 
-#### 属性检查
+#### Property Check
 ```gdscript
 func _evaluate_condition(context: ExecutionContext) -> bool:
     var node = context.get_node(node_path)
     if not node:
         return false
 
-    # 检查属性是否存在
+    # Check whether the property exists
     if not "property_name" in node:
         _log_warning("节点缺少属性: property_name")
         return false
 
     var value = node.get("property_name")
 
-    # 比较属性值
+    # Compare the property values
     return value == expected_value
 ```
 
-### 常用错误键
+### Common Error Keys
 
-已定义的本地化错误键（参考 `translations.csv`）：
-- `FUSE_ERROR_CONTEXT_NULL` - 执行上下文为空
-- `FUSE_ERROR_VAR_NAME_EMPTY` - 变量名为空
-- `FUSE_ERROR_VAR_NOT_FOUND` - 变量未找到
-- `FUSE_ERROR_TARGET_NODE_EMPTY` - 目标节点路径为空
-- `FUSE_ERROR_TARGET_NODE_NOT_FOUND` - 目标节点未找到
-- `FUSE_ERROR_INVALID_TARGET` - 目标无效
-- `FUSE_ERROR_MISSING_PARAMETER` - 缺少必需参数
+Predefined localization error keys (see `translations.csv`):
+- `FUSE_ERROR_CONTEXT_NULL` - Execution context is null
+- `FUSE_ERROR_VAR_NAME_EMPTY` - Variable name is empty
+- `FUSE_ERROR_VAR_NOT_FOUND` - Variable not found
+- `FUSE_ERROR_TARGET_NODE_EMPTY` - Target node path is empty
+- `FUSE_ERROR_TARGET_NODE_NOT_FOUND` - Target node not found
+- `FUSE_ERROR_INVALID_TARGET` - Invalid target
+- `FUSE_ERROR_MISSING_PARAMETER` - Missing required parameter
 
-### 常用日志键
+### Common Log Keys
 
-- `FUSE_LOG_CONDITION_CHECK` - 条件检查
-- `FUSE_LOG_CONDITION_RESULT` - 条件结果
-- `FUSE_LOG_CONDITION_CACHE_HIT` - 缓存命中
-- `FUSE_LOG_CONDITION_CACHE_MISS` - 缓存未命中
+- `FUSE_LOG_CONDITION_CHECK` - Condition check
+- `FUSE_LOG_CONDITION_RESULT` - Condition result
+- `FUSE_LOG_CONDITION_CACHE_HIT` - Cache hit
+- `FUSE_LOG_CONDITION_CACHE_MISS` - Cache miss
 
 ---
 
-## 总结
+## Summary
 
-创建 Fuse 条件的关键要点：
+Key takeaways for creating Fuse conditions:
 
-1. ✅ **遵循命名规范** - `_condition` 后缀，类名自然以 "Condition" 结尾
-2. ✅ **实现必需方法** - `_update_resource_name()`, `_evaluate_condition()`, `_compute_dependencies()`
-3. ✅ **正确声明依赖** - 在 `_compute_dependencies()` 中返回所有依赖的变量
-4. ✅ **验证参数有效性** - 在 `_evaluate_condition()` 开始时验证
-5. ✅ **使用本地化消息** - 使用 `_create_fuse_error_localized()`
-6. ✅ **不要手动取反** - 使用内置的 `negate_result` 属性
-7. ✅ **添加完整测试** - 评估、取反、缓存、依赖、边界情况
-8. ✅ **限制描述长度** - 避免超过 50 个字符
-9. ✅ **提供元数据** - 实现 `_get_condition_metadata()` 静态方法
-10. ✅ **使用 VariableOperations** - 统一使用 VariableOperations 访问三层变量系统
-11. ✅ **实现线程安全检测** - 重写 `_compute_thread_safety()` 支持并行评估
+1. ✅ **Follow the naming conventions** - `_condition` suffix; class names naturally end with "Condition"
+2. ✅ **Implement the required methods** - `_update_resource_name()`, `_evaluate_condition()`, `_compute_dependencies()`
+3. ✅ **Declare dependencies correctly** - return all dependent variables in `_compute_dependencies()`
+4. ✅ **Validate parameter validity** - validate at the start of `_evaluate_condition()`
+5. ✅ **Use localized messages** - use `_create_fuse_error_localized()`
+6. ✅ **Do not negate manually** - use the built-in `negate_result` property
+7. ✅ **Add complete tests** - evaluation, negation, caching, dependencies, edge cases
+8. ✅ **Limit description length** - avoid exceeding 50 characters
+9. ✅ **Provide metadata** - implement the `_get_condition_metadata()` static method
+10. ✅ **Use VariableOperations** - use VariableOperations consistently to access the three-layer variable system
+11. ✅ **Implement thread safety detection** - override `_compute_thread_safety()` to support parallel evaluation
 
-**核心原则**:
-- **_update_resource_name()** 更新资源显示名称
-- **_evaluate_condition()** 返回布尔值
-- **_compute_dependencies()** 声明依赖的变量
-- **_compute_thread_safety()** 判断是否可并行评估（缓存机制）
-- **VariableOperations** 统一变量访问接口（LOCAL/SCOPE/GLOBAL）
-- 系统自动处理取反和缓存
+**Core principles**:
+- **_update_resource_name()** updates the resource display name
+- **_evaluate_condition()** returns a boolean value
+- **_compute_dependencies()** declares the dependent variables
+- **_compute_thread_safety()** determines whether parallel evaluation is possible (caching mechanism)
+- **VariableOperations** is the unified variable access interface (LOCAL/SCOPE/GLOBAL)
+- The system handles negation and caching automatically
 
-**参考文档**:
+**Reference documents**:
 - [BaseCondition API](../../../../core/base/base_condition.gd)
-- [变量操作（三层变量系统）](#变量操作三层变量系统)
-- [完整条件模板](#完整条件模板)
-- [测试规范](#测试规范)
+- [Variable Operations (Three-Layer Variable System)](#variable-operations-three-layer-variable-system)
+- [Complete Condition Templates](#complete-condition-templates)
+- [Testing Standards](#testing-standards)
 
 ---
 
-**文档维护**: Fuse 开发团队
-**最后更新**: 2026-06-17
+**Maintained by**: Fuse development team
+**Last updated**: 2026-06-17

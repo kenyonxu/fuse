@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/runtime-instance-migration-guide.md)
+
 # Event RuntimeInstance 迁移指南
 
 **状态:** 已发布

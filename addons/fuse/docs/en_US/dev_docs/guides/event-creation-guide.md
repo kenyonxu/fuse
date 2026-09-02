@@ -1,61 +1,61 @@
-> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/event-creation-guide.md)
+> 🌐 [**中文版**](../../../zh_CN/dev_docs/guides/event-creation-guide.md) | English
 
-# 创建 Fuse 事件指南
+# Fuse Event Creation Guide
 
-> **目标**: 为开发者提供完整的 Fuse 事件创建指引，基于现有事件实现经验和最佳实践。
-> **权威规范**: 组件生成的最终权威是 [fuse-event-generator skill](../../../../agent_skills/fuse-event-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
+> **Goal**: Provide developers with a complete guide to creating Fuse events, based on existing event implementation experience and best practices.
+> **Authoritative spec**: The final authority for component generation is the [fuse-event-generator skill](../../../../agent_skills/fuse-event-generator/SKILL.md) (templates, naming prohibitions, and validation gates); this guide elaborates on its architectural principles.
 
-**适用对象**: Fuse 系统开发者、贡献者
+**Audience**: Fuse system developers and contributors
 
-**最后更新**: 2026-06-17
+**Last updated**: 2026-06-17
 
-**版本**: v2.1 - 添加 stopped 信号、性能追踪文档，修复断链
-
----
-
-## 📋 目录
-
-1. [事件 vs 指令](#事件-vs-指令)
-2. [命名规范](#命名规范)
-3. [图标规范](#图标规范)
-4. [必需实现的方法](#必需实现的方法)
-5. [可选实现的方法](#可选实现的方法)
-6. [完整事件模板](#完整事件模板)
-7. [创建步骤](#创建步骤)
-8. [最佳实践](#最佳实践)
-9. [常见陷阱](#常见陷阱)
-10. [测试规范](#测试规范)
+**Version**: v2.1 - Added the stopped signal, performance tracking documentation, fixed broken links
 
 ---
 
-## 事件 vs 指令
+## 📋 Table of Contents
 
-理解 Event 和 Instruction 的区别是创建事件的第一步。
-
-| 特性 | Event (事件) | Instruction (指令) |
-|------|-------------|-------------------|
-| **用途** | 监听条件，触发响应 | 执行具体动作 |
-| **生命周期** | `initialize_with_runtime_instance()` → `terminate()` | `execute()` → 完成/取消/错误 |
-| **信号** | `triggered(context: Node)`, `stopped(reason, context)` | `finished` |
-| **执行状态** | 无执行状态 | PENDING/RUNNING/COMPLETED/CANCELLED/ERROR |
-| **清理时机** | 在 `terminate()` 中清理 | 在 `_cleanup_resources()` 中清理 |
-| **典型用途** | 检测输入、碰撞、信号等 | 移动节点、播放动画、设置变量等 |
-
-**核心区别**:
-- **Event** 是"被动的" - 等待某事发生，然后发出 `triggered` 信号；当条件满足或主动停止时发出 `stopped` 信号
-- **Instruction** 是"主动的" - 执行某个动作，然后发出 `finished` 信号
+1. [Events vs Instructions](#events-vs-instructions)
+2. [Naming Conventions](#naming-conventions)
+3. [Icon Conventions](#icon-conventions)
+4. [Required Methods](#required-methods)
+5. [Optional Methods](#optional-methods)
+6. [Complete Event Templates](#complete-event-templates)
+7. [Creation Steps](#creation-steps)
+8. [Best Practices](#best-practices)
+9. [Common Pitfalls](#common-pitfalls)
+10. [Testing Guide](#testing-guide)
 
 ---
 
-## RuntimeInstance 架构
+## Events vs Instructions
 
-**推荐**: 新 Event 应该使用 RuntimeInstance 架构来管理运行时状态。
+Understanding the difference between an Event and an Instruction is the first step in creating an event.
 
-**为什么需要**:
+| Feature | Event | Instruction |
+|---------|-------|-------------|
+| **Purpose** | Listens for conditions, triggers a response | Performs a concrete action |
+| **Lifecycle** | `initialize_with_runtime_instance()` → `terminate()` | `execute()` → completed/cancelled/error |
+| **Signals** | `triggered(context: Node)`, `stopped(reason, context)` | `finished` |
+| **Execution state** | No execution state | PENDING/RUNNING/COMPLETED/CANCELLED/ERROR |
+| **Cleanup timing** | Cleaned up in `terminate()` | Cleaned up in `_cleanup_resources()` |
+| **Typical uses** | Detecting input, collisions, signals, etc. | Moving nodes, playing animations, setting variables, etc. |
 
-当多个 Trigger 共享同一个 Event 资源时，如果 Event 包含运行时状态（如 `_is_hovered`），会导致状态污染问题。
+**Core difference**:
+- **Event** is "passive" - it waits for something to happen and then emits the `triggered` signal; it emits the `stopped` signal when its condition is met or when it is actively stopped
+- **Instruction** is "active" - it performs an action and then emits the `finished` signal
 
-**示例**:
+---
+
+## RuntimeInstance Architecture
+
+**Recommended**: new events should use the RuntimeInstance architecture to manage runtime state.
+
+**Why it is needed**:
+
+When multiple Triggers share the same Event resource, an Event that carries runtime state (such as `_is_hovered`) runs into state pollution.
+
+**Example**:
 ```
 两个按钮（start 和 continue）共享同一个 OnMouseEnter 资源
 1. start Trigger 初始化 → Event._is_hovered = false
@@ -63,31 +63,31 @@
 3. 鼠标进入 start → continue 的状态被修改 ❌
 ```
 
-**解决方案**:
+**Solution**:
 
-使用 RuntimeInstance 架构将状态从 Event 资源中分离：
+Use the RuntimeInstance architecture to move state out of the Event resource:
 
 ```
 Event (Resource) = 纯配置（@export 变量）
 RuntimeEventInstance (RefCounted) = 运行时状态（每个 Trigger 独立）
 ```
 
-**核心优势**:
-- ✅ 完全状态隔离（每个 Trigger 有独立状态）
-- ✅ 资源共享（配置仍可共享，节省内存）
-- ✅ 向后兼容（保留旧的 `initialize()` 方法）
-- ✅ 轻量级设计（RefCounted，约 200-500 字节/实例）
+**Core advantages**:
+- ✅ Complete state isolation (each Trigger has independent state)
+- ✅ Resource sharing (configuration can still be shared, saving memory)
+- ✅ Backward compatibility (the legacy `initialize()` method is preserved)
+- ✅ Lightweight design (RefCounted, ~200-500 bytes per instance)
 
-**如何实施**:
+**How to adopt**:
 
-参考下文「RuntimeInstance 架构」与「获取默认运行时状态」章节。
+See the "RuntimeInstance Architecture" and "Get Default Runtime State" sections below.
 
-**新版架构（自声明状态模式）**:
+**New architecture (self-declared state pattern)**:
 
-Event 通过实现 `get_default_runtime_state()` 方法声明自己的状态：
+An Event declares its own state by implementing the `get_default_runtime_state()` method:
 
 ```gdscript
-## 获取默认运行时状态（新版核心方法）
+## Get the default runtime state (core method of the new architecture)
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()
 	base["is_hovered"] = false
@@ -95,10 +95,10 @@ func get_default_runtime_state() -> Dictionary:
 	return base
 ```
 
-**快速上手**:
+**Quick start**:
 
 ```gdscript
-# ❌ 旧方式（状态共享问题）
+# ❌ Old way (shared-state problem)
 var _is_hovered: bool = false
 
 func _on_event_triggered():
@@ -106,10 +106,10 @@ func _on_event_triggered():
         return
     _is_hovered = true
 
-# ✅ 新方式（状态隔离 + 自声明状态）
+# ✅ New way (state isolation + self-declared state)
 var _runtime_instance_ref: RuntimeEventInstance = null
 
-## 声明默认运行时状态
+## Declare the default runtime state
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()
 	base["is_hovered"] = false
@@ -117,7 +117,7 @@ func get_default_runtime_state() -> Dictionary:
 
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance):
     _runtime_instance_ref = runtime_instance
-    # ... 初始化 ...
+    # ... initialization ...
 
 func _on_event_triggered():
     var is_hovered = _runtime_instance_ref.get_runtime_state("is_hovered", false)
@@ -126,43 +126,43 @@ func _on_event_triggered():
     _runtime_instance_ref.set_runtime_state("is_hovered", true)
 ```
 
-**核心优势**:
-- ✅ 无需修改 `RuntimeEventInstance` 核心代码
-- ✅ 遵循开闭原则（Open/Closed Principle）
-- ✅ 用户创建自定义 Event 更方便
+**Core advantages**:
+- ✅ No need to modify `RuntimeEventInstance` core code
+- ✅ Follows the Open/Closed Principle
+- ✅ Makes it easier for users to create custom events
 
 ---
 
-## 命名规范
+## Naming Conventions
 
-**重要**: 所有 Fuse 事件遵循以下命名规范，保持简洁一致。
+**Important**: all Fuse events follow the naming conventions below to stay concise and consistent.
 
-### 文件命名
+### File Naming
 
-- **事件文件**: 使用 `snake_case`，**必须添加** `on_` 前缀
-  - ✅ 正确：`on_ready.gd`, `on_input_key.gd`, `on_area_2d_enter.gd`
-  - ❌ 错误：`event_on_ready.gd`, `input_key_event.gd`, `area_2d_enter_event.gd`
+- **Event files**: use `snake_case`, **must add** the `on_` prefix
+  - ✅ Correct: `on_ready.gd`, `on_input_key.gd`, `on_area_2d_enter.gd`
+  - ❌ Wrong: `event_on_ready.gd`, `input_key_event.gd`, `area_2d_enter_event.gd`
 
-### 类命名
+### Class Naming
 
-- **类名**: 使用 `PascalCase`，**必须添加** `On` 前缀
-  - ✅ 正确：`class_name OnReady`, `class_name OnInputKey`, `class_name OnArea2DEnter`
-  - ❌ 错误：`class_name EventOnReady`, `class_name InputKeyEvent`, `class_name Area2DEnterEvent`
+- **Class names**: use `PascalCase`, **must add** the `On` prefix
+  - ✅ Correct: `class_name OnReady`, `class_name OnInputKey`, `class_name OnArea2DEnter`
+  - ❌ Wrong: `class_name EventOnReady`, `class_name InputKeyEvent`, `class_name Area2DEnterEvent`
 
-### 测试文件命名
+### Test File Naming
 
-- **测试脚本**: `test_on_<event_name>.gd`
-  - 例如：`test_on_ready.gd`, `test_on_input_key.gd`
-- **测试场景**: `test_on_<event_name>.tscn`
-  - 例如：`test_on_ready.tscn`, `test_on_input_key.tscn`
+- **Test scripts**: `test_on_<event_name>.gd`
+  - Examples: `test_on_ready.gd`, `test_on_input_key.gd`
+- **Test scenes**: `test_on_<event_name>.tscn`
+  - Examples: `test_on_ready.tscn`, `test_on_input_key.tscn`
 
-### 统一性原则
+### Consistency Principles
 
-- 文件名、类名、测试文件名保持一致的基础名称
-- 必须使用 `on_` / `On` 前缀
-- 保持简洁可读
+- Keep the file name, class name, and test file names based on the same base name
+- Always use the `on_` / `On` prefix
+- Keep names concise and readable
 
-**示例**:
+**Example**:
 ```
 事件文件：   on_input_key.gd
 类名：       class_name OnInputKey
@@ -172,44 +172,44 @@ func _on_event_triggered():
 
 ---
 
-## 图标规范
+## Icon Conventions
 
-**图标选择原则**: 每个事件都应该配置图标，提升用户体验和可视化效果。
+**Icon selection principle**: every event should have an icon configured to improve user experience and visualization.
 
-### 图标配置方式
+### Icon Configuration Methods
 
-**推荐：使用 Godot 内置图标**
+**Recommended: use Godot built-in icons**
 ```gdscript
 metadata.builtin_icon = "KeyKeyboard"  # 使用 Godot 内置图标名称
 ```
 
-**备选：使用自定义图标库**
+**Alternative: use a custom icon library**
 ```gdscript
 metadata.custom_icon = "my_custom_icon"  # 使用导入的自定义图标
 ```
 
-**向后兼容**
+**Backward compatibility**
 ```gdscript
 metadata.icon_name = "KeyKeyboard"  # 旧方式，仍然有效
 metadata.icon = preload("res://icon.png")  # 直接指定纹理
 ```
 
-### 内置图标命名参考
+### Built-in Icon Naming Reference
 
-**常用图标名称**：
-- **输入事件**: `KeyKeyboard`, `JoyButton`, `Mouse`
-- **场景事件**: `HostNode`, `Scene`, `Play`
-- **物理事件**: `CollisionShape2D`, `CollisionShape3D`, `PhysicsBody2D`, `PhysicsBody3D`
-- **信号事件**: `Signals`, `Connect`, `Call`
-- **时间事件**: `Time`, `Timer`, `Clock`
-- **生命周期**: `Refresh`, `Loop`, `Animation`
-- **通用**: `Script`, `Node`, `File`, `Folder`
+**Common icon names**:
+- **Input events**: `KeyKeyboard`, `JoyButton`, `Mouse`
+- **Scene events**: `HostNode`, `Scene`, `Play`
+- **Physics events**: `CollisionShape2D`, `CollisionShape3D`, `PhysicsBody2D`, `PhysicsBody3D`
+- **Signal events**: `Signals`, `Connect`, `Call`
+- **Time events**: `Time`, `Timer`, `Clock`
+- **Lifecycle**: `Refresh`, `Loop`, `Animation`
+- **General**: `Script`, `Node`, `File`, `Folder`
 
-**完整列表**: 参考 [icon-system-guide.md](icon-system-guide.md)
+**Full list**: see [icon-system-guide.md](icon-system-guide.md)
 
-### 图标配置步骤
+### Icon Configuration Steps
 
-在 `_get_event_metadata()` 中配置图标：
+Configure the icon in `_get_event_metadata()`:
 
 ```gdscript
 static func _get_event_metadata() -> EventMetadata:
@@ -220,18 +220,18 @@ static func _get_event_metadata() -> EventMetadata:
 
 ---
 
-## 必需实现的方法
+## Required Methods
 
-所有事件**必须**实现以下方法，否则会导致运行时错误或编译错误。
+All events **must** implement the following methods, otherwise runtime or compile errors will occur.
 
-### 1. `_update_resource_name()` - 更新资源名称
+### 1. `_update_resource_name()` - Update the Resource Name
 
-**标记**: `@abstract` - **必须实现**
+**Marker**: `@abstract` - **must implement**
 
 ```gdscript
-## 更新资源名称（必需）
+## Update the resource name (required)
 ##
-## 根据事件属性更新 resource_name，用于在编辑器检查器中显示
+## Update resource_name based on event properties; shown in the editor Inspector
 func _update_resource_name():
     var parts = []
     parts.append("事件类型名称")
@@ -240,17 +240,17 @@ func _update_resource_name():
     resource_name = " ".join(parts)
 ```
 
-**作用**:
-- 在事件列表中显示有意义的名称
-- 方便用户识别和区分不同事件配置
+**Purpose**:
+- Displays a meaningful name in the event list
+- Helps users identify and distinguish different event configurations
 
-**示例**:
+**Example**:
 ```gdscript
-# 简单事件
+# Simple event
 func _update_resource_name():
     resource_name = "On Ready With Delay: %s" % delay_seconds
 
-# 复杂事件
+# Complex event
 func _update_resource_name():
     var key_name = _get_key_name()
     match key_event_type:
@@ -262,101 +262,101 @@ func _update_resource_name():
 
 ---
 
-### 2. `initialize()` - 初始化事件监听
+### 2. `initialize()` - Initialize the Event Listener
 
-**标记**: 虽然不是 `@abstract`，但**必须重写**
+**Marker**: although not `@abstract`, **must be overridden**
 
 ```gdscript
-## 初始化事件监听（必需）
+## Initialize the event listener (required)
 ##
-## 由 Trigger 在 _ready() 时调用，用来 "启动" 事件监听
-## 'owner_node' 通常就是 Trigger 节点
-## 子类将在这里连接信号
+## Called by the Trigger in _ready() to "start" the event listener
+## 'owner_node' is usually the Trigger node itself
+## Subclasses connect signals here
 ##
-## 参数：
-## - owner_node: Node - 拥有此事件的触发器节点
+## Parameters:
+## - owner_node: Node - the Trigger node that owns this event
 func initialize(owner_node: Node) -> void:
-    # 1. 验证 owner_node
+    # 1. Validate owner_node
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
-    # 2. 连接信号或设置监听
-    # 示例：连接节点信号
+    # 2. Connect signals or set up listeners
+    # Example: connect a node signal
     if not owner_node.some_signal.is_connected(_on_some_event):
         owner_node.some_signal.connect(_on_some_event)
 
-    # 3. 记录日志
+    # 3. Log
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 ```
 
-**作用**:
-- 设置事件监听（连接信号、设置定时器等）
-- 验证配置参数
-- 初始化内部状态
+**Purpose**:
+- Sets up event listening (connects signals, sets up timers, etc.)
+- Validates configuration parameters
+- Initializes internal state
 
-**重要**:
-- 必须验证 `owner_node` 有效性
-- 必须记录初始化日志
-- 避免重复连接信号
+**Important**:
+- Must validate that `owner_node` is valid
+- Must log initialization
+- Avoid connecting the same signal more than once
 
 ---
 
-### 2.1. `initialize_with_runtime_instance()` - 使用运行时实例初始化（推荐）
+### 2.1. `initialize_with_runtime_instance()` - Initialize with a Runtime Instance (Recommended)
 
-**推荐**: 对于有运行时状态的 Event，优先使用此方法。
+**Recommended**: for events with runtime state, prefer this method.
 
-**标记**: 虽然不是 `@abstract`，但强烈推荐重写
+**Marker**: although not `@abstract`, overriding it is strongly recommended
 
 ```gdscript
-## 使用运行时实例初始化事件（推荐）
+## Initialize the event with a runtime instance (recommended)
 ##
-## 由 Trigger 在 _ready() 时调用，使用 RuntimeEventInstance 初始化事件
-## 这是内存优化的一部分，避免不必要的资源复制
+## Called by the Trigger in _ready(); initializes the event with a RuntimeEventInstance
+## This is part of the memory optimization, avoiding unnecessary resource duplication
 ##
-## 参数：
-## - owner_node: Node - 拥有此事件的触发器节点
-## - runtime_instance: RuntimeEventInstance - 运行时事件实例
+## Parameters:
+## - owner_node: Node - the Trigger node that owns this event
+## - runtime_instance: RuntimeEventInstance - the runtime event instance
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance) -> void:
-    # 1. 保存 RuntimeEventInstance 引用
+    # 1. Save the RuntimeEventInstance reference
     _runtime_instance_ref = runtime_instance
 
-    # 2. 验证参数
+    # 2. Validate parameters
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
-    # 3. 连接信号或设置监听
-    # 示例：连接节点信号
+    # 3. Connect signals or set up listeners
+    # Example: connect a node signal
     if not owner_node.some_signal.is_connected(_on_some_event):
         owner_node.some_signal.connect(_on_some_event)
 
-    # 4. 记录日志
+    # 4. Log
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 ```
 
-**作用**:
-- 提供独立的运行时状态管理（通过 RuntimeEventInstance）
-- 支持多个 Trigger 共享同一个 Event 资源而不会产生状态污染
-- 保持向后兼容（BaseEvent 默认实现会调用 `initialize()`）
+**Purpose**:
+- Provides independent runtime state management (via RuntimeEventInstance)
+- Allows multiple Triggers to share the same Event resource without state pollution
+- Stays backward compatible (the BaseEvent default implementation calls `initialize()`)
 
-**何时使用**:
-- ✅ Event 有运行时状态（如 `_is_hovered`、`_has_triggered`）
-- ✅ 多个 Trigger 可能共享同一个 Event 资源
-- ✅ 需要状态隔离保证
+**When to use it**:
+- ✅ The event has runtime state (such as `_is_hovered`, `_has_triggered`)
+- ✅ Multiple Triggers may share the same Event resource
+- ✅ State isolation guarantees are needed
 
-**何时不需要**:
-- ⚠️ Event 是无状态的（纯监听，不存储状态）
-- ⚠️ 确定 Event 不会被多个 Trigger 共享
+**When it is not needed**:
+- ⚠️ The event is stateless (pure listening, stores no state)
+- ⚠️ You are certain the event will not be shared by multiple Triggers
 
-**状态管理示例**:
+**State management example**:
 ```gdscript
-# 在 RuntimeEventInstance 中读取状态
+# Read state from the RuntimeEventInstance
 var is_hovered: bool = false
 if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("is_hovered"):
     is_hovered = _runtime_instance_ref.get_runtime_state("is_hovered")
 
-# 在 RuntimeEventInstance 中写入状态
+# Write state to the RuntimeEventInstance
 if _runtime_instance_ref:
     _runtime_instance_ref.set_runtime_state("is_hovered", true)
     _runtime_instance_ref.set_runtime_state("trigger_count",
@@ -364,12 +364,12 @@ if _runtime_instance_ref:
     )
 ```
 
-**在 Event 中声明默认状态**（新版架构，推荐）:
+**Declare default state in the Event** (new architecture, recommended):
 
-在 Event 类中实现 `get_default_runtime_state()` 方法：
+Implement the `get_default_runtime_state()` method in the Event class:
 
 ```gdscript
-## 获取默认运行时状态
+## Get the default runtime state
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()
 	base["has_triggered"] = false
@@ -378,17 +378,17 @@ func get_default_runtime_state() -> Dictionary:
 	return base
 ```
 
-**优势**:
-- ✅ 无需修改 `RuntimeEventInstance` 核心代码
-- ✅ 状态声明清晰明确
-- ✅ 自动获得基础状态（initialized, trigger_count, last_trigger_time）
-- ✅ RuntimeEventInstance 会自动调用此方法
+**Advantages**:
+- ✅ No need to modify `RuntimeEventInstance` core code
+- ✅ State declarations are clear and explicit
+- ✅ Base state is obtained automatically (initialized, trigger_count, last_trigger_time)
+- ✅ RuntimeEventInstance calls this method automatically
 
-**在 RuntimeEventInstance 中初始化状态**（旧版架构，已弃用）:
+**Initialize state in RuntimeEventInstance** (legacy architecture, deprecated):
 
-> ⚠️ **注意**: 这是旧版架构，已弃用。新 Event 应使用上面的自声明状态模式。
+> ⚠️ **Note**: this is the legacy architecture and is deprecated. New events should use the self-declared state pattern above.
 
-在 `addons/fuse/core/runtime_event_instance.gd` 的 `_initialize_runtime_state()` 方法中添加状态初始化：
+Add state initialization to the `_initialize_runtime_state()` method in `addons/fuse/core/runtime_event_instance.gd`:
 
 ```gdscript
 func _initialize_runtime_state():
@@ -402,25 +402,25 @@ func _initialize_runtime_state():
 
 ---
 
-### 3. `terminate()` - 清理事件监听
+### 3. `terminate()` - Clean Up the Event Listener
 
-**标记**: 虽然不是 `@abstract`，但**必须重写**
+**Marker**: although not `@abstract`, **must be overridden**
 
 ```gdscript
-## 清理事件监听（必需）
+## Clean up the event listener (required)
 ##
-## 由 Trigger 在 _exit_tree() 时调用，用来 "清理" 事件监听
-## 这是必要的，以防止内存泄漏
-## 子类将在这里断开信号
+## Called by the Trigger in _exit_tree() to "tear down" the event listener
+## This is necessary to prevent memory leaks
+## Subclasses disconnect signals here
 ##
-## 参数：
-## - owner_node: Node - 拥有此事件的触发器节点
+## Parameters:
+## - owner_node: Node - the Trigger node that owns this event
 func terminate(owner_node: Node) -> void:
-    # 1. 断开所有信号连接
+    # 1. Disconnect all signal connections
     if owner_node and owner_node.some_signal.is_connected(_on_some_event):
         owner_node.some_signal.disconnect(_on_some_event)
 
-    # 2. 清理定时器
+    # 2. Clean up timers
     if _timer:
         if _timer.timeout.is_connected(_on_timer_timeout):
             _timer.timeout.disconnect(_on_timer_timeout)
@@ -429,34 +429,34 @@ func terminate(owner_node: Node) -> void:
         _timer.queue_free()
         _timer = null
 
-    # 3. 重置状态
+    # 3. Reset state
     _internal_state = false
 
-    # 4. 记录日志
+    # 4. Log
     _log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 ```
 
-**作用**:
-- 断开所有信号连接
-- 清理定时器、Tween 等资源
-- 重置内部状态
-- 防止内存泄漏
+**Purpose**:
+- Disconnects all signal connections
+- Cleans up timers, Tweens, and other resources
+- Resets internal state
+- Prevents memory leaks
 
-**重要**:
-- 必须断开所有在 `initialize()` 中连接的信号
-- 必须清理所有创建的临时节点（Timer、Tween 等）
-- 使用 `is_instance_valid()` 检查节点有效性
-- 清理顺序：先断开信号 → 移除子节点 → 释放资源
+**Important**:
+- Must disconnect every signal connected in `initialize()`
+- Must clean up all temporary nodes created (Timer, Tween, etc.)
+- Use `is_instance_valid()` to check node validity
+- Cleanup order: disconnect signals → remove child nodes → free resources
 
 ---
 
-### 4. `stopped` 信号与 `notify_stopped()` — 事件停止通知
+### 4. The `stopped` Signal and `notify_stopped()` — Event Stop Notification
 
-**信号**: `stopped(reason: String, context: Dictionary)`
+**Signal**: `stopped(reason: String, context: Dictionary)`
 
-当事件停止时发出（例如 `OnInterval` 因条件满足或达到最大重复次数而停止）。
+Emitted when the event stops (for example, `OnInterval` stops because its condition is met or it reaches the maximum repeat count).
 
-**停止原因常量**:
+**Stop reason constants**:
 ```gdscript
 STOP_REASON_CONDITION_MET  # 条件满足而停止
 STOP_REASON_MAX_REPEATS    # 达到最大重复次数
@@ -464,21 +464,21 @@ STOP_REASON_MANUAL         # 手动停止
 STOP_REASON_ERROR          # 因错误而停止
 ```
 
-**通知方法**:
+**Notification method**:
 
 ```gdscript
-## 通知事件停止
+## Notify that the event stopped
 ##
-## 当事件停止时调用此方法，会发出 stopped 信号并通知 Trigger
+## Call this method when the event stops; it emits the stopped signal and notifies the Trigger
 ##
-## 参数：
-## - reason: String - 停止原因（使用 STOP_REASON_* 常量）
-## - context: Dictionary - 停止上下文信息（可选）
+## Parameters:
+## - reason: String - the stop reason (use the STOP_REASON_* constants)
+## - context: Dictionary - stop context information (optional)
 func notify_stopped(reason: String, context: Dictionary = {}) -> void:
-    # 发出 stopped 信号
+    # Emit the stopped signal
     stopped.emit(reason, context)
 
-    # 通知 Trigger 发出 event_stopped 信号
+    # Notify the Trigger to emit the event_stopped signal
     if _trigger_ref:
         var stop_context = context.duplicate()
         stop_context["event"] = self
@@ -488,35 +488,36 @@ func notify_stopped(reason: String, context: Dictionary = {}) -> void:
             _trigger_ref.emit_signal("event_stopped", reason, stop_context)
 ```
 
-**使用示例**:
+**Usage example**:
 ```gdscript
-# 在重复事件中，当达到最大次数时停止
+# In a repeating event, stop when the maximum count is reached
 func _on_event_triggered():
     if max_repeats > 0 and repeat_count >= max_repeats:
         notify_stopped(STOP_REASON_MAX_REPEATS, {"repeat_count": repeat_count})
         return
 ```
 
-**重要**:
-- 必须在 `set_trigger_ref()` 之后调用（Trigger 会在初始化时自动设置）
-- `notify_stopped()` 会自动通知 Trigger 发出 `event_stopped` 信号
-- 停止上下文信息用于调试和日志记录
+**Important**:
+- Must be called after `set_trigger_ref()` (the Trigger sets it automatically during initialization)
+- `notify_stopped()` automatically notifies the Trigger to emit the `event_stopped` signal
+- The stop context information is used for debugging and logging
 
 ---
 
-### 5. `_emit_triggered()` — 推荐的事件触发方式
+### 5. `_emit_triggered()` — Recommended Way to Emit the Event Trigger
 
-**推荐使用 `_emit_triggered()` 而非直接 `triggered.emit()`**：
+**Use `_emit_triggered()` instead of emitting `triggered.emit()` directly**:
 
 ```gdscript
-## 发出 triggered 信号（自动设置 trigger meta）
+## Emit the triggered signal (sets the trigger meta automatically)
 ##
-## 此方法会自动设置 context 的 "trigger" meta，防止信号广播到其他 RuntimeEventInstance
-## 适用于池化对象和共享 Event 资源的场景
+## This method sets the "trigger" meta on the context automatically, preventing the signal
+## from being broadcast to other RuntimeEventInstances
+## Intended for pooled objects and shared Event resources
 ##
-## 参数：
-## - context: Node - 事件上下文节点
-## - owner_node: Node - 触发器节点（可选，如果 _trigger_ref 已设置）
+## Parameters:
+## - context: Node - the event context node
+## - owner_node: Node - the Trigger node (optional if _trigger_ref is already set)
 func _emit_triggered(context: Node, owner_node: Node = null) -> void:
     var trigger_node = owner_node if owner_node else _trigger_ref
     if context and trigger_node:
@@ -524,37 +525,37 @@ func _emit_triggered(context: Node, owner_node: Node = null) -> void:
     triggered.emit(context)
 ```
 
-**对比**:
+**Comparison**:
 ```gdscript
-# ❌ 旧方式：直接 emit，可能缺少 trigger meta
+# ❌ Old way: emit directly, the trigger meta may be missing
 triggered.emit(some_node)
 
-# ✅ 推荐方式：自动设置 trigger meta
+# ✅ Recommended way: the trigger meta is set automatically
 _emit_triggered(some_node)
-# 或指定 owner_node
+# Or specify the owner_node
 _emit_triggered(context_node, owner_node)
 ```
 
 ---
 
-## 可选实现的方法
+## Optional Methods
 
-这些方法不是强制要求，但强烈建议实现以提供完整的功能。
+These methods are not mandatory, but implementing them is strongly recommended to provide full functionality.
 
-### 1. `get_description()` - 获取事件描述
+### 1. `get_description()` - Get the Event Description
 
 ```gdscript
-## 获取事件描述（推荐）
+## Get the event description (recommended)
 ##
-## 返回事件的描述信息，用于在日志和调试中显示
+## Returns the event's description, shown in logs and debugging
 ##
-## 返回：
-## - String - 事件的描述信息
+## Returns:
+## - String - the event description
 func get_description() -> String:
     return "事件描述字符串"
 ```
 
-**示例**:
+**Example**:
 ```gdscript
 func get_description() -> String:
     if delay_seconds > 0:
@@ -565,77 +566,77 @@ func get_description() -> String:
 
 ---
 
-### 2. `get_event_type()` - 获取事件类型
+### 2. `get_event_type()` - Get the Event Type
 
 ```gdscript
-## 获取事件类型（推荐）
+## Get the event type (recommended)
 ##
-## 返回事件的唯一类型标识符
+## Returns the event's unique type identifier
 ##
-## 返回：
-## - String - 事件类型名称
+## Returns:
+## - String - the event type name
 func get_event_type() -> String:
     return "your_event_type"
 ```
 
-**命名建议**:
-- 使用 `snake_case`
-- 简洁且具有描述性
-- 例如：`"scene_ready"`, `"input_key"`, `"area_2d_enter"`
+**Naming suggestions**:
+- Use `snake_case`
+- Be concise and descriptive
+- Examples: `"scene_ready"`, `"input_key"`, `"area_2d_enter"`
 
 ---
 
-### 3. `get_event_category()` - 获取事件分类
+### 3. `get_event_category()` - Get the Event Category
 
 ```gdscript
-## 获取事件分类（推荐）
+## Get the event category (recommended)
 ##
-## 返回事件的分类信息，用于在编辑器中组织事件
+## Returns the event's category information, used to organize events in the editor
 ##
-## 返回：
-## - String - 事件分类名称
+## Returns:
+## - String - the event category name
 func get_event_category() -> String:
     return "your_category"
 ```
 
-**常用分类**:
-- `"scene"` - 场景生命周期事件
-- `"input"` - 输入事件
-- `"physics"` - 物理事件
-- `"signal"` - 信号事件
-- `"timer"` - 定时器事件
+**Common categories**:
+- `"scene"` - scene lifecycle events
+- `"input"` - input events
+- `"physics"` - physics events
+- `"signal"` - signal events
+- `"timer"` - timer events
 
 ---
 
-### 4. `validate()` - 验证事件配置
+### 4. `validate()` - Validate the Event Configuration
 
 ```gdscript
-## 验证事件配置（推荐）
+## Validate the event configuration (recommended)
 ##
-## 验证事件参数的有效性
+## Checks that the event parameters are valid
 ##
-## 返回：
-## - Array[String] - 错误信息数组，如果为空则表示验证通过
+## Returns:
+## - Array[String] - an array of error messages; empty means validation passed
 func validate() -> Array[String]:
     var errors: Array[String] = []
 
-    # 添加自定义验证
+    # Add custom validation
     if some_property <= 0:
         errors.append("属性必须大于0")
 
     return errors
 ```
 
-**示例**:
+**Example**:
 ```gdscript
 func validate() -> Array[String]:
     var errors: Array[String] = []
 
-    # 验证按键代码
+    # Validate the key code
     if key_code == KEY_NONE:
         errors.append("必须指定有效的按键代码")
 
-    # 验证数值范围
+    # Validate the numeric range
     if delay_seconds < 0:
         errors.append("延迟时间不能为负数")
 
@@ -644,37 +645,37 @@ func validate() -> Array[String]:
 
 ---
 
-### 5. `reset()` - 重置事件状态
+### 5. `reset()` - Reset the Event State
 
 ```gdscript
-## 重置事件状态（可选）
+## Reset the event state (optional)
 ##
-## 重置事件到初始状态，允许重新使用
-## 子类可以重写此方法来重置特定状态
+## Resets the event to its initial state so it can be reused
+## Subclasses can override this method to reset specific state
 func reset() -> void:
     super.reset()  # 调用父类重置
-    # 重置自定义状态
+    # Reset custom state
     _has_triggered = false
     _is_key_pressed = false
 ```
 
-**使用场景**:
-- 需要重新使用事件实例
-- 清除运行时状态
-- 准备下一次触发
+**Use cases**:
+- The event instance needs to be reused
+- Clearing runtime state
+- Preparing for the next trigger
 
 ---
 
-### 6. `_get_event_metadata()` - 获取事件元数据
+### 6. `_get_event_metadata()` - Get the Event Metadata
 
 ```gdscript
-## 获取事件元数据（推荐）
+## Get the event metadata (recommended)
 ##
-## 静态方法，返回事件的元数据信息
-## 用于事件选择器和编辑器显示
+## Static method that returns the event's metadata
+## Used by the event selector and the editor display
 ##
-## 返回：
-## - EventMetadata - 事件元数据对象
+## Returns:
+## - EventMetadata - the event metadata object
 static func _get_event_metadata() -> EventMetadata:
     var metadata = EventMetadata.new()
     metadata.name_key = "FUSE_EVENT_XXX_NAME"
@@ -685,61 +686,61 @@ static func _get_event_metadata() -> EventMetadata:
     return metadata
 ```
 
-**元数据字段**:
-- `name_key` - 事件名称的翻译键
-- `category_key` - 分类名称的翻译键
-- `description_key` - 描述的翻译键
-- `keywords` - 搜索关键词数组
-- `builtin_icon` - 内置图标名称
+**Metadata fields**:
+- `name_key` - translation key for the event name
+- `category_key` - translation key for the category name
+- `description_key` - translation key for the description
+- `keywords` - array of search keywords
+- `builtin_icon` - built-in icon name
 
 ---
 
-### 7. `_start_performance_track()` / `_stop_performance_track()` — 性能追踪
+### 7. `_start_performance_track()` / `_stop_performance_track()` — Performance Tracking
 
-**用途**: 自动追踪事件的执行时间，使用 `FusePerformanceTracker`。
+**Purpose**: automatically tracks event execution time using `FusePerformanceTracker`.
 
 ```gdscript
-## 开始性能追踪
+## Start performance tracking
 ##
-## 使用事件类型作为追踪名称，自动追踪所有事件的执行时间
-## 示例追踪名称：OnProcess.on_process, OnPhysicsProcess.on_physics_process
+## Uses the event type as the tracking name, automatically tracking execution time for all events
+## Example tracking names: OnProcess.on_process, OnPhysicsProcess.on_physics_process
 ##
-## 参数：
-## - method_name: String - 方法名称（默认为 "execute"）
+## Parameters:
+## - method_name: String - the method name (defaults to "execute")
 func _start_performance_track(method_name: String = "execute") -> void:
     var track_name = "%s.%s" % [get_event_type(), method_name]
     FusePerformanceTracker.get_instance().start_track(track_name)
 
-## 停止性能追踪
+## Stop performance tracking
 ##
-## 与 _start_performance_track 配对使用
+## Used in pairs with _start_performance_track
 ##
-## 参数：
-## - method_name: String - 方法名称（必须与 _start_performance_track 一致）
+## Parameters:
+## - method_name: String - the method name (must match _start_performance_track)
 func _stop_performance_track(method_name: String = "execute") -> void:
     var track_name = "%s.%s" % [get_event_type(), method_name]
     FusePerformanceTracker.get_instance().stop_track(track_name)
 ```
 
-**使用示例**:
+**Usage example**:
 ```gdscript
 func _on_event_triggered():
     _start_performance_track("trigger")
-    # ... 事件处理逻辑 ...
+    # ... event handling logic ...
     _stop_performance_track("trigger")
     _emit_triggered(context_node)
 ```
 
-**重要**:
-- `_start_performance_track` 和 `_stop_performance_track` 必须配对使用
-- 两个方法的 `method_name` 参数必须一致
-- 追踪名称格式：`<event_type>.<method_name>`（如 `on_interval.trigger`）
+**Important**:
+- `_start_performance_track` and `_stop_performance_track` must be used in pairs
+- The `method_name` parameter must match in both methods
+- Tracking name format: `<event_type>.<method_name>` (e.g. `on_interval.trigger`)
 
 ---
 
-## 完整事件模板
+## Complete Event Templates
 
-### 简单同步事件模板
+### Simple Synchronous Event Template
 
 ```gdscript
 @tool
@@ -747,28 +748,28 @@ func _on_event_triggered():
 extends BaseEvent
 class_name EventSimpleTemplate
 
-## 简单事件模板
+## Simple event template
 
-# 参数定义
+# Parameter definitions
 var target_node: NodePath = NodePath("")
 
-# 内部状态
+# Internal state
 var _target_node_ref: Node = null
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     resource_name = "简单事件: %s" % target_node
 
-## 初始化事件监听（必需）
+## Initialize the event listener (required)
 func initialize(owner_node: Node) -> void:
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-    # 验证 owner_node
+    # Validate owner_node
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
-    # 验证目标节点
+    # Validate the target node
     if target_node.is_empty():
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
@@ -778,42 +779,42 @@ func initialize(owner_node: Node) -> void:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node)})
         return
 
-    # 连接信号
+    # Connect the signal
     if not _target_node_ref.some_signal.is_connected(_on_event_triggered):
         _target_node_ref.some_signal.connect(_on_event_triggered)
 
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-## 清理事件监听（必需）
+## Clean up the event listener (required)
 func terminate(owner_node: Node) -> void:
-    # 断开信号连接
+    # Disconnect signals
     if _target_node_ref and is_instance_valid(_target_node_ref):
         if _target_node_ref.some_signal.is_connected(_on_event_triggered):
             _target_node_ref.some_signal.disconnect(_on_event_triggered)
 
-    # 清理引用
+    # Clean up references
     _target_node_ref = null
 
     _log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
-## 事件处理回调
+## Event handler callback
 func _on_event_triggered():
     _log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
     _emit_triggered(_target_node_ref)  # 推荐：自动设置 trigger meta
 
-## 获取事件描述（推荐）
+## Get the event description (recommended)
 func get_description() -> String:
     return "当 %s 发生时触发" % str(target_node)
 
-## 获取事件类型（推荐）
+## Get the event type (recommended)
 func get_event_type() -> String:
     return "simple_template"
 
-## 获取事件分类（推荐）
+## Get the event category (recommended)
 func get_event_category() -> String:
     return "template"
 
-## 验证事件配置（推荐）
+## Validate the event configuration (recommended)
 func validate() -> Array[String]:
     var errors: Array[String] = []
 
@@ -822,7 +823,7 @@ func validate() -> Array[String]:
 
     return errors
 
-## 获取事件元数据（推荐）
+## Get the event metadata (recommended)
 static func _get_event_metadata() -> EventMetadata:
     var metadata = EventMetadata.new()
     metadata.name_key = "FUSE_EVENT_SIMPLE_TEMPLATE_NAME"
@@ -835,7 +836,7 @@ static func _get_event_metadata() -> EventMetadata:
 
 ---
 
-### 复杂异步事件模板
+### Complex Asynchronous Event Template
 
 ```gdscript
 @tool
@@ -843,9 +844,9 @@ static func _get_event_metadata() -> EventMetadata:
 extends BaseEvent
 class_name EventComplexTemplate
 
-## 复杂事件模板（带定时器）
+## Complex event template (with timer)
 
-# 参数定义
+# Parameter definitions
 @export var delay_seconds: float = 0.0:
     set(value):
         delay_seconds = value
@@ -856,52 +857,52 @@ class_name EventComplexTemplate
         trigger_once = value
         _update_resource_name()
 
-# 内部状态
+# Internal state
 var _timer: Timer = null
 var _has_triggered: bool = false
 var _owner_node_ref: Node = null
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     var once_text = " [仅一次]" if trigger_once else ""
     resource_name = "复杂事件: 延迟 %.2fs%s" % [delay_seconds, once_text]
 
-## 初始化事件监听（必需）
+## Initialize the event listener (required)
 func initialize(owner_node: Node) -> void:
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-    # 验证 owner_node
+    # Validate owner_node
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
     _owner_node_ref = owner_node
 
-    # 检查是否在场景树中
+    # Check whether inside the scene tree
     if owner_node.is_inside_tree():
         _start_timer()
     else:
-        # 等待进入场景树后再启动
+        # Wait until inside the scene tree before starting
         owner_node.tree_entered.connect(_on_tree_entered)
 
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-## 清理事件监听（必需）
+## Clean up the event listener (required)
 func terminate(owner_node: Node) -> void:
-    # 断开 tree_entered 连接
+    # Disconnect the tree_entered connection
     if owner_node and owner_node.tree_entered.is_connected(_on_tree_entered):
         owner_node.tree_entered.disconnect(_on_tree_entered)
 
-    # 清理定时器
+    # Clean up the timer
     _cleanup_timer()
 
-    # 重置状态
+    # Reset state
     _has_triggered = false
     _owner_node_ref = null
 
     _log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
-## 启动定时器
+## Start the timer
 func _start_timer():
     if not _owner_node_ref:
         return
@@ -909,7 +910,7 @@ func _start_timer():
     _cleanup_timer()
 
     if delay_seconds > 0:
-        # 创建定时器
+        # Create the timer
         _timer = Timer.new()
         _timer.wait_time = delay_seconds
         _timer.one_shot = true
@@ -918,41 +919,41 @@ func _start_timer():
         _timer.start()
         _log_debug_localized("FUSE_LOG_EVENT_DELAY", {"delay": delay_seconds})
     else:
-        # 立即触发
+        # Trigger immediately
         call_deferred("_deferred_trigger")
 
-## 清理定时器
+## Clean up the timer
 func _cleanup_timer():
     if _timer:
-        # 先停止定时器
+        # Stop the timer first
         _timer.stop()
 
-        # 断开信号
+        # Disconnect the signal
         if _timer.timeout.is_connected(_on_timer_timeout):
             _timer.timeout.disconnect(_on_timer_timeout)
 
-        # 从场景树中移除并释放
+        # Remove from the scene tree and free
         if _owner_node_ref and is_instance_valid(_owner_node_ref):
             _owner_node_ref.remove_child(_timer)
 
         _timer.queue_free()
         _timer = null
 
-## 当节点进入场景树时
+## When the node enters the scene tree
 func _on_tree_entered():
     _start_timer()
 
-## 定时器超时回调
+## Timer timeout callback
 func _on_timer_timeout():
     _trigger_event()
 
-## 延迟触发
+## Deferred trigger
 func _deferred_trigger():
     _trigger_event()
 
-## 触发事件
+## Trigger the event
 func _trigger_event():
-    # 检查是否只触发一次
+    # Check whether it should trigger only once
     if trigger_once and _has_triggered:
         _log_debug_localized("FUSE_LOG_EVENT_ALREADY_TRIGGERED", {})
         return
@@ -961,7 +962,7 @@ func _trigger_event():
     _log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
     _emit_triggered(_owner_node_ref)  # 推荐：自动设置 trigger meta
 
-## 获取事件描述（推荐）
+## Get the event description (recommended)
 func get_description() -> String:
     var once_text = trigger_once ? " (仅一次)" : ""
     if delay_seconds > 0:
@@ -969,15 +970,15 @@ func get_description() -> String:
     else:
         return "立即触发%s" % once_text
 
-## 获取事件类型（推荐）
+## Get the event type (recommended)
 func get_event_type() -> String:
     return "complex_template"
 
-## 获取事件分类（推荐）
+## Get the event category (recommended)
 func get_event_category() -> String:
     return "template"
 
-## 验证事件配置（推荐）
+## Validate the event configuration (recommended)
 func validate() -> Array[String]:
     var errors: Array[String] = []
 
@@ -986,7 +987,7 @@ func validate() -> Array[String]:
 
     return errors
 
-## 重置事件状态（可选）
+## Reset the event state (optional)
 func reset() -> void:
     super.reset()
     _has_triggered = false
@@ -994,7 +995,7 @@ func reset() -> void:
         _timer.stop()
     _log_debug_localized("FUSE_LOG_EVENT_RESET", {"event_type": get_event_type()})
 
-## 获取事件元数据（推荐）
+## Get the event metadata (recommended)
 static func _get_event_metadata() -> EventMetadata:
     var metadata = EventMetadata.new()
     metadata.name_key = "FUSE_EVENT_COMPLEX_TEMPLATE_NAME"
@@ -1007,7 +1008,7 @@ static func _get_event_metadata() -> EventMetadata:
 
 ---
 
-### RuntimeInstance 感知的事件模板（推荐）
+### RuntimeInstance-Aware Event Template (Recommended)
 
 ```gdscript
 @tool
@@ -1015,52 +1016,52 @@ static func _get_event_metadata() -> EventMetadata:
 extends BaseEvent
 class_name OnRuntimeInstanceTemplate
 
-## RuntimeInstance 感知事件模板
+## RuntimeInstance-aware event template
 ##
-## 此模板展示如何使用 RuntimeEventInstance 管理运行时状态
-## 适用于有运行时状态的事件，或可能被多个 Trigger 共享的事件
+## This template shows how to use RuntimeEventInstance to manage runtime state
+## Suitable for events with runtime state, or events that may be shared by multiple Triggers
 ##
-## 迁移到 RuntimeInstance: 2026-02-03
-## 状态变量:
-## - _has_triggered: bool - 是否已触发
-## - _trigger_count: int - 触发次数
+## Migrated to RuntimeInstance: 2026-02-03
+## State variables:
+## - _has_triggered: bool - whether it has triggered
+## - _trigger_count: int - number of triggers
 ##
-## 架构版本: 自声明状态模式 v2.0
+## Architecture version: self-declared state pattern v2.0
 
-# 参数定义
+# Parameter definitions
 @export var target_node_path: NodePath = NodePath("")
 @export var trigger_once_per_activation: bool = true
 
-# 🔧 运行时状态现在存储在 RuntimeEventInstance 中
+# 🔧 Runtime state is now stored in the RuntimeEventInstance
 var _runtime_instance_ref: RuntimeEventInstance = null
 var _signal_connections: Dictionary = {}
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     var once_text = " [仅一次]" if trigger_once_per_activation else ""
     resource_name = "RuntimeInstance 模板: %s%s" % [target_node_path, once_text]
 
-## 获取默认运行时状态（新版核心方法）
+## Get the default runtime state (core method of the new architecture)
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()
 	base["has_triggered"] = false
 	base["trigger_count"] = 0
 	return base
 
-## 使用运行时实例初始化事件（推荐）
+## Initialize the event with a runtime instance (recommended)
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance) -> void:
     if Engine.is_editor_hint():
         return
 
-    # 🔧 保存 RuntimeEventInstance 引用
+    # 🔧 Save the RuntimeEventInstance reference
     _runtime_instance_ref = runtime_instance
 
-    # 验证参数
+    # Validate parameters
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
-    # 验证目标节点
+    # Validate the target node
     if target_node_path.is_empty():
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_EMPTY", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
@@ -1070,41 +1071,41 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_node_path)})
         return
 
-    # 连接信号
+    # Connect signals
     _connect_signals(target_node, owner_node)
 
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-## 清理事件监听（必需）
+## Clean up the event listener (required)
 func terminate(owner_node: Node) -> void:
-    # 断开所有信号连接
+    # Disconnect all signal connections
     _disconnect_signals()
 
-    # 🔧 清理 RuntimeEventInstance 的状态
+    # 🔧 Clean up the RuntimeEventInstance state
     if _runtime_instance_ref:
         _runtime_instance_ref.set_runtime_state("has_triggered", false)
         _runtime_instance_ref.set_runtime_state("trigger_count", 0)
 
-    # 清理引用
+    # Clean up references
     _runtime_instance_ref = null
 
     _log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 
-## 事件处理回调
+## Event handler callback
 func _on_event_triggered(context: Node):
     _log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
 
-    # 🔧 使用 RuntimeEventInstance 的状态
+    # 🔧 Use the RuntimeEventInstance state
     var has_triggered: bool = false
     if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("has_triggered"):
         has_triggered = _runtime_instance_ref.get_runtime_state("has_triggered")
 
-    # 检查触发条件
+    # Check the trigger condition
     if trigger_once_per_activation and has_triggered:
         _log_debug_localized("FUSE_LOG_EVENT_ALREADY_TRIGGERED", {})
         return
 
-    # 🔧 更新 RuntimeEventInstance 的状态
+    # 🔧 Update the RuntimeEventInstance state
     if _runtime_instance_ref:
         _runtime_instance_ref.set_runtime_state("has_triggered", true)
         _runtime_instance_ref.set_runtime_state("trigger_count",
@@ -1113,17 +1114,17 @@ func _on_event_triggered(context: Node):
         _runtime_instance_ref.set_runtime_state("last_trigger_time", Time.get_unix_time_from_system())
         _runtime_instance_ref.update_trigger_stats()
 
-    # 发出事件信号
+    # Emit the event signal
     _emit_triggered(context)  # 推荐：自动设置 trigger meta
 
-## 连接信号
+## Connect signals
 func _connect_signals(target_node: Node, owner: Node) -> void:
-    # 示例：连接 mouse_entered 信号
+    # Example: connect the mouse_entered signal
     if target_node.has_signal("mouse_entered") and not target_node.mouse_entered.is_connected(_on_event_triggered):
         target_node.mouse_entered.connect(_on_event_triggered.bind(owner))
         _signal_connections[target_node] = "mouse_entered"
 
-## 断开信号
+## Disconnect signals
 func _disconnect_signals() -> void:
     for target_node in _signal_connections:
         if is_instance_valid(target_node):
@@ -1135,22 +1136,22 @@ func _disconnect_signals() -> void:
 
     _signal_connections.clear()
 
-## 获取事件描述（推荐）
+## Get the event description (recommended)
 func get_description() -> String:
     if trigger_once_per_activation:
         return "当 %s 被激活时触发（仅一次）" % str(target_node_path)
     else:
         return "当 %s 被激活时触发" % str(target_node_path)
 
-## 获取事件类型（推荐）
+## Get the event type (recommended)
 func get_event_type() -> String:
     return "runtime_instance_template"
 
-## 获取事件分类（推荐）
+## Get the event category (recommended)
 func get_event_category() -> String:
     return "template"
 
-## 验证事件配置（推荐）
+## Validate the event configuration (recommended)
 func validate() -> Array[String]:
     var errors: Array[String] = []
 
@@ -1159,18 +1160,18 @@ func validate() -> Array[String]:
 
     return errors
 
-## 重置事件状态（可选）
+## Reset the event state (optional)
 func reset() -> void:
     super.reset()
 
-    # 🔧 重置 RuntimeEventInstance 的状态
+    # 🔧 Reset the RuntimeEventInstance state
     if _runtime_instance_ref:
         _runtime_instance_ref.set_runtime_state("has_triggered", false)
         _runtime_instance_ref.set_runtime_state("trigger_count", 0)
 
     _log_debug_localized("FUSE_LOG_EVENT_RESET", {"event_type": get_event_type()})
 
-## 获取事件元数据（推荐）
+## Get the event metadata (recommended)
 static func _get_event_metadata() -> EventMetadata:
     var metadata = EventMetadata.new()
     metadata.name_key = "FUSE_EVENT_RUNTIME_INSTANCE_TEMPLATE_NAME"
@@ -1181,29 +1182,29 @@ static func _get_event_metadata() -> EventMetadata:
     return metadata
 ```
 
-**关键区别**（与简单模板相比）:
-- ✅ 使用 `initialize_with_runtime_instance()` 而非 `initialize()`
-- ✅ 实现 `get_default_runtime_state()` 声明状态（新版核心）
-- ✅ 通过 `RuntimeEventInstance` 管理状态
-- ✅ 支持多个 Trigger 共享同一 Event 资源
-- ✅ 状态完全隔离，无污染风险
-- ✅ **无需修改 `RuntimeEventInstance` 核心代码**
+**Key differences** (compared with the simple template):
+- ✅ Uses `initialize_with_runtime_instance()` instead of `initialize()`
+- ✅ Implements `get_default_runtime_state()` to declare state (core of the new version)
+- ✅ Manages state through `RuntimeEventInstance`
+- ✅ Multiple Triggers can share the same Event resource
+- ✅ State is fully isolated, no pollution risk
+- ✅ **No need to modify `RuntimeEventInstance` core code**
 
-**迁移检查清单**（新版）:
-- [ ] 删除 Event 类中的运行时状态变量（如 `_has_triggered`）
-- [ ] 添加 `_runtime_instance_ref: RuntimeEventInstance` 引用
-- [ ] ⭐ **实现 `get_default_runtime_state()` 方法（新版核心）**
-- [ ] 实现 `initialize_with_runtime_instance()` 方法
-- [ ] 修改所有状态访问使用 `get_runtime_state()` / `set_runtime_state()`
-- [ ] 在 `terminate()` 和 `reset()` 中清理状态
+**Migration checklist** (new version):
+- [ ] Remove runtime state variables from the Event class (such as `_has_triggered`)
+- [ ] Add the `_runtime_instance_ref: RuntimeEventInstance` reference
+- [ ] ⭐ **Implement the `get_default_runtime_state()` method (core of the new version)**
+- [ ] Implement the `initialize_with_runtime_instance()` method
+- [ ] Change all state access to use `get_runtime_state()` / `set_runtime_state()`
+- [ ] Clean up state in `terminate()` and `reset()`
 
 ---
 
-## 创建步骤
+## Creation Steps
 
-### Step 1: 创建事件类骨架
+### Step 1: Create the Event Class Skeleton
 
-创建事件文件 `addons/fuse/events/on_<your_event_name>.gd`：
+Create the event file `addons/fuse/events/on_<your_event_name>.gd`:
 
 ```gdscript
 @tool
@@ -1211,66 +1212,66 @@ static func _get_event_metadata() -> EventMetadata:
 extends BaseEvent
 class_name OnYourEventName
 
-## 事件描述
+## Event description
 
-# 参数定义
+# Parameter definitions
 @export var your_property: String = ""
 
-## 更新资源名称（必需）
+## Update the resource name (required)
 func _update_resource_name():
     resource_name = "Your Event Name: %s" % your_property
 
-## 初始化事件监听（必需）
+## Initialize the event listener (required)
 func initialize(owner_node: Node) -> void:
-    # TODO: 实现初始化逻辑
+    # TODO: implement initialization logic
     pass
 
-## 清理事件监听（必需）
+## Clean up the event listener (required)
 func terminate(owner_node: Node) -> void:
-    # TODO: 实现清理逻辑
+    # TODO: implement cleanup logic
     pass
 ```
 
-### Step 2: 实现核心方法
+### Step 2: Implement the Core Methods
 
-**2.1 实现 `initialize()`**:
+**2.1 Implement `initialize()`**:
 ```gdscript
 func initialize(owner_node: Node) -> void:
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 
-    # 验证 owner_node
+    # Validate owner_node
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
-    # 连接信号或设置监听
+    # Connect signals or set up listeners
     # ...
 
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 ```
 
-**2.2 实现 `terminate()`**:
+**2.2 Implement `terminate()`**:
 ```gdscript
 func terminate(owner_node: Node) -> void:
-    # 断开所有信号连接
+    # Disconnect all signal connections
     # ...
 
-    # 清理定时器和其他资源
+    # Clean up timers and other resources
     # ...
 
     _log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
 ```
 
-**2.3 实现事件处理回调**:
+**2.3 Implement the event handler callback**:
 ```gdscript
 func _on_event_triggered():
     _log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
     _emit_triggered(context_node)  # 推荐：自动设置 trigger meta
 ```
 
-### Step 3: 添加本地化翻译
+### Step 3: Add Localization Translations
 
-在 `addons/fuse/localization/translations.csv` 添加：
+Add to `addons/fuse/localization/translations.csv`:
 
 ```csv
 key,zh_CN,en_US
@@ -1281,18 +1282,18 @@ FUSE_LOG_EVENT_YOUR_EVENT_TRIGGERED,事件已触发,Event triggered
 FUSE_ERROR_YOUR_EVENT_ERROR,错误消息,Error message
 ```
 
-**注意**：
-- 使用 `NAME` 后缀表示事件名称
-- 使用 `DESC` 后缀表示事件描述
-- 使用 `LOG_EVENT_` 前缀表示日志消息
-- 使用 `ERROR_` 后缀表示错误消息
-- 所有占位符使用 `{variable_name}` 格式
+**Note**:
+- Use the `NAME` suffix for event names
+- Use the `DESC` suffix for event descriptions
+- Use the `LOG_EVENT_` prefix for log messages
+- Use the `ERROR_` suffix for error messages
+- All placeholders use the `{variable_name}` format
 
-### Step 4: 创建测试场景
+### Step 4: Create the Test Scene
 
-**Step 4.1: 创建测试场景文件**
+**Step 4.1: Create the test scene file**
 
-创建 `tests/events/test_<event_name>.tscn`：
+Create `tests/events/test_<event_name>.tscn`:
 
 ```gdscript
 [gd_scene load_steps=2 format=3 uid="uid://test_xxx"]
@@ -1305,14 +1306,14 @@ script = ExtResource("1")
 [node name="Trigger" type="Node" parent="."]
 ```
 
-**Step 4.2: 创建测试脚本**
+**Step 4.2: Create the test script**
 
-创建 `tests/events/test_on_<event_name>.gd`：
+Create `tests/events/test_on_<event_name>.gd`:
 
 ```gdscript
 extends Node
 
-## OnYourEventName 事件测试
+## OnYourEventName event tests
 
 func _ready():
     print("=== Testing OnYourEventName ===")
@@ -1330,56 +1331,56 @@ func test_basic_functionality():
     var trigger = Node.new()
     add_child(trigger)
 
-    # 连接事件信号
+    # Connect the event signal
     var triggered = false
     event.triggered.connect(func():
         triggered = true
         print("  Event triggered!")
     )
 
-    # 初始化事件
+    # Initialize the event
     event.initialize(trigger)
     await get_tree().process_frame
 
-    # 验证结果
+    # Verify the results
     assert(condition, "Verification message")
     print("  ✓ Test 1 passed\n")
 
-    # 清理
+    # Clean up
     event.terminate(trigger)
     trigger.queue_free()
 
 func test_edge_cases():
     print("Test 2: Edge cases")
-    # 测试边界情况...
+    # Test edge cases...
     print("  ✓ Test 2 passed\n")
 ```
 
-### Step 5: RuntimeInstance 迁移（推荐）
+### Step 5: RuntimeInstance Migration (Recommended)
 
-**为何迁移**:
-- ✅ 完全状态隔离（每个 Trigger 有独立状态）
-- ✅ 资源共享（配置仍可共享，节省内存）
-- ✅ 支持多个 Trigger 共享同一个 Event 资源
-- ✅ 轻量级设计（RefCounted，约 200-500 字节/实例）
-- ✅ **无需修改核心代码（新版自声明状态模式）**
+**Why migrate**:
+- ✅ Complete state isolation (each Trigger has independent state)
+- ✅ Resource sharing (configuration can still be shared, saving memory)
+- ✅ Multiple Triggers can share the same Event resource
+- ✅ Lightweight design (RefCounted, ~200-500 bytes per instance)
+- ✅ **No core code changes needed (new self-declared state pattern)**
 
-**快速迁移步骤（新版：自声明状态模式）**:
+**Quick migration steps (new version: self-declared state pattern)**:
 
-**5.1 删除状态变量**:
+**5.1 Remove the state variables**:
 ```gdscript
-# ❌ 删除这些运行时状态变量
+# ❌ Delete these runtime state variables
 var _has_triggered: bool = false
 var _trigger_count: int = 0
 var _last_trigger_time: float = 0.0
 
-# ✅ 添加 RuntimeEventInstance 引用
+# ✅ Add the RuntimeEventInstance reference
 var _runtime_instance_ref: RuntimeEventInstance = null
 ```
 
-**5.2 实现 `get_default_runtime_state()` 方法**（⭐ **新版核心步骤**）:
+**5.2 Implement the `get_default_runtime_state()` method** (⭐ **core step of the new version**):
 ```gdscript
-## 获取默认运行时状态
+## Get the default runtime state
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()
 	base["has_triggered"] = false
@@ -1388,39 +1389,39 @@ func get_default_runtime_state() -> Dictionary:
 	return base
 ```
 
-**优势**:
-- ✅ 无需修改 `RuntimeEventInstance` 核心代码
-- ✅ 状态声明清晰明确
-- ✅ 自动获得基础状态
+**Advantages**:
+- ✅ No need to modify `RuntimeEventInstance` core code
+- ✅ State declarations are clear and explicit
+- ✅ Base state is obtained automatically
 
-**5.3 实现 `initialize_with_runtime_instance()`**:
+**5.3 Implement `initialize_with_runtime_instance()`**:
 ```gdscript
 func initialize_with_runtime_instance(owner_node: Node, runtime_instance: RuntimeEventInstance) -> void:
     if Engine.is_editor_hint():
         return
 
-    # 保存 RuntimeEventInstance 引用
+    # Save the RuntimeEventInstance reference
     _runtime_instance_ref = runtime_instance
 
-    # 验证参数
+    # Validate parameters
     if not owner_node:
         _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
         return
 
-    # 连接信号
-    # ... 其余初始化逻辑 ...
+    # Connect signals
+    # ... remaining initialization logic ...
 
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 ```
 
-**5.4 修改状态访问**:
+**5.4 Change state access**:
 ```gdscript
-# ❌ 旧方式：直接使用成员变量
+# ❌ Old way: use member variables directly
 if _has_triggered:
     return
 _has_triggered = true
 
-# ✅ 新方式：通过 RuntimeEventInstance
+# ✅ New way: go through the RuntimeEventInstance
 var has_triggered: bool = false
 if _runtime_instance_ref and _runtime_instance_ref.has_runtime_state("has_triggered"):
     has_triggered = _runtime_instance_ref.get_runtime_state("has_triggered")
@@ -1432,18 +1433,18 @@ if _runtime_instance_ref:
     _runtime_instance_ref.set_runtime_state("has_triggered", true)
 ```
 
-**5.5 清理状态**:
+**5.5 Clean up the state**:
 ```gdscript
 func terminate(owner_node: Node) -> void:
-    # 断开信号
-    # ... 其余清理逻辑 ...
+    # Disconnect signals
+    # ... remaining cleanup logic ...
 
-    # 清理 RuntimeEventInstance 的状态
+    # Clean up the RuntimeEventInstance state
     if _runtime_instance_ref:
         _runtime_instance_ref.set_runtime_state("has_triggered", false)
         _runtime_instance_ref.set_runtime_state("trigger_count", 0)
 
-    # 清理引用
+    # Clean up references
     _runtime_instance_ref = null
 
     _log_debug_localized("FUSE_LOG_EVENT_TERMINATED", {"event_type": get_event_type()})
@@ -1451,42 +1452,42 @@ func terminate(owner_node: Node) -> void:
 func reset() -> void:
     super.reset()
 
-    # 重置 RuntimeEventInstance 的状态
+    # Reset the RuntimeEventInstance state
     if _runtime_instance_ref:
         _runtime_instance_ref.set_runtime_state("has_triggered", false)
         _runtime_instance_ref.set_runtime_state("trigger_count", 0)
 ```
 
-**迁移检查清单**（新版）:
-- [ ] 删除 Event 类中的运行时状态变量
-- [ ] 添加 `_runtime_instance_ref: RuntimeEventInstance` 引用
-- [ ] ⭐ **实现 `get_default_runtime_state()` 方法（新版核心）**
-- [ ] 实现 `initialize_with_runtime_instance()` 方法
-- [ ] 修改所有状态访问使用 `get_runtime_state()` / `set_runtime_state()`
-- [ ] 在 `terminate()` 和 `reset()` 中清理状态
-- [ ] 测试多个 Trigger 共享同一个 Event 资源的场景
+**Migration checklist** (new version):
+- [ ] Remove runtime state variables from the Event class
+- [ ] Add the `_runtime_instance_ref: RuntimeEventInstance` reference
+- [ ] ⭐ **Implement the `get_default_runtime_state()` method (core of the new version)**
+- [ ] Implement the `initialize_with_runtime_instance()` method
+- [ ] Change all state access to use `get_runtime_state()` / `set_runtime_state()`
+- [ ] Clean up state in `terminate()` and `reset()`
+- [ ] Test the scenario where multiple Triggers share the same Event resource
 
 ---
 
-### Step 6: 测试验证
+### Step 6: Test Verification
 
-1. 在 Godot 中打开测试场景
-2. 运行测试，确认所有测试用例通过
-3. 检查编辑器中的 Inspector 显示是否正确
-4. 验证本地化是否生效
-5. 验证资源清理是否正确（无内存泄漏）
-6. **如果迁移到 RuntimeInstance**：测试多个 Trigger 共享同一 Event 资源
+1. Open the test scene in Godot
+2. Run the tests and confirm all test cases pass
+3. Check that the Inspector display in the editor is correct
+4. Verify that localization takes effect
+5. Verify that resources are cleaned up correctly (no memory leaks)
+6. **If migrated to RuntimeInstance**: test multiple Triggers sharing the same Event resource
 
 ---
 
-## 最佳实践
+## Best Practices
 
-### 1. 信号管理
+### 1. Signal Management
 
-**原则**: 所有信号连接必须在 `terminate()` 中断开。
+**Principle**: every signal connection must be disconnected in `terminate()`.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func initialize(owner_node: Node):
     if not owner_node.some_signal.is_connected(_on_callback):
         owner_node.some_signal.connect(_on_callback)
@@ -1497,17 +1498,17 @@ func terminate(owner_node: Node):
 ```
 
 ```gdscript
-# ❌ 避免重复连接
+# ❌ Avoid duplicate connections
 func initialize(owner_node: Node):
     owner_node.some_signal.connect(_on_callback)  # 可能重复连接
 ```
 
-### 2. 资源清理
+### 2. Resource Cleanup
 
-**原则**: 所有在 `initialize()` 中创建的资源必须在 `terminate()` 中清理。
+**Principle**: every resource created in `initialize()` must be cleaned up in `terminate()`.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func terminate(owner_node: Node):
     if _timer:
         _timer.stop()
@@ -1520,19 +1521,19 @@ func terminate(owner_node: Node):
 ```
 
 ```gdscript
-# ❌ 遗漏清理
+# ❌ Missing cleanup
 func terminate(owner_node: Node):
     if _timer:
         _timer.queue_free()  # 忘记断开信号和移除子节点
         _timer = null
 ```
 
-### 3. 节点有效性检查
+### 3. Node Validity Checks
 
-**原则**: 在使用节点引用前，使用 `is_instance_valid()` 检查有效性。
+**Principle**: use `is_instance_valid()` to check validity before using node references.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func terminate(owner_node: Node):
     if _target_node and is_instance_valid(_target_node):
         if _target_node.some_signal.is_connected(_on_callback):
@@ -1540,36 +1541,36 @@ func terminate(owner_node: Node):
 ```
 
 ```gdscript
-# ❌ 不检查有效性
+# ❌ No validity check
 func terminate(owner_node: Node):
     if _target_node:
         _target_node.some_signal.disconnect(_on_callback)  # 可能已释放
 ```
 
-### 4. 错误处理
+### 4. Error Handling
 
-**原则**: 所有错误都应该使用本地化错误消息。
+**Principle**: all errors should use localized error messages.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 if not owner_node:
     _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NULL", FuseError.ErrorType.CONFIGURATION_ERROR, {})
     return
 ```
 
 ```gdscript
-# ❌ 避免硬编码
+# ❌ Avoid hardcoding
 if not owner_node:
     push_error("Owner node is null")  # 不推荐
     return
 ```
 
-### 5. 日志记录
+### 5. Logging
 
-**原则**: 使用本地化日志方法记录关键操作。
+**Principle**: use the localized logging methods for key operations.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func initialize(owner_node: Node):
     _log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
     # ...
@@ -1579,12 +1580,12 @@ func _on_event_triggered():
     _emit_triggered(context_node)  # 推荐：自动设置 trigger meta
 ```
 
-### 6. 属性验证
+### 6. Property Validation
 
-**原则**: 使用 `validate()` 方法验证配置参数。
+**Principle**: validate configuration parameters with the `validate()` method.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func validate() -> Array[String]:
     var errors: Array[String] = []
 
@@ -1597,12 +1598,12 @@ func validate() -> Array[String]:
     return errors
 ```
 
-### 7. 状态重置
+### 7. State Reset
 
-**原则**: 实现 `reset()` 方法以支持事件重用。
+**Principle**: implement the `reset()` method to support event reuse.
 
 ```gdscript
-# ✅ 好的做法
+# ✅ Good practice
 func reset() -> void:
     super.reset()
     _has_triggered = false
@@ -1612,30 +1613,30 @@ func reset() -> void:
     _log_debug_localized("FUSE_LOG_EVENT_RESET", {"event_type": get_event_type()})
 ```
 
-### 8. 编辑器模式检查
+### 8. Editor Mode Checks
 
-**原则**: 在 `initialize()` 中检查编辑器模式。
+**Principle**: check the editor mode in `initialize()`.
 
 ```gdscript
-# BaseEvent 已经处理了编辑器检查
-# 子类不需要额外处理
+# BaseEvent already handles the editor check
+# Subclasses need no extra handling
 func initialize(owner_node: Node) -> void:
-    # BaseEvent 会在编辑器模式下跳过初始化
-    # 直接实现运行时逻辑即可
+    # BaseEvent skips initialization in editor mode
+    # Just implement the runtime logic
     ...
 ```
 
 ---
 
-### 9. RuntimeInstance 状态管理
+### 9. RuntimeInstance State Management
 
-**原则**: 使用 RuntimeInstance 架构管理有状态的 Event。
+**Principle**: use the RuntimeInstance architecture to manage stateful events.
 
 ```gdscript
-# ✅ 好的做法：使用 RuntimeInstance 管理状态（新版：自声明状态模式）
+# ✅ Good practice: manage state with RuntimeInstance (new: self-declared state pattern)
 var _runtime_instance_ref: RuntimeEventInstance = null
 
-## 获取默认运行时状态（新版核心方法）
+## Get the default runtime state (core method of the new architecture)
 func get_default_runtime_state() -> Dictionary:
 	var base = super.get_default_runtime_state()
 	base["has_triggered"] = false
@@ -1653,7 +1654,7 @@ func _on_event_triggered():
 ```
 
 ```gdscript
-# ❌ 避免直接在 Event 中存储运行时状态
+# ❌ Avoid storing runtime state directly in the Event
 var _has_triggered: bool = false  # 多个 Trigger 共享此 Event 时会冲突
 
 func _on_event_triggered():
@@ -1662,54 +1663,54 @@ func _on_event_triggered():
     _has_triggered = true  # 可能覆盖其他 Trigger 的状态
 ```
 
-**状态访问模式**:
+**State access pattern**:
 ```gdscript
-# 读取状态（带默认值）
+# Read state (with a default value)
 var value = _runtime_instance_ref.get_runtime_state("key", default_value)
 
-# 检查状态是否存在
+# Check whether the state exists
 if _runtime_instance_ref.has_runtime_state("key"):
-    # 状态存在
+    # State exists
     pass
 
-# 写入状态
+# Write state
 _runtime_instance_ref.set_runtime_state("key", new_value)
 ```
 
-**新版架构优势**（自声明状态模式）:
-- ✅ Event 通过 `get_default_runtime_state()` 声明状态
-- ✅ 无需修改 `RuntimeEventInstance` 核心代码
-- ✅ 遵循开闭原则（Open/Closed Principle）
-- ✅ 用户创建自定义 Event 更方便
+**New architecture advantages** (self-declared state pattern):
+- ✅ The event declares state via `get_default_runtime_state()`
+- ✅ No need to modify `RuntimeEventInstance` core code
+- ✅ Follows the Open/Closed Principle
+- ✅ Makes it easier for users to create custom events
 
-**何时使用 RuntimeInstance**:
-- ✅ Event 有运行时状态（如 `_is_hovered`、`_has_triggered`）
-- ✅ 多个 Trigger 可能共享同一个 Event 资源
-- ✅ 需要状态隔离保证
+**When to use RuntimeInstance**:
+- ✅ The event has runtime state (such as `_is_hovered`, `_has_triggered`)
+- ✅ Multiple Triggers may share the same Event resource
+- ✅ State isolation guarantees are needed
 
-**何时不使用**:
-- ⚠️ Event 是无状态的（纯监听，不存储状态）
-- ⚠️ 确定 Event 不会被多个 Trigger 共享（节省内存）
+**When not to use it**:
+- ⚠️ The event is stateless (pure listening, stores no state)
+- ⚠️ You are certain the event will not be shared by multiple Triggers (saves memory)
 
 ---
 
-## 常见陷阱
+## Common Pitfalls
 
-### 陷阱 1: 忘记断开信号连接
+### Pitfall 1: Forgetting to Disconnect Signals
 
-**问题**:
+**Problem**:
 ```gdscript
 func initialize(owner_node: Node):
     owner_node.some_signal.connect(_on_callback)
 
 func terminate(owner_node: Node):
-    # ❌ 忘记断开信号
+    # ❌ Forgot to disconnect the signal
     pass
 ```
 
-**后果**: 信号仍然保持连接，可能导致内存泄漏或意外触发。
+**Consequence**: the signal stays connected, which can cause memory leaks or unexpected triggers.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func terminate(owner_node: Node):
     if owner_node and owner_node.some_signal.is_connected(_on_callback):
@@ -1718,18 +1719,18 @@ func terminate(owner_node: Node):
 
 ---
 
-### 陷阱 2: Timer 未正确清理
+### Pitfall 2: Timer Not Cleaned Up Properly
 
-**问题**:
+**Problem**:
 ```gdscript
 func terminate(owner_node: Node):
     _timer.queue_free()  # ❌ 忘记断开信号和移除子节点
     _timer = null
 ```
 
-**后果**: Timer 可能仍在运行，导致错误或内存泄漏。
+**Consequence**: the Timer may still be running, causing errors or memory leaks.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func terminate(owner_node: Node):
     if _timer:
@@ -1744,17 +1745,17 @@ func terminate(owner_node: Node):
 
 ---
 
-### 陷阱 3: 节点引用未检查有效性
+### Pitfall 3: Node References Not Validity-Checked
 
-**问题**:
+**Problem**:
 ```gdscript
 func terminate(owner_node: Node):
     _target_node.some_signal.disconnect(_on_callback)  # ❌ 节点可能已释放
 ```
 
-**后果**: 尝试访问已释放的节点导致错误。
+**Consequence**: accessing an already-freed node causes an error.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func terminate(owner_node: Node):
     if _target_node and is_instance_valid(_target_node):
@@ -1764,17 +1765,17 @@ func terminate(owner_node: Node):
 
 ---
 
-### 陷阱 4: 重复连接信号
+### Pitfall 4: Connecting a Signal Multiple Times
 
-**问题**:
+**Problem**:
 ```gdscript
 func initialize(owner_node: Node):
     owner_node.some_signal.connect(_on_callback)  # ❌ 每次调用都连接
 ```
 
-**后果**: 信号回调被调用多次。
+**Consequence**: the signal callback gets invoked multiple times.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func initialize(owner_node: Node):
     if not owner_node.some_signal.is_connected(_on_callback):
@@ -1783,9 +1784,9 @@ func initialize(owner_node: Node):
 
 ---
 
-### 陷阱 5: 资源清理顺序错误
+### Pitfall 5: Wrong Cleanup Order
 
-**问题**:
+**Problem**:
 ```gdscript
 func terminate(owner_node: Node):
     if owner_node:
@@ -1794,9 +1795,9 @@ func terminate(owner_node: Node):
         _timer.timeout.disconnect(_on_timer_timeout)  # 后断开信号（可能失败）
 ```
 
-**后果**: 信号断开可能失败。
+**Consequence**: disconnecting the signal may fail.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func terminate(owner_node: Node):
     if _timer:
@@ -1807,22 +1808,22 @@ func terminate(owner_node: Node):
         _timer.queue_free()
 ```
 
-**清理顺序**: 断开信号 → 移除子节点 → 释放资源
+**Cleanup order**: disconnect signals → remove child nodes → free resources
 
 ---
 
-### 陷阱 6: 忘记触发信号
+### Pitfall 6: Forgetting to Emit the Signal
 
-**问题**:
+**Problem**:
 ```gdscript
 func _on_event_triggered():
-    # ❌ 忘记发出 triggered 信号
+    # ❌ Forgot to emit the triggered signal
     _log_info("Event triggered!")
 ```
 
-**后果**: Trigger 无法知道事件已触发，指令不会执行。
+**Consequence**: the Trigger never learns that the event fired, so instructions are not executed.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func _on_event_triggered():
     _log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
@@ -1831,74 +1832,74 @@ func _on_event_triggered():
 
 ---
 
-### 陷阱 7: 在 initialize 中执行耗时操作
+### Pitfall 7: Performing Expensive Operations in initialize
 
-**问题**:
+**Problem**:
 ```gdscript
 func initialize(owner_node: Node):
-    # ❌ 初始化中执行耗时操作
+    # ❌ Expensive operations during initialization
     for i in range(10000):
         some_heavy_computation()
 ```
 
-**后果**: 场景启动卡顿。
+**Consequence**: scene startup stutters.
 
-**解决方案**:
+**Solution**:
 ```gdscript
 func initialize(owner_node: Node):
-    # ✅ 仅设置监听，不执行耗时操作
+    # ✅ Only set up listeners; do not perform expensive operations
     if not owner_node.some_signal.is_connected(_on_callback):
         owner_node.some_signal.connect(_on_callback)
 ```
 
 ---
 
-### 陷阱 8: 未实现必需方法
+### Pitfall 8: Required Methods Not Implemented
 
-**问题**:
+**Problem**:
 ```gdscript
 @tool
 extends BaseEvent
 class_name MyEvent
 
-# ❌ 忘记实现 _update_resource_name()
-# ❌ 忘记实现 initialize()
-# ❌ 忘记实现 terminate()
+# ❌ Forgot to implement _update_resource_name()
+# ❌ Forgot to implement initialize()
+# ❌ Forgot to implement terminate()
 ```
 
-**后果**:
-- 编译错误（`_update_resource_name()` 是 `@abstract`）
-- 运行时错误（`initialize()` 和 `terminate()` 有默认错误实现）
+**Consequence**:
+- Compile error (`_update_resource_name()` is `@abstract`)
+- Runtime error (`initialize()` and `terminate()` have default error implementations)
 
-**解决方案**:
+**Solution**:
 ```gdscript
 @tool
 extends BaseEvent
 class_name MyEvent
 
-# ✅ 实现所有必需方法
+# ✅ Implement all required methods
 func _update_resource_name():
     resource_name = "My Event"
 
 func initialize(owner_node: Node) -> void:
-    # 实现初始化逻辑
+    # Implement the initialization logic
     pass
 
 func terminate(owner_node: Node) -> void:
-    # 实现清理逻辑
+    # Implement the cleanup logic
     pass
 ```
 
 ---
 
-## 测试规范
+## Testing Guide
 
-### 测试文件结构
+### Test File Structure
 
 ```gdscript
 extends Node
 
-## EventName 事件测试
+## EventName event tests
 
 func _ready():
     print("=== Testing EventName ===")
@@ -1909,16 +1910,16 @@ func _ready():
     print("=== All EventName tests passed! ===")
 ```
 
-### 测试用例设计
+### Test Case Design
 
-**必需的测试**:
-1. **初始化测试** - 验证事件正确初始化
-2. **触发测试** - 验证事件正确触发
-3. **清理测试** - 验证资源正确清理
-4. **边界值测试** - 测试极端参数值
-5. **错误处理测试** - 验证错误情况被正确处理
+**Required tests**:
+1. **Initialization test** - verify the event initializes correctly
+2. **Trigger test** - verify the event triggers correctly
+3. **Cleanup test** - verify resources are cleaned up correctly
+4. **Boundary value test** - test extreme parameter values
+5. **Error handling test** - verify error cases are handled correctly
 
-**测试示例**:
+**Test example**:
 ```gdscript
 func test_initialization():
     print("Test 1: Initialization")
@@ -1927,15 +1928,15 @@ func test_initialization():
     var trigger = Node.new()
     add_child(trigger)
 
-    # 初始化事件
+    # Initialize the event
     event.initialize(trigger)
     await get_tree().process_frame
 
-    # 验证信号已连接
+    # Verify the signal is connected
     assert(trigger.some_signal.is_connected(event._on_callback), "Signal should be connected")
     print("  ✓ Test 1 passed\n")
 
-    # 清理
+    # Clean up
     event.terminate(trigger)
     trigger.queue_free()
 
@@ -1953,15 +1954,15 @@ func test_triggering():
 
     event.initialize(trigger)
 
-    # 触发事件
+    # Trigger the event
     trigger.emit_signal("some_signal")
     await get_tree().process_frame
 
-    # 验证事件触发
+    # Verify the event triggered
     assert(triggered, "Event should be triggered")
     print("  ✓ Test 2 passed\n")
 
-    # 清理
+    # Clean up
     event.terminate(trigger)
     trigger.queue_free()
 
@@ -1975,51 +1976,51 @@ func test_termination():
     event.initialize(trigger)
     event.terminate(trigger)
 
-    # 验证信号已断开
+    # Verify the signal is disconnected
     assert(not trigger.some_signal.is_connected(event._on_callback), "Signal should be disconnected")
     print("  ✓ Test 3 passed\n")
 
     trigger.queue_free()
 ```
 
-### 测试断言
+### Test Assertions
 
 ```gdscript
-# 验证条件
+# Verify a condition
 assert(condition, "Error message")
 
-# 验证事件触发
+# Verify the event triggered
 assert(triggered == should_trigger, "Event should trigger")
 
-# 验证信号连接
+# Verify the signal connection
 assert(signal_connected, "Signal should be connected")
 
-# 验证资源清理
+# Verify resource cleanup
 assert(timer == null, "Timer should be cleaned up")
 ```
 
 ---
 
-## 快速参考
+## Quick Reference
 
-### 常用代码片段
+### Common Code Snippets
 
-#### 信号连接
+#### Signal Connection
 ```gdscript
-# 初始化时连接
+# Connect on initialization
 func initialize(owner_node: Node):
     if not owner_node.some_signal.is_connected(_on_callback):
         owner_node.some_signal.connect(_on_callback)
 
-# 清理时断开
+# Disconnect on cleanup
 func terminate(owner_node: Node):
     if owner_node and owner_node.some_signal.is_connected(_on_callback):
         owner_node.some_signal.disconnect(_on_callback)
 ```
 
-#### Timer 创建和清理
+#### Timer Creation and Cleanup
 ```gdscript
-# 创建
+# Create
 func _start_timer():
     _cleanup_timer()
     _timer = Timer.new()
@@ -2029,7 +2030,7 @@ func _start_timer():
     _owner_node.add_child(_timer)
     _timer.start()
 
-# 清理
+# Cleanup
 func _cleanup_timer():
     if _timer:
         _timer.stop()
@@ -2041,12 +2042,12 @@ func _cleanup_timer():
         _timer = null
 ```
 
-#### 节点获取和验证
+#### Node Acquisition and Validation
 ```gdscript
-# 获取节点
+# Get the node
 var target_node = owner_node.get_node_or_null(target_path)
 
-# 验证
+# Validate
 if not target_node:
     _create_fuse_error_localized("FUSE_ERROR_TARGET_NODE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"node_path": str(target_path)})
     return
@@ -2056,12 +2057,12 @@ if not target_node is Area2D:
     return
 ```
 
-#### 事件触发
+#### Event Triggering
 ```gdscript
 func _on_event_triggered():
     _log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
 
-    # 检查是否只触发一次
+    # Check whether it should trigger only once
     if trigger_once and _has_triggered:
         return
 
@@ -2069,53 +2070,53 @@ func _on_event_triggered():
     _emit_triggered(context_node)  # 推荐：自动设置 trigger meta
 ```
 
-### 常用错误键
+### Common Error Keys
 
-已定义的本地化错误键（参考 `translations.csv`）：
-- `FUSE_ERROR_TARGET_NODE_NULL` - 目标节点为空
-- `FUSE_ERROR_TARGET_NODE_EMPTY` - 目标节点路径为空
-- `FUSE_ERROR_TARGET_NODE_NOT_FOUND` - 目标节点未找到
-- `FUSE_ERROR_INVALID_TARGET` - 目标节点类型无效
-- `FUSE_ERROR_MISSING_PARAMETER` - 缺少必需参数
-- `FUSE_ERROR_CONFIGURATION_ERROR` - 配置错误
+Defined localization error keys (see `translations.csv`):
+- `FUSE_ERROR_TARGET_NODE_NULL` - target node is null
+- `FUSE_ERROR_TARGET_NODE_EMPTY` - target node path is empty
+- `FUSE_ERROR_TARGET_NODE_NOT_FOUND` - target node not found
+- `FUSE_ERROR_INVALID_TARGET` - target node type is invalid
+- `FUSE_ERROR_MISSING_PARAMETER` - a required parameter is missing
+- `FUSE_ERROR_CONFIGURATION_ERROR` - configuration error
 
-### 常用日志键
+### Common Log Keys
 
-- `FUSE_LOG_EVENT_INITIALIZED` - 事件已初始化
-- `FUSE_LOG_EVENT_TERMINATED` - 事件已终止
-- `FUSE_LOG_EVENT_TRIGGERED` - 事件已触发
-- `FUSE_LOG_EVENT_RESET` - 事件已重置
-- `FUSE_LOG_EVENT_DELAY` - 延迟触发
-- `FUSE_LOG_EVENT_ALREADY_TRIGGERED` - 事件已触发
+- `FUSE_LOG_EVENT_INITIALIZED` - event initialized
+- `FUSE_LOG_EVENT_TERMINATED` - event terminated
+- `FUSE_LOG_EVENT_TRIGGERED` - event triggered
+- `FUSE_LOG_EVENT_RESET` - event reset
+- `FUSE_LOG_EVENT_DELAY` - delayed trigger
+- `FUSE_LOG_EVENT_ALREADY_TRIGGERED` - event already triggered
 
 ---
 
-## 总结
+## Summary
 
-创建 Fuse 事件的关键要点：
+Key points for creating a Fuse event:
 
-1. ✅ **遵循命名规范** - `on_` 前缀，`On` 类前缀
-2. ✅ **实现必需方法** - `_update_resource_name()`, `initialize()`, `terminate()`
-3. ✅ **正确管理信号** - 在 `terminate()` 中断开所有连接
-4. ✅ **清理资源** - Timer、节点引用等必须正确清理
-5. ✅ **本地化消息** - 使用 `_log_*_localized()` 和 `_create_fuse_error_localized()`
-6. ✅ **添加完整测试** - 初始化、触发、清理、边界情况
-7. ✅ **验证配置** - 实现 `validate()` 方法
-8. ✅ **提供元数据** - 实现 `_get_event_metadata()` 静态方法
+1. ✅ **Follow the naming conventions** - `on_` prefix, `On` class prefix
+2. ✅ **Implement the required methods** - `_update_resource_name()`, `initialize()`, `terminate()`
+3. ✅ **Manage signals correctly** - disconnect all connections in `terminate()`
+4. ✅ **Clean up resources** - Timers, node references, etc. must be cleaned up properly
+5. ✅ **Localize messages** - use `_log_*_localized()` and `_create_fuse_error_localized()`
+6. ✅ **Add complete tests** - initialization, triggering, cleanup, edge cases
+7. ✅ **Validate configuration** - implement the `validate()` method
+8. ✅ **Provide metadata** - implement the static `_get_event_metadata()` method
 
-**核心原则**:
-- **initialize_with_runtime_instance()** 初始化事件（推荐），连接信号
-- **terminate()** 断开信号并清理资源
-- 事件触发时使用 `_emit_triggered()` 发出信号（自动设置 trigger meta）
-- 事件停止时使用 `notify_stopped()` 通知 Trigger
+**Core principles**:
+- **initialize_with_runtime_instance()** initializes the event (recommended) and connects signals
+- **terminate()** disconnects signals and cleans up resources
+- Use `_emit_triggered()` to emit the signal when the event fires (sets the trigger meta automatically)
+- Use `notify_stopped()` to notify the Trigger when the event stops
 
-**参考文档**:
+**Reference documents**:
 - [BaseEvent API](../../../../core/base/base_event.gd)
-- [完整事件模板](#完整事件模板)
-- [测试规范](#测试规范)
+- [Complete Event Templates](#complete-event-templates)
+- [Testing Guide](#testing-guide)
 
 ---
 
-**文档维护**: Fuse 开发团队
-**最后更新**: 2026-06-17
-**版本**: v2.1 - 添加 stopped 信号、性能追踪文档，修复断链
+**Maintained by**: Fuse development team
+**Last updated**: 2026-06-17
+**Version**: v2.1 - Added the stopped signal, performance tracking documentation, fixed broken links

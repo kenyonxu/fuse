@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/59-global-variables-dev-guide.md)
+
 # 全局变量开发指南
 
 > **目标**: 为开发者提供 Fuse 全局变量系统的架构说明与接入指引，覆盖 `GlobalVariableManager` + `GlobalVariableService` + `GlobalVariableAssistant` 三层职责划分、声明/读写 API、线程安全、持久化管道以及与预设系统的集成。

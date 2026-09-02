@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/execution-context-diagnostics-guide.md)
+
 # ExecutionContext 与 ExecutionDiagnostics 开发指南
 
 > **目标**: 为开发者提供 ExecutionContext 执行上下文及其诊断子系统 ExecutionDiagnostics 的完整开发指引。
