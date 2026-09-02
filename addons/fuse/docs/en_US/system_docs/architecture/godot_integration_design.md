@@ -1,17 +1,17 @@
-> 🌐 中文 | [**English**](../../en_US/system_docs/architecture/godot_integration_design.md)
+> 🌐 [**中文版**](../../../zh_CN/system_docs/architecture/godot_integration_design.md) | English
 
-# Godot特性集成设计方案
+# Godot Feature Integration Design
 
-## 1. 概述
+## 1. Overview
 
-本文档详细描述了可视化编程系统与Godot 4.x引擎特性的深度集成方案。通过充分利用Godot的核心特性，我们创建了一个既符合Godot设计理念又具有强大功能的可视化编程系统。
+This document describes in detail the deep integration of Godot 4.x engine features into the visual programming system. By making full use of Godot's core features, we have created a visual programming system that both follows Godot's design philosophy and offers powerful capabilities.
 
-## 2. Resource系统深度集成
+## 2. Deep Integration with the Resource System
 
-### 2.1 资源重用机制
+### 2.1 Resource Reuse Mechanism
 
 ```gdscript
-# ActionRunner资源化存储
+# ActionRunner stored as a Resource
 class_name ActionRunnerResource
 extends Resource
 
@@ -19,14 +19,14 @@ extends Resource
 @export var variables: VariableContainer
 @export var metadata: Dictionary = {}
 
-# 运行时创建ActionRunner
+# Create an ActionRunner at runtime
 func create_runner(context: ExecutionContext) -> ActionRunner:
     var runner = ActionRunner.new(context)
     runner.instructions = instructions.duplicate(true)
     runner.variable_container = variables.duplicate(true)
     return runner
 
-# 资源模板系统
+# Resource template system
 class_name InstructionTemplate
 extends Resource
 
@@ -42,10 +42,10 @@ func create_instruction() -> BaseInstruction:
     return instruction
 ```
 
-### 2.2 内嵌逻辑支持
+### 2.2 Embedded Logic Support
 
 ```gdscript
-# 场景内嵌逻辑组件
+# Scene-embedded logic component
 class_name SceneLogicComponent
 extends Node
 
@@ -59,12 +59,12 @@ var context: ExecutionContext
 func _ready():
     context = ExecutionContext.new(self)
     
-    # 创建ActionRunner实例
+    # Create ActionRunner instances
     for resource in logic_resources:
         var runner = resource.create_runner(context)
         runners.append(runner)
     
-    # 自动启动
+    # Auto start
     if auto_start:
         if start_delay > 0:
             await get_tree().create_timer(start_delay).timeout
@@ -79,10 +79,10 @@ func stop_all():
         runner.stop()
 ```
 
-### 2.3 资源版本管理
+### 2.3 Resource Version Management
 
 ```gdscript
-# 资源版本管理器
+# Resource version manager
 class_name ResourceVersionManager
 extends RefCounted
 
@@ -109,7 +109,7 @@ func migrate_resource(resource: Resource, from_version: String, to_version: Stri
         push_error("Invalid version for migration")
         return resource
     
-    # 逐步迁移
+    # Migrate step by step
     for i in range(from_index, to_index):
         var migration = version_history[i].migration_script
         if migration and migration.has_method("migrate"):
@@ -118,12 +118,12 @@ func migrate_resource(resource: Resource, from_version: String, to_version: Stri
     return resource
 ```
 
-## 3. Signal系统优化集成
+## 3. Signal System Integration Optimization
 
-### 3.1 信号连接管理器
+### 3.1 Signal Connection Manager
 
 ```gdscript
-# 信号连接管理器
+# Signal connection manager
 class_name SignalConnectionManager
 extends RefCounted
 
@@ -146,7 +146,7 @@ func connect_signal(source: Object, signal_name: String, target: Object, method_
     info.binds = binds
     info.flags = flags
     
-    # 安全连接
+    # Safe connection
     if not source.is_connected(signal_name, _create_safe_callback(info)):
         source.connect(signal_name, _create_safe_callback(info), binds, flags)
     
@@ -168,10 +168,10 @@ func cleanup_invalid_connections():
     connections = connections.filter(func(info): return is_instance_valid(info.source) and is_instance_valid(info.target))
 ```
 
-### 3.2 异步执行优化
+### 3.2 Async Execution Optimization
 
 ```gdscript
-# 基于Signal的异步执行器
+# Signal-based async executor
 class_name SignalAsyncExecutor
 extends RefCounted
 
@@ -200,7 +200,7 @@ func execute_async(callable: Callable, timeout: float = -1, on_complete: Callabl
     
     active_tasks[task_id] = task
     
-    # 执行任务
+    # Execute the task
     _execute_task(task)
     
     return task_id
@@ -210,7 +210,7 @@ func _execute_task(task: AsyncTask):
     var error = null
     
     try:
-        # 如果callable返回Signal，等待信号
+        # If the callable returns a Signal, await it
         var callable_result = task.callable.call()
         if callable_result is Signal:
             await callable_result
@@ -220,7 +220,7 @@ func _execute_task(task: AsyncTask):
     except:
         error = "Task execution failed"
     
-    # 完成回调
+    # Completion callback
     active_tasks.erase(task.id)
     
     if error:
@@ -231,10 +231,10 @@ func _execute_task(task: AsyncTask):
             task.on_complete.call(result)
 ```
 
-### 3.3 事件分发机制
+### 3.3 Event Dispatching Mechanism
 
 ```gdscript
-# 事件分发器
+# Event dispatcher
 class_name EventDispatcher
 extends Node
 
@@ -287,28 +287,28 @@ func _dispatch_event_immediate(event_name: String, data: Dictionary):
     var to_remove = []
     
     for listener in listeners[event_name]:
-        # 应用过滤器
+        # Apply the filter
         if listener.filter.is_valid() and not listener.filter.call(data):
             continue
         
-        # 调用回调
+        # Invoke the callback
         listener.callback.call(data)
         
-        # 一次性监听器
+        # One-shot listener
         if listener.once:
             to_remove.append(listener)
     
-    # 移除一次性监听器
+    # Remove one-shot listeners
     for listener in to_remove:
         listeners[event_name].erase(listener)
 ```
 
-## 4. NodePath系统集成
+## 4. NodePath System Integration
 
-### 4.1 路径解析器
+### 4.1 Path Resolver
 
 ```gdscript
-# NodePath解析器
+# NodePath resolver
 class_name NodePathResolver
 extends RefCounted
 
@@ -321,7 +321,7 @@ func resolve_path(path: String, context: PathContext) -> Node:
     if path.is_empty():
         return null
     
-    # 处理特殊路径
+    # Handle special paths
     if path.begins_with("$"):
         return _resolve_variable_path(path, context)
     elif path.begins_with("@"):
@@ -351,10 +351,10 @@ func validate_path(path: String, context: PathContext) -> bool:
     return node != null
 ```
 
-### 4.2 路径验证器
+### 4.2 Path Validator
 
 ```gdscript
-# 路径验证器
+# Path validator
 class_name NodePathValidator
 extends RefCounted
 
@@ -372,7 +372,7 @@ func validate_and_suggest(path: String, context: PathContext) -> ValidationResul
         result.error_message = "Path is empty"
         return result
     
-    # 尝试解析路径
+    # Try to resolve the path
     var node = context.root_node.get_node_or_null(path)
     
     if node:
@@ -380,7 +380,7 @@ func validate_and_suggest(path: String, context: PathContext) -> ValidationResul
         result.resolved_node = node
         return result
     
-    # 路径无效，生成建议
+    # Invalid path, generate suggestions
     result.is_valid = false
     result.error_message = "Invalid path: " + path
     result.suggestions = _generate_suggestions(path, context)
@@ -392,7 +392,7 @@ func _generate_suggestions(path: String, context: PathContext) -> Array[String]:
     var parts = path.split("/")
     var current_path = ""
     
-    # 逐级检查并生成建议
+    # Check level by level and generate suggestions
     for i in range(parts.size()):
         if parts[i].is_empty():
             continue
@@ -434,10 +434,10 @@ func _find_similar_names(target: String, candidates: Array[String]) -> Array[Str
     return matches
 ```
 
-### 4.3 场景实例化
+### 4.3 Scene Instantiation
 
 ```gdscript
-# 场景实例化管理器
+# Scene instantiation manager
 class_name SceneInstantiationManager
 extends RefCounted
 
@@ -452,35 +452,35 @@ class InstanceRequest:
 var pending_requests: Array[InstanceRequest] = []
 
 func instantiate_scene_async(request: InstanceRequest) -> Node:
-    # 加载场景
+    # Load the scene
     var packed_scene = load(request.scene_path) as PackedScene
     if not packed_scene:
         push_error("Failed to load scene: " + request.scene_path)
         return null
     
-    # 实例化场景
+    # Instantiate the scene
     var instance = packed_scene.instantiate()
     
-    # 设置父节点
+    # Set the parent node
     if request.parent:
         request.parent.add_child(instance)
     
-    # 设置位置
+    # Set the position
     if instance.has_method("set_position"):
         instance.set_position(request.position)
     elif instance is Node2D:
         instance.position = request.position
     
-    # 应用属性
+    # Apply properties
     for property in request.properties:
         if instance.set(property, request.properties[property]) != OK:
             push_warning("Failed to set property: " + property)
     
-    # 调用创建回调
+    # Invoke the created callback
     if request.on_instance_created.is_valid():
         request.on_instance_created.call(instance)
     
-    # 等待ready信号
+    # Wait for the ready signal
     if request.on_instance_ready.is_valid():
         if not instance.is_node_ready():
             await instance.ready
@@ -499,12 +499,12 @@ func instantiate_scene_batch(requests: Array[InstanceRequest]) -> Array[Node]:
     return instances
 ```
 
-## 5. 编辑器工具集成
+## 5. Editor Tools Integration
 
-### 5.1 自定义编辑器插件
+### 5.1 Custom Editor Plugin
 
 ```gdscript
-# 主编辑器插件
+# Main editor plugin
 @tool
 extends EditorPlugin
 
@@ -513,19 +513,19 @@ var node_graph_editor: Control
 var inspector_plugin: EditorInspectorPlugin
 
 func _enter_tree():
-    # 创建停靠面板
+    # Create the dock panel
     visual_programming_dock = preload("res://addons/visual_programming/dock/visual_programming_dock.tscn").instantiate()
     add_control_to_dock(DOCK_SLOT_LEFT_UL, visual_programming_dock)
     
-    # 创建节点图编辑器
+    # Create the node graph editor
     node_graph_editor = preload("res://addons/visual_programming/editor/node_graph_editor.tscn").instantiate()
     add_control_to_bottom_panel(node_graph_editor, "Visual Programming")
     
-    # 添加Inspector插件
+    # Add the Inspector plugin
     inspector_plugin = preload("res://addons/visual_programming/editor/visual_programming_inspector.gd").new()
     add_inspector_plugin(inspector_plugin)
     
-    # 注册自定义类型
+    # Register custom types
     _register_custom_types()
 
 func _exit_tree():
@@ -554,10 +554,10 @@ func _unregister_custom_types():
     remove_custom_type("TriggerComponent")
 ```
 
-### 5.2 可视化编辑界面
+### 5.2 Visual Editing Interface
 
 ```gdscript
-# 节点图编辑器
+# Node graph editor
 @tool
 class_name NodeGraphEditor
 extends GraphEdit
@@ -570,7 +570,7 @@ func _ready():
     node_factory = NodeFactory.new()
     connection_manager = ConnectionManager.new()
     
-    # 设置右键菜单
+    # Set up the context menu
     context_menu = PopupMenu.new()
     add_child(context_menu)
     
@@ -622,10 +622,10 @@ func _create_instruction_node(category: String, pos: Vector2):
         node.position_offset = pos
 ```
 
-### 5.3 Inspector集成
+### 5.3 Inspector Integration
 
 ```gdscript
-# 自定义Inspector插件
+# Custom Inspector plugin
 @tool
 extends EditorInspectorPlugin
 
@@ -633,14 +633,14 @@ func _can_handle(object: Object) -> bool:
     return object is BaseInstruction or object is BaseTrigger or object is BaseCondition
 
 func _parse_property(object: Object, type: Variant.Type, name: String, hint_type: PropertyHint, hint_string: String, usage_flags: int, wide: bool) -> bool:
-    # 自定义变量属性的编辑
+    # Custom editing for the variables property
     if name == "variables" and object is BaseInstruction:
         var property_editor = VariableListEditor.new()
         property_editor.setup(object, name)
         add_property_editor(name, property_editor)
         return true
     
-    # 自定义NodePath属性的编辑
+    # Custom editing for NodePath properties
     if type == TYPE_NODE_PATH:
         var property_editor = NodePathEditor.new()
         property_editor.setup(object, name)
@@ -649,7 +649,7 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
     
     return false
 
-# 变量列表编辑器
+# Variable list editor
 @tool
 class_name VariableListEditor
 extends EditorProperty
@@ -664,7 +664,7 @@ func setup(object: Object, name: String):
     instruction = object
     property_name = name
     
-    # 创建UI
+    # Build the UI
     var hbox = HBoxContainer.new()
     add_child(hbox)
     
@@ -685,10 +685,10 @@ func setup(object: Object, name: String):
     remove_button.pressed.connect(_on_remove_pressed)
     vbox.add_child(remove_button)
     
-    # 连接信号
+    # Connect signals
     list.item_selected.connect(_on_item_selected)
     
-    # 更新显示
+    # Update the display
     _update_list()
 
 func _update_list():
@@ -720,12 +720,12 @@ func _on_item_selected(index: int):
     remove_button.disabled = false
 ```
 
-## 6. 性能优化集成
+## 6. Performance Optimization Integration
 
-### 6.1 对象池集成
+### 6.1 Object Pool Integration
 
 ```gdscript
-# Godot对象池管理器
+# Godot object pool manager
 class_name GodotObjectPoolManager
 extends Node
 
@@ -755,7 +755,7 @@ func warm_up_pool(pool_name: String, count: int):
     if pools.has(pool_name):
         pools[pool_name].warm_up(count)
 
-# 对象池实现
+# Object pool implementation
 class_name ObjectPool
 extends RefCounted
 
@@ -770,7 +770,7 @@ func setup(scene_path: String, initial_size: int, max_size: int, auto_expand: bo
     self.max_size = max_size
     self.auto_expand = auto_expand
     
-    # 预创建对象
+    # Pre-create objects
     for i in range(initial_size):
         _create_object()
 
@@ -804,10 +804,10 @@ func _reset_object(object: Node):
         object.get_parent().remove_child(object)
 ```
 
-### 6.2 资源管理优化
+### 6.2 Resource Management Optimization
 
 ```gdscript
-# 资源管理器
+# Resource manager
 class_name ResourceManager
 extends Node
 
@@ -853,12 +853,12 @@ func cleanup_unused_resources():
         resource_refs.erase(path)
 ```
 
-## 7. 调试和分析集成
+## 7. Debugging and Profiling Integration
 
-### 7.1 调试工具集成
+### 7.1 Debugging Tools Integration
 
 ```gdscript
-# 调试管理器
+# Debug manager
 class_name DebugManager
 extends Node
 
@@ -900,7 +900,7 @@ func get_debug_report() -> Dictionary:
         "memory_usage": performance_monitor.get_memory_usage()
     }
 
-# 性能监控器
+# Performance monitor
 class_name PerformanceMonitor
 extends Node
 
@@ -922,7 +922,7 @@ func _process(_delta):
     if monitoring:
         frame_times.append(get_process_delta_time())
         
-        # 每秒记录一次内存使用情况
+        # Record memory usage once per second
         if Engine.get_frames_drawn() % 60 == 0:
             memory_snapshots.append(_get_memory_snapshot())
 
@@ -954,22 +954,22 @@ func get_memory_usage() -> Array[Dictionary]:
     return memory_snapshots
 ```
 
-## 8. 总结
+## 8. Summary
 
-通过深度集成Godot 4.x的核心特性，我们的可视化编程系统实现了：
+Through deep integration of Godot 4.x core features, our visual programming system achieves:
 
-1. **Resource系统集成**：提供了资源重用、内嵌逻辑和版本管理
-2. **Signal系统优化**：实现了安全的信号连接、异步执行和事件分发
-3. **NodePath系统集成**：提供了智能路径解析、验证和场景实例化
-4. **编辑器工具集成**：创建了完整的可视化编辑环境和Inspector集成
-5. **性能优化集成**：实现了对象池、资源管理和性能监控
-6. **调试工具集成**：提供了全面的调试和分析功能
+1. **Resource system integration**: provides resource reuse, embedded logic, and version management
+2. **Signal system optimization**: implements safe signal connections, async execution, and event dispatching
+3. **NodePath system integration**: provides intelligent path resolution, validation, and scene instantiation
+4. **Editor tools integration**: creates a complete visual editing environment with Inspector integration
+5. **Performance optimization integration**: implements object pooling, resource management, and performance monitoring
+6. **Debugging tools integration**: provides comprehensive debugging and profiling capabilities
 
-这种深度集成确保了系统与Godot引擎的完美融合，既保持了Godot的设计理念，又提供了强大的可视化编程能力。
+This deep integration ensures the system blends seamlessly with the Godot engine, preserving Godot's design philosophy while delivering powerful visual programming capabilities.
 
-## 更新说明（2026-03）
+## Update Notes (2026-03)
 
-- Runtime Instance 模式：Event/Instruction/ActionRunner 均支持运行时实例分离
-- 统一错误处理：FuseError 类提供本地化错误上下文
-- 统一日志：FuseLogger 类提供分级日志输出
-- 对象池集成：FusePoolManager 和 _on_pool_reset() 生命周期
+- Runtime Instance pattern: Event/Instruction/ActionRunner all support runtime instance separation
+- Unified error handling: the FuseError class provides localized error context
+- Unified logging: the FuseLogger class provides leveled log output
+- Object pool integration: FusePoolManager and the _on_pool_reset() lifecycle

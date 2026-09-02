@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../en_US/system_docs/README.md)
+
 # 系统文档（system_docs）
 
 面向系统架构师与核心开发者的权威文档：架构设计、数据流 / 控制流、各核心组件的深入分析。

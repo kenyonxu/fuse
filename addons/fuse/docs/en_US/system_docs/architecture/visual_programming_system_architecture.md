@@ -1,63 +1,63 @@
-> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/visual_programming_system_architecture.md)
+> 🌐 [**中文版**](../../../zh_CN/system_docs/architecture/visual_programming_system_architecture.md) | English
 
-# Godot 4.x 可视化编程系统完整架构设计
+# Complete Architecture Design of the Godot 4.x Visual Programming System
 
-## 目录
-1. [核心架构设计概述](#1-核心架构设计概述)
-2. [主要组件及其职责](#2-主要组件及其职责)
-3. [数据流和控制流设计](#3-数据流和控制流设计)
-4. [扩展点设计](#4-扩展点设计)
-5. [与Godot特性的集成方案](#5-与godot特性的集成方案)
+## Table of Contents
+1. [Overview of the Core Architecture Design](#1-overview-of-the-core-architecture-design)
+2. [Main Components and Their Responsibilities](#2-main-components-and-their-responsibilities)
+3. [Data Flow and Control Flow Design](#3-data-flow-and-control-flow-design)
+4. [Extension Point Design](#4-extension-point-design)
+5. [Integration with Godot Features](#5-integration-with-godot-features)
 
 ---
 
-## 1. 核心架构设计概述
+## 1. Overview of the Core Architecture Design
 
-### 1.1 设计理念
+### 1.1 Design Philosophy
 
-本架构融合了GameCreator的先进设计理念和Godot 4.x的核心特性，创建了一个既强大又灵活的可视化编程系统。核心理念包括：
+This architecture combines the advanced design concepts of GameCreator with the core features of Godot 4.x, creating a visual programming system that is both powerful and flexible. The core concepts include:
 
-- **资源优先**：充分利用Godot的Resource系统实现逻辑重用和内嵌
-- **信号驱动**：基于Godot的Signal系统实现事件驱动的异步执行
-- **原子化设计**：每个指令执行单一职责，通过组合实现复杂逻辑
-- **类型安全**：利用GDScript的类型系统确保编译时安全
-- **编辑器原生**：深度集成Godot编辑器，提供直观的可视化体验
+- **Resource-first**: Fully leverages Godot's Resource system for logic reuse and embedding
+- **Signal-driven**: Builds on Godot's Signal system for event-driven asynchronous execution
+- **Atomic design**: Each instruction performs a single responsibility; complex logic is built through composition
+- **Type safety**: Leverages GDScript's type system for compile-time safety
+- **Editor-native**: Deeply integrated with the Godot editor for an intuitive visual experience
 
-### 1.2 整体架构图
+### 1.2 Overall Architecture Diagram
 
 ```mermaid
 graph TB
-    subgraph "编辑器层 (Editor Layer)"
-        VisualEditor[可视化编辑器]
-        Inspector[Inspector面板]
-        Gizmos[3D/2D辅助工具]
+    subgraph "Editor Layer"
+        VisualEditor[Visual Editor]
+        Inspector[Inspector Panel]
+        Gizmos[3D/2D Helper Tools]
     end
     
-    subgraph "执行层 (Execution Layer)"
-        TriggerSystem[触发器系统]
-        InstructionSystem[指令系统]
-        ConditionSystem[条件系统]
-        VariableSystem[变量系统]
+    subgraph "Execution Layer"
+        TriggerSystem[Trigger System]
+        InstructionSystem[Instruction System]
+        ConditionSystem[Condition System]
+        VariableSystem[Variable System]
     end
     
-    subgraph "资源层 (Resource Layer)"
-        ActionRunner[动作执行器]
-        BaseInstruction[指令基类]
-        BaseCondition[条件基类]
-        VariableContainer[变量容器]
+    subgraph "Resource Layer"
+        ActionRunner[Action Executor]
+        BaseInstruction[Instruction Base Class]
+        BaseCondition[Condition Base Class]
+        VariableContainer[Variable Container]
     end
     
-    subgraph "核心层 (Core Layer)"
-        ExecutionContext[执行上下文]
-        EventSystem[事件系统]
-        TypeRegistry[类型注册器]
+    subgraph "Core Layer"
+        ExecutionContext[Execution Context]
+        EventSystem[Event System]
+        TypeRegistry[Type Registry]
     end
     
-    subgraph "Godot集成层 (Godot Integration Layer)"
-        Node[Node系统]
-        Resource[Resource系统]
-        Signal[Signal系统]
-        SceneTree[SceneTree系统]
+    subgraph "Godot Integration Layer"
+        Node[Node System]
+        Resource[Resource System]
+        Signal[Signal System]
+        SceneTree[SceneTree System]
     end
     
     VisualEditor --> Inspector
@@ -68,58 +68,58 @@ graph TB
     ExecutionContext --> Signal
 ```
 
-### 1.3 核心设计原则
+### 1.3 Core Design Principles
 
-#### 1.3.1 资源与节点的分离设计
-- **资源(Resource)**：存储可重用的逻辑和数据（指令、条件、变量）
-- **节点(Node)**：负责执行和交互（触发器、执行器）
+#### 1.3.1 Separation of Resources and Nodes
+- **Resource**: Stores reusable logic and data (instructions, conditions, variables)
+- **Node**: Handles execution and interaction (triggers, executors)
 
-#### 1.3.2 异步优先的执行模型
-- 所有指令执行基于Signal和await机制
-- 避免阻塞主线程，确保游戏流畅性
+#### 1.3.2 Async-First Execution Model
+- All instruction execution is based on the Signal and await mechanisms
+- Avoids blocking the main thread, ensuring smooth gameplay
 
-#### 1.3.3 上下文驱动的参数传递
-- 统一的ExecutionContext提供执行上下文
-- 支持局部变量和全局变量的安全访问
+#### 1.3.3 Context-Driven Parameter Passing
+- A unified ExecutionContext provides the execution context
+- Supports safe access to local and global variables
 
 ---
 
-## 2. 主要组件及其职责
+## 2. Main Components and Their Responsibilities
 
-### 2.1 核心资源组件
+### 2.1 Core Resource Components
 
-#### 2.1.1 BaseInstruction - 指令基类
+#### 2.1.1 BaseInstruction - Instruction Base Class
 
 ```gdscript
 @tool
 class_name BaseInstruction extends Resource
 signal finished
 
-## 指令执行接口
-## context: ExecutionContext - 执行上下文
+## Instruction execution interface
+## context: ExecutionContext - execution context
 func execute(context: ExecutionContext):
     print("Executing: %s" % resource_path)
     finished.emit()
 
-## 指令验证接口
+## Instruction validation interface
 func validate() -> Array[String]:
     return []
 
-## 指令描述信息
+## Instruction description
 func get_description() -> String:
     return "Base Instruction"
 
-## 指令图标
+## Instruction icon
 func get_icon() -> Texture2D:
     return null
 ```
 
-**职责**：
-- 定义所有指令的基本接口和行为
-- 提供统一的执行完成信号机制
-- 支持指令验证和描述信息
+**Responsibilities**:
+- Defines the basic interface and behavior common to all instructions
+- Provides a unified execution-completion signal mechanism
+- Supports instruction validation and descriptions
 
-#### 2.1.2 ActionRunner - 动作执行器
+#### 2.1.2 ActionRunner - Action Executor
 
 ```gdscript
 @tool
@@ -134,7 +134,7 @@ enum ExecutionMode { SEQUENTIAL, PARALLEL, CONDITIONAL }
 var is_running: bool = false
 var current_context: ExecutionContext = null
 
-## 执行指令序列
+## Execute the instruction sequence
 func run(context: ExecutionContext):
     if is_running:
         context.print_warning("ActionRunner is already running")
@@ -154,50 +154,50 @@ func run(context: ExecutionContext):
     is_running = false
     current_context = null
 
-## 停止执行
+## Stop execution
 func stop():
     if is_running and current_context:
         current_context.request_cancel()
 ```
 
-**职责**：
-- 管理指令序列的执行流程
-- 支持多种执行模式（顺序、并行、条件）
-- 提供执行状态控制和错误处理
+**Responsibilities**:
+- Manages the execution flow of instruction sequences
+- Supports multiple execution modes (sequential, parallel, conditional)
+- Provides execution state control and error handling
 
-#### 2.1.3 BaseCondition - 条件基类
+#### 2.1.3 BaseCondition - Condition Base Class
 
 ```gdscript
 @tool
 class_name BaseCondition extends Resource
 
-## 条件检查接口
-## context: ExecutionContext - 执行上下文
-## returns: bool - 条件是否满足
+## Condition check interface
+## context: ExecutionContext - execution context
+## returns: bool - whether the condition is met
 func check(context: ExecutionContext) -> bool:
     return true
 
-## 条件验证接口
+## Condition validation interface
 func validate() -> Array[String]:
     return []
 
-## 条件描述信息
+## Condition description
 func get_description() -> String:
     return "Base Condition"
 
-## 条件图标
+## Condition icon
 func get_icon() -> Texture2D:
     return null
 ```
 
-**职责**：
-- 定义条件检查的基本接口
-- 支持复杂的条件逻辑组合
-- 提供条件验证和描述功能
+**Responsibilities**:
+- Defines the basic interface for condition checks
+- Supports composition of complex conditional logic
+- Provides condition validation and descriptions
 
-### 2.2 核心节点组件
+### 2.2 Core Node Components
 
-#### 2.2.1 BaseTrigger - 触发器基类
+#### 2.2.1 BaseTrigger - Trigger Base Class
 
 ```gdscript
 @tool
@@ -210,22 +210,22 @@ class_name BaseTrigger extends Node
 
 var execution_context: ExecutionContext = null
 
-## 触发动作执行
+## Trigger action execution
 func trigger_actions(target: Node = null):
     if not enabled or not action_runner:
         return
     
-    # 创建执行上下文
+    # Create the execution context
     execution_context = ExecutionContext.new(self, target)
     
-    # 检查条件
+    # Check conditions
     if not _check_conditions(execution_context):
         return
     
-    # 执行动作
+    # Execute actions
     action_runner.run(execution_context)
 
-## 检查所有条件
+## Check all conditions
 func _check_conditions(context: ExecutionContext) -> bool:
     for condition in conditions:
         if condition and not condition.check(context):
@@ -233,12 +233,12 @@ func _check_conditions(context: ExecutionContext) -> bool:
     return true
 ```
 
-**职责**：
-- 作为事件系统的入口点
-- 管理局部变量和执行上下文
-- 协调条件检查和动作执行
+**Responsibilities**:
+- Serves as the entry point of the event system
+- Manages local variables and the execution context
+- Coordinates condition checks and action execution
 
-#### 2.2.2 ExecutionContext - 执行上下文
+#### 2.2.2 ExecutionContext - Execution Context
 
 ```gdscript
 @tool
@@ -257,9 +257,9 @@ func _init(trigger_node: BaseTrigger, target_node: Node = null):
     target = target_node
     global_variables = VariableManager.get_global_variables()
 
-## 获取变量值
+## Get a variable value
 func get_variable(name: String, default_value = null):
-    # 优先级：局部变量 > 触发器变量 > 全局变量
+    # Priority: local variables > trigger variables > global variables
     if local_variables.has(name):
         return local_variables[name]
     elif trigger and trigger.local_variables and trigger.local_variables.has(name):
@@ -268,7 +268,7 @@ func get_variable(name: String, default_value = null):
         return global_variables.get(name)
     return default_value
 
-## 设置变量值
+## Set a variable value
 func set_variable(name: String, value):
     if local_variables.has(name):
         local_variables[name] = value
@@ -277,12 +277,12 @@ func set_variable(name: String, value):
     elif global_variables:
         global_variables.set(name, value)
 
-## 请求取消执行
+## Request cancellation of execution
 func request_cancel():
     is_cancelled = true
     cancel_requested.emit()
 
-## 打印日志
+## Print a log message
 func print_message(message: String, type: String = "INFO"):
     var prefix = "[VisualScript][%s]" % trigger.name if trigger else "[VisualScript]"
     match type:
@@ -294,14 +294,14 @@ func print_message(message: String, type: String = "INFO"):
             print("%s %s" % [prefix, message])
 ```
 
-**职责**：
-- 提供统一的执行上下文环境
-- 管理变量的访问和修改
-- 支持执行取消和日志记录
+**Responsibilities**:
+- Provides a unified execution context environment
+- Manages variable access and modification
+- Supports execution cancellation and logging
 
-### 2.3 变量系统组件
+### 2.3 Variable System Components
 
-#### 2.3.1 VariableContainer - 变量容器
+#### 2.3.1 VariableContainer - Variable Container
 
 ```gdscript
 @tool
@@ -309,37 +309,37 @@ class_name VariableContainer extends Resource
 
 @export var variables: Dictionary = {}
 
-## 获取变量值
+## Get a variable value
 func get(name: String, default_value = null):
     return variables.get(name, default_value)
 
-## 设置变量值
+## Set a variable value
 func set(name: String, value):
     variables[name] = value
 
-## 检查变量是否存在
+## Check whether a variable exists
 func has(name: String) -> bool:
     return variables.has(name)
 
-## 删除变量
+## Delete a variable
 func erase(name: String):
     variables.erase(name)
 
-## 获取所有变量名
+## Get all variable names
 func get_variable_names() -> Array[String]:
     return variables.keys()
 
-## 清空所有变量
+## Clear all variables
 func clear():
     variables.clear()
 ```
 
-**职责**：
-- 提供类型安全的变量存储和访问
-- 支持变量的增删改查操作
-- 作为局部和全局变量的统一容器
+**Responsibilities**:
+- Provides type-safe variable storage and access
+- Supports variable create, delete, update, and query operations
+- Serves as the unified container for local and global variables
 
-#### 2.3.2 VariableManager - 变量管理器
+#### 2.3.2 VariableManager - Variable Manager
 
 ```gdscript
 @tool
@@ -353,130 +353,130 @@ func _init():
         instance = self
         global_variables = VariableContainer.new()
 
-## 获取全局变量容器
+## Get the global variable container
 static func get_global_variables() -> VariableContainer:
     if not instance:
         instance = VariableManager.new()
     return instance.global_variables
 
-## 创建变量容器
+## Create a variable container
 static func create_container() -> VariableContainer:
     return VariableContainer.new()
 ```
 
-**职责**：
-- 管理全局变量的生命周期
-- 提供变量容器的创建和访问接口
-- 实现单例模式确保全局唯一性
+**Responsibilities**:
+- Manages the lifecycle of global variables
+- Provides interfaces for creating and accessing variable containers
+- Implements the singleton pattern to ensure global uniqueness
 
 ---
 
-## 3. 数据流和控制流设计
+## 3. Data Flow and Control Flow Design
 
-### 3.1 数据流图
+### 3.1 Data Flow Diagram
 
 ```mermaid
 sequenceDiagram
-    participant User as 用户/游戏事件
+    participant User as User/Game Event
     participant Trigger as BaseTrigger
     participant Condition as BaseCondition
     participant Context as ExecutionContext
     participant ActionRunner as ActionRunner
     participant Instruction as BaseInstruction
     
-    User->>Trigger: 事件触发
-    Trigger->>Context: 创建执行上下文
-    Trigger->>Condition: 检查条件
+    User->>Trigger: Event triggered
+    Trigger->>Context: Create execution context
+    Trigger->>Condition: Check conditions
     
-    loop 条件检查
-        Condition->>Context: 读取变量
-        Condition-->>Trigger: 返回检查结果
+    loop Condition check
+        Condition->>Context: Read variables
+        Condition-->>Trigger: Return check result
     end
     
-    alt 条件满足
-        Trigger->>ActionRunner: 执行动作
-        ActionRunner->>Instruction: 执行指令
+    alt Conditions met
+        Trigger->>ActionRunner: Execute actions
+        ActionRunner->>Instruction: Execute instruction
         
-        loop 指令执行
-            Instruction->>Context: 读取/写入变量
-            Instruction->>Context: 访问目标节点
-            Instruction-->>ActionRunner: 发出完成信号
+        loop Instruction execution
+            Instruction->>Context: Read/write variables
+            Instruction->>Context: Access target node
+            Instruction-->>ActionRunner: Emit finished signal
         end
         
-        ActionRunner-->>Trigger: 执行完成
-    else 条件不满足
-        Trigger-->>User: 忽略触发
+        ActionRunner-->>Trigger: Execution complete
+    else Conditions not met
+        Trigger-->>User: Ignore trigger
     end
 ```
 
-### 3.2 控制流设计
+### 3.2 Control Flow Design
 
-#### 3.2.1 触发器控制流
+#### 3.2.1 Trigger Control Flow
 
 ```mermaid
 flowchart TD
-    A[事件触发] --> B{触发器启用?}
-    B -->|否| C[忽略事件]
-    B -->|是| D{有动作执行器?}
-    D -->|否| E[记录警告]
-    D -->|是| F[创建执行上下文]
-    F --> G[检查条件列表]
-    G --> H{所有条件满足?}
-    H -->|否| I[忽略触发]
-    H -->|是| J[执行动作序列]
-    J --> K[执行完成]
+    A[Event triggered] --> B{Trigger enabled?}
+    B -->|No| C[Ignore event]
+    B -->|Yes| D{Has ActionRunner?}
+    D -->|No| E[Log warning]
+    D -->|Yes| F[Create execution context]
+    F --> G[Check condition list]
+    G --> H{All conditions met?}
+    H -->|No| I[Ignore trigger]
+    H -->|Yes| J[Execute action sequence]
+    J --> K[Execution complete]
 ```
 
-#### 3.2.2 指令执行控制流
+#### 3.2.2 Instruction Execution Control Flow
 
 ```mermaid
 flowchart TD
-    A[开始执行] --> B{执行模式}
-    B -->|顺序| C[顺序执行模式]
-    B -->|并行| D[并行执行模式]
-    B -->|条件| E[条件执行模式]
+    A[Start execution] --> B{Execution mode}
+    B -->|Sequential| C[Sequential execution mode]
+    B -->|Parallel| D[Parallel execution mode]
+    B -->|Conditional| E[Conditional execution mode]
     
-    C --> F[获取下一个指令]
-    F --> G{指令为空?}
-    G -->|是| H[执行完成]
-    G -->|否| I[执行指令]
-    I --> J[等待完成信号]
-    J --> K{请求取消?}
-    K -->|是| L[停止执行]
-    K -->|否| M[继续下一个指令]
+    C --> F[Get next instruction]
+    F --> G{Instruction is empty?}
+    G -->|Yes| H[Execution complete]
+    G -->|No| I[Execute instruction]
+    I --> J[Wait for finished signal]
+    J --> K{Cancel requested?}
+    K -->|Yes| L[Stop execution]
+    K -->|No| M[Continue to the next instruction]
     M --> F
     
-    D --> N[同时执行所有指令]
-    N --> O[等待所有指令完成]
-    O --> P[执行完成]
+    D --> N[Execute all instructions simultaneously]
+    N --> O[Wait for all instructions to complete]
+    O --> P[Execution complete]
     
-    E --> Q[评估条件]
-    Q --> R{条件满足?}
-    R -->|是| S[执行对应指令]
-    R -->|否| T[跳过指令]
-    S --> U[执行完成]
+    E --> Q[Evaluate condition]
+    Q --> R{Condition met?}
+    R -->|Yes| S[Execute corresponding instruction]
+    R -->|No| T[Skip instruction]
+    S --> U[Execution complete]
     T --> U
 ```
 
-### 3.3 变量访问流程
+### 3.3 Variable Access Flow
 
 ```mermaid
 flowchart TD
-    A[变量访问请求] --> B{变量类型}
-    B -->|局部变量| C[检查局部变量字典]
-    B -->|触发器变量| D[检查触发器变量容器]
-    B -->|全局变量| E[检查全局变量容器]
+    A[Variable access request] --> B{Variable type}
+    B -->|Local variable| C[Check local variable dictionary]
+    B -->|Trigger variable| D[Check trigger variable container]
+    B -->|Global variable| E[Check global variable container]
     
-    C --> F{找到变量?}
-    D --> G{找到变量?}
-    E --> H{找到变量?}
+    C --> F{Variable found?}
+    D --> G{Variable found?}
+    E --> H{Variable found?}
     
-    F -->|是| I[返回局部变量值]
-    F -->|否| J[检查触发器变量]
-    G -->|是| K[返回触发器变量值]
-    G -->|否| L[检查全局变量]
-    H -->|是| M[返回全局变量值]
-    H -->|否| N[返回默认值]
+    F -->|Yes| I[Return local variable value]
+    F -->|No| J[Check trigger variables]
+    G -->|Yes| K[Return trigger variable value]
+    G -->|No| L[Check global variables]
+    H -->|Yes| M[Return global variable value]
+    H -->|No| N[Return default value]
     
     J --> G
     L --> H
@@ -484,11 +484,11 @@ flowchart TD
 
 ---
 
-## 4. 扩展点设计
+## 4. Extension Point Design
 
-### 4.1 指令系统扩展点
+### 4.1 Instruction System Extension Points
 
-#### 4.1.1 自定义指令接口
+#### 4.1.1 Custom Instruction Interface
 
 ```gdscript
 @tool
@@ -499,23 +499,23 @@ class_name CustomInstruction extends BaseInstruction
 @export var target_node: NodePath
 
 func execute(context: ExecutionContext):
-    # 自定义执行逻辑
+    # Custom execution logic
     var node = context.get_node(target_node)
     if node:
-        # 执行自定义操作
+        # Perform the custom operation
         _perform_custom_action(node, context)
     
     finished.emit()
 
 func _perform_custom_action(node: Node, context: ExecutionContext):
-    # 子类实现具体逻辑
+    # Subclasses implement the concrete logic
     pass
 
 func get_description() -> String:
     return "Custom Instruction: %s" % custom_property
 ```
 
-#### 4.1.2 指令注册系统
+#### 4.1.2 Instruction Registration System
 
 ```gdscript
 @tool
@@ -523,31 +523,31 @@ class_name InstructionRegistry extends RefCounted
 
 static var registered_instructions: Dictionary = {}
 
-## 注册指令类型
+## Register an instruction type
 static func register_instruction(instruction_name: String, instruction_script: Script):
     registered_instructions[instruction_name] = instruction_script
 
-## 获取所有注册的指令
+## Get all registered instructions
 static func get_registered_instructions() -> Dictionary:
     return registered_instructions
 
-## 创建指令实例
+## Create an instruction instance
 static func create_instruction(instruction_name: String) -> BaseInstruction:
     var script = registered_instructions.get(instruction_name)
     if script:
         return script.new()
     return null
 
-## 自动发现并注册指令
+## Automatically discover and register instructions
 static func auto_register_instructions():
     var directory = DirAccess.open("res://addons/visual_programming/instructions/")
     if directory:
         _scan_directory_for_instructions(directory)
 ```
 
-### 4.2 触发器系统扩展点
+### 4.2 Trigger System Extension Points
 
-#### 4.2.1 自定义触发器基类
+#### 4.2.1 Custom Trigger Base Class
 
 ```gdscript
 @tool
@@ -562,15 +562,15 @@ func _ready():
     _setup_custom_listeners()
 
 func _setup_custom_listeners():
-    # 子类实现具体的事件监听逻辑
+    # Subclasses implement the concrete event listening logic
     pass
 
 func _on_custom_event_occurred(data: Dictionary = {}):
-    # 处理自定义事件
+    # Handle the custom event
     trigger_actions(data.get("target", null))
 ```
 
-#### 4.2.2 通用信号触发器
+#### 4.2.2 Generic Signal Trigger
 
 ```gdscript
 @tool
@@ -597,7 +597,7 @@ func _connect_to_signal():
             print_warning("Node %s does not have signal: %s" % [source_node.name, signal_name])
             return
         
-        # 动态连接到指定信号
+        # Dynamically connect to the specified signal
         source_node.connect(signal_name, _on_signal_triggered)
 
 func _on_signal_triggered(...):
@@ -610,9 +610,9 @@ func _on_signal_triggered(...):
     trigger_actions(target)
 ```
 
-### 4.3 条件系统扩展点
+### 4.3 Condition System Extension Points
 
-#### 4.3.1 复合条件
+#### 4.3.1 Composite Conditions
 
 ```gdscript
 @tool
@@ -656,9 +656,9 @@ func _check_not(context: ExecutionContext) -> bool:
     return true
 ```
 
-### 4.4 编辑器扩展点
+### 4.4 Editor Extension Points
 
-#### 4.4.1 自定义Inspector插件
+#### 4.4.1 Custom Inspector Plugin
 
 ```gdscript
 @tool
@@ -676,7 +676,7 @@ func _parse_begin(object):
     add_custom_control(editor)
 ```
 
-#### 4.4.2 可视化编辑器
+#### 4.4.2 Visual Editor
 
 ```gdscript
 @tool
@@ -691,21 +691,21 @@ func _ready():
     _load_instruction_library()
 
 func _setup_ui():
-    # 创建编辑器界面
+    # Create the editor UI
     var split_container = HSplitContainer.new()
     add_child(split_container)
     
-    # 左侧：指令库
+    # Left: instruction library
     instruction_library = VBoxContainer.new()
     instruction_library.custom_minimum_size.x = 200
     split_container.add_child(instruction_library)
     
-    # 右侧：工作区
+    # Right: workspace
     workspace = Control.new()
     split_container.add_child(workspace)
 
 func _load_instruction_library():
-    # 加载所有可用指令
+    # Load all available instructions
     var instructions = InstructionRegistry.get_registered_instructions()
     for instruction_name in instructions.keys():
         var button = Button.new()
@@ -714,7 +714,7 @@ func _load_instruction_library():
         instruction_library.add_child(button)
 
 func _on_instruction_button_pressed(instruction_name: String):
-    # 创建指令并添加到当前ActionRunner
+    # Create an instruction and add it to the current ActionRunner
     var instruction = InstructionRegistry.create_instruction(instruction_name)
     if instruction and current_action_runner:
         current_action_runner.instructions.append(instruction)
@@ -723,42 +723,42 @@ func _on_instruction_button_pressed(instruction_name: String):
 
 ---
 
-## 5. 与Godot特性的集成方案
+## 5. Integration with Godot Features
 
-### 5.1 Resource系统深度集成
+### 5.1 Deep Integration with the Resource System
 
-#### 5.1.1 资源重用机制
+#### 5.1.1 Resource Reuse Mechanism
 
 ```gdscript
 @tool
 class_name ResourceManager extends RefCounted
 
-## 创建可重用的ActionRunner
+## Create a reusable ActionRunner
 static func create_reusable_action_runner(name: String) -> ActionRunner:
     var action_runner = ActionRunner.new()
     action_runner.resource_name = name
     ResourceSaver.save(action_runner, "res://visual_scripts/%s.tres" % name)
     return action_runner
 
-## 加载可重用的ActionRunner
+## Load a reusable ActionRunner
 static func load_reusable_action_runner(name: String) -> ActionRunner:
     var path = "res://visual_scripts/%s.tres" % name
     if ResourceLoader.exists(path):
         return ResourceLoader.load(path)
     return null
 
-## 创建内嵌的ActionRunner
+## Create an embedded ActionRunner
 static func create_embedded_action_runner() -> ActionRunner:
     return ActionRunner.new()
 ```
 
-#### 5.1.2 资源版本管理
+#### 5.1.2 Resource Version Management
 
 ```gdscript
 @tool
 class_name ResourceVersionManager extends RefCounted
 
-## 资源版本信息
+## Resource version information
 class ResourceVersion:
     var version: String
     var changelog: String
@@ -766,18 +766,18 @@ class ResourceVersion:
 
 static var version_history: Dictionary = {}
 
-## 注册资源版本
+## Register a resource version
 static func register_version(resource_type: String, version_info: ResourceVersion):
     if not version_history.has(resource_type):
         version_history[resource_type] = []
     version_history[resource_type].append(version_info)
 
-## 检查资源是否需要迁移
+## Check whether a resource needs migration
 static func needs_migration(resource: Resource, target_version: String) -> bool:
     var current_version = resource.get("version", "1.0.0")
     return current_version != target_version
 
-## 执行资源迁移
+## Perform resource migration
 static func migrate_resource(resource: Resource, target_version: String) -> Resource:
     var resource_type = resource.get_class()
     var versions = version_history.get(resource_type, [])
@@ -789,9 +789,9 @@ static func migrate_resource(resource: Resource, target_version: String) -> Reso
     return resource
 ```
 
-### 5.2 Signal系统优化集成
+### 5.2 Optimized Integration with the Signal System
 
-#### 5.2.1 信号连接管理器
+#### 5.2.1 Signal Connection Manager
 
 ```gdscript
 @tool
@@ -799,7 +799,7 @@ class_name SignalConnectionManager extends RefCounted
 
 var active_connections: Array[Dictionary] = []
 
-## 安全连接信号
+## Safely connect a signal
 func connect_signal(source: Object, signal_name: String, target: Callable, flags: int = 0) -> Error:
     if not source or not source.has_signal(signal_name):
         return ERR_METHOD_NOT_FOUND
@@ -817,7 +817,7 @@ func connect_signal(source: Object, signal_name: String, target: Callable, flags
     
     return result
 
-## 断开所有连接
+## Disconnect all connections
 func disconnect_all():
     for connection in active_connections:
         if connection.source and connection.source.is_connected(connection.signal, connection.target):
@@ -825,7 +825,7 @@ func disconnect_all():
     
     active_connections.clear()
 
-## 清理无效连接
+## Clean up invalid connections
 func cleanup_invalid_connections():
     var valid_connections = []
     for connection in active_connections:
@@ -835,7 +835,7 @@ func cleanup_invalid_connections():
     active_connections = valid_connections
 ```
 
-#### 5.2.2 异步执行优化
+#### 5.2.2 Asynchronous Execution Optimization
 
 ```gdscript
 @tool
@@ -844,7 +844,7 @@ class_name AsyncExecutionManager extends Node
 var active_tasks: Array[AsyncTask] = []
 var max_concurrent_tasks: int = 10
 
-## 异步任务类
+## Asynchronous task class
 class AsyncTask:
     var id: String
     var context: ExecutionContext
@@ -853,9 +853,9 @@ class AsyncTask:
     var start_time: float
     var end_time: float
 
-## 执行异步指令
+## Execute an instruction asynchronously
 func execute_async(instruction: BaseInstruction, context: ExecutionContext) -> String:
-    # 检查并发限制
+    # Check the concurrency limit
     if _get_running_task_count() >= max_concurrent_tasks:
         await _wait_for_task_completion()
     
@@ -867,15 +867,15 @@ func execute_async(instruction: BaseInstruction, context: ExecutionContext) -> S
     
     active_tasks.append(task)
     
-    # 连接完成信号
+    # Connect the finished signal
     instruction.finished.connect(_on_instruction_finished.bind(task.id))
     
-    # 执行指令
+    # Execute the instruction
     instruction.execute(context)
     
     return task.id
 
-## 等待任务完成
+## Wait for task completion
 func _on_instruction_finished(task_id: String):
     var task = _find_task(task_id)
     if task:
@@ -883,7 +883,7 @@ func _on_instruction_finished(task_id: String):
         task.end_time = Time.get_ticks_msec()
         active_tasks.erase(task)
 
-## 获取正在运行的任务数量
+## Get the number of running tasks
 func _get_running_task_count() -> int:
     var count = 0
     for task in active_tasks:
@@ -892,15 +892,15 @@ func _get_running_task_count() -> int:
     return count
 ```
 
-### 5.3 NodePath系统集成
+### 5.3 NodePath System Integration
 
-#### 5.3.1 路径解析器
+#### 5.3.1 Path Resolver
 
 ```gdscript
 @tool
 class_name NodePathResolver extends RefCounted
 
-## 解析相对路径
+## Resolve a relative path
 static func resolve_relative_path(context: ExecutionContext, path: NodePath) -> Node:
     if path.is_empty():
         return null
@@ -911,7 +911,7 @@ static func resolve_relative_path(context: ExecutionContext, path: NodePath) -> 
     
     return base_node.get_node_or_null(path)
 
-## 解析绝对路径
+## Resolve an absolute path
 static func resolve_absolute_path(path: NodePath) -> Node:
     if path.is_empty():
         return null
@@ -922,7 +922,7 @@ static func resolve_absolute_path(path: NodePath) -> Node:
     
     return scene_tree.current_scene.get_node_or_null(path)
 
-## 解析组路径
+## Resolve a group path
 static func resolve_group_path(group_name: String) -> Array[Node]:
     var scene_tree = Engine.get_main_loop() as SceneTree
     if not scene_tree or not scene_tree.current_scene:
@@ -931,13 +931,13 @@ static func resolve_group_path(group_name: String) -> Array[Node]:
     return scene_tree.get_nodes_in_group(group_name)
 ```
 
-#### 5.3.2 路径验证器
+#### 5.3.2 Path Validator
 
 ```gdscript
 @tool
 class_name NodePathValidator extends RefCounted
 
-## 验证路径有效性
+## Validate path validity
 static func validate_path(context: ExecutionContext, path: NodePath) -> Dictionary:
     var result = {
         "valid": false,
@@ -958,7 +958,7 @@ static func validate_path(context: ExecutionContext, path: NodePath) -> Dictiona
     result.node = node
     return result
 
-## 验证节点类型
+## Validate the node type
 static func validate_node_type(node: Node, expected_type: String) -> bool:
     if not node:
         return false
@@ -966,9 +966,9 @@ static func validate_node_type(node: Node, expected_type: String) -> bool:
     return node.is_class(expected_type) or ClassDB.class_exists(expected_type) and node.get_script().get_base_script().get_global_name() == expected_type
 ```
 
-### 5.4 SceneTree系统集成
+### 5.4 SceneTree System Integration
 
-#### 5.4.1 场景生命周期管理
+#### 5.4.1 Scene Lifecycle Management
 
 ```gdscript
 @tool
@@ -989,35 +989,35 @@ func _exit_tree():
     scene_state = "exiting"
     _notify_triggers_scene_exiting()
 
-## 注册触发器
+## Register a trigger
 func register_trigger(trigger: BaseTrigger):
     if trigger not in active_triggers:
         active_triggers.append(trigger)
 
-## 注销触发器
+## Unregister a trigger
 func unregister_trigger(trigger: BaseTrigger):
     active_triggers.erase(trigger)
 
-## 通知触发器场景就绪
+## Notify triggers that the scene is ready
 func _notify_triggers_scene_ready():
     for trigger in active_triggers:
         if trigger.enabled:
             trigger.on_scene_ready()
 
-## 通知触发器场景进入
+## Notify triggers that the scene is entering
 func _notify_triggers_scene_entering():
     for trigger in active_triggers:
         if trigger.enabled:
             trigger.on_scene_entering()
 
-## 通知触发器场景退出
+## Notify triggers that the scene is exiting
 func _notify_triggers_scene_exiting():
     for trigger in active_triggers:
         if trigger.enabled:
             trigger.on_scene_exiting()
 ```
 
-#### 5.4.2 跨场景通信
+#### 5.4.2 Cross-Scene Communication
 
 ```gdscript
 @tool
@@ -1030,28 +1030,28 @@ func _init():
     if not instance:
         instance = self
 
-## 设置场景数据
+## Set scene data
 static func set_scene_data(scene_name: String, key: String, value):
     if instance:
         if not instance.scene_data.has(scene_name):
             instance.scene_data[scene_name] = {}
         instance.scene_data[scene_name][key] = value
 
-## 获取场景数据
+## Get scene data
 static func get_scene_data(scene_name: String, key: String, default_value = null):
     if instance and instance.scene_data.has(scene_name):
         return instance.scene_data[scene_name].get(key, default_value)
     return default_value
 
-## 清理场景数据
+## Clear scene data
 static func clear_scene_data(scene_name: String):
     if instance and instance.scene_data.has(scene_name):
         instance.scene_data.erase(scene_name)
 ```
 
-### 5.5 编辑器工具集成
+### 5.5 Editor Tool Integration
 
-#### 5.5.1 自定义编辑器插件
+#### 5.5.1 Custom Editor Plugin
 
 ```gdscript
 @tool
@@ -1061,7 +1061,7 @@ const VisualScriptDock = preload("res://addons/visual_programming/editor/visual_
 var visual_script_dock: Control
 
 func _enter_tree():
-    # 添加自定义类型
+    # Add custom types
     add_custom_type(
         "BaseTrigger",
         "Node",
@@ -1076,24 +1076,24 @@ func _enter_tree():
         preload("res://addons/visual_programming/icons/action_runner.svg")
     )
     
-    # 添加Inspector插件
+    # Add the Inspector plugin
     add_inspector_plugin(preload("res://addons/visual_programming/editor/action_runner_inspector.gd").new())
     
-    # 添加停靠面板
+    # Add the dock panel
     visual_script_dock = VisualScriptDock.new()
     add_control_to_dock(DOCK_SLOT_LEFT_UL, visual_script_dock)
 
 func _exit_tree():
-    # 移除自定义类型
+    # Remove custom types
     remove_custom_type("BaseTrigger")
     remove_custom_type("ActionRunner")
     
-    # 移除停靠面板
+    # Remove the dock panel
     remove_control_from_docks(visual_script_dock)
     visual_script_dock.queue_free()
 ```
 
-#### 5.5.2 可视化编辑界面
+#### 5.5.2 Visual Editing UI
 
 ```gdscript
 @tool
@@ -1108,11 +1108,11 @@ func _ready():
     _connect_signals()
 
 func _setup_ui():
-    # 创建垂直布局
+    # Create the vertical layout
     var vbox = VBoxContainer.new()
     add_child(vbox)
     
-    # 工具栏
+    # Toolbar
     toolbar = HBoxContainer.new()
     vbox.add_child(toolbar)
     
@@ -1126,12 +1126,12 @@ func _setup_ui():
     new_action_btn.pressed.connect(_on_new_action_pressed)
     toolbar.add_child(new_action_btn)
     
-    # 场景树
+    # Scene tree
     scene_tree = Tree.new()
     scene_tree.custom_minimum_size.y = 200
     vbox.add_child(scene_tree)
     
-    # 属性编辑器
+    # Property editor
     property_editor = Control.new()
     property_editor.custom_minimum_size.y = 300
     vbox.add_child(property_editor)
@@ -1151,32 +1151,32 @@ func _on_tree_item_activated():
         _focus_node_in_scene(item.get_meta("object"))
 
 func _show_properties(object: Object):
-    # 显示选中对象的属性
+    # Show the properties of the selected object
     pass
 
 func _focus_node_in_scene(object: Object):
-    # 在场景中聚焦节点
+    # Focus the node in the scene
     pass
 ```
 
 ---
 
-## 总结
+## Summary
 
-本架构设计充分融合了GameCreator的先进设计理念和Godot 4.x的核心特性，创建了一个既强大又灵活的可视化编程系统。主要特点包括：
+This architecture fully combines the advanced design concepts of GameCreator with the core features of Godot 4.x, creating a visual programming system that is both powerful and flexible. Its main features include:
 
-1. **资源与节点的分离设计**：实现了逻辑的可重用性和内嵌的灵活性
-2. **异步优先的执行模型**：基于Signal和await机制确保游戏流畅性
-3. **完整的组件体系**：涵盖指令、触发器、条件、变量等核心组件
-4. **强大的扩展机制**：支持自定义指令、触发器、条件和编辑器工具
-5. **深度Godot集成**：充分利用Resource、Signal、NodePath、SceneTree等核心特性
+1. **Separation of resources and nodes**: Achieves logic reusability and embedding flexibility
+2. **Async-first execution model**: Ensures smooth gameplay based on the Signal and await mechanisms
+3. **Complete component system**: Covers core components such as instructions, triggers, conditions, and variables
+4. **Powerful extension mechanism**: Supports custom instructions, triggers, conditions, and editor tools
+5. **Deep Godot integration**: Makes full use of core features such as Resource, Signal, NodePath, and SceneTree
 
-这个架构为Godot 4.x提供了一个完整的可视化编程解决方案，既保持了系统的简洁性，又确保了强大的功能和良好的扩展性。
+This architecture provides a complete visual programming solution for Godot 4.x, keeping the system simple while ensuring powerful functionality and good extensibility.
 
-## 架构更新（2026-03）
+## Architecture Updates (2026-03)
 
-- 新增 Runtime Instance 层：RuntimeEventInstance、RuntimeInstructionInstance、RuntimeActionRunnerInstance
-- 新增统一变量系统：GlobalVariableAssistant + ScopeVariableContainer
-- 新增 FuseError/FuseLogger 基础设施
-- Trigger 使用两层继承：Trigger extends BaseTrigger
-- 详细参考: `archive/architecture/runtime-instance-pattern.md`
+- Added the Runtime Instance layer: RuntimeEventInstance, RuntimeInstructionInstance, RuntimeActionRunnerInstance
+- Added a unified variable system: GlobalVariableAssistant + ScopeVariableContainer
+- Added FuseError/FuseLogger infrastructure
+- Trigger uses two-layer inheritance: Trigger extends BaseTrigger
+- Detailed reference: `archive/architecture/runtime-instance-pattern.md`

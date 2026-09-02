@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/visual_programming_complete_design_summary.md)
+
 # 可视化编程系统完整设计总结
 
 ## 1. 项目概述

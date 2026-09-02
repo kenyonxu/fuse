@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/editor_tools_design.md)
+
 # Fuse 编辑器工具设计
 
 ## 概述

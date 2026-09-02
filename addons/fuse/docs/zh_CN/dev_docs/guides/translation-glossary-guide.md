@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/translation-glossary-guide.md)
+
 # Fuse 中英翻译术语表（Translation Glossary）
 
 > 本表是 `docs/` 中英双语化（`zh_CN/` 权威源 → `en_US/` 英文镜像）的术语权威。所有英文翻译以此为准，保证跨文档、跨批次一致。
