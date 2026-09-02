@@ -83,9 +83,9 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 
 - [Game Creator 文档](https://gamecreator.io/) - 可视化编程参考
 - [Godot 官方文档](https://docs.godotengine.org/) - Godot API 参考
-- [项目开发规范](../../../CLAUDE.md) / [AGENTS.md](../../../AGENTS.md) - 代码规范和开发指南
-- [测试场景](../../../../tests/) - 系统测试（仓库根级，不随插件分发）
-- [演示场景](../../../demos/) - 功能演示
+- [项目开发规范](../../../../CLAUDE.md) / [AGENTS.md](../../../../AGENTS.md) - 代码规范和开发指南
+- [测试场景](../../../../../tests/) - 系统测试（仓库根级，不随插件分发）
+- [演示场景](../../../../demos/) - 功能演示
 
 ---
 

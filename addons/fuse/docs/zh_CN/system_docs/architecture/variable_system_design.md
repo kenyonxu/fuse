@@ -1223,9 +1223,9 @@ static func get_scope_container_by_source(
 ### 修复文档
 
 详细的修复指南和进度报告（历史文档，已归档）：
-- [修复进度报告](../../archive/archive/development/scope_source_fix_progress.md)
-- [剩余修复指南](../../archive/archive/development/remaining_fixes_guide.md)
-- [待办事项列表](../../archive/archive/development/scope_source_todos.md)
+- [修复进度报告](../../../archive/archive/development/scope_source_fix_progress.md)
+- [剩余修复指南](../../../archive/archive/development/remaining_fixes_guide.md)
+- [待办事项列表](../../../archive/archive/development/scope_source_todos.md)
 
 ---
 

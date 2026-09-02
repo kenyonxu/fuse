@@ -6,10 +6,10 @@
 
 本报告对 Fuse 可视化编程系统中的 `BaseCondition` 核心脚本进行现状描述。`BaseCondition` 是条件系统的抽象基类（`@abstract class_name BaseCondition extends Resource`），定义条件检查的生命周期接口、缓存系统、依赖图、线程安全、批量操作族以及序列化/克隆框架，为 Trigger / ActionRunner / ParallelConditionEvaluator 等上层模块提供统一的条件抽象。
 
-**源文件:** [base_condition.gd](../../../core/base/base_condition.gd)
+**源文件:** [base_condition.gd](../../../../core/base/base_condition.gd)
 **行数:** 942 行
 **基类:** Resource（`@tool` + `@abstract`，可序列化为 .tres）
-**配套并行评估器:** [parallel_condition_evaluator.gd](../../../core/threading/parallel_condition_evaluator.gd)（251 行）
+**配套并行评估器:** [parallel_condition_evaluator.gd](../../../../core/threading/parallel_condition_evaluator.gd)（251 行）
 **子类规模:** 66 个 `extends BaseCondition` 实现，分布于 physics / node / input / animation / composite / variable / time / string / dictionaries / arrays / scope / distance / navigation / system / rendering / scene / ui / math 等目录
 
 > ⚠️ **澄清**：`BaseCondition` **不声明任何 signal**（grep `^signal\s` 在源文件无匹配）。条件检查的结果通过 `check()` 返回值传递；`on_condition_met(context)` 与 `on_condition_failed(context)` 是普通实例方法（497–512 行），由调用方主动调用，作为子类响应结果的钩子。早期文档称"条件满足/失败信号"为误述。

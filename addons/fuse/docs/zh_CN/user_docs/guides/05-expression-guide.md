@@ -53,7 +53,7 @@ Fuse 提供三个基于 Godot `Expression` 引擎的表达式组件，覆盖数�
 
 数学表达式指令，执行数学运算并将结果保存到变量。
 
-**文件:** [math_expression.gd](../../../instructions/math/math_expression.gd)
+**文件:** [math_expression.gd](../../../../instructions/math/math_expression.gd)
 **分类:** Math
 **图标:** Code
 
@@ -168,7 +168,7 @@ MathExpression 使用数值模式处理变量引用：
 
 字符串表达式指令，用表达式拼接和格式化字符串。
 
-**文件:** [string_expression.gd](../../../instructions/math/string_expression.gd)
+**文件:** [string_expression.gd](../../../../instructions/math/string_expression.gd)
 **分类:** Math
 **图标:** Code
 
@@ -266,7 +266,7 @@ pad_right({local:item_name}, 20, ".")
 
 表达式条件，用布尔表达式进行条件判断。
 
-**文件:** [expression_condition.gd](../../../conditions/math/expression_condition.gd)
+**文件:** [expression_condition.gd](../../../../conditions/math/expression_condition.gd)
 **分类:** Math
 **图标:** Code
 

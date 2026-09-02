@@ -37,6 +37,7 @@
 |------|------|
 | [数组指令开发](guides/array-instructions-guide.md) | `element_value` 属性、变量变化通知、翻译键命名、调试日志 |
 | [变量操作工具](guides/variable-operations-guide.md) | 变量读写工具 API 与用法 |
+| [中英翻译术语表](guides/translation-glossary-guide.md) | `docs/` 双语化（`en_US/` 镜像）的术语权威与单篇翻译检查清单 |
 
 ---
 

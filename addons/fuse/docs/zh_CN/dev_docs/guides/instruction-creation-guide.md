@@ -1,7 +1,7 @@
 # 创建 Fuse 指令指南
 
 > **目标**: 为开发者提供完整的 Fuse 指令创建指引，基于 Phase 0B 经验总结和最佳实践。
-> **权威规范**: 组件生成的最终权威是 [fuse-instruction-generator skill](../../../agent_skills/fuse-instruction-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
+> **权威规范**: 组件生成的最终权威是 [fuse-instruction-generator skill](../../../../agent_skills/fuse-instruction-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
 
 **适用对象**: Fuse 系统开发者、贡献者
 

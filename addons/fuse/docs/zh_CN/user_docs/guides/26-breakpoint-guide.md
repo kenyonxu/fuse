@@ -2,7 +2,7 @@
 
 BreakpointInstruction 是 Fuse 的调试工具指令。将它插入指令列表中，执行到该位置时会输出变量快照到 Godot 输出窗口，可选暂停执行以检查状态。
 
-**文件:** [breakpoint_instruction.gd](../../../instructions/debug/breakpoint_instruction.gd)
+**文件:** [breakpoint_instruction.gd](../../../../instructions/debug/breakpoint_instruction.gd)
 **分类:** Debug
 **图标:** Debug
 

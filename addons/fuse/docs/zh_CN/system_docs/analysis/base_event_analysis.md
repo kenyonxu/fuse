@@ -6,7 +6,7 @@
 
 本报告对 Fuse 可视化编程系统中的 `BaseEvent` 核心脚本进行了全面分析。`BaseEvent` 是事件系统的基类 (class_name BaseEvent extends Resource)，定义了所有事件的生命周期接口、信号机制、运行时状态管理和错误处理框架，为可视化编程系统中的事件驱动功能提供了基础支持。
 
-**源文件:** [base_event.gd](../../../core/base/base_event.gd)
+**源文件:** [base_event.gd](../../../../core/base/base_event.gd)
 **行数:** 534 行
 **基类:** Resource
 **子类示例:** OnAnimationStarted, OnAnimationFinished, OnBodyEntered 等
@@ -105,7 +105,7 @@ BaseEvent 是所有 Fuse 事件的抽象基类。它作为 Resource 子类，可
   5. 调用 _initialize_runtime_state(runtime_instance) 初始化运行时状态
 ```
 
-**注**: 此方法不负责连接 `triggered` 信号。信号连接由 `RuntimeEventInstance._init()` 在构造时完成 — RuntimeEventInstance 在 `_init` 中将自己的 `_on_event_triggered` 方法连接到 `event_definition.triggered`，再通过自身的 `triggered` 信号转发给 Trigger（参见 [runtime_event_instance.gd:30](../../../core/runtime_event_instance.gd)）。这是推荐的初始化方式。子类可以重写此方法来处理特定的运行时状态初始化。
+**注**: 此方法不负责连接 `triggered` 信号。信号连接由 `RuntimeEventInstance._init()` 在构造时完成 — RuntimeEventInstance 在 `_init` 中将自己的 `_on_event_triggered` 方法连接到 `event_definition.triggered`，再通过自身的 `triggered` 信号转发给 Trigger（参见 [runtime_event_instance.gd:30](../../../../core/runtime_event_instance.gd)）。这是推荐的初始化方式。子类可以重写此方法来处理特定的运行时状态初始化。
 
 #### terminate(owner_node: Node) -- 清理事件
 

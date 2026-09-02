@@ -13,7 +13,7 @@ Fuse 提供场景预加载功能，通过 `PreloadSceneInstruction` 和 `CheckPr
 
 使用 `ResourceLoader.load_threaded_request()` 在后台加载场景。
 
-**文件:** [preload_scene_instruction.gd](../../../instructions/scene/preload_scene_instruction.gd)
+**文件:** [preload_scene_instruction.gd](../../../../instructions/scene/preload_scene_instruction.gd)
 **分类:** Scene
 **图标:** Load
 
@@ -51,7 +51,7 @@ Fuse 提供场景预加载功能，通过 `PreloadSceneInstruction` 和 `CheckPr
 
 检查场景预加载状态。
 
-**文件:** [check_preload_status.gd](../../../conditions/scene/check_preload_status.gd)
+**文件:** [check_preload_status.gd](../../../../conditions/scene/check_preload_status.gd)
 **分类:** Scene
 **图标:** Load
 

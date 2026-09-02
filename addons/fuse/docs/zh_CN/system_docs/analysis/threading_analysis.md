@@ -5,7 +5,7 @@
 
 本报告对 Fuse 可视化编程系统中的多线程支持模块进行全面分析。线程系统位于 `addons/fuse/core/threading/`，共 4 个类（合计约 689 行）：`FuseTaskManager`、`ParallelConditionEvaluator`、`FuseThreadSafe`、`FuseThreadingConfig`。该模块为条件并行评估、异步任务执行和共享数据保护提供基础设施，并与 `BaseCondition` 的 `is_thread_safe` 属性协作，实现"按条件安全性自动并行"的核心机制。
 
-**源文件目录:** [addons/fuse/core/threading/](../../../core/threading/)
+**源文件目录:** [addons/fuse/core/threading/](../../../../core/threading/)
 **总行数:** 689 行（fuse_task_manager.gd 268 + parallel_condition_evaluator.gd 251 + fuse_thread_safe.gd 78 + fuse_threading_config.gd 92）
 **基础类:** RefCounted（3 个）/ Resource（1 个）
 **依赖:** WorkerThreadPool（Godot 内建）、Semaphore、Mutex、OS.delay_msec、FuseLogger、GlobalVariableManager、ExecutionContext、BaseCondition
@@ -50,10 +50,10 @@ Fuse 线程系统是一个**基础设施层**，向上为条件评估、指令�
 
 | 类名 | 文件 | 行数 | 基类 | 单例 | 运行时接入 |
 |------|------|------|------|------|-----------|
-| `FuseTaskManager` | [fuse_task_manager.gd](../../../core/threading/fuse_task_manager.gd) | 268 | RefCounted | 静态自初始化单例（L10） | 否（仅测试） |
-| `ParallelConditionEvaluator` | [parallel_condition_evaluator.gd](../../../core/threading/parallel_condition_evaluator.gd) | 251 | RefCounted | 否（按 Trigger 实例化） | **是**（MultiEventTrigger） |
-| `FuseThreadSafe` | [fuse_thread_safe.gd](../../../core/threading/fuse_thread_safe.gd) | 78 | RefCounted | 全静态方法 | 否（仅文档/示例） |
-| `FuseThreadingConfig` | [fuse_threading_config.gd](../../../core/threading/fuse_threading_config.gd) | 92 | Resource | 懒加载单例（L67） | 否（仅文档/示例） |
+| `FuseTaskManager` | [fuse_task_manager.gd](../../../../core/threading/fuse_task_manager.gd) | 268 | RefCounted | 静态自初始化单例（L10） | 否（仅测试） |
+| `ParallelConditionEvaluator` | [parallel_condition_evaluator.gd](../../../../core/threading/parallel_condition_evaluator.gd) | 251 | RefCounted | 否（按 Trigger 实例化） | **是**（MultiEventTrigger） |
+| `FuseThreadSafe` | [fuse_thread_safe.gd](../../../../core/threading/fuse_thread_safe.gd) | 78 | RefCounted | 全静态方法 | 否（仅文档/示例） |
+| `FuseThreadingConfig` | [fuse_threading_config.gd](../../../../core/threading/fuse_threading_config.gd) | 92 | Resource | 懒加载单例（L67） | 否（仅文档/示例） |
 
 ### 2.1 FuseTaskManager — 任务管理器
 
@@ -182,7 +182,7 @@ Fuse 线程系统是一个**基础设施层**，向上为条件评估、指令�
 
 ### 4.1 与 BaseCondition 的协作（核心机制）
 
-线程系统与 `BaseCondition` 通过两个钩子紧耦合（见 [base_condition.gd](../../../core/base/base_condition.gd)）：
+线程系统与 `BaseCondition` 通过两个钩子紧耦合（见 [base_condition.gd](../../../../core/base/base_condition.gd)）：
 
 - **`is_thread_safe` 属性**（L60-62）：getter 委托给 `_compute_thread_safety()`。
 - **`_compute_thread_safety()`**（L374-381）：默认返回 `false`，带缓存（`_thread_safety_cached` / `_thread_safety_computed`），子类重写以声明线程安全。
@@ -192,7 +192,7 @@ Fuse 线程系统是一个**基础设施层**，向上为条件评估、指令�
 
 ### 4.2 与 MultiEventTrigger 的接入（唯一运行时消费者）
 
-`MultiEventTrigger` 是当前唯一接入线程系统的运行时类（见 [multi_event_trigger.gd](../../../core/multi_event_trigger.gd)）：
+`MultiEventTrigger` 是当前唯一接入线程系统的运行时类（见 [multi_event_trigger.gd](../../../../core/multi_event_trigger.gd)）：
 
 - **持有实例**：`_condition_evaluator: ParallelConditionEvaluator`（L55）。
 - **生命周期**：在 `_on_trigger_ready()` 中调用 `_initialize_parallel_evaluator()`（L92）创建实例并设为 `PARALLEL_SAFE`（L107-108）；在 `_on_trigger_exit_tree()` 中置为 null（L100）。
@@ -201,7 +201,7 @@ Fuse 线程系统是一个**基础设施层**，向上为条件评估、指令�
 
 ### 4.3 与 ActionRunner 并行模式的关系（独立体系，不复用线程系统）
 
-`ActionRunner._run_parallel()`（[action_runner.gd](../../../core/base/action_runner.gd) L330-390）是**另一套独立的并行机制**：
+`ActionRunner._run_parallel()`（[action_runner.gd](../../../../core/base/action_runner.gd) L330-390）是**另一套独立的并行机制**：
 
 - 不通过 `WorkerThreadPool`，而是**不 await** 地调用 `instruction.execute(context)` 让指令在后台运行（L364），随后用 `_wait_for_all_tasks()`（L893-918）+ `_wait_for_any_signal()`（L922）通过 `instruction.finished` 信号数组 `await` 全部完成。
 - 即 ActionRunner 的"并行"是**异步并发**（信号驱动），工作线程由指令自身决定（部分指令可能内部用 `WorkerThreadPool`，但 ActionRunner 本身不调度线程）。

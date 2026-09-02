@@ -6,7 +6,7 @@
 
 本报告对 Fuse 可视化编程系统中的对象池子系统进行现状描述。对象池位于 `core/pooling/`，由 5 个类组成：通用场景池 (`FuseObjectPool`)、池项包装 (`FusePoolItem`)、全局池管理器 (`FusePoolManager`)、专用回收定时器 (`FuseRecycleTimer`)，以及面向 `RuntimeInstructionInstance` 的指令实例池 (`InstructionInstancePool`)。两套池体系分别服务于"场景节点复用"（如子弹、特效）与"指令运行时实例复用"（高频执行路径的内存优化），各自有独立的池策略、生命周期与协作对象。
 
-**源目录:** [core/pooling/](../../../core/pooling/)
+**源目录:** [core/pooling/](../../../../core/pooling/)
 **类数量:** 5
 **总行数:** 1498 行
 **集成方:** `RuntimeActionRunnerInstance`（指令实例池）、`instantiate_scene`/`recycle_pooled_scene`/`warm_up_pool` 指令（场景池）
@@ -17,17 +17,17 @@
 
 | 类名 | 文件 | 行数 | 基类 | 职责 |
 |------|------|------|------|------|
-| `FusePoolItem` | [fuse_pool_item.gd](../../../core/pooling/fuse_pool_item.gd) | 140 | `RefCounted` | 池项包装器，跟踪单个对象的 in_use/usage_count/时间戳，提供效率评分与过期检测 |
-| `FuseObjectPool` | [fuse_object_pool.gd](../../../core/pooling/fuse_object_pool.gd) | 597 | `RefCounted` | 通用场景对象池，负责单一场景路径的实例创建/复用/回收/重置/收缩 |
-| `FusePoolManager` | [fuse_pool_manager.gd](../../../core/pooling/fuse_pool_manager.gd) | 528 | `RefCounted` | 全局单例，按 `scene_path` 索引多个 `FuseObjectPool`，提供 `instantiate_pooled`/`recycle_pooled` 入口，多策略路径匹配，管理回收定时器生命周期 |
-| `FuseRecycleTimer` | [fuse_recycle_timer.gd](../../../core/pooling/fuse_recycle_timer.gd) | 148 | `Node` | 专用延迟回收定时器，弱引用实例 + usage_count 一致性校验 + 多重"已被回收"检测，超时后回调管理器回收 |
-| `InstructionInstancePool` | [instruction_instance_pool.gd](../../../core/pooling/instruction_instance_pool.gd) | 185 | `RefCounted` | `RuntimeInstructionInstance` 专用池，通过 `acquire`/`release` 配合 `reinitialize`/`reset_for_pool` 实现高频执行路径复用 |
+| `FusePoolItem` | [fuse_pool_item.gd](../../../../core/pooling/fuse_pool_item.gd) | 140 | `RefCounted` | 池项包装器，跟踪单个对象的 in_use/usage_count/时间戳，提供效率评分与过期检测 |
+| `FuseObjectPool` | [fuse_object_pool.gd](../../../../core/pooling/fuse_object_pool.gd) | 597 | `RefCounted` | 通用场景对象池，负责单一场景路径的实例创建/复用/回收/重置/收缩 |
+| `FusePoolManager` | [fuse_pool_manager.gd](../../../../core/pooling/fuse_pool_manager.gd) | 528 | `RefCounted` | 全局单例，按 `scene_path` 索引多个 `FuseObjectPool`，提供 `instantiate_pooled`/`recycle_pooled` 入口，多策略路径匹配，管理回收定时器生命周期 |
+| `FuseRecycleTimer` | [fuse_recycle_timer.gd](../../../../core/pooling/fuse_recycle_timer.gd) | 148 | `Node` | 专用延迟回收定时器，弱引用实例 + usage_count 一致性校验 + 多重"已被回收"检测，超时后回调管理器回收 |
+| `InstructionInstancePool` | [instruction_instance_pool.gd](../../../../core/pooling/instruction_instance_pool.gd) | 185 | `RefCounted` | `RuntimeInstructionInstance` 专用池，通过 `acquire`/`release` 配合 `reinitialize`/`reset_for_pool` 实现高频执行路径复用 |
 
 ---
 
 ## 2. 核心属性
 
-### 2.1 FuseObjectPool（[fuse_object_pool.gd:7-23](../../../core/pooling/fuse_object_pool.gd)）
+### 2.1 FuseObjectPool（[fuse_object_pool.gd:7-23](../../../../core/pooling/fuse_object_pool.gd)）
 
 | 属性 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -41,7 +41,7 @@
 | `_total_created/_total_reused/_peak_usage/_cleanup_count` | `int` | `0` | 统计计数 |
 | `_enable_debug` | `bool` | `false` | 调试日志开关 |
 
-### 2.2 FusePoolItem（[fuse_pool_item.gd:8-30](../../../core/pooling/fuse_pool_item.gd)）
+### 2.2 FusePoolItem（[fuse_pool_item.gd:8-30](../../../../core/pooling/fuse_pool_item.gd)）
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
@@ -52,7 +52,7 @@
 | `usage_count` | `int` | 被标记使用的累计次数 |
 | `_next_id`（static） | `int` | 全局 ID 生成器 |
 
-### 2.3 FusePoolManager（[fuse_pool_manager.gd:7-23](../../../core/pooling/fuse_pool_manager.gd)）
+### 2.3 FusePoolManager（[fuse_pool_manager.gd:7-23](../../../../core/pooling/fuse_pool_manager.gd)）
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
@@ -61,7 +61,7 @@
 | `_active_recycle_timers` | `Array[FuseRecycleTimer]` | 活动定时器强引用集合（防止 RefCounted 提前释放） |
 | `_enable_debug` | `bool` | 调试日志开关 |
 
-### 2.4 FuseRecycleTimer（[fuse_recycle_timer.gd:9-25](../../../core/pooling/fuse_recycle_timer.gd)）
+### 2.4 FuseRecycleTimer（[fuse_recycle_timer.gd:9-25](../../../../core/pooling/fuse_recycle_timer.gd)）
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
@@ -71,7 +71,7 @@
 | `_timer` | `SceneTreeTimer` | 底层 Godot 定时器 |
 | `_triggered` | `bool` | 防重入标志 |
 
-### 2.5 InstructionInstancePool（[instruction_instance_pool.gd:9-25](../../../core/pooling/instruction_instance_pool.gd)）
+### 2.5 InstructionInstancePool（[instruction_instance_pool.gd:9-25](../../../../core/pooling/instruction_instance_pool.gd)）
 
 | 属性 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -118,14 +118,14 @@
 | `process_auto_resize()` | 使用率 `> threshold` 扩容到 `min(size*2, max)`；`< threshold*0.5` 收缩到 `max(size/2, min)` |
 | `clear_pool()` | `queue_free` 所有对象并清零统计 |
 
-**Fuse 组件重置（[fuse_object_pool.gd:236-291](../../../core/pooling/fuse_object_pool.gd)）：**
+**Fuse 组件重置（[fuse_object_pool.gd:236-291](../../../../core/pooling/fuse_object_pool.gd)）：**
 
 `_reset_fuse_components(node)` 通过迭代栈遍历整个子树，依次：
 - `Trigger`：优先调 `pool_reset()`，否则 `reset()` + `set_physics_process(true)` + `set_process(true)`
 - `MultiEventTrigger`：同上策略
 - `ScopeVariableContainer` 检测（`variables` 字段 + `get_variable` 方法）：首次重置保存 `_pool_default_variables`，后续重置回写默认值
 
-`_terminate_fuse_triggers(node)`（[:300-343](../../../core/pooling/fuse_object_pool.gd)）则在归还时停止所有 Trigger/MultiEventTrigger 的 `set_physics_process(false)` + `set_process(false)`，并调用其 `event_definition`/`event_bindings` 的 `terminate()`。
+`_terminate_fuse_triggers(node)`（[:300-343](../../../../core/pooling/fuse_object_pool.gd)）则在归还时停止所有 Trigger/MultiEventTrigger 的 `set_physics_process(false)` + `set_process(false)`，并调用其 `event_definition`/`event_bindings` 的 `terminate()`。
 
 ### 3.3 FusePoolManager（全局入口）
 
@@ -151,7 +151,7 @@
 | `is_instance_in_use(scene_path, instance)` | 查询池项 `in_use` 标志 |
 | `get_instance_usage_count(scene_path, instance)` | 查询池项 `usage_count`（未找到返回 -1） |
 
-**路径解析策略**（[fuse_pool_manager.gd:182-316](../../../core/pooling/fuse_pool_manager.gd)）：`recycle_pooled` 内部按顺序尝试 `_find_pool_by_instance_id` → `_find_pool_by_any_path`（含 `_get_resource_uid` 将 `res://` 转 `uid://`），并接入 `FusePerformanceTracker` 性能追踪。
+**路径解析策略**（[fuse_pool_manager.gd:182-316](../../../../core/pooling/fuse_pool_manager.gd)）：`recycle_pooled` 内部按顺序尝试 `_find_pool_by_instance_id` → `_find_pool_by_any_path`（含 `_get_resource_uid` 将 `res://` 转 `uid://`），并接入 `FusePerformanceTracker` 性能追踪。
 
 ### 3.4 FuseRecycleTimer（延迟回收）
 
@@ -241,7 +241,7 @@ _on_timeout 五重校验：
 
 ### 4.4 指令实例池与 RuntimeActionRunnerInstance 集成
 
-`InstructionInstancePool` 与 `RuntimeActionRunnerInstance` 是协作关系，通过**共享静态实例**模式工作（[runtime_action_runner_instance.gd:51-61, 377-399](../../../core/runtime_action_runner_instance.gd)）：
+`InstructionInstancePool` 与 `RuntimeActionRunnerInstance` 是协作关系，通过**共享静态实例**模式工作（[runtime_action_runner_instance.gd:51-61, 377-399](../../../../core/runtime_action_runner_instance.gd)）：
 
 | 组件 | 字段/方法 | 行号 | 说明 |
 |------|-----------|------|------|
@@ -251,7 +251,7 @@ _on_timeout 五重校验：
 | 同上 | `_acquire_instruction_instance(...)` | L394-399 | `use_instruction_pool` 为 true 时 `pool.acquire(instruction, context, self)`，否则 `RuntimeInstructionInstance.new(...)` |
 | 同上 | 清理路径 | L378-382 | `use_instruction_pool` 为 true 时遍历 `_instruction_instances` 调 `pool.release(runtime_instruction)` |
 
-**RuntimeInstructionInstance 配套方法**（[runtime_instruction_instance.gd:397-458](../../../core/runtime_instruction_instance.gd)）：
+**RuntimeInstructionInstance 配套方法**（[runtime_instruction_instance.gd:397-458](../../../../core/runtime_instruction_instance.gd)）：
 
 | 方法 | 行号 | 说明 |
 |------|------|------|
@@ -278,11 +278,11 @@ _on_timeout 五重校验：
 
 ### 5.2 指令实例池：自动启用
 
-`RuntimeActionRunnerInstance.use_instruction_pool` 默认 `true`，所有指令实例的获取/释放自动走池路径，无需业务代码改动。需要回滚到非池化模式时，将 `use_instruction_pool = false` 即可退化为 `new`/直接 GC 模式（[runtime_action_runner_instance.gd:378-399](../../../core/runtime_action_runner_instance.gd)）。
+`RuntimeActionRunnerInstance.use_instruction_pool` 默认 `true`，所有指令实例的获取/释放自动走池路径，无需业务代码改动。需要回滚到非池化模式时，将 `use_instruction_pool = false` 即可退化为 `new`/直接 GC 模式（[runtime_action_runner_instance.gd:378-399](../../../../core/runtime_action_runner_instance.gd)）。
 
 ### 5.3 类型擦除规避循环依赖
 
-`RuntimeActionRunnerInstance` 与 `InstructionInstancePool` 互相 preload 会循环依赖，因此 `_shared_instruction_pool` 与 `get_shared_pool()` 返回值均声明为 `RefCounted`（[runtime_action_runner_instance.gd:55, 58](../../../core/runtime_action_runner_instance.gd)），实际运行时为 `InstructionInstancePool`。
+`RuntimeActionRunnerInstance` 与 `InstructionInstancePool` 互相 preload 会循环依赖，因此 `_shared_instruction_pool` 与 `get_shared_pool()` 返回值均声明为 `RefCounted`（[runtime_action_runner_instance.gd:55, 58](../../../../core/runtime_action_runner_instance.gd)），实际运行时为 `InstructionInstancePool`。
 
 ---
 
@@ -297,7 +297,7 @@ _on_timeout 五重校验：
 
 ### 6.2 路径多策略匹配
 
-`recycle_pooled` 不要求调用方提供与 `instantiate_pooled` 完全一致的 `scene_path`，按以下优先级匹配（[fuse_pool_manager.gd:128-179](../../../core/pooling/fuse_pool_manager.gd)）：
+`recycle_pooled` 不要求调用方提供与 `instantiate_pooled` 完全一致的 `scene_path`，按以下优先级匹配（[fuse_pool_manager.gd:128-179](../../../../core/pooling/fuse_pool_manager.gd)）：
 1. 优先用 `instance.scene_file_path`（实例自带真实场景路径）
 2. `_scene_pools.get(final_scene_path)` 直接命中
 3. `_find_pool_by_instance_id` 通过实例 ID 遍历所有池
@@ -307,11 +307,11 @@ _on_timeout 五重校验：
 
 ### 6.3 回收安全：FuseRecycleTimer 的五重校验
 
-延迟回收期间对象状态可能变化（被其他方式回收、被复用、从场景树移除），`_on_timeout` 通过弱引用 + `_creation_usage_count` 一致性 + `is_inside_tree` + `is_instance_in_use` 四重检测，避免误回收（[fuse_recycle_timer.gd:76-122](../../../core/pooling/fuse_recycle_timer.gd)）。`usage_count` 不匹配说明对象已被归还后再次 `acquire`，定时器应放行。
+延迟回收期间对象状态可能变化（被其他方式回收、被复用、从场景树移除），`_on_timeout` 通过弱引用 + `_creation_usage_count` 一致性 + `is_inside_tree` + `is_instance_in_use` 四重检测，避免误回收（[fuse_recycle_timer.gd:76-122](../../../../core/pooling/fuse_recycle_timer.gd)）。`usage_count` 不匹配说明对象已被归还后再次 `acquire`，定时器应放行。
 
 ### 6.4 物理回调安全
 
-`return_object` 在归还时若对象在场景树中，会先 `_terminate_fuse_triggers`（关闭 Trigger 的 `_physics_process`），再 `_schedule_safe_remove` 延迟一帧 `remove_child`（[fuse_object_pool.gd:115-156, 346-357](../../../core/pooling/fuse_object_pool.gd)）。这避免了在物理回调中直接移除节点导致的 Godot 物理引擎状态混乱。
+`return_object` 在归还时若对象在场景树中，会先 `_terminate_fuse_triggers`（关闭 Trigger 的 `_physics_process`），再 `_schedule_safe_remove` 延迟一帧 `remove_child`（[fuse_object_pool.gd:115-156, 346-357](../../../../core/pooling/fuse_object_pool.gd)）。这避免了在物理回调中直接移除节点导致的 Godot 物理引擎状态混乱。
 
 ### 6.5 Fuse 子系统的池化钩子
 
@@ -325,7 +325,7 @@ _on_timeout 五重校验：
 
 ### 6.7 指令池的注释预期收益
 
-[instruction_instance_pool.gd:1-4](../../../core/pooling/instruction_instance_pool.gd) 注释明确：池化 `RuntimeInstructionInstance` 用于减少约 25μs 的 `.new()` 开销，标记为 "Phase 2 性能优化"。注释中的 `acquire`/`release`/`reinitialize`/`reset_for_pool` 四个方法名与代码实际定义完全一致。
+[instruction_instance_pool.gd:1-4](../../../../core/pooling/instruction_instance_pool.gd) 注释明确：池化 `RuntimeInstructionInstance` 用于减少约 25μs 的 `.new()` 开销，标记为 "Phase 2 性能优化"。注释中的 `acquire`/`release`/`reinitialize`/`reset_for_pool` 四个方法名与代码实际定义完全一致。
 
 ---
 

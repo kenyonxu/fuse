@@ -8,10 +8,10 @@
 
 经过重构，`ExecutionContext` 现为**门面类**：自身只保留节点引用、自定义数据、日志、ActionRunner、FuseError 等执行环境数据；执行状态/历史/进度/依赖图、变量 CRUD/作用域/索引化访问/快照、循环 break/continue 标志栈等职责**全部委托**给两个子系统——`ExecutionDiagnostics` 与 `VariableContext`。EC 在 `_init()` 中创建这两个子系统实例，外部调用者通过 EC 暴露的门面方法访问它们。
 
-**源文件:** [execution_context.gd](../../../core/base/execution_context.gd)
+**源文件:** [execution_context.gd](../../../../core/base/execution_context.gd)
 **行数:** 773 行
 **基类:** RefCounted
-**子系统:** [ExecutionDiagnostics](../../../core/base/execution_diagnostics.gd)（281 行）、[VariableContext](../../../core/base/variable_context.gd)（463 行）
+**子系统:** [ExecutionDiagnostics](../../../../core/base/execution_diagnostics.gd)（281 行）、[VariableContext](../../../../core/base/variable_context.gd)（463 行）
 
 ---
 

@@ -907,9 +907,9 @@ scope = 1  # 魔数，难以理解
 - [BaseVariable 分析](../../system_docs/analysis/base_variable_analysis.md)
 
 ### 指令和条件
-- [SetScopeVariable 指令](../../../instructions/variables/set_scope_variable.gd)
-- [GetScopeVariable 指令](../../../instructions/variables/get_scope_variable.gd)
-- [CheckVariable 条件](../../../conditions/variable/check_variable.gd)
+- [SetScopeVariable 指令](../../../../instructions/variables/set_scope_variable.gd)
+- [GetScopeVariable 指令](../../../../instructions/variables/get_scope_variable.gd)
+- [CheckVariable 条件](../../../../conditions/variable/check_variable.gd)
 
 ---
 

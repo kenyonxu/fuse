@@ -684,5 +684,5 @@ Fuse 可以与 Orchestrator/FlowKit 互补使用：
 - [线程系统分析](./threading_analysis.md)
 - [变量系统分析](./variable_system_analysis.md)
 - [指令系统设计](../architecture/instruction_system_design.md)
-- [触发器系统设计](../../archive/archive/trigger_system_design.md)
+- [触发器系统设计](../../../archive/archive/trigger_system_design.md)
 - [Tween 补间动画使用指南](../../user_docs/guides/18-tween-animation-guide.md)

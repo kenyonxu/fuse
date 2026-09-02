@@ -13,7 +13,7 @@ Fuse 提供了一套完整的动画控制组件，包含 4 个指令和 6 个事
 
 在 AnimationPlayer 上播放指定动画。
 
-**文件:** [play_animation.gd](../../../instructions/animation/play_animation.gd)
+**文件:** [play_animation.gd](../../../../instructions/animation/play_animation.gd)
 **图标:** AnimationPlayer
 
 #### 属性
@@ -75,7 +75,7 @@ speed: 2.0    -- 双倍速播放
 
 停止 AnimationPlayer 的动画播放。
 
-**文件:** [stop_animation.gd](../../../instructions/animation/stop_animation.gd)
+**文件:** [stop_animation.gd](../../../../instructions/animation/stop_animation.gd)
 **图标:** Stop
 
 #### 属性
@@ -115,7 +115,7 @@ keep_position: false
 
 设置 AnimationTree 混合轨道的值，支持直接值或变量驱动。
 
-**文件:** [blend_animation.gd](../../../instructions/animation/blend_animation.gd)
+**文件:** [blend_animation.gd](../../../../instructions/animation/blend_animation.gd)
 **图标:** Blend
 
 #### 属性
@@ -171,7 +171,7 @@ blend_scope: Local
 
 设置 AnimationPlayer 的全局播放速度缩放。
 
-**文件:** [set_animation_speed.gd](../../../instructions/animation/set_animation_speed.gd)
+**文件:** [set_animation_speed.gd](../../../../instructions/animation/set_animation_speed.gd)
 **图标:** ViewportSpeed
 
 #### 属性
@@ -224,7 +224,7 @@ speed_scale: 3.0
 
 当 AnimationPlayer 开始播放动画时触发。
 
-**文件:** [on_animation_started.gd](../../../events/animation/on_animation_started.gd)
+**文件:** [on_animation_started.gd](../../../../events/animation/on_animation_started.gd)
 **图标:** Animation
 
 #### 属性
@@ -257,7 +257,7 @@ Godot 4.7+ 优先使用 `animation_started` 信号。如果信号不存在，则
 
 当 AnimationPlayer 播放完成指定动画时触发。
 
-**文件:** [on_animation_finished.gd](../../../events/animation/on_animation_finished.gd)
+**文件:** [on_animation_finished.gd](../../../../events/animation/on_animation_finished.gd)
 **图标:** Animation
 
 #### 属性
@@ -289,7 +289,7 @@ animation_name: "attack"
 
 当动画循环播放时触发 (播放到末尾重新开始)。
 
-**文件:** [on_animation_loop.gd](../../../events/animation/on_animation_loop.gd)
+**文件:** [on_animation_loop.gd](../../../../events/animation/on_animation_loop.gd)
 **图标:** Animation
 
 #### 属性
@@ -344,7 +344,7 @@ loop_count_threshold: 3
 
 当动画播放到达指定帧时触发。
 
-**文件:** [on_animation_frame_reached.gd](../../../events/animation/on_animation_frame_reached.gd)
+**文件:** [on_animation_frame_reached.gd](../../../../events/animation/on_animation_frame_reached.gd)
 **图标:** AnimationPlayer
 
 #### 属性
@@ -380,7 +380,7 @@ loop_count_threshold: 3
 
 当动画播放经过指定标记点时触发。
 
-**文件:** [on_animation_marker.gd](../../../events/animation/on_animation_marker.gd)
+**文件:** [on_animation_marker.gd](../../../../events/animation/on_animation_marker.gd)
 **图标:** Animation
 
 #### 属性
@@ -418,7 +418,7 @@ loop_count_threshold: 3
 
 当 AnimationTree 的混合节点权重达到指定阈值时触发。
 
-**文件:** [on_animation_blend.gd](../../../events/animation/on_animation_blend.gd)
+**文件:** [on_animation_blend.gd](../../../../events/animation/on_animation_blend.gd)
 **图标:** AnimationTree
 
 #### 属性

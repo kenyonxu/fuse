@@ -869,5 +869,5 @@ func test_event_performance():
 **相关文档:**
 
 - [自定义 Condition 创建最佳实践](custom_condition.md)
-- [事件生成 skill](../../../agent_skills/fuse-event-generator/SKILL.md)——事件组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
+- [事件生成 skill](../../../../agent_skills/fuse-event-generator/SKILL.md)——事件组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
 - [事件系统指南](../guides/30-lifecycle-events-guide.md)

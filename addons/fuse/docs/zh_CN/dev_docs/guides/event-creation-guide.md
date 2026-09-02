@@ -1,7 +1,7 @@
 # 创建 Fuse 事件指南
 
 > **目标**: 为开发者提供完整的 Fuse 事件创建指引，基于现有事件实现经验和最佳实践。
-> **权威规范**: 组件生成的最终权威是 [fuse-event-generator skill](../../../agent_skills/fuse-event-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
+> **权威规范**: 组件生成的最终权威是 [fuse-event-generator skill](../../../../agent_skills/fuse-event-generator/SKILL.md)（模板、命名禁则与验证 gate）；本指南是其架构原理的详述。
 
 **适用对象**: Fuse 系统开发者、贡献者
 
@@ -2108,7 +2108,7 @@ func _on_event_triggered():
 - 事件停止时使用 `notify_stopped()` 通知 Trigger
 
 **参考文档**:
-- [BaseEvent API](../../../core/base/base_event.gd)
+- [BaseEvent API](../../../../core/base/base_event.gd)
 - [完整事件模板](#完整事件模板)
 - [测试规范](#测试规范)
 

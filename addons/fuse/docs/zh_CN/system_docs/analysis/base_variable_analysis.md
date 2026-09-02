@@ -6,7 +6,7 @@
 
 本报告对 Fuse 可视化编程系统中的 `BaseVariable` 核心脚本进行了现状描述式分析。`BaseVariable` 是变量系统的基类（`class_name BaseVariable extends Resource`），以 Godot 原生 `Variant` 直接承载值，定义了三层作用域、统一错误处理、生命周期钩子和一组静态工厂方法。它本身不承担存储/查找职责——变量按作用域分别由 `VariableContext`（LOCAL）、`ScopeVariableContainer`（SCOPE）、`GlobalVariableManager`/`Assistant`/`Resource`/`Service` 四件套（GLOBAL）管理。
 
-**源文件:** [base_variable.gd](../../../core/base/base_variable.gd)
+**源文件:** [base_variable.gd](../../../../core/base/base_variable.gd)
 **行数:** 1073 行
 **基类:** Resource（`@tool` + `@icon`）
 **作用域枚举:** `VariableScope.LOCAL = 0` / `SCOPE = 1` / `GLOBAL = 2`

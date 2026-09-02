@@ -68,7 +68,7 @@ FusePreset.from_json()                              # fuse_preset.gd:114
 
 ### 3.2 缺陷点：`_set_property_value` 扁平赋值
 
-[fuse_preset_deserializer.gd:245-251](../../../editor/serialization/fuse_preset_deserializer.gd#L245-L251)：
+[fuse_preset_deserializer.gd:245-251](../../../../editor/serialization/fuse_preset_deserializer.gd#L245-L251)：
 
 ```gdscript
 static func _set_property_value(obj: Object, key: String, val) -> void:
@@ -84,13 +84,13 @@ static func _set_property_value(obj: Object, key: String, val) -> void:
 
 ### 3.3 `InstructionSerializer` 同病
 
-[instruction_serializer.gd:46-61](../../../core/serialization/instruction_serializer.gd#L46-L61) 的 `deserialize_instruction` 同样是扁平 `instruction.set(property, data[property])`，无递归。
+[instruction_serializer.gd:46-61](../../../../core/serialization/instruction_serializer.gd#L46-L61) 的 `deserialize_instruction` 同样是扁平 `instruction.set(property, data[property])`，无递归。
 
-序列化侧 [instruction_serializer.gd:34-36](../../../core/serialization/instruction_serializer.gd#L34-L36) 也只做 `data[name] = instruction.get(name)`——若 `condition` 是 BaseCondition 对象，写入字典后无法被 `JSON.stringify` 正确处理（对象引用丢失）。这解释了现有 JSON（如 game_flow.json）里 condition 为何总是 `.tscn::Resource_xxx` 指针形式。
+序列化侧 [instruction_serializer.gd:34-36](../../../../core/serialization/instruction_serializer.gd#L34-L36) 也只做 `data[name] = instruction.get(name)`——若 `condition` 是 BaseCondition 对象，写入字典后无法被 `JSON.stringify` 正确处理（对象引用丢失）。这解释了现有 JSON（如 game_flow.json）里 condition 为何总是 `.tscn::Resource_xxx` 指针形式。
 
 ### 3.4 唯一的"正确实现"：L4 EventBinding.conditions
 
-[fuse_preset_deserializer.gd:168-174](../../../editor/serialization/fuse_preset_deserializer.gd#L168-L174)：
+[fuse_preset_deserializer.gd:168-174](../../../../editor/serialization/fuse_preset_deserializer.gd#L168-L174)：
 
 ```gdscript
 if data.has("conditions"):
@@ -102,7 +102,7 @@ if data.has("conditions"):
     binding.conditions = conds
 ```
 
-`_deserialize_binding` **显式**知道 conditions 字段语义，调 `_deserialize_condition` 做字典→实例的转换（[fuse_preset_deserializer.gd:140-151](../../../editor/serialization/fuse_preset_deserializer.gd#L140-L151)）。这是整个管道里**唯一**支持条件字典反序列化的路径。
+`_deserialize_binding` **显式**知道 conditions 字段语义，调 `_deserialize_condition` 做字典→实例的转换（[fuse_preset_deserializer.gd:140-151](../../../../editor/serialization/fuse_preset_deserializer.gd#L140-L151)）。这是整个管道里**唯一**支持条件字典反序列化的路径。
 
 > 通用 `_set_property_value` 缺这条路 → 容器型指令的嵌套字段全部失效。
 
@@ -181,7 +181,7 @@ binding 2: OnButtonPressed(NextLevel) + [CheckScopeVariable(current_level==2)] �
 
 **关键实现**：通过 `obj.get_property_list()` 取目标属性的 `hint_string`（动态声明的 BaseCondition/BaseInstruction 属性都带 `PROPERTY_HINT_RESOURCE_TYPE` + `hint_string="BaseCondition"` 等，见 [if_else.gd:69-99](../../../../instructions/flow_control/if_else.gd#L69-L99)）。
 
-**伪码**（替换 [fuse_preset_deserializer.gd:245-251](../../../editor/serialization/fuse_preset_deserializer.gd#L245-L251)）：
+**伪码**（替换 [fuse_preset_deserializer.gd:245-251](../../../../editor/serialization/fuse_preset_deserializer.gd#L245-L251)）：
 
 ```gdscript
 static func _set_property_value(obj: Object, key: String, val) -> void:
@@ -256,7 +256,7 @@ GET_PROPERTY_LIST 都能拿到，只是分支判断要覆盖两种 hint + hint_s
 
 方案 A 只修反序列化。`InstructionSerializer` 的序列化侧（`serialize_instruction`）也要对称修复——遇到 BaseCondition/BaseInstruction 属性值时递归序列化成嵌套字典，否则导出的 JSON 仍无法内联。
 
-**伪码**（[instruction_serializer.gd:34-36](../../../core/serialization/instruction_serializer.gd#L34-L36) 改造）：
+**伪码**（[instruction_serializer.gd:34-36](../../../../core/serialization/instruction_serializer.gd#L34-L36) 改造）：
 
 ```gdscript
 for property_name in properties:

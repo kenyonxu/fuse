@@ -210,4 +210,4 @@ _log_debug("══════════════════════�
 
 ## 参考实现
 
-完整的参考实现见 [array_add.gd](../../../instructions/arrays/array_add.gd)。
+完整的参考实现见 [array_add.gd](../../../../instructions/arrays/array_add.gd)。

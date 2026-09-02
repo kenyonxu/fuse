@@ -2,7 +2,7 @@
 
 面向系统架构师与核心开发者的权威文档：架构设计、数据流 / 控制流、各核心组件的深入分析。
 
-> 开发向指南见 [../dev_docs/](../dev_docs/)；用户向使用文档见 [../user_docs/](../user_docs/)；历史设计 / 分析文档见 [../archive/](../archive/)。
+> 开发向指南见 [../dev_docs/](../dev_docs/)；用户向使用文档见 [../user_docs/](../user_docs/)；历史设计 / 分析文档见 [../archive/](../../archive/)。
 
 ---
 

@@ -21,7 +21,7 @@ Fuse 提供了一套调试工具，帮助你在开发和运行时排查指令执
 
 最基础的调试指令，将自定义消息输出到 Godot 输出窗口。
 
-**文件:** [print.gd](../../../instructions/debug/print.gd)
+**文件:** [print.gd](../../../../instructions/debug/print.gd)
 **图标:** Debug
 
 ### 属性
@@ -68,7 +68,7 @@ message: "计算完成，伤害值为 25"
 
 输出指定变量的名称、作用域和当前值。
 
-**文件:** [print_variable_value.gd](../../../instructions/debug/print_variable_value.gd)
+**文件:** [print_variable_value.gd](../../../../instructions/debug/print_variable_value.gd)
 **图标:** FileList
 
 ### 属性
@@ -153,7 +153,7 @@ variable_scope: Global
 
 功能最全面的调试指令。命中时输出所有变量快照，支持条件触发和执行暂停。
 
-**文件:** [breakpoint_instruction.gd](../../../instructions/debug/breakpoint_instruction.gd)
+**文件:** [breakpoint_instruction.gd](../../../../instructions/debug/breakpoint_instruction.gd)
 **图标:** Debug
 
 ### 核心属性
@@ -196,7 +196,7 @@ variable_scope: Global
 
 提供图形化界面来查看执行历史、性能指标和调试信息。
 
-**文件:** [debug_visualizer.gd](../../../editor/debugging/debug_visualizer.gd)
+**文件:** [debug_visualizer.gd](../../../../editor/debugging/debug_visualizer.gd)
 
 #### 功能
 
@@ -240,7 +240,7 @@ variable_scope: Global
 
 在后台记录指令执行的详细历史，提供数据给 DebugVisualizer 显示。
 
-**文件:** [execution_tracker.gd](../../../editor/debugging/execution_tracker.gd)
+**文件:** [execution_tracker.gd](../../../../editor/debugging/execution_tracker.gd)
 
 #### 核心功能
 

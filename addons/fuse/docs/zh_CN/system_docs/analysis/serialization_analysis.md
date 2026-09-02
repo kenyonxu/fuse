@@ -12,8 +12,8 @@
 两者分属不同子系统（持久化 vs. 运行时性能优化），但在 Fuse 的"ActionRunner → RuntimeActionRunnerInstance"执行链上分别承担"状态保留"与"热路径加速"职责，是 analysis 系列此前未单独覆盖的两块缺口。
 
 **源文件:**
-- [instruction_serializer.gd](../../../core/serialization/instruction_serializer.gd)（135 行）
-- [compiled_instruction_sequence.gd](../../../core/execution/compiled_instruction_sequence.gd)（142 行）
+- [instruction_serializer.gd](../../../../core/serialization/instruction_serializer.gd)（135 行）
+- [compiled_instruction_sequence.gd](../../../../core/execution/compiled_instruction_sequence.gd)（142 行）
 
 **基类:** 两者均 `extends RefCounted`（非 Resource，纯逻辑组件）
 
@@ -60,7 +60,7 @@
 | `get_instruction_description` | `(instruction: BaseInstruction) -> String`（:103） | 硬编码 match 几个内置指令类型（PlaySound/PlayAnimation/ScreenShake/Print/Wait/Count）拼接可读描述；默认返回 `class_name` |
 | `_create_instruction` | `(type: String) -> BaseInstruction`（:66，私有） | `ClassDB.class_exists(type)` ? `ClassDB.instantiate(type)` : `push_error` + 返回 `null` |
 
-**反序列化的关键约束**：依赖 `ClassDB`。这意味着所有可被序列化的指令必须以 `class_name XxxInstruction extends BaseInstruction` 声明，并经插件注册（参见 [plugin.gd:113](../../../plugin.gd)、[fuse_type_registrar.gd:21](../../../editor/bootstrap/fuse_type_registrar.gd)）注册到 ClassDB，否则 `ClassDB.class_exists()` 会失败并返回 `null`。
+**反序列化的关键约束**：依赖 `ClassDB`。这意味着所有可被序列化的指令必须以 `class_name XxxInstruction extends BaseInstruction` 声明，并经插件注册（参见 [plugin.gd:113](../../../../plugin.gd)、[fuse_type_registrar.gd:21](../../../../editor/bootstrap/fuse_type_registrar.gd)）注册到 ClassDB，否则 `ClassDB.class_exists()` 会失败并返回 `null`。
 
 ### 1.4 与 BaseInstruction 的关系
 
@@ -87,7 +87,7 @@ static var _property_cache: Dictionary = {}   # :11
 
 ### 1.6 ActionRunner 中的集成
 
-`ActionRunner.serialize()` / `deserialize(data)`（[action_runner.gd:608-643](../../../core/base/action_runner.gd)）使用 `InstructionSerializer` 序列化自身配置：
+`ActionRunner.serialize()` / `deserialize(data)`（[action_runner.gd:608-643](../../../../core/base/action_runner.gd)）使用 `InstructionSerializer` 序列化自身配置：
 
 ```
 ActionRunner.serialize() → Dictionary
@@ -128,7 +128,7 @@ ActionRunner.deserialize(data):
 | `ActionRunner.serialize()` → Dictionary | 字典化"逻辑快照"（程序化传输/克隆用） | **是**（:622, :639） |
 | Preset 导出/导入（`.tres` + `.json` 双写） | `ResourceSaver.save(preset, tres_path)` + `to_json()` | 否（走 `editor/serialization/fuse_preset_serializer.gd`，另成体系） |
 
-也就是说，`InstructionSerializer` 不是"保存到磁盘"的工具——它只是"把指令变成可塞进 Dictionary 的形式"的工具。`@export var instructions: Array[BaseInstruction]`（[action_runner.gd:12](../../../core/base/action_runner.gd)）这条声明才是 `.tres` 落地的真正承担者。
+也就是说，`InstructionSerializer` 不是"保存到磁盘"的工具——它只是"把指令变成可塞进 Dictionary 的形式"的工具。`@export var instructions: Array[BaseInstruction]`（[action_runner.gd:12](../../../../core/base/action_runner.gd)）这条声明才是 `.tres` 落地的真正承担者。
 
 ---
 
@@ -178,7 +178,7 @@ ActionRunner.deserialize(data):
 > - 安全场景：仅"添加/删除指令"导致失效（典型编辑流）
 > - 风险场景：仅修改某条指令的属性值（数量不变）→ **缓存不会失效，描述仍为旧值**
 >
-> 由于 `ActionRunner.instructions` 的 setter（[action_runner.gd:12-16](../../../core/base/action_runner.gd)）只清 `_validation_cache`，不清 `_compiled_cache`，因此"原地改指令属性"会导致描述缓存陈旧。当前实际使用中描述主要用于调试显示（见 2.5），影响有限，但这是已知的设计缺口。
+> 由于 `ActionRunner.instructions` 的 setter（[action_runner.gd:12-16](../../../../core/base/action_runner.gd)）只清 `_validation_cache`，不清 `_compiled_cache`，因此"原地改指令属性"会导致描述缓存陈旧。当前实际使用中描述主要用于调试显示（见 2.5），影响有限，但这是已知的设计缺口。
 
 ### 2.5 ActionRunner / RuntimeActionRunnerInstance 集成
 
@@ -190,7 +190,7 @@ ActionRunner (Resource)                       ← 定义层，可被多个 Trigg
                                                 ↑ 所有 RuntimeActionRunnerInstance 共享同一份
 ```
 
-**懒加载与失效检测链**（[runtime_action_runner_instance.gd:259-288](../../../core/runtime_action_runner_instance.gd)）：
+**懒加载与失效检测链**（[runtime_action_runner_instance.gd:259-288](../../../../core/runtime_action_runner_instance.gd)）：
 
 ```
 RuntimeActionRunnerInstance._get_cached_description(index)    # :284 热路径入口
@@ -243,7 +243,7 @@ RuntimeActionRunnerInstance._get_cached_description(index)    # :284 热路径�
 1. **职责清晰**：序列化器专注"字典化"，编译缓存专注"预计算"，边界分明
 2. **解耦合理**：`InstructionSerializer` 把反射逻辑从 `ActionRunner` 主体剥离，`CompiledInstructionSequence` 把缓存策略从 `RuntimeActionRunnerInstance` 主体剥离，符合单一职责
 3. **零依赖设计**：两者均 `extends RefCounted`、无节点引用、无信号，可在任意上下文（含 `@tool` 编辑器模式）安全使用
-4. **反射缓存有效**：`_property_cache` 避免了每次序列化的 `get_property_list()` 开销（archive 中 [internal_optimization_plan.md](../../archive/proposals/internal_optimization_plan.md) 记录的优化点已落地）
+4. **反射缓存有效**：`_property_cache` 避免了每次序列化的 `get_property_list()` 开销（archive 中 [internal_optimization_plan.md](../../../archive/proposals/internal_optimization_plan.md) 记录的优化点已落地）
 5. **共享缓存语义正确**：`_compiled_cache` 放在 ActionRunner 而非 RuntimeActionRunnerInstance，避免每个 Trigger 触发都重编译
 
 ### 4.2 不足

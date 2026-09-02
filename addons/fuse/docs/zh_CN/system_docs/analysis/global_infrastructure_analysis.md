@@ -12,9 +12,9 @@
 两者均为 `extends Node` 的 Autoload 单例，由插件启用时通过 `FuseRuntimeBootstrap` 动态注册到 `project.godot`，插件禁用时反注册。两者**互不直接调用**，分属两条独立子系统（事件通信 / 调试反射）。
 
 **源文件：**
-- [`addons/fuse/core/fuse_event_bus.gd`](../../../core/fuse_event_bus.gd)（216 行）
-- [`addons/fuse/core/fuse_runtime_bridge.gd`](../../../core/fuse_runtime_bridge.gd)（199 行）
-- [`addons/fuse/editor/bootstrap/fuse_runtime_bootstrap.gd`](../../../editor/bootstrap/fuse_runtime_bootstrap.gd)（注册引导）
+- [`addons/fuse/core/fuse_event_bus.gd`](../../../../core/fuse_event_bus.gd)（216 行）
+- [`addons/fuse/core/fuse_runtime_bridge.gd`](../../../../core/fuse_runtime_bridge.gd)（199 行）
+- [`addons/fuse/editor/bootstrap/fuse_runtime_bootstrap.gd`](../../../../editor/bootstrap/fuse_runtime_bootstrap.gd)（注册引导）
 
 **基类：** Node（两者均是）
 **注册方式：** Autoload 单例（`project.godot` 的 `[autoload]` 段，前缀 `*` 表示启用）
@@ -25,7 +25,7 @@
 
 ### 1.1 注册位置
 
-`project.godot`（[第 26–29 行](../../../../../project.godot)）：
+`project.godot`（[第 26–29 行](../../../../../../project.godot)）：
 
 ```ini
 [autoload]
@@ -41,7 +41,7 @@ FuseRuntimeBridge="*uid://c6iequlsnctd7"
 
 ### 1.2 注册引导（FuseRuntimeBootstrap）
 
-注册不是手动写入 `project.godot`，而是由 `EditorPlugin` 在插件启用/禁用时调用 `add_autoload_singleton` / `remove_autoload_singleton` 动态完成（[fuse_runtime_bootstrap.gd:16-24](../../../editor/bootstrap/fuse_runtime_bootstrap.gd)）：
+注册不是手动写入 `project.godot`，而是由 `EditorPlugin` 在插件启用/禁用时调用 `add_autoload_singleton` / `remove_autoload_singleton` 动态完成（[fuse_runtime_bootstrap.gd:16-24](../../../../editor/bootstrap/fuse_runtime_bootstrap.gd)）：
 
 ```gdscript
 func setup() -> void:
@@ -115,7 +115,7 @@ if bridge == null or not bridge.has_method("get_cached_vars"):
 
 | 信号 | 参数 | 用途 |
 |------|------|------|
-| `event_sent` | `(event_name: String, args: Dictionary)` | 每次发送事件时同步 emit，**仅供编辑器调试**观察事件流（见 [fuse_event_bus.gd:14](../../../core/fuse_event_bus.gd)） |
+| `event_sent` | `(event_name: String, args: Dictionary)` | 每次发送事件时同步 emit，**仅供编辑器调试**观察事件流（见 [fuse_event_bus.gd:14](../../../../core/fuse_event_bus.gd)） |
 
 ### 2.3 内部类与常量
 
@@ -142,7 +142,7 @@ const MAX_HISTORY_SIZE: int = 100
 
 #### `send_event(event_name: String, args: Dictionary = {}) -> void` —— 同步发送
 
-执行流程（[fuse_event_bus.gd:51-67](../../../core/fuse_event_bus.gd)）：
+执行流程（[fuse_event_bus.gd:51-67](../../../../core/fuse_event_bus.gd)）：
 1. 空名警告并返回
 2. `_record_event()` 写历史
 3. `event_sent.emit()` 发调试信号
@@ -196,7 +196,7 @@ func _record_event(event_name, args) -> void:
 
 ### 2.7 反射缓存清理（与事件总线无直接关系）
 
-`_ready()` 里挂了一个**与事件通信无关**的副作用（[fuse_event_bus.gd:34-41](../../../core/fuse_event_bus.gd)）：
+`_ready()` 里挂了一个**与事件通信无关**的副作用（[fuse_event_bus.gd:34-41](../../../../core/fuse_event_bus.gd)）：
 
 ```gdscript
 func _ready() -> void:
@@ -210,7 +210,7 @@ func _on_node_removed_for_reflection_cache(node: Node) -> void:
 
 节点删除时清掉反射/可调用缓存，避免悬挂指针。
 
-> **注（待确认）**：`FuseRuntimeBootstrap._register_reflection_cache_cleanup()` **也**连接了一次 `tree.node_removed`（[fuse_runtime_bootstrap.gd:44-48](../../../editor/bootstrap/fuse_runtime_bootstrap.gd)），回调体与 `FuseEventBus._on_node_removed_for_reflection_cache` **完全相同**。在编辑器进程里，**同一节点的 `node_removed` 信号会被触发两次**——一次来自 bootstrap（仅在编辑器，因为 `EditorPlugin` 才存在），一次来自 autoload（编辑器和运行游戏都有）。两次清理彼此幂等（`clear_*` 容错），不会出错，但属于轻度冗余，疑似 bootstrap 同时兼负"运行游戏侧兜底"职责的历史遗留。如需精简，可由运行游戏侧的某处统一接管。
+> **注（待确认）**：`FuseRuntimeBootstrap._register_reflection_cache_cleanup()` **也**连接了一次 `tree.node_removed`（[fuse_runtime_bootstrap.gd:44-48](../../../../editor/bootstrap/fuse_runtime_bootstrap.gd)），回调体与 `FuseEventBus._on_node_removed_for_reflection_cache` **完全相同**。在编辑器进程里，**同一节点的 `node_removed` 信号会被触发两次**——一次来自 bootstrap（仅在编辑器，因为 `EditorPlugin` 才存在），一次来自 autoload（编辑器和运行游戏都有）。两次清理彼此幂等（`clear_*` 容错），不会出错，但属于轻度冗余，疑似 bootstrap 同时兼负"运行游戏侧兜底"职责的历史遗留。如需精简，可由运行游戏侧的某处统一接管。
 
 ### 2.8 清理钩子
 
@@ -230,7 +230,7 @@ func _notification(what: int) -> void:
 
 ### 3.1 SendEvent 指令（发送方）
 
-[send_event.gd:76-122](../../../instructions/event/send_event.gd)：
+[send_event.gd:76-122](../../../../instructions/event/send_event.gd)：
 
 ```gdscript
 func execute(context: ExecutionContext) -> void:
@@ -264,7 +264,7 @@ func execute(context: ExecutionContext) -> void:
 
 ### 3.2 OnReceiveEvent 事件（接收方）
 
-[on_receive_event.gd](../../../events/event/on_receive_event.gd)：
+[on_receive_event.gd](../../../../events/event/on_receive_event.gd)：
 
 `@export` 选项：
 - `event_name: String` —— 监听的事件名
@@ -272,7 +272,7 @@ func execute(context: ExecutionContext) -> void:
 - `store_args_to_local: bool` —— 是否把参数存入 RuntimeEventInstance 状态
 - `local_var_prefix: String` —— 存储时变量名前缀（默认 `event_`）
 
-**初始化（订阅）**：[on_receive_event.gd:143-153](../../../events/event/on_receive_event.gd)
+**初始化（订阅）**：[on_receive_event.gd:143-153](../../../../events/event/on_receive_event.gd)
 
 ```gdscript
 func _subscribe_to_event(owner_node: Node) -> void:
@@ -285,7 +285,7 @@ func _subscribe_to_event(owner_node: Node) -> void:
 
 注意 `.bind(owner_node)` 把 Trigger 节点作为额外参数绑定进 Callable——回调签名是 `(args, owner_node)`。
 
-**回调（接收）**：[on_receive_event.gd:177-256](../../../events/event/on_receive_event.gd)
+**回调（接收）**：[on_receive_event.gd:177-256](../../../../events/event/on_receive_event.gd)
 1. `trigger_once` 检查（状态优先看 RuntimeEventInstance，回退到 `_has_triggered`）
 2. 标记已触发（同步写 RuntimeEventInstance）
 3. `store_args_to_local` 时把每个参数以 `local_var_prefix + key` 写入运行时状态，并保存完整 `last_event_args`
@@ -334,7 +334,7 @@ OnReceiveEvent **桥接两者**：对外消费 FuseEventBus，对内仍走 BaseE
 
 `FuseRuntimeBridge` 是**双模式 Autoload**：同一个脚本在编辑器进程和运行游戏进程里**执行不同分支**，通过本机 TCP（`127.0.0.1:24563`）建立通信通道，把运行游戏的 Runner 变量快照推送到编辑器，供变量监视器实时显示。
 
-**为什么需要 TCP 桥**：Godot 的内置调试协议（`EngineDebugger`）在 GDScript 侧不可直接调用，且编辑器进程与运行游戏进程内存隔离，RefCounted / Object 跨进程不可达。详见历史方案调研 [`docs/archive/roadmap/2026-06-27-runtime-variable-access-research.md`](../../archive/roadmap/2026-06-27-runtime-variable-access-research.md)（"运行游戏→编辑器：推送扁平快照"是唯一可行路径）。
+**为什么需要 TCP 桥**：Godot 的内置调试协议（`EngineDebugger`）在 GDScript 侧不可直接调用，且编辑器进程与运行游戏进程内存隔离，RefCounted / Object 跨进程不可达。详见历史方案调研 [`docs/archive/roadmap/2026-06-27-runtime-variable-access-research.md`](../../../archive/roadmap/2026-06-27-runtime-variable-access-research.md)（"运行游戏→编辑器：推送扁平快照"是唯一可行路径）。
 
 ### 4.2 常量与协议
 
@@ -353,7 +353,7 @@ const PUSH_INTERVAL := 0.5
   ]}
 ```
 
-`local` / `scope` 均为**扁平 Dictionary**（变量名 → 值），由 `VariableContext.get_all_local_variables_snapshot()` / `get_all_scope_variables_snapshot()` 产出（详见 [variable_context.gd:374-383](../../../core/base/variable_context.gd)）。
+`local` / `scope` 均为**扁平 Dictionary**（变量名 → 值），由 `VariableContext.get_all_local_variables_snapshot()` / `get_all_scope_variables_snapshot()` 产出（详见 [variable_context.gd:374-383](../../../../core/base/variable_context.gd)）。
 
 ### 4.3 实例属性
 
@@ -405,7 +405,7 @@ func _start_server() -> void:
 
 #### 轮询逻辑 `_server_poll()`
 
-每帧执行（[fuse_runtime_bridge.gd:78-101](../../../core/fuse_runtime_bridge.gd)）：
+每帧执行（[fuse_runtime_bridge.gd:78-101](../../../../core/fuse_runtime_bridge.gd)）：
 1. `take_connection()` 接受所有待接入连接，存入 `_connections`
 2. 遍历 `_connections`：
    - `conn.poll()`（**关键**：注释明确指出"poll 后 get_status 准确，断开连接能被清除，避免 !is_open 报错刷屏卡死"）
@@ -415,7 +415,7 @@ func _start_server() -> void:
 
 #### 粘包处理 `_read_json_lines()`
 
-[第 104–124 行](../../../core/fuse_runtime_bridge.gd)：
+[第 104–124 行](../../../../core/fuse_runtime_bridge.gd)：
 1. `get_utf8_string(avail)` 读取全部可用字节
 2. 累加到 `_read_buffers[cid]`（每条连接独立缓冲）
 3. 循环 `find("\n")`，按行切分；每行 `JSON.parse_string`
@@ -462,7 +462,7 @@ func _connect_client() -> void:
 
 #### 节流轮询 `_client_poll(delta)`
 
-[第 155–168 行](../../../core/fuse_runtime_bridge.gd)：
+[第 155–168 行](../../../../core/fuse_runtime_bridge.gd)：
 
 ```gdscript
 _push_acc += delta
@@ -497,7 +497,7 @@ _client.put_partial_data(msg.to_utf8_buffer())
 
 #### Runner 采集 `_collect_runners()`
 
-[第 181–199 行](../../../core/fuse_runtime_bridge.gd)：
+[第 181–199 行](../../../../core/fuse_runtime_bridge.gd)：
 
 ```gdscript
 var scene = get_tree().current_scene
@@ -533,7 +533,7 @@ Runner.current_execution_context (ExecutionContext)
 
 **无直接交互**。`FuseRuntimeBridge` 仅采集 **Runner 的 local / scope 变量**（来自 `VariableContext`），**不**采集 global 变量。
 
-全局变量的编辑器侧显示走**另一条路径**：`FuseVariableWatcher._refresh()` 直接通过 `GlobalVariableService` 读取（[variable_watcher.gd:395-404](../../../editor/debugging/variable_watcher.gd)），无需 TCP 桥（因为 `GlobalVariableManager` 是 Autoload，编辑器进程本就有完整副本）。
+全局变量的编辑器侧显示走**另一条路径**：`FuseVariableWatcher._refresh()` 直接通过 `GlobalVariableService` 读取（[variable_watcher.gd:395-404](../../../../editor/debugging/variable_watcher.gd)），无需 TCP 桥（因为 `GlobalVariableManager` 是 Autoload，编辑器进程本就有完整副本）。
 
 | 变量作用域 | 数据来源 | 是否经 TCP 桥 |
 |-----------|---------|---------------|
@@ -625,7 +625,7 @@ Resource 单例没有这些钩子，必须由外部 driver 调度——而 Autol
 
 ### 7.5 `SendEvent` 调试日志冗长
 
-[send_event.gd:135-159](../../../instructions/event/send_event.gd) 的 `_resolve_args` 含大量 `_log_debug` 行，对每个参数打 3 行日志。生产环境下若 DEBUG 级别未关，将产生大量日志噪声。
+[send_event.gd:135-159](../../../../instructions/event/send_event.gd) 的 `_resolve_args` 含大量 `_log_debug` 行，对每个参数打 3 行日志。生产环境下若 DEBUG 级别未关，将产生大量日志噪声。
 
 ---
 

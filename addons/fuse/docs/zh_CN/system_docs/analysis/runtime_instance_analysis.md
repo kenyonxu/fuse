@@ -8,9 +8,9 @@
 
 | 类名 | 源文件 | 行数 | 职责 |
 |------|--------|------|------|
-| `RuntimeEventInstance` | [runtime_event_instance.gd](../../../core/runtime_event_instance.gd) | 289 行 | 包装 `BaseEvent`，持有事件级运行时状态，转发并过滤 triggered 信号 |
-| `RuntimeInstructionInstance` | [runtime_instruction_instance.gd](../../../core/runtime_instruction_instance.gd) | 549 行 | 包装 `BaseInstruction`，持有单条指令的执行状态、暂停/恢复/超时控制 |
-| `RuntimeActionRunnerInstance` | [runtime_action_runner_instance.gd](../../../core/runtime_action_runner_instance.gd) | 692 行 | 包装 `ActionRunner`，调度指令序列，管理并行/顺序执行、批量信号、对象池集成 |
+| `RuntimeEventInstance` | [runtime_event_instance.gd](../../../../core/runtime_event_instance.gd) | 289 行 | 包装 `BaseEvent`，持有事件级运行时状态，转发并过滤 triggered 信号 |
+| `RuntimeInstructionInstance` | [runtime_instruction_instance.gd](../../../../core/runtime_instruction_instance.gd) | 549 行 | 包装 `BaseInstruction`，持有单条指令的执行状态、暂停/恢复/超时控制 |
+| `RuntimeActionRunnerInstance` | [runtime_action_runner_instance.gd](../../../../core/runtime_action_runner_instance.gd) | 692 行 | 包装 `ActionRunner`，调度指令序列，管理并行/顺序执行、批量信号、对象池集成 |
 
 **共同基类:** `RefCounted`（不进场景树、可被 GC、轻量）
 **注解:** `@tool`（编辑器模式可用）
@@ -342,7 +342,7 @@ Trigger B._ready():
 
 ### 4.3 与 BaseTrigger 的关系
 
-`BaseTrigger`（[base_trigger.gd:57-60](../../../core/base_trigger.gd)）通过两个抽象方法把三件套的访问权下放给子类：
+`BaseTrigger`（[base_trigger.gd:57-60](../../../../core/base_trigger.gd)）通过两个抽象方法把三件套的访问权下放给子类：
 
 ```gdscript
 @abstract func get_runtime_event_instance_at(index: int) -> RuntimeEventInstance
