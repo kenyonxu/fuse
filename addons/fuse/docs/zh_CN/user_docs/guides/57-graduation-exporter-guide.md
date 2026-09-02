@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/57-graduation-exporter-guide.md)
+
 # 毕业导出器使用指南（实验特性）
 
 > **方向修订（2026-09-01）**：Fuse 的出口主线已调整为 **AI 交接工件**——拓扑 + System 划分 + preset 供给**用户自己的 AI agent** 编写脱离 Fuse 的代码，Fuse 不代写代码（`derive_systems` / `validate_system` CLI 仍为主线部件）。本指南描述的 **GDScript 生成（`export_system`）降级为实验特性**：生成代码仍依赖 Fuse 运行时（FuseDelegation + 组件类 + autoload），不是"脱离 Fuse"的导出；保留作参考实现与语义等价性研究的素材。主线工作流见 [README](../../../../../../README.md) 的"从原型到工程代码"。

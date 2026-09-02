@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/51-object-pool-system-guide.md)
+
 # Fuse 对象池系统使用指南
 
 ## 概述

@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/best_practices/trigger_organization.md)
+
 # 触发器组织与竞态规避
 
 ## 概述

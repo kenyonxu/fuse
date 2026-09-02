@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/43-animation-conditions-guide.md)
+
 # Animation 条件指南
 
 ## 概述

@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/45-composite-conditions-guide.md)
+
 # 复合条件指南
 
 Fuse 提供 4 个复合条件，用于通过逻辑组合构建复杂的判断逻辑。复合条件可以嵌套使用，实现任意深度的条件树。

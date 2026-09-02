@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/50-scene-preloading-guide.md)
+
 # 场景预加载系统
 
 Fuse 提供场景预加载功能，通过 `PreloadSceneInstruction` 和 `CheckPreloadStatus` 配合实现异步加载，避免游戏运行时卡顿。

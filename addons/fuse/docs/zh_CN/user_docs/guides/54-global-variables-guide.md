@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/54-global-variables-guide.md)
+
 # 全局变量管理指南
 
 ## 概述

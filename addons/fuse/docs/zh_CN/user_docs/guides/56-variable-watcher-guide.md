@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/56-variable-watcher-guide.md)
+
 # 变量监视器使用指南
 
 `FuseVariableWatcher` 是嵌入在 Godot 编辑器底部 Dock 的**实时变量监视面板**，以 0.5 秒轮询频率展示 Fuse 运行时所有可见变量的名称、值与类型。支持双击编辑、录制折线图和静态声明快照补全。

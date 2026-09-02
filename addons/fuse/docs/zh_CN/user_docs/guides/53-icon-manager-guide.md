@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/53-icon-manager-guide.md)
+
 # Fuse 图标管理器使用指南
 
 想让你的指令在编辑器中显示正确的图标？FuseIconManager 让这件事变得简单。我们提供了两种图标系统：**内置图标**（Godot 自带）和**自定义图标库**（你的专属图标）。

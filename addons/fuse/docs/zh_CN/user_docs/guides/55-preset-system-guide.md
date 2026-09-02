@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/55-preset-system-guide.md)
+
 # 预设系统使用指南
 
 Fuse 预设系统提供**工作流复用 + 跨项目分享**的一体化方案，覆盖从编辑器导出到 JSON/`.tres` 文件再到导入还原的完整管道。系统由以下组件构成：

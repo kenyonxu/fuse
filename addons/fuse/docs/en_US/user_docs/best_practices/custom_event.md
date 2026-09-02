@@ -870,6 +870,6 @@ By following these best practices, you can create high-quality, high-performance
 
 **Related docs:**
 
-- [Custom Condition Creation Best Practices (Chinese)](../../../zh_CN/user_docs/best_practices/custom_condition.md)
+- [Custom Condition Creation Best Practices](custom_condition.md)
 - [Event generation skill](../../../../agent_skills/fuse-event-generator/SKILL.md) — the final authority on event component specs (templates, naming rules, and validation gates); this guide details the architectural principles behind it
 - [Event System Guide (Chinese)](../../../zh_CN/user_docs/guides/30-lifecycle-events-guide.md)

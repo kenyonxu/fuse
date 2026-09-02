@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/52-multithreading-optimization.md)
+
 # Fuse 多线程优化 - 用户指南
 
 ## 这是什么？

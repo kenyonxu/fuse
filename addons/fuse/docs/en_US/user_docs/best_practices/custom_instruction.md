@@ -1277,6 +1277,6 @@ By following these best practices, you can create high-quality, high-performance
 
 **Related docs:**
 
-- [Custom Condition Creation Best Practices (Chinese)](../../../zh_CN/user_docs/best_practices/custom_condition.md)
+- [Custom Condition Creation Best Practices](custom_condition.md)
 - [Instruction generation skill](../../../../agent_skills/fuse-instruction-generator/SKILL.md) — the final authority on instruction component specs (templates, naming rules, and validation gates); this guide details the architectural principles behind it
 - [Variable Binding Usage Guide](../guides/07-variable-binding-guide.md) — user-side usage of the dual-track parameters
