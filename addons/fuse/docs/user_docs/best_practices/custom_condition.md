@@ -233,7 +233,7 @@ static func _get_condition_metadata() -> ConditionMetadata:
 5. **元数据注册**：重启编辑器后在条件选择器对应分类下能找到、搜索 keywords 能命中
 6. **本地化**：中英文 Inspector 名称正常显示
 
-验证清单通过后，参照 [条件生成 skill](../../agent_skills/fuse-condition-generator/SKILL.md) 的完整规范（模板、命名禁则与验证 gate）做最终对齐——该 skill 是条件组件规范的最终权威，本指南是其架构原理的详述。
+验证清单通过后，参照 [条件生成 skill](../../../agent_skills/fuse-condition-generator/SKILL.md) 的完整规范（模板、命名禁则与验证 gate）做最终对齐——该 skill 是条件组件规范的最终权威，本指南是其架构原理的详述。
 
 ---
 

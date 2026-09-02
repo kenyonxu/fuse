@@ -1276,5 +1276,5 @@ func test_instruction_performance():
 **相关文档:**
 
 - [自定义 Condition 创建最佳实践](custom_condition.md)
-- [指令生成 skill](../../agent_skills/fuse-instruction-generator/SKILL.md)——指令组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
+- [指令生成 skill](../../../agent_skills/fuse-instruction-generator/SKILL.md)——指令组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
 - [变量绑定使用指南](../guides/07-variable-binding-guide.md)——双轨参数的用户侧用法
