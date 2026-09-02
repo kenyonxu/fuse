@@ -1,5 +1,7 @@
 # Runner 分析
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 概述
 
 `Runner` 是 Fuse 系统中的 Node 封装组件，将 ActionRunner 资源包装为场景节点，提供信号绑定、运行时实例管理和 awaitable 执行功能。

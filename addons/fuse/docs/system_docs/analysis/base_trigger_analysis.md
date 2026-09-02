@@ -1,5 +1,7 @@
 # BaseTrigger 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统中的 `BaseTrigger` 核心脚本进行了全面分析。`BaseTrigger` 是触发器系统的抽象基类 (`@abstract class_name BaseTrigger extends Node`)，定义了触发器与事件 / 动作运行时实例协作的统一接口、冷却检查、执行上下文创建、引擎回调转发以及池化重置钩子，为 `Trigger` (单事件) 和 `MultiEventTrigger` (多事件绑定) 两个具体子类提供公共能力。

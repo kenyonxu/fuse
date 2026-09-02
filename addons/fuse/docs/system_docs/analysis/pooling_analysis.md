@@ -1,5 +1,7 @@
 # 对象池体系分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统中的对象池子系统进行现状描述。对象池位于 `core/pooling/`，由 5 个类组成：通用场景池 (`FuseObjectPool`)、池项包装 (`FusePoolItem`)、全局池管理器 (`FusePoolManager`)、专用回收定时器 (`FuseRecycleTimer`)，以及面向 `RuntimeInstructionInstance` 的指令实例池 (`InstructionInstancePool`)。两套池体系分别服务于"场景节点复用"（如子弹、特效）与"指令运行时实例复用"（高频执行路径的内存优化），各自有独立的池策略、生命周期与协作对象。

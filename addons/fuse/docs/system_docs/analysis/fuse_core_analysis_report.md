@@ -1,5 +1,7 @@
 # Fuse Visual Programming System - 核心架构分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 1. 概述
 Fuse 是一个为 Godot 4.x 设计的可视化编程系统。通过分析 `addons/fuse` 下的核心文件，可以看出该系统采用**资源驱动 (Resource-driven)** 的架构设计，充分利用了 Godot 的 `Resource` 系统来实现序列化、编辑器集成和运行时逻辑。
 

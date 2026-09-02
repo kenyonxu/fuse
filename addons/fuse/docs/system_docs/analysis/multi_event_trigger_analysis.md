@@ -1,5 +1,7 @@
 # MultiEventTrigger 分析
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 概述
 
 `MultiEventTrigger` 是 Fuse 系统中用于将多个 Trigger 功能合并到单个节点的组件。它继承自 `BaseTrigger`，通过 `EventBinding` 数组管理多个事件-动作绑定，减少场景中的节点数量并提升性能。

@@ -1,5 +1,7 @@
 # 全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge）
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 顶层的两个全局 Autoload 单例节点进行了全面分析：

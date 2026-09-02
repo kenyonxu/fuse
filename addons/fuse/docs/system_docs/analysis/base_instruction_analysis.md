@@ -1,5 +1,7 @@
 # BaseInstruction 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 > 参照代码：`addons/fuse/core/base/base_instruction.gd`（1294 行）、`addons/fuse/core/runtime_instruction_instance.gd`（548 行）
 > 维护：Fuse 开发团队 | 状态：2026-07-07 大更新（对齐 v2.0+ 架构）
 

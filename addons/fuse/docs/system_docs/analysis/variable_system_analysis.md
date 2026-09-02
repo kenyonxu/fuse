@@ -1,5 +1,7 @@
 # Variable System 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统的「变量子系统」进行整体分析。变量系统是事件驱动 / 指令执行的数据底座：Events、Conditions、Instructions 通过统一的读写接口访问变量，无需关心存储位置。

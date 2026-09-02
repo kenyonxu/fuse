@@ -1,5 +1,7 @@
 # Fuse 架构优势分析
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 核心设计理念
 
 Fuse 采用 **Resource-based 可组合架构**，与其他可视化编程系统有本质区别。

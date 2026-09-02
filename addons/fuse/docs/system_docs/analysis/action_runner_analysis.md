@@ -1,5 +1,7 @@
 # ActionRunner 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 > **基准代码**：`addons/fuse/core/base/action_runner.gd`（1041 行）
 > **关联类**：`RuntimeActionRunnerInstance`（`core/runtime_action_runner_instance.gd`，691 行）、`CompiledInstructionSequence`（`core/execution/compiled_instruction_sequence.gd`，142 行）
 > **审计勘误**：旧版本审计曾误判「`core/execution`、`core/pooling`、`core/serialization` 三目录缺失 / 幽灵引用 / 运行时崩溃」。经直接核查为**误判**——三目录及 `CompiledInstructionSequence` / `InstructionInstancePool` / `InstructionSerializer` 类**均真实存在**：`action_runner.gd:9` 的 `CompiledInstructionSequenceClass` preload 生效；`InstructionSerializer` 类定义完整（`action_runner.gd:6` 的 preload 已被注释但类仍存在于 `serialization/` 目录）。本文档反映「代码引用完整」之事实，不传播误判。

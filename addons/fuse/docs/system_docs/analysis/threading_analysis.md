@@ -1,5 +1,6 @@
 # Fuse 线程系统分析报告
 
+
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统中的多线程支持模块进行全面分析。线程系统位于 `addons/fuse/core/threading/`，共 4 个类（合计约 689 行）：`FuseTaskManager`、`ParallelConditionEvaluator`、`FuseThreadSafe`、`FuseThreadingConfig`。该模块为条件并行评估、异步任务执行和共享数据保护提供基础设施，并与 `BaseCondition` 的 `is_thread_safe` 属性协作，实现"按条件安全性自动并行"的核心机制。

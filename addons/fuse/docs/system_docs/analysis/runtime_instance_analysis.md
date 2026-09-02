@@ -1,5 +1,7 @@
 # Runtime 实例三件套分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse v2.0 核心架构——**Runtime 实例三件套**——进行专题分析。三件套由三个相互协作的 `RefCounted` 类组成，共同解决一个核心工程问题：**让同一份 `.tres` Resource 定义可被多个 Trigger 共享，而各自的运行时状态互不污染**。

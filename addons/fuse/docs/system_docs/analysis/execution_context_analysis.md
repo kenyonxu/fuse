@@ -1,5 +1,7 @@
 # ExecutionContext 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统中的 `ExecutionContext` 核心脚本进行现状描述。`ExecutionContext` 是执行上下文类（`class_name ExecutionContext extends RefCounted`），提供指令执行时的环境和上下文信息，是指令与游戏世界交互的桥梁。

@@ -1,5 +1,7 @@
 # 代码修复规格说明（FIX_SPEC）
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 > 用途：规范 CODE_ISSUES.md 中 18 个代码问题的核实与修复工作。
 > 依据：[CODE_ISSUES.md](CODE_ISSUES.md)
 > 性质：**代码修复**（非文档），涉及行为变更，需测试与影响评估

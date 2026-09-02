@@ -1,5 +1,7 @@
 # BaseVariable 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统中的 `BaseVariable` 核心脚本进行了现状描述式分析。`BaseVariable` 是变量系统的基类（`class_name BaseVariable extends Resource`），以 Godot 原生 `Variant` 直接承载值，定义了三层作用域、统一错误处理、生命周期钩子和一组静态工厂方法。它本身不承担存储/查找职责——变量按作用域分别由 `VariableContext`（LOCAL）、`ScopeVariableContainer`（SCOPE）、`GlobalVariableManager`/`Assistant`/`Resource`/`Service` 四件套（GLOBAL）管理。

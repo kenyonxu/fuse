@@ -1,5 +1,7 @@
 # BaseEvent 分析报告
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 ## 文档概述
 
 本报告对 Fuse 可视化编程系统中的 `BaseEvent` 核心脚本进行了全面分析。`BaseEvent` 是事件系统的基类 (class_name BaseEvent extends Resource)，定义了所有事件的生命周期接口、信号机制、运行时状态管理和错误处理框架，为可视化编程系统中的事件驱动功能提供了基础支持。

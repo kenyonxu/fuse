@@ -1,5 +1,7 @@
 # system_docs/analysis 重写规格说明（UPDATE_SPEC）
 
+
+> **分析时点**：2026-07-07（经同日全量文档审计逐篇核对代码；此后实现演进以源码为准，近期已核对的机制性结论见 threading / runtime_instance / preset_nested 等篇）
 > 用途：规范 `addons/fuse/docs/system_docs/analysis/` 12 篇分析文档的重写与更新工作。
 > 依据：[AUDIT_REPORT_2026-07-07.md](AUDIT_REPORT_2026-07-07.md)
 > 状态：✅ 已完成（2026-07-07，15 篇文档重写/更新 + 3 篇新增专题） | 创建日期：2026-07-07 | 维护：Fuse 开发团队
