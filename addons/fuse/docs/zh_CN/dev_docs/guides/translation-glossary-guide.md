@@ -86,28 +86,9 @@
 
 ---
 
-## Introductions 系列英文文件名映射
+## Introductions 系列文件名
 
-zh 树保留中文文件名；en 树按此映射：
-
-| zh_CN（原文） | en_US（译名） |
-|--------------|--------------|
-| `01-总览篇.md` | `01-overview.md` |
-| `02-触发器三件套.md` | `02-trigger-trio.md` |
-| `03-三层变量系统.md` | `03-three-layer-variables.md` |
-| `04-表达式系统.md` | `04-expression-system.md` |
-| `05-流程控制与数据结构.md` | `05-flow-control-and-data-structures.md` |
-| `06-动画系统与Tween.md` | `06-animation-and-tween.md` |
-| `07-角色操控实战.md` | `07-character-control-in-practice.md` |
-| `08-交互体验三件套.md` | `08-interaction-trio.md` |
-| `09-事件系统全解.md` | `09-event-system-complete.md` |
-| `10-条件系统.md` | `10-condition-system.md` |
-| `11-场景与节点管理.md` | `11-scene-and-node-management.md` |
-| `12-指令生成器.md` | `12-instruction-generator.md` |
-| `13-调试体系.md` | `13-debugging-system.md` |
-| `14-Topology拓扑主屏.md` | `14-topology-main-screen.md` |
-| `15-工程化与性能.md` | `15-engineering-and-performance.md` |
-| `16-AI协作与毕业交接.md` | `16-ai-collaboration-and-graduation-handoff.md` |
+2026-09-02 起 zh 树 Introductions 文件名已英文化（`01-overview.md`、`02-trigger-trio.md` … `16-ai-collaboration-and-graduation-handoff.md`），**两树同目录同文件名**，双语互链与工具处理无需任何文件名映射。
 
 `introductions-诊断报告-*.md` 为过程性诊断文档，不翻译。
 

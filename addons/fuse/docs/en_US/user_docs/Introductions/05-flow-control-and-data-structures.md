@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/05-流程控制与数据结构.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/05-flow-control-and-data-structures.md) | English
 
 # If, Loops, Arrays, and Dictionaries: Building Complex Logic in a Visual System
 

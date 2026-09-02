@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/01-总览篇.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/01-overview.md) | English
 
 # Fuse Overview: A Non-destructive Bridge from Visual Prototyping to Production Code
 

@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/02-触发器三件套.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/02-trigger-trio.md) | English
 
 # Build Your First Game Logic in 5 Minutes: Choosing Between Runner / Trigger / MultiEventTrigger
 

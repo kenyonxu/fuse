@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/13-调试体系.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/13-debugging-system.md) | English
 
 # Visual Logic Can Be Stepped Through Too: Breakpoints, Execution Tracing, and Live Variable Watching in Fuse
 

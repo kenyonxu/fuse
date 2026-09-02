@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/04-表达式系统.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/04-expression-system.md) | English
 
 # Damage Formulas Without Writing a Line of Code: Fuse's Expression System in Practice
 

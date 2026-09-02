@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/16-AI协作与毕业交接.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/16-ai-collaboration-and-graduation-handoff.md) | English
 
 # AI Collaboration and Graduation Handoff: From "Prototype Proven in Fuse" to "Engineering Code Born off the Bridge"
 

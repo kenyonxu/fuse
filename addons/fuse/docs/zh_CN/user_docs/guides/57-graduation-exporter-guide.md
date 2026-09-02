@@ -81,6 +81,6 @@ Godot --headless --path . res://addons/fuse/editor/graduation/export_system.tscn
 
 ## 相关文档
 
-- 出口主线走读（用户向）：[16-AI协作与毕业交接](../Introductions/16-AI协作与毕业交接.md)
+- 出口主线走读（用户向）：[16-AI协作与毕业交接](../Introductions/16-ai-collaboration-and-graduation-handoff.md)
 - 场景拓扑面板：[00-editor-panels-overview.md](00-editor-panels-overview.md)
 - 预设系统（去程）：[55-preset-system-guide.md](55-preset-system-guide.md)

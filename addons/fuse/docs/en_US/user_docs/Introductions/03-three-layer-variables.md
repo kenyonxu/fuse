@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/03-三层变量系统.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/03-three-layer-variables.md) | English
 
 # Don't Let Global Variables Run Wild: Managing Fuse's LOCAL / SCOPE / GLOBAL Three-Layer Variables
 

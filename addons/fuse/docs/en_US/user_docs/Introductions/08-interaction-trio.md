@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/08-交互体验三件套.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/08-interaction-trio.md) | English
 
 # Maxing Out Game Feel: UI, Camera, and Audio Feedback with Fuse
 

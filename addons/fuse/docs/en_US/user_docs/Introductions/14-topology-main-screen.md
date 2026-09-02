@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/14-Topology拓扑主屏.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/14-topology-main-screen.md) | English
 
 # One Graph for All Scene Logic: The Fuse Topology Main Screen and Static Analysis
 

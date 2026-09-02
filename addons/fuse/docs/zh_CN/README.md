@@ -11,7 +11,7 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 
 面向使用者。三条内容线：
 
-- **Introductions 系列**（16 篇）：从总览到 AI 协作与毕业交接的完整教程路径，入口 [01-总览篇](user_docs/Introductions/01-总览篇.md)
+- **Introductions 系列**（16 篇）：从总览到 AI 协作与毕业交接的完整教程路径，入口 [01-总览篇](user_docs/Introductions/01-overview.md)
 - **使用指南**（40 余篇）：按编号分段覆盖变量、触发器、表达式、各指令域、事件、条件与高级主题，入口 [00-index](user_docs/guides/00-index.md)
 - **最佳实践**（5 篇）：自定义组件三部曲（[事件](user_docs/best_practices/custom_event.md) / [指令](user_docs/best_practices/custom_instruction.md) / [条件](user_docs/best_practices/custom_condition.md)）+ 用户实践两篇（[Preset 复用与 AI 协作](user_docs/best_practices/preset_reuse.md) / [触发器组织与竞态规避](user_docs/best_practices/trigger_organization.md)）
 
@@ -47,7 +47,7 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 ### 下一步
 
 - [快速开始指南](user_docs/quick_start.md) 详细步骤
-- [01-总览篇](user_docs/Introductions/01-总览篇.md) 系统性入门
+- [01-总览篇](user_docs/Introductions/01-overview.md) 系统性入门
 - [最佳实践](user_docs/best_practices/) 创建自定义组件
 
 ---
@@ -64,10 +64,10 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 ## 🎯 按角色查找文档
 
 ### 游戏设计师（不写代码）
-[快速开始指南](user_docs/quick_start.md) → [Introductions 系列](user_docs/Introductions/01-总览篇.md) → [变量系统](user_docs/guides/01-variable-system-guide.md)
+[快速开始指南](user_docs/quick_start.md) → [Introductions 系列](user_docs/Introductions/01-overview.md) → [变量系统](user_docs/guides/01-variable-system-guide.md)
 
 ### AI 辅助开发者
-[Preset 复用与 AI 协作实践](user_docs/best_practices/preset_reuse.md) → [AI 协作与毕业交接](user_docs/Introductions/16-AI协作与毕业交接.md)
+[Preset 复用与 AI 协作实践](user_docs/best_practices/preset_reuse.md) → [AI 协作与毕业交接](user_docs/Introductions/16-ai-collaboration-and-graduation-handoff.md)
 
 ### 游戏开发者（扩展组件）
 [创建自定义事件](user_docs/best_practices/custom_event.md) · [指令](user_docs/best_practices/custom_instruction.md) · [条件](user_docs/best_practices/custom_condition.md)

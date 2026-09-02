@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/10-条件系统.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/10-condition-system.md) | English
 
 # Teaching Logic to Think: Fuse's Condition System and AND/OR/NOT Composition
 

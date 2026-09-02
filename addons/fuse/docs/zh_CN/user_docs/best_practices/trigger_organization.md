@@ -24,7 +24,7 @@ Topology 静态分析把跨单元的变量关联分成三型，这个分类就�
 
 ### 排查工具
 
-Topology 主屏的竞态预警（黄色 🔥）会列出每对写写冲突和共享变量名。[Topology 指南](../Introductions/14-Topology拓扑主屏.md)有面板操作详解——本篇讲的是看到 🔥 之后怎么办。
+Topology 主屏的竞态预警（黄色 🔥）会列出每对写写冲突和共享变量名。[Topology 指南](../Introductions/14-topology-main-screen.md)有面板操作详解——本篇讲的是看到 🔥 之后怎么办。
 
 ## 二、竞态规避五法
 
@@ -112,7 +112,7 @@ Trigger 节点名带上"对象 + 语义"：`Player_OnDamaged`、`Boss_Phase2_Ent
 
 **相关文档：**
 
-- [Topology 拓扑主屏](../Introductions/14-Topology拓扑主屏.md)——竞态预警的面板操作
+- [Topology 拓扑主屏](../Introductions/14-topology-main-screen.md)——竞态预警的面板操作
 - [变量系统指南](../guides/01-variable-system-guide.md)——作用域隔离的完整规则
 - [触发器选型指南](../guides/02-trigger-selection-guide.md)——三种触发器的选择
 - [Preset 复用与 AI 协作实践](preset_reuse.md)——单元逻辑的积木化与跨项目迁移

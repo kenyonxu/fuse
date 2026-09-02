@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/06-动画系统与Tween.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/06-animation-and-tween.md) | English
 
 # From Animation Playback to Springy Tweens: Fuse's Animation Toolkit and Game Feel Polish
 

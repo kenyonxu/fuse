@@ -122,5 +122,5 @@ Godot --headless --path . res://addons/fuse/editor/preset_ai/validate_preset.tsc
 
 - [预设系统指南](../guides/55-preset-system-guide.md)——导出/导入/映射的操作面
 - [变量绑定使用指南](../guides/07-variable-binding-guide.md)——参数双轨，减少路径依赖的手段
-- [AI 协作与毕业交接](../Introductions/16-AI协作与毕业交接.md)——preset 在"桥梁"全景中的位置
+- [AI 协作与毕业交接](../Introductions/16-ai-collaboration-and-graduation-handoff.md)——preset 在"桥梁"全景中的位置
 - [触发器组织与竞态规避](trigger_organization.md)——preset 落回场景后的组织实践

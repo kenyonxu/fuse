@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/11-场景与节点管理.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/11-scene-and-node-management.md) | English
 
 # Scene Switching, Background Loading, Node CRUD: Fuse Keeps Your Game World in Order
 

@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/09-事件系统全解.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/09-event-system-complete.md) | English
 
 # Triggers Explained: Fuse Lifecycle, Timing Events, and the Event Bus
 

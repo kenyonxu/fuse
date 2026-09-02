@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/12-指令生成器.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/12-instruction-generator.md) | English
 
 # Don't Want to Wait for Official Instructions? Turn Node Methods into Instructions with One Click Using the Fuse Generator
 

@@ -1,4 +1,4 @@
-> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/07-角色操控实战.md) | English
+> 🌐 [**中文版**](../../../zh_CN/user_docs/Introductions/07-character-control-in-practice.md) | English
 
 # Building a Jumping, Wall-climbing Character Without Code: Fuse Input and Physics in Practice
 
