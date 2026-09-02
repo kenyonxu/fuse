@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/event-bus-guide.md)
+
 # FuseEventBus 事件总线开发指南
 
 > **目标**: 为开发者提供 FuseEventBus 全局事件通信机制的完整开发指引，包括事件发送、订阅、取消订阅和编辑器调试。

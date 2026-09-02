@@ -1,213 +1,213 @@
-> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/event_on_input_key_design.md)
+> 🌐 [**中文版**](../../../zh_CN/system_docs/architecture/event_on_input_key_design.md) | English
 
-# OnInputKey 事件设计文档
+# OnInputKey Event Design Document
 
-**文档版本**: 1.0
-**创建日期**: 2024-12-10
-**状态**: ✅ 已实现
-**最后更新**: 2026-01-25
-**实际实现**: `addons/fuse/events/on_input_key.gd`
+**Document version**: 1.0
+**Created**: 2024-12-10
+**Status**: ✅ Implemented
+**Last updated**: 2026-01-25
+**Actual implementation**: `addons/fuse/events/on_input_key.gd`
 
-## 概述
+## Overview
 
-`OnInputKey` 是一个自定义事件类，用于监听用户的键盘输入并触发相应的事件。该事件支持三种按键类型：按下（pressed）、释放（released）和持续按下（held）。用户可以通过编辑器界面选择要监听的按键，并配置相关参数。
+`OnInputKey` is a custom event class that listens for user keyboard input and triggers the corresponding events. It supports three key types: pressed, released, and held. Users can pick the key to listen for through the editor UI and configure the related parameters.
 
-## 核心功能设计
+## Core Feature Design
 
-### 1. 事件类型支持
+### 1. Event Type Support
 
-支持三种键盘事件类型：
+Three keyboard event types are supported:
 
-- **按下事件（Pressed）**：当按键被按下时触发一次
-- **释放事件（Released）**：当按键被释放时触发一次
-- **持续按下事件（Held）**：按键持续按下时按配置的间隔重复触发
+- **Pressed event**: Triggered once when a key is pressed
+- **Released event**: Triggered once when a key is released
+- **Held event**: Triggered repeatedly at the configured interval while a key is held down
 
-### 2. 配置参数
+### 2. Configuration Parameters
 
 ```gdscript
-## 要监听的按键代码
+## The key code to listen for
 @export var key_code: int = KEY_NONE:
     set(value):
         if key_code != value:
             key_code = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # Trigger inspector update
 
-## 按键事件类型
+## The key event type
 @export_enum("按下:0", "释放:1", "持续按下:2") var key_event_type: int = 0:
     set(value):
         if key_event_type != value:
             key_event_type = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # Trigger inspector update
 
-## 持续按下事件的初始延迟（秒）
+## Initial delay for held events (seconds)
 @export var held_initial_delay: float = 1.0:
     set(value):
         if held_initial_delay != value:
             held_initial_delay = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # Trigger inspector update
 
-## 持续按下事件的重复间隔（秒）
+## Repeat interval for held events (seconds)
 @export var held_repeat_interval: float = 0.2:
     set(value):
         if held_repeat_interval != value:
             held_repeat_interval = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # Trigger inspector update
 
-## 是否只触发一次（仅对 pressed 和 released 有效）
+## Whether to trigger only once (valid only for pressed and released)
 @export var trigger_once: bool = false:
     set(value):
         if trigger_once != value:
             trigger_once = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # Trigger inspector update
 
-## 自定义按键名称（用于显示）
+## Custom key name (for display)
 @export var custom_key_name: String = "":
     set(value):
         if custom_key_name != value:
             custom_key_name = value
             _update_resource_name()
-            notify_property_list_changed()  # 触发检视器更新
+            notify_property_list_changed()  # Trigger inspector update
 ```
 
-### 3. 内部状态管理
+### 3. Internal State Management
 
 ```gdscript
-# 内部状态变量
+# Internal state variables
 var _is_key_pressed: bool = false
 var _has_triggered: bool = false
 var _held_timer: Timer = null
 var _owner_node: Node = null
 
-# 实现条件化检视器显示（使用 _validate_property 方法）
+# Implement conditional inspector display (using the _validate_property method)
 func _validate_property(property: Dictionary) -> void:
-    # 当按键事件类型不是持续按下时，禁用持续按下相关属性
-    if key_event_type != 2:  # 不是持续按下事件
+    # When the key event type is not held, disable the held-related properties
+    if key_event_type != 2:  # Not a held event
         if property.name == "held_initial_delay" or property.name == "held_repeat_interval":
             property.usage = PROPERTY_USAGE_READ_ONLY
     
-    # 当按键事件类型是持续按下时，禁用 trigger_once 属性
-    if key_event_type == 2:  # 持续按下事件
+    # When the key event type is held, disable the trigger_once property
+    if key_event_type == 2:  # Held event
         if property.name == "trigger_once":
             property.usage = PROPERTY_USAGE_READ_ONLY
 ```
 
-## 条件化属性显示设计
+## Conditional Property Display Design
 
-为了提供更好的用户体验，OnInputKey 实现了条件化属性显示功能，根据按键事件类型自动显示或隐藏相关参数。
+To provide a better user experience, OnInputKey implements conditional property display, automatically showing or hiding related parameters based on the key event type.
 
-### 1. 设计原理
+### 1. Design Rationale
 
-参考 `SetIntVariable` 中的 `set_with_another_variable` 模式，使用 Godot 的 `_validate_property()` 方法来实现动态属性显示控制。
+Following the `set_with_another_variable` pattern from `SetIntVariable`, it uses Godot's `_validate_property()` method to implement dynamic property display control.
 
-### 2. 实现机制
+### 2. Implementation Mechanism
 
 ```gdscript
-# 实现条件化检视器显示（使用 _validate_property 方法）
+# Implement conditional inspector display (using the _validate_property method)
 func _validate_property(property: Dictionary) -> void:
-    # 当按键事件类型不是持续按下时，禁用持续按下相关属性
-    if key_event_type != 2:  # 不是持续按下事件
+    # When the key event type is not held, disable the held-related properties
+    if key_event_type != 2:  # Not a held event
         if property.name == "held_initial_delay" or property.name == "held_repeat_interval":
             property.usage = PROPERTY_USAGE_READ_ONLY
     
-    # 当按键事件类型是持续按下时，禁用 trigger_once 属性
-    if key_event_type == 2:  # 持续按下事件
+    # When the key event type is held, disable the trigger_once property
+    if key_event_type == 2:  # Held event
         if property.name == "trigger_once":
             property.usage = PROPERTY_USAGE_READ_ONLY
 ```
 
-### 3. 属性显示规则
+### 3. Property Display Rules
 
-| 按键事件类型 | held_initial_delay | held_repeat_interval | trigger_once |
+| Key event type | held_initial_delay | held_repeat_interval | trigger_once |
 |---------------|-------------------|---------------------|--------------|
-| 按下 (0)     | 隐藏              | 隐藏                 | 显示         |
-| 释放 (1)     | 隐藏              | 隐藏                 | 显示         |
-| 持续按下 (2)  | 显示              | 显示                 | 隐藏         |
+| Pressed (0)   | Hidden            | Hidden              | Shown        |
+| Released (1)  | Hidden            | Hidden              | Shown        |
+| Held (2)      | Shown             | Shown               | Hidden       |
 
-### 4. 用户体验优化
+### 4. User Experience Improvements
 
-1. **即时反馈**：当用户切换事件类型时，相关属性立即显示或隐藏
-2. **视觉提示**：隐藏的属性在检视器中显示为只读状态，提供清晰的视觉反馈
-3. **状态保持**：切换事件类型时，已设置的参数值会被保留，方便用户切换回来
+1. **Instant feedback**: When the user switches the event type, related properties are shown or hidden immediately
+2. **Visual cue**: Hidden properties appear read-only in the Inspector, providing clear visual feedback
+3. **State retention**: When switching event types, already-set parameter values are preserved, making it easy to switch back
 
-### 5. 技术细节
+### 5. Technical Details
 
-- 使用 `notify_property_list_changed()` 触发检视器更新
-- 在每个属性的 setter 中调用更新，确保状态同步
-- 使用 `PROPERTY_USAGE_READ_ONLY` 而非完全隐藏属性，保持界面一致性
+- Uses `notify_property_list_changed()` to trigger Inspector updates
+- Calls the update from each property's setter to keep state in sync
+- Uses `PROPERTY_USAGE_READ_ONLY` instead of fully hiding properties, keeping the UI consistent
 
-## 专家审查和关键修复
+## Expert Review and Key Fixes
 
-根据专家审查，发现了以下关键问题并已修复：
+The expert review uncovered the following key issues, all of which have been fixed:
 
-### 🔴 严重问题（已修复）
+### 🔴 Critical Issues (Fixed)
 
-#### 1. 输入事件重复处理
-**问题**：同时连接 `input` 和 `unhandled_key_input` 会导致事件被处理两次
-**修复**：只保留 `unhandled_key_input`，并添加事件标记处理
+#### 1. Duplicate Input Event Handling
+**Problem**: Connecting both `input` and `unhandled_key_input` caused events to be processed twice
+**Fix**: Keep only `unhandled_key_input` and add event-handled marking
 
 ```gdscript
-# 修复前（有问题）
+# Before the fix (buggy)
 _owner_node.input.connect(_on_input)
 _owner_node.unhandled_key_input.connect(_on_unhandled_key_input)
 
-# 修复后（正确）
+# After the fix (correct)
 _owner_node.set_process_unhandled_key_input(true)
 if not _owner_node.unhandled_key_input.is_connected(_on_unhandled_key_input):
     _owner_node.unhandled_key_input.connect(_on_unhandled_key_input)
 
 func _on_unhandled_key_input(event: InputEvent):
-    # 标记事件已处理，避免被其他节点处理
+    # Mark the event as handled to prevent other nodes from processing it
     if event is InputEventKey and event.keycode == key_code:
         get_viewport().set_input_as_handled()
     _on_input(event)
 ```
 
-#### 2. 持续按下逻辑的定时器错误
-**问题**：`trigger_once` 参数影响持续按下事件的重复触发
-**修复**：持续按下事件不受 `trigger_once` 限制，并正确重置状态
+#### 2. Timer Bug in the Held Logic
+**Problem**: The `trigger_once` parameter affected repeated triggering of held events
+**Fix**: Held events are exempt from the `trigger_once` restriction, and state is reset correctly
 
 ```gdscript
-# 修复前（逻辑错误）
+# Before the fix (logic error)
 if not trigger_once or not _has_triggered:
     _has_triggered = true
     triggered.emit()
 
-# 修复后（正确）
-# 持续按下事件不受 trigger_once 限制
+# After the fix (correct)
+# Held events are exempt from the trigger_once restriction
 _log_info("触发持续按下事件: %s" % _get_key_name())
 triggered.emit(_owner_node)
 ```
 
-#### 3. 状态管理不完整
-**问题**：按键释放后没有重置 `_has_triggered` 状态
-**修复**：在按键释放事件中重置触发状态
+#### 3. Incomplete State Management
+**Problem**: The `_has_triggered` state was not reset after the key was released
+**Fix**: Reset the trigger state in the key-released event
 
 ```gdscript
-# 修复后（添加状态重置）
+# After the fix (state reset added)
 func _handle_key_released():
-    # ... 现有代码 ...
+    # ... existing code ...
     _has_triggered = true
     _log_info("触发按键释放事件: %s" % _get_key_name())
     triggered.emit(_owner_node)
     
-    # 按键释放后重置触发状态，允许下次按键再次触发
+    # Reset the trigger state after key release so the next press can trigger again
     _has_triggered = false
 ```
 
-#### 4. 内存泄漏风险
-**问题**：移除定时器前没有停止它
-**修复**：在 `queue_free()` 前调用 `stop()`
+#### 4. Memory Leak Risk
+**Problem**: The timer was not stopped before being removed
+**Fix**: Call `stop()` before `queue_free()`
 
 ```gdscript
-# 修复后（正确清理）
+# After the fix (correct cleanup)
 func _cleanup_held_timer():
     if _held_timer:
-        _held_timer.stop()  # 先停止定时器
+        _held_timer.stop()  # Stop the timer first
         if _held_timer.timeout.is_connected(_on_held_timer_timeout):
             _held_timer.timeout.disconnect(_on_held_timer_timeout)
         if _owner_node and is_instance_valid(_owner_node):
@@ -216,27 +216,27 @@ func _cleanup_held_timer():
         _held_timer = null
 ```
 
-### 🟡 设计改进（建议实现）
+### 🟡 Design Improvements (Recommended)
 
-#### 1. API 设计不够 Godot 风格
-**问题**：使用字符串枚举而非类型安全的枚举
-**建议**：使用 Godot 4 的 `enum` 特性
+#### 1. API Design Not Idiomatic Godot Style
+**Problem**: Uses a string enum instead of a type-safe enum
+**Recommendation**: Use Godot 4's `enum` feature
 
 ```gdscript
-# 当前（不推荐）
+# Current (not recommended)
 @export_enum("按下:0", "释放:1", "持续按下:2") var key_event_type: int = 0
 
-# 建议（类型安全）
+# Recommended (type-safe)
 enum KeyEventType { PRESSED, RELEASED, HELD }
 @export var key_event_type: KeyEventType = KeyEventType.PRESSED
 ```
 
-#### 2. Editor 插件缺少状态同步
-**问题**：`InputKeySelector` 缺少 `_update_property` 实现
-**建议**：完整实现属性同步方法
+#### 2. Editor Plugin Missing State Sync
+**Problem**: `InputKeySelector` lacks a `_update_property` implementation
+**Recommendation**: Fully implement the property sync method
 
 ```gdscript
-# 建议添加
+# Suggested addition
 func _update_property():
     var object = get_edited_object()
     if object and object.has_method("get"):
@@ -245,36 +245,36 @@ func _update_property():
         property_control.text = "按键: " + key_name
 ```
 
-#### 3. 性能优化建议
-**问题**：每个事件实例都创建独立 Timer
-**建议**：使用单例 Timer 管理器或帧计数
+#### 3. Performance Optimization Suggestions
+**Problem**: Every event instance creates its own Timer
+**Recommendation**: Use a singleton Timer manager or frame counting
 
-#### 4. 缺少输入优先级控制
-**问题**：无法处理多个事件监听同一按键时的优先级
-**建议**：增加 `priority` 属性
+#### 4. Missing Input Priority Control
+**Problem**: Cannot handle priority when multiple events listen to the same key
+**Recommendation**: Add a `priority` property
 
-### 📋 关键修复清单
+### 📋 Key Fix Checklist
 
-✅ **已修复的核心问题：**
-- [x] 移除重复的输入处理连接
-- [x] 修复持续按下事件的 trigger_once 逻辑
-- [x] 添加按键释放后的状态重置
-- [x] 修复定时器内存泄漏问题
-- [x] 添加事件处理标记防止重复处理
+✅ **Core issues fixed:**
+- [x] Removed the duplicate input processing connection
+- [x] Fixed the trigger_once logic for held events
+- [x] Added state reset after key release
+- [x] Fixed the timer memory leak
+- [x] Added event-handled marking to prevent duplicate processing
 
-### 🧪 测试验证要点
+### 🧪 Test Verification Points
 
-1. **按键按下事件**：在 `trigger_once=true` 时只触发一次
-2. **持续按下事件**：释放后再次按下能正确重置和触发
-3. **多个事件监听**：同一按键的多个事件不会相互干扰
-4. **内存管理**：场景卸载时定时器和信号正确清理
-5. **性能测试**：100个持续按下事件同时运行的性能表现
+1. **Key press event**: Triggers only once when `trigger_once=true`
+2. **Held event**: Pressing again after release resets and triggers correctly
+3. **Multiple listeners**: Multiple events on the same key do not interfere with each other
+4. **Memory management**: Timers and signal connections are cleaned up correctly when the scene unloads
+5. **Performance test**: Performance with 100 held events running simultaneously
 
-## 按键选择界面设计
+## Key Selection UI Design
 
-### 1. 编辑器插件集成
+### 1. Editor Plugin Integration
 
-创建一个自定义的 Inspector 插件，用于在编辑器中提供按键选择功能：
+Create a custom Inspector plugin to provide key selection in the editor:
 
 ```gdscript
 # addons/fuse/editor/input_key_selector/input_key_selector.gd
@@ -304,7 +304,7 @@ func _on_key_selected(key_code: int):
     emit_changed(get_edited_property(), key_code)
 ```
 
-### 2. 按键选择对话框
+### 2. Key Selection Dialog
 
 ```gdscript
 # addons/fuse/editor/input_key_selector/input_key_dialog.gd
@@ -354,48 +354,48 @@ func _notification(what):
             waiting_for_key = false
 ```
 
-## 按键监听和事件触发机制
+## Key Listening and Event Triggering Mechanism
 
-### 1. 初始化流程
+### 1. Initialization Flow
 
 ```gdscript
 func initialize(owner_node: Node) -> void:
     _log_debug("初始化 OnInputKey")
     
-    # 验证 owner_node
+    # Validate owner_node
     if not owner_node:
         _create_fuse_error("Owner 节点为空", FuseError.ErrorType.CONFIGURATION_ERROR)
         return
     
     _owner_node = owner_node
     
-    # 验证按键代码
+    # Validate the key code
     if key_code == KEY_NONE:
         _create_fuse_error("未指定有效的按键代码", FuseError.ErrorType.CONFIGURATION_ERROR)
         return
     
-    # 连接输入处理
+    # Connect input handling
     if not owner_node.tree_entered.is_connected(_on_tree_entered):
         owner_node.tree_entered.connect(_on_tree_entered)
     
-    # 如果已经在场景树中，立即设置输入处理
+    # If already in the scene tree, set up input processing immediately
     if owner_node.is_inside_tree():
         _setup_input_processing()
     
     _log_debug("OnInputKey 初始化完成: %s" % get_description())
 ```
 
-### 2. 输入处理设置
+### 2. Input Processing Setup
 
 ```gdscript
 func _setup_input_processing():
     if not _owner_node:
         return
     
-    # 确保节点可以处理输入
+    # Make sure the node can process input
     _owner_node.set_process_unhandled_key_input(true)
     
-    # 只连接 unhandled_key_input，避免重复处理
+    # Connect only unhandled_key_input to avoid duplicate processing
     if not _owner_node.unhandled_key_input.is_connected(_on_unhandled_key_input):
         _owner_node.unhandled_key_input.connect(_on_unhandled_key_input)
 
@@ -403,7 +403,7 @@ func _on_tree_entered():
     _setup_input_processing()
 ```
 
-### 3. 按键事件处理
+### 3. Key Event Handling
 
 ```gdscript
 func _on_input(event: InputEvent):
@@ -414,13 +414,13 @@ func _on_input(event: InputEvent):
         return
     
     match key_event_type:
-        0:  # 按下
+        0:  # Pressed
             if event.pressed and not event.is_echo():
                 _handle_key_pressed()
-        1:  # 释放
+        1:  # Released
             if not event.pressed:
                 _handle_key_released()
-        2:  # 持续按下
+        2:  # Held
             if event.pressed:
                 if not event.is_echo():
                     _handle_key_held_start()
@@ -428,19 +428,19 @@ func _on_input(event: InputEvent):
                 _handle_key_held_end()
 
 func _on_unhandled_key_input(event: InputEvent):
-    # 标记事件已处理，避免被其他节点处理
+    # Mark the event as handled to prevent other nodes from processing it
     if event is InputEventKey and event.keycode == key_code:
         get_viewport().set_input_as_handled()
     _on_input(event)
 ```
 
-### 4. 事件触发逻辑
+### 4. Event Triggering Logic
 
 ```gdscript
 func _handle_key_pressed():
     _log_debug("按键按下: %s" % _get_key_name())
     
-    # 检查是否只触发一次
+    # Check whether it should trigger only once
     if trigger_once and _has_triggered:
         _log_debug("已触发过，跳过")
         return
@@ -452,7 +452,7 @@ func _handle_key_pressed():
 func _handle_key_released():
     _log_debug("按键释放: %s" % _get_key_name())
     
-    # 检查是否只触发一次
+    # Check whether it should trigger only once
     if trigger_once and _has_triggered:
         _log_debug("已触发过，跳过")
         return
@@ -461,20 +461,20 @@ func _handle_key_released():
     _log_info("触发按键释放事件: %s" % _get_key_name())
     triggered.emit(_owner_node)
     
-    # 按键释放后重置触发状态，允许下次按键再次触发
+    # Reset the trigger state after key release so the next press can trigger again
     _has_triggered = false
 
 func _handle_key_held_start():
     if _is_key_pressed:
-        return  # 已经在按下状态
+        return  # Already in the pressed state
     
     _is_key_pressed = true
     _log_debug("开始持续按下: %s" % _get_key_name())
     
-    # 创建定时器
+    # Create the timer
     _create_held_timer()
     
-    # 立即触发一次（持续按下事件不受 trigger_once 限制）
+    # Trigger once immediately (held events are exempt from the trigger_once restriction)
     _log_info("触发持续按下事件: %s" % _get_key_name())
     triggered.emit(_owner_node)
 
@@ -485,7 +485,7 @@ func _handle_key_held_end():
     _is_key_pressed = false
     _log_debug("结束持续按下: %s" % _get_key_name())
     
-    # 清理定时器
+    # Clean up the timer
     _cleanup_held_timer()
 
 func _create_held_timer():
@@ -501,17 +501,17 @@ func _create_held_timer():
 func _on_held_timer_timeout():
     _log_debug("持续按下重复触发: %s" % _get_key_name())
     
-    # 更新定时器间隔为重复间隔
+    # Update the timer wait time to the repeat interval
     if _held_timer.wait_time != held_repeat_interval:
         _held_timer.wait_time = held_repeat_interval
     
-    # 触发事件
+    # Trigger the event
     _log_info("触发持续按下重复事件: %s" % _get_key_name())
     triggered.emit(_owner_node)
 
 func _cleanup_held_timer():
     if _held_timer:
-        # 先停止定时器
+        # Stop the timer first
         _held_timer.stop()
         
         if _held_timer.timeout.is_connected(_on_held_timer_timeout):
@@ -524,7 +524,7 @@ func _cleanup_held_timer():
         _held_timer = null
 ```
 
-## 资源名称更新逻辑
+## Resource Name Update Logic
 
 ```gdscript
 func _update_resource_name():
@@ -533,11 +533,11 @@ func _update_resource_name():
     var once_text = trigger_once ? " [仅一次]" : ""
     
     match key_event_type:
-        0:  # 按下
+        0:  # Pressed
             resource_name = "按键按下: %s%s" % [key_name, once_text]
-        1:  # 释放
+        1:  # Released
             resource_name = "按键释放: %s%s" % [key_name, once_text]
-        2:  # 持续按下
+        2:  # Held
             var delay_text = " (延迟:%.1fs, 间隔:%.1fs)" % [held_initial_delay, held_repeat_interval]
             resource_name = "按键持续按下: %s%s" % [key_name, delay_text]
 
@@ -558,18 +558,18 @@ func _get_event_type_name() -> String:
         _: return "未知"
 ```
 
-## 验证和错误处理机制
+## Validation and Error Handling Mechanism
 
 ```gdscript
 func validate() -> Array[String]:
     var errors: Array[String] = []
     
-    # 验证按键代码
+    # Validate the key code
     if key_code == KEY_NONE:
         errors.append("必须指定有效的按键代码")
     
-    # 验证持续按下参数
-    if key_event_type == 2:  # 持续按下
+    # Validate the held parameters
+    if key_event_type == 2:  # Held
         if held_initial_delay < 0:
             errors.append("初始延迟不能为负数")
         
@@ -589,13 +589,13 @@ func get_description() -> String:
     var event_type_name = _get_event_type_name()
     
     match key_event_type:
-        0:  # 按下
+        0:  # Pressed
             var once_text = trigger_once ? " (仅一次)" : ""
             return "当按下 %s 键时触发%s" % [key_name, once_text]
-        1:  # 释放
+        1:  # Released
             var once_text = trigger_once ? " (仅一次)" : ""
             return "当释放 %s 键时触发%s" % [key_name, once_text]
-        2:  # 持续按下
+        2:  # Held
             return "当持续按下 %s 键时触发 (延迟%.1fs, 间隔%.1fs)" % [
                 key_name, held_initial_delay, held_repeat_interval
             ]
@@ -609,13 +609,13 @@ func get_event_category() -> String:
     return "input"
 ```
 
-## 生命周期管理
+## Lifecycle Management
 
 ```gdscript
 func terminate(owner_node: Node) -> void:
     _log_debug("清理 OnInputKey")
     
-    # 断开信号连接
+    # Disconnect the signal connections
     if owner_node:
         if owner_node.tree_entered.is_connected(_on_tree_entered):
             owner_node.tree_entered.disconnect(_on_tree_entered)
@@ -626,10 +626,10 @@ func terminate(owner_node: Node) -> void:
         if owner_node.unhandled_key_input.is_connected(_on_unhandled_key_input):
             owner_node.unhandled_key_input.disconnect(_on_unhandled_key_input)
     
-    # 清理定时器
+    # Clean up the timer
     _cleanup_held_timer()
     
-    # 重置状态
+    # Reset the state
     _is_key_pressed = false
     _has_triggered = false
     _owner_node = null
@@ -644,26 +644,26 @@ func reset() -> void:
     _log_debug("OnInputKey 状态已重置")
 ```
 
-## 编辑器插件注册
+## Editor Plugin Registration
 
-### 1. 插件主文件注册
+### 1. Plugin Main File Registration
 
-根据项目的插件架构，以下类应该注册到 `addons/fuse/plugin.gd` 中：
+Per the project's plugin architecture, the following classes should be registered in `addons/fuse/plugin.gd`:
 
 ```gdscript
-# 在 addons/fuse/plugin.gd 的 _enter_tree() 方法中添加：
+# Add inside the _enter_tree() method of addons/fuse/plugin.gd:
 
-# 注册按键选择相关编辑器类
+# Register the key-selection editor classes
 add_custom_type("InputKeySelector", "EditorProperty", preload("res://addons/fuse/editor/input_key_selector.gd"), preload("res://icon.svg"))
 add_custom_type("InputKeyDialog", "AcceptDialog", preload("res://addons/fuse/editor/input_key_dialog.gd"), preload("res://icon.svg"))
 add_custom_type("InputKeyInspectorPlugin", "EditorInspectorPlugin", preload("res://addons/fuse/editor/input_key_inspector_plugin.gd"), preload("res://icon.svg"))
 
-# 注册 Inspector 插件实例
+# Register the Inspector plugin instance
 var input_key_inspector = preload("res://addons/fuse/editor/input_key_inspector_plugin.gd").new()
 add_inspector_plugin(input_key_inspector)
 ```
 
-### 2. Inspector 插件实现
+### 2. Inspector Plugin Implementation
 
 ```gdscript
 # addons/fuse/editor/input_key_selector/input_key_inspector_plugin.gd
@@ -681,176 +681,176 @@ func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wi
     return false
 ```
 
-### 3. 需要注册的类清单
+### 3. Classes to Register
 
-| 类名 | 类型 | 文件路径 | 是否需要注册 |
+| Class | Type | File path | Needs registration |
 |------|------|----------|--------------|
-| OnInputKey | Resource | addons/fuse/events/on_input_key.gd | ✅ 是 |
-| InputKeySelector | EditorProperty | addons/fuse/editor/input_key_selector.gd | ✅ 是 |
-| InputKeyDialog | AcceptDialog | addons/fuse/editor/input_key_dialog.gd | ✅ 是 |
-| InputKeyInspectorPlugin | EditorInspectorPlugin | addons/fuse/editor/input_key_inspector_plugin.gd | ✅ 是 |
+| OnInputKey | Resource | addons/fuse/events/on_input_key.gd | ✅ Yes |
+| InputKeySelector | EditorProperty | addons/fuse/editor/input_key_selector.gd | ✅ Yes |
+| InputKeyDialog | AcceptDialog | addons/fuse/editor/input_key_dialog.gd | ✅ Yes |
+| InputKeyInspectorPlugin | EditorInspectorPlugin | addons/fuse/editor/input_key_inspector_plugin.gd | ✅ Yes |
 
-### 4. 插件清理
+### 4. Plugin Cleanup
 
-在 `addons/fuse/plugin.gd` 的 `_exit_tree()` 方法中添加：
+Add the following in the `_exit_tree()` method of `addons/fuse/plugin.gd`:
 
 ```gdscript
-# 清理 OnInputKey 相关类
+# Clean up the OnInputKey-related classes
 remove_custom_type("OnInputKey")
 remove_custom_type("InputKeySelector")
 remove_custom_type("InputKeyDialog")
 remove_custom_type("InputKeyInspectorPlugin")
 
-# 移除 Inspector 插件
+# Remove the Inspector plugin
 if input_key_inspector:
     remove_inspector_plugin(input_key_inspector)
     input_key_inspector = null
 ```
 
-## 使用示例
+## Usage Examples
 
 ```gdscript
-# 创建事件
+# Create the event
 var key_event = OnInputKey.new()
 
-# 配置按键为空格键的按下事件
+# Configure a pressed event for the Space key
 key_event.key_code = KEY_SPACE
-key_event.key_event_type = 0  # 按下
+key_event.key_event_type = 0  # Pressed
 key_event.trigger_once = true
 
-# 配置持续按下事件
+# Configure a held event
 key_event.key_code = KEY_R
-key_event.key_event_type = 2  # 持续按下
+key_event.key_event_type = 2  # Held
 key_event.held_initial_delay = 0.5
 key_event.held_repeat_interval = 0.1
 ```
 
-## 最佳实践建议
+## Best Practice Recommendations
 
-1. **性能考虑**：避免设置过小的重复间隔，可能导致性能问题
-2. **按键冲突**：避免多个事件监听同一个按键，可能导致意外行为
-3. **状态管理**：合理使用 trigger_once 参数，避免重复触发
-4. **错误处理**：始终检查验证结果，确保配置正确
-5. **资源清理**：确保在不需要时正确终止事件，释放资源
+1. **Performance**: Avoid setting a repeat interval that is too small; it can cause performance issues
+2. **Key conflicts**: Avoid having multiple events listen to the same key; it can cause unexpected behavior
+3. **State management**: Use the trigger_once parameter judiciously to avoid duplicate triggering
+4. **Error handling**: Always check validation results to make sure the configuration is correct
+5. **Resource cleanup**: Make sure to terminate events properly when no longer needed, releasing resources
 
-## 扩展可能性
+## Extension Possibilities
 
-1. **多键组合**：支持同时按下多个按键的组合事件
-2. **修饰键支持**：支持 Ctrl、Alt、Shift 等修饰键
-3. **鼠标事件**：扩展支持鼠标按键和滚轮事件
-4. **手柄支持**：扩展支持游戏手柄按键事件
-5. **输入映射集成**：与 Godot 的输入映射系统集成
+1. **Multi-key combos**: Support combo events where multiple keys are pressed together
+2. **Modifier keys**: Support modifiers such as Ctrl, Alt, and Shift
+3. **Mouse events**: Extend support to mouse buttons and the scroll wheel
+4. **Gamepad support**: Extend support to gamepad button events
+5. **Input map integration**: Integrate with Godot's input map system
 
-## 完整实现示例
+## Full Implementation Example
 
-### 1. OnInputKey 主类实现
+### 1. OnInputKey Main Class Implementation
 
 ```gdscript
-# 文件：addons/fuse/events/on_input_key.gd
+# File: addons/fuse/events/on_input_key.gd
 @tool
 class_name OnInputKey extends BaseEvent
 
-## 要监听的按键代码
+## The key code to listen for
 @export var key_code: int = KEY_NONE:
 	set(value):
 		if key_code != value:
 			key_code = value
 			_update_resource_name()
-			notify_property_list_changed()  # 触发检视器更新
+			notify_property_list_changed()  # Trigger inspector update
 
-## 按键事件类型
+## The key event type
 @export_enum("按下:0", "释放:1", "持续按下:2") var key_event_type: int = 0:
 	set(value):
 		if key_event_type != value:
 			key_event_type = value
 			_update_resource_name()
-			notify_property_list_changed()  # 触发检视器更新
+			notify_property_list_changed()  # Trigger inspector update
 
-## 持续按下事件的初始延迟（秒）
+## Initial delay for held events (seconds)
 @export var held_initial_delay: float = 1.0:
 	set(value):
 		if held_initial_delay != value:
 			held_initial_delay = value
 			_update_resource_name()
-			notify_property_list_changed()  # 触发检视器更新
+			notify_property_list_changed()  # Trigger inspector update
 
-## 持续按下事件的重复间隔（秒）
+## Repeat interval for held events (seconds)
 @export var held_repeat_interval: float = 0.2:
 	set(value):
 		if held_repeat_interval != value:
 			held_repeat_interval = value
 			_update_resource_name()
-			notify_property_list_changed()  # 触发检视器更新
+			notify_property_list_changed()  # Trigger inspector update
 
-## 是否只触发一次（仅对 pressed 和 released 有效）
+## Whether to trigger only once (valid only for pressed and released)
 @export var trigger_once: bool = false:
 	set(value):
 		if trigger_once != value:
 			trigger_once = value
 			_update_resource_name()
-			notify_property_list_changed()  # 触发检视器更新
+			notify_property_list_changed()  # Trigger inspector update
 
-## 自定义按键名称（用于显示）
+## Custom key name (for display)
 @export var custom_key_name: String = "":
 	set(value):
 		if custom_key_name != value:
 			custom_key_name = value
 			_update_resource_name()
-			notify_property_list_changed()  # 触发检视器更新
+			notify_property_list_changed()  # Trigger inspector update
 
-# 内部状态变量
+# Internal state variables
 var _is_key_pressed: bool = false
 var _has_triggered: bool = false
 var _held_timer: Timer = null
 var _owner_node: Node = null
 
-# 实现条件化检视器显示（使用 _validate_property 方法）
+# Implement conditional inspector display (using the _validate_property method)
 func _validate_property(property: Dictionary) -> void:
-	# 当按键事件类型不是持续按下时，禁用持续按下相关属性
-	if key_event_type != 2:  # 不是持续按下事件
+	# When the key event type is not held, disable the held-related properties
+	if key_event_type != 2:  # Not a held event
 		if property.name == "held_initial_delay" or property.name == "held_repeat_interval":
 			property.usage = PROPERTY_USAGE_READ_ONLY
 	
-	# 当按键事件类型是持续按下时，禁用 trigger_once 属性
-	if key_event_type == 2:  # 持续按下事件
+	# When the key event type is held, disable the trigger_once property
+	if key_event_type == 2:  # Held event
 		if property.name == "trigger_once":
 			property.usage = PROPERTY_USAGE_READ_ONLY
 
-# 根据属性设置更新在列表中的名称
+# Update the name shown in the list based on the property settings
 func _update_resource_name():
 	var key_name = _get_key_name()
 	
 	match key_event_type:
-		0:  # 按下
+		0:  # Pressed
 			var once_text = trigger_once ? " [仅一次]" : ""
 			resource_name = "按键按下: %s%s" % [key_name, once_text]
-		1:  # 释放
+		1:  # Released
 			var once_text = trigger_once ? " [仅一次]" : ""
 			resource_name = "按键释放: %s%s" % [key_name, once_text]
-		2:  # 持续按下
+		2:  # Held
 			var delay_text = " (延迟:%.1fs, 间隔:%.1fs)" % [held_initial_delay, held_repeat_interval]
 			resource_name = "按键持续按下: %s%s" % [key_name, delay_text]
 
 func initialize(owner_node: Node) -> void:
 	_log_debug("初始化 OnInputKey")
 	
-	# 验证 owner_node
+	# Validate owner_node
 	if not owner_node:
 		_create_fuse_error("Owner 节点为空", FuseError.ErrorType.CONFIGURATION_ERROR)
 		return
 	
 	_owner_node = owner_node
 	
-	# 验证按键代码
+	# Validate the key code
 	if key_code == KEY_NONE:
 		_create_fuse_error("未指定有效的按键代码", FuseError.ErrorType.CONFIGURATION_ERROR)
 		return
 	
-	# 连接输入处理
+	# Connect input handling
 	if not owner_node.tree_entered.is_connected(_on_tree_entered):
 		owner_node.tree_entered.connect(_on_tree_entered)
 	
-	# 如果已经在场景树中，立即设置输入处理
+	# If already in the scene tree, set up input processing immediately
 	if owner_node.is_inside_tree():
 		_setup_input_processing()
 	
@@ -859,7 +859,7 @@ func initialize(owner_node: Node) -> void:
 func terminate(owner_node: Node) -> void:
 	_log_debug("清理 OnInputKey")
 	
-	# 断开信号连接
+	# Disconnect the signal connections
 	if owner_node:
 		if owner_node.tree_entered.is_connected(_on_tree_entered):
 			owner_node.tree_entered.disconnect(_on_tree_entered)
@@ -867,10 +867,10 @@ func terminate(owner_node: Node) -> void:
 		if owner_node.unhandled_key_input.is_connected(_on_unhandled_key_input):
 			owner_node.unhandled_key_input.disconnect(_on_unhandled_key_input)
 	
-	# 清理定时器
+	# Clean up the timer
 	_cleanup_held_timer()
 	
-	# 重置状态
+	# Reset the state
 	_is_key_pressed = false
 	_has_triggered = false
 	_owner_node = null
@@ -881,10 +881,10 @@ func _setup_input_processing():
 	if not _owner_node:
 		return
 	
-	# 确保节点可以处理未处理的按键输入
+	# Make sure the node can process unhandled key input
 	_owner_node.set_process_unhandled_key_input(true)
 	
-	# 只连接 unhandled_key_input，避免重复处理
+	# Connect only unhandled_key_input to avoid duplicate processing
 	if not _owner_node.unhandled_key_input.is_connected(_on_unhandled_key_input):
 		_owner_node.unhandled_key_input.connect(_on_unhandled_key_input)
 
@@ -899,13 +899,13 @@ func _on_input(event: InputEvent):
 		return
 	
 	match key_event_type:
-		0:  # 按下
+		0:  # Pressed
 			if event.pressed and not event.is_echo():
 				_handle_key_pressed()
-		1:  # 释放
+		1:  # Released
 			if not event.pressed:
 				_handle_key_released()
-		2:  # 持续按下
+		2:  # Held
 			if event.pressed:
 				if not event.is_echo():
 					_handle_key_held_start()
@@ -913,7 +913,7 @@ func _on_input(event: InputEvent):
 				_handle_key_held_end()
 
 func _on_unhandled_key_input(event: InputEvent):
-	# 标记事件已处理，避免被其他节点处理
+	# Mark the event as handled to prevent other nodes from processing it
 	if event is InputEventKey and event.keycode == key_code:
 		get_viewport().set_input_as_handled()
 	_on_input(event)
@@ -921,7 +921,7 @@ func _on_unhandled_key_input(event: InputEvent):
 func _handle_key_pressed():
 	_log_debug("按键按下: %s" % _get_key_name())
 	
-	# 检查是否只触发一次
+	# Check whether it should trigger only once
 	if trigger_once and _has_triggered:
 		_log_debug("已触发过，跳过")
 		return
@@ -933,7 +933,7 @@ func _handle_key_pressed():
 func _handle_key_released():
 	_log_debug("按键释放: %s" % _get_key_name())
 	
-	# 检查是否只触发一次
+	# Check whether it should trigger only once
 	if trigger_once and _has_triggered:
 		_log_debug("已触发过，跳过")
 		return
@@ -942,20 +942,20 @@ func _handle_key_released():
 	_log_info("触发按键释放事件: %s" % _get_key_name())
 	triggered.emit(_owner_node)
 	
-	# 按键释放后重置触发状态，允许下次按键再次触发
+	# Reset the trigger state after key release so the next press can trigger again
 	_has_triggered = false
 
 func _handle_key_held_start():
 	if _is_key_pressed:
-		return  # 已经在按下状态
+		return  # Already in the pressed state
 	
 	_is_key_pressed = true
 	_log_debug("开始持续按下: %s" % _get_key_name())
 	
-	# 创建定时器
+	# Create the timer
 	_create_held_timer()
 	
-	# 立即触发一次（持续按下事件不受 trigger_once 限制）
+	# Trigger once immediately (held events are exempt from the trigger_once restriction)
 	_log_info("触发持续按下事件: %s" % _get_key_name())
 	triggered.emit(_owner_node)
 
@@ -966,7 +966,7 @@ func _handle_key_held_end():
 	_is_key_pressed = false
 	_log_debug("结束持续按下: %s" % _get_key_name())
 	
-	# 清理定时器
+	# Clean up the timer
 	_cleanup_held_timer()
 
 func _create_held_timer():
@@ -982,17 +982,17 @@ func _create_held_timer():
 func _on_held_timer_timeout():
 	_log_debug("持续按下重复触发: %s" % _get_key_name())
 	
-	# 更新定时器间隔为重复间隔
+	# Update the timer wait time to the repeat interval
 	if _held_timer.wait_time != held_repeat_interval:
 		_held_timer.wait_time = held_repeat_interval
 	
-	# 触发事件
+	# Trigger the event
 	_log_info("触发持续按下重复事件: %s" % _get_key_name())
 	triggered.emit(_owner_node)
 
 func _cleanup_held_timer():
 	if _held_timer:
-		# 先停止定时器
+		# Stop the timer first
 		_held_timer.stop()
 		
 		if _held_timer.timeout.is_connected(_on_held_timer_timeout):
@@ -1017,13 +1017,13 @@ func get_description() -> String:
 	var key_name = _get_key_name()
 	
 	match key_event_type:
-		0:  # 按下
+		0:  # Pressed
 			var once_text = trigger_once ? " (仅一次)" : ""
 			return "当按下 %s 键时触发%s" % [key_name, once_text]
-		1:  # 释放
+		1:  # Released
 			var once_text = trigger_once ? " (仅一次)" : ""
 			return "当释放 %s 键时触发%s" % [key_name, once_text]
-		2:  # 持续按下
+		2:  # Held
 			return "当持续按下 %s 键时触发 (延迟%.1fs, 间隔%.1fs)" % [
 				key_name, held_initial_delay, held_repeat_interval
 			]
@@ -1039,12 +1039,12 @@ func get_event_category() -> String:
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	
-	# 验证按键代码
+	# Validate the key code
 	if key_code == KEY_NONE:
 		errors.append("必须指定有效的按键代码")
 	
-	# 验证持续按下参数
-	if key_event_type == 2:  # 持续按下
+	# Validate the held parameters
+	if key_event_type == 2:  # Held
 		if held_initial_delay < 0:
 			errors.append("初始延迟不能为负数")
 		
@@ -1066,7 +1066,7 @@ func reset() -> void:
 	_cleanup_held_timer()
 	_log_debug("OnInputKey 状态已重置")
 
-## 统一日志方法
+## Unified logging methods
 func _log_debug(message: String) -> void:
 	FuseLogger.log_debug("OnInputKey", log_level, message)
 
@@ -1080,10 +1080,10 @@ func _log_error(message: String) -> void:
 	FuseLogger.log_error("OnInputKey", log_level, message)
 ```
 
-### 2. 编辑器插件实现
+### 2. Editor Plugin Implementation
 
 ```gdscript
-# 文件：addons/fuse/editor/input_key_selector/input_key_inspector_plugin.gd
+# File: addons/fuse/editor/input_key_selector/input_key_inspector_plugin.gd
 @tool
 extends EditorInspectorPlugin
 
@@ -1100,7 +1100,7 @@ func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wi
 ```
 
 ```gdscript
-# 文件：addons/fuse/editor/input_key_selector/input_key_selector.gd
+# File: addons/fuse/editor/input_key_selector/input_key_selector.gd
 @tool
 class_name InputKeySelector extends EditorProperty
 
@@ -1136,7 +1136,7 @@ func _update_property():
 ```
 
 ```gdscript
-# 文件：addons/fuse/editor/input_key_selector/input_key_dialog.gd
+# File: addons/fuse/editor/input_key_selector/input_key_dialog.gd
 @tool
 class_name InputKeyDialog extends AcceptDialog
 
@@ -1183,10 +1183,10 @@ func _notification(what):
 			waiting_for_key = false
 ```
 
-### 3. 插件注册
+### 3. Plugin Registration
 
 ```gdscript
-# 文件：addons/fuse/plugin.gd（修改现有文件）
+# File: addons/fuse/plugin.gd (modify the existing file)
 @tool
 extends EditorPlugin
 
@@ -1194,96 +1194,96 @@ extends EditorPlugin
 var input_key_inspector_plugin
 
 func _enter_tree():
-	# 现有代码...
+	# Existing code...
 	
-	# 添加输入按键选择器插件
+	# Add the input key selector plugin
 	input_key_inspector_plugin = InputKeyInspectorPlugin.new()
 	add_inspector_plugin(input_key_inspector_plugin)
 
 func _exit_tree():
-	# 现有代码...
+	# Existing code...
 	
-	# 移除输入按键选择器插件
+	# Remove the input key selector plugin
 	if input_key_inspector_plugin:
 		remove_inspector_plugin(input_key_inspector_plugin)
 		input_key_inspector_plugin = null
 ```
 
-## 使用示例
+## Usage Examples
 
-### 1. 在代码中创建事件
+### 1. Creating Events in Code
 
 ```gdscript
-# 创建按键按下事件
+# Create a key press event
 var key_press_event = OnInputKey.new()
 key_press_event.key_code = KEY_SPACE
-key_press_event.key_event_type = 0  # 按下
+key_press_event.key_event_type = 0  # Pressed
 key_press_event.trigger_once = true
 
-# 创建按键释放事件
+# Create a key release event
 var key_release_event = OnInputKey.new()
 key_release_event.key_code = KEY_ESCAPE
-key_release_event.key_event_type = 1  # 释放
+key_release_event.key_event_type = 1  # Released
 key_release_event.trigger_once = false
 
-# 创建持续按下事件
+# Create a held event
 var key_held_event = OnInputKey.new()
 key_held_event.key_code = KEY_R
-key_held_event.key_event_type = 2  # 持续按下
+key_held_event.key_event_type = 2  # Held
 key_held_event.held_initial_delay = 0.5
 key_held_event.held_repeat_interval = 0.1
 ```
 
-### 2. 在编辑器中配置事件
+### 2. Configuring Events in the Editor
 
-1. 创建或选择一个 Trigger 节点
-2. 在 Inspector 中添加 OnInputKey 事件
-3. 点击"选择按键"按钮，打开按键选择对话框
-4. 按下任意键进行选择
-5. 配置事件类型和相关参数
-6. 保存场景，事件将在运行时自动初始化
+1. Create or select a Trigger node
+2. Add an OnInputKey event in the Inspector
+3. Click the "Select Key" button to open the key selection dialog
+4. Press any key to select it
+5. Configure the event type and related parameters
+6. Save the scene; the event will be initialized automatically at runtime
 
-### 3. 与动作系统结合使用
+### 3. Combining with the Action System
 
 ```gdscript
-# 在 Trigger 的配置中
+# In the Trigger's configuration
 @onready var trigger = $Trigger
 
 func _ready():
-	# 创建按键事件
+	# Create the key event
 	var jump_event = OnInputKey.new()
 	jump_event.key_code = KEY_SPACE
-	jump_event.key_event_type = 0  # 按下
+	jump_event.key_event_type = 0  # Pressed
 	
-	# 创建动作
+	# Create the action
 	var jump_action = JumpAction.new()
 	
-	# 配置触发器
+	# Configure the trigger
 	trigger.events = [jump_event]
 	trigger.action_runner = ActionRunner.new()
 	trigger.action_runner.actions = [jump_action]
 ```
 
-## 测试和验证
+## Testing and Validation
 
-### 1. 单元测试
+### 1. Unit Tests
 
 ```gdscript
-# 测试按键事件初始化
+# Test event initialization
 func test_event_initialization():
 	var event = OnInputKey.new()
 	var test_node = Node.new()
 	
-	# 测试正常初始化
+	# Test normal initialization
 	event.key_code = KEY_SPACE
 	event.initialize(test_node)
 	assert(event._owner_node != null)
 	
-	# 测试清理
+	# Test cleanup
 	event.terminate(test_node)
 	assert(event._owner_node == null)
 
-# 测试按键事件触发
+# Test event triggering
 func test_event_triggering():
 	var event = OnInputKey.new()
 	var test_node = Node.new()
@@ -1292,91 +1292,91 @@ func test_event_triggering():
 	event.key_event_type = 0
 	event.initialize(test_node)
 	
-	# 模拟按键事件
+	# Simulate a key event
 	var input_event = InputEventKey.new()
 	input_event.keycode = KEY_SPACE
 	input_event.pressed = true
 	
-	# 验证事件是否触发
-	# 这里需要连接 triggered 信号进行验证
+	# Verify that the event is triggered
+	# Connect the triggered signal here for verification
 	
 	event.terminate(test_node)
 ```
 
-### 2. 集成测试
+### 2. Integration Tests
 
 ```gdscript
-# 在实际场景中测试按键事件
+# Test the key event in a real scene
 func test_key_event_in_scene():
-	# 创建测试场景
+	# Create the test scene
 	var scene = PackedScene.new()
-	# 添加必要的节点和事件配置
+	# Add the required nodes and event configuration
 	
-	# 运行场景并验证按键事件行为
+	# Run the scene and verify the key event behavior
 ```
 
-## 性能考虑
+## Performance Considerations
 
-1. **输入处理频率**：持续按下事件的重复间隔不应设置过小，建议最小值为 0.05 秒
-2. **内存管理**：确保在不需要时正确清理定时器和信号连接
-3. **事件过滤**：在输入处理函数中尽早过滤不相关的事件，减少不必要的处理
-4. **状态缓存**：缓存按键状态，避免重复计算
+1. **Input processing frequency**: The repeat interval of held events should not be too small; the recommended minimum is 0.05 seconds
+2. **Memory management**: Make sure timers and signal connections are cleaned up correctly when no longer needed
+3. **Event filtering**: Filter out irrelevant events early in the input handling functions to reduce unnecessary processing
+4. **State caching**: Cache the key state to avoid repeated computation
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **按键事件不触发**
-   - 检查按键代码是否正确设置
-   - 确认事件类型配置正确
-   - 验证 Trigger 节点是否正确初始化
+1. **Key event does not trigger**
+   - Check that the key code is set correctly
+   - Confirm the event type is configured correctly
+   - Verify that the Trigger node is initialized correctly
 
-2. **持续按下事件重复过快**
-   - 检查 held_repeat_interval 值是否过小
-   - 考虑增加 held_initial_delay 值
+2. **Held event repeats too fast**
+   - Check whether held_repeat_interval is too small
+   - Consider increasing held_initial_delay
 
-3. **编辑器中按键选择不工作**
-   - 确认编辑器插件正确注册
-   - 检查插件文件路径是否正确
+3. **Key selection does not work in the editor**
+   - Confirm the editor plugin is registered correctly
+   - Check that the plugin file paths are correct
 
-4. **运行时错误**
-   - 检查日志输出，确认错误类型
-   - 验证事件配置是否通过 validate() 检查
+4. **Runtime errors**
+   - Check the log output to identify the error type
+   - Verify the event configuration passes the validate() check
 
-## 总结
+## Summary
 
-OnInputKey 事件设计提供了一个完整的键盘输入监听解决方案，具有以下特点：
+The OnInputKey event design provides a complete keyboard input listening solution with the following characteristics:
 
-### 核心优势
+### Core Strengths
 
-1. **三种事件类型支持**：按下、释放和持续按下，满足不同的游戏需求
-2. **直观的编辑器界面**：通过按键选择对话框，用户可以轻松配置要监听的按键
-3. **条件化属性显示**：根据事件类型自动显示或隐藏相关参数，提供清晰的用户体验
-4. **健壮的状态管理**：正确处理按键状态，避免重复触发和内存泄漏
-5. **完整的生命周期管理**：从初始化到清理的全过程都有适当的处理
+1. **Three event types**: Pressed, released, and held, covering different gameplay needs
+2. **Intuitive editor UI**: Through the key selection dialog, users can easily configure the key to listen for
+3. **Conditional property display**: Related parameters are shown or hidden automatically based on the event type, for a clear user experience
+4. **Robust state management**: Key state is handled correctly, avoiding duplicate triggering and memory leaks
+5. **Complete lifecycle management**: The whole flow from initialization to cleanup is properly handled
 
-### 技术亮点
+### Technical Highlights
 
-1. **输入处理优化**：使用 `unhandled_key_input` 避免重复处理，并通过 `set_input_as_handled()` 防止事件冲突
-2. **定时器管理**：安全的定时器创建和清理机制，避免内存泄漏
-3. **状态重置机制**：按键释放后正确重置触发状态，确保下次按键能正常触发
-4. **参数验证**：完整的配置验证系统，帮助用户在运行前发现问题
+1. **Optimized input handling**: Uses `unhandled_key_input` to avoid duplicate processing and `set_input_as_handled()` to prevent event conflicts
+2. **Timer management**: Safe timer creation and cleanup to avoid memory leaks
+3. **State reset mechanism**: The trigger state is reset correctly after key release, ensuring the next press triggers normally
+4. **Parameter validation**: A complete configuration validation system helps users catch issues before running
 
-### 扩展性
+### Extensibility
 
-设计考虑了未来的扩展需求：
-- 多键组合支持
-- 修饰键支持
-- 鼠标和手柄事件扩展
-- 与 Godot 输入映射系统集成
+The design accounts for future extension needs:
+- Multi-key combo support
+- Modifier key support
+- Mouse and gamepad event extensions
+- Integration with the Godot input map system
 
-### 最佳实践遵循
+### Best Practices Followed
 
-该设计完全遵循了 Fuse 事件系统的最佳实践：
-- 正确实现 `initialize()` 和 `terminate()` 方法
-- 使用统一的错误处理机制
-- 提供清晰的日志记录
-- 实现直观的资源名称更新
-- 包含完整的验证机制
+The design fully follows the best practices of the Fuse event system:
+- Correctly implements the `initialize()` and `terminate()` methods
+- Uses the unified error handling mechanism
+- Provides clear logging
+- Implements intuitive resource name updates
+- Includes complete validation
 
-通过这个设计，开发者可以轻松创建响应键盘输入的游戏逻辑，而无需处理复杂的输入管理细节。事件系统的模块化设计确保了代码的可维护性和可扩展性。
+With this design, developers can easily create gameplay logic that responds to keyboard input without dealing with complex input management details. The event system's modular design ensures the code remains maintainable and extensible.

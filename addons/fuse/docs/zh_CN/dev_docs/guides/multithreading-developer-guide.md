@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/multithreading-developer-guide.md)
+
 # Fuse 多线程系统 - 开发者指南
 
 ## 概述

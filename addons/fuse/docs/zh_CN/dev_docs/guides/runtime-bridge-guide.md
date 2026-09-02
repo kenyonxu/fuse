@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/runtime-bridge-guide.md)
+
 # Fuse RuntimeBridge 开发指南
 
 > **目标**: 为开发者提供 FuseRuntimeBridge 运行时变量桥的完整开发指引，包括双模式架构、TCP 协议和变量快照。

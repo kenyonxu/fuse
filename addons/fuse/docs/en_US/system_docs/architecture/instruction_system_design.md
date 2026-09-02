@@ -1,100 +1,100 @@
-> 🌐 中文 | [**English**](../../../en_US/system_docs/architecture/instruction_system_design.md)
+> 🌐 [**中文版**](../../../zh_CN/system_docs/architecture/instruction_system_design.md) | English
 
-# 指令系统详细设计
+# Instruction System Detailed Design
 
-## 目录
-1. [指令系统概述](#1-指令系统概述)
-2. [核心指令类型](#2-核心指令类型)
-3. [指令执行机制](#3-指令执行机制)
-4. [指令扩展框架](#4-指令扩展框架)
-5. [内置指令实现](#5-内置指令实现)
-6. [指令调试和性能优化](#6-指令调试和性能优化)
+## Table of Contents
+1. [Instruction System Overview](#1-instruction-system-overview)
+2. [Core Instruction Types](#2-core-instruction-types)
+3. [Instruction Execution Mechanism](#3-instruction-execution-mechanism)
+4. [Instruction Extension Framework](#4-instruction-extension-framework)
+5. [Built-in Instruction Implementations](#5-built-in-instruction-implementations)
+6. [Instruction Debugging and Performance Optimization](#6-instruction-debugging-and-performance-optimization)
 
 ---
 
-## 1. 指令系统概述
+## 1. Instruction System Overview
 
-### 1.1 设计原则
+### 1.1 Design Principles
 
-指令系统是整个可视化编程系统的核心执行单元，遵循以下设计原则：
+The instruction system is the core execution unit of the entire visual programming system and follows these design principles:
 
-- **原子性**：每个指令执行单一、明确的操作
-- **异步性**：所有指令基于Signal机制实现异步执行
-- **可组合性**：通过组合简单指令实现复杂逻辑
-- **类型安全**：利用GDScript的类型系统确保执行安全
-- **可扩展性**：提供简单的扩展接口支持自定义指令
+- **Atomicity**: each instruction performs a single, well-defined operation
+- **Asynchrony**: all instructions execute asynchronously via the Signal mechanism
+- **Composability**: complex logic is built by combining simple instructions
+- **Type safety**: GDScript's type system ensures safe execution
+- **Extensibility**: a simple extension interface supports custom instructions
 
-### 1.2 指令分类体系
+### 1.2 Instruction Classification System
 
 ```mermaid
 graph TB
-    BaseInstruction[BaseInstruction 基类]
+    BaseInstruction[BaseInstruction Base Class]
     
-    subgraph "控制流指令 (Control Flow)"
-        WaitInstruction[等待指令]
-        LoopInstruction[循环指令]
-        BranchInstruction[分支指令]
-        StopInstruction[停止指令]
+    subgraph "Control Flow Instructions"
+        WaitInstruction[Wait Instruction]
+        LoopInstruction[Loop Instruction]
+        BranchInstruction[Branch Instruction]
+        StopInstruction[Stop Instruction]
     end
     
-    subgraph "节点操作指令 (Node Operations)"
-        MoveInstruction[移动指令]
-        RotateInstruction[旋转指令]
-        ScaleInstruction[缩放指令]
-        SetPropertyInstruction[设置属性指令]
-        CallMethodInstruction[调用方法指令]
+    subgraph "Node Operation Instructions"
+        MoveInstruction[Move Instruction]
+        RotateInstruction[Rotate Instruction]
+        ScaleInstruction[Scale Instruction]
+        SetPropertyInstruction[Set Property Instruction]
+        CallMethodInstruction[Call Method Instruction]
     end
     
-    subgraph "场景管理指令 (Scene Management)"
-        LoadSceneInstruction[加载场景指令]
-        UnloadSceneInstruction[卸载场景指令]
-        InstantiateInstruction[实例化指令]
-        QueueFreeInstruction[销毁指令]
+    subgraph "Scene Management Instructions"
+        LoadSceneInstruction[Load Scene Instruction]
+        UnloadSceneInstruction[Unload Scene Instruction]
+        InstantiateInstruction[Instantiate Instruction]
+        QueueFreeInstruction[Queue Free Instruction]
     end
     
-    subgraph "音频指令 (Audio)"
-        PlaySoundInstruction[播放音效指令]
-        PlayMusicInstruction[播放音乐指令]
-        StopAudioInstruction[停止音频指令]
-        SetVolumeInstruction[设置音量指令]
+    subgraph "Audio Instructions"
+        PlaySoundInstruction[Play Sound Instruction]
+        PlayMusicInstruction[Play Music Instruction]
+        StopAudioInstruction[Stop Audio Instruction]
+        SetVolumeInstruction[Set Volume Instruction]
     end
     
-    subgraph "动画指令 (Animation)"
-        PlayAnimationInstruction[播放动画指令]
-        StopAnimationInstruction[停止动画指令]
-        SetAnimationSpeedInstruction[设置动画速度指令]
+    subgraph "Animation Instructions"
+        PlayAnimationInstruction[Play Animation Instruction]
+        StopAnimationInstruction[Stop Animation Instruction]
+        SetAnimationSpeedInstruction[Set Animation Speed Instruction]
     end
     
-    subgraph "变量指令 (Variables)"
-        SetVariableInstruction[设置变量指令]
-        GetVariableInstruction[获取变量指令]
-        IncrementVariableInstruction[递增变量指令]
-        CompareVariableInstruction[比较变量指令]
+    subgraph "Variable Instructions"
+        SetVariableInstruction[Set Variable Instruction]
+        GetVariableInstruction[Get Variable Instruction]
+        IncrementVariableInstruction[Increment Variable Instruction]
+        CompareVariableInstruction[Compare Variable Instruction]
     end
     
-    subgraph "UI指令 (UI)"
-        ShowUIInstruction[显示UI指令]
-        HideUIInstruction[隐藏UI指令]
-        UpdateUITextInstruction[更新UI文本指令]
-        SetUIProgressInstruction[设置UI进度指令]
+    subgraph "UI Instructions"
+        ShowUIInstruction[Show UI Instruction]
+        HideUIInstruction[Hide UI Instruction]
+        UpdateUITextInstruction[Update UI Text Instruction]
+        SetUIProgressInstruction[Set UI Progress Instruction]
     end
     
-    BaseInstruction --> 控制流指令
-    BaseInstruction --> 节点操作指令
-    BaseInstruction --> 场景管理指令
-    BaseInstruction --> 音频指令
-    BaseInstruction --> 动画指令
-    BaseInstruction --> 变量指令
-    BaseInstruction --> UI指令
+    BaseInstruction --> Control Flow Instructions
+    BaseInstruction --> Node Operation Instructions
+    BaseInstruction --> Scene Management Instructions
+    BaseInstruction --> Audio Instructions
+    BaseInstruction --> Animation Instructions
+    BaseInstruction --> Variable Instructions
+    BaseInstruction --> UI Instructions
 ```
 
 ---
 
-## 2. 核心指令类型
+## 2. Core Instruction Types
 
-### 2.1 控制流指令
+### 2.1 Control Flow Instructions
 
-#### 2.1.1 等待指令 (WaitInstruction)
+#### 2.1.1 Wait Instruction (WaitInstruction)
 
 ```gdscript
 @tool
@@ -125,7 +125,7 @@ func validate() -> Array[String]:
     return errors
 ```
 
-#### 2.1.2 循环指令 (LoopInstruction)
+#### 2.1.2 Loop Instruction (LoopInstruction)
 
 ```gdscript
 @tool
@@ -152,13 +152,13 @@ func execute(context: ExecutionContext):
     _execute_loop_iteration(context)
 
 func _execute_loop_iteration(context: ExecutionContext):
-    # 检查循环条件
+    # Check the loop condition
     if break_on_condition and break_on_condition.check(context):
         context.print_message("Loop break condition met, exiting loop")
         finished.emit()
         return
     
-    # 检查循环次数
+    # Check the iteration count
     if current_iteration >= loop_count:
         context.print_message("Loop completed after %s iterations" % current_iteration)
         finished.emit()
@@ -167,11 +167,11 @@ func _execute_loop_iteration(context: ExecutionContext):
     context.print_message("Loop iteration %s/%s" % [current_iteration + 1, loop_count])
     current_iteration += 1
     
-    # 执行循环体
+    # Execute the loop body
     loop_runner.run(context)
     await loop_runner.action_completed
     
-    # 继续下一次迭代
+    # Continue with the next iteration
     _execute_loop_iteration(context)
 
 func get_description() -> String:
@@ -186,7 +186,7 @@ func validate() -> Array[String]:
     return errors
 ```
 
-#### 2.1.3 分支指令 (BranchInstruction)
+#### 2.1.3 Branch Instruction (BranchInstruction)
 
 ```gdscript
 @tool
@@ -242,9 +242,9 @@ func validate() -> Array[String]:
     return errors
 ```
 
-### 2.2 节点操作指令
+### 2.2 Node Operation Instructions
 
-#### 2.2.1 移动指令 (MoveInstruction)
+#### 2.2.1 Move Instruction (MoveInstruction)
 
 ```gdscript
 @tool
@@ -306,7 +306,7 @@ func validate() -> Array[String]:
     return errors
 ```
 
-#### 2.2.2 设置属性指令 (SetPropertyInstruction)
+#### 2.2.2 Set Property Instruction (SetPropertyInstruction)
 
 ```gdscript
 @tool
@@ -342,7 +342,7 @@ func execute(context: ExecutionContext):
     
     var value = _get_property_value(context)
     
-    # 使用call方法设置属性，支持嵌套属性
+    # Use the set call to assign the property, supporting nested properties
     var success = target_node.set(property_name, value)
     
     if success:
@@ -388,9 +388,9 @@ func validate() -> Array[String]:
     return errors
 ```
 
-### 2.3 变量指令
+### 2.3 Variable Instructions
 
-#### 2.3.1 设置变量指令 (SetVariableInstruction)
+#### 2.3.1 Set Variable Instruction (SetVariableInstruction)
 
 ```gdscript
 @tool
@@ -453,16 +453,16 @@ func _get_value(context: ExecutionContext) -> Variant:
     return null
 
 func _evaluate_expression(context: ExecutionContext) -> Variant:
-    # 简单的表达式求值实现
-    # 在实际项目中，可以使用更强大的表达式解析库
+    # Simple expression evaluation implementation
+    # In a real project, a more powerful expression parsing library could be used
     var expr = expression
     var variables = context.local_variables.duplicate()
     
-    # 替换变量引用
+    # Replace variable references
     for var_name in variables.keys():
         expr = expr.replace("${%s}" % var_name, str(variables[var_name]))
     
-    # 简单的数学表达式求值
+    # Simple math expression evaluation
     var expression_parser = Expression.new()
     var parse_result = expression_parser.parse(expr)
     
@@ -504,15 +504,15 @@ func validate() -> Array[String]:
 
 ---
 
-## 3. 指令执行机制
+## 3. Instruction Execution Mechanism
 
-### 3.1 异步执行框架
+### 3.1 Asynchronous Execution Framework
 
 ```gdscript
 @tool
 class_name InstructionExecutor extends RefCounted
 
-## 指令执行状态
+## Instruction execution status
 enum ExecutionStatus {
     PENDING,
     RUNNING,
@@ -521,7 +521,7 @@ enum ExecutionStatus {
     ERROR
 }
 
-## 执行上下文
+## Execution context
 class InstructionContext:
     var instruction: BaseInstruction
     var execution_context: ExecutionContext
@@ -533,7 +533,7 @@ class InstructionContext:
 var active_instructions: Array[InstructionContext] = []
 var max_concurrent_instructions: int = 50
 
-## 执行单个指令
+## Execute a single instruction
 func execute_instruction(instruction: BaseInstruction, context: ExecutionContext) -> String:
     var instruction_id = _generate_instruction_id()
     var instruction_context = InstructionContext.new()
@@ -543,27 +543,27 @@ func execute_instruction(instruction: BaseInstruction, context: ExecutionContext
     
     active_instructions.append(instruction_context)
     
-    # 检查并发限制
+    # Check the concurrency limit
     if _get_running_count() >= max_concurrent_instructions:
         await _wait_for_completion()
     
     _execute_instruction_context(instruction_context)
     return instruction_id
 
-## 执行指令上下文
+## Execute an instruction context
 func _execute_instruction_context(instruction_context: InstructionContext):
     instruction_context.status = ExecutionStatus.RUNNING
     instruction_context.start_time = Time.get_ticks_msec()
     
-    # 连接完成信号
+    # Connect the completion signal
     instruction_context.instruction.finished.connect(
         _on_instruction_completed.bind(instruction_context)
     )
     
-    # 执行指令
+    # Execute the instruction
     instruction_context.instruction.execute(instruction_context.execution_context)
 
-## 指令完成回调
+## Instruction completion callback
 func _on_instruction_completed(instruction_context: InstructionContext):
     instruction_context.status = ExecutionStatus.COMPLETED
     instruction_context.end_time = Time.get_ticks_msec()
@@ -578,12 +578,12 @@ func _on_instruction_completed(instruction_context: InstructionContext):
     
     active_instructions.erase(instruction_context)
 
-## 等待指令完成
+## Wait for instructions to complete
 func _wait_for_completion():
     while _get_running_count() >= max_concurrent_instructions:
         await get_tree().process_frame
 
-## 获取正在运行的指令数量
+## Get the number of running instructions
 func _get_running_count() -> int:
     var count = 0
     for context in active_instructions:
@@ -591,18 +591,18 @@ func _get_running_count() -> int:
             count += 1
     return count
 
-## 生成指令ID
+## Generate an instruction ID
 func _generate_instruction_id() -> String:
     return "inst_%d_%d" % [Time.get_ticks_msec(), randi()]
 ```
 
-### 3.2 错误处理机制
+### 3.2 Error Handling Mechanism
 
 ```gdscript
 @tool
 class_name InstructionErrorHandler extends RefCounted
 
-## 错误类型
+## Error types
 enum ErrorType {
     VALIDATION_ERROR,
     EXECUTION_ERROR,
@@ -610,7 +610,7 @@ enum ErrorType {
     CANCELLATION_ERROR
 }
 
-## 错误信息
+## Error information
 class ErrorInfo:
     var error_type: ErrorType
     var instruction: BaseInstruction
@@ -621,7 +621,7 @@ class ErrorInfo:
 var error_history: Array[ErrorInfo] = []
 var max_error_history: int = 100
 
-## 处理指令错误
+## Handle an instruction error
 func handle_error(
     error_type: ErrorType,
     instruction: BaseInstruction,
@@ -637,14 +637,14 @@ func handle_error(
     
     error_history.append(error_info)
     
-    # 限制错误历史记录数量
+    # Cap the error history size
     if error_history.size() > max_error_history:
         error_history.pop_front()
     
-    # 记录错误
+    # Log the error
     _log_error(error_info)
     
-    # 根据错误类型采取不同的处理策略
+    # Apply a different handling strategy per error type
     match error_type:
         ErrorType.VALIDATION_ERROR:
             _handle_validation_error(error_info)
@@ -655,7 +655,7 @@ func handle_error(
         ErrorType.CANCELLATION_ERROR:
             _handle_cancellation_error(error_info)
 
-## 记录错误
+## Log the error
 func _log_error(error_info: ErrorInfo):
     var error_type_name = ErrorType.keys()[error_info.error_type]
     context.print_error(
@@ -666,30 +666,30 @@ func _log_error(error_info: ErrorInfo):
         ]
     )
 
-## 处理验证错误
+## Handle validation errors
 func _handle_validation_error(error_info: ErrorInfo):
-    # 验证错误通常不应该执行指令
+    # Instructions with validation errors should not be executed
     error_info.context.print_warning(
         "Skipping instruction due to validation errors: %s" % error_info.error_message
     )
 
-## 处理执行错误
+## Handle execution errors
 func _handle_execution_error(error_info: ErrorInfo):
-    # 执行错误可能需要回滚或恢复
+    # Execution errors may require rollback or recovery
     error_info.context.print_error(
         "Instruction execution failed: %s" % error_info.error_message
     )
 
-## 处理超时错误
+## Handle timeout errors
 func _handle_timeout_error(error_info: ErrorInfo):
-    # 超时错误可能需要强制停止
+    # Timeout errors may require a forced stop
     error_info.context.print_error(
         "Instruction execution timed out: %s" % error_info.error_message
     )
 
-## 处理取消错误
+## Handle cancellation errors
 func _handle_cancellation_error(error_info: ErrorInfo):
-    # 取消错误是正常的，不需要特殊处理
+    # Cancellations are normal and need no special handling
     error_info.context.print_message(
         "Instruction was cancelled: %s" % error_info.error_message
     )
@@ -697,9 +697,9 @@ func _handle_cancellation_error(error_info: ErrorInfo):
 
 ---
 
-## 4. 指令扩展框架
+## 4. Instruction Extension Framework
 
-### 4.1 指令注册系统
+### 4.1 Instruction Registration System
 
 ```gdscript
 @tool
@@ -709,7 +709,7 @@ static var _registered_instructions: Dictionary = {}
 static var _instruction_categories: Dictionary = {}
 static var _instruction_metadata: Dictionary = {}
 
-## 指令元数据
+## Instruction metadata
 class InstructionMetadata:
     var name: String
     var description: String
@@ -719,7 +719,7 @@ class InstructionMetadata:
     var author: String
     var dependencies: Array[String] = []
 
-## 注册指令类型
+## Register an instruction type
 static func register_instruction(
     instruction_name: String,
     instruction_script: Script,
@@ -729,7 +729,7 @@ static func register_instruction(
         print_warning("Instruction '%s' is already registered" % instruction_name)
         return false
     
-    # 验证指令脚本
+    # Validate the instruction script
     if not _validate_instruction_script(instruction_script):
         print_error("Invalid instruction script for '%s'" % instruction_name)
         return false
@@ -737,7 +737,7 @@ static func register_instruction(
     _registered_instructions[instruction_name] = instruction_script
     _instruction_metadata[instruction_name] = metadata
     
-    # 添加到分类
+    # Add to the category
     if not _instruction_categories.has(metadata.category):
         _instruction_categories[metadata.category] = []
     _instruction_categories[metadata.category].append(instruction_name)
@@ -745,9 +745,9 @@ static func register_instruction(
     print("Registered instruction: %s" % instruction_name)
     return true
 
-## 验证指令脚本
+## Validate an instruction script
 static func _validate_instruction_script(instruction_script: Script) -> bool:
-    # 检查脚本是否继承自BaseInstruction
+    # Check whether the script inherits from BaseInstruction
     var base_class = instruction_script.get_base_script()
     while base_class:
         if base_class.get_global_name() == "BaseInstruction":
@@ -755,7 +755,7 @@ static func _validate_instruction_script(instruction_script: Script) -> bool:
         base_class = base_class.get_base_script()
     return false
 
-## 创建指令实例
+## Create an instruction instance
 static func create_instruction(instruction_name: String) -> BaseInstruction:
     var instruction_script = _registered_instructions.get(instruction_name)
     if not instruction_script:
@@ -769,24 +769,24 @@ static func create_instruction(instruction_name: String) -> BaseInstruction:
     
     return instruction
 
-## 获取所有注册的指令
+## Get all registered instructions
 static func get_registered_instructions() -> Dictionary:
     return _registered_instructions.duplicate()
 
-## 获取指令分类
+## Get instruction categories
 static func get_instruction_categories() -> Dictionary:
     return _instruction_categories.duplicate()
 
-## 获取指令元数据
+## Get instruction metadata
 static func get_instruction_metadata(instruction_name: String) -> InstructionMetadata:
     return _instruction_metadata.get(instruction_name)
 
-## 自动发现并注册指令
+## Auto-discover and register instructions
 static func auto_register_instructions():
     var instruction_dir = "res://addons/visual_programming/instructions/"
     _scan_directory_for_instructions(instruction_dir)
 
-## 扫描目录中的指令
+## Scan a directory for instructions
 static func _scan_directory_for_instructions(directory_path: String):
     var dir = DirAccess.open(directory_path)
     if not dir:
@@ -803,18 +803,18 @@ static func _scan_directory_for_instructions(directory_path: String):
     
     dir.list_dir_end()
 
-## 尝试从文件注册指令
+## Try to register an instruction from a file
 static func _try_register_instruction_from_file(script_path: String):
     var script = load(script_path)
     if not script or not script is Script:
         return
     
-    # 检查是否有自定义注册方法
+    # Check for a custom registration method
     if script.has_method("auto_register"):
         script.auto_register()
 ```
 
-### 4.2 指令模板系统
+### 4.2 Instruction Template System
 
 ```gdscript
 @tool
@@ -826,7 +826,7 @@ class_name InstructionTemplate extends Resource
 @export var instruction_data: Dictionary = {}
 @export var parameters: Array[TemplateParameter] = []
 
-## 模板参数
+## Template parameter
 class TemplateParameter:
     var name: String
     var type: String
@@ -834,7 +834,7 @@ class TemplateParameter:
     var description: String
     var required: bool = true
 
-## 从模板创建指令
+## Create an instruction from the template
 func create_instruction(parameters: Dictionary = {}) -> BaseInstruction:
     var instruction_type = instruction_data.get("type")
     if instruction_type.is_empty():
@@ -845,15 +845,15 @@ func create_instruction(parameters: Dictionary = {}) -> BaseInstruction:
     if not instruction:
         return null
     
-    # 应用模板参数
+    # Apply template parameters
     _apply_template_parameters(instruction, parameters)
     
-    # 应用模板数据
+    # Apply template data
     _apply_template_data(instruction)
     
     return instruction
 
-## 应用模板参数
+## Apply template parameters
 func _apply_template_parameters(instruction: BaseInstruction, parameters: Dictionary):
     for param in self.parameters:
         var value = parameters.get(param.name, param.default_value)
@@ -861,11 +861,11 @@ func _apply_template_parameters(instruction: BaseInstruction, parameters: Dictio
             print_error("Required parameter '%s' is missing" % param.name)
             continue
         
-        # 使用反射设置属性值
+        # Set the property value via reflection
         if instruction.has_method("set"):
             instruction.set(param.name, value)
 
-## 应用模板数据
+## Apply template data
 func _apply_template_data(instruction: BaseInstruction):
     for property_name in instruction_data:
         if property_name == "type":
@@ -875,7 +875,7 @@ func _apply_template_data(instruction: BaseInstruction):
         if instruction.has_method("set"):
             instruction.set(property_name, value)
 
-## 验证模板参数
+## Validate template parameters
 func validate_parameters(parameters: Dictionary) -> Array[String]:
     var errors: Array[String] = []
     
@@ -890,7 +890,7 @@ func validate_parameters(parameters: Dictionary) -> Array[String]:
     
     return errors
 
-## 验证参数类型
+## Validate a parameter type
 func _validate_parameter_type(value: Variant, expected_type: String) -> bool:
     match expected_type:
         "bool":
@@ -910,16 +910,16 @@ func _validate_parameter_type(value: Variant, expected_type: String) -> bool:
         "NodePath":
             return value is NodePath
         _:
-            return true  # 未知类型，假设有效
+            return true  # Unknown type, assume valid
 ```
 
 ---
 
-## 5. 内置指令实现
+## 5. Built-in Instruction Implementations
 
-### 5.1 场景管理指令
+### 5.1 Scene Management Instructions
 
-#### 5.1.1 加载场景指令
+#### 5.1.1 Load Scene Instruction
 
 ```gdscript
 @tool
@@ -1033,9 +1033,9 @@ func validate() -> Array[String]:
     return errors
 ```
 
-### 5.2 音频指令
+### 5.2 Audio Instructions
 
-#### 5.2.1 播放音效指令
+#### 5.2.1 Play Sound Instruction
 
 ```gdscript
 @tool
@@ -1066,7 +1066,7 @@ func execute(context: ExecutionContext):
         finished.emit()
         return
     
-    # 配置音频播放器
+    # Configure the audio player
     audio_player.stream = sound_resource
     audio_player.volume_db = volume_db
     audio_player.pitch_scale = pitch_scale
@@ -1077,7 +1077,7 @@ func execute(context: ExecutionContext):
     if autoplay:
         if loop:
             audio_player.play()
-            finished.emit()  # 循环播放立即完成
+            finished.emit()  # Looping playback completes immediately
         else:
             audio_player.play()
             audio_player.finished.connect(finished.emit)
@@ -1085,25 +1085,25 @@ func execute(context: ExecutionContext):
         finished.emit()
 
 func _get_audio_player(context: ExecutionContext) -> AudioStreamPlayer:
-    # 如果指定了音频播放器路径，使用指定的播放器
+    # If an audio player path is specified, use that player
     if not audio_player_path.is_empty():
         var player = context.get_node(audio_player_path)
         if player is AudioStreamPlayer:
             return player
     
-    # 尝试在触发器节点下查找音频播放器
+    # Try to find an audio player under the trigger node
     if context.trigger:
         var player = context.trigger.find_child("AudioStreamPlayer", true, false)
         if player is AudioStreamPlayer:
             return player
     
-    # 尝试在目标节点下查找音频播放器
+    # Try to find an audio player under the target node
     if context.target:
         var player = context.target.find_child("AudioStreamPlayer", true, false)
         if player is AudioStreamPlayer:
             return player
     
-    # 创建临时音频播放器
+    # Create a temporary audio player
     var temp_player = AudioStreamPlayer.new()
     context.trigger.add_child(temp_player) if context.trigger else context.get_tree().current_scene.add_child(temp_player)
     temp_player.owner = context.get_tree().current_scene
@@ -1128,15 +1128,15 @@ func validate() -> Array[String]:
 
 ---
 
-## 6. 指令调试和性能优化
+## 6. Instruction Debugging and Performance Optimization
 
-### 6.1 调试系统
+### 6.1 Debugging System
 
 ```gdscript
 @tool
 class_name InstructionDebugger extends RefCounted
 
-## 调试信息
+## Debug information
 class DebugInfo:
     var instruction: BaseInstruction
     var context: ExecutionContext
@@ -1151,18 +1151,18 @@ var debug_history: Array[DebugInfo] = []
 var is_debugging: bool = false
 var max_debug_history: int = 1000
 
-## 开始调试
+## Start debugging
 func start_debugging():
     is_debugging = true
     debug_history.clear()
     print("Instruction debugging started")
 
-## 停止调试
+## Stop debugging
 func stop_debugging():
     is_debugging = false
     print("Instruction debugging stopped")
 
-## 记录指令执行
+## Record an instruction execution
 func record_instruction_execution(
     instruction: BaseInstruction,
     context: ExecutionContext,
@@ -1184,37 +1184,37 @@ func record_instruction_execution(
     
     debug_history.append(debug_info)
     
-    # 限制调试历史记录数量
+    # Cap the debug history size
     if debug_history.size() > max_debug_history:
         debug_history.pop_front()
     
     _print_debug_info(debug_info)
 
-## 获取内存使用情况
+## Get memory usage
 func _get_memory_usage() -> int:
     return OS.get_static_memory_usage_by_type()[OS.MEMORY_TYPE_STATIC]
 
-## 获取变量快照
+## Get a variables snapshot
 func _get_variables_snapshot(context: ExecutionContext, phase: String) -> Dictionary:
     var snapshot = {}
     
-    # 局部变量
+    # Local variables
     for var_name in context.local_variables.keys():
         snapshot["local_%s_%s" % [var_name, phase]] = context.local_variables[var_name]
     
-    # 触发器变量
+    # Trigger variables
     if context.trigger and context.trigger.local_variables:
         for var_name in context.trigger.local_variables.get_variable_names():
             snapshot["trigger_%s_%s" % [var_name, phase]] = context.trigger.local_variables.get(var_name)
     
-    # 全局变量
+    # Global variables
     if context.global_variables:
         for var_name in context.global_variables.get_variable_names():
             snapshot["global_%s_%s" % [var_name, phase]] = context.global_variables.get(var_name)
     
     return snapshot
 
-## 打印调试信息
+## Print debug information
 func _print_debug_info(debug_info: DebugInfo):
     print("=== DEBUG INFO ===")
     print("Instruction: %s" % debug_info.instruction.get_description())
@@ -1223,7 +1223,7 @@ func _print_debug_info(debug_info: DebugInfo):
     print("Variables Changed: %d" % _count_changed_variables(debug_info))
     print("==================")
 
-## 计算变量变化数量
+## Count changed variables
 func _count_changed_variables(debug_info: DebugInfo) -> int:
     var changes = 0
     for key in debug_info.variables_before:
@@ -1232,7 +1232,7 @@ func _count_changed_variables(debug_info: DebugInfo) -> int:
                 changes += 1
     return changes
 
-## 生成调试报告
+## Generate a debug report
 func generate_debug_report() -> String:
     var report = "INSTRUCTION DEBUG REPORT\n"
     report += "========================\n\n"
@@ -1255,20 +1255,20 @@ func generate_debug_report() -> String:
     return report
 ```
 
-### 6.2 性能优化
+### 6.2 Performance Optimization
 
 ```gdscript
 @tool
 class_name InstructionOptimizer extends RefCounted
 
-## 优化建议
+## Optimization suggestion
 class OptimizationSuggestion:
     var instruction: BaseInstruction
     var suggestion_type: String
     var description: String
     var impact: String  # "low", "medium", "high"
 
-## 分析指令性能
+## Analyze instruction performance
 func analyze_performance(instructions: Array[BaseInstruction]) -> Array[OptimizationSuggestion]:
     var suggestions: Array[OptimizationSuggestion] = []
     
@@ -1277,11 +1277,11 @@ func analyze_performance(instructions: Array[BaseInstruction]) -> Array[Optimiza
     
     return suggestions
 
-## 分析单个指令
+## Analyze a single instruction
 func _analyze_instruction(instruction: BaseInstruction) -> Array[OptimizationSuggestion]:
     var suggestions: Array[OptimizationSuggestion] = []
     
-    # 检查等待指令
+    # Check wait instructions
     if instruction is WaitInstruction:
         var wait_instruction = instruction as WaitInstruction
         if wait_instruction.duration > 5.0:
@@ -1292,7 +1292,7 @@ func _analyze_instruction(instruction: BaseInstruction) -> Array[OptimizationSug
                 "medium"
             ))
     
-    # 检查循环指令
+    # Check loop instructions
     elif instruction is LoopInstruction:
         var loop_instruction = instruction as LoopInstruction
         if loop_instruction.loop_count > 100:
@@ -1303,7 +1303,7 @@ func _analyze_instruction(instruction: BaseInstruction) -> Array[OptimizationSug
                 "high"
             ))
     
-    # 检查移动指令
+    # Check move instructions
     elif instruction is MoveInstruction:
         var move_instruction = instruction as MoveInstruction
         if move_instruction.duration < 0.1:
@@ -1316,7 +1316,7 @@ func _analyze_instruction(instruction: BaseInstruction) -> Array[OptimizationSug
     
     return suggestions
 
-## 创建优化建议
+## Create an optimization suggestion
 func _create_suggestion(
     instruction: BaseInstruction,
     suggestion_type: String,
@@ -1330,22 +1330,22 @@ func _create_suggestion(
     suggestion.impact = impact
     return suggestion
 
-## 优化指令序列
+## Optimize an instruction sequence
 func optimize_instructions(instructions: Array[BaseInstruction]) -> Array[BaseInstruction]:
     var optimized = instructions.duplicate()
     
-    # 合并连续的等待指令
+    # Merge consecutive wait instructions
     optimized = _merge_consecutive_waits(optimized)
     
-    # 移除空指令
+    # Remove empty instructions
     optimized = _remove_empty_instructions(optimized)
     
-    # 优化循环结构
+    # Optimize loop structures
     optimized = _optimize_loops(optimized)
     
     return optimized
 
-## 合并连续的等待指令
+## Merge consecutive wait instructions
 func _merge_consecutive_waits(instructions: Array[BaseInstruction]) -> Array[BaseInstruction]:
     var optimized: Array[BaseInstruction] = []
     var total_wait_time = 0.0
@@ -1357,7 +1357,7 @@ func _merge_consecutive_waits(instructions: Array[BaseInstruction]) -> Array[Bas
             total_wait_time += wait_instruction.duration
             use_unscaled_time = use_unscaled_time or wait_instruction.use_unscaled_time
         else:
-            # 如果有累积的等待时间，创建合并的等待指令
+            # If wait time has accumulated, create a merged wait instruction
             if total_wait_time > 0:
                 var merged_wait = WaitInstruction.new()
                 merged_wait.duration = total_wait_time
@@ -1368,7 +1368,7 @@ func _merge_consecutive_waits(instructions: Array[BaseInstruction]) -> Array[Bas
             
             optimized.append(instruction)
     
-    # 处理最后的等待指令
+    # Handle the trailing wait instruction
     if total_wait_time > 0:
         var merged_wait = WaitInstruction.new()
         merged_wait.duration = total_wait_time
@@ -1377,7 +1377,7 @@ func _merge_consecutive_waits(instructions: Array[BaseInstruction]) -> Array[Bas
     
     return optimized
 
-## 移除空指令
+## Remove empty instructions
 func _remove_empty_instructions(instructions: Array[BaseInstruction]) -> Array[BaseInstruction]:
     var optimized: Array[BaseInstruction] = []
     
@@ -1387,44 +1387,44 @@ func _remove_empty_instructions(instructions: Array[BaseInstruction]) -> Array[B
     
     return optimized
 
-## 优化循环结构
+## Optimize loop structures
 func _optimize_loops(instructions: Array[BaseInstruction]) -> Array[BaseInstruction]:
-    # 这里可以实现更复杂的循环优化逻辑
-    # 例如：检测可以并行化的循环
+    # More complex loop optimization logic could be implemented here
+    # e.g. detecting loops that could be parallelized
     return instructions
 ```
 
 ---
 
-## 总结
+## Summary
 
-指令系统是整个可视化编程系统的核心，本设计提供了：
+The instruction system is the core of the entire visual programming system. This design provides:
 
-1. **完整的指令分类体系**：涵盖控制流、节点操作、场景管理、音频、动画、变量、UI等多个方面
-2. **强大的扩展框架**：支持自定义指令的注册、模板化和自动发现
-3. **健壮的执行机制**：基于异步执行和完善的错误处理
-4. **全面的调试支持**：提供详细的调试信息和性能分析
-5. **智能的性能优化**：自动分析和优化指令序列
+1. **A complete instruction classification system**: covering control flow, node operations, scene management, audio, animation, variables, UI, and more
+2. **A powerful extension framework**: supporting registration, templating, and auto-discovery of custom instructions
+3. **A robust execution mechanism**: based on asynchronous execution and thorough error handling
+4. **Comprehensive debugging support**: detailed debug information and performance profiling
+5. **Intelligent performance optimization**: automatic analysis and optimization of instruction sequences
 
-这个指令系统设计既保持了简单易用性，又提供了强大的功能和良好的扩展性，为整个可视化编程系统奠定了坚实的基础。
+This instruction system design stays simple and easy to use while providing powerful features and good extensibility, laying a solid foundation for the entire visual programming system.
 
 ---
 
-## 架构更新（2026-03）
+## Architecture Update (2026-03)
 
-### RuntimeInstructionInstance 架构
-- 指令现在支持运行时实例，通过 get_default_runtime_state() 自声明状态
-- 暂停/恢复机制：on_runtime_pause() / on_runtime_resume()
-- ExecutionMode 枚举：AUTO_DETECT / FORCE_ASYNC / FORCE_SYNC
-- 智能同步检测：can_execute_sync() 自动判断指令是否可以同步执行
+### RuntimeInstructionInstance Architecture
+- Instructions now support runtime instances, self-declaring their state via get_default_runtime_state()
+- Pause/resume mechanism: on_runtime_pause() / on_runtime_resume()
+- ExecutionMode enum: AUTO_DETECT / FORCE_ASYNC / FORCE_SYNC
+- Smart sync detection: can_execute_sync() automatically determines whether an instruction can execute synchronously
 
-### 新增指令类别
-- Array 操作（18 个指令）
-- Dictionary 操作（16 个指令）
-- 表达式指令（MathExpression, StringExpression）
-- 断点指令（BreakpointInstruction）
-- 作用域变量指令（GetScopeVariable, SetScopeVariable）
+### New Instruction Categories
+- Array operations (18 instructions)
+- Dictionary operations (16 instructions)
+- Expression instructions (MathExpression, StringExpression)
+- Breakpoint instruction (BreakpointInstruction)
+- Scope variable instructions (GetScopeVariable, SetScopeVariable)
 
-### 统一基础设施
-- FuseError 统一错误处理
-- FuseLogger 统一日志
+### Unified Infrastructure
+- Unified error handling with FuseError
+- Unified logging with FuseLogger

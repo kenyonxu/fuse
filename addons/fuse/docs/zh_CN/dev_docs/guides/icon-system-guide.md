@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/icon-system-guide.md)
+
 # Fuse 图标系统开发指南
 
 > **目标**: 为开发者提供完整的 Fuse 图标系统使用指引，包括图标注册、配置、内置图标引用和自定义图标库管理。

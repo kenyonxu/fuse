@@ -1,17 +1,17 @@
-> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/array-instructions-guide.md)
+> 🌐 [**中文版**](../../../zh_CN/dev_docs/guides/array-instructions-guide.md) | English
 
-# 数组指令开发指南
+# Array Instructions Development Guide
 
-本文档总结了开发 Fuse 数组指令时的常见问题和最佳实践。
+This document summarizes common issues and best practices when developing Fuse array instructions.
 
-## element_value 属性定义
+## The element_value Property Definition
 
-### 问题
+### Problem
 
-在 `_get_property_list()` 中使用 `TYPE_NIL` 定义 Variant 类型属性时，Inspector 会显示 null 且无法编辑。
+When defining a Variant-typed property with `TYPE_NIL` in `_get_property_list()`, the Inspector shows null and the property cannot be edited.
 
 ```gdscript
-# ❌ 这样做会导致 Inspector 显示 null
+# ❌ Doing this makes the Inspector show null
 properties.append({
     name = "element_value",
     type = TYPE_NIL,
@@ -21,18 +21,18 @@ properties.append({
 })
 ```
 
-### 解决方案
+### Solution
 
-使用 `@export` 声明属性，在 `_validate_property()` 中控制可见性。
+Declare the property with `@export` and control its visibility in `_validate_property()`.
 
 ```gdscript
-# ✅ 使用 @export 声明
+# ✅ Declare with @export
 @export var element_value: Variant:
     set(value):
         element_value = value
         _update_resource_name()
 
-# 在 _validate_property() 中控制可见性
+# Control visibility in _validate_property()
 func _validate_property(property: Dictionary) -> void:
     if use_element_from_variable:
         if property.name == "element_value":
@@ -41,18 +41,18 @@ func _validate_property(property: Dictionary) -> void:
 
 ---
 
-## 变量变化通知
+## Variable Change Notifications
 
-### 问题背景
+### Background
 
-`push_back()`、`remove_at()` 等操作修改数组**内容**而非**引用**，信号不会自动触发。远程调试器无法观测到变量变化。
+Operations such as `push_back()` and `remove_at()` modify the array **contents**, not the **reference**, so the signal does not fire automatically. The remote debugger cannot observe the variable change.
 
-### GLOBAL 全局变量通知
+### GLOBAL Variable Notification
 
 ```gdscript
-## 通知全局变量已变化（用于触发自动保存等）
-## 由于 push_back 修改的是数组内容而非引用，value_changed 信号不会自动触发
-## 因此需要手动通知 GlobalVariableManager 变量已变化
+## Notify that a global variable has changed (used to trigger autosave, etc.)
+## Because push_back modifies the array contents rather than the reference, the value_changed
+## signal does not fire automatically, so GlobalVariableManager must be notified manually
 func _notify_global_variable_changed(var_name: String) -> void:
     var manager = GlobalVariableManager.get_instance()
     if manager == null:
@@ -64,21 +64,21 @@ func _notify_global_variable_changed(var_name: String) -> void:
         _log_debug("⚠️ 全局变量 '%s' 不存在，跳过变化通知" % var_name)
         return
 
-    # 检查是否是持久化变量
+    # Check whether this is a persistent variable
     if variable.persistent:
         _log_debug("📌 持久化变量 '%s' 已修改，触发变化通知" % var_name)
-        # 使用 GlobalVariableManager 提供的方法通知变量内容已变化
+        # Use the GlobalVariableManager method to notify that the variable contents changed
         manager.notify_variable_content_changed(var_name)
     else:
         _log_debug("变量 '%s' 不是持久化变量，跳过自动保存通知" % var_name)
 ```
 
-### SCOPE 作用域变量通知
+### SCOPE Variable Notification
 
 ```gdscript
-## 通知 SCOPE 作用域变量已变化
-## 由于 push_back 修改的是数组内容而非引用，需要调用 notify_property_list_changed
-## 让远程调试器能够观测到变量变化
+## Notify that a SCOPE-scope variable has changed
+## Because push_back modifies the array contents rather than the reference, call
+## notify_property_list_changed so the remote debugger can observe the change
 func _notify_scope_variable_changed(context: ExecutionContext) -> void:
     var utils_scope_source = array_scope_source as VariableScopeUtils.ScopeSource
     var scope_container = VariableScopeUtils.get_scope_container_by_source(
@@ -96,9 +96,9 @@ func _notify_scope_variable_changed(context: ExecutionContext) -> void:
     scope_container.notify_property_list_changed()
 ```
 
-### 调用时机
+### When to Call
 
-在 `execute()` 末尾调用：
+Call at the end of `execute()`:
 
 ```gdscript
 if source_type == SourceType.VARIABLE:
@@ -108,36 +108,36 @@ if source_type == SourceType.VARIABLE:
         _notify_scope_variable_changed(context)
 ```
 
-### 变量变化通知总结
+### Variable Change Notification Summary
 
-| 作用域 | 修改数组内容后需要通知 | 通知方法 |
+| Scope | Notify after modifying array contents | Notification method |
 |--------|----------------------|----------|
-| LOCAL | 不需要 | - |
-| SCOPE | **需要** | `scope_container.notify_property_list_changed()` |
-| GLOBAL | 需要（持久化变量） | `manager.notify_variable_content_changed(var_name)` |
+| LOCAL | Not needed | - |
+| SCOPE | **Needed** | `scope_container.notify_property_list_changed()` |
+| GLOBAL | Needed (persistent variables) | `manager.notify_variable_content_changed(var_name)` |
 
 ---
 
-## 翻译键命名规范
+## Translation Key Naming Conventions
 
-每个指令使用独立的翻译键前缀：
+Each instruction uses its own translation key prefix:
 
-| 指令 | 翻译键前缀 |
+| Instruction | Translation key prefix |
 |------|-----------|
 | ArrayAdd | `FUSE_INSTRUCTION_ARRAY_ADD_*` |
 | ArrayRemove | `FUSE_INSTRUCTION_ARRAY_REMOVE_*` |
 | ArraySet | `FUSE_INSTRUCTION_ARRAY_SET_*` |
 | ArrayGet | `FUSE_INSTRUCTION_ARRAY_GET_*` |
 
-### 需要翻译的函数
+### Functions Requiring Translation
 
-| 函数 | 用途 |
+| Function | Purpose |
 |------|------|
-| `_update_resource_name()` | 资源名称显示 |
-| `get_description()` | 指令描述文本 |
-| `_get_instruction_metadata()` | 指令选择器元数据 |
+| `_update_resource_name()` | Resource name display |
+| `get_description()` | Instruction description text |
+| `_get_instruction_metadata()` | Instruction picker metadata |
 
-### 翻译键示例
+### Translation Key Examples
 
 ```
 FUSE_INSTRUCTION_ARRAY_SET_NAME,设置数组元素,Array Set
@@ -153,9 +153,9 @@ FUSE_INSTRUCTION_ARRAY_SET_FROM_VAR,变量 {name},Variable {name}
 
 ---
 
-## 调试日志最佳实践
+## Debug Logging Best Practices
 
-### 作用域信息日志
+### Scope Info Logging
 
 ```gdscript
 func _debug_log_array_scope_info():
@@ -184,7 +184,7 @@ func _debug_log_array_scope_info():
         _log_debug("📍 目标数组: '%s' | 作用域: %s" % [array_variable, scope_name])
 ```
 
-### 执行结果日志
+### Execution Result Logging
 
 ```gdscript
 var scope_name_for_log := _get_scope_name_for_log()
@@ -201,15 +201,15 @@ _log_debug("══════════════════════�
 
 ---
 
-## 指令分类
+## Instruction Categories
 
-| 类型 | 指令 | 需要变化通知 |
+| Type | Instructions | Change notification needed |
 |------|------|-------------|
-| **修改数组** | ArrayAdd, ArrayRemove, ArraySet, ArrayClear, ArrayInsert, ArrayMerge, ArrayReverse, ArrayShuffle | **需要** |
-| **只读操作** | ArrayGet, ArraySize, ArrayFind, ArrayContains, ArrayRandom, ArraySlice | 不需要 |
+| **Array-modifying** | ArrayAdd, ArrayRemove, ArraySet, ArrayClear, ArrayInsert, ArrayMerge, ArrayReverse, ArrayShuffle | **Needed** |
+| **Read-only operations** | ArrayGet, ArraySize, ArrayFind, ArrayContains, ArrayRandom, ArraySlice | Not needed |
 
 ---
 
-## 参考实现
+## Reference Implementation
 
-完整的参考实现见 [array_add.gd](../../../../instructions/arrays/array_add.gd)。
+See [array_add.gd](../../../../instructions/arrays/array_add.gd) for the complete reference implementation.

@@ -1,67 +1,67 @@
-> 🌐 中文 | [**English**](../../../en_US/dev_docs/guides/runtime-instruction-instance-guide.md)
+> 🌐 [**中文版**](../../../zh_CN/dev_docs/guides/runtime-instruction-instance-guide.md) | English
 
-# RuntimeInstructionInstance 开发指南
+# RuntimeInstructionInstance Development Guide
 
-## 概述
+## Overview
 
-RuntimeInstructionInstance 是指令的运行时实例包装器，提供独立的状态存储和执行隔离。
+RuntimeInstructionInstance is the runtime instance wrapper for instructions, providing independent state storage and execution isolation.
 
-## 架构
+## Architecture
 
 ```
-BaseInstruction (Resource, 共享)
+BaseInstruction (Resource, shared)
         │
         ▼
-RuntimeInstructionInstance (RefCounted, 每次执行独立)
-    - runtime_state: Dictionary  ← 独立状态存储
-    - instruction: BaseInstruction  ← 指向共享资源
+RuntimeInstructionInstance (RefCounted, independent per execution)
+    - runtime_state: Dictionary  ← independent state storage
+    - instruction: BaseInstruction  ← points to the shared resource
 ```
 
-### 架构对比
+### Architecture Comparison
 
-| 层级 | 是否有 RuntimeInstance | 状态隔离 |
+| Layer | Has a RuntimeInstance | State isolation |
 |------|----------------------|----------|
-| Event | ✅ RuntimeEventInstance | ✅ 有 |
-| ActionRunner | ✅ RuntimeActionRunnerInstance | ✅ 有 |
-| Instruction | ✅ RuntimeInstructionInstance | ✅ 有 |
+| Event | ✅ RuntimeEventInstance | ✅ Yes |
+| ActionRunner | ✅ RuntimeActionRunnerInstance | ✅ Yes |
+| Instruction | ✅ RuntimeInstructionInstance | ✅ Yes |
 
-## 核心功能
+## Core Features
 
-### 状态隔离
+### State Isolation
 
-每个 RuntimeInstructionInstance 都有独立的 `runtime_state` 字典，确保并发执行互不干扰。
+Every RuntimeInstructionInstance has its own `runtime_state` dictionary, ensuring concurrent executions do not interfere with each other.
 
-### 超时机制
+### Timeout Mechanism
 
 ```gdscript
 var runtime_inst = RuntimeInstructionInstance.new(instruction, context, null)
-runtime_inst.execution_timeout = 5.0  # 5秒超时
+runtime_inst.execution_timeout = 5.0  # 5-second timeout
 runtime_inst.timeout.connect(_on_timeout)
 ```
 
-### 暂停/恢复
+### Pause/Resume
 
 ```gdscript
 runtime_inst.pause()
-# ... 暂停期间
+# ... while paused
 runtime_inst.resume()
 ```
 
-### 信号
+### Signals
 
-| 信号 | 说明 |
+| Signal | Description |
 |------|------|
-| `finished()` | 执行完成信号 |
-| `error_occurred(message: String)` | 执行出错信号 |
-| `paused()` | 暂停信号 |
-| `resumed()` | 恢复信号 |
-| `timeout()` | 超时信号 |
+| `finished()` | Execution completed |
+| `error_occurred(message: String)` | Execution error |
+| `paused()` | Paused |
+| `resumed()` | Resumed |
+| `timeout()` | Timed out |
 
-## 为指令添加运行时实例支持
+## Adding Runtime Instance Support to an Instruction
 
-### 方法1：声明默认状态
+### Method 1: Declare the Default State
 
-重写 `get_default_runtime_state()` 方法声明自己需要的运行时状态：
+Override the `get_default_runtime_state()` method to declare the runtime state you need:
 
 ```gdscript
 class_name MyInstruction extends BaseInstruction
@@ -73,32 +73,32 @@ func get_default_runtime_state() -> Dictionary:
     return state
 ```
 
-### 方法2：实现运行时执行方法
+### Method 2: Implement the Runtime Execution Method
 
-重写 `execute_with_runtime_instance()` 方法：
+Override the `execute_with_runtime_instance()` method:
 
 ```gdscript
 func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance) -> bool:
     _start_execution(runtime_instance.execution_context)
 
-    # 使用 runtime_instance.runtime_state 存储状态
+    # Use runtime_instance.runtime_state to store state
     var state = runtime_instance.runtime_state
 
-    # 创建计时器
+    # Create a timer
     var scene_tree = Engine.get_main_loop()
     if scene_tree:
         var timer = scene_tree.create_timer(1.0)
         state["timer"] = timer
 
-        # 使用 Callable 并注册到 runtime_instance
+        # Create a Callable and register it with the runtime_instance
         var callback = _create_timer_callback(runtime_instance)
         timer.timeout.connect(callback)
         runtime_instance.register_timer_callback(callback)
 
-        return false  # 异步执行
+        return false  # Asynchronous execution
 
     runtime_instance._complete_execution()
-    return true  # 同步完成
+    return true  # Synchronous completion
 
 func _create_timer_callback(runtime_instance: RuntimeInstructionInstance) -> Callable:
     var callback = func():
@@ -111,62 +111,62 @@ func _on_timer_done(runtime_instance: RuntimeInstructionInstance):
     runtime_instance._complete_execution()
 ```
 
-### 方法3：实现暂停/恢复回调
+### Method 3: Implement the Pause/Resume Callbacks
 
 ```gdscript
 func on_runtime_pause(runtime_instance: RuntimeInstructionInstance) -> void:
     var state = runtime_instance.runtime_state
-    # 保存暂停时状态
+    # Save the state at pause time
     runtime_instance.set_runtime_state("paused_at", Time.get_ticks_msec())
 
 func on_runtime_resume(runtime_instance: RuntimeInstructionInstance) -> void:
-    # 恢复执行
+    # Resume execution
     pass
 ```
 
-## 信号连接管理
+## Signal Connection Management
 
-**重要：** 不要使用 `bind()` 连接 SceneTreeTimer 信号，而是使用注册机制：
+**Important:** do not connect SceneTreeTimer signals with `bind()`; use the registration mechanism instead:
 
 ```gdscript
-# ✅ 正确：注册回调
+# ✅ Correct: register the callback
 var callback = func(): _on_timer_done(runtime_instance)
 timer.timeout.connect(callback)
 runtime_instance.register_timer_callback(callback)
 
-# ❌ 错误：使用 bind 可能导致内存泄漏
+# ❌ Wrong: using bind may cause memory leaks
 timer.timeout.connect(_on_timer_done.bind(runtime_instance))
 ```
 
-## 错误处理
+## Error Handling
 
-使用条件检查和 `_handle_execution_error()` 处理错误（GDScript 不支持 try-catch）：
+Use condition checks and `_handle_execution_error()` to handle errors (GDScript has no try-catch):
 
 ```gdscript
-# GDScript 使用条件检查代替 try-catch
+# GDScript uses condition checks instead of try-catch
 if risky_operation() != OK:
     runtime_instance._handle_execution_error("操作失败")
     return true
 
-# 或使用返回值检查
+# Or check the return value
 var result = risky_operation()
 if result == null or result.has_error():
     runtime_instance._handle_execution_error("操作失败: %s" % str(result.get_error()))
     return true
 ```
 
-## 迁移现有指令
+## Migrating Existing Instructions
 
-1. **添加 `get_default_runtime_state()`** - 声明状态
-2. **添加 `execute_with_runtime_instance()`** - 实现运行时执行
-3. **将实例变量改为使用 `runtime_state`** - 状态存储
-4. **实现 `on_runtime_pause()` / `on_runtime_resume()`** - 如果需要
-5. **保留原 `execute()` 方法** - 兼容遗留模式
+1. **Add `get_default_runtime_state()`** - declare the state
+2. **Add `execute_with_runtime_instance()`** - implement the runtime execution
+3. **Switch instance variables to `runtime_state`** - state storage
+4. **Implement `on_runtime_pause()` / `on_runtime_resume()`** - if needed
+5. **Keep the original `execute()` method** - for legacy-mode compatibility
 
-## 示例：Wait 指令迁移
+## Example: Wait Instruction Migration
 
 ```gdscript
-# 获取默认运行时状态
+# Declare the default runtime state
 func get_default_runtime_state() -> Dictionary:
     var state = super.get_default_runtime_state()
     state["timer"] = null
@@ -175,7 +175,7 @@ func get_default_runtime_state() -> Dictionary:
     state["pause_remaining_time"] = 0.0
     return state
 
-# 运行时执行方法
+# Runtime execution method
 func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance) -> bool:
     _start_execution(runtime_instance.execution_context)
 
@@ -197,12 +197,12 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
         timer.timeout.connect(callback)
         runtime_instance.register_timer_callback(callback)
 
-        return false  # 异步
+        return false  # Asynchronous
 
     runtime_instance._complete_execution()
     return true
 
-# 暂停处理
+# Pause handling
 func on_runtime_pause(runtime_instance: RuntimeInstructionInstance) -> void:
     var state = runtime_instance.runtime_state
     if state.has("timer") and state["timer"]:
@@ -211,7 +211,7 @@ func on_runtime_pause(runtime_instance: RuntimeInstructionInstance) -> void:
         state["pause_remaining_time"] = max(0.0, remaining)
         state["timer"] = null
 
-# 恢复处理
+# Resume handling
 func on_runtime_resume(runtime_instance: RuntimeInstructionInstance) -> void:
     var state = runtime_instance.runtime_state
     var remaining = state.get("pause_remaining_time", 0.0)
@@ -229,10 +229,10 @@ func on_runtime_resume(runtime_instance: RuntimeInstructionInstance) -> void:
     state["pause_remaining_time"] = 0.0
 ```
 
-## 注意事项
+## Notes
 
-1. **保留原 `execute()` 方法** - 确保向后兼容
-2. **使用条件检查代替 try-catch** - GDScript 不支持异常
-3. **注册计时器回调** - 避免使用 `bind()` 导致内存泄漏
-4. **状态存储在 `runtime_state`** - 确保并发隔离
-5. **检查实例有效性** - 在回调中验证 `is_completed()`
+1. **Keep the original `execute()` method** - ensures backward compatibility
+2. **Use condition checks instead of try-catch** - GDScript has no exceptions
+3. **Register timer callbacks** - avoid `bind()`, which causes memory leaks
+4. **Store state in `runtime_state`** - ensures concurrency isolation
+5. **Check instance validity** - verify `is_completed()` inside callbacks
