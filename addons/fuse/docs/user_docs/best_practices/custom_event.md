@@ -863,4 +863,11 @@ func test_event_performance():
 - 使用 `initialize_with_runtime_instance()` 进行运行时实例初始化
 - 使用 `get_runtime_instance()` 访问运行时实例
 - 元数据通过 `EventMetadata` 类和 `_get_event_metadata()` 静态方法定义
-- 详细参考: [Runtime Instance 模式](../../archive/architecture/runtime-instance-pattern.md)
+
+---
+
+**相关文档:**
+
+- [自定义 Condition 创建最佳实践](custom_condition.md)
+- [事件生成 skill](../../agent_skills/fuse-event-generator/SKILL.md)——事件组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
+- [事件系统指南](../guides/30-lifecycle-events-guide.md)

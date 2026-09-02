@@ -554,6 +554,28 @@ func execute(context: ExecutionContext):
 		_on_execution_completed()
 ```
 
+### 3. 变量绑定声明（get_variable_modes）
+
+内置指令普遍支持参数"直接值 / 变量"双轨（用户侧用法见[变量绑定使用指南](../guides/07-variable-binding-guide.md)）。自定义指令通过 `use_variable_for_xxx` 布尔开关 + `get_variable_modes()` 声明加入同一体系：
+
+```gdscript
+@export var use_variable_for_damage: bool = false:
+    set(value):
+        use_variable_for_damage = value
+        notify_property_list_changed()
+
+@export var damage_variable: String = ""      # 勾选后的变量来源
+@export var damage_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
+
+func get_variable_modes() -> Array[Dictionary]:
+    var modes: Array[Dictionary] = []
+    if use_variable_for_damage:
+        modes.append({"name": "damage_variable", "mode": "read"})
+    return modes
+```
+
+配套在 `_get_property_list()` 里按开关动态切换属性形态（未勾选显示直接值输入框，勾选显示变量名 + 作用域下拉），行为对齐内置指令。声明了变量模式的指令会被 preset AI 上下文的 schema 收录，AI 生成 preset 时能正确使用双轨参数。
+
 ---
 
 ## 性能优化
@@ -1248,3 +1270,11 @@ func test_instruction_performance():
 - 新增 `set_error()` / `set_error_localized()` 统一错误处理
 - 新增 `set_timeout()` 超时管理
 - 元数据通过 `InstructionMetadata` 类和 `_get_instruction_metadata()` 静态方法定义
+
+---
+
+**相关文档:**
+
+- [自定义 Condition 创建最佳实践](custom_condition.md)
+- [指令生成 skill](../../agent_skills/fuse-instruction-generator/SKILL.md)——指令组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
+- [变量绑定使用指南](../guides/07-variable-binding-guide.md)——双轨参数的用户侧用法
