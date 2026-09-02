@@ -1,93 +1,93 @@
-> 🌐 中文 | [**English**](../../../en_US/user_docs/best_practices/custom_instruction.md)
+> 🌐 [**中文版**](../../../zh_CN/user_docs/best_practices/custom_instruction.md) | English
 
-# 自定义 Instruction 创建最佳实践指南
+# Custom Instruction Creation Best Practices Guide
 
-## 概述
+## Overview
 
-本指南基于 Fuse Visual Programming 系统中的 Instruction 架构，提供了创建自定义 Instruction 类的完整最佳实践。通过遵循这些实践，您可以创建高效、可靠且易于维护的自定义指令。
+This guide is based on the Instruction architecture of the Fuse Visual Programming system and provides complete best practices for creating custom Instruction classes. By following these practices, you can create efficient, reliable, and easy-to-maintain custom instructions.
 
-## 目录
+## Table of Contents
 
-1. [Instruction 架构基础](#instruction-架构基础)
-2. [核心方法实现](#核心方法实现)
-3. [生命周期管理](#生命周期管理)
-4. [错误处理和日志](#错误处理和日志)
-5. [性能优化](#性能优化)
-6. [常见实现模式](#常见实现模式)
-7. [完整示例](#完整示例)
-8. [测试和验证](#测试和验证)
+1. [Instruction Architecture Basics](#instruction-architecture-basics)
+2. [Core Method Implementation](#core-method-implementation)
+3. [Lifecycle Management](#lifecycle-management)
+4. [Error Handling and Logging](#error-handling-and-logging)
+5. [Performance Optimization](#performance-optimization)
+6. [Common Implementation Patterns](#common-implementation-patterns)
+7. [Complete Example](#complete-example)
+8. [Testing and Validation](#testing-and-validation)
 
 ---
 
-## Instruction 架构基础
+## Instruction Architecture Basics
 
-### BaseInstruction 核心职责
+### BaseInstruction Core Responsibilities
 
-`BaseInstruction` 是所有指令类的基类，提供以下核心功能：
+`BaseInstruction` is the base class of all instruction classes and provides the following core capabilities:
 
-- **执行框架**：统一的指令执行流程和状态管理
-- **信号系统**：`finished` 信号用于通知执行完成
-- **生命周期管理**：`execute()` 和 `_cleanup_resources()` 方法管理指令生命周期
-- **错误处理**：统一的 `FuseError` 错误处理机制（包括本地化错误）
-- **元数据**：指令名称、分类和描述信息（通过 InstructionMetadata 类）
-- **超时管理**：内置的超时检测和处理机制
-- **执行状态管理**：完整的执行状态跟踪（ExecutionStatus 枚举）
-- **完成时机控制**：支持两种完成信号发送时机（CompletionSignalTiming）
-- **执行模式优化**：智能执行模式检测（ExecutionMode）
-- **性能优化**：本地化类缓存提升性能约 70%
+- **Execution framework**: a unified instruction execution flow and state management
+- **Signal system**: the `finished` signal is used to notify execution completion
+- **Lifecycle management**: the `execute()` and `_cleanup_resources()` methods manage the instruction lifecycle
+- **Error handling**: the unified `FuseError` error handling mechanism (including localized errors)
+- **Metadata**: instruction name, category, and description information (via the InstructionMetadata class)
+- **Timeout management**: built-in timeout detection and handling
+- **Execution state management**: complete execution state tracking (the ExecutionStatus enum)
+- **Completion timing control**: two completion signal timings are supported (CompletionSignalTiming)
+- **Execution mode optimization**: smart execution mode detection (ExecutionMode)
+- **Performance optimization**: the localization class cache improves performance by about 70%
 
-### 指令生命周期
+### Instruction Lifecycle
 
 ```
 创建 → _init() → _setup_metadata() → execute() → [执行逻辑] → finished.emit() → _cleanup_resources()
 ```
 
-1. **创建阶段**：Instruction 资源被实例化
-2. **初始化阶段**：`_init()` 和 `_setup_metadata()` 被调用，设置指令信息
-3. **执行阶段**：`execute()` 被调用，执行具体逻辑
-4. **完成阶段**：`finished` 信号被发出，资源被清理
+1. **Creation phase**: the Instruction resource is instantiated
+2. **Initialization phase**: `_init()` and `_setup_metadata()` are called to set up the instruction information
+3. **Execution phase**: `execute()` is called to run the concrete logic
+4. **Completion phase**: the `finished` signal is emitted and resources are cleaned up
 
-### 执行状态管理（ExecutionStatus 枚举）
+### Execution State Management (ExecutionStatus Enum)
 
-指令在执行过程中会经历以下状态：
+An instruction goes through the following states during execution:
 
-- **PENDING**：等待执行（初始状态）
-- **RUNNING**：正在执行
-- **COMPLETED**：执行完成
-- **CANCELLED**：已取消
-- **ERROR**：执行出错
+- **PENDING**: waiting to execute (initial state)
+- **RUNNING**: currently executing
+- **COMPLETED**: execution completed
+- **CANCELLED**: cancelled
+- **ERROR**: an error occurred during execution
 
-**状态转换规则：**
+**State transition rules:**
 ```
 PENDING → RUNNING → COMPLETED
                 ↘ ERROR
                 ↘ CANCELLED
 ```
 
-### 完成信号时机（CompletionSignalTiming 枚举）
+### Completion Signal Timing (CompletionSignalTiming Enum)
 
-支持两种完成信号发送时机：
+Two completion signal timings are supported:
 
-- **ON_START**：在执行开始时发送完成信号（适用于立即完成的指令）
-- **ON_FINISH**：在执行完成时发送完成信号（默认，适用于大多数指令）
+- **ON_START**: the completion signal is sent when execution starts (for instructions that complete immediately)
+- **ON_FINISH**: the completion signal is sent when execution finishes (default, for most instructions)
 
-### 执行模式（ExecutionMode 枚举）
+### Execution Mode (ExecutionMode Enum)
 
-智能执行模式优化：
+Smart execution mode optimization:
 
-- **AUTO_DETECT**：自动检测执行模式（推荐，默认）
-- **FORCE_ASYNC**：强制异步执行
-- **FORCE_SYNC**：强制同步执行
+- **AUTO_DETECT**: auto-detect the execution mode (recommended, default)
+- **FORCE_ASYNC**: force asynchronous execution
+- **FORCE_SYNC**: force synchronous execution
 
 ---
 
-## 核心方法实现
+## Core Method Implementation
 
-### 1. 必须实现的抽象方法
+### 1. Required Abstract Methods
 
-#### _get_instruction_metadata() - 静态方法
+#### _get_instruction_metadata() - Static Method
 
-设置指令的基本信息和元数据，使用静态方法模式：
+Sets up the instruction's basic information and metadata, using the static method pattern:
 
 ```gdscript
 static func _get_instruction_metadata() -> InstructionMetadata:
@@ -101,82 +101,82 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 	return metadata
 ```
 
-**InstructionMetadata 类属性：**
-- `name`：指令的显示名称（必需）
-- `description`：指令的详细描述（必需）
-- `category`：指令的分类，用于在编辑器中组织（必需）
-- `version`：指令版本（可选）
-- `author`：作者信息（可选）
-- `keywords`：关键词列表，用于搜索（可选）
-- `icon`：指令图标（可选）
+**InstructionMetadata class properties:**
+- `name`: the instruction's display name (required)
+- `description`: a detailed description of the instruction (required)
+- `category`: the instruction's category, used for organization in the editor (required)
+- `version`: instruction version (optional)
+- `author`: author information (optional)
+- `keywords`: a keyword list used for search (optional)
+- `icon`: instruction icon (optional)
 
-**重要说明：**
-- 必须实现此静态方法，用于指令选择器和注册系统
-- 必须设置 `name`、`description` 和 `category`
-- 必须返回 metadata 对象
-- 元数据会被缓存，避免重复创建
+**Important notes:**
+- This static method must be implemented; it is used by the instruction picker and the registration system
+- `name`, `description`, and `category` must be set
+- The metadata object must be returned
+- The metadata is cached to avoid repeated creation
 
 #### _setup_metadata()
 
-设置指令的实例元数据（可选）：
+Sets up the instruction's instance metadata (optional):
 
 ```gdscript
 func _setup_metadata():
-	# 通常留空，因为元数据已在静态方法中设置
+	# Usually left empty because the metadata is already set in the static method
 	pass
 ```
 
-**说明：**
-- 此方法仍然需要实现（因为是抽象方法），但通常只需留空
-- 实际的元数据设置在静态方法 `_get_instruction_metadata()` 中完成
+**Notes:**
+- This method still needs to be implemented (it is an abstract method), but it usually just stays empty
+- The actual metadata setup is done in the static method `_get_instruction_metadata()`
 
 #### execute(context: ExecutionContext)
 
-实现指令的核心逻辑：
+Implements the instruction's core logic:
 
 ```gdscript
 func execute(context: ExecutionContext):
-	# 强制性：必须调用此方法初始化执行状态
+	# Mandatory: this method must be called to initialize the execution state
 	_start_execution(context)
 	
-	# 验证参数
+	# Validate parameters
 	if not _validate_parameters():
 		set_error("参数验证失败", FuseError.ErrorType.VALIDATION_ERROR)
 		finished.emit()
 		return
 	
-	# 执行指令逻辑
+	# Run the instruction logic
 	_execute_instruction_logic(context)
 	
-	# 标记完成
+	# Mark completion
 	_on_execution_completed()
 ```
 
-**重要说明：**
-- `_start_execution(context)` 调用是强制性的，必须作为 `execute()` 方法的第一个操作
-- 此方法会设置执行状态为 RUNNING，记录开始时间，并设置超时计时器
-- 省略此调用会导致指令状态管理异常
+**Important notes:**
+- The `_start_execution(context)` call is mandatory and must be the first operation in the `execute()` method
+- This method sets the execution state to RUNNING, records the start time, and starts the timeout timer
+- Omitting this call breaks the instruction's state management
 
 #### _update_resource_name()
 
-更新指令在编辑器列表中显示的名称，让使用者能够直观地看到指令的作用与参数：
+Updates the name displayed for the instruction in the editor list, so users can see at a glance what the instruction does and which parameters it uses:
 
 ```gdscript
 func _update_resource_name():
 	resource_name = "指令类型: 参数值"
 ```
 
-**重要说明：**
-- 这是一个抽象方法，必须在子类中实现
-- 只在属性的 setter 中调用此方法，确保参数变化时名称同步更新
-- 无需在 `_init()` 或 `_setup_metadata()` 中调用，因为此方法仅与编辑器显示相关
-- 名称应该简洁明了，包含最重要的参数信息
-- 避免在名称中包含过多细节，保持可读性
+**Important notes:**
+- This is an abstract method and must be implemented in subclasses
+- Call this method only in property setters so the name is updated in sync whenever a parameter changes
+- There is no need to call it in `_init()` or `_setup_metadata()`, because this method only affects editor display
+- The name should be concise and contain the most important parameter information
+- Avoid including too much detail in the name; keep it readable
 
-**实现示例：**
+**Implementation example:**
 
 ```gdscript
-# 在属性 setter 中调用
+# Called in property setters
 @export var message: String = "Hello":
 	set(value):
 		message = value
@@ -187,7 +187,7 @@ func _update_resource_name():
 		wait_time = value
 		_update_resource_name()
 
-# 实现更新方法
+# Implements the update method
 func _update_resource_name():
 	if wait_time > 0:
 		resource_name = "等待 %.1f 秒: %s" % [wait_time, message]
@@ -195,11 +195,11 @@ func _update_resource_name():
 		resource_name = "立即: %s" % message
 ```
 
-### 2. 推荐重写的方法
+### 2. Recommended Overrides
 
 #### get_description() -> String
 
-提供指令的描述信息：
+Provides the instruction description:
 
 ```gdscript
 func get_description() -> String:
@@ -208,16 +208,16 @@ func get_description() -> String:
 
 #### validate() -> Array[String]
 
-验证指令配置的有效性：
+Validates the instruction configuration:
 
 ```gdscript
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	
-	# 调用基类验证
+	# Call the base class validation
 	errors.append_array(super.validate())
 	
-	# 添加自定义验证
+	# Add custom validation
 	if required_parameter <= 0:
 		errors.append("参数值必须大于0")
 	
@@ -226,59 +226,59 @@ func validate() -> Array[String]:
 
 #### _cleanup_resources()
 
-清理指令执行过程中使用的资源：
+Releases resources used during instruction execution:
 
 ```gdscript
 func _cleanup_resources():
 	super._cleanup_resources()
 	
-	# 清理计时器
+	# Clean up the timer
 	if _timer:
 		if _timer.timeout.is_connected(_on_timer_timeout):
 			_timer.timeout.disconnect(_on_timer_timeout)
 		_timer = null
 	
-	# 清理其他资源
+	# Clean up other resources
 	_custom_resources.clear()
 ```
 
 #### cancel()
 
-处理指令取消逻辑：
+Handles instruction cancellation:
 
 ```gdscript
 func cancel():
-	# 停止进行中的操作
+	# Stop in-progress operations
 	if _timer:
 		_timer.timeout.disconnect(_on_timer_timeout)
 		_timer = null
 	
-	# 调用基类取消方法
+	# Call the base class cancel method
 	super.cancel()
 ```
 
 ---
 
-## 生命周期管理
+## Lifecycle Management
 
-### 资源管理最佳实践
+### Resource Management Best Practices
 
-#### 1. 执行状态管理
+#### 1. Execution State Management
 
 ```gdscript
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 检查执行状态
+	# Check the execution state
 	if execution_status != ExecutionStatus.RUNNING:
 		_log_warning("指令不在运行状态，跳过执行")
 		return
 	
-	# 执行逻辑
+	# Run the logic
 	_perform_instruction_logic()
 ```
 
-#### 2. 异步操作管理
+#### 2. Async Operation Management
 
 ```gdscript
 var _timer: SceneTreeTimer = null
@@ -287,14 +287,14 @@ var _async_operation: AsyncOperation = null
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 创建异步操作
+	# Create the async operation
 	_timer = Engine.get_main_loop().create_timer(wait_time)
 	_timer.timeout.connect(_on_operation_completed)
 
 func _cleanup_resources():
 	super._cleanup_resources()
 	
-	# 清理异步操作
+	# Clean up the async operation
 	if _timer:
 		if _timer.timeout.is_connected(_on_operation_completed):
 			_timer.timeout.disconnect(_on_operation_completed)
@@ -305,15 +305,15 @@ func _cleanup_resources():
 		_async_operation = null
 ```
 
-#### 3. 超时管理
+#### 3. Timeout Management
 
 ```gdscript
 func execute(context: ExecutionContext):
-	# 设置超时时间
+	# Set the timeout
 	set_timeout(30.0)  # 30秒超时
 	
 	_start_execution(context)
-	# 执行逻辑...
+	# Execution logic...
 
 func _on_timeout():
 	_log_error("指令执行超时")
@@ -323,15 +323,15 @@ func _on_timeout():
 
 ---
 
-## 错误处理和日志
+## Error Handling and Logging
 
-### 1. 统一错误处理
+### 1. Unified Error Handling
 
 ```gdscript
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 参数验证
+	# Parameter validation
 	if not _validate_parameters():
 		set_error("参数验证失败", FuseError.ErrorType.VALIDATION_ERROR, {
 			"parameter_name": parameter_name,
@@ -340,7 +340,7 @@ func execute(context: ExecutionContext):
 		finished.emit()
 		return
 	
-	# 执行逻辑
+	# Run the logic
 	var result = _perform_operation()
 	if result.is_error():
 		set_error("操作失败: %s" % result.get_error_message(), FuseError.ErrorType.EXECUTION_ERROR)
@@ -350,22 +350,22 @@ func execute(context: ExecutionContext):
 	_on_execution_completed()
 ```
 
-**错误处理最佳实践：**
-- 直接使用 `set_error()` 方法，无需预先创建 FuseError 对象
-- 提供有意义的错误消息，包含足够的上下文信息
-- 使用适当的错误类型
-- 提供错误上下文信息，便于调试
-- 在设置错误后立即发出 `finished` 信号并返回
+**Error handling best practices:**
+- Use the `set_error()` method directly; there is no need to pre-create a FuseError object
+- Provide meaningful error messages that contain enough context
+- Use the appropriate error type
+- Provide error context information to ease debugging
+- Emit the `finished` signal and return immediately after setting the error
 
-### 2. 本地化错误处理
+### 2. Localized Error Handling
 
-支持本地化错误消息，便于多语言支持：
+Localized error messages are supported to enable multi-language support:
 
 ```gdscript
 func execute(context: ExecutionContext):
 	_start_execution(context)
 
-	# 参数验证 - 使用本地化错误
+	# Parameter validation - use a localized error
 	if not _validate_parameters():
 		set_error_localized(
 			"FUSE_ERROR_PARAMETER_VALIDATION_FAILED",
@@ -375,33 +375,33 @@ func execute(context: ExecutionContext):
 		finished.emit()
 		return
 
-	# 执行逻辑...
+	# Execution logic...
 ```
 
-**错误类型（FuseError.ErrorType）：**
+**Error types (FuseError.ErrorType):**
 
-- **VALIDATION_ERROR**：参数验证错误
-- **CONFIGURATION_ERROR**：配置错误
-- **EXECUTION_ERROR**：执行错误（默认）
-- **RUNTIME_ERROR**：运行时错误
-- **TIMEOUT_ERROR**：超时错误
-- **NOT_FOUND_ERROR**：资源或节点未找到错误
-- **PERMISSION_ERROR**：权限错误
-- **NETWORK_ERROR**：网络错误
+- **VALIDATION_ERROR**: parameter validation error
+- **CONFIGURATION_ERROR**: configuration error
+- **EXECUTION_ERROR**: execution error (default)
+- **RUNTIME_ERROR**: runtime error
+- **TIMEOUT_ERROR**: timeout error
+- **NOT_FOUND_ERROR**: resource or node not found
+- **PERMISSION_ERROR**: permission error
+- **NETWORK_ERROR**: network error
 
-**本地化错误的优势：**
-- 支持多语言界面
-- 集中管理错误消息
-- 便于翻译和维护
-- 用户体验更好
+**Advantages of localized errors:**
+- Supports multi-language UIs
+- Centralizes error message management
+- Easier to translate and maintain
+- Better user experience
 
-### 3. 分级日志记录
+### 3. Leveled Logging
 
 ```gdscript
 func execute(context: ExecutionContext):
 	_log_debug("开始执行指令: %s" % metadata.name)
 	
-	# 执行逻辑
+	# Execution logic
 	_log_info("正在执行操作...")
 	
 	if condition_met:
@@ -413,7 +413,7 @@ func execute(context: ExecutionContext):
 	_log_info("指令执行完成")
 ```
 
-### 3. 上下文信息记录
+### 3. Context Information Logging
 
 ```gdscript
 func set_error(message: String, error_type: FuseError.ErrorType = FuseError.ErrorType.EXECUTION_ERROR, context: Dictionary = {}):
@@ -427,51 +427,51 @@ func set_error(message: String, error_type: FuseError.ErrorType = FuseError.Erro
 
 ---
 
-## 高级功能
+## Advanced Features
 
-### 1. 超时管理
+### 1. Timeout Management
 
-BaseInstruction 提供了完整的超时管理功能，可以防止指令无限期执行：
+BaseInstruction provides complete timeout management that prevents instructions from executing indefinitely:
 
-#### 基本超时设置
+#### Basic Timeout Setup
 
 ```gdscript
 func execute(context: ExecutionContext):
-	# 设置超时时间（秒）
+	# Set the timeout (seconds)
 	set_timeout(30.0)  # 30秒超时
 	
 	_start_execution(context)
 	
-	# 执行可能耗时的操作...
+	# Perform operations that may take a while...
 ```
 
-#### 超时处理方法
+#### Timeout Query Methods
 
 ```gdscript
-# 检查是否启用了超时
+# Check whether a timeout is enabled
 func has_timeout() -> bool:
 	return _timeout_duration > 0.0
 
-# 获取当前超时设置
+# Get the current timeout setting
 func get_timeout() -> float:
 	return _timeout_duration
 
-# 获取已经执行的时间
+# Get the elapsed execution time
 func get_execution_time() -> float:
 	if execution_status == ExecutionStatus.RUNNING:
 		return (Time.get_ticks_msec() / 1000.0) - _execution_start_time
 	return 0.0
 ```
 
-#### 自定义超时处理
+#### Custom Timeout Handling
 
 ```gdscript
-# 重写超时处理方法（可选）
+# Override the timeout handling method (optional)
 func _on_timeout():
 	var elapsed_time = get_execution_time()
 	var error_msg = "指令执行超时 (%.2f 秒 > %.2f 秒)" % [elapsed_time, _timeout_duration]
 	
-	# 提供详细的超时上下文
+	# Provide a detailed timeout context
 	var timeout_context = {
 		"elapsed_time": elapsed_time,
 		"timeout_duration": _timeout_duration,
@@ -482,61 +482,61 @@ func _on_timeout():
 	finished.emit()
 ```
 
-**超时管理最佳实践：**
-- 为可能长时间运行的指令设置合理的超时时间
-- 在指令描述中说明预期的执行时间
-- 对于网络操作或文件 I/O，设置较长的超时时间
-- 对于计算密集型操作，根据复杂度设置超时
+**Timeout management best practices:**
+- Set a reasonable timeout for instructions that may run for a long time
+- Document the expected execution time in the instruction description
+- Use longer timeouts for network operations or file I/O
+- For compute-intensive operations, set the timeout according to complexity
 
-### 2. 完成信号时机
+### 2. Completion Signal Timing
 
-BaseInstruction 支持两种完成信号发送时机，通过 `CompletionSignalTiming` 枚举控制：
+BaseInstruction supports two completion signal timings, controlled by the `CompletionSignalTiming` enum:
 
-#### ON_FINISH 模式（默认）
+#### ON_FINISH Mode (Default)
 
 ```gdscript
-# 在指令执行完成时发送信号（默认行为）
+# The signal is sent when the instruction finishes executing (default behavior)
 func _init():
 	completion_timing = CompletionSignalTiming.ON_FINISH
 
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 执行指令逻辑...
+	# Instruction logic...
 	
-	# 在这里调用 _on_execution_completed() 会发送 finished 信号
+	# Calling _on_execution_completed() here emits the finished signal
 	_on_execution_completed()
 ```
 
-#### ON_START 模式
+#### ON_START Mode
 
 ```gdscript
-# 在指令开始执行时立即发送信号
+# The signal is sent immediately when the instruction starts executing
 func _init():
 	completion_timing = CompletionSignalTiming.ON_START
 
 func execute(context: ExecutionContext):
-	# _start_execution() 会自动检测并发送 finished 信号
+	# _start_execution() auto-detects this and emits the finished signal
 	_start_execution(context)
 	
-	# 执行指令逻辑...
+	# Instruction logic...
 	
-	# 这里不需要调用 _on_execution_completed()，因为信号已经发送
+	# No need to call _on_execution_completed() here because the signal was already sent
 ```
 
-#### 使用场景
+#### Use cases
 
-**ON_FINISH 模式适用于：**
-- 需要等待执行完成的指令
-- 异步操作的指令
-- 大多数标准指令
+**The ON_FINISH mode suits:**
+- Instructions that need to wait for execution to complete
+- Instructions with asynchronous operations
+- Most standard instructions
 
-**ON_START 模式适用于：**
-- 立即完成的指令
-- 触发器类型的指令
-- 只需要启动而不需要等待完成的操作
+**The ON_START mode suits:**
+- Instructions that complete immediately
+- Trigger-style instructions
+- Operations that only need to start, without waiting for completion
 
-#### 动态设置完成时机
+#### Dynamically Setting the Completion Timing
 
 ```gdscript
 @export var immediate_completion: bool = false:
@@ -548,17 +548,17 @@ func execute(context: ExecutionContext):
 	_start_execution(context)
 	
 	if immediate_completion:
-		# ON_START 模式：信号已在 _start_execution() 中发送
+		# ON_START mode: the signal was already sent in _start_execution()
 		_log_info("指令已触发，无需等待完成")
 	else:
-		# ON_FINISH 模式：需要等待执行完成
+		# ON_FINISH mode: wait for execution to complete
 		_perform_full_execution()
 		_on_execution_completed()
 ```
 
-### 3. 变量绑定声明（get_variable_modes）
+### 3. Variable Binding Declaration (get_variable_modes)
 
-内置指令普遍支持参数"直接值 / 变量"双轨（用户侧用法见[变量绑定使用指南](../guides/07-variable-binding-guide.md)）。自定义指令通过 `use_variable_for_xxx` 布尔开关 + `get_variable_modes()` 声明加入同一体系：
+Built-in instructions generally support the "direct value / variable" dual-track parameter mode (for user-side usage see the [Variable Binding Usage Guide](../guides/07-variable-binding-guide.md)). Custom instructions join the same system by declaring a `use_variable_for_xxx` boolean switch plus `get_variable_modes()`:
 
 ```gdscript
 @export var use_variable_for_damage: bool = false:
@@ -576,32 +576,32 @@ func get_variable_modes() -> Array[Dictionary]:
     return modes
 ```
 
-配套在 `_get_property_list()` 里按开关动态切换属性形态（未勾选显示直接值输入框，勾选显示变量名 + 作用域下拉），行为对齐内置指令。声明了变量模式的指令会被 preset AI 上下文的 schema 收录，AI 生成 preset 时能正确使用双轨参数。
+Pair this with dynamically switching the property shape in `_get_property_list()` based on the toggle (unchecked shows a direct-value input box; checked shows a variable name + scope dropdown), matching the built-in instruction behavior. Instructions that declare variable modes are collected into the preset AI context schema, so AI-generated presets can use the dual-track parameters correctly.
 
 ---
 
-## 性能优化
+## Performance Optimization
 
-### 1. 条件检查优化
+### 1. Condition Check Optimization
 
 ```gdscript
-# 使用短路逻辑优化条件检查
+# Use short-circuit logic to optimize condition checks
 func _should_execute(context: ExecutionContext) -> bool:
-	# 先检查轻量级条件
+	# Check lightweight conditions first
 	if not context or not _enabled:
 		return false
 	
-	# 再检查重量级条件
+	# Then check heavyweight conditions
 	if not _check_expensive_condition(context):
 		return false
 	
 	return true
 ```
 
-### 2. 资源复用
+### 2. Resource Reuse
 
 ```gdscript
-# 缓存常用资源
+# Cache frequently used resources
 var _cached_texture: Texture2D = null
 var _cached_node: Node = null
 
@@ -611,30 +611,30 @@ func _get_resource():
 	return _cached_texture
 ```
 
-### 3. 批量操作
+### 3. Batch Operations
 
 ```gdscript
-# 批量处理多个对象
+# Process multiple objects in batches
 func _process_multiple_objects(objects: Array[Node]) -> void:
 	var valid_objects: Array[Node] = []
 	
-	# 先过滤，再处理
+	# Filter first, then process
 	for obj in objects:
 		if _is_valid_object(obj):
 			valid_objects.append(obj)
 	
-	# 批量执行操作
+	# Perform the operation in batches
 	for obj in valid_objects:
 		_process_object(obj)
 ```
 
 ---
 
-## 常见实现模式
+## Common Implementation Patterns
 
-### 1. 同步执行模式
+### 1. Synchronous Execution Pattern
 
-基于 `PrintInstruction` 的实现模式：
+Implementation pattern based on `PrintInstruction`:
 
 ```gdscript
 @export var message: String = "":
@@ -645,13 +645,13 @@ func _process_multiple_objects(objects: Array[Node]) -> void:
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 验证参数
+	# Validate parameters
 	if message.is_empty():
 		set_error("消息不能为空", FuseError.ErrorType.VALIDATION_ERROR)
 		finished.emit()
 		return
 	
-	# 执行同步操作
+	# Perform the synchronous operation
 	print(message)
 	if context:
 		context.print_message(message)
@@ -662,9 +662,9 @@ func _update_resource_name():
 	resource_name = "Print: %s" % message
 ```
 
-### 2. 异步执行模式
+### 2. Asynchronous Execution Pattern
 
-基于 `WaitInstruction` 的实现模式：
+Implementation pattern based on `WaitInstruction`:
 
 ```gdscript
 @export var wait_time: float = 1.0:
@@ -677,13 +677,13 @@ var _timer: SceneTreeTimer = null
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 验证参数
+	# Validate parameters
 	if wait_time <= 0:
 		set_error("等待时间必须大于0", FuseError.ErrorType.VALIDATION_ERROR)
 		finished.emit()
 		return
 	
-	# 创建异步操作
+	# Create the async operation
 	var scene_tree = Engine.get_main_loop()
 	if scene_tree:
 		_timer = scene_tree.create_timer(wait_time)
@@ -707,9 +707,9 @@ func _update_resource_name():
 	resource_name = "Wait: %.1f secs" % wait_time
 ```
 
-### 3. 状态维护模式
+### 3. State Maintenance Pattern
 
-基于 `CountInstruction` 的实现模式：
+Implementation pattern based on `CountInstruction`:
 
 ```gdscript
 @export var initial_count: int = 0:
@@ -728,10 +728,10 @@ var current_count: int = 0
 func execute(context: ExecutionContext):
 	_start_execution(context)
 	
-	# 更新状态
+	# Update the state
 	current_count += increment
 	
-	# 输出结果
+	# Output the result
 	var message = "计数: %d" % current_count
 	print(message)
 	if context:
@@ -747,12 +747,12 @@ func _update_resource_name():
 	resource_name = "Count: %d→%d (+%d)" % [initial_count, current_count, increment]
 ```
 
-### 4. 动态资源名称更新模式
+### 4. Dynamic Resource Name Update Pattern
 
-基于 `_update_resource_name()` 的实现模式，提供直观的编辑器体验：
+Implementation pattern based on `_update_resource_name()`, providing an intuitive editor experience:
 
 ```gdscript
-# 多参数指令的资源名称更新
+# Resource name updates for multi-parameter instructions
 @export var target_node: NodePath = "":
 	set(value):
 		target_node = value
@@ -771,7 +771,7 @@ func _update_resource_name():
 func _update_resource_name():
 	var parts = []
 	
-	# 基础操作类型
+	# Base operation type
 	match operation_type:
 		"move":
 			parts.append("移动")
@@ -782,18 +782,18 @@ func _update_resource_name():
 		_:
 			parts.append("操作")
 	
-	# 目标节点信息
+	# Target node information
 	if not target_node.is_empty():
 		parts.append(target_node.get_name(0))
 	
-	# 持续时间信息
+	# Duration information
 	if duration > 0:
 		parts.append("(%.1fs)" % duration)
 	
-	# 组合最终名称
+	# Combine the final name
 	resource_name = " ".join(parts)
 
-# 条件性资源名称更新
+# Conditional resource name updates
 @export var condition_type: String = "always":
 	set(value):
 		condition_type = value
@@ -821,16 +821,16 @@ func _update_resource_name():
 			resource_name = base_name + ": 未知条件"
 ```
 
-### 5. 条件化属性显示模式
+### 5. Conditional Property Display Pattern
 
-基于 `_validate_property()` 的实现模式，提供动态的编辑器界面：
+Implementation pattern based on `_validate_property()`, providing a dynamic editor UI:
 
 ```gdscript
-# 基础属性（始终显示）
+# Base properties (always shown)
 @export var target_variable: String = ""
 @export var scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
-# 控制属性（带 setter，触发属性更新）
+# Control property (has a setter that triggers property updates)
 @export var set_with_another_variable: bool = false:
 	set(value):
 		if set_with_another_variable != value:
@@ -838,26 +838,26 @@ func _update_resource_name():
 			_update_resource_name()
 			notify_property_list_changed()  # 触发属性验证
 
-# 条件属性（始终导出，但根据条件禁用）
+# Conditional properties (always exported but disabled based on conditions)
 @export var from_variable: String = ""
 @export var from_variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 @export var new_value: int = 0
 
-# 使用 _validate_property() 实现条件化显示
+# Use _validate_property() for conditional display
 func _validate_property(property: Dictionary) -> void:
-	# 当 set_with_another_variable = false 时，禁用源变量属性
+	# When set_with_another_variable = false, disable the source variable properties
 	if not set_with_another_variable:
 		if property.name == "from_variable":
 			property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 		elif property.name == "from_variable_scope":
 			property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 	
-	# 当 set_with_another_variable = true 时，禁用新值属性
+	# When set_with_another_variable = true, disable the new value property
 	if set_with_another_variable:
 		if property.name == "new_value":
 			property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 
-# 更新资源名称以反映当前配置
+# Update the resource name to reflect the current configuration
 func _update_resource_name():
 	if target_variable.is_empty():
 		resource_name = "设置变量: 未指定"
@@ -875,45 +875,45 @@ func _update_resource_name():
 	resource_name = "设置 %s.%s %s" % [scope, target_variable, operation_desc]
 ```
 
-#### 条件化显示的优势
+#### Advantages of Conditional Display
 
-1. **更好的用户体验**：属性变灰而不是消失，用户能看到所有可用选项
-2. **性能更优**：不需要重建整个属性列表，只验证需要验证的属性
-3. **逻辑更清晰**：每个属性的条件判断独立，易于调试和维护
-4. **符合标准实践**：使用 Godot 推荐的属性验证方法
+1. **Better user experience**: properties are greyed out instead of disappearing, so users can see all available options
+2. **Better performance**: there is no need to rebuild the whole property list; only the properties that need validation are validated
+3. **Clearer logic**: the condition checks for each property are independent, making debugging and maintenance easier
+4. **Standard practice**: uses Godot's recommended property validation approach
 
-#### 实现要点
+#### Implementation Notes
 
-1. **使用 @export 导出所有属性**：确保所有属性都能被编辑器识别
-2. **关键属性添加 setter**：在 setter 中调用 `notify_property_list_changed()` 触发更新
-3. **实现 _validate_property()**：根据条件动态设置属性的 `PROPERTY_USAGE_READ_ONLY` 标志
-4. **更新资源名称**：在属性变化时更新 `resource_name` 以反映当前配置
+1. **Export all properties with @export**: make sure the editor recognizes every property
+2. **Add setters to key properties**: call `notify_property_list_changed()` inside the setter to trigger updates
+3. **Implement _validate_property()**: dynamically set the property's `PROPERTY_USAGE_READ_ONLY` flag based on conditions
+4. **Update the resource name**: update `resource_name` when properties change to reflect the current configuration
 
-#### 常用属性使用标志
+#### Commonly Used Property Usage Flags
 
 ```gdscript
-# 禁用属性（变灰）
+# Disable a property (greyed out)
 property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
 
-# 隐藏属性（完全不可见）
+# Hide a property (completely invisible)
 property.usage = property.usage | PROPERTY_USAGE_NO_EDITOR
 
-# 只在编辑器中显示
+# Show only in the editor
 property.usage = property.usage | PROPERTY_USAGE_EDITOR
 
-# 标记为脚本变量
+# Mark as a script variable
 property.usage = property.usage | PROPERTY_USAGE_SCRIPT_VARIABLE
 ```
 
-#### 复杂条件示例
+#### Complex Condition Example
 
 ```gdscript
 func _validate_property(property: Dictionary) -> void:
-	# 多条件判断
+	# Multi-condition checks
 	var should_disable_advanced = not advanced_mode_enabled
 	var should_hide_deprecated = not show_deprecated_features
 	
-	# 根据多个条件控制属性
+	# Control properties based on multiple conditions
 	match property.name:
 		"advanced_property":
 			if should_disable_advanced:
@@ -928,51 +928,51 @@ func _validate_property(property: Dictionary) -> void:
 
 ---
 
-## 完整示例
+## Complete Example
 
-### 自定义指令示例：MoveNodeInstruction
+### Custom Instruction Example: MoveNodeInstruction
 
 ```gdscript
 @tool
 extends BaseInstruction
 class_name MoveNodeInstruction
 
-## 目标节点路径
+## Target node path
 @export var target_node_path: NodePath:
 	set(value):
 		target_node_path = value
 		_update_resource_name()
 
-## 目标位置
+## Target position
 @export var target_position: Vector2 = Vector2.ZERO:
 	set(value):
 		target_position = value
 		_update_resource_name()
 
-## 移动持续时间（秒）
+## Move duration (seconds)
 @export var move_duration: float = 1.0:
 	set(value):
 		move_duration = value
 		_update_resource_name()
 
-## 是否使用相对移动
+## Whether to use relative movement
 @export var relative_movement: bool = false:
 	set(value):
 		relative_movement = value
 		_update_resource_name()
 
-## 缓动类型
+## Easing type
 @export_enum("Linear", "EaseIn", "EaseOut", "EaseInOut") var ease_type: int = 0:
 	set(value):
 		ease_type = value
 		_update_resource_name()
 
-# 内部状态
+# Internal state
 var _target_node: Node = null
 var _tween: Tween = null
 var _initial_position: Vector2
 
-# 更新资源名称
+# Update the resource name
 func _update_resource_name():
 	var node_name = "未指定节点"
 	if not target_node_path.is_empty():
@@ -988,7 +988,7 @@ func _update_resource_name():
 		ease_name
 	]
 
-# 设置指令元数据（静态方法）
+# Set up instruction metadata (static method)
 static func _get_instruction_metadata() -> InstructionMetadata:
 	metadata = InstructionMetadata.new()
 	metadata.name = "移动节点"
@@ -999,56 +999,56 @@ static func _get_instruction_metadata() -> InstructionMetadata:
 	metadata.keywords = ["移动", "节点", "动画", "位置"]
 	return metadata
 
-# 设置指令元数据（实例方法，通常留空）
+# Set up instruction metadata (instance method, usually empty)
 func _setup_metadata():
 	pass
 
-# 执行指令
+# Execute the instruction
 func execute(context: ExecutionContext):
-	# 强制性：必须首先调用此方法
+	# Mandatory: this method must be called first
 	_start_execution(context)
 	
-	# 设置超时时间（动画操作可能需要较长时间）
+	# Set the timeout (animation operations may take a while)
 	set_timeout(move_duration + 5.0)  # 动画时间 + 5秒缓冲
 	
-	# 验证参数
+	# Validate parameters
 	var errors = validate()
 	if not errors.is_empty():
 		set_error("参数验证失败: " + ", ".join(errors), FuseError.ErrorType.VALIDATION_ERROR)
 		finished.emit()
 		return
 	
-	# 获取目标节点
+	# Get the target node
 	_target_node = context.get_node(target_node_path) if context else null
 	if not _target_node:
 		set_error("无法找到目标节点: %s" % target_node_path, FuseError.ErrorType.RUNTIME_ERROR)
 		finished.emit()
 		return
 	
-	# 验证节点类型
+	# Validate the node type
 	if not _target_node is Node2D and not _target_node is Control:
 		set_error("目标节点必须是 Node2D 或 Control 类型", FuseError.ErrorType.VALIDATION_ERROR)
 		finished.emit()
 		return
 	
-	# 记录初始位置
+	# Record the initial position
 	_initial_position = _target_node.position
 	
-	# 计算目标位置
+	# Compute the target position
 	var final_position = target_position
 	if relative_movement:
 		final_position = _initial_position + target_position
 	
-	# 输出执行信息
+	# Log execution information
 	var move_message = "开始移动 %s 从 %s 到 %s" % [_target_node.name, _initial_position, final_position]
 	_log_info(move_message)
 	if context:
 		context.print_message(move_message)
 	
-	# 创建补间动画
+	# Create the tween animation
 	_create_move_tween(final_position)
 
-# 创建移动补间
+# Create the move tween
 func _create_move_tween(target_pos: Vector2):
 	var scene_tree = Engine.get_main_loop()
 	if not scene_tree:
@@ -1059,27 +1059,27 @@ func _create_move_tween(target_pos: Vector2):
 	_tween = scene_tree.create_tween()
 	_tween.set_parallel(false)
 	
-	# 设置缓动类型
+	# Set the easing type
 	match ease_type:
 		0: _tween.set_ease(Tween.EASE_IN_OUT)
 		1: _tween.set_ease(Tween.EASE_IN)
 		2: _tween.set_ease(Tween.EASE_OUT)
 		3: _tween.set_ease(Tween.EASE_IN_OUT)
 	
-	# 设置过渡类型
+	# Set the transition type
 	_tween.set_trans(Tween.TRANS_SINE)
 	
-	# 执行移动动画
+	# Run the move animation
 	_tween.tween_property(_target_node, "position", target_pos, move_duration)
 	_tween.tween_callback(_on_move_completed)
 
-# 移动完成回调
+# Move completion callback
 func _on_move_completed():
 	_log_info("节点移动完成: %s" % _target_node.name)
 	_tween = null
 	_on_execution_completed()
 
-# 获取指令描述
+# Get the instruction description
 func get_description() -> String:
 	var move_type = relative_movement ? "相对移动" : "绝对移动"
 	var node_name = target_node_path.get_name(0) if not target_node_path.is_empty() else "未指定节点"
@@ -1091,7 +1091,7 @@ func get_description() -> String:
 		move_duration
 	]
 
-# 验证指令参数
+# Validate instruction parameters
 func validate() -> Array[String]:
 	var errors = super.validate()
 	
@@ -1103,7 +1103,7 @@ func validate() -> Array[String]:
 	
 	return errors
 
-# 取消指令执行
+# Cancel instruction execution
 func cancel():
 	if _tween:
 		_tween.kill()
@@ -1112,7 +1112,7 @@ func cancel():
 	
 	super.cancel()
 
-# 资源清理
+# Resource cleanup
 func _cleanup_resources():
 	super._cleanup_resources()
 	
@@ -1123,14 +1123,14 @@ func _cleanup_resources():
 	_target_node = null
 	_log_debug("MoveNodeInstruction 资源清理完成")
 
-# 重置指令状态
+# Reset the instruction state
 func reset():
 	super.reset()
 	_target_node = null
 	_tween = null
 	_log_debug("MoveNodeInstruction 状态已重置")
 
-# 统一日志方法
+# Unified logging methods
 func _log_debug(message: String):
 	FuseLogger.log_debug("MoveNodeInstruction", log_level, message)
 
@@ -1146,84 +1146,84 @@ func _log_error(message: String):
 
 ---
 
-## 测试和验证
+## Testing and Validation
 
-### 1. 单元测试模式
+### 1. Unit Test Pattern
 
 ```gdscript
-# 测试指令初始化
+# Test instruction initialization
 func test_instruction_initialization():
 	var instruction = MoveNodeInstruction.new()
 	var context = ExecutionContext.new()
 	
-	# 测试元数据设置
+	# Test metadata setup
 	assert(instruction.metadata.name == "移动节点")
 	assert(instruction.metadata.category == "节点操作")
 	
-	# 测试参数设置
+	# Test parameter settings
 	instruction.target_node_path = "^/TestNode"
 	instruction.target_position = Vector2(100, 100)
 	instruction.move_duration = 2.0
 	
-	# 验证资源名称更新
+	# Verify the resource name update
 	assert("TestNode" in instruction.resource_name)
 	assert("100.0" in instruction.resource_name)
 
-# 测试指令执行
+# Test instruction execution
 func test_instruction_execution():
 	var instruction = MoveNodeInstruction.new()
 	var context = create_test_context()
 	
-	# 设置测试参数
+	# Set test parameters
 	instruction.target_node_path = "^/TestNode"
 	instruction.target_position = Vector2(50, 50)
 	
-	# 连接完成信号
+	# Connect the finished signal
 	var completed = false
 	instruction.finished.connect(func(): completed = true)
 	
-	# 执行指令
+	# Execute the instruction
 	instruction.execute(context)
 	
-	# 验证执行状态
+	# Verify the execution state
 	assert(instruction.is_running())
 	
-	# 等待完成（在实际测试中需要适当的等待机制）
+	# Wait for completion (a proper waiting mechanism is needed in real tests)
 	# await instruction.finished
 	
-	# 验证完成状态
+	# Verify the completion state
 	assert(completed)
 	assert(instruction.is_completed())
 ```
 
-### 2. 集成测试模式
+### 2. Integration Test Pattern
 
 ```gdscript
-# 在实际场景中测试指令
+# Test the instruction in a real scene
 func test_instruction_in_scene():
-	# 创建测试场景
+	# Create a test scene
 	var scene = PackedScene.new()
 	var test_node = Node2D.new()
 	test_node.name = "TestNode"
 	
-	# 创建执行上下文
+	# Create the execution context
 	var context = ExecutionContext.new()
 	context.add_node(test_node)
 	
-	# 创建并执行指令
+	# Create and execute the instruction
 	var instruction = MoveNodeInstruction.new()
 	instruction.target_node_path = "^/TestNode"
 	instruction.target_position = Vector2(200, 200)
 	
-	# 执行并验证结果
+	# Execute and verify the result
 	instruction.execute(context)
 	
-	# 验证节点位置变化
+	# Verify the node position change
 	assert(test_node.position.x == 200)
 	assert(test_node.position.y == 200)
 ```
 
-### 3. 性能测试
+### 3. Performance Test
 
 ```gdscript
 func test_instruction_performance():
@@ -1231,7 +1231,7 @@ func test_instruction_performance():
 	var context = create_test_context()
 	var start_time = Time.get_ticks_msec()
 	
-	# 执行大量指令操作
+	# Perform a large number of instruction operations
 	for i in range(1000):
 		instruction.target_position = Vector2(i, i)
 		instruction._update_resource_name()
@@ -1242,41 +1242,41 @@ func test_instruction_performance():
 
 ---
 
-## 总结
+## Summary
 
-创建自定义 Instruction 时遵循以下关键原则：
+When creating custom Instructions, follow these key principles:
 
-1. **完整生命周期管理**：正确实现 `execute()` 和 `_cleanup_resources()` 方法
-2. **元数据管理**：使用 `_get_instruction_metadata()` 静态方法设置指令信息
-3. **执行状态管理**：理解并正确使用 ExecutionStatus 枚举
-4. **完成时机控制**：根据指令类型选择合适的 CompletionSignalTiming
-5. **执行模式优化**：利用 ExecutionMode.AUTO_DETECT 自动检测最佳执行模式
-6. **健壮的错误处理**：使用统一的错误处理机制（包括本地化错误）
-7. **清晰的日志记录**：提供适当的调试信息（包括本地化日志）
-8. **性能优化**：利用内置的本地化类缓存（性能提升约 70%）
-9. **超时管理**：合理设置超时时间，防止指令无限期执行
-10. **状态一致性**：确保指令状态在生命周期内保持一致
-11. **资源清理**：及时释放不再需要的资源
-12. **参数验证**：在 `validate()` 中验证配置参数
-13. **直观的资源名称**：实现 `_update_resource_name()` 方法，让指令在编辑器中显示清晰的信息
-14. **异步操作处理**：正确处理异步操作和资源清理
-15. **强制初始化调用**：在 `execute()` 中首先调用 `_start_execution(context)`
+1. **Complete lifecycle management**: implement the `execute()` and `_cleanup_resources()` methods correctly
+2. **Metadata management**: use the `_get_instruction_metadata()` static method to set up instruction information
+3. **Execution state management**: understand and correctly use the ExecutionStatus enum
+4. **Completion timing control**: choose the right CompletionSignalTiming for the instruction type
+5. **Execution mode optimization**: use ExecutionMode.AUTO_DETECT to auto-detect the best execution mode
+6. **Robust error handling**: use the unified error handling mechanism (including localized errors)
+7. **Clear logging**: provide appropriate debug information (including localized logs)
+8. **Performance optimization**: leverage the built-in localization class cache (about 70% faster)
+9. **Timeout management**: set reasonable timeouts to prevent instructions from executing indefinitely
+10. **State consistency**: keep the instruction state consistent across the lifecycle
+11. **Resource cleanup**: release unneeded resources in a timely manner
+12. **Parameter validation**: validate configuration parameters in `validate()`
+13. **Intuitive resource names**: implement `_update_resource_name()` so the instruction shows clear information in the editor
+14. **Async operation handling**: handle asynchronous operations and resource cleanup correctly
+15. **Mandatory initialization call**: call `_start_execution(context)` first in `execute()`
 
-通过遵循这些最佳实践，您可以创建高质量、高性能的自定义 Instruction 类，为 Fuse Visual Programming 系统提供强大而可靠的指令执行能力。
-
----
-## 更新说明（2026-03）
-
-- BaseInstruction 现在支持 `ExecutionMode` 枚举（AUTO_DETECT / FORCE_ASYNC / FORCE_SYNC）
-- 新增 `get_default_runtime_state()` 方法用于 RuntimeInstance 模式
-- 新增 `set_error()` / `set_error_localized()` 统一错误处理
-- 新增 `set_timeout()` 超时管理
-- 元数据通过 `InstructionMetadata` 类和 `_get_instruction_metadata()` 静态方法定义
+By following these best practices, you can create high-quality, high-performance custom Instruction classes that give the Fuse Visual Programming system powerful and reliable instruction execution.
 
 ---
+## Update Notes (2026-03)
 
-**相关文档:**
+- BaseInstruction now supports the `ExecutionMode` enum (AUTO_DETECT / FORCE_ASYNC / FORCE_SYNC)
+- Added the `get_default_runtime_state()` method for the RuntimeInstance mode
+- Added `set_error()` / `set_error_localized()` for unified error handling
+- Added `set_timeout()` timeout management
+- Metadata is defined through the `InstructionMetadata` class and the `_get_instruction_metadata()` static method
 
-- [自定义 Condition 创建最佳实践](custom_condition.md)
-- [指令生成 skill](../../../../agent_skills/fuse-instruction-generator/SKILL.md)——指令组件规范的最终权威（模板、命名禁则与验证 gate），本指南是其架构原理的详述
-- [变量绑定使用指南](../guides/07-variable-binding-guide.md)——双轨参数的用户侧用法
+---
+
+**Related docs:**
+
+- [Custom Condition Creation Best Practices (Chinese)](../../../zh_CN/user_docs/best_practices/custom_condition.md)
+- [Instruction generation skill](../../../../agent_skills/fuse-instruction-generator/SKILL.md) — the final authority on instruction component specs (templates, naming rules, and validation gates); this guide details the architectural principles behind it
+- [Variable Binding Usage Guide](../guides/07-variable-binding-guide.md) — user-side usage of the dual-track parameters

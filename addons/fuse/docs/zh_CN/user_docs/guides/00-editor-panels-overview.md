@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/00-editor-panels-overview.md)
+
 # 编辑器面板总览
 
 Fuse 在 Godot 编辑器中集成了多个专属界面，分别覆盖：**Fuse Topology 主屏 Tab**（全场景 Trigger 拓扑总览 + 问题标注）、**Inspector 增强**（数据流卡片 + 预设操作）、**作用域变量编辑**、**底部变量监视器**（[56-variable-watcher-guide](56-variable-watcher-guide.md)）。本文档作为所有编辑器面板的入口参考。

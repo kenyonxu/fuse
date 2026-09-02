@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/06-instruction-generator-guide.md)
+
 # 指令生成器使用指南
 
 通过右键场景树节点自动生成 Fuse 指令。选择节点的方法或属性，一键生成可用的指令文件，无需手写代码。

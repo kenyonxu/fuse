@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/02-trigger-selection-guide.md)
+
 # 触发器选型指南：Runner、Trigger 与 MultiEventTrigger
 
 Fuse 提供了三种组件来响应事件并执行指令序列（ActionRunner）。它们各自擅长不同的场景，本指南帮助你在具体需求下做出选择。

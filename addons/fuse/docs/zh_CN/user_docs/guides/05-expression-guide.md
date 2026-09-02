@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/05-expression-guide.md)
+
 # 表达式系统使用指南
 
 Fuse 提供三个基于 Godot `Expression` 引擎的表达式组件，覆盖数学计算、字符串处理和条件判断。

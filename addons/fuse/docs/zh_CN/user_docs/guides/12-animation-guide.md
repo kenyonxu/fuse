@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/12-animation-guide.md)
+
 # 动画系统用户指南
 
 Fuse 提供了一套完整的动画控制组件，包含 4 个指令和 6 个事件，覆盖 AnimationPlayer 播放控制和 AnimationTree 混合控制两大场景。

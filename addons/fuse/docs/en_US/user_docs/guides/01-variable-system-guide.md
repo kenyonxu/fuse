@@ -1,29 +1,29 @@
-> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/01-variable-system-guide.md)
+> 🌐 [**中文版**](../../../zh_CN/user_docs/guides/01-variable-system-guide.md) | English
 
-# Fuse 变量使用指南
+# Fuse Variable Usage Guide
 
-> 学会在 Fuse 可视化编程中正确使用三层变量系统
+> Learn to use the three-layer variable system correctly in Fuse visual programming
 
-## 基础概念
+## Basic Concepts
 
-Fuse 变量系统分为三个层级：LOCAL（局部）、SCOPE（作用域）、GLOBAL（全局）。大多数情况下，你只需要 LOCAL 和 GLOBAL，但 SCOPE 在特定场景下非常有用。
+The Fuse variable system has three layers: LOCAL (local), SCOPE (scope), and GLOBAL (global). In most cases you only need LOCAL and GLOBAL, but SCOPE is very useful in specific scenarios.
 
-**快速决策树：**
-- 单次指令临时数据？用 LOCAL
-- 跨场景共享数据？用 GLOBAL
-- 场景内节点间共享？用 SCOPE
+**Quick decision tree:**
+- Temporary data for a single instruction? Use LOCAL
+- Data shared across scenes? Use GLOBAL
+- Data shared between nodes within a scene? Use SCOPE
 
-## LOCAL 变量
+## LOCAL Variables
 
-LOCAL 变量存储在执行上下文中，生命周期最短但速度最快。适合指令执行的中间结果。
+LOCAL variables live in the execution context; they have the shortest lifetime but the fastest access. They suit intermediate results of instruction execution.
 
 ```gdscript
-# 指令：计算两点距离
+# Instruction: compute the distance between two points
 func execute(context: ExecutionContext):
     var point_a = Vector2(0, 0)
     var point_b = Vector2(100, 100)
 
-    # 计算距离，保存到 LOCAL 变量
+    # Compute the distance and save it to a LOCAL variable
     var distance = point_a.distance_to(point_b)
     VariableOperations.set_variable(
         context,
@@ -33,21 +33,21 @@ func execute(context: ExecutionContext):
     )
 ```
 
-**何时使用 LOCAL：**
-- ✅ 计算中间结果
-- ✅ 单次指令临时数据
-- ✅ 循环计数器
-- ❌ 需要跨指令共享的数据
-- ❌ 需要持久化的数据
+**When to use LOCAL:**
+- ✅ Intermediate computation results
+- ✅ Temporary data for a single instruction
+- ✅ Loop counters
+- ❌ Data that must be shared across instructions
+- ❌ Data that must persist
 
-## GLOBAL 变量
+## GLOBAL Variables
 
-GLOBAL 变量在整个游戏运行期间保持，跨场景共享。用于游戏配置、玩家数据等全局状态。
+GLOBAL variables persist for the entire game run and are shared across scenes. Use them for game configuration, player data, and other global state.
 
 ```gdscript
-# 指令：更新玩家分数
+# Instruction: update the player's score
 func execute(context: ExecutionContext):
-    # 读取当前分数
+    # Read the current score
     var current_score = VariableOperations.get_variable(
         context,
         "player_score",
@@ -55,7 +55,7 @@ func execute(context: ExecutionContext):
         0
     )
 
-    # 增加分数
+    # Add to the score
     VariableOperations.set_variable(
         context,
         "player_score",
@@ -64,27 +64,27 @@ func execute(context: ExecutionContext):
     )
 ```
 
-**何时使用 GLOBAL：**
-- ✅ 游戏配置（音量、画质）
-- ✅ 玩家数据（等级、经验、背包）
-- ✅ 游戏进度（当前关卡、任务状态）
-- ❌ 临时数据
-- ❌ 场景局部数据
+**When to use GLOBAL:**
+- ✅ Game configuration (volume, graphics quality)
+- ✅ Player data (level, experience, inventory)
+- ✅ Game progress (current level, quest state)
+- ❌ Temporary data
+- ❌ Scene-local data
 
-## SCOPE 变量
+## SCOPE Variables
 
-SCOPE 变量是场景内节点间的共享数据，随节点生命周期自动清理。这是 LOCAL 和 GLOBAL 之间的折中方案。
+SCOPE variables are data shared between nodes within a scene and are cleaned up automatically with the node lifecycle. They are the middle ground between LOCAL and GLOBAL.
 
-### 基础用法（NEAREST 模式）
+### Basic Usage (NEAREST Mode)
 
-默认情况下，SCOPE 变量使用最近的 `ScopeVariableContainer` 节点。
+By default, SCOPE variables use the nearest `ScopeVariableContainer` node.
 
 ```gdscript
-# 指令：更新 UI 血量显示
+# Instruction: update the UI health display
 func execute(context: ExecutionContext):
     var hp = 80
 
-    # 保存到最近的 SCOPE 容器
+    # Save to the nearest SCOPE container
     VariableOperations.set_variable(
         context,
         "current_hp",
@@ -93,7 +93,7 @@ func execute(context: ExecutionContext):
     )
 ```
 
-**场景树示例：**
+**Scene tree example:**
 ```
 Main
 └── GameUI (ScopeVariableContainer, scope_id: "ui")
@@ -101,19 +101,19 @@ Main
     └── ScoreDisplay
 ```
 
-HPBar 和 ScoreDisplay 指令都可以访问同一个 SCOPE 容器中的变量。
+The instructions of both HPBar and ScoreDisplay can access variables in the same SCOPE container.
 
-### 指定容器（CUSTOM_ID 模式）
+### Specifying a Container (CUSTOM_ID Mode)
 
-当你需要精确控制使用哪个容器时，使用 `save_to_scope` + `scope_source` 组合。
+When you need precise control over which container is used, combine `save_to_scope` + `scope_source`.
 
 ```gdscript
-# 指令属性
+# Instruction properties
 @export var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.SCOPE
 var scope_source: ScopeSource = ScopeSource.CUSTOM_ID
 var custom_scope_id: String = "player_stats"
 
-# 执行逻辑
+# Execution logic
 func execute(context: ExecutionContext):
     if save_to_scope == BaseVariable.VariableScope.SCOPE:
         if scope_source == ScopeSource.CUSTOM_ID:
@@ -129,26 +129,26 @@ func execute(context: ExecutionContext):
                 scope_container.set_variable("player_hp", 100)
 ```
 
-**复杂场景树示例：**
+**Complex scene tree example:**
 ```
 Main
 ├── PlayerStats (ScopeVariableContainer, scope_id: "player_stats")
 ├── EnemyStats (ScopeVariableContainer, scope_id: "enemy_stats")
 └── EnemyAI
-    └── Instruction (需要读取玩家血量)
+    └── Instruction (needs to read the player's HP)
 ```
 
-使用 `custom_scope_id = "player_stats"` 可以精确读取 PlayerStats 容器中的数据，而不是最近的 EnemyStats。
+With `custom_scope_id = "player_stats"` you read precisely from the PlayerStats container instead of the nearest EnemyStats.
 
-### 作用域链继承
+### Scope Chain Inheritance
 
-SCOPE 容器支持继承模式，子容器可以访问父容器的变量。
+SCOPE containers support an inheritance mode where child containers can access parent container variables.
 
 ```gdscript
-# 父容器：GameSettings (scope_id: "game_settings", 继承模式: READ_WRITE)
-#   └── 子容器：Level1 (scope_id: "level1", 继承模式: READ_ONLY)
+# Parent container: GameSettings (scope_id: "game_settings", inheritance mode: READ_WRITE)
+#   └── Child container: Level1 (scope_id: "level1", inheritance mode: READ_ONLY)
 
-# Level1 中的指令可以读取 GameSettings 的变量
+# Instructions in Level1 can read GameSettings variables
 var difficulty = VariableOperations.get_variable(
     context,
     "difficulty",
@@ -157,60 +157,60 @@ var difficulty = VariableOperations.get_variable(
 )
 ```
 
-**继承模式：**
-- `NONE` - 不继承父作用域
-- `READ_ONLY` - 只读继承父作用域
-- `READ_WRITE` - 读写继承父作用域
+**Inheritance modes:**
+- `NONE` - do not inherit the parent scope
+- `READ_ONLY` - inherit the parent scope read-only
+- `READ_WRITE` - inherit the parent scope read-write
 
-## 作用域选择指南
+## Scope Selection Guide
 
-### 场景 1：单次计算
+### Scenario 1: One-off Computation
 
 ```gdscript
-# 错误：不必要地使用 GLOBAL
+# Wrong: using GLOBAL unnecessarily
 func execute(context: ExecutionContext):
     var temp_result = calculate()
     VariableOperations.set_variable(context, "temp", BaseVariable.VariableScope.GLOBAL, temp_result)
 
-# 正确：使用 LOCAL
+# Correct: use LOCAL
 func execute(context: ExecutionContext):
     var temp_result = calculate()
     VariableOperations.set_variable(context, "temp", BaseVariable.VariableScope.LOCAL, temp_result)
 ```
 
-### 场景 2：UI 数据共享
+### Scenario 2: UI Data Sharing
 
 ```gdscript
-# 错误：UI 数据使用 GLOBAL
+# Wrong: UI data in GLOBAL
 func execute(context: ExecutionContext):
     VariableOperations.set_variable(context, "ui_hp", BaseVariable.VariableScope.GLOBAL, 100)
 
-# 正确：UI 数据使用 SCOPE
-# 在 UI 根节点添加 ScopeVariableContainer
+# Correct: UI data in SCOPE
+# Add a ScopeVariableContainer to the UI root node
 func execute(context: ExecutionContext):
     VariableOperations.set_variable(context, "hp", BaseVariable.VariableScope.SCOPE, 100)
 ```
 
-**场景树：**
+**Scene tree:**
 ```
 GameUI (ScopeVariableContainer, scope_id: "ui")
-├── HPBar (指令：设置 hp = 100)
-├── ScoreDisplay (指令：读取 hp)
-└── ManaBar (指令：读取 hp 显示血条)
+├── HPBar (instruction: set hp = 100)
+├── ScoreDisplay (instruction: read hp)
+└── ManaBar (instruction: read hp to display the health bar)
 ```
 
-### 场景 3：跨敌人数据共享
+### Scenario 3: Cross-Enemy Data Sharing
 
 ```gdscript
-# 场景树
+# Scene tree
 Main
 ├── EnemyManager (ScopeVariableContainer, scope_id: "enemy_manager")
-│   ├── Enemy1 (指令：enemy_count++)
-│   └── Enemy2 (指令：enemy_count++)
+│   ├── Enemy1 (instruction: enemy_count++)
+│   └── Enemy2 (instruction: enemy_count++)
 └── EnemyAI
-    └── Instruction (读取 enemy_count)
+    └── Instruction (reads enemy_count)
 
-# Enemy1 中的指令
+# Instruction in Enemy1
 func execute(context: ExecutionContext):
     var count = VariableOperations.get_variable(
         context,
@@ -227,36 +227,36 @@ func execute(context: ExecutionContext):
     )
 ```
 
-## 在指令中使用变量系统
+## Using the Variable System in Instructions
 
-### 标准模式
+### Standard Pattern
 
 ```gdscript
-## 重构变量系统: 2026-02-09 - 使用 VariableOperations 统一变量访问
+## Variable system refactor: 2026-02-09 - use VariableOperations for unified variable access
 
 @tool
 extends BaseInstruction
 class_name MyInstruction
 
-# 变量名
+# Variable name
 var variable_name: String = ""
 
-# 变量作用域
+# Variable scope
 @export var variable_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL:
 	set(value):
 		variable_scope = value
 		_update_resource_name()
 
 func execute(context: ExecutionContext):
-	# 读取变量
+	# Read the variable
 	var value = VariableOperations.get_variable(
 		context,
 		variable_name,
 		variable_scope,
-		null  # 默认值
+		null  # default value
 	)
 
-	# 检查变量是否存在
+	# Check whether the variable exists
 	if value == null and not VariableOperations.has_variable(
 		context,
 		variable_name,
@@ -265,10 +265,10 @@ func execute(context: ExecutionContext):
 		_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
 		return
 
-	# 处理值
+	# Process the value
 	var result = _process(value)
 
-	# 写入变量
+	# Write the variable
 	VariableOperations.set_variable(
 		context,
 		variable_name,
@@ -282,7 +282,7 @@ func validate() -> Array[String]:
 	if variable_name.is_empty():
 		errors.append("变量名不能为空")
 
-	# 验证 SCOPE 作用域需要 ScopeVariableManager
+	# The SCOPE scope requires ScopeVariableManager
 	if variable_scope == BaseVariable.VariableScope.SCOPE:
 		var manager = ScopeVariableManager.get_instance()
 		if manager == null:
@@ -291,21 +291,21 @@ func validate() -> Array[String]:
 	return errors
 ```
 
-### SCOPE 变量的高级用法
+### Advanced SCOPE Variable Usage
 
-#### 使用自定义 scope_id
+#### Using a Custom scope_id
 
 ```gdscript
-# 属性定义
+# Property definitions
 @export var save_to_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.SCOPE
 var scope_source: ScopeSource = ScopeSource.CUSTOM_ID
 var custom_scope_id: String = "my_custom_scope"
 
-# 执行逻辑
+# Execution logic
 func execute(context: ExecutionContext):
     match save_to_scope:
         BaseVariable.VariableScope.LOCAL:
-            # LOCAL 逻辑
+            # LOCAL logic
             pass
         BaseVariable.VariableScope.SCOPE:
             if scope_source == ScopeSource.CUSTOM_ID:
@@ -320,17 +320,17 @@ func execute(context: ExecutionContext):
                 if scope_container != null:
                     scope_container.set_variable("my_var", 42)
         BaseVariable.VariableScope.GLOBAL:
-            # GLOBAL 逻辑
+            # GLOBAL logic
             pass
 ```
 
-#### 属性列表控制
+#### Property List Control
 
 ```gdscript
 func _get_property_list() -> Array[Dictionary]:
 	var properties := []
 
-	# 始终显示作用域选择
+	# Always show the scope selection
 	properties.append({
 		name = "save_to_scope",
 		type = TYPE_INT,
@@ -338,7 +338,7 @@ func _get_property_list() -> Array[Dictionary]:
 		hint_string = "Local,Scope,Global"
 	})
 
-	# 只在选择 SCOPE 时显示 ScopeSource 选项
+	# Only show the ScopeSource options when SCOPE is selected
 	if save_to_scope == BaseVariable.VariableScope.SCOPE:
 		properties.append({
 			name = "scope_source",
@@ -357,24 +357,24 @@ func _get_property_list() -> Array[Dictionary]:
 	return properties
 
 func _validate_property(property: Dictionary) -> void:
-	# 只在 SCOPE 作用域时验证 ScopeSource 属性
+	# Only validate the ScopeSource property when the scope is SCOPE
 	if save_to_scope == BaseVariable.VariableScope.SCOPE:
 		VariableScopeUtils.validate_scope_source_property(
 			property,
 			scope_source as VariableScopeUtils.ScopeSource
 		)
 	else:
-		# 非 SCOPE 作用域时隐藏 ScopeSource 属性
+		# Hide the ScopeSource properties when the scope is not SCOPE
 		if property.name in ["scope_source", "custom_scope_id", "target_node_path"]:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 ```
 
-## 常见模式
+## Common Patterns
 
-### 模式 1：读写操作
+### Pattern 1: Read/Write Operations
 
 ```gdscript
-# 读取输入变量，写入输出变量
+# Read an input variable and write an output variable
 @export var input_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 @export var output_scope: BaseVariable.VariableScope = BaseVariable.VariableScope.LOCAL
 
@@ -390,22 +390,22 @@ func execute(context: ExecutionContext):
 	)
 ```
 
-### 模式 2：默认值处理
+### Pattern 2: Default Value Handling
 
 ```gdscript
-# 使用默认值避免变量不存在的错误
+# Use a default value to avoid errors when the variable does not exist
 var player_level = VariableOperations.get_variable(
     context,
     "player_level",
     BaseVariable.VariableScope.GLOBAL,
-    1  # 默认值
+    1  # default value
 )
 ```
 
-### 模式 3：存在性检查
+### Pattern 3: Existence Check
 
 ```gdscript
-# 区分"变量不存在"和"变量值为 null"
+# Distinguish "the variable does not exist" from "the variable's value is null"
 var value = VariableOperations.get_variable(
     context,
     "my_variable",
@@ -413,7 +413,7 @@ var value = VariableOperations.get_variable(
     null
 )
 
-# 检查变量是否真的存在
+# Check whether the variable really exists
 if not VariableOperations.has_variable(
     context,
     "my_variable",
@@ -422,70 +422,70 @@ if not VariableOperations.has_variable(
 	_log_error("变量 '%s' 不存在" % "my_variable")
 	return
 
-# 此时 value 为 null 是有效的（变量确实存在，但值为 null）
+# At this point a null value is valid (the variable does exist, but its value is null)
 ```
 
-## 性能考虑
+## Performance Considerations
 
-### 访问速度排序
+### Access Speed Ranking
 
-1. **LOCAL** - 直接字典访问，最快
-2. **SCOPE** - 需要查找容器节点，稍慢
-3. **GLOBAL** - 需要通过管理器访问，相对较慢
+1. **LOCAL** - direct dictionary access, fastest
+2. **SCOPE** - requires looking up the container node, slightly slower
+3. **GLOBAL** - goes through the manager, relatively slower
 
-### 优化建议
+### Optimization Tips
 
 ```gdscript
-# 不推荐：在循环中重复访问 GLOBAL 变量
+# Not recommended: accessing a GLOBAL variable repeatedly inside a loop
 for i in range(100):
     var config = VariableOperations.get_variable(
         context, "config", BaseVariable.VariableScope.GLOBAL, null
     )
-    # 使用 config...
+    # Use config...
 
-# 推荐：循环外读取一次
+# Recommended: read once outside the loop
 var config = VariableOperations.get_variable(
     context, "config", BaseVariable.VariableScope.GLOBAL, null
 )
 for i in range(100):
-    # 使用 config...
+    # Use config...
 ```
 
-## 最佳实践
+## Best Practices
 
-### 1. 优先使用 LOCAL
+### 1. Prefer LOCAL
 
 ```gdscript
-# ✅ 推荐：临时数据使用 LOCAL
+# ✅ Recommended: temporary data in LOCAL
 var temp_distance = point_a.distance_to(point_b)
 VariableOperations.set_variable(context, "temp", BaseVariable.VariableScope.LOCAL, temp_distance)
 
-# ❌ 避免：临时数据使用 GLOBAL
+# ❌ Avoid: temporary data in GLOBAL
 VariableOperations.set_variable(context, "temp", BaseVariable.VariableScope.GLOBAL, temp_distance)
 ```
 
-### 2. 变量命名规范
+### 2. Variable Naming Conventions
 
 ```gdscript
-# LOCAL 变量 - 使用 temp_ 前缀
+# LOCAL variables - use the temp_ prefix
 "temp_distance"
 "temp_index"
 "temp_result"
 
-# SCOPE 变量 - 按功能分组
+# SCOPE variables - group by function
 "ui_hp"
 "ui_score"
 "player_current_state"
 "enemy_spawn_count"
 
-# GLOBAL 变量 - 使用描述性名称
+# GLOBAL variables - use descriptive names
 "player_level"
 "game_difficulty"
 "audio_master_volume"
 "current_scene_name"
 ```
 
-### 3. 验证前提条件
+### 3. Validate Preconditions
 
 ```gdscript
 func validate() -> Array[String]:
@@ -494,7 +494,7 @@ func validate() -> Array[String]:
 	if variable_name.is_empty():
 		errors.append("变量名不能为空")
 
-	# 验证 SCOPE 作用域需要 ScopeVariableManager
+	# The SCOPE scope requires ScopeVariableManager
 	if variable_scope == BaseVariable.VariableScope.SCOPE:
 		var manager = ScopeVariableManager.get_instance()
 		if manager == null:
@@ -503,7 +503,7 @@ func validate() -> Array[String]:
 	return errors
 ```
 
-### 4. 统一的显示格式
+### 4. Unified Display Format
 
 ```gdscript
 func _update_resource_name():
@@ -515,17 +515,17 @@ func get_description() -> String:
 	return "设置 %s = %s [%s]" % [target_property, value, scope_str]
 ```
 
-## 故障排查
+## Troubleshooting
 
-### 问题：SCOPE 变量返回 null
+### Problem: SCOPE Variable Returns null
 
-**可能原因：**
-1. 场景中没有添加 `ScopeVariableContainer` 节点
-2. 没有设置 `scope_id`
-3. `ScopeVariableManager` 实例不存在
-4. 节点不在场景树中
+**Possible causes:**
+1. No `ScopeVariableContainer` node was added to the scene
+2. `scope_id` was not set
+3. The `ScopeVariableManager` instance does not exist
+4. The node is not in the scene tree
 
-**验证代码：**
+**Validation code:**
 ```gdscript
 func validate() -> Array[String]:
 	var errors = super.validate()
@@ -538,59 +538,59 @@ func validate() -> Array[String]:
 	return errors
 ```
 
-### 问题：变量值不更新
+### Problem: Variable Value Does Not Update
 
-**检查清单：**
-1. 确认使用了正确的作用域
-2. 确认变量名拼写正确
-3. 检查是否有多个同名变量在不同作用域
-4. 验证指令执行顺序是否正确
+**Checklist:**
+1. Confirm you used the correct scope
+2. Confirm the variable name is spelled correctly
+3. Check whether variables with the same name exist in different scopes
+4. Verify that the instruction execution order is correct
 
-**调试方法：**
+**Debugging method:**
 ```gdscript
-# 添加日志指令查看变量值
+# Add a log instruction to inspect the variable value
 PrintVariableValue:
     variable_name: "my_var"
     variable_scope: SCOPE
 ```
 
-## 参考资源
+## Reference Resources
 
-- **完整架构文档：** [变量系统设计文档](../../system_docs/architecture/variable_system_design.md)
-- **示例场景：** `addons/fuse/demos/variable_system_demo.tscn`
+- **Full architecture document:** [Variable System Design Document](../../../zh_CN/system_docs/architecture/variable_system_design.md) (Chinese)
+- **Example scene:** `addons/fuse/demos/variable_system_demo.tscn`
 
-## 快速参考
+## Quick Reference
 
-### VariableOperations 方法
+### VariableOperations Methods
 
 ```gdscript
-# 获取变量
+# Get a variable
 VariableOperations.get_variable(context, name, scope, default_value) -> Variant
 
-# 设置变量
+# Set a variable
 VariableOperations.set_variable(context, name, scope, value) -> bool
 
-# 检查变量存在
+# Check whether a variable exists
 VariableOperations.has_variable(context, name, scope) -> bool
 ```
 
-### VariableScope 枚举
+### VariableScope Enum
 
 ```gdscript
-BaseVariable.VariableScope.LOCAL   # 局部变量
-BaseVariable.VariableScope.SCOPE   # 作用域变量
-BaseVariable.VariableScope.GLOBAL  # 全局变量
+BaseVariable.VariableScope.LOCAL   # Local variable
+BaseVariable.VariableScope.SCOPE   # Scope variable
+BaseVariable.VariableScope.GLOBAL  # Global variable
 ```
 
-### ScopeSource 枚举（仅在 SCOPE 时使用）
+### ScopeSource Enum (only used with SCOPE)
 
 ```gdscript
-ScopeSource.NEAREST         # 最近的容器
-ScopeSource.CUSTOM_ID       # 指定 scope_id
-ScopeSource.TRIGGER_SCOPE   # Trigger 节点的容器
-ScopeSource.TARGET_NODE     # 目标节点的容器
+ScopeSource.NEAREST         # Nearest container
+ScopeSource.CUSTOM_ID       # Specified scope_id
+ScopeSource.TRIGGER_SCOPE   # The Trigger node's container
+ScopeSource.TARGET_NODE     # The target node's container
 ```
 
-就这样！掌握了 LOCAL、SCOPE、GLOBAL 三层变量系统，你就可以在 Fuse 可视化编程中灵活管理数据了。记住：优先 LOCAL，必要时 SCOPE，慎用 GLOBAL。
+That's it! Once you master the LOCAL, SCOPE, and GLOBAL three-layer variable system, you can manage data flexibly in Fuse visual programming. Remember: prefer LOCAL, use SCOPE when necessary, and use GLOBAL sparingly.
 
-变量的下一站是"用"：让指令参数在运行时从变量读取——直接值/变量双轨的用法见[变量绑定使用指南](07-variable-binding-guide.md)。
+The next stop for variables is "using" them: having instruction parameters read from variables at runtime—for the direct-value/variable dual-track usage, see the [Variable Binding Usage Guide](07-variable-binding-guide.md).

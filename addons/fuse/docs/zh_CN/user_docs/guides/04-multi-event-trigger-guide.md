@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/user_docs/guides/04-multi-event-trigger-guide.md)
+
 # MultiEventTrigger 使用指南
 
 `MultiEventTrigger` 是一个复合触发器节点，将多个事件-动作绑定合并到单个节点中，减少场景中的节点数量。
