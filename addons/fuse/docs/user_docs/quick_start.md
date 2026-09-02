@@ -169,7 +169,7 @@ Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger
 
 | 组件 | 说明 | 详细文档 |
 |------|------|---------|
-| **Runner** | 轻量信号绑定 + 代码调用 | [Runner 指南](guides/runner-guide.md) |
+| **Runner** | 轻量信号绑定 + 代码调用 | [Runner 指南](guides/03-runner-guide.md) |
 | **Trigger** | 带 Event 的标准触发器 | — |
 | **MultiEventTrigger** | 多事件合并触发器 | [MultiEventTrigger 指南](guides/multi-event-trigger-guide.md) |
 
@@ -222,7 +222,7 @@ Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger
 ### 指南文档
 
 - [触发器选型指南](guides/trigger-selection-guide.md) — Runner / Trigger / MultiEventTrigger 怎么选
-- [Runner 使用指南](guides/runner-guide.md) — 信号绑定与代码调用详解
+- [Runner 使用指南](guides/03-runner-guide.md) — 信号绑定与代码调用详解
 - [MultiEventTrigger 使用指南](guides/multi-event-trigger-guide.md) — 多事件合并与拆分
 
 ### 系统指南
@@ -230,15 +230,15 @@ Fuse 提供三种触发器组件，详见 [触发器选型指南](guides/trigger
 - [输入事件指南](guides/input-events-guide.md) — 键盘、鼠标、手柄
 - [物理系统指南](guides/physics-guide.md) — 碰撞、射线检测
 - [动画系统指南](guides/animation-guide.md) — 动画事件与控制
-- [UI 系统指南](guides/ui-guide.md) — 按钮焦点、文本输入、值变化
+- [UI 系统指南](guides/15-ui-guide.md) — 按钮焦点、文本输入、值变化
 - [Tween 补间动画指南](guides/tween-animation-guide.md) — 渐变、弹性动画
-- [音频系统指南](guides/audio-guide.md) — 音效播放与控制
+- [音频系统指南](guides/13-audio-guide.md) — 音效播放与控制
 - [流程控制指南](guides/flow-control-guide.md) — 条件分支、循环、等待
 - [断点指令指南](guides/breakpoint-guide.md) — 调试用断点指令
 
 ### 变量与表达式
 
-- [全局变量管理器](guides/global_variable_manager_v2.md) — 全局变量系统
+- [全局变量管理器](guides/54-global-variables-guide.md) — 全局变量系统
 - [全局变量持久化](guides/global-variable-persistence-guide.md) — 存档与读取
 - [表达式系统](guides/expression-guide.md) — 运行时表达式计算
 - [Event Bus 指南](guides/34-event-bus-guide.md) — 跨场景事件通信
