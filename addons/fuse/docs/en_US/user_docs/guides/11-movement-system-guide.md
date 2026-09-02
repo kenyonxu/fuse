@@ -207,9 +207,9 @@ InputMap.action_add_event("move_up", joypad_event)
 
 ## Example Scene
 
-For the complete example, see:
-- `demos/fuse/movement/movement_demo.tscn`
-- `demos/fuse/movement/README.md`
+For complete examples, see:
+- `demos/fuse/deep_tests/scenes/base_movement.tscn` (basic movement instruction tests)
+- `demos/fuse/deep_tests/scenes/test_deep_movement.tscn` (CharacterBody2D composite movement in practice)
 
 ## Technical Support
 

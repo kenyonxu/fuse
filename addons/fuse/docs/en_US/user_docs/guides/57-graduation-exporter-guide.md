@@ -24,7 +24,7 @@ The graduation exporter provides an **experimental export path from Fuse prototy
 ```bash
 # ① Derive drafts — one per Trigger/MultiEventTrigger unit (Runner units and nested scene units are not derived yet)
 Godot --headless --path . res://addons/fuse/editor/graduation/derive_systems.tscn -- \
-  --scene res://demos/fuse/brickian/game_scene.tscn
+  --scene res://demos/fuse/fuse_adventure/scenes/fuse_demo_level_01.tscn
 # Output: fuse_generated/systems/drafts/<name>.json + _derive_report.json (with the race-warning quadruple list)
 
 # ② Manual confirmation — copy the units you want from drafts/ into a formal System (fuse_generated/systems/<name>.json),

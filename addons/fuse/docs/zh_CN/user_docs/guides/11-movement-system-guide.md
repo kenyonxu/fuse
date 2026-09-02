@@ -208,8 +208,8 @@ InputMap.action_add_event("move_up", joypad_event)
 ## 示例场景
 
 完整示例请参考：
-- `demos/fuse/movement/movement_demo.tscn`
-- `demos/fuse/movement/README.md`
+- `demos/fuse/deep_tests/scenes/base_movement.tscn`（移动指令基础验证）
+- `demos/fuse/deep_tests/scenes/test_deep_movement.tscn`（CharacterBody2D 复合移动实战）
 
 ## 技术支持
 

@@ -139,3 +139,6 @@ fuse-preset-generator-workspace/iteration-2/handcrafted/outputs/*
 
 # 测试运行期生成的迷你 fixture workspace（test_eval_runner 自建自清）
 tests/preset_ai/fixtures/
+
+# Local-only demo experiments (kept on disk, not published)
+/demos/fuse/_local/

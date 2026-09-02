@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cbmur4cb0qkww"]
-
-[ext_resource type="Script" uid="uid://hwwcrkk8y6aj" path="res://addons/juicy_mixer/tests/test_juicy_audio_event_handler.gd" id="1_qrqh5"]
-
-[node name="BrickTestRunner" type="Node2D"]
-script = ExtResource("1_qrqh5")

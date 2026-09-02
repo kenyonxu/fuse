@@ -24,7 +24,7 @@
 ```bash
 # ① 推导草稿——每个 Trigger/MultiEventTrigger 单元一份（Runner 单元与嵌套场景单元暂不推导）
 Godot --headless --path . res://addons/fuse/editor/graduation/derive_systems.tscn -- \
-  --scene res://demos/fuse/brickian/game_scene.tscn
+  --scene res://demos/fuse/fuse_adventure/scenes/fuse_demo_level_01.tscn
 # 产物：fuse_generated/systems/drafts/<name>.json + _derive_report.json（含竞态警告四元组清单）
 
 # ② 人工确认——从 drafts/ 拷贝想要的单元为正式 System（fuse_generated/systems/<name>.json），
