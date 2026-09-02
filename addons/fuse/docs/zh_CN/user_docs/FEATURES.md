@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../en_US/user_docs/FEATURES.md)
+
 # Fuse 特性总结
 
 Fuse 是 Godot 4.6 的可视化编程插件，通过 Inspector 配置事件、指令和条件来构建游戏逻辑，无需编写代码。

@@ -1,3 +1,4 @@
+> 🌐 中文 | [**English**](../en_US/README.md)
 # Fuse 可视化编程系统 - 文档中心
 
 Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition 三类砖块在 Inspector 里搭逻辑，AI 可生成 preset，调稳的系统可"毕业"为脱离插件的工程代码——从原型到代码的非破坏性桥梁。
@@ -84,7 +85,7 @@ Fuse 是一个 Godot 4.7 可视化编程插件：Event / Instruction / Condition
 - [Game Creator 文档](https://gamecreator.io/) - 可视化编程参考
 - [Godot 官方文档](https://docs.godotengine.org/) - Godot API 参考
 - [项目开发规范](../../../../CLAUDE.md) / [AGENTS.md](../../../../AGENTS.md) - 代码规范和开发指南
-- [测试场景](../../../../../tests/) - 系统测试（仓库根级，不随插件分发）
+- [测试场景](../../../../tests/) - 系统测试（仓库根级，不随插件分发）
 - [演示场景](../../../../demos/) - 功能演示
 
 ---

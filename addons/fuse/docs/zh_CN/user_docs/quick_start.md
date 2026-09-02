@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../en_US/user_docs/quick_start.md)
+
 # Fuse 快速开始指南
 
 欢迎使用 Fuse 可视化编程系统！本指南将帮助你在 5 分钟内上手 Fuse 的基本功能。
