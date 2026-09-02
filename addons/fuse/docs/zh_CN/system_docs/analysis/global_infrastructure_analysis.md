@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/global_infrastructure_analysis.md)
+
 # 全局基础设施分析报告（FuseEventBus / FuseRuntimeBridge）
 
 

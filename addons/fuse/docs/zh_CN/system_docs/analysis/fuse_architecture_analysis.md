@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/fuse_architecture_analysis.md)
+
 # Fuse 可视化编程系统架构分析报告
 
 

@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/base_event_analysis.md)
+
 # BaseEvent 分析报告
 
 

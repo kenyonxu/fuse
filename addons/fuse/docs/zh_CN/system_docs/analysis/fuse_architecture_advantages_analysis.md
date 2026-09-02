@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/fuse_architecture_advantages_analysis.md)
+
 # Fuse 架构优势分析
 
 
