@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/base_variable_analysis.md)
+
 # BaseVariable 分析报告
 
 

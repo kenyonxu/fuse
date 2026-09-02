@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/threading_analysis.md)
+
 # Fuse 线程系统分析报告
 
 

@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/preset_nested_resource_flaw.md)
+
 # Preset 反序列化嵌套资源缺陷分析与修复方案
 
 > **发现日期**: 2026-08-10

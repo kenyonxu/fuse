@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/base_instruction_analysis.md)
+
 # BaseInstruction 分析报告
 
 

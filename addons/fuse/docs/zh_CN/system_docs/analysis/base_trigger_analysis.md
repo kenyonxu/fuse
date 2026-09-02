@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/base_trigger_analysis.md)
+
 # BaseTrigger 分析报告
 
 

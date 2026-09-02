@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/fuse_core_analysis_report.md)
+
 # Fuse Visual Programming System - 核心架构分析报告
 
 

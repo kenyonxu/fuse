@@ -1,3 +1,5 @@
+> 🌐 中文 | [**English**](../../../en_US/system_docs/analysis/variable_system_analysis.md)
+
 # Variable System 分析报告
 
 
