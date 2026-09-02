@@ -273,7 +273,7 @@ execution_history: Array[Dictionary]
 
 ### 5. 静态分析（已整合）
 
-静态分析逻辑已从独立的 `InstructionValidator` / `StaticAnalysisPanel` 迁入 `InstructionAnalyzer.analyze_problems`，结果在 FuseTopology 主屏标注（见 [FuseTopology](#fusetopology) 或 `topology/fuse_topology.gd`）。原 `editor/static_analysis/` 目录已移除。
+静态分析逻辑已从独立的 `InstructionValidator` / `StaticAnalysisPanel` 迁入 `InstructionAnalyzer.analyze_problems`，结果在 FuseTopology 主屏标注（入口代码 `topology/fuse_topology.gd`）。原 `editor/static_analysis/` 目录已移除。
 
 ### 6. 指令生成器 (Instruction Generator)
 

@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 7b: 数值变量 60s 历史折线图（HistoryGraph 自定义 _draw，120 点 / 0.5s 采样，选中变量行显示）
   - 7c: 指令链静态变量声明注入（InstructionAnalyzer.build_topology 数据源，独立「指令引用(静态)」分区，5s 刷新节流）
   - 7d: get_snapshot() 补全 runners/local/scope 快照（抽 _collect_runtime_variables 复用 _refresh 和快照）
-- **FuseRuntimeBridge TCP 变量桥**（[方案 C](addons/fuse/docs/roadmap/2026-06-27-runtime-variable-tcp-bridge-plan.md)）
+- **FuseRuntimeBridge TCP 变量桥**（方案 C，见本地归档 `addons/fuse/docs/archive/roadmap/2026-06-27-runtime-variable-tcp-bridge-plan.md`）
   - 双模式 Autoload：编辑器 TCPServer listen 127.0.0.1:24563，运行游戏 TCP 客户端 push JSON line
   - JSON line 协议（`\n` 分隔）：`{"t":"vars","runners":[{"name":"...","local":{...},"scope":{...}}]}`
   - TCP 读缓冲处理粘包/半包，断开连接自动清空缓存

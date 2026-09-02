@@ -334,7 +334,7 @@ OnReceiveEvent **桥接两者**：对外消费 FuseEventBus，对内仍走 BaseE
 
 `FuseRuntimeBridge` 是**双模式 Autoload**：同一个脚本在编辑器进程和运行游戏进程里**执行不同分支**，通过本机 TCP（`127.0.0.1:24563`）建立通信通道，把运行游戏的 Runner 变量快照推送到编辑器，供变量监视器实时显示。
 
-**为什么需要 TCP 桥**：Godot 的内置调试协议（`EngineDebugger`）在 GDScript 侧不可直接调用，且编辑器进程与运行游戏进程内存隔离，RefCounted / Object 跨进程不可达。详见历史方案调研 [`docs/archive/roadmap/2026-06-27-runtime-variable-access-research.md`](../../../archive/roadmap/2026-06-27-runtime-variable-access-research.md)（"运行游戏→编辑器：推送扁平快照"是唯一可行路径）。
+**为什么需要 TCP 桥**：Godot 的内置调试协议（`EngineDebugger`）在 GDScript 侧不可直接调用，且编辑器进程与运行游戏进程内存隔离，RefCounted / Object 跨进程不可达。详见历史方案调研 `archive/roadmap/2026-06-27-runtime-variable-access-research.md`（"运行游戏→编辑器：推送扁平快照"是唯一可行路径）。
 
 ### 4.2 常量与协议
 

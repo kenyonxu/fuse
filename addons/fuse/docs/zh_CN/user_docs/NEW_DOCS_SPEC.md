@@ -8,17 +8,17 @@
 ## 目录
 
 1. [合并项 A：全局变量管理指南（覆盖管理 + 持久化）](#合并项-a全局变量管理指南覆盖管理--持久化)
-2. [合并项 B：坐标系统概念 → 并入 10-transform-guide.md](#合并项-b坐标系统概念--并入-transform-guidemd)
-3. [P0 新增项 A：Node Operations 指令指南](#p0a-node-operations-指令指南)
-4. [P0 新增项 B：Lifecycle 事件指南](#p0b-lifecycle-事件指南)
-5. [P1 新增项 A：Timing 事件指南](#p1a-timing-事件指南)
-6. [P1 新增项 B：Node 事件指南](#p1b-node-事件指南)
-7. [P1 新增项 C：Input 条件指南](#p1c-input-条件指南)
-8. [P1 新增项 D：Node 条件指南](#p1d-node-条件指南)
-9. [P1 新增项 E：Physics 条件指南](#p1e-physics-条件指南)
-10. [P2 新增项 A：Animation 条件指南](#p2a-animation-条件指南)
-11. [P2 新增项 B：Time 条件指南](#p2b-time-条件指南)
-12. [P2 新增项 C：综合条件合集（9 小类合并）](#p2c-综合条件合集9-小类合并)
+2. [合并项 B：坐标系统概念 → 并入 10-transform-guide.md](#合并项-b坐标系统概念--并入-10-transform-guidemd)
+3. [P0 新增项 A：Node Operations 指令指南](#p0-anode-operations-指令指南)
+4. [P0 新增项 B：Lifecycle 事件指南](#p0-blifecycle-事件指南)
+5. [P1 新增项 A：Timing 事件指南](#p1-atiming-事件指南)
+6. [P1 新增项 B：Node 事件指南](#p1-bnode-事件指南)
+7. [P1 新增项 C：Input 条件指南](#p1-cinput-条件指南)
+8. [P1 新增项 D：Node 条件指南](#p1-dnode-条件指南)
+9. [P1 新增项 E：Physics 条件指南](#p1-ephysics-条件指南)
+10. [P2 新增项 A：Animation 条件指南](#p2-aanimation-条件指南)
+11. [P2 新增项 B：Time 条件指南](#p2-btime-条件指南)
+12. [P2 新增项 C：综合条件合集（9 小类合并）](#p2-c综合条件合集9-小类合并)
 
 ---
 

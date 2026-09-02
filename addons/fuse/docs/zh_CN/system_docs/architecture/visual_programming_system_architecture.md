@@ -1177,4 +1177,4 @@ func _focus_node_in_scene(object: Object):
 - 新增统一变量系统：GlobalVariableAssistant + ScopeVariableContainer
 - 新增 FuseError/FuseLogger 基础设施
 - Trigger 使用两层继承：Trigger extends BaseTrigger
-- 详细参考: [Runtime Instance 模式](../../../archive/architecture/runtime-instance-pattern.md)
+- 详细参考: `archive/architecture/runtime-instance-pattern.md`

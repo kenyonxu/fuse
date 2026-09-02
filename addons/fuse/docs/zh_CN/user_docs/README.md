@@ -3,7 +3,7 @@
 
 面向游戏设计师与开发者的使用指南、教程与最佳实践。
 
-> 架构与系统设计见 [../system_docs/](../system_docs/)；开发向指南见 [../dev_docs/](../dev_docs/)；历史文档见 [../archive/](../../archive/)。
+> 架构与系统设计见 [../system_docs/](../system_docs/)；开发向指南见 [../dev_docs/](../dev_docs/)；历史文档见 `archive/`。
 
 ---
 

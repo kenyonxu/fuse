@@ -243,7 +243,7 @@ RuntimeActionRunnerInstance._get_cached_description(index)    # :284 热路径�
 1. **职责清晰**：序列化器专注"字典化"，编译缓存专注"预计算"，边界分明
 2. **解耦合理**：`InstructionSerializer` 把反射逻辑从 `ActionRunner` 主体剥离，`CompiledInstructionSequence` 把缓存策略从 `RuntimeActionRunnerInstance` 主体剥离，符合单一职责
 3. **零依赖设计**：两者均 `extends RefCounted`、无节点引用、无信号，可在任意上下文（含 `@tool` 编辑器模式）安全使用
-4. **反射缓存有效**：`_property_cache` 避免了每次序列化的 `get_property_list()` 开销（archive 中 [internal_optimization_plan.md](../../../archive/proposals/internal_optimization_plan.md) 记录的优化点已落地）
+4. **反射缓存有效**：`_property_cache` 避免了每次序列化的 `get_property_list()` 开销（archive 中 `archive/proposals/internal_optimization_plan.md` 记录的优化点已落地）
 5. **共享缓存语义正确**：`_compiled_cache` 放在 ActionRunner 而非 RuntimeActionRunnerInstance，避免每个 Trigger 触发都重编译
 
 ### 4.2 不足

@@ -579,7 +579,7 @@ func get_default_runtime_state() -> Dictionary:
 - **编译缓存集成**：通过 `CompiledInstructionSequence`（`core/execution/`）缓存指令描述等编译结果
 - **共享对象池**：`InstructionInstancePool` 静态池化 `RuntimeInstructionInstance`，所有实例共享同一池（`get_shared_pool()`）
 
-> **参考文档：** [runtime-instance-pattern](../../../archive/architecture/runtime-instance-pattern.md)
+> **参考文档：** `archive/architecture/runtime-instance-pattern.md`
 
 ### 11.2 统一变量系统
 

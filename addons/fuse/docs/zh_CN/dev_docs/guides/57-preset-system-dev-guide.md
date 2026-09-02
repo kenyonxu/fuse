@@ -14,7 +14,7 @@
 
 1. [系统架构总览](#系统架构总览)
 2. [FusePreset 资源定义](#fusepreset-资源定义)
-3. [序列化管道（FusePresetSerializer）](#序列化管道fusepresetsSerializer)
+3. [序列化管道（FusePresetSerializer）](#序列化管道fusepresetserializer)
 4. [反序列化管道（FusePresetDeserializer）](#反序列化管道fusepresetdeserializer)
 5. [PresetRegistry 注册表](#presetregistry-注册表)
 6. [NodePath 解析（NodePathResolver）](#nodepath-解析nodepathresolver)

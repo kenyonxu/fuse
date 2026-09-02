@@ -2144,7 +2144,7 @@ var description = "变量 %s [%s]" % [var_name, scope_str]
 - [完整指令模板](#完整指令模板)
 - [带变量操作的指令模板](#带变量操作的指令模板)
 - [RuntimeInstructionInstance 架构支持](#runtimeinstructioninstance-架构支持)
-- [变量系统最佳实践](#变量系统最佳实践)
+- [变量系统最佳实践](#7-变量系统最佳实践)
 - [Phase 0B 经验总结](#关键技术要点)
 - [测试规范](#测试规范)
 - [变量系统设计文档](../../system_docs/architecture/variable_system_design.md)

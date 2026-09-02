@@ -561,7 +561,7 @@ func get_default_runtime_state() -> Dictionary:
 - [Runtime 实例分析](runtime-instruction-instance-guide.md) - 三件套架构与状态隔离
 - Event 资源共享问题背景：见本文档「概述」与历史分析（本地归档）
 - 快速入门：按本文档「迁移步骤」顺序执行即可
-- [RuntimeEventInstance API](../../core/runtime_event_instance.gd) - 核心类
+- [RuntimeEventInstance API](../../../../core/runtime_event_instance.gd) - 核心类
 
 ---
 
