@@ -142,3 +142,6 @@ tests/preset_ai/fixtures/
 
 # Local-only demo experiments (kept on disk, not published)
 /demos/fuse/_local/
+
+# Store screenshots 4K originals (local-only, 1080p finals are committed under media/screenshots/)
+/media/originals/
