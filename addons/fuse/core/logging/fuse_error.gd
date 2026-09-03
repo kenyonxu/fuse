@@ -121,9 +121,8 @@ static func create_with_context(error_type: ErrorType, component: String, messag
 	error_context["component"] = component
 	error_context["timestamp"] = Time.get_ticks_msec() / 1000.0
 
-	var error = FuseError.new(error_type, component, message, "", error_context)
-	error._log_to_fuse_logger()
-	return error
+	# _init 已统一记录日志，不再手动补记（曾因此每条错误双份输出）
+	return FuseError.new(error_type, component, message, "", error_context)
 
 ## 翻译错误消息的辅助方法
 static func _translate_error_message(message_key: String, args: Dictionary = {}) -> String:
@@ -152,19 +151,26 @@ static func _translate_error_message(message_key: String, args: Dictionary = {})
 func to_string() -> String:
 	return "[%s][%s] %s" % [ErrorType.keys()[error_type], component_name, message]
 
+## 日志链内部字段：仅供程序消费，打进 push_error 纯文本只产生噪音
+const _INTERNAL_CONTEXT_KEYS: Array[String] = ["message_key", "message_args", "component", "timestamp"]
+
 func get_formatted_message() -> String:
-	# 检查是否有翻译键信息
+	var message_text := message
 	if context.has("message_key"):
-		var message_key = context["message_key"]
-		var message_args = context.get("message_args", {})
-		var localized_message = _translate_error_message(message_key, message_args)
+		# 本地化错误：按存储的键与参数重新解析（容忍创建时翻译系统尚未就绪）
+		message_text = _translate_error_message(context["message_key"], context.get("message_args", {}))
+	return "[%s][%s] %s%s" % [ErrorType.keys()[error_type], component_name, message_text, _format_context()]
 
-		var context_str = "" if context.is_empty() else " | Context: %s" % str(context)
-		return "[%s][%s] %s%s" % [ErrorType.keys()[error_type], component_name, localized_message, context_str]
-
-	# 原有逻辑
-	var context_str = "" if context.is_empty() else " | Context: %s" % str(context)
-	return "[%s][%s] %s%s" % [ErrorType.keys()[error_type], component_name, message, context_str]
+## 上下文输出：剔除内部字段后以 key=value 扁平展示，避免整包 dict str() 噪音
+func _format_context() -> String:
+	var parts: Array[String] = []
+	for key in context:
+		if key in _INTERNAL_CONTEXT_KEYS:
+			continue
+		parts.append("%s=%s" % [key, str(context[key])])
+	if parts.is_empty():
+		return ""
+	return " | Context: %s" % ", ".join(parts)
 
 ## 记录到 FuseLogger - 改进分类输出
 func _log_to_fuse_logger():

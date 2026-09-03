@@ -38,3 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `variable_watcher.gd`: `_collect_runtime_variables` 改读 `FuseRuntimeBridge.get_cached_vars()`（替代 EditorInterface 扫描场景 Runner，V1 local/scope context 传 null 只读）
 - `variable_watcher.gd`: `_make_row_data` 新增 `runner` 字段标识变量来源
 - `fuse_runtime_bootstrap.gd`: 增加 `_register_runtime_bridge()/_unregister_runtime_bridge()`，在插件启停时注册/注销 FuseRuntimeBridge Autoload
+- `fuse_error.gd`: 上下文输出改为剔除内部字段（message_key/message_args/component/timestamp）的 `key=value` 扁平格式，不再整包 dict str()
+
+### Fixed
+- 错误/警告日志在 Errors 面板只能看到硬编码占位（"发现错误!"）的问题：`push_error`/`push_warning` 改为携带完整结构化纯文本消息，ERROR 级附首发位置 `(at res://...:行)`（跳过 Fuse 内部帧，无调试器时省略）；info/debug 维持 `print_rich` 富文本，error/warning 不再双份输出
+- `fuse_error.gd`: `create_with_context` 双份记录（`_init` 已记录后又手动补记）
+- `fuse_logger.gd`: 富文本格式串把 `[/color]` 多包一层方括号的笔误（渲染残留多余 `]`）

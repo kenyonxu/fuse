@@ -38,3 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `variable_watcher.gd`: `_collect_runtime_variables` now reads `FuseRuntimeBridge.get_cached_vars()` (replacing EditorInterface scene Runner scanning; V1 local/scope context passed as null, read-only)
 - `variable_watcher.gd`: `_make_row_data` adds a `runner` field identifying the variable source
 - `fuse_runtime_bootstrap.gd`: added `_register_runtime_bridge()/_unregister_runtime_bridge()` to register/unregister the FuseRuntimeBridge Autoload on plugin start/stop
+- `fuse_error.gd`: context output switched to a flat `key=value` format that filters out internal fields (message_key/message_args/component/timestamp) instead of str()-ing the whole dict
+
+### Fixed
+- Errors/warnings previously showed only a hardcoded placeholder in the Errors dock: `push_error`/`push_warning` now carry the full structured plain-text message, with the originating call site appended for ERROR level as `(at res://...:line)` (Fuse-internal frames skipped, omitted when no debugger is attached); info/debug keep `print_rich` rich text, and error/warning are no longer printed twice
+- `fuse_error.gd`: `create_with_context` logged every error twice (`_init` already logged it, then it logged again manually)
+- `fuse_logger.gd`: format-string typo wrapping `[/color]` in an extra pair of brackets (leaving a stray `]` after rendering)

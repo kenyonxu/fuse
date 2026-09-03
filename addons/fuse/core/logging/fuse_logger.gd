@@ -22,18 +22,15 @@ static func log_message(component_name: String, component_level: LogLevel, messa
 	if not should_log(component_level, message_level):
 		return
 
-	var formatted_message = format_message(message_level, component_name, message, context)
-
-	# 根据级别选择输出方法
+	# 通道分工：error/warning 走 push_*（纯文本完整消息进 Errors 面板，带原生栈、
+	# 可点击跳转，不再 print_rich 重复一份）；info/debug 维持 print_rich 富文本
 	match message_level:
 		LogLevel.ERROR:
-			push_error("发现错误!")
-			print_rich(formatted_message)
+			push_error(format_message(message_level, component_name, message, context, false) + _external_call_site())
 		LogLevel.WARNING:
-			push_warning("警告!")
-			print_rich(formatted_message)
+			push_warning(format_message(message_level, component_name, message, context, false))
 		LogLevel.INFO, LogLevel.DEBUG:
-			print_rich(formatted_message)
+			print_rich(format_message(message_level, component_name, message, context))
 
 ## 各级别日志方法
 static func log_debug(component_name: String, component_level: LogLevel, message: String, context: String = ""):
@@ -138,15 +135,26 @@ static func should_log(component_level: LogLevel, message_level: LogLevel) -> bo
 	return _LEVEL_RANK.get(message_level, 0) <= _LEVEL_RANK.get(component_level, 0)
 
 ## 格式化日志消息
-static func format_message(level: LogLevel, component_name: String, message: String, context: String = "") -> String:
+##
+## rich = true  输出 BBCode 富文本（print_rich 通道）；
+## rich = false 输出纯文本（push_error / push_warning 通道）：不插任何 BBCode 标签、
+## 级别图标换成 ASCII 前缀，避免标签在 Errors 面板裸奔、emoji 在 CI/控制台乱码。
+## 两版字段顺序同构：[图标/级别][组件名][上下文] 消息内容。
+static func format_message(
+	level: LogLevel,
+	component_name: String,
+	message: String,
+	context: String = "",
+	rich: bool = true
+) -> String:
 	var level_str = LogLevel.keys()[level]
-	var context_str = context if not context.is_empty() else ""
 
-	# 添加颜色代码和图标（只在关键部分使用颜色）
+	if not rich:
+		return "[%s][%s]%s %s" % [level_str, component_name, context, message]
+
+	# 富文本配色：只给级别标签和实际消息内容着色
 	var level_color = ""
 	var icon = ""
-	var reset_code = "[/color]"
-
 	match level:
 		LogLevel.ERROR:
 			level_color = "[color=red]"
@@ -161,16 +169,28 @@ static func format_message(level: LogLevel, component_name: String, message: Str
 			level_color = "[color=cyan]"
 			icon = "🔍"
 
-	# 精细的颜色方案：只给级别标签和实际消息内容着色
-	# 格式：[图标][级别][组件名][上下文] 消息内容
-	return "%s%s%s[%s][%s]%s%s%s%s" % [
-		icon,                    # 图标（无颜色）
-		level_color,             # 级别颜色开始
-		level_str,               # 级别文本
-		reset_code,              # 级别颜色结束
-		component_name,          # 组件名（默认颜色）
-		context_str,             # 上下文（默认颜色）
-		level_color,             # 消息颜色开始（与级别相同）
-		message,                 # 消息内容
-		reset_code               # 消息颜色结束
+	return "%s%s%s%s[%s]%s %s%s%s" % [
+		icon,               # 图标（无颜色）
+		level_color,        # 级别颜色开始
+		level_str,          # 级别文本
+		"[/color]",         # 级别颜色结束
+		component_name,     # 组件名（默认颜色）
+		context,            # 上下文（默认颜色）
+		level_color,        # 消息颜色开始（与级别相同）
+		message,            # 消息内容
+		"[/color]"          # 消息颜色结束
 	]
+
+## 错误首发位置标注：取调用链中第一个 Fuse 插件之外的帧（业务侧真正报错处）
+## get_stack() 仅在调试器可用时有数据（发布版/无调试器运行时为空），
+## 因此只对 ERROR 级别调用并容忍为空
+static func _external_call_site() -> String:
+	var stack := get_stack()
+	if stack == null or stack.is_empty():
+		return ""
+	for frame: Dictionary in stack:
+		var source := str(frame.get("source", ""))
+		if not source.begins_with("res://") or source.begins_with("res://addons/fuse/"):
+			continue
+		return " (at %s:%d)" % [source, int(frame.get("line", 0))]
+	return ""
