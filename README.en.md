@@ -105,6 +105,11 @@ See [addons/fuse/docs/](addons/fuse/docs/) for details.
 
 MIT License — see [LICENSE](LICENSE)
 
+## Community
+
+- QQ Group: 1107927198 (Chinese)
+- Discord: [https://discord.gg/zWqv4u7BkT](https://discord.gg/zWqv4u7BkT)
+
 ## Links
 
 - GitHub repository: https://github.com/kenyonxu/fuse

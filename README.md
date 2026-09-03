@@ -105,6 +105,11 @@ Event（何时）──▶ Instruction（做什么）──▶ Condition（是�
 
 MIT License — 详见 [LICENSE](LICENSE)
 
+## 社区
+
+- QQ 群：1107927198
+- Discord：[https://discord.gg/zWqv4u7BkT](https://discord.gg/zWqv4u7BkT)
+
 ## 相关链接
 
 - GitHub 仓库：https://github.com/kenyonxu/fuse
