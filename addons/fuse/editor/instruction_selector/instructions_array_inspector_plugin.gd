@@ -2,6 +2,8 @@
 @tool
 extends EditorInspectorPlugin
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 ## Inspector 插件:在 Array[BaseInstruction] 属性上方添加操作按钮
 ## 添加指令 / 导出为预设 / 导入预设
 ## 保留 Godot 原生数组编辑器处理内联展开
@@ -28,18 +30,18 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 	hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	var add_btn := Button.new()
-	add_btn.text = "添加指令"
+	add_btn.text = FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_BTN_ADD_INSTRUCTION")
 	add_btn.icon = FuseIconManager.get_builtin_icon("Add")
 	add_btn.pressed.connect(_on_add_pressed.bind(object, name))
 	hbox.add_child(add_btn)
 
 	var export_btn := Button.new()
-	export_btn.text = "导出为预设"
+	export_btn.text = FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_BTN_EXPORT_PRESET")
 	export_btn.pressed.connect(_on_export_pressed.bind(object, name))
 	hbox.add_child(export_btn)
 
 	var import_btn := Button.new()
-	import_btn.text = "导入预设"
+	import_btn.text = FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_BTN_IMPORT_PRESET")
 	import_btn.pressed.connect(_on_import_pressed.bind(object, name))
 	hbox.add_child(import_btn)
 
@@ -102,10 +104,12 @@ func _on_preset_save_path_selected(tres_path: String, preset: FusePreset, dialog
 	PresetRegistry.scan_presets()
 
 	var notify := AcceptDialog.new()
-	notify.title = "预设已导出"
-	notify.dialog_text = """已保存到:
-%s
-%s""" % [tres_path, json_path]
+	notify.title = FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_PRESET_EXPORTED_TITLE")
+	notify.dialog_text = "%s\n%s\n%s" % [
+		FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_PRESET_EXPORTED_SAVED_TO"),
+		tres_path,
+		json_path
+	]
 	notify.confirmed.connect(notify.queue_free)
 	notify.close_requested.connect(notify.queue_free)
 	EditorInterface.get_base_control().add_child(notify)
@@ -118,7 +122,7 @@ func _on_import_pressed(object: Object, property_name: String) -> void:
 	dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	dialog.access = FileDialog.ACCESS_RESOURCES
 	dialog.current_dir = _last_import_dir if not _last_import_dir.is_empty() else "res://addons/fuse/presets/"
-	dialog.add_filter("*.json", "Fuse 预设 JSON")
+	dialog.add_filter("*.json", FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_FILTER_PRESET_JSON"))
 	dialog.file_selected.connect(_on_preset_json_selected.bind(object, property_name))
 	EditorInterface.get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2i(800, 500))
@@ -174,4 +178,7 @@ func _on_preset_mapped(preset: FusePreset, object: Object, property_name: String
 	ResourceSaver.save(preset, tres_path)
 	PresetRegistry.scan_presets()
 
-	print("预设已导入: %s → %s" % [preset.display_name, property_name])
+	print(FuseLocalizationClass.translate_format(
+		"FUSE_UI_INSTRUCTIONS_ARRAY_PRESET_IMPORTED",
+		{"name": preset.display_name, "property": property_name}
+	))

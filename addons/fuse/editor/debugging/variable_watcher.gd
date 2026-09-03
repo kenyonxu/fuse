@@ -6,6 +6,8 @@ extends Control
 ## 变量监视器 — Bottom Dock, 0.5s 轮询, 显示 local/scope/global 变量
 ## Stage 7 升级: (7a)双击编辑 (7b)折线图 (7c)静态声明 (7d)快照补全
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 var _timer: Timer
 var _search_input: LineEdit
 var _status_label: Label
@@ -48,18 +50,18 @@ func _init() -> void:
 	top.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vbox.add_child(top)
 	_status_label = Label.new()
-	_status_label.text = "刷新:0.5s"
+	_status_label.text = FuseLocalizationClass.translate_format("FUSE_UI_WATCHER_REFRESH_INTERVAL", {"sec": 0.5})
 	top.add_child(_status_label)
 	top.add_spacer(true)
 	_snapshot_btn = Button.new()
-	_snapshot_btn.text = "📸快照"
+	_snapshot_btn.text = "📸" + FuseLocalizationClass.translate("FUSE_UI_WATCHER_SNAPSHOT")
 	_snapshot_btn.pressed.connect(_on_snapshot)
 	top.add_child(_snapshot_btn)
 
 	# 搜索
 	_search_input = LineEdit.new()
 	_search_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_search_input.placeholder_text = "搜索变量..."
+	_search_input.placeholder_text = FuseLocalizationClass.translate("FUSE_UI_WATCHER_SEARCH_PLACEHOLDER")
 	_search_input.text_changed.connect(_refresh)
 	vbox.add_child(_search_input)
 
@@ -128,7 +130,9 @@ func _enter_edit_mode(panel: PanelContainer, data: Dictionary) -> void:
 	var scope: String = data.get("scope", "")
 	var context = data.get("context", null)
 	if scope in ["local", "scope"] and (context == null or not is_instance_valid(context)):
-		push_warning("变量监视器: %s 变量 '%s' 需场景运行后方可编辑" % [scope, data.get("name", "")])
+		push_warning(FuseLocalizationClass.translate_format(
+			"FUSE_UI_WATCHER_EDIT_NEEDS_RUNTIME",
+			{"scope": scope, "name": data.get("name", "")}))
 		return
 
 	var line := LineEdit.new()
@@ -201,7 +205,7 @@ func _restore_label(panel: PanelContainer, display_text: String) -> void:
 func _write_back_global(name: String, value: Variant) -> void:
 	var var_obj = BaseVariable.create(name, value, BaseVariable.VariableScope.GLOBAL)
 	if var_obj == null:
-		push_warning("变量监视器: 无法创建全局变量 '%s'" % name)
+		push_warning(FuseLocalizationClass.translate_format("FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED", {"name": name}))
 		return
 	GlobalVariableManager.get_instance().add_variable(name, var_obj)
 
@@ -274,7 +278,7 @@ class HistoryGraph extends Control:
 	func _init() -> void:
 		mouse_filter = MOUSE_FILTER_PASS
 		_empty_label = Label.new()
-		_empty_label.text = "(无数值历史)"
+		_empty_label.text = FuseLocalizationClass.translate("FUSE_UI_WATCHER_NO_HISTORY")
 		_empty_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 		_empty_label.add_theme_font_size_override("font_size", 14)
 		_empty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -387,7 +391,8 @@ func _refresh() -> void:
 
 	if runner_count > 0 and active_count == 0:
 		local_rows.append({
-			"name": "(场景运行后可见)", "value": "", "type": "",
+			"name": FuseLocalizationClass.translate("FUSE_UI_WATCHER_VISIBLE_AFTER_RUN"),
+			"value": "", "type": "",
 			"is_note": true, "scope": "", "context": null
 		})
 
@@ -456,7 +461,7 @@ func _render_static_declarations(parent: VBoxContainer, filter: String) -> void:
 		return
 
 	# 分区标题
-	var header := _make_section_header("指令引用(静态)")
+	var header := _make_section_header(FuseLocalizationClass.translate("FUSE_UI_WATCHER_STATIC_SECTION"))
 	parent.add_child(header)
 
 	for row in filtered:
@@ -489,11 +494,19 @@ func _collect_static_var_rows(topology: Dictionary) -> Array[Dictionary]:
 		# mode 推断
 		var has_write: bool = info["modes"].has("write")
 		var has_read: bool = info["modes"].has("read")
-		var mode_str := "读写" if has_write and has_read else ("写" if has_write else "读")
+		var mode_str := ""
+		if has_write and has_read:
+			mode_str = FuseLocalizationClass.translate("FUSE_UI_WATCHER_MODE_READ_WRITE")
+		elif has_write:
+			mode_str = FuseLocalizationClass.translate("FUSE_UI_WATCHER_MODE_WRITE")
+		else:
+			mode_str = FuseLocalizationClass.translate("FUSE_UI_WATCHER_MODE_READ")
 		rows.append({
 			"name": vname,
-			"value": "(静态)",
-			"type": "%s · %s · %d处" % [scopes_str, mode_str, info["triggers"].size()],
+			"value": FuseLocalizationClass.translate("FUSE_UI_WATCHER_STATIC_VALUE"),
+			"type": FuseLocalizationClass.translate_format("FUSE_UI_WATCHER_STATIC_TYPE", {
+				"scopes": scopes_str, "mode": mode_str, "count": info["triggers"].size()
+			}),
 			"is_static": true,
 			"scope": "",
 			"context": null
@@ -547,17 +560,17 @@ func _make_header_row() -> HBoxContainer:
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 0)
 
-	var name := _make_label_panel("变量", COL_NAME)
+	var name := _make_label_panel(FuseLocalizationClass.translate("FUSE_UI_LABEL_VARIABLES"), COL_NAME)
 	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name.size_flags_stretch_ratio = 1.0
 	hbox.add_child(name)
 
-	var val := _make_label_panel("值", COL_VALUE)
+	var val := _make_label_panel(FuseLocalizationClass.translate("FUSE_UI_LABEL_VALUE"), COL_VALUE)
 	val.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	val.size_flags_stretch_ratio = 1.0
 	hbox.add_child(val)
 
-	var typ := _make_label_panel("类型", COL_TYPE)
+	var typ := _make_label_panel(FuseLocalizationClass.translate("FUSE_UI_LABEL_TYPE"), COL_TYPE)
 	typ.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	typ.size_flags_stretch_ratio = 1.0
 	hbox.add_child(typ)
@@ -658,4 +671,4 @@ func _on_snapshot() -> void:
 	if file:
 		file.store_string(JSON.stringify(snap, "\t"))
 		file.close()
-		print("变量快照已保存: %s" % path)
+		print(FuseLocalizationClass.translate_format("FUSE_UI_WATCHER_SNAPSHOT_SAVED", {"path": path}))

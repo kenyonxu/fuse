@@ -160,8 +160,10 @@ func _set(property: StringName, value: Variant) -> bool:
 			# 语言已变化或首次设置，重新生成翻译
 			_last_locale = current_locale
 			_update_resource_name()
-			# 返回 false 让 Godot 使用我们更新的 resource_name
-			return false
+			# 返回 true 声明"已处理"：阻止引擎把传入的旧值（如 .tscn 里
+			# 烘焙的旧语言快照）写回 resource_name，覆盖刚重译的名称。
+			# 返回 false 的语义是"未处理，走默认写入"，会让旧值覆盖重译结果。
+			return true
 
 		# 语言未变化，记录当前语言
 		_last_locale = current_locale

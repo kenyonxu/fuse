@@ -2,6 +2,8 @@
 @tool
 extends VBoxContainer
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 ## 指令列表编辑器(add_custom_control 模式)
 ## ItemList 在上方 + 原生编辑器在下方(内联展开) + 选中时内联 EditorInspector
 
@@ -37,30 +39,30 @@ func _init():
 	var vbox_btns = VBoxContainer.new()
 	hbox.add_child(vbox_btns)
 
-	add_button.text = "添加"
+	add_button.text = FuseLocalizationClass.translate("FUSE_UI_BTN_ADD")
 	add_button.custom_minimum_size.x = 70
 	add_button.pressed.connect(_on_add_pressed)
 	vbox_btns.add_child(add_button)
 
-	edit_button.text = "编辑"
+	edit_button.text = FuseLocalizationClass.translate("FUSE_UI_BTN_EDIT")
 	edit_button.custom_minimum_size.x = 70
 	edit_button.pressed.connect(_on_edit_pressed)
 	edit_button.disabled = true
 	vbox_btns.add_child(edit_button)
 
-	remove_button.text = "删除"
+	remove_button.text = FuseLocalizationClass.translate("FUSE_UI_BTN_DELETE")
 	remove_button.custom_minimum_size.x = 70
 	remove_button.pressed.connect(_on_remove_pressed)
 	remove_button.disabled = true
 	vbox_btns.add_child(remove_button)
 
-	copy_button.text = "复制"
+	copy_button.text = FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_BTN_COPY")
 	copy_button.custom_minimum_size.x = 70
 	copy_button.pressed.connect(_on_copy_pressed)
 	copy_button.disabled = true
 	vbox_btns.add_child(copy_button)
 
-	export_btn.text = "导出为预设"
+	export_btn.text = FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_BTN_EXPORT_PRESET")
 	export_btn.custom_minimum_size.x = 70
 	export_btn.pressed.connect(_on_export_pressed)
 	vbox_btns.add_child(export_btn)
@@ -102,7 +104,7 @@ func refresh():
 			property_list.add_item(instruction_name, icon if icon != null else null)
 		_update_buttons()
 	else:
-		property_list.add_item("(空)")
+		property_list.add_item(FuseLocalizationClass.translate("FUSE_UI_INSTRUCTIONS_ARRAY_EMPTY_LIST"))
 
 
 func _update_buttons():

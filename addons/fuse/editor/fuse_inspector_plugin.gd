@@ -9,8 +9,8 @@ extends EditorInspectorPlugin
 ## - BaseEvent：事件资源，添加按钮打开单选选择器
 ## - BaseCondition：条件资源，添加按钮打开单选选择器
 
-# 本地化类缓存
-var _fuse_localization_class: RefCounted = null
+# 本地化类（const preload 模式，与其他编辑器脚本一致）
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
 
 # Stage 5: InstructionAnalyzer 预加载
 const InstructionAnalyzerClass = preload("res://addons/fuse/editor/analysis/instruction_analyzer.gd")
@@ -58,7 +58,6 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 	return false
 
 func _add_component_selector_button(object: Object, property_name: String, component_type: ComponentRegistry.ComponentType) -> void:
-	_ensure_localization_loaded()
 	var container = VBoxContainer.new()
 	var enhance_hbox = HBoxContainer.new()
 	enhance_hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -80,20 +79,8 @@ func _add_component_selector_button(object: Object, property_name: String, compo
 			button_text_key = "FUSE_UI_BTN_CLICK_TO_SELECT_COMPONENT"
 			button_tooltip_key = "FUSE_UI_BTN_CLICK_TO_SELECT_COMPONENT_TOOLTIP"
 
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		select_button.text = _fuse_localization_class.translate(button_text_key)
-		select_button.tooltip_text = _fuse_localization_class.translate(button_tooltip_key)
-	else:
-		match component_type:
-			ComponentRegistry.ComponentType.EVENT:
-				select_button.text = " 点击以选择事件..."
-				select_button.tooltip_text = "点击以选择事件..."
-			ComponentRegistry.ComponentType.CONDITION:
-				select_button.text = " 点击以选择条件..."
-				select_button.tooltip_text = "点击以选择条件..."
-			_:
-				select_button.text = " 点击以选择组件..."
-				select_button.tooltip_text = "点击以选择组件..."
+	select_button.text = " " + FuseLocalizationClass.translate(button_text_key)
+	select_button.tooltip_text = FuseLocalizationClass.translate(button_tooltip_key)
 
 	select_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	select_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -108,10 +95,6 @@ func _open_component_selector(object: Object, property_name: String, component_t
 	var selector = ComponentSelector.new(object, property_name, component_type)
 	EditorInterface.get_base_control().add_child(selector)
 	selector.popup()
-
-func _ensure_localization_loaded() -> void:
-	if _fuse_localization_class == null:
-		_fuse_localization_class = load("res://addons/fuse/localization/fuse_localization.gd")
 
 
 # ============================================================
@@ -186,13 +169,16 @@ func _add_action_buttons(node: Node) -> void:
 	var errors := _validate_before_export(node, level)
 	if errors.is_empty():
 		var export_btn := Button.new()
-		export_btn.text = "📦 导出 (%s)" % _level_label(level)
+		export_btn.text = "📦 " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_BTN_EXPORT_PRESET",
+			{"level": _level_label(level)}
+		)
 		export_btn.pressed.connect(_on_export_preset_pressed)
 		_action_hbox.add_child(export_btn)
 
 	# 导入按钮
 	_import_btn = Button.new()
-	_import_btn.text = "📥 导入预设"
+	_import_btn.text = "📥 " + FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_BTN_IMPORT_PRESET")
 	_import_btn.pressed.connect(_on_import_preset_pressed)
 	_action_hbox.add_child(_import_btn)
 
@@ -200,9 +186,9 @@ func _add_action_buttons(node: Node) -> void:
 
 func _level_label(level: String) -> String:
 	match level:
-		"L2": return "Trigger/触发器"
-		"L3": return "Runner/信号适配器"
-		"L4": return "MultiEventTrigger/多重事件触发器"
+		"L2": return FuseLocalizationClass.translate("FUSE_UI_LEVEL_L2")
+		"L3": return FuseLocalizationClass.translate("FUSE_UI_LEVEL_L3")
+		"L4": return FuseLocalizationClass.translate("FUSE_UI_LEVEL_L4")
 	return level
 
 
@@ -212,15 +198,15 @@ func _validate_before_export(node: Node, level: String) -> Array[String]:
 		"L2":
 			var trigger := node as Trigger
 			if not trigger or not trigger.event_definition:
-				errors.append("事件定义未配置，无法导出")
+				errors.append(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_ERR_EVENT_NOT_CONFIGURED"))
 		"L3":
 			var runner := node as Runner
 			if not runner or not runner.action_runner:
-				errors.append("ActionRunner 未配置，无法导出")
+				errors.append(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_ERR_ACTION_RUNNER_NOT_CONFIGURED"))
 		"L4":
 			var multi := node as MultiEventTrigger
 			if not multi:
-				errors.append("节点无效")
+				errors.append(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_ERR_NODE_INVALID"))
 			else:
 				var has_enabled := false
 				for binding in multi.event_bindings:
@@ -228,7 +214,7 @@ func _validate_before_export(node: Node, level: String) -> Array[String]:
 						has_enabled = true
 						break
 				if not has_enabled:
-					errors.append("没有启用的事件绑定，无法导出")
+					errors.append(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_ERR_NO_ENABLED_BINDINGS"))
 	return errors
 
 
@@ -271,17 +257,26 @@ func _add_dataflow_ui(report: Dictionary) -> void:
 		var var_count_upd := 0
 		for scope in report.variables:
 			var_count_upd += report.variables[scope].size()
-		_dataflow_button.text = "📊 数据流: %s (%d指令, %d节点, %d变量, %d信号)%s" % [
-			report.event.get("resource_name", "?"),
-			report.instructions_flat.size(), node_count_upd, var_count_upd, report.signals.size(),
-			problem_suffix
-		]
+		_dataflow_button.text = "📊 " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_DATAFLOW_SUMMARY",
+			{
+				"event": report.event.get("resource_name", "?"),
+				"inst": report.instructions_flat.size(),
+				"node": node_count_upd,
+				"var": var_count_upd,
+				"sig": report.signals.size(),
+				"suffix": problem_suffix
+			}
+		)
 		_apply_problem_color(_dataflow_button, problem_color)
 		return
 
 	if report.instructions_flat.is_empty():
 		_dataflow_button = Button.new()
-		_dataflow_button.text = "📊 数据流: (无指令)%s" % problem_suffix
+		_dataflow_button.text = "📊 " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_DATAFLOW_NO_INSTRUCTIONS",
+			{"suffix": problem_suffix}
+		)
 		_apply_problem_color(_dataflow_button, problem_color)
 		add_custom_control(_dataflow_button)
 		return
@@ -293,11 +288,17 @@ func _add_dataflow_ui(report: Dictionary) -> void:
 	for scope in report.variables:
 		var_count += report.variables[scope].size()
 	_dataflow_button = Button.new()
-	_dataflow_button.text = "📊 数据流: %s (%d指令, %d节点, %d变量, %d信号)%s" % [
-		report.event.get("resource_name", "?"),
-		report.instructions_flat.size(), node_count, var_count, signal_count,
-		problem_suffix
-	]
+	_dataflow_button.text = "📊 " + FuseLocalizationClass.translate_format(
+		"FUSE_UI_INSPECTOR_DATAFLOW_SUMMARY",
+		{
+			"event": report.event.get("resource_name", "?"),
+			"inst": report.instructions_flat.size(),
+			"node": node_count,
+			"var": var_count,
+			"sig": signal_count,
+			"suffix": problem_suffix
+		}
+	)
 	_apply_problem_color(_dataflow_button, problem_color)
 	_dataflow_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_dataflow_button.pressed.connect(_toggle_dataflow)
@@ -310,8 +311,8 @@ func _add_dataflow_ui(report: Dictionary) -> void:
 	_dataflow_expanded = false
 
 
-## E5: 计算数据流按钮的问题角标后缀（中文标签，无 emoji）
-## 返回 "" 或 " N 错误 M 警告" 形式
+## E5: 计算数据流按钮的问题角标后缀（本地化标签，无 emoji）
+## 返回 "" 或 " N 错误 M 警告" 形式（前导空格在此拼接，键值不含前导空格）
 func _compute_problem_suffix(report: Dictionary) -> String:
 	var summary: Dictionary = report.get("problems", {}).get("summary", {"errors": 0, "warnings": 0, "suggestions": 0})
 	var err_count: int = summary.get("errors", 0)
@@ -319,10 +320,17 @@ func _compute_problem_suffix(report: Dictionary) -> String:
 	if err_count == 0 and warn_count == 0:
 		return ""
 	if err_count > 0 and warn_count > 0:
-		return " %d 错误 %d 警告" % [err_count, warn_count]
+		return " " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_ERRORS_WARNINGS",
+			{"err": err_count, "warn": warn_count}
+		)
 	if err_count > 0:
-		return " %d 错误" % err_count
-	return " %d 警告" % warn_count
+		return " " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_ERRORS", {"err": err_count}
+		)
+	return " " + FuseLocalizationClass.translate_format(
+		"FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_WARNINGS", {"warn": warn_count}
+	)
 
 
 ## E5: 计算数据流按钮的问题警示颜色（无问题→null 用默认色）
@@ -360,11 +368,15 @@ func _create_dataflow_card() -> void:
 	var content := VBoxContainer.new()
 	content.add_theme_constant_override("separation", 2)
 	panel.add_child(content)
-	content.add_child(_make_section_label("数据流"))
+	content.add_child(_make_section_label(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_DATAFLOW_TITLE")))
 	if not report.event.is_empty():
-		content.add_child(_make_info_line("事件: %s" % report.event.resource_name))
+		content.add_child(_make_info_line(FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_DATAFLOW_EVENT", {"name": report.event.resource_name}
+		)))
 	if not report.nodes.is_empty():
-		content.add_child(_make_info_line("操作节点: %s" % ", ".join(report.nodes)))
+		content.add_child(_make_info_line(FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_DATAFLOW_NODES", {"names": ", ".join(report.nodes)}
+		)))
 	var var_lines: Array[String] = []
 	if not report.variables.local.is_empty():
 		var strs: Array[String] = []
@@ -378,13 +390,24 @@ func _create_dataflow_card() -> void:
 		var strs: Array[String] = []
 		for v in report.variables.global: strs.append(v.name)
 		var_lines.append("[global] " + ", ".join(strs))
-	content.add_child(_make_info_line("变量: %s" % (" | ".join(var_lines) if not var_lines.is_empty() else "(无)")))
+	var var_names := " | ".join(var_lines)
+	if var_names.is_empty():
+		var_names = FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_NONE")
+	content.add_child(_make_info_line(FuseLocalizationClass.translate_format(
+		"FUSE_UI_INSPECTOR_DATAFLOW_VARIABLES", {"names": var_names}
+	)))
 	if not report.signals.is_empty():
 		for sig in report.signals:
-			content.add_child(_make_info_line("信号: %s (%s)" % [sig.signal, sig.runner_name]))
+			content.add_child(_make_info_line(FuseLocalizationClass.translate_format(
+				"FUSE_UI_INSPECTOR_DATAFLOW_SIGNAL",
+				{"signal": sig.signal, "runner": sig.runner_name}
+			)))
 	else:
-		content.add_child(_make_info_line("信号: (无)"))
-	content.add_child(_make_section_label("指令链 (%d 条)" % report.instructions_flat.size()))
+		content.add_child(_make_info_line(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_DATAFLOW_SIGNAL_NONE")))
+	content.add_child(_make_section_label(FuseLocalizationClass.translate_format(
+		"FUSE_UI_INSPECTOR_DATAFLOW_INSTRUCTION_CHAIN",
+		{"count": report.instructions_flat.size()}
+	)))
 	for inst_info in report.instructions_flat:
 		content.add_child(_make_info_line("%s %s" % [inst_info.prefix, inst_info.name]))
 
@@ -431,17 +454,19 @@ func _add_problems_section(content: VBoxContainer, report: Dictionary) -> void:
 	var warn_count: int = summary.get("warnings", 0)
 
 	if err_count == 0 and warn_count == 0:
-		content.add_child(_make_info_line("问题: (无)"))
+		content.add_child(_make_info_line(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_PROBLEMS_NONE")))
 		return
 
-	# section label：汇总（无 emoji，与按钮一致）
-	var label_text := "问题: "
+	# section label：汇总（无 emoji，与按钮一致；分隔空格在代码里拼接）
+	var label_text := FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_PROBLEMS_LABEL")
 	if err_count > 0:
-		label_text += "%d 错误" % err_count
-	if err_count > 0 and warn_count > 0:
-		label_text += " "
+		label_text += " " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_ERRORS", {"err": err_count}
+		)
 	if warn_count > 0:
-		label_text += "%d 警告" % warn_count
+		label_text += " " + FuseLocalizationClass.translate_format(
+			"FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_WARNINGS", {"warn": warn_count}
+		)
 	content.add_child(_make_section_label(label_text))
 
 	# 列具体问题（按消息去重，避免同变量被多处引用重复显示）
@@ -513,7 +538,7 @@ func _apply_preset_to_node(preset: FusePreset, node: Node) -> void:
 	var mapping_suggestions := NodePathResolver.resolve_mapping(nodepaths, node)
 	var dialog := NodePathMappingDialog.new(mapping_suggestions, node)
 	dialog.canceled.connect(func():
-		push_warning("导入已取消（NodePath 映射未确认）")
+		push_warning(FuseLocalizationClass.translate("FUSE_UI_INSPECTOR_IMPORT_CANCELLED_NODEPATH_UNCONFIRMED"))
 	)
 	dialog.confirmed.connect(func():
 		var final_mapping: Dictionary = dialog.get_final_mapping()

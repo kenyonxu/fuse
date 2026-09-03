@@ -116,18 +116,18 @@ func get_description() -> String:
 		desc = FuseLocalization.translate("FUSE_TRIGGER_NO_EVENT")
 
 	if trigger_once:
-		desc += " [触发一次]"
+		desc += " [" + FuseLocalization.translate("FUSE_EVENT_BINDING_TRIGGER_ONCE") + "]"
 
 	if retrigger_policy == RetriggerPolicy.RESTART:
-		desc += " [运行中重启]"
+		desc += " [" + FuseLocalization.translate("FUSE_EVENT_BINDING_RESTART_WHILE_RUNNING") + "]"
 
 	if cooldown_mode != BaseTrigger.CooldownMode.NONE and cooldown_time > 0.0:
 		var mode_text: String = ""
 		match cooldown_mode:
 			BaseTrigger.CooldownMode.GLOBAL_COOLDOWN:
-				mode_text = "全局冷却"
+				mode_text = FuseLocalization.translate("FUSE_EVENT_BINDING_GLOBAL_COOLDOWN")
 			BaseTrigger.CooldownMode.PER_OBJECT_COOLDOWN:
-				mode_text = "每物体冷却"
+				mode_text = FuseLocalization.translate("FUSE_EVENT_BINDING_PER_OBJECT_COOLDOWN")
 		desc += " [%s %.1fs]" % [mode_text, cooldown_time]
 
 	return desc

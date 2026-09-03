@@ -65,6 +65,15 @@ func _refresh_locale_if_needed() -> void:
 				elif editor_locale.begins_with("zh"):
 					_fuse_localization_class.set_locale("zh_CN")
 
+## 翻译指定键
+##
+## 本地化类未就绪时返回键名（与 FuseLocalization.translate 缺键行为一致）；
+## 带格式占位符的键（CSV 值内为 %d/%s/%.1f 风格）在调用点用 % 运算符填参
+func _t(key: String) -> String:
+	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
+		return str(_fuse_localization_class.translate(key))
+	return key
+
 ## 设置UI界面
 func _setup_ui() -> void:
 	# 创建主分割容器
@@ -86,37 +95,25 @@ func _setup_ui() -> void:
 
 	# 创建刷新按钮
 	refresh_button = Button.new()
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		refresh_button.text = _fuse_localization_class.translate("FUSE_UI_BTN_REFRESH")
-	else:
-		refresh_button.text = "刷新"  # 回退文本
+	refresh_button.text = _t("FUSE_UI_BTN_REFRESH")
 	refresh_button.pressed.connect(_on_refresh_pressed)
 	control_panel.add_child(refresh_button)
 
 	# 创建清除按钮
 	clear_button = Button.new()
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		clear_button.text = _fuse_localization_class.translate("FUSE_UI_BTN_CLEAR")
-	else:
-		clear_button.text = "清除"  # 回退文本
+	clear_button.text = _t("FUSE_UI_BTN_CLEAR")
 	clear_button.pressed.connect(_on_clear_pressed)
 	control_panel.add_child(clear_button)
 
 	# 创建导出按钮
 	export_button = Button.new()
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		export_button.text = _fuse_localization_class.translate("FUSE_UI_BTN_EXPORT")
-	else:
-		export_button.text = "导出"  # 回退文本
+	export_button.text = _t("FUSE_UI_BTN_EXPORT")
 	export_button.pressed.connect(_on_export_pressed)
 	control_panel.add_child(export_button)
 
 	# 创建自动刷新复选框
 	auto_refresh_check = CheckBox.new()
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		auto_refresh_check.text = _fuse_localization_class.translate("FUSE_UI_DEBUG_AUTO_REFRESH")
-	else:
-		auto_refresh_check.text = "自动刷新"  # 回退文本
+	auto_refresh_check.text = _t("FUSE_UI_DEBUG_AUTO_REFRESH")
 	auto_refresh_check.toggled.connect(_on_auto_refresh_toggled)
 	control_panel.add_child(auto_refresh_check)
 
@@ -172,25 +169,13 @@ func _setup_timer() -> void:
 
 ## 显示欢迎信息
 func _display_welcome_message() -> void:
-	var welcome_text = ""
-
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		welcome_text = "[color=cyan]%s[/color]\n\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_WELCOME_TITLE")
-		welcome_text += _fuse_localization_class.translate("FUSE_UI_DEBUG_WELCOME_DESCRIPTION") + "\n"
-		welcome_text += "• " + _fuse_localization_class.translate("FUSE_UI_DEBUG_FEATURE_1") + "\n"
-		welcome_text += "• " + _fuse_localization_class.translate("FUSE_UI_DEBUG_FEATURE_2") + "\n"
-		welcome_text += "• " + _fuse_localization_class.translate("FUSE_UI_DEBUG_FEATURE_3") + "\n"
-		welcome_text += "• " + _fuse_localization_class.translate("FUSE_UI_DEBUG_FEATURE_4") + "\n\n"
-		welcome_text += _fuse_localization_class.translate("FUSE_UI_DEBUG_WELCOME_INSTRUCTION")
-	else:
-		# 回退文本
-		welcome_text = "[color=cyan]欢迎使用调试可视化工具[/color]\n\n"
-		welcome_text += "此工具可以帮助您：\n"
-		welcome_text += "• 可视化指令执行流程\n"
-		welcome_text += "• 分析性能瓶颈\n"
-		welcome_text += "• 调试复杂的执行逻辑\n"
-		welcome_text += "• 监控运行时状态\n\n"
-		welcome_text += "执行一些指令后，点击'刷新'按钮查看执行历史。"
+	var welcome_text = "[color=cyan]%s[/color]\n\n" % _t("FUSE_UI_DEBUG_WELCOME_TITLE")
+	welcome_text += _t("FUSE_UI_DEBUG_WELCOME_DESCRIPTION") + "\n"
+	welcome_text += "• " + _t("FUSE_UI_DEBUG_FEATURE_1") + "\n"
+	welcome_text += "• " + _t("FUSE_UI_DEBUG_FEATURE_2") + "\n"
+	welcome_text += "• " + _t("FUSE_UI_DEBUG_FEATURE_3") + "\n"
+	welcome_text += "• " + _t("FUSE_UI_DEBUG_FEATURE_4") + "\n\n"
+	welcome_text += _t("FUSE_UI_DEBUG_WELCOME_INSTRUCTION")
 
 	detail_panel.text = welcome_text
 
@@ -206,35 +191,21 @@ func _update_execution_tree() -> void:
 	var history = execution_tracker.get_execution_history()
 	if history.is_empty():
 		var root = execution_tree.create_item()
-		if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-			root.set_text(0, _fuse_localization_class.translate("FUSE_UI_DEBUG_NO_HISTORY"))
-		else:
-			root.set_text(0, "没有执行历史")  # 回退文本
+		root.set_text(0, _t("FUSE_UI_DEBUG_NO_HISTORY"))
 		return
 
 	var root = execution_tree.create_item()
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		root.set_text(0, _fuse_localization_class.translate("FUSE_UI_DEBUG_HISTORY_TITLE"))
-	else:
-		root.set_text(0, "执行历史")  # 回退文本
+	root.set_text(0, _t("FUSE_UI_DEBUG_HISTORY_TITLE"))
 
 	for i in range(history.size()):
 		var execution = history[i]
 		var exec_item = execution_tree.create_item(root)
 
 		# 设置执行项文本
-		var exec_text = ""
-		if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-			exec_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_EXECUTION_ITEM") % [i + 1, execution.total_time / 1000.0]
-			if execution.has("stats"):
-				var stats = execution.stats
-				exec_text += " - " + _fuse_localization_class.translate("FUSE_UI_DEBUG_EXEC_STATS") % [stats.instruction_count, stats.error_count]
-		else:
-			# 回退文本
-			exec_text = "执行 #%d (%.2fs)" % [i + 1, execution.total_time / 1000.0]
-			if execution.has("stats"):
-				var stats = execution.stats
-				exec_text += " - 指令: %d, 错误: %d" % [stats.instruction_count, stats.error_count]
+		var exec_text = _t("FUSE_UI_DEBUG_EXECUTION_ITEM") % [i + 1, execution.total_time / 1000.0]
+		if execution.has("stats"):
+			var stats = execution.stats
+			exec_text += " - " + _t("FUSE_UI_DEBUG_EXEC_STATS") % [stats.instruction_count, stats.error_count]
 
 		exec_item.set_text(0, exec_text)
 
@@ -259,18 +230,12 @@ func _update_execution_tree() -> void:
 
 				match step.type:
 					"instruction_start":
-						if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-							step_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_START") % step.instruction
-						else:
-							step_text = "开始: %s" % step.instruction
+						step_text = _t("FUSE_UI_DEBUG_STEP_START") % step.instruction
 						step_color = Color(0.8, 0.8, 1.0)  # 浅蓝色
 					"instruction_complete":
 						var success_symbol = "✓" if step.success else "✗"
 						var time_text = "%.3fs" % step.execution_time if step.execution_time > 0 else ""
-						if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-							step_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_COMPLETE") % [success_symbol, step.instruction, time_text]
-						else:
-							step_text = "完成: %s %s %s" % [success_symbol, step.instruction, time_text]
+						step_text = _t("FUSE_UI_DEBUG_STEP_COMPLETE") % [success_symbol, step.instruction, time_text]
 						if step.has_error:
 							step_color = Color(1.0, 0.3, 0.3)  # 红色
 						elif not step.success:
@@ -278,22 +243,13 @@ func _update_execution_tree() -> void:
 						else:
 							step_color = Color(0.2, 1.0, 0.2)  # 绿色
 					"error":
-						if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-							step_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_ERROR") % step.error_message
-						else:
-							step_text = "错误: %s" % step.error_message
+						step_text = _t("FUSE_UI_DEBUG_STEP_ERROR") % step.error_message
 						step_color = Color(1.0, 0.2, 0.2)  # 红色
 					"performance_bottleneck":
-						if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-							step_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_PERFORMANCE") % [step.bottleneck_type, step.severity]
-						else:
-							step_text = "性能问题: %s (%s)" % [step.bottleneck_type, step.severity]
+						step_text = _t("FUSE_UI_DEBUG_STEP_PERFORMANCE") % [step.bottleneck_type, step.severity]
 						step_color = Color(1.0, 0.8, 0.2)  # 黄色
 					"custom_event":
-						if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-							step_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_EVENT") % step.event_type
-						else:
-							step_text = "事件: %s" % step.event_type
+						step_text = _t("FUSE_UI_DEBUG_STEP_EVENT") % step.event_type
 						step_color = Color(0.8, 0.8, 0.8)  # 灰色
 
 				step_item.set_text(0, step_text)
@@ -325,246 +281,138 @@ func _update_detail_panel() -> void:
 
 ## 格式化执行详情
 func _format_execution_details(execution: Dictionary) -> String:
-	var text = ""
+	var text = "[color=cyan]%s[/color]\n" % _t("FUSE_UI_DEBUG_EXEC_DETAILS_TITLE")
+	text += str("=").repeat(40) + "\n\n"
 
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		text = "[color=cyan]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_EXEC_DETAILS_TITLE")
-		text += str("=").repeat(40) + "\n\n"
+	# 基本信息
+	text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_BASIC_INFO")
+	text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_START_TIME"), _format_timestamp(execution.start_time)]
+	if execution.has("end_time"):
+		text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_END_TIME"), _format_timestamp(execution.end_time)]
+		text += "• %s: %.3f %s\n" % [
+			_t("FUSE_UI_DEBUG_TOTAL_TIME"), execution.total_time / 1000.0, _t("FUSE_UI_DEBUG_SECONDS")
+		]
+	text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_CONTEXT_ID"), execution.get("context_id", "unknown")]
+	text += "• %s: %d\n\n" % [_t("FUSE_UI_DEBUG_STEP_COUNT"), execution.steps.size()]
 
-		# 基本信息
-		text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_BASIC_INFO")
-		text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_START_TIME"), _format_timestamp(execution.start_time)]
-		if execution.has("end_time"):
-			text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_END_TIME"), _format_timestamp(execution.end_time)]
-			text += "• %s: %.3f %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_TOTAL_TIME"), execution.total_time / 1000.0, _fuse_localization_class.translate("FUSE_UI_DEBUG_SECONDS")]
-		text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_CONTEXT_ID"), execution.get("context_id", "unknown")]
-		text += "• %s: %d\n\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_COUNT"), execution.steps.size()]
+	# 统计信息
+	if execution.has("stats"):
+		var stats = execution.stats
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_STATS")
+		text += "• %s: %d\n" % [_t("FUSE_UI_DEBUG_INSTRUCTION_COUNT"), stats.instruction_count]
+		text += "• %s: %d\n" % [_t("FUSE_UI_DEBUG_ERROR_COUNT"), stats.error_count]
+		text += "• %s: %d\n" % [_t("FUSE_UI_DEBUG_PERF_ISSUES"), stats.performance_issues]
+		text += "• %s: %.1f%%\n" % [_t("FUSE_UI_DEBUG_SUCCESS_RATE"), stats.success_rate]
+		text += "• %s: %.3f %s\n" % [
+			_t("FUSE_UI_DEBUG_AVG_TIME"), stats.average_execution_time, _t("FUSE_UI_DEBUG_SECONDS")
+		]
 
-		# 统计信息
-		if execution.has("stats"):
-			var stats = execution.stats
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_STATS")
-			text += "• %s: %d\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_INSTRUCTION_COUNT"), stats.instruction_count]
-			text += "• %s: %d\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_ERROR_COUNT"), stats.error_count]
-			text += "• %s: %d\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_PERF_ISSUES"), stats.performance_issues]
-			text += "• %s: %.1f%%\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_SUCCESS_RATE"), stats.success_rate]
-			text += "• %s: %.3f %s\n\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_AVG_TIME"), stats.average_execution_time, _fuse_localization_class.translate("FUSE_UI_DEBUG_SECONDS")]
+	# 性能指标
+	if execution.has("performance_metrics"):
+		var metrics = execution.performance_metrics
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_PERF_METRICS")
+		if metrics.has("initial") and metrics.has("final"):
+			var initial = metrics.initial
+			var final = metrics.final
+			var memory_diff = final.memory_usage - initial.memory_usage
+			text += "• %s: %s bytes\n" % [_t("FUSE_UI_DEBUG_MEMORY_CHANGE"), _format_memory(memory_diff)]
+		text += "\n"
 
-		# 性能指标
-		if execution.has("performance_metrics"):
-			var metrics = execution.performance_metrics
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_PERF_METRICS")
-			if metrics.has("initial") and metrics.has("final"):
-				var initial = metrics.initial
-				var final = metrics.final
-				var memory_diff = final.memory_usage - initial.memory_usage
-				text += "• %s: %s bytes\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_MEMORY_CHANGE"), _format_memory(memory_diff)]
-			text += "\n"
-
-		# 内存快照
-		if execution.has("memory_snapshots") and execution.memory_snapshots.size() > 0:
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_MEMORY_SNAPSHOTS")
-			for snapshot in execution.memory_snapshots:
-				text += "• %s: %s\n" % [snapshot.phase, _format_memory(snapshot.static_memory)]
-			text += "\n"
-	else:
-		# 回退文本
-		text = "[color=cyan]执行详情[/color]\n"
-		text += str("=").repeat(40) + "\n\n"
-
-		# 基本信息
-		text += "[color=yellow]基本信息:[/color]\n"
-		text += "• 开始时间: %s\n" % _format_timestamp(execution.start_time)
-		if execution.has("end_time"):
-			text += "• 结束时间: %s\n" % _format_timestamp(execution.end_time)
-			text += "• 总耗时: %.3f 秒\n" % (execution.total_time / 1000.0)
-		text += "• 上下文ID: %s\n" % execution.get("context_id", "unknown")
-		text += "• 步骤数量: %d\n\n" % execution.steps.size()
-
-		# 统计信息
-		if execution.has("stats"):
-			var stats = execution.stats
-			text += "[color=yellow]统计信息:[/color]\n"
-			text += "• 指令数量: %d\n" % stats.instruction_count
-			text += "• 错误数量: %d\n" % stats.error_count
-			text += "• 性能问题: %d\n" % stats.performance_issues
-			text += "• 成功率: %.1f%%\n" % stats.success_rate
-			text += "• 平均执行时间: %.3f 秒\n\n" % stats.average_execution_time
-
-		# 性能指标
-		if execution.has("performance_metrics"):
-			var metrics = execution.performance_metrics
-			text += "[color=yellow]性能指标:[/color]\n"
-			if metrics.has("initial") and metrics.has("final"):
-				var initial = metrics.initial
-				var final = metrics.final
-				var memory_diff = final.memory_usage - initial.memory_usage
-				text += "• 内存使用变化: %s bytes\n" % _format_memory(memory_diff)
-			text += "\n"
-
-		# 内存快照
-		if execution.has("memory_snapshots") and execution.memory_snapshots.size() > 0:
-			text += "[color=yellow]内存快照:[/color]\n"
-			for snapshot in execution.memory_snapshots:
-				text += "• %s: %s\n" % [snapshot.phase, _format_memory(snapshot.static_memory)]
-			text += "\n"
+	# 内存快照
+	if execution.has("memory_snapshots") and execution.memory_snapshots.size() > 0:
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_MEMORY_SNAPSHOTS")
+		for snapshot in execution.memory_snapshots:
+			text += "• %s: %s\n" % [snapshot.phase, _format_memory(snapshot.static_memory)]
+		text += "\n"
 
 	return text
 
 ## 格式化步骤详情
 func _format_step_details(step: Dictionary) -> String:
-	var text = ""
+	var text = "[color=cyan]%s[/color]\n" % _t("FUSE_UI_DEBUG_STEP_DETAILS_TITLE")
+	text += str("=").repeat(40) + "\n\n"
 
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		text = "[color=cyan]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_STEP_DETAILS_TITLE")
-		text += str("=").repeat(40) + "\n\n"
+	# 基本信息
+	text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_BASIC_INFO")
+	text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_TYPE"), step.type]
+	text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_TIME"), _format_timestamp(step.timestamp)]
 
-		# 基本信息
-		text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_BASIC_INFO")
-		text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_TYPE"), step.type]
-		text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_TIME"), _format_timestamp(step.timestamp)]
+	if step.has("instruction"):
+		text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_INSTRUCTION"), step.instruction]
 
-		if step.has("instruction"):
-			text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_INSTRUCTION"), step.instruction]
+	if step.has("instruction_type"):
+		text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_INSTRUCTION_TYPE"), step.instruction_type]
 
-		if step.has("instruction_type"):
-			text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_INSTRUCTION_TYPE"), step.instruction_type]
+	if step.has("context_id"):
+		text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_CONTEXT_ID"), step.context_id]
 
-		if step.has("context_id"):
-			text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_CONTEXT_ID"), step.context_id]
+	if step.has("instruction_index") and step.instruction_index >= 0:
+		text += "• %s: %d\n" % [_t("FUSE_UI_DEBUG_INSTRUCTION_INDEX"), step.instruction_index]
 
-		if step.has("instruction_index") and step.instruction_index >= 0:
-			text += "• %s: %d\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_INSTRUCTION_INDEX"), step.instruction_index]
+	text += "\n"
 
-		text += "\n"
+	# 执行结果
+	if step.has("success"):
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_EXECUTION_RESULT")
+		var success_text = _t("FUSE_UI_DEBUG_YES") if step.success else _t("FUSE_UI_DEBUG_NO")
+		text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_SUCCESS"), success_text]
 
-		# 执行结果
-		if step.has("success"):
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_EXECUTION_RESULT")
-			var success_text = _fuse_localization_class.translate("FUSE_UI_DEBUG_YES") if step.success else _fuse_localization_class.translate("FUSE_UI_DEBUG_NO")
-			text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_SUCCESS"), success_text]
+		if step.has("execution_time"):
+			text += "• %s: %.3f %s\n" % [
+				_t("FUSE_UI_DEBUG_EXECUTION_TIME"), step.execution_time, _t("FUSE_UI_DEBUG_SECONDS")
+			]
 
-			if step.has("execution_time"):
-				text += "• %s: %.3f %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_EXECUTION_TIME"), step.execution_time, _fuse_localization_class.translate("FUSE_UI_DEBUG_SECONDS")]
-
-			if step.has("has_error") and step.has_error:
-				text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_ERROR"), step.error_message]
-
-			text += "\n"
-
-		# 性能数据
-		if step.has("performance_data") and step.performance_data:
-			var perf_data = step.performance_data
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_PERF_DATA")
-			text += "• %s: %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_MEMORY_USAGE"), _format_memory(perf_data.memory_usage)]
-			text += "• %s: %.1f%%\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_CPU_USAGE"), perf_data.cpu_usage]
-			text += "\n"
-
-		# 变量状态
-		if step.has("variable_state"):
-			var var_state = step.variable_state
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_VARIABLE_STATE")
-			if var_state.has("local_variables") and var_state.local_variables:
-				text += "• %s: %d %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_LOCAL_VARIABLES"), var_state.local_variables.size(), _fuse_localization_class.translate("FUSE_UI_DEBUG_COUNT")]
-			if var_state.has("global_variables") and var_state.global_variables:
-				text += "• %s: %d %s\n" % [_fuse_localization_class.translate("FUSE_UI_DEBUG_GLOBAL_VARIABLES"), var_state.global_variables.size(), _fuse_localization_class.translate("FUSE_UI_DEBUG_COUNT")]
-			text += "\n"
-
-		# 变量变化
-		if step.has("variable_changes") and step.variable_changes:
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_VARIABLE_CHANGES")
-			for change in step.variable_changes:
-				text += "• %s: %s → %s\n" % [change.variable, str(change.old_value), str(change.new_value)]
-			text += "\n"
-
-		# 自定义事件数据
-		if step.has("data") and step.data:
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_EVENT_DATA")
-			for key in step.data:
-				text += "• %s: %s\n" % [key, str(step.data[key])]
-			text += "\n"
-
-		# 错误上下文
-		if step.has("context") and step.context:
-			text += "[color=yellow]%s[/color]\n" % _fuse_localization_class.translate("FUSE_UI_DEBUG_ERROR_CONTEXT")
-			for key in step.context:
-				text += "• %s: %s\n" % [key, str(step.context[key])]
-			text += "\n"
-	else:
-		# 回退文本
-		text = "[color=cyan]步骤详情[/color]\n"
-		text += str("=").repeat(40) + "\n\n"
-
-		# 基本信息
-		text += "[color=yellow]基本信息:[/color]\n"
-		text += "• 类型: %s\n" % step.type
-		text += "• 时间: %s\n" % _format_timestamp(step.timestamp)
-
-		if step.has("instruction"):
-			text += "• 指令: %s\n" % step.instruction
-
-		if step.has("instruction_type"):
-			text += "• 指令类型: %s\n" % step.instruction_type
-
-		if step.has("context_id"):
-			text += "• 上下文ID: %s\n" % step.context_id
-
-		if step.has("instruction_index") and step.instruction_index >= 0:
-			text += "• 指令索引: %d\n" % step.instruction_index
+		if step.has("has_error") and step.has_error:
+			text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_ERROR"), step.error_message]
 
 		text += "\n"
 
-		# 执行结果
-		if step.has("success"):
-			text += "[color=yellow]执行结果:[/color]\n"
-			text += "• 成功: %s\n" % ("是" if step.success else "否")
+	# 性能数据
+	if step.has("performance_data") and step.performance_data:
+		var perf_data = step.performance_data
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_PERF_DATA")
+		text += "• %s: %s\n" % [_t("FUSE_UI_DEBUG_MEMORY_USAGE"), _format_memory(perf_data.memory_usage)]
+		text += "• %s: %.1f%%\n" % [_t("FUSE_UI_DEBUG_CPU_USAGE"), perf_data.cpu_usage]
+		text += "\n"
 
-			if step.has("execution_time"):
-				text += "• 执行时间: %.3f 秒\n" % step.execution_time
+	# 变量状态
+	if step.has("variable_state"):
+		var var_state = step.variable_state
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_VARIABLE_STATE")
+		if var_state.has("local_variables") and var_state.local_variables:
+			text += "• %s: %d %s\n" % [
+				_t("FUSE_UI_DEBUG_LOCAL_VARIABLES"),
+				var_state.local_variables.size(),
+				_t("FUSE_UI_DEBUG_COUNT")
+			]
+		if var_state.has("global_variables") and var_state.global_variables:
+			text += "• %s: %d %s\n" % [
+				_t("FUSE_UI_DEBUG_GLOBAL_VARIABLES"),
+				var_state.global_variables.size(),
+				_t("FUSE_UI_DEBUG_COUNT")
+			]
+		text += "\n"
 
-			if step.has("has_error") and step.has_error:
-				text += "• 错误: %s\n" % step.error_message
+	# 变量变化
+	if step.has("variable_changes") and step.variable_changes:
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_VARIABLE_CHANGES")
+		for change in step.variable_changes:
+			text += "• %s: %s → %s\n" % [change.variable, str(change.old_value), str(change.new_value)]
+		text += "\n"
 
-			text += "\n"
+	# 自定义事件数据
+	if step.has("data") and step.data:
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_EVENT_DATA")
+		for key in step.data:
+			text += "• %s: %s\n" % [key, str(step.data[key])]
+		text += "\n"
 
-		# 性能数据
-		if step.has("performance_data") and step.performance_data:
-			var perf_data = step.performance_data
-			text += "[color=yellow]性能数据:[/color]\n"
-			text += "• 内存使用: %s\n" % _format_memory(perf_data.memory_usage)
-			text += "• CPU使用率: %.1f%%\n" % perf_data.cpu_usage
-			text += "\n"
-
-		# 变量状态
-		if step.has("variable_state"):
-			var var_state = step.variable_state
-			text += "[color=yellow]变量状态:[/color]\n"
-			if var_state.has("local_variables") and var_state.local_variables:
-				text += "• 局部变量: %d 个\n" % var_state.local_variables.size()
-			if var_state.has("global_variables") and var_state.global_variables:
-				text += "• 全局变量: %d 个\n" % var_state.global_variables.size()
-			text += "\n"
-
-		# 变量变化
-		if step.has("variable_changes") and step.variable_changes:
-			text += "[color=yellow]变量变化:[/color]\n"
-			for change in step.variable_changes:
-				text += "• %s: %s → %s\n" % [change.variable, str(change.old_value), str(change.new_value)]
-			text += "\n"
-
-		# 自定义事件数据
-		if step.has("data") and step.data:
-			text += "[color=yellow]事件数据:[/color]\n"
-			for key in step.data:
-				text += "• %s: %s\n" % [key, str(step.data[key])]
-			text += "\n"
-
-		# 错误上下文
-		if step.has("context") and step.context:
-			text += "[color=yellow]错误上下文:[/color]\n"
-			for key in step.context:
-				text += "• %s: %s\n" % [key, str(step.context[key])]
-			text += "\n"
+	# 错误上下文
+	if step.has("context") and step.context:
+		text += "[color=yellow]%s[/color]\n" % _t("FUSE_UI_DEBUG_ERROR_CONTEXT")
+		for key in step.context:
+			text += "• %s: %s\n" % [key, str(step.context[key])]
+		text += "\n"
 
 	return text
 
@@ -572,17 +420,9 @@ func _format_step_details(step: Dictionary) -> String:
 func _format_timestamp(timestamp: int) -> String:
 	var elapsed = (Time.get_ticks_msec() - timestamp) / 1000.0
 
-	if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-		if elapsed < 60:
-			return _fuse_localization_class.translate("FUSE_UI_DEBUG_SECONDS_AGO") % elapsed
-		else:
-			return _fuse_localization_class.translate("FUSE_UI_DEBUG_MINUTES_AGO") % (elapsed / 60.0)
-	else:
-		# 回退文本
-		if elapsed < 60:
-			return "%.1f 秒前" % elapsed
-		else:
-			return "%.1f 分钟前" % (elapsed / 60.0)
+	if elapsed < 60:
+		return _t("FUSE_UI_DEBUG_SECONDS_AGO") % elapsed
+	return _t("FUSE_UI_DEBUG_MINUTES_AGO") % (elapsed / 60.0)
 
 ## 格式化内存大小
 func _format_memory(bytes: int) -> String:
@@ -624,15 +464,9 @@ func _on_clear_pressed() -> void:
 func _on_export_pressed() -> void:
 	var file_path = "user://execution_history_%s.json" % Time.get_time_string_from_system().replace(":", "-")
 	if execution_tracker.export_execution_history(file_path):
-		if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-			detail_panel.text = "[color=green]%s[/color]" % (_fuse_localization_class.translate("FUSE_UI_DEBUG_EXPORT_SUCCESS") % file_path)
-		else:
-			detail_panel.text = "[color=green]执行历史已导出到: %s[/color]" % file_path
+		detail_panel.text = "[color=green]%s[/color]" % (_t("FUSE_UI_DEBUG_EXPORT_SUCCESS") % file_path)
 	else:
-		if _fuse_localization_class and _fuse_localization_class.has_method("translate"):
-			detail_panel.text = "[color=red]%s[/color]" % _fuse_localization_class.translate("FUSE_UI_DEBUG_EXPORT_FAILED")
-		else:
-			detail_panel.text = "[color=red]导出失败[/color]"
+		detail_panel.text = "[color=red]%s[/color]" % _t("FUSE_UI_DEBUG_EXPORT_FAILED")
 
 ## 自动刷新切换处理
 func _on_auto_refresh_toggled(toggled_on: bool) -> void:

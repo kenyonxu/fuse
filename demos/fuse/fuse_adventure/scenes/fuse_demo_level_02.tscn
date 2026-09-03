@@ -35,7 +35,7 @@
 [ext_resource type="Script" uid="uid://dgk6lyr4260ad" path="res://addons/fuse/instructions/audio/crossfade_to_music.gd" id="32_r155i"]
 
 [sub_resource type="Resource" id="Resource_ak1ug"]
-resource_name = "获取节点 '..' → camera [最近作用域]"
+resource_name = "Get Node '..' → camera [Nearest Scope]"
 script = ExtResource("6_wnpyd")
 custom_scope_id = "level_scope"
 target_node_path = NodePath("")
@@ -46,7 +46,7 @@ scope_source = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_0u2nx"]
-resource_name = "相机边界 (Camera2D ← CameraFrame)"
+resource_name = "Camera Limit (Camera2D ← CameraFrame)"
 script = ExtResource("7_pf1ym")
 camera_variable = ""
 camera_scope = 0
@@ -75,7 +75,7 @@ metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 size = Vector2(1266, 719)
 
 [sub_resource type="Resource" id="Resource_ffb08"]
-resource_name = "间隔执行: 12.1s - 自动开始 立即触发 无限重复"
+resource_name = "Interval: 12.1s - Auto Start Trigger Immediately Infinite Repeat"
 script = ExtResource("11_pyj0u")
 trigger_on_start = true
 emit_repeat_count = false
@@ -85,7 +85,7 @@ max_interval_seconds = 2.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_bn3sp"]
-resource_name = "等待 2.0 秒"
+resource_name = "Wait 2.0 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -95,7 +95,7 @@ wait_time = 2.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_4jxn0"]
-resource_name = "移动到 [MovingPlatform] (0.0, -100.0) (本地) (4.00s)"
+resource_name = "Move To [MovingPlatform] (0.0, -100.0) (Local) (4.00s)"
 script = ExtResource("13_qyi66")
 target_variable = ""
 target_scope = 0
@@ -120,7 +120,7 @@ use_physics_process = true
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_pyj0u"]
-resource_name = "等待 2.0 秒"
+resource_name = "Wait 2.0 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -131,7 +131,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://spkts3pa4cdm"
 
 [sub_resource type="Resource" id="Resource_v8mi7"]
-resource_name = "移动到 [MovingPlatform] (0.0, 100.0) (本地) (4.00s)"
+resource_name = "Move To [MovingPlatform] (0.0, 100.0) (Local) (4.00s)"
 script = ExtResource("13_qyi66")
 target_variable = ""
 target_scope = 0
@@ -162,7 +162,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_p6k3q"]
-resource_name = "间隔执行: 12.1s - 自动开始 立即触发 无限重复"
+resource_name = "Interval: 12.1s - Auto Start Trigger Immediately Infinite Repeat"
 script = ExtResource("11_pyj0u")
 trigger_on_start = true
 emit_repeat_count = false
@@ -172,7 +172,7 @@ max_interval_seconds = 2.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_jn2gk"]
-resource_name = "等待 2.0 秒"
+resource_name = "Wait 2.0 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -182,7 +182,7 @@ wait_time = 2.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_qakxj"]
-resource_name = "移动到 [MovingPlatform2] (0.0, 200.0) (本地) (4.00s)"
+resource_name = "Move To [MovingPlatform2] (0.0, 200.0) (Local) (4.00s)"
 script = ExtResource("13_qyi66")
 target_variable = ""
 target_scope = 0
@@ -207,7 +207,7 @@ use_physics_process = true
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_b3lrm"]
-resource_name = "等待 2.0 秒"
+resource_name = "Wait 2.0 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -218,7 +218,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://spkts3pa4cdm"
 
 [sub_resource type="Resource" id="Resource_sj40y"]
-resource_name = "移动到 [MovingPlatform2] (0.0, -200.0) (本地) (4.00s)"
+resource_name = "Move To [MovingPlatform2] (0.0, -200.0) (Local) (4.00s)"
 script = ExtResource("13_qyi66")
 target_variable = ""
 target_scope = 0
@@ -255,7 +255,7 @@ _data = {
 point_count = 3
 
 [sub_resource type="Resource" id="Resource_n5feu"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 1.0 (4.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 1.0 (4.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -280,7 +280,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_6kde4"]
-resource_name = "[上级] 进度比 0.0 (±0.1)"
+resource_name = "[上级] progress ratio 0.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -296,14 +296,14 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_ehdw3"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 0.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_6kde4")
 action_runner = SubResource("Resource_4jwmc")
 metadata/_custom_type_script = "uid://bvwgknoxvc6w1"
 
 [sub_resource type="Resource" id="Resource_kkifu"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 0.0 (4.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 0.0 (4.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -328,7 +328,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_r07d2"]
-resource_name = "[上级] 进度比 1.0 (±0.1)"
+resource_name = "[上级] progress ratio 1.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -344,7 +344,7 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_sfv2b"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 1.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_r07d2")
 action_runner = SubResource("Resource_3swal")
@@ -357,7 +357,7 @@ _data = {
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_j8xdb"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 1.0 (2.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 1.0 (2.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -381,7 +381,7 @@ instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_j8xdb")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_yjpbx"]
-resource_name = "[上级] 进度比 0.0 (±0.1)"
+resource_name = "[上级] progress ratio 0.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -397,13 +397,13 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_wwi5u"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 0.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_yjpbx")
 action_runner = SubResource("Resource_q3gy3")
 
 [sub_resource type="Resource" id="Resource_mgphg"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 0.0 (2.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 0.0 (2.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -427,7 +427,7 @@ instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_mgphg")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_0ltaa"]
-resource_name = "[上级] 进度比 1.0 (±0.1)"
+resource_name = "[上级] progress ratio 1.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -443,7 +443,7 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_mlmyh"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 1.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_0ltaa")
 action_runner = SubResource("Resource_vloxp")
@@ -455,7 +455,7 @@ _data = {
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_b4iir"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 1.0 (2.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 1.0 (2.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -479,7 +479,7 @@ instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_b4iir")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_203w8"]
-resource_name = "[上级] 进度比 0.0 (±0.1)"
+resource_name = "[上级] progress ratio 0.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -495,13 +495,13 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_t5iq0"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 0.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_203w8")
 action_runner = SubResource("Resource_4upqs")
 
 [sub_resource type="Resource" id="Resource_1axvd"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 0.0 (2.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 0.0 (2.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -525,7 +525,7 @@ instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_1axvd")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_0qrpp"]
-resource_name = "[上级] 进度比 1.0 (±0.1)"
+resource_name = "[上级] progress ratio 1.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -541,7 +541,7 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_3b1bd"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 1.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_0qrpp")
 action_runner = SubResource("Resource_ofjia")
@@ -553,7 +553,7 @@ _data = {
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_sruw6"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 1.0 (2.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 1.0 (2.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -577,7 +577,7 @@ instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_sruw6")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_nv0p3"]
-resource_name = "[上级] 进度比 0.0 (±0.1)"
+resource_name = "[上级] progress ratio 0.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -593,13 +593,13 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_fujmj"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 0.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 0.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_nv0p3")
 action_runner = SubResource("Resource_fasb1")
 
 [sub_resource type="Resource" id="Resource_vu5q1"]
-resource_name = "属性动画 [[上级]] [Node] .progress_ratio = 0.0 (2.00s)"
+resource_name = "Property Animation [[上级]] [Node] .progress_ratio = 0.0 (2.00s)"
 script = ExtResource("9_kkifu")
 target_variable = ""
 target_scope = 0
@@ -623,7 +623,7 @@ instructions = Array[ExtResource("5_yyvwg")]([SubResource("Resource_vu5q1")])
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_fat61"]
-resource_name = "[上级] 进度比 1.0 (±0.1)"
+resource_name = "[上级] progress ratio 1.0 (±0.1)"
 script = ExtResource("10_n5feu")
 ratio_variable = ""
 ratio_scope = 0
@@ -639,7 +639,7 @@ trigger_once = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_xfg3l"]
-resource_name = "监听 [上级]，当 progress_ratio 接近 1.0 (容差 0.1) 时触发"
+resource_name = "Monitor [上级] and trigger when progress_ratio approaches 1.0 (tolerance 0.1)"
 script = ExtResource("7_kkifu")
 event = SubResource("Resource_fat61")
 action_runner = SubResource("Resource_db3cc")
@@ -650,14 +650,14 @@ script = ExtResource("10_v5lb7")
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_3ucjy"]
-resource_name = "设置视口尺寸 640x360"
+resource_name = "Set Viewport Size 640x360"
 script = ExtResource("11_vvbtj")
 width = 640
 height = 360
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_plqys"]
-resource_name = "获取组中节点 'player_spawn_point' → spawn_points [[本地]]"
+resource_name = "Get Nodes In Group 'player_spawn_point' → spawn_points [[Local]]"
 script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
@@ -668,7 +668,7 @@ result_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_scxm5"]
-resource_name = "Array Get 数组 spawn_points [0] → spawn_point"
+resource_name = "Array Get Array spawn_points [0] → spawn_point"
 script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
@@ -687,7 +687,7 @@ target_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_fovbj"]
-resource_name = "获取位置 spawn_point [LOCAL] → pos_spawn [LOCAL]"
+resource_name = "Get Position spawn_point [LOCAL] → pos_spawn [LOCAL]"
 script = ExtResource("14_pyj0u")
 target = NodePath("")
 target_scope_source = 0
@@ -705,7 +705,7 @@ use_global_position = true
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_sqapb"]
-resource_name = "实例化 'player.tscn' 从变量 [[本地]] pos_spawn"
+resource_name = "Instantiate 'player.tscn' from variable [[Local]] pos_spawn"
 script = ExtResource("15_qyi66")
 target_variable = "player"
 save_to_scope = 0
@@ -730,7 +730,7 @@ use_object_pool = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_o4ukh"]
-resource_name = "获取组中节点 'player' → grp_player [[本地]]"
+resource_name = "Get Nodes In Group 'player' → grp_player [[Local]]"
 script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
@@ -741,7 +741,7 @@ result_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_5a3ub"]
-resource_name = "Array Get 数组 grp_player [0] → player"
+resource_name = "Array Get Array grp_player [0] → player"
 script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
@@ -760,7 +760,7 @@ target_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_cb305"]
-resource_name = "等待 0.1 秒"
+resource_name = "Wait 0.1 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -770,7 +770,7 @@ wait_time = 0.1
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_3vddb"]
-resource_name = "打印变量 'player' [[本地]]"
+resource_name = "Print variable 'player' [[Local]]"
 script = ExtResource("17_6kde4")
 scope_source = 0
 custom_scope_id = ""
@@ -780,7 +780,7 @@ variable_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_p1ubp"]
-resource_name = "打印变量 'camera' [最近作用域]"
+resource_name = "Print variable 'camera' [Nearest Scope]"
 script = ExtResource("17_6kde4")
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -790,7 +790,7 @@ scope_source = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_mw75f"]
-resource_name = "相机跟随 player [LOCAL] → camera [SCOPE] 平滑 速度: 5.0"
+resource_name = "Camera Follow player [LOCAL] → camera [SCOPE] Smooth Speed: 5.0"
 script = ExtResource("18_ehdw3")
 target_node = NodePath("")
 target_scope_source = 0
@@ -816,7 +816,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_pf1ym"]
-resource_name = "预加载场景 'title_scene.tscn' (等待完成)"
+resource_name = "Preload Scene 'title_scene.tscn' (Wait for completion)"
 script = ExtResource("22_wnpyd")
 scene_path = "uid://d1hc0i6nwulkd"
 preload_mode = 0
@@ -825,7 +825,7 @@ status_variable = "preload_scene_status"
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_lj5vm"]
-resource_name = "预加载场景 'fuse_demo_level_01.tscn' (等待完成)"
+resource_name = "Preload Scene 'fuse_demo_level_01.tscn' (Wait for completion)"
 script = ExtResource("22_wnpyd")
 scene_path = "uid://cxiwcx0w5nofb"
 preload_mode = 0
@@ -840,7 +840,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_v5lb7"]
-resource_name = "接收事件: banana_get"
+resource_name = "On Receive Event: banana_get"
 script = ExtResource("23_lj5vm")
 event_name = "banana_get"
 log_level = 0
@@ -874,13 +874,13 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_8t2ux"]
-resource_name = "接收事件: playerdie"
+resource_name = "On Receive Event: playerdie"
 script = ExtResource("23_lj5vm")
 event_name = "playerdie"
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_0c3mp"]
-resource_name = "获取组中节点 'player' → grp_player [[本地]]"
+resource_name = "Get Nodes In Group 'player' → grp_player [[Local]]"
 script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
@@ -891,7 +891,7 @@ result_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_ikeak"]
-resource_name = "Array Get 数组 grp_player [0] → player"
+resource_name = "Array Get Array grp_player [0] → player"
 script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
@@ -910,7 +910,7 @@ target_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_7g33l"]
-resource_name = "获取位置 player [LOCAL] → player_pos [LOCAL]"
+resource_name = "Get Position player [LOCAL] → player_pos [LOCAL]"
 script = ExtResource("14_pyj0u")
 target = NodePath("")
 target_scope_source = 0
@@ -928,7 +928,7 @@ use_global_position = true
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_qfwu4"]
-resource_name = "打印变量 'player_pos' [[本地]]"
+resource_name = "Print variable 'player_pos' [[Local]]"
 script = ExtResource("17_6kde4")
 scope_source = 0
 custom_scope_id = ""
@@ -938,7 +938,7 @@ variable_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_5xcvj"]
-resource_name = "实例化 'death_explosion.tscn' 从变量 [[本地]] player_pos"
+resource_name = "Instantiate 'death_explosion.tscn' from variable [[Local]] player_pos"
 script = ExtResource("15_qyi66")
 target_variable = "instance_id"
 save_to_scope = 0
@@ -963,7 +963,7 @@ use_object_pool = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_4e4jn"]
-resource_name = "释放 player [[本地]]"
+resource_name = "Queue Free player [[Local]]"
 script = ExtResource("29_n5feu")
 target_node = NodePath("")
 target_scope_source = 0
@@ -976,7 +976,7 @@ delay = 0.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_cq55b"]
-resource_name = "等待 1.0 秒"
+resource_name = "Wait 1.0 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -986,7 +986,7 @@ wait_time = 1.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_oyosn"]
-resource_name = "获取组中节点 'player_spawn_point' → spawn_points [[本地]]"
+resource_name = "Get Nodes In Group 'player_spawn_point' → spawn_points [[Local]]"
 script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
@@ -997,7 +997,7 @@ result_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_uohtv"]
-resource_name = "Array Get 数组 spawn_points [0] → spawn_point"
+resource_name = "Array Get Array spawn_points [0] → spawn_point"
 script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
@@ -1016,7 +1016,7 @@ target_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_4830j"]
-resource_name = "获取位置 spawn_point [LOCAL] → pos_spawn [LOCAL]"
+resource_name = "Get Position spawn_point [LOCAL] → pos_spawn [LOCAL]"
 script = ExtResource("14_pyj0u")
 target = NodePath("")
 target_scope_source = 0
@@ -1034,7 +1034,7 @@ use_global_position = true
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_32l6o"]
-resource_name = "实例化 'player.tscn' 从变量 [[本地]] pos_spawn"
+resource_name = "Instantiate 'player.tscn' from variable [[Local]] pos_spawn"
 script = ExtResource("15_qyi66")
 target_variable = "player"
 save_to_scope = 0
@@ -1059,7 +1059,7 @@ use_object_pool = false
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_8531j"]
-resource_name = "获取组中节点 'player' → grp_player [[本地]]"
+resource_name = "Get Nodes In Group 'player' → grp_player [[Local]]"
 script = ExtResource("12_kkifu")
 scope_source = 0
 custom_scope_id = ""
@@ -1070,7 +1070,7 @@ result_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_xh47y"]
-resource_name = "Array Get 数组 grp_player [0] → player"
+resource_name = "Array Get Array grp_player [0] → player"
 script = ExtResource("13_n5feu")
 array_scope_source = 0
 array_custom_scope_id = ""
@@ -1089,7 +1089,7 @@ target_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_7w0l6"]
-resource_name = "等待 0.1 秒"
+resource_name = "Wait 0.1 secs"
 script = ExtResource("16_r155i")
 scope_source = 0
 custom_scope_id = ""
@@ -1099,7 +1099,7 @@ wait_time = 0.1
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_jnxlw"]
-resource_name = "打印变量 'player' [[本地]]"
+resource_name = "Print variable 'player' [[Local]]"
 script = ExtResource("17_6kde4")
 scope_source = 0
 custom_scope_id = ""
@@ -1109,7 +1109,7 @@ variable_scope = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_80t41"]
-resource_name = "打印变量 'camera' [最近作用域]"
+resource_name = "Print variable 'camera' [Nearest Scope]"
 script = ExtResource("17_6kde4")
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -1119,7 +1119,7 @@ scope_source = 0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_vslg2"]
-resource_name = "相机跟随 player [LOCAL] → camera [SCOPE] 平滑 速度: 5.0"
+resource_name = "Camera Follow player [LOCAL] → camera [SCOPE] Smooth Speed: 5.0"
 script = ExtResource("18_ehdw3")
 target_node = NodePath("")
 target_scope_source = 0
@@ -1146,7 +1146,7 @@ log_level = 0
 metadata/_custom_type_script = "uid://nsaea7jh1jr5"
 
 [sub_resource type="Resource" id="Resource_8wjjd"]
-resource_name = "间隔执行: 25.0s - 自动开始 立即触发 无限重复"
+resource_name = "Interval: 25.0s - Auto Start Trigger Immediately Infinite Repeat"
 script = ExtResource("11_pyj0u")
 trigger_on_start = true
 emit_repeat_count = false
@@ -1156,7 +1156,7 @@ max_interval_seconds = 2.0
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_ct7sh"]
-resource_name = "交叉淡入淡出 'SpaceBattle_8bit_final.wav' [37.84s] (交叉淡入淡出 3.0秒)"
+resource_name = "Crossfade 'SpaceBattle_8bit_final.wav' [37.84s] (Crossfade 3.0s)"
 script = ExtResource("32_r155i")
 music_path = "uid://bi1lb4nvpv6gn"
 volume = 1.0

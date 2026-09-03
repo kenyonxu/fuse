@@ -13,18 +13,18 @@
 [ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="11_8wic3"]
 
 [sub_resource type="Resource" id="Resource_5y4ic"]
-resource_name = "发送事件: AllEnemyDied"
+resource_name = "Send Event: AllEnemyDied"
 script = ExtResource("2_xw62m")
 event_name = "AllEnemyDied"
 log_level = 0
 
 [sub_resource type="Resource" id="Resource_ejd0v"]
-resource_name = "发送事件: StartCountDown"
+resource_name = "Send Event: StartCountDown"
 script = ExtResource("2_xw62m")
 event_name = "StartCountDown"
 
 [sub_resource type="Resource" id="Resource_2y4y2"]
-resource_name = "等待 2.0 秒"
+resource_name = "Wait 2.0 secs"
 script = ExtResource("6_7n2jb")
 scope_source = 0
 custom_scope_id = ""
@@ -33,7 +33,7 @@ value_source = 0
 wait_time = 2.0
 
 [sub_resource type="Resource" id="Resource_ull3x"]
-resource_name = "实例化 'player_ship.tscn' 从变量 [最近作用域] start_pos"
+resource_name = "Instantiate 'player_ship.tscn' from variable [Nearest Scope] start_pos"
 script = ExtResource("7_mo1gi")
 target_variable = "instance_id"
 save_to_scope = 0
@@ -55,7 +55,7 @@ save_to_scope = 0
 use_object_pool = false
 
 [sub_resource type="Resource" id="Resource_onugj"]
-resource_name = "等待 1.0 秒"
+resource_name = "Wait 1.0 secs"
 script = ExtResource("6_7n2jb")
 scope_source = 0
 custom_scope_id = ""
@@ -64,14 +64,14 @@ value_source = 0
 wait_time = 1.0
 
 [sub_resource type="Resource" id="Resource_j327c"]
-resource_name = "恢复游戏"
+resource_name = "Resume Game"
 script = ExtResource("8_68tvk")
 pause_menu_node = NodePath("")
 ui_node_path = NodePath("../../GameSceneCanvas")
 close_pause_menu = false
 
 [sub_resource type="Resource" id="Resource_mbx8a"]
-resource_name = "检查变量 [最近作用域]: current_score GREATER_THAN 0"
+resource_name = "Check Variable [Nearest Scope]: current_score GREATER_THAN 0"
 script = ExtResource("3_8jeqc")
 variable_name = "current_score"
 custom_scope_id = ""
@@ -91,7 +91,7 @@ auto_convert_types = true
 treat_empty_as_null = false
 
 [sub_resource type="Resource" id="Resource_20jyw"]
-resource_name = "Array Add 数组 score_list ← 变量 current_score"
+resource_name = "Array Add Array score_list ← Variable current_score"
 script = ExtResource("4_uv1kb")
 array_scope_source = 0
 array_custom_scope_id = ""
@@ -112,13 +112,13 @@ element_target_node_path = NodePath("")
 log_level = 4
 
 [sub_resource type="Resource" id="Resource_52e3n"]
-resource_name = "If/Then current_score [最近作用域] GREATER_THAN 0 [1 个指令] [异步]"
+resource_name = "If/Then current_score [Nearest Scope] GREATER_THAN 0 [1 instruction(s)] [Async]"
 script = ExtResource("5_3a64e")
 condition = SubResource("Resource_mbx8a")
 instructions = Array[ExtResource("1_sgqhx")]([SubResource("Resource_20jyw")])
 
 [sub_resource type="Resource" id="Resource_kpi76"]
-resource_name = "发送事件: GameEnd"
+resource_name = "Send Event: GameEnd"
 script = ExtResource("2_xw62m")
 event_name = "GameEnd"
 event_args = {
@@ -126,7 +126,7 @@ event_args = {
 }
 
 [sub_resource type="Resource" id="Resource_rimn6"]
-resource_name = "发送事件: GameEnd"
+resource_name = "Send Event: GameEnd"
 script = ExtResource("2_xw62m")
 event_name = "GameEnd"
 event_args = {
@@ -134,7 +134,7 @@ event_args = {
 }
 
 [sub_resource type="Resource" id="Resource_s2i3n"]
-resource_name = "暂停游戏 (仅暂停)"
+resource_name = "Pause Game (Pause only)"
 script = ExtResource("9_k1i4i")
 pause_menu_scene = ""
 pause_menu_parent = NodePath("")
@@ -142,7 +142,7 @@ ui_node_path = NodePath("../../GameSceneCanvas")
 show_pause_menu = false
 
 [sub_resource type="Resource" id="Resource_7e0w5"]
-resource_name = "运行 Runner '../SpawnEnemy' 立即返回"
+resource_name = "Run Runner '../SpawnEnemy' Return Immediately"
 script = ExtResource("10_sxe4j")
 result_variable_name = ""
 result_variable_scope = 0

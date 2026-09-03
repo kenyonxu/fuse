@@ -3097,7 +3097,6 @@ FUSE_CONDITION_VAR_COMPARISON_NOT_SET,变量比较 (未设置变量),Variable Co
 FUSE_CONDITION_VAR_COMPARISON_FORMAT,{var} {op} {value},{var} {op} {value}
 FUSE_CONDITION_VAR_COMPARISON_DESC_NOT_SET,变量比较 (未设置变量),Variable comparison (variable not set)
 FUSE_ERROR_VAR_NAME_EMPTY,变量名不能为空,Variable name cannot be empty
-FUSE_ERROR_VAR_NOT_FOUND,找不到变量: %s,Variable not found: %s
 FUSE_ERROR_UNKNOWN_COMPARISON_OPERATOR,未知的比较运算符: %d,Unknown comparison operator: %d
 FUSE_ERROR_CANNOT_COMPARE_NON_NUMERIC,无法比较非数值类型: %s 和 %s,Cannot compare non-numeric types: %s and %s
 FUSE_LOG_VARIABLE_COMPARISON,变量比较: {var} ({value}) {op} {compare} = {result},Variable comparison: {var} ({value}) {op} {compare} = {result}
@@ -5134,3 +5133,142 @@ FUSE_LOG_ADD_VELOCITY,{node} 速度 {from} + {impulse} = {to},{node} velocity {f
 FUSE_ERROR_NO_VELOCITY_PROPERTY,目标节点没有 velocity 属性（需为 CharacterBody2D/RigidBody2D 等物理体）,Target node has no velocity property (must be a physics body like CharacterBody2D/RigidBody2D)
 FUSE_ERROR_IMPULSE_NOT_VECTOR2,冲量变量 '{variable}' 的值不是 Vector2（实际 {actual_type}）,Impulse variable '{variable}' value is not Vector2 (got {actual_type})
 FUSE_ERROR_IMPULSE_ZERO,冲量值不能为零,Impulse cannot be zero
+
+# 编辑器 UI 本地化补全（2026-09-03 漏网之鱼修复：Inspector/数据流卡片/指令数组/拓扑面板/变量监视器/预设与映射对话框/扫描与插件日志/EventBinding 后缀）
+FUSE_UI_INSPECTOR_BTN_EXPORT_PRESET,导出 ({level}),Export Preset ({level})
+FUSE_UI_INSPECTOR_BTN_IMPORT_PRESET,导入预设,Import Preset
+FUSE_UI_LEVEL_L2,Trigger/触发器,Trigger
+FUSE_UI_LEVEL_L3,Runner/信号适配器,Runner
+FUSE_UI_LEVEL_L4,MultiEventTrigger/多重事件触发器,MultiEventTrigger
+FUSE_UI_INSPECTOR_ERR_EVENT_NOT_CONFIGURED,事件定义未配置，无法导出,Event definition is not configured; cannot export
+FUSE_UI_INSPECTOR_ERR_ACTION_RUNNER_NOT_CONFIGURED,ActionRunner 未配置，无法导出,ActionRunner is not configured; cannot export
+FUSE_UI_INSPECTOR_ERR_NODE_INVALID,节点无效,Invalid node
+FUSE_UI_INSPECTOR_ERR_NO_ENABLED_BINDINGS,没有启用的事件绑定，无法导出,No enabled event bindings; cannot export
+FUSE_UI_INSPECTOR_DATAFLOW_SUMMARY,数据流: {event} ({inst}指令，{node}节点，{var}变量，{sig}信号){suffix},Data Flow: {event} ({inst} instructions / {node} nodes / {var} variables / {sig} signals){suffix}
+FUSE_UI_INSPECTOR_DATAFLOW_NO_INSTRUCTIONS,数据流: (无指令){suffix},Data Flow: (no instructions){suffix}
+FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_ERRORS_WARNINGS,{err} 错误 {warn} 警告,{err} errors {warn} warnings
+FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_ERRORS,{err} 错误,{err} errors
+FUSE_UI_INSPECTOR_PROBLEM_SUFFIX_WARNINGS,{warn} 警告,{warn} warnings
+FUSE_UI_INSPECTOR_DATAFLOW_TITLE,数据流,Data Flow
+FUSE_UI_INSPECTOR_DATAFLOW_EVENT,事件: {name},Event: {name}
+FUSE_UI_INSPECTOR_DATAFLOW_NODES,操作节点: {names},Action Nodes: {names}
+FUSE_UI_INSPECTOR_DATAFLOW_VARIABLES,变量: {names},Variables: {names}
+FUSE_UI_INSPECTOR_NONE,(无),(none)
+FUSE_UI_INSPECTOR_DATAFLOW_SIGNAL,信号: {signal} ({runner}),Signal: {signal} ({runner})
+FUSE_UI_INSPECTOR_DATAFLOW_SIGNAL_NONE,信号: (无),Signal: (none)
+FUSE_UI_INSPECTOR_DATAFLOW_INSTRUCTION_CHAIN,指令链 ({count} 条),Instruction Chain ({count})
+FUSE_UI_INSPECTOR_PROBLEMS_NONE,问题: (无),Problems: (none)
+FUSE_UI_INSPECTOR_PROBLEMS_LABEL,问题:,Problems:
+FUSE_UI_INSPECTOR_IMPORT_CANCELLED_NODEPATH_UNCONFIRMED,导入已取消（NodePath 映射未确认）,Import cancelled (NodePath mapping not confirmed)
+FUSE_UI_INSTRUCTIONS_ARRAY_BTN_COPY,复制,Copy
+FUSE_UI_INSTRUCTIONS_ARRAY_BTN_EXPORT_PRESET,导出为预设,Export as Preset
+FUSE_UI_INSTRUCTIONS_ARRAY_BTN_IMPORT_PRESET,导入预设,Import Preset
+FUSE_UI_INSTRUCTIONS_ARRAY_BTN_ADD_INSTRUCTION,添加指令,Add Instruction
+FUSE_UI_INSTRUCTIONS_ARRAY_EMPTY_LIST,(空),(empty)
+FUSE_UI_INSTRUCTIONS_ARRAY_PRESET_EXPORTED_TITLE,预设已导出,Preset Exported
+FUSE_UI_INSTRUCTIONS_ARRAY_PRESET_EXPORTED_SAVED_TO,已保存到:,Saved to:
+FUSE_UI_INSTRUCTIONS_ARRAY_FILTER_PRESET_JSON,Fuse 预设 JSON,Fuse Preset JSON
+FUSE_UI_INSTRUCTIONS_ARRAY_PRESET_IMPORTED,预设已导入: {name} → {property},Preset imported: {name} → {property}
+FUSE_UI_TOPOLOGY_PANEL_TITLE,Fuse 场景拓扑,Fuse Scene Topology
+FUSE_UI_TOPOLOGY_FILTER_LABEL,问题过滤:,Issue Filter:
+FUSE_UI_TOPOLOGY_FILTER_ALL,全部,All
+FUSE_UI_TOPOLOGY_FILTER_ERRORS_ONLY,仅错误,Errors Only
+FUSE_UI_TOPOLOGY_FILTER_NONE,无,None
+FUSE_UI_TOPOLOGY_SEARCH_PLACEHOLDER,搜索：单元 / 指令 / 变量,Search: unit / instruction / variable
+FUSE_UI_TOPOLOGY_BTN_EXPORT_PROBLEMS,导出问题报告,Export Issues Report
+FUSE_UI_TOPOLOGY_BTN_EXPORT_JSON,导出 JSON,Export JSON
+FUSE_UI_TOPOLOGY_COLUMN_EVENT,事件,Event
+FUSE_UI_TOPOLOGY_EDITOR_UNAVAILABLE,(编辑器不可用),(Editor unavailable)
+FUSE_UI_TOPOLOGY_NO_SCENE_OPEN,(未打开场景),(No scene open)
+FUSE_UI_TOPOLOGY_NO_TRIGGERS,(场景中无 Trigger),(No Triggers in scene)
+FUSE_UI_TOPOLOGY_CROSS_REFS_NONE,跨 Trigger 关联: (无),Cross-trigger relations: (none)
+FUSE_UI_TOPOLOGY_NESTED_SCENE,(嵌套场景),(nested scene)
+FUSE_UI_TOPOLOGY_NO_MATCH,(无匹配),(no match)
+FUSE_UI_TOPOLOGY_PROBLEMS_SUMMARY,问题（{count}）:,Issues ({count}):
+FUSE_UI_TOPOLOGY_INST_PROBLEMS_TITLE,本指令问题:,Instruction issues:
+FUSE_UI_TOPOLOGY_BELONGS_TO,所属: {name},Belongs to: {name}
+FUSE_UI_TOPOLOGY_EVENT_LABEL,事件:,Event:
+FUSE_UI_TOPOLOGY_OP_NODES_LABEL,操作节点:,Affected nodes:
+FUSE_UI_TOPOLOGY_VARIABLES_LABEL,变量:,Variables:
+FUSE_UI_TOPOLOGY_INSTRUCTION_CHAIN_COUNT,指令链 ({count} 条):,Instruction chain ({count}):
+FUSE_UI_TOPOLOGY_EMPTY,(空),(empty)
+FUSE_UI_TOPOLOGY_INST_DETAIL_NEEDS_TREE,(指令详情需要 instructions_tree 支持),(instruction detail requires instructions_tree)
+FUSE_UI_TOPOLOGY_CATEGORY_LABEL,分类:,Category:
+FUSE_UI_TOPOLOGY_PARAMS_LABEL,参数:,Parameters:
+FUSE_UI_TOPOLOGY_NODE_REFS_LABEL,节点引用:,Node references:
+FUSE_UI_TOPOLOGY_VAR_REFS_LABEL,变量引用:,Variable references:
+FUSE_UI_TOPOLOGY_BELONGS_TRIGGER,所属 Trigger: {name},Belongs to Trigger: {name}
+FUSE_UI_TOPOLOGY_NONE,(无),(none)
+FUSE_UI_TOPOLOGY_SIGNALS_LABEL,信号:,Signals:
+FUSE_UI_TOPOLOGY_SIGNAL_LABEL,信号:,Signal:
+FUSE_UI_TOPOLOGY_VARIABLE_LABEL,变量:,Variable:
+FUSE_UI_TOPOLOGY_RACE,竞态,Race risk
+FUSE_UI_TOPOLOGY_SHARED_VAR_RACE,共享变量: {variable} (竞态),Shared variable: {variable} (race risk)
+FUSE_UI_TOPOLOGY_ORPHAN_WRITE,孤写: {name} → (无读者),Orphan write: {name} → (no reader)
+FUSE_UI_TOPOLOGY_ORPHAN_READ,孤读: {name} ← (无写者),Orphan read: {name} ← (no writer)
+FUSE_UI_TOPOLOGY_CROSS_REFS_COUNT,跨 Trigger 关联 ({count} 条):,Cross-trigger relations ({count}):
+FUSE_UI_TOPOLOGY_WARNINGS_COUNT,预警 ({count} 条):,Warnings ({count}):
+FUSE_UI_TOPOLOGY_MODE_WRITE,写,Write
+FUSE_UI_TOPOLOGY_MODE_READ,读,Read
+FUSE_UI_TOPOLOGY_MODE_READ_WRITE,读写,Read/Write
+FUSE_UI_TOPOLOGY_NO_ANALYSIS_DATA,无分析数据，先刷新,No analysis data yet - refresh first
+FUSE_UI_TOPOLOGY_MKDIR_FAILED,无法创建目录 '{path}' (错误码 {code}),Failed to create directory '{path}' (error {code})
+FUSE_UI_TOPOLOGY_REPORT_TITLE,Fuse 问题报告 {time},Fuse Issues Report {time}
+FUSE_UI_TOPOLOGY_REPORT_SCENE,场景: {path},Scene: {path}
+FUSE_UI_TOPOLOGY_SEVERITY_ERROR,错误,Error
+FUSE_UI_TOPOLOGY_SEVERITY_WARNING,警告,Warning
+FUSE_UI_TOPOLOGY_SEVERITY_SUGGESTION,建议,Suggestion
+FUSE_UI_TOPOLOGY_REPORT_INST_LINE,[{severity}] 指令#{index} ({name}): {message},[{severity}] Instruction #{index} ({name}): {message}
+FUSE_UI_TOPOLOGY_REPORT_TOTAL,合计: {errors} 错误、{warnings} 警告、{suggestions} 建议,Total: {errors} errors; {warnings} warnings; {suggestions} suggestions
+FUSE_UI_TOPOLOGY_EXPORT_OK,报告已导出: {path},Report exported: {path}
+FUSE_UI_TOPOLOGY_EXPORT_FAILED,导出失败: {path},Export failed: {path}
+FUSE_UI_TOPOLOGY_EXPORT_NO_SCENE,(未打开场景，无法导出),(no scene open - cannot export)
+FUSE_UI_TOPOLOGY_EXPORT_FAILED_SEE_OUTPUT,(导出失败，见输出面板),(export failed - see Output panel)
+FUSE_UI_TOPOLOGY_TOPOLOGY_EXPORTED,拓扑已导出: {path},Topology exported: {path}
+FUSE_UI_WATCHER_REFRESH_INTERVAL,刷新:{sec}s,Refresh: {sec}s
+FUSE_UI_WATCHER_SNAPSHOT,快照,Snapshot
+FUSE_UI_WATCHER_SEARCH_PLACEHOLDER,搜索变量...,Search variables...
+FUSE_UI_WATCHER_NO_HISTORY,(无数值历史),(no numeric history)
+FUSE_UI_WATCHER_VISIBLE_AFTER_RUN,(场景运行后可见),(visible after scene runs)
+FUSE_UI_WATCHER_STATIC_SECTION,指令引用(静态),Instruction References (static)
+FUSE_UI_WATCHER_MODE_READ_WRITE,读写,Read/Write
+FUSE_UI_WATCHER_MODE_WRITE,写,Write
+FUSE_UI_WATCHER_MODE_READ,读,Read
+FUSE_UI_WATCHER_STATIC_VALUE,(静态),(static)
+FUSE_UI_WATCHER_STATIC_TYPE,{scopes} · {mode} · {count}处,{scopes} · {mode} · {count} refs
+FUSE_UI_WATCHER_SNAPSHOT_SAVED,变量快照已保存: {path},Variable snapshot saved: {path}
+FUSE_UI_WATCHER_EDIT_NEEDS_RUNTIME,变量监视器: {scope} 变量 '{name}' 需场景运行后方可编辑,Variable watcher: {scope} variable '{name}' requires a running scene to edit
+FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED,变量监视器: 无法创建全局变量 '{name}',Variable watcher: failed to create global variable '{name}'
+FUSE_UI_PRESET_DIALOG_TITLE,导出为预设,Export as Preset
+FUSE_UI_PRESET_DIALOG_LABEL_LEVEL,层级:,Level:
+FUSE_UI_PRESET_DIALOG_LABEL_NAME,名称:,Name:
+FUSE_UI_PRESET_DIALOG_LABEL_FOLDER,目标文件夹:,Target Folder:
+FUSE_UI_PRESET_DIALOG_BROWSE,浏览...,Browse...
+FUSE_UI_PRESET_DIALOG_LABEL_DESCRIPTION,描述:,Description:
+FUSE_UI_PRESET_DIALOG_LABEL_ICON,图标:,Icon:
+FUSE_UI_PRESET_DIALOG_LEVEL_L1,L1 · ActionRunner（指令序列）,L1 · ActionRunner (instruction sequence)
+FUSE_UI_PRESET_DIALOG_LEVEL_L2,L2 · Trigger（事件 + 指令）,L2 · Trigger (event + instructions)
+FUSE_UI_PRESET_DIALOG_LEVEL_L3,L3 · Runner（信号 + 指令）,L3 · Runner (signal + instructions)
+FUSE_UI_PRESET_DIALOG_LEVEL_L4,L4 · MultiEventTrigger（多事件绑定）,L4 · MultiEventTrigger (multi-event bindings)
+FUSE_UI_PRESET_DIALOG_INFO_DETECTED,检测到: {nodepaths} 个 NodePath，{vars} 个变量(local:{local} scope:{scope} global:{global}),Detected: {nodepaths} NodePaths and {vars} variables (local:{local} scope:{scope} global:{global})
+FUSE_UI_NODEPATH_DIALOG_TITLE,NodePath 映射,NodePath Mapping
+FUSE_UI_NODEPATH_DIALOG_CONFIRM,确认导入,Confirm Import
+FUSE_UI_NODEPATH_DIALOG_HEADER,以下路径需要映射到当前场景的节点：,Map the following paths to nodes in the current scene:
+FUSE_UI_NODEPATH_DIALOG_NO_NODES,场景中无可用节点,No available nodes in scene
+FUSE_UI_NODEPATH_DIALOG_SELECT_NODE,请选择节点...,Please select a node...
+FUSE_SCAN_LABEL_INSTRUCTION,指令,instruction
+FUSE_SCAN_LABEL_EVENT,事件,event
+FUSE_SCAN_LABEL_CONDITION,条件,condition
+FUSE_SCAN_FAIL_LOAD_SCRIPT,{path} (无法加载脚本),{path} (failed to load script)
+FUSE_SCAN_FAIL_MISSING_METHOD,{path} (缺少 {method} 方法),{path} (missing {method} method)
+FUSE_SCAN_FAIL_METADATA_EMPTY,{path} (元数据为空),{path} (metadata is empty)
+FUSE_SCAN_FAIL_NO_IDENTIFIER,{path} (缺少标识符),{path} (missing identifier)
+FUSE_SCAN_REGISTER_SUMMARY,注册完成 - 找到 {files} 个文件，成功注册 {count} 个{label},registered {count} of {files} files ({label})
+FUSE_SCAN_REGISTER_FAILED_HEADER,注册失败的{label}:,failed to register {label}:
+FUSE_SCAN_DUPLICATE_FOUND,发现 {count} 个重复 {label} identifier（已自动去重更新）,found {count} duplicate {label} identifiers (auto-deduplicated)
+FUSE_PLUGIN_VARIABLE_WATCHER_REGISTERED,Fuse 变量监视器已注册,Fuse variable watcher registered
+FUSE_PLUGIN_TOPOLOGY_PANEL_REGISTERED,Fuse 拓扑面板已注册,Fuse topology panel registered
+FUSE_EVENT_BINDING_TRIGGER_ONCE,触发一次,trigger once
+FUSE_EVENT_BINDING_RESTART_WHILE_RUNNING,运行中重启,restart while running
+FUSE_EVENT_BINDING_GLOBAL_COOLDOWN,全局冷却,global cooldown
+FUSE_EVENT_BINDING_PER_OBJECT_COOLDOWN,每物体冷却,per-object cooldown

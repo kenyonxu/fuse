@@ -9,6 +9,8 @@ extends EditorPlugin
 ##   FuseComponentScanner → 指令/事件/条件组件扫描
 ##   FuseRuntimeBootstrap → EventBus Autoload + 反射缓存清理
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 # Bootstrap 模块
 var _editor_bootstrap: FuseEditorBootstrap = null
 var _scanner: FuseComponentScanner = null
@@ -42,12 +44,12 @@ func _enter_tree():
     # Stage 2.5: 注册变量监视器 (底部面板)
     _watcher = preload("res://addons/fuse/editor/debugging/variable_watcher.gd").new()
     add_control_to_bottom_panel(_watcher, "Fuse Variables")
-    print("Fuse 变量监视器已注册")
+    print(FuseLocalizationClass.translate("FUSE_PLUGIN_VARIABLE_WATCHER_REGISTERED"))
 
     # Stage 5.3: 注册全场景拓扑面板 (主屏幕 Tab)
     _topology = preload("res://addons/fuse/editor/topology/fuse_topology.gd").new()
     EditorInterface.get_editor_main_screen().add_child(_topology)
-    print("Fuse 拓扑面板已注册")
+    print(FuseLocalizationClass.translate("FUSE_PLUGIN_TOPOLOGY_PANEL_REGISTERED"))
 
 	# 初始隐藏,用户切换到 Fuse Tab 时 _make_visible(true) 显示
     _make_visible(false)
@@ -55,7 +57,7 @@ func _enter_tree():
     # Topology 自动刷新：场景切换时触发（防抖）
     scene_changed.connect(_on_topology_scene_changed)
 
-    print("Fuse Visual Programming 插件已激活")
+    print(FuseLocalizationClass.translate("FUSE_PLUGIN_ACTIVATED"))
 
 ## 当插件停用时调用
 func _exit_tree():
@@ -86,7 +88,7 @@ func _exit_tree():
     if _editor_bootstrap:
         _editor_bootstrap.teardown()
         _editor_bootstrap = null
-    print("Fuse Visual Programming 插件已停用")
+    print(FuseLocalizationClass.translate("FUSE_PLUGIN_DEACTIVATED"))
 
 ## 获取插件名称
 func _get_plugin_name() -> String:

@@ -8,12 +8,12 @@
 [ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="10_67dd2"]
 
 [sub_resource type="Resource" id="Resource_od456"]
-resource_name = "发送事件: ShowWave"
+resource_name = "Send Event: ShowWave"
 script = ExtResource("2_hkbvk")
 event_name = "ShowWave"
 
 [sub_resource type="Resource" id="Resource_7gge6"]
-resource_name = "For Each (spawn_pos) -> item 索引=index [0 个指令]"
+resource_name = "For Each (spawn_pos) -> item Index=index [0 Instructions]"
 script = ExtResource("7_nxhbk")
 array_custom_scope_id = ""
 array_target_node_path = NodePath("")
@@ -37,7 +37,7 @@ skip_null_items = true
 loop_instructions = Array[ExtResource("1_wc80g")]([])
 
 [sub_resource type="Resource" id="Resource_66fsa"]
-resource_name = "获取组节点数量 'enemies' → enemy_count [最近作用域]"
+resource_name = "Get Group Count 'enemies' → enemy_count [Nearest Scope]"
 script = ExtResource("8_ytvoa")
 custom_scope_id = ""
 target_node_path = NodePath("")
@@ -47,12 +47,12 @@ result_scope = 1
 scope_source = 0
 
 [sub_resource type="Resource" id="Resource_afrrd"]
-resource_name = "发送事件: HideWave"
+resource_name = "Send Event: HideWave"
 script = ExtResource("2_hkbvk")
 event_name = "HideWave"
 
 [sub_resource type="Resource" id="Resource_wc80g"]
-resource_name = "恢复游戏"
+resource_name = "Resume Game"
 script = ExtResource("9_bwlea")
 pause_menu_node = NodePath("")
 ui_node_path = NodePath("../../GameSceneCanvas")

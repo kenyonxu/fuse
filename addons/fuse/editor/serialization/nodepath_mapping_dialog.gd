@@ -10,6 +10,8 @@ extends AcceptDialog
 
 ## mapping: NodePathResolver.resolve_mapping 的输出
 ##  {old_str: {"new": NodePath, "matched": bool, "suggestions": Array[String]}}
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 var _mapping: Dictionary = {}
 var _option_buttons: Dictionary = {}  # old_str → OptionButton
 var _target_node: Node
@@ -18,8 +20,8 @@ var _target_node: Node
 func _init(p_mapping: Dictionary, p_target: Node) -> void:
 	_mapping = p_mapping
 	_target_node = p_target
-	title = "NodePath 映射"
-	ok_button_text = "确认导入"
+	title = FuseLocalizationClass.translate("FUSE_UI_NODEPATH_DIALOG_TITLE")
+	ok_button_text = FuseLocalizationClass.translate("FUSE_UI_NODEPATH_DIALOG_CONFIRM")
 	min_size = Vector2i(760, 480)
 	_build_ui()
 
@@ -37,7 +39,7 @@ func _build_ui() -> void:
 
 	# 说明
 	var header := Label.new()
-	header.text = "以下路径需要映射到当前场景的节点："
+	header.text = FuseLocalizationClass.translate("FUSE_UI_NODEPATH_DIALOG_HEADER")
 	header.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(header)
 
@@ -77,9 +79,9 @@ func _build_ui() -> void:
 			# 无匹配 — 场景节点全量列出
 			var suggestions: Array = result.get("suggestions", [])
 			if suggestions.is_empty():
-				option.add_item("⚠ 场景中无可用节点")
+				option.add_item("⚠ " + FuseLocalizationClass.translate("FUSE_UI_NODEPATH_DIALOG_NO_NODES"))
 			else:
-				option.add_item("⚠ 请选择节点...")
+				option.add_item("⚠ " + FuseLocalizationClass.translate("FUSE_UI_NODEPATH_DIALOG_SELECT_NODE"))
 				for sug in suggestions:
 					option.add_item(sug)
 
@@ -108,6 +110,7 @@ func get_final_mapping() -> Dictionary:
 			clean = clean.substr(2)
 		elif clean.begins_with("⚠ "):
 			clean = clean.substr(2)
-		if clean != "" and not clean.begins_with("请选择"):
+		# 占位提示项（"请选择节点..."）不计入最终映射
+		if clean != "" and not clean.begins_with(FuseLocalizationClass.translate("FUSE_UI_NODEPATH_DIALOG_SELECT_NODE")):
 			final_mapping[old_np_str] = NodePath(clean)
 	return final_mapping

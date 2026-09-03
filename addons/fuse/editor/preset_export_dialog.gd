@@ -5,6 +5,8 @@ extends AcceptDialog
 
 ## 导出预设对话框 — 支持 L1（传指令数组）和 L2-L4（传节点）
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 var _display_name_input: LineEdit
 var _folder_input: LineEdit
 var _folder_browse_btn: Button
@@ -20,8 +22,8 @@ var _folder_path: String = "res://addons/fuse/presets/"
 
 
 func _init(source: Variant) -> void:
-	title = "导出为预设"
-	ok_button_text = "导出"
+	title = FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_TITLE")
+	ok_button_text = FuseLocalizationClass.translate("FUSE_UI_BTN_EXPORT")
 	min_size = Vector2i(840, 520)
 	if source is Node:
 		_source_node = source
@@ -82,21 +84,21 @@ func _build_ui() -> void:
 	scroll.add_child(grid)
 
 	# Level 标签
-	grid.add_child(_make_label("层级:"))
+	grid.add_child(_make_label(FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LABEL_LEVEL")))
 	_level_label = Label.new()
 	_level_label.text = _level_display_name()
 	_level_label.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
 	grid.add_child(_level_label)
 
 	# display_name
-	grid.add_child(_make_label("名称:"))
+	grid.add_child(_make_label(FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LABEL_NAME")))
 	_display_name_input = LineEdit.new()
 	_display_name_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_display_name_input.text = _default_display_name()
 	grid.add_child(_display_name_input)
 
 	# 目标文件夹（替代旧 category 文本框）
-	grid.add_child(_make_label("目标文件夹:"))
+	grid.add_child(_make_label(FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LABEL_FOLDER")))
 	var folder_hbox := HBoxContainer.new()
 	folder_hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_folder_input = LineEdit.new()
@@ -105,20 +107,20 @@ func _build_ui() -> void:
 	_folder_input.text_changed.connect(_on_folder_text_changed)
 	folder_hbox.add_child(_folder_input)
 	_folder_browse_btn = Button.new()
-	_folder_browse_btn.text = "浏览..."
+	_folder_browse_btn.text = FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_BROWSE")
 	_folder_browse_btn.pressed.connect(_on_browse_folder)
 	folder_hbox.add_child(_folder_browse_btn)
 	grid.add_child(folder_hbox)
 
 	# description
-	grid.add_child(_make_label("描述:"))
+	grid.add_child(_make_label(FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LABEL_DESCRIPTION")))
 	_description_input = TextEdit.new()
 	_description_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_description_input.custom_minimum_size.y = 60
 	grid.add_child(_description_input)
 
 	# icon
-	grid.add_child(_make_label("图标:"))
+	grid.add_child(_make_label(FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LABEL_ICON")))
 	_icon_input = LineEdit.new()
 	_icon_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_icon_input.placeholder_text = "Bullet / Sprite2D / Node"
@@ -166,10 +168,10 @@ func _make_label(text: String) -> Label:
 
 func _level_display_name() -> String:
 	match _level:
-		"L1": return "L1 · ActionRunner（指令序列）"
-		"L2": return "L2 · Trigger（事件 + 指令）"
-		"L3": return "L3 · Runner（信号 + 指令）"
-		"L4": return "L4 · MultiEventTrigger（多事件绑定）"
+		"L1": return FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LEVEL_L1")
+		"L2": return FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LEVEL_L2")
+		"L3": return FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LEVEL_L3")
+		"L4": return FuseLocalizationClass.translate("FUSE_UI_PRESET_DIALOG_LEVEL_L4")
 	return _level
 
 
@@ -184,11 +186,11 @@ func _update_info() -> void:
 	temp.instructions = _instructions
 	var nodepaths := temp.collect_unique_nodepaths()
 	var vars := temp.collect_variables()
-	_info_label.text = "检测到: %d 个 NodePath, %d 个变量(local:%d scope:%d global:%d)" % [
-		nodepaths.size(),
-		vars.local.size() + vars.scope.size() + vars.global.size(),
-		vars.local.size(), vars.scope.size(), vars.global.size()
-	]
+	_info_label.text = FuseLocalizationClass.translate_format("FUSE_UI_PRESET_DIALOG_INFO_DETECTED", {
+		"nodepaths": nodepaths.size(),
+		"vars": vars.local.size() + vars.scope.size() + vars.global.size(),
+		"local": vars.local.size(), "scope": vars.scope.size(), "global": vars.global.size()
+	})
 
 
 func _get_source_instructions() -> Array[BaseInstruction]:

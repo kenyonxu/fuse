@@ -7,6 +7,8 @@ class_name FuseComponentScanner extends RefCounted
 ## 验证元数据后注册到 ComponentRegistry(经三个专用 Registry)。
 ## 不依赖 EditorPlugin 特殊方法,仅用全局 Registry + DirAccess。
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 var _plugin: EditorPlugin
 
 func _init(plugin: EditorPlugin) -> void:
@@ -33,17 +35,36 @@ func _register_all_instructions() -> void:
 		"res://addons/fuse/integration/",
 		"res://fuse_generated/instructions/"
 	]
-	_register_components_from_folders(folders, "_get_instruction_metadata", "InstructionRegistry", "register_instruction", "instructions_", "指令")
+	_register_components_from_folders(
+		folders,
+		"_get_instruction_metadata",
+		"InstructionRegistry",
+		"register_instruction",
+		"instructions_",
+		FuseLocalizationClass.translate("FUSE_SCAN_LABEL_INSTRUCTION")
+	)
 
 ## 扫描并注册所有事件
 func _register_events() -> void:
 	_register_components_from_folders(
-		["res://addons/fuse/events/"] as Array[String], "_get_event_metadata", "EventRegistry", "register_event", "base_", "事件")
+		["res://addons/fuse/events/"] as Array[String],
+		"_get_event_metadata",
+		"EventRegistry",
+		"register_event",
+		"base_",
+		FuseLocalizationClass.translate("FUSE_SCAN_LABEL_EVENT")
+	)
 
 ## 扫描并注册所有条件
 func _register_conditions() -> void:
 	_register_components_from_folders(
-		["res://addons/fuse/conditions/"] as Array[String], "_get_condition_metadata", "ConditionRegistry", "register_condition", "base_", "条件")
+		["res://addons/fuse/conditions/"] as Array[String],
+		"_get_condition_metadata",
+		"ConditionRegistry",
+		"register_condition",
+		"base_",
+		FuseLocalizationClass.translate("FUSE_SCAN_LABEL_CONDITION")
+	)
 
 ## 泛型组件注册方法
 func _register_components_from_folders(
@@ -79,16 +100,18 @@ func _register_components_from_folders(
 	for file_path in all_files:
 		var script = load(file_path) as GDScript
 		if not script:
-			failed_files.append(file_path + " (无法加载脚本)")
+			failed_files.append(FuseLocalizationClass.translate_format("FUSE_SCAN_FAIL_LOAD_SCRIPT", {"path": file_path}))
 			continue
 
 		if not script.has_method(metadata_method):
-			failed_files.append(file_path + " (缺少 %s 方法)" % metadata_method)
+			failed_files.append(FuseLocalizationClass.translate_format(
+				"FUSE_SCAN_FAIL_MISSING_METHOD", {"path": file_path, "method": metadata_method}
+			))
 			continue
 
 		var metadata = script.call(metadata_method)
 		if not metadata:
-			failed_files.append(file_path + " (元数据为空)")
+			failed_files.append(FuseLocalizationClass.translate_format("FUSE_SCAN_FAIL_METADATA_EMPTY", {"path": file_path}))
 			continue
 
 		var has_identifier = (
@@ -96,7 +119,7 @@ func _register_components_from_folders(
 			(metadata.name and not metadata.name.is_empty())
 		)
 		if not has_identifier:
-			failed_files.append(file_path + " (缺少标识符)")
+			failed_files.append(FuseLocalizationClass.translate_format("FUSE_SCAN_FAIL_NO_IDENTIFIER", {"path": file_path}))
 			continue
 
 		# 通过字符串引用注册表，避免 Callable 闭包捕获问题
@@ -109,16 +132,23 @@ func _register_components_from_folders(
 				ConditionRegistry.register_condition(script)
 		registered_count += 1
 
-	print("Fuse: 注册完成 - 找到 %d 个文件，成功注册 %d 个%s" % [all_files.size(), registered_count, component_label])
+	print("Fuse: " + FuseLocalizationClass.translate_format(
+		"FUSE_SCAN_REGISTER_SUMMARY",
+		{"files": all_files.size(), "count": registered_count, "label": component_label}
+	))
 	if failed_files.size() > 0:
-		print("Fuse: 注册失败的%s:" % component_label)
+		print("Fuse: " + FuseLocalizationClass.translate_format(
+			"FUSE_SCAN_REGISTER_FAILED_HEADER", {"label": component_label}
+		))
 		for failed_file in failed_files:
 			print("  - %s" % failed_file)
 	# 输出重复 identifier 统计
 	if ctype_for_reset != -1:
 		var dup_count = ComponentRegistry.get_duplicate_count(ctype_for_reset)
 		if dup_count > 0:
-			print("Fuse: 发现 %d 个重复 %s identifier（已自动去重更新）" % [dup_count, component_label])
+			print("Fuse: " + FuseLocalizationClass.translate_format(
+				"FUSE_SCAN_DUPLICATE_FOUND", {"count": dup_count, "label": component_label}
+			))
 
 ## 递归扫描文件夹中的 GDScript 文件
 func _scan_scripts_recursive(folder: String, skip_prefix: String = "") -> Array[String]:

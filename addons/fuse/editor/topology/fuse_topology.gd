@@ -10,6 +10,7 @@ extends VBoxContainer
 ## 依赖 InstructionAnalyzer 解析引擎。
 
 const TopologyExport := preload("res://addons/fuse/editor/topology/topology_export.gd")
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
 
 # E6: 问题过滤模式
 const FILTER_ALL := 0
@@ -40,24 +41,24 @@ func _init() -> void:
 	add_child(banner)
 
 	var title := Label.new()
-	title.text = "Fuse 场景拓扑"
+	title.text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_PANEL_TITLE")
 	banner.add_child(title)
 
 	# E6: 问题过滤下拉框
 	var filter_label := Label.new()
-	filter_label.text = "问题过滤:"
+	filter_label.text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_FILTER_LABEL")
 	banner.add_child(filter_label)
 	var filter_option := OptionButton.new()
-	filter_option.add_item("全部", FILTER_ALL)
-	filter_option.add_item("仅错误", FILTER_ERROR)
-	filter_option.add_item("无", FILTER_NONE)
+	filter_option.add_item(FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_FILTER_ALL"), FILTER_ALL)
+	filter_option.add_item(FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_FILTER_ERRORS_ONLY"), FILTER_ERROR)
+	filter_option.add_item(FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_FILTER_NONE"), FILTER_NONE)
 	filter_option.select(_filter_mode)
 	filter_option.item_selected.connect(_on_filter_changed)
 	banner.add_child(filter_option)
 
 	# 拓扑增强 Task 3: 搜索框（单元 / 指令 / 变量 / 信号）
 	_search_input = LineEdit.new()
-	_search_input.placeholder_text = "搜索：单元 / 指令 / 变量"
+	_search_input.placeholder_text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEARCH_PLACEHOLDER")
 	_search_input.custom_minimum_size = Vector2(180, 0)
 	_search_input.text_changed.connect(_on_search_changed)
 	banner.add_child(_search_input)
@@ -65,7 +66,7 @@ func _init() -> void:
 	banner.add_spacer(true)
 
 	_refresh_btn = Button.new()
-	_refresh_btn.text = "刷新"
+	_refresh_btn.text = FuseLocalizationClass.translate("FUSE_UI_BTN_REFRESH")
 	_refresh_btn.pressed.connect(_do_refresh)
 	banner.add_child(_refresh_btn)
 
@@ -76,12 +77,12 @@ func _init() -> void:
 	add_child(_refresh_timer)
 
 	var export_btn := Button.new()
-	export_btn.text = "导出问题报告"
+	export_btn.text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_BTN_EXPORT_PROBLEMS")
 	export_btn.pressed.connect(_on_export_problems)
 	banner.add_child(export_btn)
 
 	var export_json_btn := Button.new()
-	export_json_btn.text = "导出 JSON"
+	export_json_btn.text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_BTN_EXPORT_JSON")
 	export_json_btn.pressed.connect(_on_export_json)
 	banner.add_child(export_json_btn)
 
@@ -98,7 +99,7 @@ func _init() -> void:
 	_tree.hide_root = true
 	_tree.columns = 2
 	_tree.set_column_title(0, "Trigger")
-	_tree.set_column_title(1, "事件")
+	_tree.set_column_title(1, FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_COLUMN_EVENT"))
 	_tree.set_column_expand(0, true)
 	_tree.set_column_expand(1, false)
 	_tree.allow_reselect = true
@@ -289,12 +290,16 @@ func refresh() -> void:
 	_detail.visible = true
 
 	if not ClassDB.class_exists("EditorInterface"):
-		_detail.append_text("[color=gray](编辑器不可用)[/color]")
+		_detail.append_text("[color=gray]%s[/color]" % FuseLocalizationClass.translate(
+			"FUSE_UI_TOPOLOGY_EDITOR_UNAVAILABLE"
+		))
 		return
 
 	var scene_root: Node = EditorInterface.get_edited_scene_root()
 	if scene_root == null:
-		_detail.append_text("[color=gray](未打开场景)[/color]")
+		_detail.append_text("[color=gray]%s[/color]" % FuseLocalizationClass.translate(
+			"FUSE_UI_TOPOLOGY_NO_SCENE_OPEN"
+		))
 		return
 
 	var topology: Dictionary = InstructionAnalyzer.build_topology(scene_root)
@@ -302,8 +307,8 @@ func refresh() -> void:
 
 	if topology.triggers.is_empty():
 		var note := _tree.create_item(root)
-		note.set_text(0, "(场景中无 Trigger)")
-		_cross_ref_label.text = "跨 Trigger 关联: (无)"
+		note.set_text(0, FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NO_TRIGGERS"))
+		_cross_ref_label.text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_CROSS_REFS_NONE")
 		return
 
 	# 注入静态分析结果到每 trigger report（report.problems: {by_inst, summary}）
@@ -339,7 +344,8 @@ func refresh() -> void:
 	# 嵌套场景分组
 	for source in nested_groups:
 		var group_item: TreeItem = _tree.create_item(root)
-		group_item.set_text(0, "📦 %s (嵌套场景)" % source)
+		group_item.set_text(0, "📦 %s %s" % [
+			source, FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NESTED_SCENE")])
 		group_item.set_selectable(0, false)
 		group_item.set_custom_color(0, Color(0.5, 0.7, 1.0))
 		for report in nested_groups[source]:
@@ -349,7 +355,7 @@ func refresh() -> void:
 	# 拓扑增强 Task 3: 过滤后全空 → 灰字提示项（不可选）
 	if not has_visible:
 		var empty_note: TreeItem = _tree.create_item(root)
-		empty_note.set_text(0, "(无匹配)")
+		empty_note.set_text(0, FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NO_MATCH"))
 		empty_note.set_selectable(0, false)
 		empty_note.set_custom_color(0, Color.GRAY)
 
@@ -421,7 +427,7 @@ func _create_trigger_tree_item(parent_item: TreeItem, report: Dictionary) -> voi
 			var b_item: TreeItem = _tree.create_item(t_item)
 			var b_label: String = "[%d] %s" % [b_index, b_event.get("resource_name", "?")]
 			if not b_enabled:
-				b_label += " (禁用)"
+				b_label += " (%s)" % FuseLocalizationClass.translate("FUSE_COMMON_DISABLED")
 			b_item.set_text(0, b_label)
 			b_item.set_metadata(0, {"type": "binding", "binding": binding, "report": report})
 			if not b_enabled:
@@ -657,11 +663,16 @@ func _on_item_selected() -> void:
 				parts.append("[color=red]%d %s[/color]" % [err_count, _severity_label("error")])
 			if warn_count > 0:
 				parts.append("[color=yellow]%d %s[/color]" % [warn_count, _severity_label("warning")])
-			_detail.append_text("\n[b]问题（%s）:[/b]\n" % ", ".join(parts))
+			var summary := FuseLocalizationClass.translate_format(
+				"FUSE_UI_TOPOLOGY_PROBLEMS_SUMMARY", {"count": ", ".join(parts)}
+			)
+			_detail.append_text("\n[b]%s[/b]\n" % summary)
 	elif meta_type == "instruction":
 		var inst_problems: Array = _find_problems_for_inst(meta.get("inst", null), report)
 		if not inst_problems.is_empty():
-			_detail.append_text("\n[b]本指令问题:[/b]\n")
+			_detail.append_text("\n[b]%s[/b]\n" % FuseLocalizationClass.translate(
+				"FUSE_UI_TOPOLOGY_INST_PROBLEMS_TITLE"
+			))
 			for p in inst_problems:
 				var color := "red" if p.get("severity") == "error" else "yellow"
 				_detail.append_text("[color=%s]• %s[/color]\n" % [color, p.get("message", "")])
@@ -677,15 +688,19 @@ func _show_binding_detail(meta: Dictionary) -> void:
 	var b_enabled: bool = binding.get("enabled", true)
 
 	_detail.append_text("[b]EventBinding [%d][/b]\n" % b_index)
-	_detail.append_text("[color=gray]所属: %s[/color]\n" % report.get("trigger_name", "?"))
+	_detail.append_text("[color=gray]%s[/color]\n" % FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_BELONGS_TO", {"name": report.get("trigger_name", "?")}
+	))
 	if b_enabled:
-		_detail.append_text("[color=green]启用[/color]\n\n")
+		_detail.append_text("[color=green]%s[/color]\n\n" % FuseLocalizationClass.translate("FUSE_COMMON_ENABLED"))
 	else:
-		_detail.append_text("[color=gray]禁用[/color]\n\n")
+		_detail.append_text("[color=gray]%s[/color]\n\n" % FuseLocalizationClass.translate("FUSE_COMMON_DISABLED"))
 
 	# 事件
 	if not b_event.is_empty():
-		_detail.append_text("[b]事件:[/b] %s [color=gray](%s)[/color]\n" % [b_event.get("resource_name", "?"), b_event.get("type", "?")])
+		_detail.append_text("[b]%s[/b] %s [color=gray](%s)[/color]\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_EVENT_LABEL"),
+			b_event.get("resource_name", "?"), b_event.get("type", "?")])
 
 	# 节点引用
 	var b_nodes: Array = binding.get("nodes", [])
@@ -693,7 +708,9 @@ func _show_binding_detail(meta: Dictionary) -> void:
 		var node_displays := PackedStringArray()
 		for np in b_nodes:
 			node_displays.append(_display_node_path(np))
-		_detail.append_text("[b]操作节点:[/b] %s\n" % ", ".join(node_displays))
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_OP_NODES_LABEL"),
+			", ".join(node_displays)])
 
 	# 变量
 	var b_vars: Dictionary = binding.get("variables", {})
@@ -714,13 +731,17 @@ func _show_binding_detail(meta: Dictionary) -> void:
 	if not global_names.is_empty():
 		var_parts.append("[global] " + ", ".join(global_names))
 	if not var_parts.is_empty():
-		_detail.append_text("[b]变量:[/b] %s\n" % " | ".join(var_parts))
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_VARIABLES_LABEL"),
+			" | ".join(var_parts)])
 
 	# 指令链
 	var flat: Array = binding.get("instructions_flat", [])
-	_detail.append_text("\n[b]指令链 (%d 条):[/b]\n" % flat.size())
+	_detail.append_text("\n[b]%s[/b]\n" % FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_INSTRUCTION_CHAIN_COUNT", {"count": flat.size()}
+	))
 	if flat.is_empty():
-		_detail.append_text("  [color=gray](空)[/color]\n")
+		_detail.append_text("  [color=gray]%s[/color]\n" % FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_EMPTY"))
 	else:
 		for inst_info in flat:
 			var prefix: String = inst_info.get("prefix", "")
@@ -735,7 +756,9 @@ func _show_instruction_detail(meta: Dictionary) -> void:
 
 	if inst == null:
 		# flat 回退（无 inst 引用）
-		_detail.append_text("[color=gray](指令详情需要 instructions_tree 支持)[/color]")
+		_detail.append_text("[color=gray]%s[/color]" % FuseLocalizationClass.translate(
+			"FUSE_UI_TOPOLOGY_INST_DETAIL_NEEDS_TREE"
+		))
 		return
 
 	var iname: String = _strip_bbcode(inst.resource_name)
@@ -748,10 +771,12 @@ func _show_instruction_detail(meta: Dictionary) -> void:
 	var script = inst.get_script()
 	if script and script.has_method("_get_instruction_metadata"):
 		var metadata = script._get_instruction_metadata()
-		_detail.append_text("[color=gray]分类: %s[/color]\n\n" % metadata.category_key)
+		_detail.append_text("[color=gray]%s %s[/color]\n\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_CATEGORY_LABEL"),
+			metadata.category_key])
 
 	# 参数表（反射 @export 属性）
-	_detail.append_text("[b]参数:[/b]\n")
+	_detail.append_text("[b]%s[/b]\n" % FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_PARAMS_LABEL"))
 	for prop in inst.get_property_list():
 		var pname: String = prop.get("name", "")
 		if pname.begins_with("_") or pname in ["script", "resource_name", "metadata"]:
@@ -768,7 +793,9 @@ func _show_instruction_detail(meta: Dictionary) -> void:
 	InstructionAnalyzer._extract_variables(inst, inst_report)
 
 	if not inst_report["nodes"].is_empty():
-		_detail.append_text("\n[b]节点引用:[/b] %s\n" % ", ".join(inst_report["nodes"]))
+		_detail.append_text("\n[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NODE_REFS_LABEL"),
+			", ".join(inst_report["nodes"])])
 
 	var var_names: Array = []
 	for v in inst_report["variables"]["local"]:
@@ -778,10 +805,14 @@ func _show_instruction_detail(meta: Dictionary) -> void:
 	for v in inst_report["variables"]["global"]:
 		var_names.append(v.get("name", "?"))
 	if not var_names.is_empty():
-		_detail.append_text("[b]变量引用:[/b] %s\n" % ", ".join(var_names))
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_VAR_REFS_LABEL"),
+			", ".join(var_names)])
 
 	# 上下文
-	_detail.append_text("\n[color=gray]所属 Trigger: %s[/color]\n" % report.get("trigger_name", "?"))
+	_detail.append_text("\n[color=gray]%s[/color]\n" % FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_BELONGS_TRIGGER", {"name": report.get("trigger_name", "?")}
+	))
 
 
 ## 选中 Trigger → 右侧概要（现有逻辑封装）
@@ -795,7 +826,9 @@ func _show_trigger_detail(report: Dictionary) -> void:
 	# 事件
 	var event_info: Dictionary = report.get("event", {})
 	if not event_info.is_empty():
-		_detail.append_text("[b]事件:[/b] %s [color=gray](%s)[/color]\n" % [event_info.get("resource_name", "?"), event_info.get("type", "?")])
+		_detail.append_text("[b]%s[/b] %s [color=gray](%s)[/color]\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_EVENT_LABEL"),
+			event_info.get("resource_name", "?"), event_info.get("type", "?")])
 
 	# 节点引用
 	var report_nodes: Array = report.get("nodes", [])
@@ -803,31 +836,43 @@ func _show_trigger_detail(report: Dictionary) -> void:
 		var node_displays := PackedStringArray()
 		for np in report_nodes:
 			node_displays.append(_display_node_path(np))
-		_detail.append_text("[b]操作节点:[/b] %s\n" % ", ".join(node_displays))
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_OP_NODES_LABEL"),
+			", ".join(node_displays)])
 	else:
-		_detail.append_text("[b]操作节点:[/b] (无)\n")
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_OP_NODES_LABEL"),
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NONE")])
 
 	# 变量
 	var var_parts := _build_variable_parts(report)
 	if not var_parts.is_empty():
-		_detail.append_text("[b]变量:[/b] %s\n" % " | ".join(var_parts))
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_VARIABLES_LABEL"),
+			" | ".join(var_parts)])
 	else:
-		_detail.append_text("[b]变量:[/b] (无)\n")
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_VARIABLES_LABEL"),
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NONE")])
 
 	# 信号
 	var report_signals: Array = report.get("signals", [])
 	if not report_signals.is_empty():
-		_detail.append_text("[b]信号:[/b]\n")
+		_detail.append_text("[b]%s[/b]\n" % FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SIGNALS_LABEL"))
 		for sig in report_signals:
 			_detail.append_text("  • %s → %s\n" % [sig.get("signal", "?"), sig.get("target", "")])
 	else:
-		_detail.append_text("[b]信号:[/b] (无)\n")
+		_detail.append_text("[b]%s[/b] %s\n" % [
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SIGNALS_LABEL"),
+			FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_NONE")])
 
 	# 指令链
 	var flat: Array = report.get("instructions_flat", [])
-	_detail.append_text("\n[b]指令链 (%d 条):[/b]\n" % flat.size())
+	_detail.append_text("\n[b]%s[/b]\n" % FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_INSTRUCTION_CHAIN_COUNT", {"count": flat.size()}
+	))
 	if flat.is_empty():
-		_detail.append_text("  [color=gray](空)[/color]\n")
+		_detail.append_text("  [color=gray]%s[/color]\n" % FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_EMPTY"))
 	else:
 		for inst_info in flat:
 			var prefix: String = inst_info.get("prefix", "")
@@ -955,7 +1000,9 @@ func _refresh_cross_references(topology: Dictionary) -> void:
 
 		match ref_type:
 			"signal":
-				ref_lines.append("🔗  %s → %s  信号: %s" % [from_name, to_name, detail])
+				ref_lines.append("🔗  %s → %s  %s %s" % [
+					from_name, to_name,
+					FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SIGNAL_LABEL"), detail])
 			"variable_write_to_read":
 				ref_lines.append("📝  %s (%s) → [%s] → %s (%s)" % [
 					from_name, _mode_label(ref.get("from_mode", "")),
@@ -963,8 +1010,10 @@ func _refresh_cross_references(topology: Dictionary) -> void:
 					to_name, _mode_label(ref.get("to_mode", ""))])
 			"variable_write_to_write":
 				# 竞态预警 → warning 区（BBCode 黄色）
-				warning_lines.append("[color=yellow]🔥  %s ↔ %s  共享变量: %s (竞态)[/color]" % [
-					from_name, to_name, detail])
+				warning_lines.append("[color=yellow]🔥  %s ↔ %s  %s[/color]" % [
+					from_name, to_name,
+					FuseLocalizationClass.translate_format(
+						"FUSE_UI_TOPOLOGY_SHARED_VAR_RACE", {"variable": detail})])
 			_:
 				# 兼容旧 shared_global_variable（理论不再产出，保险）
 				ref_lines.append("🌐  %s → %s  (%s)" % [from_name, to_name, detail])
@@ -973,32 +1022,40 @@ func _refresh_cross_references(topology: Dictionary) -> void:
 	for entry in topology.get("variable_analysis", []):
 		match entry.get("anomaly", "normal"):
 			"write_only":
-				warning_lines.append("[color=yellow]📤  孤写: %s → (无读者)[/color]" % entry.get("name", "?"))
+				warning_lines.append("[color=yellow]📤  %s[/color]" % FuseLocalizationClass.translate_format(
+					"FUSE_UI_TOPOLOGY_ORPHAN_WRITE", {"name": entry.get("name", "?")}
+				))
 			"read_only":
-				warning_lines.append("[color=yellow]📥  孤读: %s ← (无写者)[/color]" % entry.get("name", "?"))
+				warning_lines.append("[color=yellow]📥  %s[/color]" % FuseLocalizationClass.translate_format(
+					"FUSE_UI_TOPOLOGY_ORPHAN_READ", {"name": entry.get("name", "?")}
+				))
 
 	# 组装显示（BBCode，_cross_ref_label 已是 RichTextLabel + bbcode_enabled）
 	var all_lines := PackedStringArray()
 	if not ref_lines.is_empty():
-		all_lines.append("跨 Trigger 关联 (%d 条):" % ref_lines.size())
+		all_lines.append(FuseLocalizationClass.translate_format(
+			"FUSE_UI_TOPOLOGY_CROSS_REFS_COUNT", {"count": ref_lines.size()}
+		))
 		all_lines.append_array(ref_lines)
 	if not warning_lines.is_empty():
 		if not all_lines.is_empty():
 			all_lines.append("")
-		all_lines.append("⚠ 预警 (%d 条):" % warning_lines.size())
+		all_lines.append("⚠ %s" % FuseLocalizationClass.translate_format(
+			"FUSE_UI_TOPOLOGY_WARNINGS_COUNT", {"count": warning_lines.size()}
+		))
 		all_lines.append_array(warning_lines)
 	if all_lines.is_empty():
-		_cross_ref_label.text = "跨 Trigger 关联: (无)"
+		_cross_ref_label.text = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_CROSS_REFS_NONE")
 	else:
 		_cross_ref_label.text = "\n".join(all_lines)
 
 
-## E3: 变量访问 mode → 中文标签（渲染辅助）
+## E3: 变量访问 mode → 本地化标签（渲染辅助）
 static func _mode_label(mode: String) -> String:
 	match mode:
-		"write": return "写"
-		"read": return "读"
-		"read_write": return "读写"
+		"write": return FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_MODE_WRITE")
+		"read": return FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_MODE_READ")
+		"read_write": return FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_MODE_READ_WRITE")
 		_: return mode
 
 
@@ -1016,7 +1073,9 @@ func _append_cross_trigger_relations(report: Dictionary) -> void:
 	if related_refs.is_empty():
 		return
 
-	_detail.append_text("\n[b]跨 Trigger 关联 (%d 条):[/b]\n" % related_refs.size())
+	_detail.append_text("\n[b]%s[/b]\n" % FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_CROSS_REFS_COUNT", {"count": related_refs.size()}
+	))
 	for r in related_refs:
 		var r_type: String = r.get("type", "")
 		var from_name: String = r.get("from", "?")
@@ -1026,18 +1085,22 @@ func _append_cross_trigger_relations(report: Dictionary) -> void:
 			"variable_write_to_read":
 				var direction := "→" if from_name == this_name else "←"
 				var target := to_name if from_name == this_name else from_name
-				_detail.append_text("  📝 %s %s [color=gray]变量: %s (%s→%s)[/color]\n" % [
-					direction, target, detail,
+				_detail.append_text("  📝 %s %s [color=gray]%s %s (%s→%s)[/color]\n" % [
+					direction, target,
+					FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_VARIABLE_LABEL"), detail,
 					_mode_label(r.get("from_mode", "")),
 					_mode_label(r.get("to_mode", ""))])
 			"variable_write_to_write":
-				_detail.append_text("  [color=yellow]🔥 竞态 ↔ %s [color=gray]变量: %s[/color][/color]\n" % [
-					to_name if from_name == this_name else from_name, detail])
+				_detail.append_text("  [color=yellow]🔥 %s ↔ %s [color=gray]%s %s[/color][/color]\n" % [
+					FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_RACE"),
+					to_name if from_name == this_name else from_name,
+					FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_VARIABLE_LABEL"), detail])
 			"signal":
 				var direction := "→" if from_name == this_name else "←"
 				var target := to_name if from_name == this_name else from_name
-				_detail.append_text("  🔗 %s %s [color=gray]信号: %s[/color]\n" % [
-					direction, target, detail])
+				_detail.append_text("  🔗 %s %s [color=gray]%s %s[/color]\n" % [
+					direction, target,
+					FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SIGNAL_LABEL"), detail])
 			_:
 				_detail.append_text("  • %s ↔ %s [color=gray]%s[/color]\n" % [
 					from_name, to_name, detail])
@@ -1093,17 +1156,24 @@ func _find_problems_for_inst(inst, report: Dictionary) -> Array:
 ## 导出全场景问题报告到 res://fuse_reports/fuse_problems_report_*.txt
 func _on_export_problems() -> void:
 	if _last_topology.is_empty():
-		_detail.append_text("\n[color=yellow]无分析数据，先刷新[/color]")
+		_detail.append_text("\n[color=yellow]%s[/color]" % FuseLocalizationClass.translate(
+			"FUSE_UI_TOPOLOGY_NO_ANALYSIS_DATA"
+		))
 		return
 
 	var report_dir := "res://fuse_reports"
 	if not DirAccess.dir_exists_absolute(report_dir):
 		var err := DirAccess.make_dir_recursive_absolute(report_dir)
 		if err != OK:
-			_detail.append_text("\n[color=red]无法创建目录 '%s' (错误码 %d)[/color]" % [report_dir, err])
+			_detail.append_text("\n[color=red]%s[/color]" % FuseLocalizationClass.translate_format(
+				"FUSE_UI_TOPOLOGY_MKDIR_FAILED", {"path": report_dir, "code": err}
+			))
 			return
 
-	var lines := ["Fuse 问题报告 %s" % Time.get_time_string_from_system(), "=".repeat(50)]
+	var report_title := FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_REPORT_TITLE", {"time": Time.get_time_string_from_system()}
+	)
+	var lines := [report_title, "=".repeat(50)]
 
 	var scene_path := ""
 	if ClassDB.class_exists("EditorInterface"):
@@ -1111,7 +1181,9 @@ func _on_export_problems() -> void:
 		if scene_root != null:
 			scene_path = scene_root.scene_file_path
 	if not scene_path.is_empty():
-		lines.append("场景: %s" % scene_path)
+		lines.append(FuseLocalizationClass.translate_format(
+			"FUSE_UI_TOPOLOGY_REPORT_SCENE", {"path": scene_path}
+		))
 	lines.append("")
 
 	var total_err := 0
@@ -1147,41 +1219,57 @@ func _on_export_problems() -> void:
 					"warning": total_warn += 1
 					"suggestion": total_suggest += 1
 
-				var label := "建议"
+				var label := FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_SUGGESTION")
 				match severity:
-					"error": label = "错误"
-					"warning": label = "警告"
-					"suggestion": label = "建议"
-				lines.append("  [%s] 指令#%d (%s): %s" % [label, idx, inst_name, message])
+					"error": label = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_ERROR")
+					"warning": label = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_WARNING")
+					"suggestion": label = FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_SUGGESTION")
+				lines.append("  %s" % FuseLocalizationClass.translate_format(
+					"FUSE_UI_TOPOLOGY_REPORT_INST_LINE",
+					{"severity": label, "index": idx, "name": inst_name, "message": message}
+				))
 		lines.append("")
 
 	lines.append("=".repeat(50))
-	lines.append("合计: %d 错误, %d 警告, %d 建议" % [total_err, total_warn, total_suggest])
+	lines.append(FuseLocalizationClass.translate_format(
+		"FUSE_UI_TOPOLOGY_REPORT_TOTAL",
+		{"errors": total_err, "warnings": total_warn, "suggestions": total_suggest}
+	))
 
 	var path := "%s/fuse_problems_report_%s.txt" % [report_dir, Time.get_time_string_from_system().replace(":", "-")]
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f:
 		f.store_string("\n".join(lines))
 		f.close()
-		_detail.append_text("\n[color=green]报告已导出: %s[/color]" % path)
+		_detail.append_text("\n[color=green]%s[/color]" % FuseLocalizationClass.translate_format(
+			"FUSE_UI_TOPOLOGY_EXPORT_OK", {"path": path}
+		))
 	else:
-		_detail.append_text("\n[color=red]导出失败: %s[/color]" % path)
+		_detail.append_text("\n[color=red]%s[/color]" % FuseLocalizationClass.translate_format(
+			"FUSE_UI_TOPOLOGY_EXPORT_FAILED", {"path": path}
+		))
 
 
 ## 导出当前场景拓扑 JSON（TopologyExport 共享序列化，Task 2 毕业 deriver 的地基）
 func _on_export_json() -> void:
 	var scene_root: Node = EditorInterface.get_edited_scene_root()
 	if scene_root == null:
-		_detail.append_text("[color=red](未打开场景，无法导出)[/color]")
+		_detail.append_text("[color=red]%s[/color]" % FuseLocalizationClass.translate(
+			"FUSE_UI_TOPOLOGY_EXPORT_NO_SCENE"
+		))
 		return
 	var topology: Dictionary = InstructionAnalyzer.build_topology(scene_root)
 	# 产物名用场景文件茎（未保存场景 scene_file_path 为空 → 回退 scene_name）；溯源写场景路径
 	var stem: String = scene_root.scene_file_path.get_file().get_basename()
 	var path: String = TopologyExport.export_to_json(topology, "res://fuse_reports/topology", stem, scene_root.scene_file_path)
 	if path.is_empty():
-		_detail.append_text("[color=red](导出失败，见输出面板)[/color]")
+		_detail.append_text("[color=red]%s[/color]" % FuseLocalizationClass.translate(
+			"FUSE_UI_TOPOLOGY_EXPORT_FAILED_SEE_OUTPUT"
+		))
 	else:
-		_detail.append_text("[color=gray]拓扑已导出: %s[/color]\n" % path)
+		_detail.append_text("[color=gray]%s[/color]\n" % FuseLocalizationClass.translate_format(
+			"FUSE_UI_TOPOLOGY_TOPOLOGY_EXPORTED", {"path": path}
+		))
 
 
 # ============================================================
@@ -1196,10 +1284,10 @@ func _get_theme_icon(icon_name: String) -> Texture2D:
 	return null
 
 
-## 严重度 → 中文标签（E4，替代 emoji 文本）
+## 严重度 → 本地化标签（E4，替代 emoji 文本）
 static func _severity_label(p_severity: String) -> String:
 	match p_severity:
-		"error": return "错误"
-		"warning": return "警告"
-		"suggestion": return "建议"
+		"error": return FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_ERROR")
+		"warning": return FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_WARNING")
+		"suggestion": return FuseLocalizationClass.translate("FUSE_UI_TOPOLOGY_SEVERITY_SUGGESTION")
 		_: return p_severity
