@@ -95,6 +95,8 @@ There are also things Fuse is currently not good at: low-level render pipeline c
 
 We've covered a lot in scattered fashion; now let's gather it together: on the left the three building blocks (Event 70 / Instruction 185 / Condition 55), in the middle the three trigger types, on the right the editor integrations and the five use case categories — this is the whole of Fuse, clear at a single glance.
 
+![Fuse capability map](../../../assets/capability_map.png)
+
 Keep this panoramic framework in your head as the series' navigation map. Over the next fifteen chapters, each one drills into one region of this framework, taking it from "knowing it exists" to "being able to build things with it".
 
 ## Series Preview: What the Next Fifteen Chapters Cover
