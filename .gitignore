@@ -145,3 +145,6 @@ tests/preset_ai/fixtures/
 
 # Store screenshots 4K originals (local-only, 1080p finals are committed under media/screenshots/)
 /media/originals/
+
+# Release packages (published as GitHub Release assets, not tracked in git)
+/release/
