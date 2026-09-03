@@ -663,12 +663,12 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 
 	# 验证信号
 	if target_signal.is_empty():
-		_create_fuse_error_localized("FUSE_ERROR_SIGNAL_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"signal_name": target_signal})
+		_create_fuse_error_localized("FUSE_ERROR_SIGNAL_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"signal": target_signal, "node": target.name})
 		return
 
 	# 检查信号是否存在
 	if not SignalManager.has_signal_named(target, target_signal):
-		_create_fuse_error_localized("FUSE_ERROR_SIGNAL_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"signal_name": target_signal, "node_name": target.name})
+		_create_fuse_error_localized("FUSE_ERROR_SIGNAL_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"signal": target_signal, "node": target.name})
 		return
 
 	# 将目标节点存储到 RuntimeInstance 中（供后续访问使用）

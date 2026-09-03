@@ -315,8 +315,8 @@ func _execute_loop_synchronous(context: ExecutionContext):
 		# 检查条件
 		var condition_value = _get_condition_value(context)
 		if condition_value == null and not VariableOperations.has_variable(context, condition_variable, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": condition_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": condition_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": condition_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": condition_variable})
 			break
 		condition_met = _check_condition(condition_value)
 
@@ -385,8 +385,8 @@ func _execute_loop_asynchronous(context: ExecutionContext):
 		# 检查条件
 		var condition_value = _get_condition_value(context)
 		if condition_value == null and not VariableOperations.has_variable(context, condition_variable, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": condition_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": condition_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": condition_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": condition_variable})
 			break
 		condition_met = _check_condition(condition_value)
 
@@ -686,8 +686,8 @@ func _check_condition_from_state(runtime_instance: RuntimeInstructionInstance) -
 	# 获取条件变量值
 	var condition_value = _get_condition_value(context)
 	if condition_value == null and not VariableOperations.has_variable(context, condition_variable, variable_scope):
-		_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": condition_variable})
-		set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": condition_variable})
+		_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": condition_variable})
+		set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": condition_variable})
 		return false
 
 	_log_debug_localized("FUSE_LOG_WHILE_LOOP_CONDITION_CHECK", {
@@ -890,8 +890,8 @@ func _execute_loop_synchronous_runtime(runtime_instance: RuntimeInstructionInsta
 		# 检查条件
 		var condition_value = _get_condition_value(runtime_instance.execution_context)
 		if condition_value == null and not VariableOperations.has_variable(runtime_instance.execution_context, condition_variable, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": condition_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": condition_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": condition_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": condition_variable})
 			break
 
 		var condition_met = _check_condition(condition_value)

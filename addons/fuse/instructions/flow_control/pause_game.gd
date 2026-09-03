@@ -161,16 +161,16 @@ func execute(context: ExecutionContext):
 			return
 
 		if not packed_scene is PackedScene:
-			_log_error_localized("FUSE_ERROR_NOT_PACKED_SCENE", {"scene": pause_menu_scene})
-			set_error_localized("FUSE_ERROR_NOT_PACKED_SCENE", FuseError.ErrorType.RUNTIME_ERROR, {"scene": pause_menu_scene})
+			_log_error_localized("FUSE_ERROR_NOT_PACKED_SCENE", {"scene_path": pause_menu_scene})
+			set_error_localized("FUSE_ERROR_NOT_PACKED_SCENE", FuseError.ErrorType.RUNTIME_ERROR, {"scene_path": pause_menu_scene})
 			finished.emit()
 			return
 
 		# 实例化暂停菜单
 		var pause_menu_instance = packed_scene.instantiate()
 		if not pause_menu_instance:
-			_log_error_localized("FUSE_ERROR_FAILED_INSTANTIATE", {"scene": pause_menu_scene})
-			set_error_localized("FUSE_ERROR_FAILED_INSTANTIATE", FuseError.ErrorType.RUNTIME_ERROR, {"scene": pause_menu_scene})
+			_log_error_localized("FUSE_ERROR_FAILED_INSTANTIATE", {"scene_path": pause_menu_scene})
+			set_error_localized("FUSE_ERROR_FAILED_INSTANTIATE", FuseError.ErrorType.RUNTIME_ERROR, {"scene_path": pause_menu_scene})
 			finished.emit()
 			return
 

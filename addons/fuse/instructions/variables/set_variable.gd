@@ -248,8 +248,8 @@ func execute(context: ExecutionContext):
 			BaseVariable.VariableScope.LOCAL:
 				value_to_set = VariableOperations.get_variable(context, from_variable, BaseVariable.VariableScope.LOCAL, null)
 				if value_to_set == null and not VariableOperations.has_variable(context, from_variable, BaseVariable.VariableScope.LOCAL):
-					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": from_variable})
-					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": from_variable})
+					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": from_variable})
+					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": from_variable})
 					finished.emit()
 					return
 
@@ -276,24 +276,24 @@ func execute(context: ExecutionContext):
 
 					# 检查变量是否存在
 					if not scope_container.has_variable(from_variable):
-						_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": from_variable})
-						set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": from_variable})
+						_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": from_variable})
+						set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": from_variable})
 						finished.emit()
 						return
 
 					value_to_set = scope_container.get_variable(from_variable)
 
 				if value_to_set == null:
-					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": from_variable})
-					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": from_variable})
+					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": from_variable})
+					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": from_variable})
 					finished.emit()
 					return
 
 			BaseVariable.VariableScope.GLOBAL:
 				value_to_set = VariableOperations.get_variable(context, from_variable, BaseVariable.VariableScope.GLOBAL, null)
 				if value_to_set == null and not VariableOperations.has_variable(context, from_variable, BaseVariable.VariableScope.GLOBAL):
-					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": from_variable})
-					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": from_variable})
+					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": from_variable})
+					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": from_variable})
 					finished.emit()
 					return
 	else:

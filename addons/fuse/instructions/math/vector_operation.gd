@@ -453,14 +453,14 @@ func _get_variable_with_scope_source(
 
 		var value = scope_container.get_variable(variable_name, null)
 		if value == null and not scope_container.has_variable(variable_name):
-			return { value = null, success = false, error_key = "FUSE_ERROR_VAR_NOT_FOUND", error_params = {"variable": variable_name} }
+			return { value = null, success = false, error_key = "FUSE_ERROR_VAR_NOT_FOUND", error_params = {"name": variable_name} }
 
 		return { value = value, success = true, error_key = "", error_params = {} }
 	else:
 		# LOCAL 或 GLOBAL 作用域，使用标准方法
 		var value = VariableOperations.get_variable(context, variable_name, scope, null)
 		if value == null:
-			return { value = null, success = false, error_key = "FUSE_ERROR_VAR_NOT_FOUND", error_params = {"variable": variable_name} }
+			return { value = null, success = false, error_key = "FUSE_ERROR_VAR_NOT_FOUND", error_params = {"name": variable_name} }
 		return { value = value, success = true, error_key = "", error_params = {} }
 
 ## 更新资源名称

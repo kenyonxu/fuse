@@ -313,7 +313,7 @@ func _get_node_by_variable(context: ExecutionContext) -> Node:
 		return null
 
 	if node == null:
-		var error_msg = FuseLocalization.translate_format("FUSE_ERROR_NODE_VARIABLE_NOT_FOUND", {"var": node_variable_name})
+		var error_msg = FuseLocalization.translate_format("FUSE_ERROR_NODE_VARIABLE_NOT_FOUND", {"name": node_variable_name})
 		_log_error(error_msg)
 		_create_fuse_error(error_msg, FuseError.ErrorType.RUNTIME_ERROR)
 		return null

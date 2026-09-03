@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://c2k8m3np7r1q5" path="res://addons/fuse/core/resources/fuse_preset.gd" id="4_wkvit"]
 
 [sub_resource type="Resource" id="Resource_6n6s1"]
-resource_name = "Fade In [[上级]] alpha: 0.0→1.0 (0.50s)"
+resource_name = "Fade In [[Parent]] alpha: 0.0→1.0 (0.50s)"
 script = ExtResource("2_iconv")
 target_variable = ""
 target_scope = 0
@@ -22,7 +22,7 @@ easing_type = 1
 trans_type = 1
 
 [sub_resource type="Resource" id="Resource_iconv"]
-resource_name = "Fade Out [[上级]] (0.50s)"
+resource_name = "Fade Out [[Parent]] (0.50s)"
 script = ExtResource("3_aif6g")
 target_variable = ""
 target_scope = 0

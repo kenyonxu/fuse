@@ -66,7 +66,7 @@ func initialize(owner_node: Node) -> void:
 
 	# 验证文件是否存在
 	if not FileAccess.file_exists(load_resource_path):
-		_create_fuse_error_localized("FUSE_ERROR_RESOURCE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"resource_path": load_resource_path})
+		_create_fuse_error_localized("FUSE_ERROR_RESOURCE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"path": load_resource_path})
 		return
 
 	# 验证检查间隔

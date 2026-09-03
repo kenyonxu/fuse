@@ -206,7 +206,7 @@ func _on_signal(...args):
 	# 4. 记录日志
 	# ============================================
 
-	_log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event": get_event_type()})
+	_log_info_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
 
 	# ============================================
 	# 5. 发出触发信号（使用 _emit_triggered 自动设置 trigger meta）

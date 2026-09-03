@@ -71,7 +71,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		return false
 
 	if parameter_name.is_empty():
-		_create_fuse_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"parameter": "parameter_name"})
+		_create_fuse_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"param": "parameter_name"})
 		return false
 
 	var node = context.get_node(target_node)
@@ -80,7 +80,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		return false
 
 	if not node is AnimationTree:
-		_create_fuse_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "expected": "AnimationTree"})
+		_create_fuse_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "expected": "AnimationTree"})
 		return false
 
 	var tree := node as AnimationTree

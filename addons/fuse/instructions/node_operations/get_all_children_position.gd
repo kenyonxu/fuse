@@ -392,8 +392,8 @@ func execute(context: ExecutionContext):
 		)
 
 		if node_value == null and not VariableOperations.has_variable(context, target_variable, target_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": target_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": target_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": target_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": target_variable})
 			finished.emit()
 			return
 

@@ -291,8 +291,8 @@ func execute(context: ExecutionContext) -> void:
 		particles.one_shot = one_shot
 		_apply_action(particles)
 	else:
-		_log_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", {"node": node.name, "expected": "GPUParticles2D or GPUParticles3D"})
-		set_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "expected": "GPUParticles2D or GPUParticles3D"})
+		_log_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", {"node": node.name, "expected": "GPUParticles2D or GPUParticles3D"})
+		set_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "expected": "GPUParticles2D or GPUParticles3D"})
 		finished.emit()
 		return
 
@@ -357,8 +357,8 @@ func _resolve_node(
 		)
 
 		if node_value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": variable_name})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": variable_name})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": variable_name})
 			return null
 
 		# 支持多种类型：Node、String（节点路径）、NodePath

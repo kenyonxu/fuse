@@ -199,8 +199,8 @@ func execute(context: ExecutionContext):
 
 		var var_value = VariableOperations.get_variable(context, position_variable, position_scope, null)
 		if var_value == null and not VariableOperations.has_variable(context, position_variable, position_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": position_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": position_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": position_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": position_variable})
 			finished.emit()
 			return
 

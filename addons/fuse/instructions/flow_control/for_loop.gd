@@ -442,8 +442,8 @@ func execute(context: ExecutionContext):
 				var_value = VariableOperations.get_variable(context, loop_count_variable, BaseVariable.VariableScope.GLOBAL, null)
 
 		if var_value == null and not VariableOperations.has_variable(context, loop_count_variable, loop_count_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": loop_count_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": loop_count_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": loop_count_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": loop_count_variable})
 			finished.emit()
 			return
 

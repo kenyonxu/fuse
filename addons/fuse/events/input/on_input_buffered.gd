@@ -150,7 +150,7 @@ func initialize(owner_node: Node) -> void:
 
 	# 验证输入动作
 	if input_actions.is_empty():
-		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"parameter": "input_actions"})
+		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"param": "input_actions"})
 		return
 
 	# 检查 InputMap 中的动作

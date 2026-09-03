@@ -346,7 +346,7 @@ func execute(context: ExecutionContext):
 			_log_info_localized("FUSE_LOG_APPLY_SUCCESS_CENTRAL", {"body": body_type})
 		else:
 			var force_str = str(force_3d) if use_3d else str(force)
-			_log_info_localized("FUSE_LOG_APPLY_SUCCESS_OFFSET", {"body": body_type, "force": force_str})
+			_log_info_localized("FUSE_LOG_APPLY_SUCCESS_OFFSET", {"body": body_type, "impulse": force_str})
 
 	_on_execution_completed()
 
@@ -426,8 +426,8 @@ func _resolve_node(
 		)
 
 		if node_value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": variable_name})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": variable_name})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": variable_name})
 			return null
 
 		# 支持多种类型：Node、String（节点路径）、NodePath

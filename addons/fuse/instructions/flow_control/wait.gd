@@ -258,8 +258,8 @@ func execute(context: ExecutionContext):
 
 		# 检查变量是否存在
 		if var_value == null:
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": wait_time_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": wait_time_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": wait_time_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": wait_time_variable})
 			finished.emit()
 			return
 
@@ -268,14 +268,14 @@ func execute(context: ExecutionContext):
 
 	# 检查等待时间是否有效（允许 0 秒等待，会立即继续执行）
 	if actual_wait_time < 0:
-		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"parameter": "wait_time", "value": str(actual_wait_time)})
-		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"parameter": "wait_time", "value": str(actual_wait_time)})
+		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"name": "wait_time", "value": str(actual_wait_time)})
+		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"name": "wait_time", "value": str(actual_wait_time)})
 		finished.emit()
 		return
 
 	# 如果提供了执行上下文，输出等待信息
 	if context:
-		var wait_message = FuseLocalization.translate_format("FUSE_LOG_WAITING_START", {"time": "%.2f" % actual_wait_time})
+		var wait_message = FuseLocalization.translate_format("FUSE_LOG_WAITING_START", {"duration": "%.2f" % actual_wait_time})
 		context.print_message(wait_message)
 
 	# 创建计时器进行异步等待
@@ -406,8 +406,8 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 	var actual_wait_time: float = _get_wait_time(runtime_instance.execution_context)
 
 	if actual_wait_time < 0:
-		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"parameter": "wait_time", "value": str(actual_wait_time)})
-		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"parameter": "wait_time", "value": str(actual_wait_time)})
+		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"name": "wait_time", "value": str(actual_wait_time)})
+		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"name": "wait_time", "value": str(actual_wait_time)})
 		# 错误同步到实例（runner 层 stop_on_error 据此发 execution_failed 并
 		# 阻断后续指令），对齐 wait_for_signal 的同步模式
 		runtime_instance._has_error = true
@@ -417,7 +417,7 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 
 	# 输出等待信息
 	if runtime_instance.execution_context:
-		var wait_message = FuseLocalization.translate_format("FUSE_LOG_WAITING_START", {"time": "%.2f" % actual_wait_time})
+		var wait_message = FuseLocalization.translate_format("FUSE_LOG_WAITING_START", {"duration": "%.2f" % actual_wait_time})
 		runtime_instance.execution_context.print_message(wait_message)
 
 	# 创建计时器并存储到运行时状态

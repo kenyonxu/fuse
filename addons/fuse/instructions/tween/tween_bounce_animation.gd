@@ -292,8 +292,8 @@ func execute(context: ExecutionContext) -> void:
 
 	# 验证节点有 position 属性
 	if not "position" in target:
-		_log_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", {"node": target.name, "expected": "Node2D or Node3D or Control"})
-		set_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.VALIDATION_ERROR, {"node": target.name, "expected": "Node2D or Node3D or Control"})
+		_log_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", {"node": target.name, "expected": "Node2D or Node3D or Control"})
+		set_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.VALIDATION_ERROR, {"node": target.name, "expected": "Node2D or Node3D or Control"})
 		finished.emit()
 		return
 
@@ -408,8 +408,8 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 
 	# 验证节点有 position 属性
 	if not "position" in target:
-		_log_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", {"node": target.name, "expected": "Node2D or Node3D or Control"})
-		set_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.VALIDATION_ERROR, {"node": target.name, "expected": "Node2D or Node3D or Control"})
+		_log_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", {"node": target.name, "expected": "Node2D or Node3D or Control"})
+		set_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.VALIDATION_ERROR, {"node": target.name, "expected": "Node2D or Node3D or Control"})
 		runtime_instance._complete_execution()
 		return true
 
@@ -523,8 +523,8 @@ func _resolve_node(
 		)
 
 		if node_value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": variable_name})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": variable_name})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": variable_name})
 			return null
 
 		# 支持多种类型：Node、String（节点路径）、NodePath

@@ -199,8 +199,8 @@ func execute(context: ExecutionContext):
 
 		# 检查变量是否存在
 		if value == null and not VariableOperations.has_variable(context, from_variable, from_variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": from_variable})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": from_variable})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": from_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": from_variable})
 			finished.emit()
 			return
 

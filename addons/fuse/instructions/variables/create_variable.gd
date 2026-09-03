@@ -241,15 +241,15 @@ func execute(context: ExecutionContext):
 	# 尝试创建变量
 	_created_variable = _create_variable()
 	if not _created_variable:
-		_log_error_localized("FUSE_ERROR_EXECUTION_FAILED", {"instruction": "CreateVariable"})
-		set_error_localized("FUSE_ERROR_EXECUTION_FAILED", FuseError.ErrorType.RUNTIME_ERROR, {"instruction": "CreateVariable"})
+		_log_error_localized("FUSE_ERROR_EXECUTION_FAILED", {"error": "CreateVariable"})
+		set_error_localized("FUSE_ERROR_EXECUTION_FAILED", FuseError.ErrorType.RUNTIME_ERROR, {"error": "CreateVariable"})
 		finished.emit()
 		return
 
 	# 检查变量是否有效创建
 	if not _created_variable.is_initialized:
-		_log_error_localized("FUSE_ERROR_EXECUTION_FAILED", {"instruction": "CreateVariable - initialization"})
-		set_error_localized("FUSE_ERROR_EXECUTION_FAILED", FuseError.ErrorType.RUNTIME_ERROR, {"instruction": "CreateVariable - initialization"})
+		_log_error_localized("FUSE_ERROR_EXECUTION_FAILED", {"error": "CreateVariable - initialization"})
+		set_error_localized("FUSE_ERROR_EXECUTION_FAILED", FuseError.ErrorType.RUNTIME_ERROR, {"error": "CreateVariable - initialization"})
 		finished.emit()
 		return
 

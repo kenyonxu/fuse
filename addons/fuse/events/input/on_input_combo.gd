@@ -192,7 +192,7 @@ func initialize(owner_node: Node) -> void:
 	_owner_node_ref = owner_node
 
 	if combo_sequence.is_empty():
-		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"parameter": "combo_sequence"})
+		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"param": "combo_sequence"})
 		return
 
 	# 验证输入动作

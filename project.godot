@@ -97,7 +97,6 @@ Jump={
 
 [internationalization]
 
-locale/test="false"
 locale/fallback="zh_CN"
 locale/locale="zh_CN"
 

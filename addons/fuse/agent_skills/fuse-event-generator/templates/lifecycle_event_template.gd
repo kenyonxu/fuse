@@ -174,7 +174,7 @@ func _start_timer(owner_node: Node) -> void:
 
 ## 定时器超时回调
 func _on_timer_timeout(owner_node: Node) -> void:
-	_log_debug_localized("FUSE_LOG_EVENT_TRIGGERED", {"event": get_event_type()})
+	_log_debug_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
 
 	# 检查是否只触发一次（通过 RuntimeEventInstance 状态）
 	var has_triggered: bool = false
@@ -204,7 +204,7 @@ func _on_owner_entered_tree(owner_node: Node) -> void:
 
 ## 延迟触发信号
 func _deferred_emit_triggered(owner_node: Node) -> void:
-	_log_debug_localized("FUSE_LOG_EVENT_TRIGGERED", {"event": get_event_type()})
+	_log_debug_localized("FUSE_LOG_EVENT_TRIGGERED", {"event_type": get_event_type()})
 
 	# 检查是否只触发一次（通过 RuntimeEventInstance 状态）
 	var has_triggered: bool = false

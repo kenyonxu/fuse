@@ -450,8 +450,8 @@ func execute_with_runtime_instance(runtime_instance: RuntimeInstructionInstance)
 		return true
 
 	if not loaded_resource is AudioStream:
-		_log_error_localized("FUSE_ERROR_NOT_AUDIO_STREAM", {"music_path": music_path})
-		set_error_localized("FUSE_ERROR_NOT_AUDIO_STREAM", FuseError.ErrorType.RUNTIME_ERROR, {"music_path": music_path})
+		_log_error_localized("FUSE_ERROR_NOT_AUDIO_STREAM", {"sound_path": music_path})
+		set_error_localized("FUSE_ERROR_NOT_AUDIO_STREAM", FuseError.ErrorType.RUNTIME_ERROR, {"sound_path": music_path})
 		# 错误同步到实例（同上）
 		runtime_instance._has_error = true
 		runtime_instance._error_message = get_error_message()

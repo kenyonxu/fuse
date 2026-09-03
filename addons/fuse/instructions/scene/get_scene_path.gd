@@ -320,4 +320,4 @@ func get_description() -> String:
 	var mode_str = _get_path_mode_string()
 	var scope_str = _get_scope_source_string()
 	var var_name = save_to_variable if not save_to_variable.is_empty() else FuseLocalization.translate("FUSE_INSTRUCTION_GET_SCENE_PATH_NO_VARIABLE")
-	return FuseLocalization.translate_format("FUSE_INSTRUCTION_GET_SCENE_PATH_DESC_FORMAT", {"mode": mode_str, "scope": scope_str, "name": var_name})
+	return FuseLocalization.translate_format("FUSE_INSTRUCTION_GET_SCENE_PATH_DESC_FORMAT", {"mode": mode_str, "type": scope_str, "name": var_name})

@@ -69,7 +69,7 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 
 	# 验证场景文件是否存在
 	if not FileAccess.file_exists(scene_path):
-		_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene_path": scene_path})
+		_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene": scene_path})
 		return
 
 	# 🔧 获取父节点引用（如果指定）
@@ -107,7 +107,7 @@ func initialize(owner_node: Node) -> void:
 
 	# 验证场景文件是否存在
 	if not FileAccess.file_exists(scene_path):
-		_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene_path": scene_path})
+		_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene": scene_path})
 		return
 
 	# 获取父节点引用（如果指定）

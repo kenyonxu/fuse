@@ -122,7 +122,7 @@ func execute(context: ExecutionContext):
 	# 使用 VariableOperations 获取当前值
 	var current = VariableOperations.get_variable(context, variable_name, variable_scope, null)
 	if current == null:
-		set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": variable_name})
+		set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": variable_name})
 		finished.emit()
 		return
 

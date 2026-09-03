@@ -48,7 +48,7 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 	# 如果指定了场景路径，验证场景是否存在
 	if not scene_path.is_empty():
 		if not FileAccess.file_exists(scene_path):
-			_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene_path": scene_path})
+			_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene": scene_path})
 			return
 
 	# 监听场景树变化
@@ -81,7 +81,7 @@ func initialize(owner_node: Node) -> void:
 	# 如果指定了场景路径，验证场景是否存在
 	if not scene_path.is_empty():
 		if not FileAccess.file_exists(scene_path):
-			_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene_path": scene_path})
+			_create_fuse_error_localized("FUSE_ERROR_SCENE_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"scene": scene_path})
 			return
 
 	# 监听场景树变化

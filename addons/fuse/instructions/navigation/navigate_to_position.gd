@@ -207,7 +207,7 @@ func execute(context: ExecutionContext):
 	if target_from_variable and not target_variable.is_empty():
 		target = VariableOperations.get_variable(context, target_variable, BaseVariable.VariableScope.LOCAL, null)
 		if target == null:
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": target_variable})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": target_variable})
 			finished.emit()
 			return
 	else:

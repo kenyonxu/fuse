@@ -233,7 +233,7 @@ func _setup_target(context: ExecutionContext) -> bool:
 		return false
 
 	if target_signal.is_empty() or not SignalManager.has_signal_named(_bound_node, target_signal):
-		set_error_localized("FUSE_ERROR_SIGNAL_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"signal_name": target_signal})
+		set_error_localized("FUSE_ERROR_SIGNAL_NOT_FOUND", FuseError.ErrorType.CONFIGURATION_ERROR, {"signal": target_signal})
 		finished.emit()
 		return false
 

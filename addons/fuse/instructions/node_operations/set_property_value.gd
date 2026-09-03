@@ -341,8 +341,8 @@ func execute(context: ExecutionContext):
 	# 获取要设置的值
 	var value_to_set = _get_value_to_set(context)
 	if value_to_set == null and not set_with_variable:
-		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"parameter": "value"})
-		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"parameter": "value"})
+		_log_error_localized("FUSE_ERROR_INVALID_PARAMETER", {"name": "value"})
+		set_error_localized("FUSE_ERROR_INVALID_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"name": "value"})
 		finished.emit()
 		return
 
@@ -444,7 +444,7 @@ func _get_variable_value(context: ExecutionContext) -> Variant:
 
 	# 检查变量是否存在
 	if value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
-		_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
+		_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": variable_name})
 		return null
 
 	# 如果是 BaseVariable 对象，获取其值

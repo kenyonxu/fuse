@@ -157,7 +157,7 @@ func initialize(owner_node: Node) -> void:
 
 	# 验证按键代码
 	if key_code == KEY_NONE:
-		_create_fuse_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.CONFIGURATION_ERROR, {"parameter": "key_code"})
+		_create_fuse_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.CONFIGURATION_ERROR, {"param": "key_code"})
 		return
 
 	# 连接输入处理
@@ -185,7 +185,7 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 
 	# 验证按键代码
 	if key_code == KEY_NONE:
-		_create_fuse_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.CONFIGURATION_ERROR, {"parameter": "key_code"})
+		_create_fuse_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.CONFIGURATION_ERROR, {"param": "key_code"})
 		return
 
 	# 连接输入处理

@@ -29,14 +29,17 @@ func _init(definition: BaseEvent, trigger: Node):
 	if event_definition and event_definition.has_signal("triggered"):
 		event_definition.triggered.connect(_on_event_triggered)
 
-	_log_debug("RuntimeEventInstance 创建完成: %s" % get_description())
+	_log_debug(FuseLocalization.translate_format(
+		"FUSE_LOG_RUNTIME_EVENT_CREATED",
+		{"description": get_description()}
+	))
 
 ## 初始化运行时状态
 ##
 ## 优先使用 Event 的自声明状态模式，回退到遗留的 match 分支模式
 func _initialize_runtime_state():
 	if not event_definition:
-		_log_warning("没有事件定义，无法初始化运行时状态")
+		_log_warning(FuseLocalization.translate("FUSE_LOG_RUNTIME_EVENT_NO_DEFINITION_INIT"))
 		return
 
 	# 🔧 新架构：检查 Event 是否实现了自声明状态模式
@@ -44,13 +47,19 @@ func _initialize_runtime_state():
 		var declared_state = event_definition.get_default_runtime_state()
 		# 深度复制状态以避免共享引用
 		runtime_state = declared_state.duplicate(true)
-		_log_debug("使用 Event 自声明状态模式初始化: %s, 状态数: %d" % [event_definition.get_event_type(), runtime_state.size()])
+		_log_debug(FuseLocalization.translate_format(
+			"FUSE_LOG_RUNTIME_EVENT_SELF_DECLARED_INIT",
+			{"event_type": event_definition.get_event_type(), "count": runtime_state.size()}
+		))
 		_ensure_base_states()
 		return
 
 	# 遗留架构：使用 match 分支初始化（向后兼容）
 	_initialize_runtime_state_legacy()
-	_log_debug("使用遗留 match 分支模式初始化: %s" % event_definition.get_event_type())
+	_log_debug(FuseLocalization.translate_format(
+		"FUSE_LOG_RUNTIME_EVENT_LEGACY_INIT",
+		{"event_type": event_definition.get_event_type()}
+	))
 
 ## 遗留的运行时状态初始化方法（向后兼容）
 ##
@@ -95,7 +104,10 @@ func _initialize_runtime_state_legacy():
 			runtime_state["trigger_count"] = 0
 			runtime_state["last_trigger_time"] = 0.0
 
-	_log_debug("运行时状态已初始化（遗留模式），事件类型: %s" % event_definition.get_event_type())
+	_log_debug(FuseLocalization.translate_format(
+		"FUSE_LOG_RUNTIME_EVENT_LEGACY_STATE_INITIALIZED",
+		{"event_type": event_definition.get_event_type()}
+	))
 
 ## Event 资源的 triggered 信号回调
 ##
@@ -136,7 +148,10 @@ func get_runtime_state(key: String):
 ## - value: Variant - 状态值
 func set_runtime_state(key: String, value):
 	runtime_state[key] = value
-	_log_debug("运行时状态已更新: %s = %s" % [key, str(value)])
+	_log_debug(FuseLocalization.translate_format(
+		"FUSE_LOG_RUNTIME_EVENT_STATE_UPDATED",
+		{"key": key, "value": str(value)}
+	))
 
 ## 检查运行时状态是否存在
 ##
@@ -155,7 +170,10 @@ func has_runtime_state(key: String) -> bool:
 func remove_runtime_state(key: String):
 	if runtime_state.has(key):
 		runtime_state.erase(key)
-		_log_debug("运行时状态已移除: %s" % key)
+		_log_debug(FuseLocalization.translate_format(
+			"FUSE_LOG_RUNTIME_EVENT_STATE_REMOVED",
+			{"key": key}
+		))
 
 ## 获取所有运行时状态
 ##
@@ -170,7 +188,7 @@ func get_all_runtime_states() -> Dictionary:
 func reset_runtime_state():
 	runtime_state.clear()
 	_initialize_runtime_state()
-	_log_debug("运行时状态已重置")
+	_log_debug(FuseLocalization.translate("FUSE_LOG_RUNTIME_EVENT_STATE_RESET"))
 
 ## 更新触发统计
 ##
@@ -178,13 +196,13 @@ func reset_runtime_state():
 func update_trigger_stats():
 	runtime_state["trigger_count"] = runtime_state.get("trigger_count", 0) + 1
 	runtime_state["last_trigger_time"] = Time.get_ticks_msec() / 1000.0
-	_log_debug("触发统计已更新")
+	_log_debug(FuseLocalization.translate("FUSE_LOG_RUNTIME_EVENT_TRIGGER_STATS_UPDATED"))
 
 ## 清理运行时实例
 ##
 ## 清理所有引用和状态，准备销毁
 func cleanup():
-	_log_debug("开始清理 RuntimeEventInstance")
+	_log_debug(FuseLocalization.translate("FUSE_LOG_RUNTIME_EVENT_CLEANUP_STARTED"))
 
 	# 断开 Event 资源的信号连接
 	if event_definition and event_definition.has_signal("triggered"):
@@ -198,7 +216,7 @@ func cleanup():
 	event_definition = null
 	owner_trigger = null
 
-	_log_debug("RuntimeEventInstance 清理完成")
+	_log_debug(FuseLocalization.translate("FUSE_LOG_RUNTIME_EVENT_CLEANUP"))
 
 ## 获取运行时实例描述
 ##
@@ -207,7 +225,9 @@ func cleanup():
 func get_description() -> String:
 	if event_definition:
 		return "RuntimeEventInstance: %s" % event_definition.get_description()
-	return "RuntimeEventInstance (无事件定义)"
+	return "RuntimeEventInstance (%s)" % FuseLocalization.translate(
+		"FUSE_LOG_RUNTIME_EVENT_NO_DEFINITION"
+	)
 
 ## 获取运行时实例信息
 ##
@@ -216,8 +236,12 @@ func get_description() -> String:
 func get_info() -> Dictionary:
 	return {
 		"event_type": event_definition.get_event_type() if event_definition else "none",
-		"event_description": event_definition.get_description() if event_definition else "无事件定义",
-		"owner_trigger": owner_trigger.get_name() if owner_trigger and is_instance_valid(owner_trigger) else "无触发器",
+		"event_description": event_definition.get_description() if event_definition else FuseLocalization.translate(
+			"FUSE_LOG_RUNTIME_EVENT_NO_DEFINITION"
+		),
+		"owner_trigger": owner_trigger.get_name() if owner_trigger and is_instance_valid(owner_trigger) else FuseLocalization.translate(
+			"FUSE_LOG_RUNTIME_EVENT_NO_TRIGGER"
+		),
 		"runtime_state_count": runtime_state.size(),
 		"has_event_definition": event_definition != null,
 		"has_owner_trigger": owner_trigger != null and is_instance_valid(owner_trigger)
@@ -244,8 +268,12 @@ func validate() -> Array[String]:
 func _create_fuse_error(message: String, error_type: FuseError.ErrorType = FuseError.ErrorType.RUNTIME_ERROR, context: Dictionary = {}):
 	var error_context = context.duplicate()
 	error_context["event_type"] = event_definition.get_event_type() if event_definition else "unknown"
-	error_context["event_description"] = event_definition.get_description() if event_definition else "无事件定义"
-	error_context["owner_trigger"] = owner_trigger.get_name() if owner_trigger else "无触发器"
+	error_context["event_description"] = event_definition.get_description() if event_definition else FuseLocalization.translate(
+		"FUSE_LOG_RUNTIME_EVENT_NO_DEFINITION"
+	)
+	error_context["owner_trigger"] = owner_trigger.get_name() if owner_trigger else FuseLocalization.translate(
+		"FUSE_LOG_RUNTIME_EVENT_NO_TRIGGER"
+	)
 
 	return FuseError.create_with_context(error_type, "RuntimeEventInstance", message, error_context)
 
@@ -281,7 +309,10 @@ func _ensure_base_states():
 func start_listening() -> void:
 	if event_definition and owner_trigger:
 		event_definition.initialize_with_runtime_instance(owner_trigger, self)
-		_log_debug("事件监听已启动: %s" % get_description())
+		_log_debug(FuseLocalization.translate_format(
+			"FUSE_LOG_RUNTIME_EVENT_LISTENING_STARTED",
+			{"description": get_description()}
+		))
 
 ## 停止事件监听
 ##
@@ -290,4 +321,7 @@ func start_listening() -> void:
 func stop_listening() -> void:
 	if event_definition and owner_trigger:
 		event_definition.terminate(owner_trigger)
-		_log_debug("事件监听已停止: %s" % get_description())
+		_log_debug(FuseLocalization.translate_format(
+			"FUSE_LOG_RUNTIME_EVENT_LISTENING_STOPPED",
+			{"description": get_description()}
+		))

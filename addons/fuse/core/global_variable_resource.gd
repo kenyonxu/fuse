@@ -49,25 +49,25 @@ func _init():
 func add_variable(name: String, variable_data: Variant, persistent: bool = true) -> bool:
 	# 验证参数
 	if name.is_empty():
-		_log_error("变量名称不能为空")
+		_log_error(FuseLocalization.translate("FUSE_LOG_GLOBAL_VAR_NAME_EMPTY"))
 		return false
 
 	# 检查名称冲突
 	if variables.has(name):
-		_log_error("变量名称已存在: %s" % name)
+		_log_error(FuseLocalization.translate_format("FUSE_LOG_GLOBAL_VAR_NAME_EXISTS", {"name": name}))
 		return false
 
 	# 智能处理变量数据格式
 	var normalized_data = _normalize_variable_data(variable_data, persistent)
 	if normalized_data == null:
-		_log_error("变量数据格式无效: %s" % name)
+		_log_error(FuseLocalization.translate_format("FUSE_ERROR_GLOBAL_VAR_INVALID_DATA", {"name": name}))
 		return false
 
 	# 添加变量
 	variables[name] = normalized_data
 	update_timestamp()
 
-	_log_info("变量添加成功: %s" % name)
+	_log_info(FuseLocalization.translate_format("FUSE_LOG_VARIABLE_ADDED", {"name": name}))
 	return true
 
 ## 设置变量（添加或更新）
@@ -77,13 +77,13 @@ func add_variable(name: String, variable_data: Variant, persistent: bool = true)
 ## returns: bool - 设置是否成功
 func set_variable(name: String, value: Variant, persistent: bool = true) -> bool:
 	if name.is_empty():
-		_log_error("变量名称不能为空")
+		_log_error(FuseLocalization.translate("FUSE_LOG_GLOBAL_VAR_NAME_EMPTY"))
 		return false
 
 	# 智能处理变量数据格式
 	var normalized_data = _normalize_variable_data(value, persistent)
 	if normalized_data == null:
-		_log_error("变量数据格式无效: %s" % name)
+		_log_error(FuseLocalization.translate_format("FUSE_ERROR_GLOBAL_VAR_INVALID_DATA", {"name": name}))
 		return false
 
 	variables[name] = normalized_data
@@ -95,11 +95,11 @@ func set_variable(name: String, value: Variant, persistent: bool = true) -> bool
 ## returns: Variant - 变量数据（标准化为字典格式），如果不存在则返回 null
 func get_variable(name: String) -> Variant:
 	if name.is_empty():
-		_log_error("变量名称不能为空")
+		_log_error(FuseLocalization.translate("FUSE_LOG_GLOBAL_VAR_NAME_EMPTY"))
 		return null
 
 	if not variables.has(name):
-		_log_warning("变量不存在: %s" % name)
+		_log_warning(FuseLocalization.translate_format("FUSE_LOG_GLOBAL_VAR_VARIABLE_NOT_FOUND", {"name": name}))
 		return null
 
 	# 获取数据并标准化格式
@@ -112,11 +112,11 @@ func get_variable(name: String) -> Variant:
 ## returns: bool - 更新是否成功
 func update_variable(name: String, variable_data: Variant) -> bool:
 	if name.is_empty():
-		_log_error("变量名称不能为空")
+		_log_error(FuseLocalization.translate("FUSE_LOG_GLOBAL_VAR_NAME_EMPTY"))
 		return false
 
 	if not variables.has(name):
-		_log_error("变量不存在，无法更新: %s" % name)
+		_log_error(FuseLocalization.translate_format("FUSE_LOG_GLOBAL_VAR_UPDATE_NOT_FOUND", {"name": name}))
 		return false
 
 	# 获取现有变量的 persistent 设置
@@ -128,14 +128,14 @@ func update_variable(name: String, variable_data: Variant) -> bool:
 	# 智能处理变量数据格式
 	var normalized_data = _normalize_variable_data(variable_data, existing_persistent)
 	if normalized_data == null:
-		_log_error("变量数据格式无效: %s" % name)
+		_log_error(FuseLocalization.translate_format("FUSE_ERROR_GLOBAL_VAR_INVALID_DATA", {"name": name}))
 		return false
 
 	# 更新变量
 	variables[name] = normalized_data
 	update_timestamp()
 
-	_log_info("变量更新成功: %s" % name)
+	_log_info(FuseLocalization.translate_format("FUSE_LOG_GLOBAL_VAR_VARIABLE_UPDATED", {"name": name}))
 	return true
 
 ## 移除变量
@@ -143,17 +143,17 @@ func update_variable(name: String, variable_data: Variant) -> bool:
 ## returns: bool - 移除是否成功
 func remove_variable(name: String) -> bool:
 	if name.is_empty():
-		_log_error("变量名称不能为空")
+		_log_error(FuseLocalization.translate("FUSE_LOG_GLOBAL_VAR_NAME_EMPTY"))
 		return false
 
 	if not variables.has(name):
-		_log_warning("尝试移除不存在的变量: %s" % name)
+		_log_warning(FuseLocalization.translate_format("FUSE_LOG_GLOBAL_VAR_REMOVE_NOT_FOUND", {"name": name}))
 		return false
 
 	variables.erase(name)
 	update_timestamp()
 
-	_log_info("变量移除成功: %s" % name)
+	_log_info(FuseLocalization.translate_format("FUSE_LOG_VARIABLE_REMOVED", {"name": name}))
 	return true
 
 ## 检查变量是否存在
@@ -186,7 +186,7 @@ func clear_variables() -> void:
 	var count = variables.size()
 	variables.clear()
 	update_timestamp()
-	_log_info("所有变量已清空，共清除 %d 个变量" % count)
+	_log_info(FuseLocalization.translate_format("FUSE_LOG_GLOBAL_VAR_ALL_CLEARED", {"count": count}))
 
 ## 获取变量数量
 ## returns: int - 变量数量
@@ -304,7 +304,10 @@ func cleanup_invalid_variables() -> int:
 
 	if invalid_names.size() > 0:
 		update_timestamp()
-		_log_info("清理了 %d 个无效变量" % invalid_names.size())
+		_log_info(FuseLocalization.translate_format(
+			"FUSE_LOG_GLOBAL_VAR_CLEANED_INVALID",
+			{"count": invalid_names.size()}
+		))
 
 	return invalid_names.size()
 

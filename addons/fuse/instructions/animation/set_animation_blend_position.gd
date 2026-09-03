@@ -226,7 +226,7 @@ func execute(context: ExecutionContext):
 
 
 	if blend_node.is_empty():
-		set_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"parameter": "blend_node"})
+		set_error_localized("FUSE_ERROR_MISSING_PARAMETER", FuseError.ErrorType.VALIDATION_ERROR, {"param": "blend_node"})
 		finished.emit()
 		return
 
@@ -330,8 +330,8 @@ func _resolve_node(
 		)
 
 		if node_value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": variable_name})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": variable_name})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": variable_name})
 			return null
 
 		# 支持多种类型：Node、String（节点路径）、NodePath

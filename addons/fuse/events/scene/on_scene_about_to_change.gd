@@ -86,7 +86,7 @@ func _subscribe(owner_node: Node) -> void:
 ## 收到切换预告：发触发信号
 func _on_scene_about_to_change(args: Dictionary, owner_node: Node) -> void:
 	var scene_path: String = str(args.get("scene_path", ""))
-	_log_info_localized("FUSE_LOG_EVENT_SCENE_ABOUT_TO_CHANGE", {"scene_path": scene_path})
+	_log_info_localized("FUSE_LOG_EVENT_SCENE_ABOUT_TO_CHANGE", {"scene": scene_path})
 
 	var context_node = Node.new()
 	context_node.name = "SceneAboutToChangeContext"

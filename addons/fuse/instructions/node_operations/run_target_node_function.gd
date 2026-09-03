@@ -1228,7 +1228,7 @@ func _validate_function_arguments() -> bool:
 ## 存储结果值
 func _store_result_value(context: ExecutionContext, result: Variant):
 	if result_variable_name.is_empty():
-		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"parameter": "result_variable_name"})
+		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"param": "result_variable_name"})
 		return
 
 	# 添加到上下文

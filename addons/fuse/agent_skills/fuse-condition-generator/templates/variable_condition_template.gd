@@ -134,7 +134,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 
 	if actual_value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
 		_log_error("变量不存在: %s" % variable_name)
-		_create_fuse_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"variable": variable_name})
+		_create_fuse_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.RUNTIME_ERROR, {"name": variable_name})
 		return false
 
 	# ============================================

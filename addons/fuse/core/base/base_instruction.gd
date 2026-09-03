@@ -241,8 +241,8 @@ static func _get_parent_level_display(path_str: String) -> String:
 	if parent_count <= 0:
 		return path_str
 	if parent_count == 1:
-		return "[上级]"
-	return "[%d层上级]" % parent_count
+		return FuseLocalization.translate("FUSE_TEXT_PARENT")
+	return FuseLocalization.translate_format("FUSE_TEXT_PARENT_LEVELS", {"count": parent_count})
 
 ## 记录上次更新 resource_name 时使用的语言
 ## 用于检测编辑器语言是否发生变化，以便自动刷新资源名称

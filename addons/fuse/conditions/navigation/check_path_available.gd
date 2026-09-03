@@ -45,7 +45,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		var nav := agent as NavigationAgent3D
 		return not nav.is_navigation_finished() and not nav.is_target_reached()
 	else:
-		_create_fuse_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.RUNTIME_ERROR, {"node": agent.name, "expected": "NavigationAgent2D or NavigationAgent3D"})
+		_create_fuse_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.RUNTIME_ERROR, {"node": agent.name, "expected": "NavigationAgent2D or NavigationAgent3D"})
 		return false
 
 	return true

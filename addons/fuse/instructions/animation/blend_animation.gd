@@ -360,8 +360,8 @@ func execute(context: ExecutionContext):
 			BaseVariable.VariableScope.LOCAL:
 				var var_value = VariableOperations.get_variable(context, blend_variable, BaseVariable.VariableScope.LOCAL, null)
 				if var_value == null and not VariableOperations.has_variable(context, blend_variable, BaseVariable.VariableScope.LOCAL):
-					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": blend_variable})
-					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": blend_variable})
+					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": blend_variable})
+					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": blend_variable})
 					finished.emit()
 					return
 
@@ -388,8 +388,8 @@ func execute(context: ExecutionContext):
 					# NEAREST 模式：使用 VariableOperations
 					var var_value = VariableOperations.get_variable(context, blend_variable, BaseVariable.VariableScope.SCOPE, null)
 					if var_value == null and not VariableOperations.has_variable(context, blend_variable, BaseVariable.VariableScope.SCOPE):
-						_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": blend_variable})
-						set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": blend_variable})
+						_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": blend_variable})
+						set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": blend_variable})
 						finished.emit()
 						return
 
@@ -427,8 +427,8 @@ func execute(context: ExecutionContext):
 
 					# 检查变量是否存在
 					if not scope_container.has_variable(blend_variable):
-						_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": blend_variable})
-						set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": blend_variable})
+						_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": blend_variable})
+						set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": blend_variable})
 						finished.emit()
 						return
 
@@ -454,8 +454,8 @@ func execute(context: ExecutionContext):
 			BaseVariable.VariableScope.GLOBAL:
 				var var_value = VariableOperations.get_variable(context, blend_variable, BaseVariable.VariableScope.GLOBAL, null)
 				if var_value == null and not VariableOperations.has_variable(context, blend_variable, BaseVariable.VariableScope.GLOBAL):
-					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": blend_variable})
-					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": blend_variable})
+					_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": blend_variable})
+					set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": blend_variable})
 					finished.emit()
 					return
 
@@ -634,8 +634,8 @@ func _resolve_node(
 		)
 
 		if node_value == null and not VariableOperations.has_variable(context, variable_name, variable_scope):
-			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"variable": variable_name})
-			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"variable": variable_name})
+			_log_error_localized("FUSE_ERROR_VAR_NOT_FOUND", {"name": variable_name})
+			set_error_localized("FUSE_ERROR_VAR_NOT_FOUND", FuseError.ErrorType.VALIDATION_ERROR, {"name": variable_name})
 			return null
 
 		# 支持多种类型：Node、String（节点路径）、NodePath

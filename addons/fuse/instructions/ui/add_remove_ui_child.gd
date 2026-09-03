@@ -142,8 +142,8 @@ func execute(context: ExecutionContext) -> void:
 		return
 
 	if not parent is Control:
-		_log_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", {"node": parent.name, "expected": "Control"})
-		set_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.RUNTIME_ERROR, {"node": parent.name, "expected": "Control"})
+		_log_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", {"node": parent.name, "expected": "Control"})
+		set_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.RUNTIME_ERROR, {"node": parent.name, "expected": "Control"})
 		finished.emit()
 		return
 

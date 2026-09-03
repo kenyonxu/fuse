@@ -30,7 +30,7 @@ func _evaluate_condition(context: ExecutionContext) -> bool:
 		return false
 
 	if not node is CanvasItem:
-		_create_fuse_error_localized("FUSE_ERROR_NODE_TYPE_INVALID", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "expected": "CanvasItem or Control"})
+		_create_fuse_error_localized("FUSE_ERROR_NODE_TYPE_EXPECTED", FuseError.ErrorType.RUNTIME_ERROR, {"node": node.name, "expected": "CanvasItem or Control"})
 		return false
 
 	var canvas := node as CanvasItem

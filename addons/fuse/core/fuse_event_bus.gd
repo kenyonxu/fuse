@@ -50,7 +50,7 @@ func _on_node_removed_for_reflection_cache(node: Node) -> void:
 ## - args: Dictionary - 事件参数（可选）
 func send_event(event_name: String, args: Dictionary = {}) -> void:
 	if event_name.is_empty():
-		push_warning("FuseEventBus: 事件名称不能为空")
+		push_warning("FuseEventBus: " + FuseLocalization.translate("FUSE_ERROR_EVENT_NAME_EMPTY"))
 		return
 
 	# 记录历史
@@ -90,7 +90,7 @@ func send_event_deferred(event_name: String, args: Dictionary = {}) -> void:
 ## - Subscription - 订阅对象，用于取消订阅
 func subscribe(event_name: String, callback: Callable) -> Subscription:
 	if event_name.is_empty():
-		push_warning("FuseEventBus: 无法订阅空事件名称")
+		push_warning("FuseEventBus: " + FuseLocalization.translate("FUSE_LOG_EVENT_BUS_SUBSCRIBE_EMPTY_NAME"))
 		return null
 
 	if not _listeners.has(event_name):
@@ -104,7 +104,10 @@ func subscribe(event_name: String, callback: Callable) -> Subscription:
 
 	_listeners[event_name].append(subscription)
 
-	print("[FuseEventBus] 已订阅事件 '%s'，当前监听器数: %d" % [event_name, _listeners[event_name].size()])
+	print("[FuseEventBus] " + FuseLocalization.translate_format(
+		"FUSE_LOG_EVENT_BUS_SUBSCRIBED",
+		{"event": event_name, "count": _listeners[event_name].size()}
+	))
 
 	return subscription
 
@@ -124,7 +127,10 @@ func unsubscribe(subscription: Subscription) -> void:
 		var idx = listeners.find(subscription)
 		if idx >= 0:
 			listeners.remove_at(idx)
-			print("[FuseEventBus] 已取消订阅事件 '%s'，剩余监听器数: %d" % [subscription.event_name, listeners.size()])
+			print("[FuseEventBus] " + FuseLocalization.translate_format(
+				"FUSE_LOG_EVENT_BUS_UNSUBSCRIBED",
+				{"event": subscription.event_name, "count": listeners.size()}
+			))
 
 		# 清理空列表
 		if listeners.is_empty():
@@ -191,7 +197,7 @@ func clear_history() -> void:
 ## 移除所有事件订阅，通常在场景切换时调用
 func clear_all_listeners() -> void:
 	_listeners.clear()
-	print("[FuseEventBus] 已清理所有监听器")
+	print("[FuseEventBus] " + FuseLocalization.translate("FUSE_LOG_EVENT_BUS_ALL_LISTENERS_CLEARED"))
 
 
 ## 私有方法

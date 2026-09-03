@@ -41,7 +41,7 @@ func _init():
 ## 简化的变量操作
 func add_variable(name: String, variable: BaseVariable) -> bool:
 	if name.is_empty() or variable == null:
-		_log_error("变量名称或实例不能为空")
+		_log_error_localized("FUSE_LOG_GLOBAL_VAR_NAME_OR_INSTANCE_EMPTY")
 		return false
 
 	_mutex.lock()
@@ -88,7 +88,7 @@ func remove_variable(name: String) -> bool:
 ## 简化的资源操作
 func save_to_resource(path: String) -> bool:
 	if path.is_empty():
-		_log_error("资源路径不能为空")
+		_log_error_localized("FUSE_ERROR_RESOURCE_PATH_EMPTY")
 		return false
 
 	# 使用 GlobalVariableResource 来正确持久化变量
@@ -109,17 +109,17 @@ func save_to_resource(path: String) -> bool:
 
 	var error = ResourceSaver.save(resource, path)
 	if error != OK:
-		_log_error("资源保存失败: %s (错误码: %d)" % [path, error])
+		_log_error_localized("FUSE_LOG_GLOBAL_VAR_RESOURCE_SAVE_FAILED", {"path": path, "error_code": error})
 		return false
 
 	_resource_path = path
-	_log_info("资源保存成功: %s" % path)
+	_log_info_localized("FUSE_LOG_GLOBAL_VAR_RESOURCE_SAVED", {"path": path})
 	return true
 
 ## 仅保存持久化变量到资源文件
 func save_persistent_to_resource(path: String) -> bool:
 	if path.is_empty():
-		_log_error("资源路径不能为空")
+		_log_error_localized("FUSE_ERROR_RESOURCE_PATH_EMPTY")
 		return false
 
 	var resource = GlobalVariableResource.new()
@@ -141,24 +141,30 @@ func save_persistent_to_resource(path: String) -> bool:
 	_mutex.unlock()
 
 	if persistent_count == 0:
-		_log_info("没有持久化变量需要保存")
+		_log_info_localized("FUSE_LOG_GLOBAL_VAR_NO_PERSISTENT_TO_SAVE")
 
 	var error = ResourceSaver.save(resource, path)
 	if error != OK:
-		_log_error("持久化变量保存失败: %s (错误码: %d)" % [path, error])
+		_log_error_localized(
+			"FUSE_LOG_GLOBAL_VAR_PERSISTENT_SAVE_FAILED",
+			{"path": path, "error_code": error}
+		)
 		return false
 
-	_log_info("持久化变量保存成功: %s (保存了 %d 个变量)" % [path, persistent_count])
+	_log_info_localized(
+		"FUSE_LOG_GLOBAL_VAR_PERSISTENT_SAVED",
+		{"path": path, "count": persistent_count}
+	)
 	return true
 
 func load_from_resource(path: String) -> bool:
 	if path.is_empty():
-		_log_error("资源路径不能为空")
+		_log_error_localized("FUSE_ERROR_RESOURCE_PATH_EMPTY")
 		return false
 
 	var resource = ResourceLoader.load(path)
 	if resource == null:
-		_log_error("无法加载资源: %s" % path)
+		_log_error_localized("FUSE_LOG_GLOBAL_VAR_RESOURCE_LOAD_FAILED", {"path": path})
 		return false
 
 	# 检查是否是 GlobalVariableResource 类型
@@ -169,7 +175,7 @@ func load_from_resource(path: String) -> bool:
 		# 向后兼容：尝试从旧的 meta 数据加载
 		var data = resource.get_meta("variables", {})
 		if data.is_empty():
-			_log_warning("资源中没有变量数据: %s" % path)
+			_log_warning_localized("FUSE_LOG_GLOBAL_VAR_NO_VARIABLE_DATA", {"path": path})
 			return true
 
 		# 将旧格式转换为新格式
@@ -213,7 +219,7 @@ func load_from_resource(path: String) -> bool:
 	_mutex.unlock()
 
 	_resource_path = path
-	_log_info("资源加载成功: %s (加载了 %d 个变量)" % [path, var_count])
+	_log_info_localized("FUSE_LOG_GLOBAL_VAR_RESOURCE_LOADED", {"path": path, "count": var_count})
 	return true
 
 ## 获取所有变量名称
@@ -260,7 +266,7 @@ func notify_variable_content_changed(variable_name: String) -> void:
 	_mutex.lock()
 	if not _variables.has(variable_name):
 		_mutex.unlock()
-		_log_warning("变量 '%s' 不存在，无法通知变化" % variable_name)
+		_log_warning_localized("FUSE_LOG_GLOBAL_VAR_NOTIFY_NOT_FOUND", {"name": variable_name})
 		return
 
 	var variable = _variables[variable_name]
@@ -268,7 +274,10 @@ func notify_variable_content_changed(variable_name: String) -> void:
 	var is_persistent = variable.persistent
 	_mutex.unlock()
 
-	_log_debug("变量 '%s' 内容已变化，发射变化信号 (persistent=%s)" % [variable_name, is_persistent])
+	_log_debug_localized(
+		"FUSE_LOG_GLOBAL_VAR_CONTENT_CHANGED",
+		{"name": variable_name, "persistent": is_persistent}
+	)
 	variable_changed.emit(variable_name, current_value, current_value)
 
 ## ============================================

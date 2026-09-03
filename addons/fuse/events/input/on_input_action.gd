@@ -189,7 +189,7 @@ func initialize_with_runtime_instance(owner_node: Node, runtime_instance: Runtim
 
 	# 如果目标动作为空，记录警告
 	if target_input_action.is_empty():
-		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"parameter": "target_input_action"})
+		_log_warning_localized("FUSE_ERROR_MISSING_PARAMETER", {"param": "target_input_action"})
 
 	_log_debug_localized("FUSE_LOG_EVENT_INITIALIZED", {"event_type": get_event_type()})
 

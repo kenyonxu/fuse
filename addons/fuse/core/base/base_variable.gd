@@ -83,6 +83,25 @@ func _init():
     _fuse_error = null
     creation_time = Time.get_ticks_msec() / 1000.0
 
+## 记录上次更新 resource_name 时使用的语言
+## 用于检测编辑器语言是否发生变化，以便自动刷新资源名称
+var _last_locale: String = ""
+
+## 拦截属性设置，处理 resource_name 的语言自动更新
+## （机制与 base_instruction/base_event/base_condition 保持一致）
+func _set(property: StringName, value: Variant) -> bool:
+    if property == "resource_name":
+        FuseLocalization.init()
+        var current_locale = FuseLocalization.get_locale_code()
+        if _last_locale.is_empty() or current_locale != _last_locale:
+            _last_locale = current_locale
+            _update_resource_name()
+            # 返回 true 声明"已处理"：阻止引擎把传入的旧值（如 .tscn 里
+            # 烘焙的旧语言快照）写回 resource_name，覆盖刚重译的名称。
+            return true
+        _last_locale = current_locale
+    return false
+
 ## 更新资源名称
 func _update_resource_name():
     var scope_name = _get_scope_name(scope)

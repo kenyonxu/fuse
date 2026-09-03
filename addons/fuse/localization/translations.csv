@@ -104,26 +104,18 @@ FUSE_EVENT_ON_READY_DESC,场景就绪时触发（可选延迟）,Triggers when t
 FUSE_EVENT_ON_AREA_2D_ENTER_NAME,区域进入,Area Entered
 FUSE_EVENT_ON_AREA_2D_ENTER_DESC,当物体进入 2D 区域时触发,Triggers when an object enters a 2D area
 FUSE_EVENT_ON_AREA_2D_EXITED_NAME,区域离开,Area Exited
-FUSE_EVENT_ON_AREA_2D_EXITED_DESC,当物体离开 2D 区域时触发,Triggers when an object exits a 2D area
 FUSE_EVENT_ON_AREA_3D_EXITED_NAME,区域离开（3D）,Area Exited (3D)
-FUSE_EVENT_ON_AREA_3D_EXITED_DESC,当物体离开 3D 区域时触发,Triggers when an object exits a 3D area
 FUSE_EVENT_ON_AREA_3D_ENTERED_NAME,区域进入（3D）,Area Entered (3D)
-FUSE_EVENT_ON_AREA_3D_ENTERED_DESC,当物体进入 3D 区域时触发,Triggers when an object enters a 3D area
 FUSE_EVENT_ON_AREA_3D_ENTERED_DESC_ONCE,当 %s 首次进入 %s 时触发,Triggers when %s enters %s for the first time
 FUSE_EVENT_ON_AUDIO_FINISHED_NAME,音频播放完成,Audio Finished
-FUSE_EVENT_ON_AUDIO_FINISHED_DESC,当 AudioStreamPlayer 播放完成时触发,Triggers when AudioStreamPlayer finishes playing
 FUSE_EVENT_ON_AUDIO_BUS_VOLUME_CHANGED_NAME,音频总线音量变化,Audio Bus Volume Changed
-FUSE_EVENT_ON_AUDIO_BUS_VOLUME_CHANGED_DESC,监听音频总线音量变化，使用轮询检查模式,Monitors audio bus volume changes using polling mode
 FUSE_EVENT_ON_SOUND_LISTENED_NAME,声音被听到,Sound Listened
-FUSE_EVENT_ON_SOUND_LISTENED_DESC,检测声音是否被监听器"听到"（基于距离和方向）,Detects if sound is "heard" by listener (based on distance and direction)
 FUSE_EVENT_ON_INPUT_KEY_NAME,按键输入,Key Input
-FUSE_EVENT_ON_INPUT_KEY_DESC,当按下指定按键时触发,Triggers when a specified key is pressed
 FUSE_EVENT_ON_INPUT_ACTION_NAME,动作输入,Action Input
 FUSE_EVENT_ON_INPUT_ACTION_DESC,当输入动作被触发时触发,Triggers when an input action is triggered
 FUSE_EVENT_ON_TARGET_SIGNAL_EMIT_NAME,目标信号发出,Target Signal Emitted
 FUSE_EVENT_ON_TARGET_SIGNAL_EMIT_DESC,当目标节点发出指定信号时触发,Triggers when the target node emits a specified signal
 FUSE_EVENT_ON_SCREEN_ENTERED_EXITED_NAME,屏幕进入/离开,Screen Entered/Exited
-FUSE_EVENT_ON_SCREEN_ENTERED_EXITED_DESC,节点进入或离开摄像机视野时触发，使用定期检查模式,Triggers when a node enters or exits camera viewport, uses polling mode
 FUSE_LOG_EVENT_SCREEN_ENTERED,节点进入屏幕视野,Node entered screen viewport
 FUSE_LOG_EVENT_SCREEN_EXITED,节点离开屏幕视野,Node exited screen viewport
 FUSE_LOG_EVENT_SCREEN_CHECK_STARTED,开始屏幕检查，间隔：{interval} 秒,Started screen check, interval: {interval} seconds
@@ -141,8 +133,6 @@ FUSE_EVENT_CATEGORY_AUDIO,音频,Audio
 FUSE_EVENT_CATEGORY_GAMEPLAY,游戏玩法,Gameplay
 FUSE_EVENT_CATEGORY_LIFECYCLE,生命周期,Lifecycle
 FUSE_EVENT_CATEGORY_NODE,节点,Node
-FUSE_EVENT_CATEGORY_TIMER,时间,Timer
-FUSE_EVENT_CATEGORY_UI,界面,UI
 FUSE_EVENT_CATEGORY_STATE,状态,State
 
 # 条件元数据
@@ -160,7 +150,6 @@ FUSE_CATEGORY_COMPOSITE,复合逻辑,Composite Logic
 
 # P1 - Distance & Position (距离与位置条件)
 FUSE_CONDITION_DISTANCE_NAME,对象距离,Distance
-FUSE_CONDITION_DISTANCE_DESC,检查两个节点之间的距离,Checks distance between two nodes
 FUSE_CATEGORY_DISTANCE,距离,Distance
 
 # P1 - Node Conditions (节点条件)
@@ -187,7 +176,6 @@ FUSE_CONDITION_INPUT_RELEASED_DESC,检查输入动作是否释放,Checks if inpu
 FUSE_CONDITION_INPUT_HELD_NAME,按键持续按住,Input Held
 FUSE_CONDITION_INPUT_HELD_DESC,检查输入动作是否持续按住,Checks if input action is held down
 FUSE_CONDITION_ANY_INPUT_NAME,任意输入,Any Input
-FUSE_CONDITION_ANY_INPUT_DESC,检测是否有任何键盘或手柄的按键输入,Detects if any keyboard or gamepad button input
 
 # P1 - Variable Conditions (变量条件)
 FUSE_CONDITION_CHECK_VARIABLE_NAME,变量检查,Check Variable
@@ -208,7 +196,6 @@ FUSE_CONDITION_NODE_EXISTS_DESC,检查指定路径的节点是否存在,Checks i
 
 # 错误消息
 FUSE_ERROR_MESSAGE_EMPTY,消息内容不能为空,Message content cannot be empty
-FUSE_ERROR_VAR_NAME_EMPTY,变量名称不能为空,Variable name cannot be empty
 FUSE_ERROR_VAR_NOT_FOUND,未找到变量：{name},Variable '{name}' not found
 FUSE_ERROR_VAR_NOT_VECTOR2,变量 '%s' 不是 Vector2 类型,Variable '%s' is not of Vector2 type
 FUSE_ERROR_VAR_ALREADY_EXISTS,变量已存在：{name},Variable already exists: {name}
@@ -220,8 +207,6 @@ FUSE_ERROR_RUNTIME_ERROR,运行时错误,Runtime error
 FUSE_ERROR_TIMEOUT_ERROR,超时错误,Timeout error
 FUSE_ERROR_TARGET_NODE_NULL,目标节点为空,Target node is null
 FUSE_ERROR_TARGET_NODE_NOT_FOUND,未找到目标节点,Target node not found
-FUSE_ERROR_TARGET_NODE_EMPTY,目标节点路径为空,Target node path is empty
-FUSE_ERROR_INVALID_TARGET,目标节点类型无效,Invalid target node type
 FUSE_ERROR_AUDIO_BUS_NAME_EMPTY,音频总线名称不能为空,Audio bus name cannot be empty
 FUSE_ERROR_AUDIO_BUS_NOT_FOUND,未找到音频总线：{bus_name},Audio bus not found: {bus_name}
 FUSE_ERROR_VOLUME_THRESHOLD_INVALID,音量阈值不能为负数（当前值：{threshold}）,Volume threshold cannot be negative (current: {threshold})
@@ -229,12 +214,9 @@ FUSE_ERROR_SOUND_SOURCE_EMPTY,声源节点路径不能为空,Sound source path c
 FUSE_ERROR_LISTENER_EMPTY,监听器节点路径不能为空,Listener path cannot be empty
 FUSE_ERROR_INVALID_SOUND_SOURCE,声源节点必须是 AudioStreamPlayer2D 或 AudioStreamPlayer3D,Sound source must be AudioStreamPlayer2D or AudioStreamPlayer3D
 FUSE_ERROR_DISTANCE_INVALID,距离不能为负数（当前值：{distance}）,Distance cannot be negative (current: {distance})
-FUSE_ERROR_CHECK_INTERVAL_INVALID,检查间隔必须大于 0（当前值：{interval}）,Check interval must be greater than 0 (current: {interval})
 FUSE_ERROR_FUNCTION_NOT_FOUND,未找到函数：{name},Function not found: {name}
-FUSE_ERROR_PROPERTY_NOT_FOUND,未找到属性：{name},Property not found: {name}
 FUSE_ERROR_PROPERTY_READ_ONLY,属性是只读的,Property is read-only
 FUSE_ERROR_INVALID_PARAMETER,无效参数：{name},Invalid parameter: {name}
-FUSE_ERROR_INDEX_OUT_OF_RANGE,索引超出范围,Index out of range
 FUSE_ERROR_INSTRUCTION_FREED_OR_INVALID,<已释放/无效指令>,<Freed/Invalid Instruction>
 
 # UI 文本 - 指令选择器
@@ -303,7 +285,6 @@ FUSE_UI_LANGUAGE_SETTINGS,语言设置,Language Settings
 # 日志消息
 FUSE_LOG_EXECUTION_STARTED,开始执行,Execution started
 FUSE_LOG_EXECUTION_COMPLETED,执行完成,Execution completed
-FUSE_LOG_EXECUTION_CANCELLED,执行已取消,Execution cancelled
 FUSE_LOG_VARIABLE_ACCESS,访问变量：{name},Accessing variable: {name}
 FUSE_LOG_VARIABLE_CREATED,创建变量：{name},Created variable: {name}
 FUSE_LOG_VARIABLE_UPDATED,更新变量：{name},Updated variable: {name}
@@ -350,13 +331,11 @@ FUSE_PLUGIN_ACTIVATED,Fuse 可视化编程插件已激活,Fuse Visual Programmin
 FUSE_PLUGIN_DEACTIVATED,Fuse 可视化编程插件已停用,Fuse Visual Programming plugin deactivated
 
 # 变量作用域
-FUSE_VARIABLE_SCOPE_LOCAL,局部,Local
 FUSE_VARIABLE_SCOPE_GLOBAL,全局,Global
 
 # 变量类型
 FUSE_TYPE_BOOL,布尔,Bool
 FUSE_TYPE_INT,整数,Int
-FUSE_TYPE_FLOAT,浮点,Float
 FUSE_TYPE_STRING,字符串,String
 FUSE_TYPE_VECTOR2,二维向量,Vector2
 FUSE_TYPE_VECTOR3,三维向量,Vector3
@@ -407,7 +386,6 @@ FUSE_UI_REPORT_SUGGESTION_DETAILS,建议详情,Suggestion Details
 FUSE_UI_REPORT_COMPLETED,分析完成,Analysis completed
 
 # UI 文本 - 调试可视化器
-FUSE_UI_BTN_REFRESH,刷新,Refresh
 FUSE_UI_BTN_CLEAR,清除,Clear
 FUSE_UI_BTN_EXPORT,导出,Export
 FUSE_UI_DEBUG_AUTO_REFRESH,自动刷新,Auto Refresh
@@ -574,25 +552,19 @@ FUSE_LOG_EVENT_SIGNAL_EMITTED,信号发出事件触发: {signal},Signal emit eve
 FUSE_LOG_EVENT_SIGNAL_SOURCE,信号源: {source},Signal source: {source}
 
 # 通用事件日志
-FUSE_LOG_EVENT_TRIGGERED,事件触发,Event triggered
-FUSE_LOG_EVENT_INITIALIZED,事件已初始化,Event initialized
-FUSE_LOG_EVENT_TERMINATED,事件已终止,Event terminated
 
 # 增强的错误消息
 FUSE_ERROR_INSTRUCTION_EXECUTION,指令执行失败,Instruction execution failed
 FUSE_ERROR_EVENT_INITIALIZATION,事件初始化失败,Event initialization failed
 FUSE_ERROR_MISSING_PARAMETER,缺少必需参数: {param},Missing required parameter: {param}
 FUSE_ERROR_INVALID_TARGET,无效的目标节点,Invalid target node
-FUSE_ERROR_PROPERTY_NOT_WRITABLE,属性不可写,Property is not writable
 FUSE_ERROR_FUNCTION_CALL_FAILED,函数调用失败,Function call failed
-FUSE_ERROR_SIGNAL_NOT_FOUND,未找到信号,Signal not found
 FUSE_LOG_DEBUG_EXECUTION_FLOW,执行流程: {step},Execution flow: {step}
 
 # ActionRunner 日志
 FUSE_LOG_SIGNAL_DISCONNECTED,已断开指令 '{instruction}' 的 finished 信号,Disconnected finished signal for instruction '{instruction}'
 FUSE_LOG_DISCONNECTING_ALL_SIGNALS,断开所有指令的信号连接...,Disconnecting all instruction signals...
 FUSE_LOG_SIGNALS_DISCONNECTED,已断开 {count} 个信号连接,Disconnected {count} signal(s)
-FUSE_LOG_ACTION_RUNNER_COMPLETED,ActionRunner 执行完成并清理资源,ActionRunner execution completed and resources cleaned up
 # GlobalVariableManager 日志
 FUSE_LOG_GLOBAL_VAR_MANAGER_INITIALIZED,全局变量管理器（简化版本）初始化完成,Global variable manager (simplified) initialized
 FUSE_LOG_VARIABLE_ADDED,变量添加成功: {name},Variable added successfully: {name}
@@ -601,7 +573,6 @@ FUSE_LOG_ALL_VARIABLES_CLEARED,所有变量已清空,All variables cleared
 FUSE_LOG_VARIABLE_VALUE_CHANGED,全局变量值变化: {name} ({old_value} -> {new_value}),Global variable value changed: {name} ({old_value} -> {new_value})
 
 # SetPosition Instruction 特有错误
-FUSE_ERROR_TARGET_NODE_EMPTY,目标节点不能为空,Target node cannot be empty
 FUSE_ERROR_AREA_NODE_PATH_EMPTY,区域节点路径不能为空,Area node path cannot be empty
 FUSE_ERROR_VAR_TYPE_INVALID,变量 {variable} 必须是 Vector2/Vector2i/Vector3/Vector3i 类型，实际为 {actual_type},Variable '{variable}' must be Vector2/Vector2i/Vector3/Vector3i, got '{actual_type}'
 FUSE_ERROR_VAR_TYPE_NOT_NODE_OR_PATH,变量 {variable} 必须是 Node/String/NodePath 类型，实际为 {actual_type},Variable '{variable}' must be Node/String/NodePath, got '{actual_type}'
@@ -701,7 +672,6 @@ FUSE_ERROR_INVALID_DELTA_TIME,无效的 delta 时间值：{value},Invalid delta 
 FUSE_ERROR_INVALID_TIME_SCALE,时间缩放值必须大于 0,Time scale must be greater than 0
 FUSE_ERROR_INVALID_DURATION,持续时间必须大于等于 0,Duration must be greater than or equal to 0
 FUSE_ERROR_CANNOT_RELOAD_SCENE,无法重载场景,Cannot reload scene
-FUSE_ERROR_PARENT_NODE_NOT_FOUND,找不到父节点,Parent node not found
 FUSE_ERROR_NEW_PARENT_NODE_EMPTY,新父节点路径不能为空,New parent node path cannot be empty
 FUSE_ERROR_CANNOT_REPARENT_TO_SELF,不能将节点重父化到自身,Cannot reparent node to itself
 FUSE_ERROR_CANNOT_REPARENT_TO_DESCENDANT,不能将节点重父化到其子孙节点,Cannot reparent node to its descendant
@@ -732,7 +702,6 @@ FUSE_INSTRUCTION_FOR_EACH_NAME,For Each,For Each
 FUSE_INSTRUCTION_FOR_EACH_DESC,遍历数组或节点组中的每个元素,Iterates through each element in an array or node group
 FUSE_ERROR_ITEM_VARIABLE_EMPTY,元素变量名不能为空,Item variable name cannot be empty
 FUSE_ERROR_ARRAY_VARIABLE_EMPTY,数组变量名不能为空,Array variable name cannot be empty
-FUSE_ERROR_GROUP_NAME_EMPTY,组名不能为空,Group name cannot be empty
 FUSE_ERROR_SOURCE_TYPE_INVALID,源类型无效，必须是 ARRAY 或 NODE_GROUP,Invalid source type, must be ARRAY or NODE_GROUP
 FUSE_ERROR_ARRAY_VARIABLE_NOT_FOUND,未找到数组变量：{name},Array variable not found: {name}
 FUSE_ERROR_ARRAY_VARIABLE_NOT_ARRAY,变量不是数组类型：{name},Variable is not an array: {name}
@@ -765,23 +734,17 @@ FUSE_INSTRUCTION_LERP_DESC,线性插值计算（在两个值之间按权重混�
 FUSE_INSTRUCTION_STOP_ANIMATION_NAME,停止动画,Stop Animation
 FUSE_INSTRUCTION_STOP_ANIMATION_DESC,停止 AnimationPlayer 的动画播放,Stops the animation playback of an AnimationPlayer
 FUSE_INSTRUCTION_SET_ANIMATION_SPEED_NAME,设置动画速度,Set Animation Speed
-FUSE_INSTRUCTION_SET_ANIMATION_SPEED_DESC,设置 AnimationPlayer 的播放速度,Sets the playback speed of an AnimationPlayer
 FUSE_INSTRUCTION_SET_CAMERA_ZOOM_NAME,设置相机缩放,Set Camera Zoom
 FUSE_INSTRUCTION_SET_CAMERA_ZOOM_DESC,设置 Camera2D 的缩放级别,Sets the zoom level of a Camera2D
-FUSE_CATEGORY_CAMERA,相机,Camera
 # Phase 4A - Math Operation Instruction
 FUSE_INSTRUCTION_MATH_OPERATION_NAME,数学运算,Math Operation
-FUSE_INSTRUCTION_MATH_OPERATION_DESC,执行基本四则运算（加减乘除取模）,Performs basic arithmetic operations (add, subtract, multiply, divide, modulo)
 FUSE_ERROR_OPERATION_TYPE_INVALID,无效的运算类型,Invalid operation type
 FUSE_ERROR_DIVISION_BY_ZERO,除零错误,Division by zero
 FUSE_ERROR_OPERAND_A_EMPTY,操作数 A 不能为空,Operand A cannot be empty
 FUSE_ERROR_OPERAND_B_EMPTY,操作数 B 不能为空,Operand B cannot be empty
 # Phase 4A - Vector Operation Instruction
 FUSE_INSTRUCTION_VECTOR_OPERATION_NAME,向量运算,Vector Operation
-FUSE_INSTRUCTION_VECTOR_OPERATION_DESC,执行向量运算（加减、归一化、长度、距离）,Performs vector operations (add, subtract, normalize, length, distance)
 FUSE_ERROR_VECTOR_OPERATION_INVALID,无效的向量运算类型,Invalid vector operation type
-FUSE_ERROR_VECTOR_A_EMPTY,向量 A 不能为空,Vector A cannot be empty
-FUSE_ERROR_VECTOR_B_EMPTY,向量 B 不能为空（当前运算需要）,Vector B cannot be empty (required for current operation)
 FUSE_ERROR_VECTOR_A_INVALID,向量 A 格式无效,Vector A format is invalid
 FUSE_ERROR_VECTOR_B_INVALID,向量 B 格式无效,Vector B format is invalid
 # Phase 4C - Pause Game Instruction
@@ -822,7 +785,6 @@ FUSE_ERROR_BLEND_PATH_EMPTY,混合路径不能为空,Blend path cannot be empty
 FUSE_LOG_BLEND_ANIMATION_SET,设置动画混合: {path} = {amount},Set animation blend: {path} = {amount}
 # Phase 6 - Set Velocity Instruction
 FUSE_INSTRUCTION_SET_VELOCITY_NAME,设置速度,Set Velocity
-FUSE_INSTRUCTION_SET_VELOCITY_DESC,设置物理体（CharacterBody2D/3D, RigidBody2D/3D）的速度,Sets the velocity of physics bodies (CharacterBody2D/3D, RigidBody2D/3D)
 FUSE_CATEGORY_PHYSICS,物理,Physics
 FUSE_LOG_SET_VELOCITY,设置 {type} 速度为 {velocity},Set {type} velocity to {velocity}
 FUSE_LOG_SET_VELOCITY_LOCAL,设置 {type} 局部速度为 {velocity},Set {type} local velocity to {velocity}
@@ -842,7 +804,6 @@ FUSE_LOG_APPLY_FORCE_3D,施加力到 {node}: {force},Applied force to {node}: {f
 FUSE_LOG_APPLY_CENTRAL_FORCE,施加中心力,Applied central force
 # Phase 6 - Set Collision Layer/Mask Instruction
 FUSE_INSTRUCTION_SET_COLLISION_LAYER_NAME,Set Collision Layer/Mask,设置碰撞层/掩码
-FUSE_INSTRUCTION_SET_COLLISION_LAYER_DESC,Set collision layer and/or mask for a CollisionObject,设置碰撞对象的碰撞层和/或掩码
 FUSE_LOG_SET_COLLISION_LAYER,Set collision layer: {value},设置碰撞层: {value}
 FUSE_LOG_SET_COLLISION_MASK,Set collision mask: {value},设置碰撞掩码: {value}
 FUSE_LOG_SET_COLLISION_BOTH,Set collision layer: {layer}, mask: {mask},设置碰撞层: {layer}, 掩码: {mask}
@@ -895,7 +856,6 @@ FUSE_LOG_TWEEN_PROPERTY,开始属性动画: {node}.{property} = {value} 耗时 {
 # Phase 0B - Timer Event
 FUSE_EVENT_ON_TIMER_NAME,定时器,Timer
 FUSE_EVENT_CATEGORY_TIMER,时间,Time
-FUSE_EVENT_ON_TIMER_DESC,定时触发事件，支持单次和重复触发,Timer event with single and repeat triggering support
 FUSE_LOG_EVENT_TIMER_TRIGGERED,定时器事件已触发（第 {count} 次，等待时间 {wait_time} 秒）,Timer event triggered (count: {count}, wait_time: {wait_time}s)
 FUSE_LOG_EVENT_TIMER_STARTED,定时器已启动（等待时间：{wait_time} 秒，重复次数：{repeat_count}）,Timer started (wait_time: {wait_time}s, repeat_count: {repeat_count})
 FUSE_LOG_EVENT_TIMER_STOPPED,定时器已停止,Timer stopped
@@ -905,7 +865,6 @@ FUSE_ERROR_TIMER_REPEAT_COUNT_INVALID,重复次数不能为负数,Repeat count c
 
 # Phase 0B - Process Event
 FUSE_EVENT_ON_PROCESS_NAME,每帧处理,Process
-FUSE_EVENT_CATEGORY_LIFECYCLE,生命周期,Lifecycle
 FUSE_EVENT_ON_PROCESS_DESC,每帧或定期处理事件（⚠️ 性能影响极大，请谨慎使用）,Per-frame or periodic processing event (⚠️ extremely high performance impact, use with caution)
 FUSE_DESC_PROCESS_MONITOR,每 {interval}s 触发渲染帧,Triggers render frame every {interval}s
 FUSE_DESC_PROCESS_EVERY,每帧,Every frame
@@ -919,108 +878,80 @@ FUSE_WARNING_PROCESS_PERFORMANCE_HIGH,执行间隔过低（{interval} 秒），�
 
 # Phase 0B - Variable Changed Event
 FUSE_EVENT_ON_VARIABLE_CHANGED_NAME,变量变化,Variable Changed
-FUSE_EVENT_CATEGORY_STATE,状态,State
-FUSE_EVENT_ON_VARIABLE_CHANGED_DESC,监听变量值变化，支持多种检查模式,Monitors variable value changes with multiple check modes
 FUSE_LOG_EVENT_VARIABLE_CHANGED,变量 {variable} 值变化：{old_value} → {new_value}（模式：{mode}）,Variable '{variable}' changed: {old_value} → {new_value} (mode: {mode})
 FUSE_LOG_EVENT_VARIABLE_MONITORING_STARTED,开始监听变量：{variable}（作用域：{scope}，模式：{mode}，间隔：{interval}秒）,Started monitoring variable: {variable} (scope: {scope}, mode: {mode}, interval: {interval}s)
 FUSE_LOG_EVENT_VARIABLE_NOT_FOUND,未找到变量：{variable}（作用域：{scope}）,Variable not found: {variable} (scope: {scope})
-FUSE_ERROR_VARIABLE_NAME_EMPTY,变量名不能为空,Variable name cannot be empty
-FUSE_ERROR_CHECK_INTERVAL_INVALID,检查间隔必须大于 0（当前值：{interval}）,Check interval must be greater than 0 (current: {interval})
 
 # Phase 0B - Property Changed Event
 FUSE_EVENT_ON_PROPERTY_CHANGED_NAME,属性变化,Property Changed
-FUSE_EVENT_ON_PROPERTY_CHANGED_DESC,监听节点属性变化，支持任意节点和属性,Monitors node property changes, supports any node and property
 FUSE_LOG_EVENT_PROPERTY_CHANGED,节点 {node} 的属性 {property} 变化：{old_value} → {new_value},Node '{node}' property '{property}' changed: {old_value} → {new_value}
 FUSE_LOG_EVENT_PROPERTY_MONITORING_STARTED,开始监听属性：{node}.{property}（间隔：{interval} 秒）,Started monitoring property: {node}.{property} (interval: {interval}s)
-FUSE_ERROR_PROPERTY_NAME_EMPTY,属性名不能为空,Property name cannot be empty
-FUSE_ERROR_TARGET_NODE_EMPTY,目标节点路径不能为空,Target node path cannot be empty
-FUSE_ERROR_PROPERTY_NOT_FOUND,未找到属性：{node}.{property},Property not found: {node}.{property}
 
 # 通用事件日志（扩展）
-FUSE_LOG_EVENT_RESET,事件已重置,Event reset
-FUSE_ERROR_TARGET_NODE_EMPTY,目标节点不能为空,Target node cannot be empty
 
 # Phase 1A - On Button Pressed Event
 FUSE_EVENT_ON_BUTTON_PRESSED_NAME,按钮按下,Button Pressed
 FUSE_EVENT_CATEGORY_UI,UI,UI
-FUSE_EVENT_ON_BUTTON_PRESSED_DESC,当 Button 节点被按下时触发,Triggers when a Button node is pressed
 FUSE_LOG_EVENT_BUTTON_PRESSED,按钮 {button} 已按下,Button {button} pressed
 FUSE_LOG_EVENT_BUTTON_DISABLED,按钮 {button} 已禁用，跳过触发,Button {button} is disabled, skipping trigger
 
 # Phase 1A - On Animation Finished Event
 FUSE_EVENT_ON_ANIMATION_FINISHED_NAME,动画完成,Animation Finished
-FUSE_EVENT_CATEGORY_SIGNAL,信号,Signal
 FUSE_EVENT_ON_ANIMATION_FINISHED_DESC,当 AnimationPlayer 播放完成指定动画时触发,Triggers when an AnimationPlayer finishes playing a specified animation
 FUSE_LOG_EVENT_ANIMATION_FINISHED,动画 {animation} 已完成（预期：{expected}，状态：{status}）,Animation '{animation}' finished (expected: {expected}, status: {status})
 FUSE_LOG_EVENT_ANIMATION_FINISHED_TRIGGERED,动画 {animation} 已完成并触发事件,Animation '{animation}' finished and event triggered
 
 # Phase 1A - On Body Entered Event
 FUSE_EVENT_ON_BODY_ENTERED_NAME,物体进入,Body Entered
-FUSE_EVENT_ON_BODY_ENTERED_DESC,当 PhysicsBody2D 进入 Area2D 区域时触发,Triggers when a PhysicsBody2D enters an Area2D
 FUSE_LOG_EVENT_BODY_ENTERED_TRIGGERED,物体 {body} 进入区域,Body '{body}' entered area
 FUSE_LOG_EVENT_BODY_ENTERED_GROUP,物体 {body} 不在组 {group} 中，跳过（状态：{status}）,Body '{body}' not in group '{group}', skipping (status: {status})
 
 # Phase 1A - On Overlapping Bodies Event
 FUSE_EVENT_ON_OVERLAPPING_BODIES_NAME,重叠物体,Overlapping Bodies
-FUSE_EVENT_ON_OVERLAPPING_BODIES_DESC,当区域内重叠物体数量满足阈值条件时触发,Triggers when the number of overlapping bodies meets the threshold condition
 FUSE_LOG_EVENT_OVERLAPPING_BODIES_TRIGGERED,重叠物体事件触发：数量 {count}，阈值 {threshold},Overlapping bodies event triggered: count {count}, threshold {threshold}
 
 # Phase 1A - On Mouse Button Event
 FUSE_EVENT_ON_MOUSE_BUTTON_NAME,鼠标按键,Mouse Button
-FUSE_EVENT_ON_MOUSE_BUTTON_DESC,监听鼠标按键事件，支持按下、释放、双击等触发模式,Monitors mouse button events with pressed/released/double-click modes
 FUSE_LOG_EVENT_MOUSE_BUTTON_TRIGGERED,鼠标按键 {button} {mode}，位置：{position},Mouse button {button} {mode}, position: {position}
 FUSE_LOG_EVENT_MOUSE_NOT_HOVERED,鼠标未悬停在目标节点上,Mouse not hovering over target node
 
 # Phase 1A - On Scene Loaded Event
 FUSE_EVENT_ON_SCENE_LOADED_NAME,场景加载完成,Scene Loaded
-FUSE_EVENT_CATEGORY_SCENE,场景,Scene
 FUSE_EVENT_ON_SCENE_LOADED_DESC,当指定场景加载完成时触发,Triggers when a specified scene finishes loading
 FUSE_LOG_EVENT_SCENE_LOADED_TRIGGERED,场景 {scene} 已加载（路径：{path}）,Scene '{scene}' loaded (path: {path})
-FUSE_ERROR_SCENE_NOT_FOUND,场景文件不存在：{scene_path},Scene file not found: {scene_path}
 FUSE_ERROR_INVALID_SCENE_EXTENSION,场景文件扩展名无效（必须是 .tscn 或 .scn）,Invalid scene file extension (must be .tscn or .scn)
 
 # Phase 1A - On Node Instance Event
 FUSE_EVENT_ON_NODE_INSTANCE_NAME,节点实例化,Node Instance
-FUSE_EVENT_ON_NODE_INSTANCE_DESC,当指定场景被实例化时触发,Triggers when a specified scene is instantiated
 FUSE_LOG_EVENT_NODE_INSTANCE_TRIGGERED,场景 {scene} 已实例化为 {instance},Scene '{scene}' instantiated as '{instance}'
 FUSE_LOG_EVENT_NODE_INSTANCE_PARENT_MISMATCH,实例 {instance} 的父节点不匹配（预期：{expected_parent}，实际：{actual_parent}）,Instance '{instance}' parent mismatch (expected: {expected_parent}, actual: {actual_parent})
-FUSE_ERROR_SCENE_PATH_EMPTY,场景路径不能为空,Scene path cannot be empty
 
 # Phase 1A - On Collision Event
 FUSE_EVENT_ON_COLLISION_NAME,碰撞,Collision
-FUSE_EVENT_ON_COLLISION_DESC,当物理体发生碰撞时触发，传递完整的碰撞信息,Triggers when physics bodies collide with full collision info
 FUSE_LOG_EVENT_COLLISION_TRIGGERED,碰撞发生：物体 {body}（形状：{body_shape}，本地形状：{local_shape}）,Collision occurred: body '{body}' (shape: {body_shape}, local_shape: {local_shape})
 FUSE_LOG_EVENT_COLLISION_LAYER_FILTERED,碰撞被层过滤：物体 {body}（掩码：{mask}）,Collision filtered by layer: body '{body}' (mask: {mask})
 
 # Phase 1A - On Health Changed Event
 FUSE_EVENT_ON_HEALTH_CHANGED_NAME,生命值变化,Health Changed
-FUSE_EVENT_CATEGORY_STATE,状态,State
-FUSE_EVENT_ON_HEALTH_CHANGED_DESC,监听目标节点的生命值变化，支持多级阈值触发,Monitors health value changes with multi-level threshold triggering
 FUSE_LOG_EVENT_HEALTH_CHANGED_TRIGGERED,生命值变化：{health}/{max_health}（{percentage}，原因：{reason}）,Health changed: {health}/{max_health} ({percentage}, reason: {reason})
 FUSE_LOG_EVENT_HEALTH_CHECK_STARTED,开始生命值检查（间隔：{interval} 秒）,Started health checking (interval: {interval}s)
-FUSE_ERROR_PROPERTY_NAME_EMPTY,属性名不能为空,Property name cannot be empty
-FUSE_ERROR_CHECK_INTERVAL_INVALID,检查间隔必须大于 0（当前值：{interval}）,Check interval must be greater than 0 (current: {interval})
 
 # Phase 02 - On Mouse Move Event
 FUSE_EVENT_ON_MOUSE_MOVE_NAME,鼠标移动,Mouse Move
-FUSE_EVENT_ON_MOUSE_MOVE_DESC,监听鼠标移动事件，支持持续触发和阈值触发模式,Monitors mouse movement events with continuous and threshold triggering modes
 FUSE_LOG_EVENT_MOUSE_MOVE_TRIGGERED,鼠标移动事件触发，位置：{position}，移动：{motion},Mouse move event triggered, position: {position}, motion: {motion}
 
 # Phase 02 - On Mouse Enter Event
 FUSE_EVENT_ON_MOUSE_ENTER_NAME,鼠标进入,Mouse Enter
-FUSE_EVENT_ON_MOUSE_ENTER_DESC,当鼠标进入 Control 或 CollisionObject 节点时触发,Triggers when mouse enters a Control or CollisionObject node
 FUSE_LOG_EVENT_MOUSE_ENTER_TRIGGERED,鼠标进入节点：{node},Mouse entered node: {node}
 FUSE_LOG_EVENT_ALREADY_ENTERED,鼠标已经在节点内，跳过触发,Mouse already entered node, skipping trigger
 
 # Phase 02 - On Mouse Exit Event
 FUSE_EVENT_ON_MOUSE_EXIT_NAME,鼠标离开,Mouse Exit
-FUSE_EVENT_ON_MOUSE_EXIT_DESC,当鼠标离开 Control 或 CollisionObject 节点时触发,Triggers when mouse exits a Control or CollisionObject node
 FUSE_LOG_EVENT_MOUSE_EXIT_TRIGGERED,鼠标离开节点：{node},Mouse exited node: {node}
 FUSE_LOG_EVENT_ALREADY_EXITED,鼠标已经离开节点，跳过触发,Mouse already exited node, skipping trigger
 
 # Phase 02 - On Gamepad Button Event
 FUSE_EVENT_ON_GAMEPAD_BUTTON_NAME,游戏手柄按键,Gamepad Button
-FUSE_EVENT_ON_GAMEPAD_BUTTON_DESC,监听游戏手柄按键事件，支持按下和释放触发模式,Monitors gamepad button events with pressed/released triggering modes
 FUSE_LOG_EVENT_GAMEPAD_BUTTON_TRIGGERED,手柄按键事件触发：{button} {mode}，{device},Gamepad button event triggered: {button} {mode}, {device}
 
 # Phase 02 - Event Validation Errors
@@ -1032,16 +963,13 @@ FUSE_ERROR_EVENT_BUTTON_INDEX_INVALID,按键索引无效,Invalid button index
 
 # Phase 02B - UI Events
 FUSE_EVENT_ON_ITEM_SELECTED_NAME,ItemList 选中项改变,Item List Selection Changed
-FUSE_EVENT_ON_ITEM_SELECTED_DESC,当 ItemList 控件的选中项改变时触发，支持单选和多选模式,Triggers when the selected item(s) in an ItemList control changes, supports single and multi-select modes
 FUSE_LOG_EVENT_ITEM_SELECTED,ItemList 选中项改变：索引 {index}（{mode}{count_text}）,Item list selection changed: index {index} ({mode}{count_text})
 FUSE_LOG_EVENT_ITEM_DESELECTED,ItemList 取消所有选中（{mode}）,Item list all items deselected ({mode})
 
 FUSE_EVENT_ON_VALUE_CHANGED_NAME,值改变,Value Changed
-FUSE_EVENT_ON_VALUE_CHANGED_DESC,监听 Slider、SpinBox、ProgressBar 等控件的值改变事件，支持多种触发模式,Monitors value changes in Slider, SpinBox, ProgressBar controls with multiple trigger modes
 FUSE_LOG_EVENT_VALUE_CHANGED,值改变事件触发：当前 {current}，旧值 {old}，变化量 {delta}（{mode}{threshold_text}）,Value changed event: current {current}, old {old}, delta {delta} ({mode}{threshold_text})
 
 FUSE_EVENT_ON_TEXT_CHANGED_NAME,文本改变,Text Changed
-FUSE_EVENT_ON_TEXT_CHANGED_DESC,监听 LineEdit 或 TextEdit 的文本改变事件，支持多种触发模式,Monitors text changes in LineEdit or TextEdit controls with multiple trigger modes
 FUSE_LOG_EVENT_TEXT_CHANGED,文本改变事件触发：新文本 '{new_text}'，旧文本 '{old_text}'，长度 {length}（{mode}{length_text}{pattern_text}）,Text changed event: new '{new_text}', old '{old_text}', length {length} ({mode}{length_text}{pattern_text})
 
 # Phase 02B - UI Event Errors
@@ -1061,11 +989,9 @@ FUSE_LOG_EVENT_ANIMATION_USING_SIGNAL,使用信号检测：{signal},Using signal
 FUSE_LOG_EVENT_ANIMATION_USING_POLLING,使用轮询方式检测动画开始,Using polling method for animation start detection
 
 FUSE_EVENT_ON_ANIMATION_MARKER_NAME,动画标记,Animation Marker
-FUSE_EVENT_ON_ANIMATION_MARKER_DESC,当动画播放到达指定标记点时触发,Triggers when animation playback reaches a specified marker
 FUSE_LOG_EVENT_ANIMATION_MARKER_TRIGGERED,动画 {animation} 到达标记 {marker}（位置：{position}）,Animation '{animation}' reached marker '{marker}' (position: {position})
 
 FUSE_EVENT_ON_ANIMATION_LOOP_NAME,动画循环,Animation Loop
-FUSE_EVENT_ON_ANIMATION_LOOP_DESC,当动画循环播放时触发（播放到末尾重新开始）,Triggers when animation loops (playback restarts from end)
 FUSE_LOG_EVENT_ANIMATION_LOOP_TRIGGERED,动画 {animation} 循环播放（第 {loop_count} 次）,Animation '{animation}' looped (count: {loop_count})
 
 FUSE_ERROR_LOOP_THRESHOLD_INVALID,循环次数阈值不能为负数,Loop count threshold cannot be negative
@@ -1098,7 +1024,6 @@ FUSE_EVENT_ON_ANIMATION_LOOP_DESC,当 {target} 循环播放 {animation} 时触�
 
 # Phase 02 - Time Events (Countdown, Interval, Cooldown)
 FUSE_EVENT_ON_COUNTDOWN_NAME,倒计时,Countdown
-FUSE_EVENT_ON_COUNTDOWN_DESC,倒计时指定秒数后触发事件，支持进度更新,Triggers after a specified countdown duration with progress updates
 FUSE_LOG_EVENT_COUNTDOWN_STARTED,倒计时已开始（时长：{countdown_seconds} 秒）,Countdown started (duration: {countdown_seconds}s)
 FUSE_LOG_EVENT_COUNTDOWN_PROGRESS,倒计时进度：剩余 {remaining_time} 秒,Countdown progress: {remaining_time}s remaining
 FUSE_LOG_EVENT_COUNTDOWN_COMPLETED,倒计时完成（总时长：{countdown_seconds} 秒）,Countdown completed (total duration: {countdown_seconds}s)
@@ -1107,7 +1032,6 @@ FUSE_LOG_EVENT_COUNTDOWN_RESUMED,倒计时已恢复（剩余：{remaining_time} 
 FUSE_LOG_EVENT_COUNTDOWN_RESET,倒计时已重置（时长：{countdown_seconds} 秒）,Countdown reset (duration: {countdown_seconds}s)
 
 FUSE_EVENT_ON_INTERVAL_NAME,间隔执行,Interval
-FUSE_EVENT_ON_INTERVAL_DESC,按固定间隔重复触发事件，支持最大重复次数限制,Triggers repeatedly at a fixed interval with max repeat limit
 FUSE_LOG_EVENT_INTERVAL_STARTED,间隔执行已开始（间隔：{interval_seconds} 秒，最大重复：{max_repeats}）,Interval started (interval: {interval_seconds}s, max_repeats: {max_repeats})
 FUSE_LOG_EVENT_INTERVAL_TRIGGERED,间隔执行事件已触发（第 {count} 次，间隔 {interval_seconds} 秒）,Interval event triggered (count: {count}, interval: {interval_seconds}s)
 FUSE_LOG_EVENT_INTERVAL_MAX_REACHED,达到最大重复次数限制（{max_repeats} 次）,Max repeat limit reached ({max_repeats} times)
@@ -1129,12 +1053,10 @@ FUSE_LOG_EVENT_STOPPED_NOTIFIED,事件已停止并通知 Trigger（原因：{rea
 
 # Trigger Signal Connections
 FUSE_LOG_SIGNAL_CONNECTED,已连接信号：{signal},Signal connected: {signal}
-FUSE_LOG_ACTION_RUNNER_COMPLETED,ActionRunner 执行完成,ActionRunner execution completed
 FUSE_LOG_ACTION_RUNNER_FAILED,ActionRunner 执行失败：{error},ActionRunner execution failed: {error}
 FUSE_LOG_ACTION_RUNNER_CANCELED,ActionRunner 执行已取消：{reason},ActionRunner execution canceled: {reason}
 
 FUSE_EVENT_ON_COOLDOWN_FINISHED_NAME,冷却完成,Cooldown Finished
-FUSE_EVENT_ON_COOLDOWN_FINISHED_DESC,监听技能/动作冷却时间结束，支持进度显示,Monitors skill/action cooldown completion with progress display
 FUSE_LOG_EVENT_COOLDOWN_STARTED,冷却已开始（时长：{cooldown_seconds} 秒）,Cooldown started (duration: {cooldown_seconds}s)
 FUSE_LOG_EVENT_COOLDOWN_PROGRESS,冷却进度：{progress}（剩余：{remaining_time} 秒）,Cooldown progress: {progress} (remaining: {remaining_time}s)
 FUSE_LOG_EVENT_COOLDOWN_COMPLETED,冷却完成（总时长：{cooldown_seconds} 秒）,Cooldown completed (total duration: {cooldown_seconds}s)
@@ -1153,7 +1075,6 @@ FUSE_ERROR_COOLDOWN_SECONDS_INVALID,冷却时间必须大于 0（当前值：{co
 FUSE_ERROR_UPDATE_INTERVAL_INVALID,更新间隔必须大于 0（当前值：{update_interval}）,Update interval must be greater than 0 (current: {update_interval})
 # Phase 03 - On Audio Started Event
 FUSE_EVENT_ON_AUDIO_STARTED_NAME,音频开始播放,Audio Started
-FUSE_EVENT_ON_AUDIO_STARTED_DESC,当 AudioStreamPlayer 开始播放时触发,Triggers when AudioStreamPlayer starts playing
 FUSE_LOG_EVENT_AUDIO_START_CHECK,音频状态检查：正在播放={playing},之前播放={was_playing},Audio state check: playing={playing}, was_playing={was_playing}
 FUSE_LOG_EVENT_AUDIO_ALREADY_STARTED,音频已经在播放，跳过触发,Audio already started, skipping trigger
 FUSE_LOG_EVENT_AUDIO_STARTED,音频开始播放事件触发，播放器：{player},Audio started event triggered, player: {player}
@@ -1165,7 +1086,6 @@ FUSE_TEXT_TRIGGER_ONCE_PER_PLAY,（循环不触发）,(No Loop Trigger)
 
 # Phase 03 - On Realtime Event
 FUSE_EVENT_ON_REALTIME_NAME,实时时间,Realtime
-FUSE_EVENT_ON_REALTIME_DESC,按实际时间触发（不受 time_scale 影响）,Triggers based on real time (unaffected by time_scale)
 FUSE_LOG_EVENT_REALTIME_TRIGGERED,实时时间事件触发（时间戳：{timestamp}）,Realtime event triggered (timestamp: {timestamp})
 FUSE_ERROR_REALTIME_INTERVAL_INVALID,间隔必须大于 0（当前值：{interval}）,Interval must be greater than 0 (current: {interval})
 FUSE_ERROR_MAX_TRIGGERS_NEGATIVE,最大触发次数不能为负数,Max triggers cannot be negative
@@ -1193,16 +1113,13 @@ FUSE_TEXT_TOUCH_PRESSED,按下,Pressed
 FUSE_TEXT_TOUCH_RELEASED,释放,Released
 FUSE_ERROR_TOUCH_INDEX_INVALID,触摸索引无效（范围：0-9）,Touch index invalid (range: 0-9)
 FUSE_DESC_TOUCH_MONITOR,监听触摸 {index}，,Monitoring touch {index},
-FUSE_DESC_TOUCH_ANY_INDEX,任意索引,any index
 FUSE_DESC_TOUCH_ON_PRESSED,按下时,On pressed
 FUSE_DESC_TOUCH_ON_RELEASED,释放时,On released
 FUSE_DESC_TOUCH_ON_BOTH,按下和释放,On both
-FUSE_DESC_TOUCH_INDEX_N,索引 {index},Index {index}
 FUSE_DESC_TOUCH_MONITOR_FORMAT,监听触摸 {index}，{action},Monitoring touch {index}, {action}
 FUSE_RESOURCE_GAMEPAD_AXIS_NAME,手柄轴 {axis}: {mode} ({device}),Gamepad Axis {axis}: {mode} ({device})
 # Phase 03 - On Physics Process Event
 FUSE_EVENT_ON_PHYSICS_PROCESS_NAME,物理帧处理,Physics Process
-FUSE_EVENT_ON_PHYSICS_PROCESS_DESC,每物理帧触发（⚠️ 性能影响极大）,Triggers every physics frame (⚠️ extremely high performance impact)
 FUSE_LOG_EVENT_PHYSICS_PROCESS_TRIGGERED,物理帧事件触发（delta: {delta}，间隔: {interval}s）,Physics frame event triggered (delta: {delta}, interval: {interval}s)
 FUSE_ERROR_PHYSICS_PROCESS_INTERVAL_INVALID,执行间隔必须大于 0（当前值：{interval}）,Execution interval must be greater than 0 (current: {interval})
 FUSE_WARNING_PHYSICS_PROCESS_PERFORMANCE,⚠️ 警告：OnPhysicsProcess 每物理帧触发，对性能影响极大！建议使用 OnTimer 或其他事件替代。,⚠️ Warning: OnPhysicsProcess triggers every physics frame and has extremely high performance impact! Consider using OnTimer or other events instead.
@@ -1223,7 +1140,6 @@ FUSE_DESC_FOCUS_BOTH,进入和离开,Both entered and exited
 FUSE_DESC_FOCUS_TARGET_NODE,目标节点：,Target node:
 # Phase 04 - On Tween Completed Event
 FUSE_EVENT_ON_TWEEN_COMPLETED_NAME,Tween 完成,Tween Completed
-FUSE_EVENT_ON_TWEEN_COMPLETED_DESC,Tween 补间动画完成时触发,Triggers when Tween animation completes
 FUSE_LOG_EVENT_TWEEN_COMPLETED,Tween 完成事件触发，节点：{node},Tween completed event triggered, node: {node}
 FUSE_ERROR_TWEEN_NODE_NOT_FOUND,未找到 Tween 节点：{node_path},Tween node not found: {node_path}
 FUSE_DESC_TWEEN_COMPLETED,监听 Tween：,Monitoring Tween:
@@ -1235,22 +1151,18 @@ FUSE_LOG_EVENT_SCENE_ABOUT_TO_CHANGE,场景切换事件触发，当前场景：{
 FUSE_DESC_SCENE_ABOUT_TO_CHANGE,监听场景切换,Monitoring scene changes
 # Phase 05 - On Tree Changed Event
 FUSE_EVENT_ON_TREE_CHANGED_NAME,场景树变化,Tree Changed
-FUSE_EVENT_ON_TREE_CHANGED_DESC,监听场景树结构变化（节点添加或移除）,Monitors scene tree structure changes (node added or removed)
 FUSE_LOG_EVENT_TREE_NODE_ADDED,场景树节点添加事件触发：节点 {node}，路径 {path},Tree node added event triggered: node {node}, path {path}
 FUSE_LOG_EVENT_TREE_NODE_REMOVED,场景树节点移除事件触发：节点 {node}，路径 {path},Tree node removed event triggered: node {node}, path {path}
 FUSE_DESC_TREE_CHANGED,监听场景树 {type}，组过滤：{group},Monitoring tree changes {type}, group filter: {group}
 FUSE_ERROR_NODE_NOT_IN_TREE,节点不在场景树中,Node is not in scene tree
-FUSE_ERROR_SCENE_TREE_NOT_FOUND,场景树未找到,Scene tree not found
 # Phase 04 - On Animation Frame Reached Event
 FUSE_EVENT_ON_ANIMATION_FRAME_REACHED_NAME,动画帧到达,Animation Frame Reached
-FUSE_EVENT_ON_ANIMATION_FRAME_REACHED_DESC,动画播放到指定帧时触发,Triggers when animation reaches specified frame
 FUSE_LOG_EVENT_ANIMATION_FRAME_REACHED,动画帧到达事件触发：动画 {animation}，帧 {frame},Animation frame reached event triggered: animation {animation}, frame {frame}
 FUSE_ERROR_FRAME_INDEX_INVALID,帧索引必须 >= 0,Frame index must be >= 0
 FUSE_DESC_ANIMATION_FRAME_REACHED,监听动画帧 {frame}，,Monitoring animation frame {frame},
 FUSE_DESC_ANIMATION_FRAME_TARGET,目标帧,Target frame
 # Phase 04 - On Animation Blend Event
 FUSE_EVENT_ON_ANIMATION_BLEND_NAME,动画混合,Animation Blend
-FUSE_EVENT_ON_ANIMATION_BLEND_DESC,检测 AnimationTree 混合权重变化,Detects AnimationTree blend weight changes
 FUSE_LOG_EVENT_ANIMATION_BLEND_TRIGGERED,动画混合事件触发：路径 {path}，权重 {weight},Animation blend event triggered: path {path}, weight {weight}
 FUSE_ERROR_BLEND_PATH_INVALID,混合路径不能为空,Blend path cannot be empty
 FUSE_DESC_ANIMATION_BLEND,监听动画混合 {path}，阈值 {threshold} {comparison},Monitoring animation blend {path}, threshold {threshold} {comparison}
@@ -1259,20 +1171,17 @@ FUSE_TEXT_COMPARISON_LESS_OR_EQUAL,小于等于,Less or equal
 FUSE_TEXT_COMPARISON_EQUAL,等于,Equal
 # Phase 04 - On Music Beat Event
 FUSE_EVENT_ON_MUSIC_BEAT_NAME,音乐节拍,Music Beat
-FUSE_EVENT_ON_MUSIC_BEAT_DESC,检测音乐节拍（BPM）,Detects music beats (BPM)
 FUSE_LOG_EVENT_MUSIC_BEAT_TRIGGERED,音乐节拍事件触发：第 {count} 拍,Music beat event triggered: beat {count}
 FUSE_ERROR_BPM_INVALID,BPM 必须大于 0,BPM must be greater than 0
 FUSE_DESC_MUSIC_BEAT,音乐节拍 {bpm} BPM，间隔 {interval} 拍,Music beat {bpm} BPM, every {interval} beat(s)
 # Phase 04 - On Raycast Hit Event
 FUSE_EVENT_ON_RAYCAST_HIT_NAME,射线命中,Raycast Hit
-FUSE_EVENT_ON_RAYCAST_HIT_DESC,射线检测到碰撞体时触发,Triggers when raycast hits colliders
 FUSE_LOG_EVENT_RAYCAST_HIT,射线命中事件触发：碰撞体 {collider},Raycast hit event triggered: collider {collider}
 FUSE_ERROR_RAYCAST_TARGET_INVALID,射线原点节点无效,Raycast origin node invalid
 FUSE_DESC_RAYCAST_HIT,射线 {origin} → {target},Raycast {origin} → {target}
 FUSE_TEXT_RAYCAST_ORIGIN_SELF,自身,Self
 # Phase 04 - On Shape Cast Event
 FUSE_EVENT_ON_SHAPE_CAST_NAME,形状投射,Shape Cast
-FUSE_EVENT_ON_SHAPE_CAST_DESC,形状投射检测碰撞,Detects collisions using shape casting
 FUSE_LOG_EVENT_SHAPE_CAST_TRIGGERED,形状投射事件触发：碰撞体 {collider},Shape cast event triggered: collider {collider}
 FUSE_ERROR_SHAPE_TARGET_INVALID,形状原点节点无效,Shape origin node invalid
 FUSE_DESC_SHAPE_CAST,形状投射 {shape} → {target},Shape cast {shape} → {target}
@@ -1281,23 +1190,17 @@ FUSE_TEXT_SHAPE_TYPE_CIRCLE,圆形,Circle
 FUSE_TEXT_SHAPE_TYPE_CAPSULE,胶囊,Capsule
 # Phase 04 - On Signal From Group Event
 FUSE_EVENT_ON_SIGNAL_FROM_GROUP_NAME,组信号监听,Signal From Group
-FUSE_EVENT_ON_SIGNAL_FROM_GROUP_DESC,监听指定组中任意节点的信号,Monitors signals from any node in specified group
 FUSE_LOG_EVENT_SIGNAL_FROM_GROUP_TRIGGERED,组信号事件触发：节点 {node}，信号 {signal},Group signal event triggered: node {node}, signal {signal}
 FUSE_ERROR_SIGNAL_NAME_INVALID,信号名称不能为空,Signal name cannot be empty
 FUSE_ERROR_GROUP_NAME_INVALID,组名不能为空,Group name cannot be empty
 FUSE_DESC_SIGNAL_FROM_GROUP,组 {group} 的信号 {signal},Group {group} signal {signal}
 # Phase 05 - On Enter Tree Event
-FUSE_EVENT_ON_ENTER_TREE_NAME,进入场景树,Enter Tree
 FUSE_EVENT_ON_ENTER_TREE_DESC,当节点进入场景树时触发,Triggers when node enters scene tree
-FUSE_EVENT_CATEGORY_LIFECYCLE,生命周期,Lifecycle
 FUSE_LOG_EVENT_ENTER_TREE_TRIGGERED,节点进入场景树,Node entered scene tree
-FUSE_EVENT_ON_EXIT_TREE_NAME,退出场景树,Exit Tree
 FUSE_EVENT_ON_EXIT_TREE_DESC,当节点退出场景树时触发,Triggers when node exits scene tree
 FUSE_LOG_EVENT_EXIT_TREE_TRIGGERED,节点退出场景树,Node exited scene tree
 # Phase 05 - On Touch Swipe Event
 FUSE_EVENT_ON_TOUCH_SWIPE_NAME,触摸滑动,Touch Swipe
-FUSE_EVENT_ON_TOUCH_SWIPE_DESC,检测触摸滑动手势,Detect touch swipe gestures
-FUSE_EVENT_CATEGORY_INPUT,输入,Input
 FUSE_LOG_EVENT_TOUCH_SWIPE_TRIGGERED,检测到滑动：方向={direction}，距离={distance},Swipe detected: direction={direction}, distance={distance}
 FUSE_EVENT_ON_INPUT_TEXT_NAME,文本输入,Input Text
 FUSE_EVENT_ON_INPUT_TEXT_DESC,监听文本输入事件,Listen to text input events
@@ -1309,13 +1212,11 @@ FUSE_LOG_EVENT_BACKGROUND_LOAD_PROGRESS,后台加载进度：{progress}%（资�
 FUSE_LOG_EVENT_BACKGROUND_LOAD_STARTED,开始后台加载：{resource_path}（检查间隔：{check_interval} 秒）,Started background load: {resource_path} (check interval: {check_interval}s)
 FUSE_LOG_EVENT_BACKGROUND_LOAD_FAILED,后台加载失败：{resource_path},Background load failed: {resource_path}
 FUSE_ERROR_RESOURCE_PATH_EMPTY,资源路径不能为空,Resource path cannot be empty
-FUSE_ERROR_RESOURCE_NOT_FOUND,资源文件不存在：{resource_path},Resource file not found: {resource_path}
 FUSE_ERROR_INVALID_CHECK_INTERVAL,检查间隔必须大于 0（当前值：{check_interval}）,Check interval must be greater than 0 (current: {check_interval})
 FUSE_ERROR_INVALID_PROGRESS_THRESHOLD,进度阈值必须在 0.0 到 1.0 之间,Progress threshold must be between 0.0 and 1.0
 FUSE_DESC_BACKGROUND_LOAD_PROGRESS,后台加载 {resource_path}（阈值：{threshold}%）,Background load {resource_path} (threshold: {threshold}%)
 # Phase 05 - On Node Paused/Resumed Event
 FUSE_EVENT_ON_NODE_PAUSED_RESUMED_NAME,节点暂停/恢复,Node Paused/Resumed
-FUSE_EVENT_ON_NODE_PAUSED_RESUMED_DESC,监听节点暂停模式变化（使用定时器检查）,Monitors node pause mode changes (uses timer for checking)
 FUSE_LOG_EVENT_NODE_PAUSED_RESUMED,节点暂停/恢复事件触发：节点 {node}，触发类型 {trigger_type}，旧模式 {old_mode}，新模式 {new_mode},Node paused/resumed event triggered: node {node}, trigger type {trigger_type}, old mode {old_mode}, new mode {new_mode}
 FUSE_LOG_EVENT_NODE_PAUSED,节点已暂停,Node paused
 FUSE_LOG_EVENT_NODE_RESUMED,节点已恢复,Node resumed
@@ -1365,24 +1266,18 @@ FUSE_CONDITION_COMPARE_HEALTH_THRESHOLD_DESC,对比生命值与阈值,Compares h
 # AnimationTree State Condition (AnimationTree 状态条件)
 FUSE_CONDITION_ANIMATION_TREE_STATE_NAME,AnimationTree 状态,AnimationTree State
 FUSE_CONDITION_ANIMATION_TREE_STATE_DESC,检查 AnimationTree 状态机是否处于指定状态,Checks if AnimationTree StateMachine is in specified state
-FUSE_ERROR_SPEED_MUST_BE_POSITIVE,速度值必须大于 0,Speed value must be greater than 0
 FUSE_LOG_SET_ANIMATION_SPEED,设置动画速度: {node} → {speed}x,Set animation speed: {node} → {speed}x
-FUSE_ERROR_TARGET_NODE_EMPTY,目标节点不能为空,Target node cannot be empty
 FUSE_INSTRUCTION_SET_ANIMATION_SPEED_DESC,设置 {node} 动画速度为 {speed}x,Set {node} animation speed to {speed}x
-FUSE_ERROR_NOT_ANIMATION_PLAYER,节点不是 AnimationPlayer 类型,Node is not an AnimationPlayer type
 FUSE_LOG_PAUSE_ANIMATION,暂停动画: {name},Pause animation: {name}
 FUSE_LOG_STOP_ANIMATION,停止动画: {name},Stop animation: {name}
 FUSE_ERROR_LIMIT_OUT_OF_RANGE,边界值超出有效范围,Limit value out of valid range
 FUSE_LOG_SET_CAMERA_LIMIT,设置相机边界 {side}: {value},Set camera limit {side}: {value}
-FUSE_ERROR_CAMERA_NODE_EMPTY,目标相机节点不能为空,Target camera node cannot be empty
 FUSE_ERROR_NOT_CAMERA2D,节点不是 Camera2D 类型,Node is not Camera2D type
 FUSE_ERROR_ZOOM_MUST_BE_POSITIVE,缩放值必须大于 0,Zoom value must be greater than 0
 FUSE_LOG_SET_CAMERA_ZOOM,设置相机缩放: {node} → {zoom},Set camera zoom: {node} → {zoom}
 FUSE_ERROR_ZOOM_VAR_NAME_EMPTY,缩放变量名不能为空,Zoom variable name cannot be empty
-FUSE_ERROR_NO_GLOBAL_VAR_ASSISTANT,未检测到 GlobalVariableAssistant 节点,GlobalVariableAssistant node not detected
 FUSE_WARNING_EXECUTION_CONTEXT_NULL,执行上下文为空,Execution context is null
 FUSE_LOG_GET_GLOBAL_VAR_SUCCESS,成功获取 GlobalVariableAssistant 单例，资源路径: {path},Successfully got GlobalVariableAssistant singleton, resource path: {path}
-FUSE_ERROR_VAR_NAME_EMPTY,变量名称不能为空,Variable name cannot be empty
 FUSE_ERROR_VAR_NAME_INVALID,变量名称包含无效字符或格式不正确,Variable name contains invalid characters or incorrect format
 FUSE_ERROR_NO_SCENE_TREE,无法获取 SceneTree,Cannot get SceneTree
 FUSE_LOG_BREAK_DETECTED,检测到 break 标志，跳出循环（索引: {index}）,Break flag detected, exiting loop (index: {index})
@@ -1626,7 +1521,6 @@ FUSE_ERROR_TARGET_NODE_PATH_EMPTY,目标节点路径不能为空,Target node pat
 FUSE_ERROR_TARGET_FUNCTION_NAME_EMPTY,目标函数名不能为空,Target function name cannot be empty
 FUSE_ERROR_FUNCTION_NOT_CALLABLE,函数不存在或不可调用: {function},Function does not exist or is not callable: {function}
 FUSE_ERROR_FUNCTION_PARAMS_VALIDATION_FAILED,函数参数验证失败,Function parameter validation failed
-FUSE_ERROR_RESULT_VARIABLE_NAME_EMPTY,结果变量名不能为空,Result variable name cannot be empty
 
 # Run Target Node Function - Placeholder Text
 FUSE_METHOD_FILTER_NO_METHODS,目标节点没有可用方法,Target node has no available methods
@@ -1844,7 +1738,6 @@ FUSE_INSTRUCTION_SET_CAMERA_ZOOM_DESC_FORMAT,设置 {target} 相机{mode}缩放�
 
 # Camera - Common Validation Errors
 FUSE_ERROR_CAMERA_NODE_EMPTY,相机节点不能为空,Camera node cannot be empty
-FUSE_ERROR_DURATION_MUST_BE_POSITIVE,持续时间必须大于 0,Duration must be greater than 0
 
 # Phase 3 - Flow Control Instructions (If/Else, Pause/Resume Game, Wait, Wait Until)
 # If/Else Instruction
@@ -2152,7 +2045,6 @@ FUSE_LOG_CONDITION_FALSE_SKIP_ALL,条件为假，跳过所有剩余指令,Condit
 FUSE_LOG_CONDITION_FAILED_SKIP_ALL,条件检查不通过，跳过剩余指令,Condition check failed, skipping remaining instructions
 FUSE_LOG_CONDITION_FALSE_STOP,条件为假，停止执行,Condition is false, stopping execution
 FUSE_LOG_CONDITION_TRIGGERED_STOP,条件检查触发停止执行,Condition check triggered stop execution
-FUSE_LOG_STOP_EXECUTION_SET,成功设置停止执行,Successfully set stop execution
 FUSE_WARNING_NO_ACTION_RUNNER,无法获取 ActionRunner 实例，功能可能无效,Cannot get ActionRunner instance, feature may not work
 FUSE_WARNING_NO_ACTION_RUNNER_IN_CONTEXT,执行上下文中未设置 ActionRunner,ActionRunner not set in execution context
 FUSE_LOG_JUMP_TO_LABEL_NOT_IMPLEMENTED,跳转到标签功能暂未实现,Jump to label feature not implemented
@@ -2239,7 +2131,6 @@ FUSE_ERROR_PROPERTY_SET_SUCCESS,成功设置属性 {property} 为 {value},Succes
 FUSE_ERROR_SET_PROPERTY_FAILED,设置属性失败: {error},Failed to set property: {error}
 FUSE_WARNING_GLOBAL_VAR_NOT_FOUND,全局变量未找到: {variable},Global variable not found: {variable}
 FUSE_ERROR_NO_GLOBAL_VAR_ASSISTANT,无法获取 GlobalVariableAssistant 实例,Cannot get GlobalVariableAssistant instance
-FUSE_ERROR_UNKNOWN_VARIABLE_SCOPE,未知的变量作用域: {scope},Unknown variable scope: {scope}
 FUSE_ERROR_CONTEXT_NULL,执行上下文为空,Execution context is null
 
 # Get Scene Path Instruction (Localization Fix)
@@ -2284,7 +2175,6 @@ FUSE_INSTRUCTION_LOOK_AT_NO_TARGET_NODE,未指定目标节点,Target Node Not Sp
 FUSE_LOG_NODE2D_LOOK_AT,Node2D '{node}' 朝向位置 ({x}, {y}),Node2D '{node}' looking at position ({x}, {y})
 FUSE_LOG_NODE3D_LOOK_AT,Node3D '{node}' 朝向位置 ({x}, {y}, {z}),Node3D '{node}' looking at position ({x}, {y}, {z})
 FUSE_ERROR_POSITION_VARIABLE_EMPTY,位置变量名不能为空,Position variable name cannot be empty
-FUSE_ERROR_LOOK_AT_NODE_EMPTY,目标节点路径不能为空,Target node path cannot be empty
 FUSE_INSTRUCTION_LOOK_AT_DESC_VARIABLE,变量 '{name}',variable '{name}'
 FUSE_INSTRUCTION_LOOK_AT_DESC_NODE,节点 '{node}',node '{node}'
 FUSE_INSTRUCTION_LOOK_AT_UP_VECTOR, [Up: ({x}, {y}, {z})], [Up: ({x}, {y}, {z})]
@@ -2374,7 +2264,6 @@ FUSE_AXIS_Y,Y,Y
 FUSE_AXIS_XY,XY,XY
 
 # Common Error Messages
-FUSE_ERROR_DURATION_MUST_BE_POSITIVE,持续时间必须大于 0,Duration must be greater than 0
 FUSE_ERROR_BOUNCE_HEIGHT_MUST_BE_POSITIVE,弹跳高度必须大于 0,Bounce height must be greater than 0
 FUSE_ERROR_BOUNCE_COUNT_AT_LEAST_ONE,弹跳次数必须至少为 1,Bounce count must be at least 1
 FUSE_ERROR_FROM_ALPHA_RANGE,起始透明度必须在 0.0 到 1.0 之间,From alpha must be between 0.0 and 1.0
@@ -2446,7 +2335,6 @@ FUSE_INSTRUCTION_SET_UI_PROGRESS_RESOURCE,设置进度,Set Progress
 FUSE_UI_NODE_NOT_SELECTED,未选择,Not Selected
 FUSE_VARIABLE_NAME_FORMAT,变量 '{name}',Variable '{name}'
 FUSE_LOG_SET_UI_PROGRESS,设置进度条: {node} → {value},Set progress bar: {node} → {value}
-FUSE_ERROR_TARGET_NODE_EMPTY,目标节点不能为空,Target node cannot be empty
 FUSE_ERROR_PROGRESS_VALUE_RANGE,进度值必须在 0.0 到 1.0 之间,Progress value must be between 0.0 and 1.0
 FUSE_ERROR_PROGRESS_VAR_NAME_EMPTY,进度值变量名不能为空,Progress value variable name cannot be empty
 FUSE_INSTRUCTION_SET_UI_PROGRESS_DESC_FORMAT,设置 {node} 进度为 {value},Set {node} progress to {value}
@@ -2506,7 +2394,6 @@ FUSE_VARIABLE_RESOURCE_FILE_FORMAT,资源文件: {file},Resource file: {file}
 FUSE_VARIABLE_AUTO_DETECT_NODE,自动检测资源节点,Auto-detect resource node
 FUSE_VARIABLE_RESOURCE_NOT_CONFIGURED,未配置资源节点,Resource node not configured
 FUSE_INSTRUCTION_CREATE_VARIABLE_DESC_BASE,创建{scope}变量,Create {scope} variable
-FUSE_ERROR_VAR_NAME_INVALID,变量名称包含无效字符或格式不正确,Variable name contains invalid characters or incorrect format
 FUSE_ERROR_LOCAL_VAR_PERSISTENT,局部变量不能启用持久化存储,Local variables cannot enable persistent storage
 FUSE_ERROR_GLOBAL_VAR_AUTO_DETECT_REQUIRED,全局变量需要启用自动检测 GlobalVariableAssistant 功能,Global variables require auto-detection of GlobalVariableAssistant enabled
 
@@ -2531,7 +2418,6 @@ FUSE_ERROR_LOCAL_VAR_SET_FAILED,无法设置局部变量 {name} 的值,Cannot se
 
 # Time Instructions Localization Fix
 FUSE_INSTRUCTION_GET_DELTA_TIME_RESOURCE,获取 Delta 时间,Get Delta Time
-FUSE_VARIABLE_SCOPE_GLOBAL,全局,Global
 FUSE_VARIABLE_SCOPE_LOCAL,本地,Local
 FUSE_VARIABLE_SCOPE_SCOPE,作用域,Scope
 FUSE_LOG_DELTA_TIME_SAVED_GLOBAL,已保存 delta 时间 ({time} 秒) 到全局变量 '{variable}',Saved delta time ({time}s) to global variable '{variable}'
@@ -2547,7 +2433,6 @@ FUSE_LOG_TIME_SCALE_SET_TEMPORARY,设置时间缩放为 {scale}，{duration} 秒
 FUSE_LOG_TIME_SCALE_SET_PERMANENT,设置时间缩放为 {scale}（永久）,Set time scale to {scale} (permanent)
 FUSE_LOG_TIME_SCALE_RESTORED,时间缩放已恢复为 {scale},Time scale restored to {scale}
 FUSE_ERROR_TIME_SCALE_MUST_BE_POSITIVE,时间缩放值必须大于 0,Time scale must be greater than 0
-FUSE_ERROR_DURATION_MUST_BE_POSITIVE,持续时间不能为负数,Duration cannot be negative
 FUSE_INSTRUCTION_SET_TIME_SCALE_DESC_FORMAT,设置时间缩放为 {scale}{duration},Set time scale to {scale}{duration}
 
 # System Instructions Localization Fix
@@ -2558,9 +2443,6 @@ FUSE_INSTRUCTION_QUIT_DESC_FULL,退出应用程序,Quit Application
 # Animation Events - OnAnimationBlend
 FUSE_EVENT_ON_ANIMATION_BLEND_RESOURCE_NAME,动画混合: {path} (阈值 {threshold} {comparison}),Animation Blend: {path} (threshold {threshold} {comparison})
 FUSE_EVENT_ON_ANIMATION_BLEND_DESC,当 {path} 的混合权重 {threshold} {comparison} 时触发,Triggers when {path} blend weight {threshold} {comparison}
-FUSE_TEXT_COMPARISON_GREATER_OR_EQUAL,大于等于,Greater or equal
-FUSE_TEXT_COMPARISON_LESS_OR_EQUAL,小于等于,Less or equal
-FUSE_TEXT_COMPARISON_EQUAL,等于,Equal
 
 # Animation Events - OnAnimationFrameReached
 FUSE_EVENT_ON_ANIMATION_FRAME_REACHED_RESOURCE_NAME,动画帧 {frame}: {player} ({animation}),Animation Frame {frame}: {player} ({animation})
@@ -2604,7 +2486,6 @@ FUSE_EVENT_HEALTH_DESC_ANY,发生任何变化,changes
 FUSE_EVENT_HEALTH_DESC_LOW,低于 {low_threshold},below {low_threshold}
 FUSE_EVENT_HEALTH_DESC_CRITICAL,低于 {critical_threshold}（危急）,below {critical_threshold} (critical)
 FUSE_EVENT_HEALTH_DESC_DEPLETED,耗尽,depleted
-FUSE_ERROR_PROPERTY_NAME_EMPTY,属性名称不能为空,Property name cannot be empty
 FUSE_ERROR_HEALTH_THRESHOLD_LOW_INVALID,低生命值阈值必须在 0-1 之间,Low health threshold must be between 0-1
 FUSE_ERROR_HEALTH_THRESHOLD_CRITICAL_INVALID,危急生命值阈值必须在 0-1 之间,Critical health threshold must be between 0-1
 FUSE_ERROR_HEALTH_THRESHOLD_INVALID_RELATION,危急阈值应小于或等于低生命值阈值,Critical threshold should be less than or equal to low threshold
@@ -2668,22 +2549,15 @@ FUSE_ERROR_TIME_WINDOW_INVALID,时间窗口必须大于0,Time window must be gre
 
 # Common Text
 FUSE_TEXT_ANY,任意,Any
-FUSE_TEXT_NOT_SPECIFIED,未指定,Not Specified
-FUSE_TEXT_DEVICE_N,设备 {device},Device {device}
-FUSE_TEXT_ALL_DEVICES,所有设备,All Devices
 
 # Lifecycle Events Localization Fix
 FUSE_EVENT_ON_ENTER_TREE_NAME,节点进入场景树,Node Enter Tree
-FUSE_EVENT_ON_ENTER_TREE_DESC,当节点进入场景树时触发,Triggers when node enters scene tree
 FUSE_EVENT_ON_EXIT_TREE_NAME,退出场景树,Exit Scene Tree
-FUSE_EVENT_ON_EXIT_TREE_DESC,当节点退出场景树时触发,Triggers when node exits scene tree
 FUSE_EVENT_ON_EXIT_TREE_NAME_WITH_CLEANUP,退出场景树 [清理资源],Exit Scene Tree [Cleanup Resources]
 FUSE_EVENT_ON_EXIT_TREE_DESC_WITH_CLEANUP,当节点退出场景树时触发（清理资源）,Triggers when node exits scene tree (cleanup resources)
 FUSE_EVENT_ON_INTERVAL_RESOURCE_NAME,间隔执行: {interval}s - {auto} {trigger} {repeat},Interval: {interval}s - {auto} {trigger} {repeat}
 FUSE_EVENT_ON_INTERVAL_AUTO_START,自动开始,Auto Start
 FUSE_EVENT_ON_INTERVAL_MANUAL_START,手动开始,Manual Start
-FUSE_EVENT_ON_INTERVAL_TRIGGER_ON_START,立即触发,Trigger Immediately
-FUSE_EVENT_ON_INTERVAL_TRIGGER_AFTER_INTERVAL,间隔后触发,Trigger After Interval
 FUSE_EVENT_ON_INTERVAL_REPEAT_INFINITE,无限重复,Infinite Repeat
 FUSE_EVENT_ON_INTERVAL_ONCE,仅触发一次,Trigger Once
 FUSE_EVENT_ON_INTERVAL_REPEAT_COUNT_FORMAT,重复 {count} 次,Repeat {count} times
@@ -2713,7 +2587,6 @@ FUSE_EVENT_ON_PHYSICS_PROCESS_DESC,{interval} - ⚠️ 性能影响极高，请�
 FUSE_EVENT_ON_PROCESS_RESOURCE_NAME,On Process: {interval}s - {mode},On Process: {interval}s - {mode}
 FUSE_EVENT_ON_PROCESS_MODE_PROCESSING,处理帧,Process Frame
 FUSE_EVENT_ON_PROCESS_MODE_PHYSICS,物理帧,Physics Frame
-FUSE_EVENT_ON_PROCESS_DESC,每 {interval} 秒在 {mode} 触发一次（约 {fps}）⚠️ 注意：此事件性能影响极大,Triggers every {interval}s on {mode} (~{fps}) ⚠️ Note: This event has extremely high performance impact
 FUSE_EVENT_ON_READY_RESOURCE_NAME,On Ready With Delay: {delay},On Ready With Delay: {delay}
 FUSE_EVENT_ON_READY_DESC_WITH_DELAY,场景就绪后 {delay} 秒触发,Triggers {delay}s after scene is ready
 FUSE_EVENT_ON_READY_DESC_IMMEDIATE,场景就绪时触发,Triggers when scene is ready
@@ -2917,7 +2790,6 @@ FUSE_DIRECTION_RIGHT,右,Right
 FUSE_DIRECTION_UNKNOWN,未知,Unknown
 FUSE_ERROR_SOURCE_TARGET_REQUIRED,源节点和目标节点路径都不能为空,Source and target node paths cannot be empty
 FUSE_ERROR_SOURCE_NODE_NOT_FOUND,找不到源节点: %s,Source node not found: %s
-FUSE_ERROR_TARGET_NODE_NOT_FOUND,找不到目标节点: %s,Target node not found: %s
 FUSE_ERROR_NO_GLOBAL_POSITION,节点没有 global_position 属性,Node does not have global_position property
 FUSE_ERROR_NODE_TYPE_2D_3D_REQUIRED,节点必须是 Node2D 或 Node3D 类型,Node must be Node2D or Node3D type
 FUSE_ERROR_POSITION_TYPE_ERROR,位置类型错误,Position type error
@@ -2930,7 +2802,6 @@ FUSE_LOG_DIRECTION_CHECK,方位检测: {target} 相对于 {source} 的方向为 
 # Node 条件 - 朝向检测
 FUSE_CONDITION_FACING_NOT_SET,朝向检测 (未设置),Facing Check (Not Set)
 FUSE_CONDITION_FACING_FORMAT,朝向: {node} ({facing}),Facing: {node} ({facing})
-FUSE_ERROR_TARGET_NODE_PATH_EMPTY,目标节点路径不能为空,Target node path cannot be empty
 FUSE_ERROR_SCALE_TYPE_ERROR,节点 scale 属性类型错误,Node scale property type error
 FUSE_ERROR_SCALE_VECTOR_REQUIRED,节点 scale 属性必须是 Vector2 或 Vector3,Node scale property must be Vector2 or Vector3
 FUSE_ERROR_NO_FACING_PROPERTY,节点没有可检测的朝向属性,Node has no detectable facing property
@@ -2941,7 +2812,6 @@ FUSE_LOG_FACING_CHECK,朝向检测: {node} 朝向为 {facing} => {result},Facing
 FUSE_CONDITION_HIERARCHY_NOT_SET,节点层次 (未设置),Node Hierarchy (Not Set)
 FUSE_CONDITION_IS_CHILD_OF_FORMAT,{child} 是 {parent} 的子节点,{child} is child of {parent}
 FUSE_ERROR_CHILD_PARENT_REQUIRED,子节点和父节点路径都不能为空,Child and parent node paths cannot be empty
-FUSE_ERROR_CHILD_NOT_FOUND,找不到子节点: %s,Child node not found: %s
 FUSE_ERROR_PARENT_NOT_FOUND,找不到父节点: %s,Parent node not found: %s
 FUSE_ERROR_CHILD_NODE_EMPTY,子节点路径不能为空,Child node path cannot be empty
 FUSE_ERROR_PARENT_NODE_EMPTY,父节点路径不能为空,Parent node path cannot be empty
@@ -2963,7 +2833,6 @@ FUSE_LOG_NODE_EXISTS_CHECK,节点存在性检查: {path} => {result},Node existe
 FUSE_CONDITION_NODE_GROUP_NOT_SET,节点组检测 (未设置),Node Group Check (Not Set)
 FUSE_CONDITION_NODE_GROUP_NO_GROUP,节点组检测: {path} (未设置组名),Node Group Check: {path} (group not set)
 FUSE_CONDITION_NODE_GROUP_FORMAT,节点组检测: {path} ∈ '{group}',Node Group Check: {path} ∈ '{group}'
-FUSE_ERROR_GROUP_NAME_EMPTY,组名不能为空,Group name cannot be empty
 FUSE_LOG_NODE_GROUP_CHECK,节点组检测: {path} ∈ '{group}' => {result},Node group check: {path} ∈ '{group}' => {result}
 FUSE_ERROR_NODE_VARIABLE_IS_NULL,节点变量值为空: {name},Node variable value is null: {name}
 FUSE_ERROR_NODE_VARIABLE_INVALID_TYPE,节点变量 '{name}' 类型无效: {type},Node variable '{name}' has invalid type: {type}
@@ -2971,7 +2840,6 @@ FUSE_ERROR_NODE_VARIABLE_INVALID_TYPE,节点变量 '{name}' 类型无效: {type}
 # Node 条件 - 节点属性
 FUSE_CONDITION_NODE_PROPERTY_NOT_SET,节点属性检查 (未设置),Node Property Check (Not Set)
 FUSE_CONDITION_NODE_PROPERTY_NO_PROPERTY,节点属性检查 (未设置属性),Node Property Check (property not set)
-FUSE_ERROR_TARGET_NODE_PATH_EMPTY,目标节点路径不能为空,Target node path cannot be empty
 FUSE_ERROR_PROPERTY_NAME_EMPTY,属性名不能为空,Property name cannot be empty
 FUSE_ERROR_NODE_NO_PROPERTY,节点没有属性: {property},Node does not have property: {property}
 FUSE_LOG_NODE_PROPERTY_CHECK,节点属性检查: {node}.{property} = {value} (期望: {expected}) => {result},Node property check: {node}.{property} = {value} (expected: {expected}) => {result}
@@ -3030,7 +2898,6 @@ FUSE_LOG_ON_WALL_CHECK,墙壁检查: {path} => {result},Wall check: {path} => {r
 FUSE_CONDITION_VELOCITY_NOT_SET,速度检测 (未设置),Velocity Check (Not Set)
 FUSE_CONDITION_VELOCITY_FORMAT,速度 {op} {value},Velocity {op} {value}
 FUSE_CONDITION_VELOCITY_DESC_NOT_SET,速度检测 (未设置),Velocity check (not set)
-FUSE_ERROR_NO_VELOCITY_PROPERTY,节点没有 velocity 属性,Node does not have velocity property
 FUSE_ERROR_VELOCITY_TYPE_ERROR,velocity 属性类型错误,velocity property type error
 FUSE_ERROR_VELOCITY_PROPERTY_MISSING,节点没有 velocity 属性,Node does not have velocity property
 FUSE_ERROR_VELOCITY_VECTOR_REQUIRED,velocity 属性必须是 Vector2 或 Vector3,velocity property must be Vector2 or Vector3
@@ -3042,7 +2909,6 @@ FUSE_CONDITION_COUNTDOWN_NOT_SET,倒计时 (未设置变量),Countdown (variable
 FUSE_CONDITION_COUNTDOWN_FORMAT,倒计时: {var} ({time}s),Countdown: {var} ({time}s)
 FUSE_CONDITION_COUNTDOWN_DESC_NOT_SET,倒计时检查 (未设置变量),Countdown check (variable not set)
 FUSE_ERROR_START_TIME_VARIABLE_EMPTY,开始时间变量名不能为空,Start time variable name cannot be empty
-FUSE_ERROR_DURATION_MUST_BE_POSITIVE,倒计时时长必须大于 0,Countdown duration must be greater than 0
 FUSE_ERROR_START_TIME_VARIABLE_NOT_FOUND,找不到开始时间变量: %s,Start time variable not found: %s
 FUSE_ERROR_START_TIME_TYPE_ERROR,开始时间变量必须是数值类型,Start time variable must be numeric type
 FUSE_LOG_COUNTDOWN_CHECK,倒计时检查: 已经过 {elapsed}s / {duration}s => {result},Countdown check: elapsed {elapsed}s / {duration}s => {result}
@@ -3050,7 +2916,6 @@ FUSE_LOG_COUNTDOWN_CHECK,倒计时检查: 已经过 {elapsed}s / {duration}s => 
 # Time 条件 - 游戏时间
 FUSE_CONDITION_GAME_TIME_FORMAT,游戏时间: {time}s,Game Time: {time}s
 FUSE_CONDITION_GAME_TIME_DESC_FORMAT,游戏时间 >= {time}s,Game Time >= {time}s
-FUSE_ERROR_GAME_TIME_NEGATIVE,目标游戏时间不能为负数,Target game time cannot be negative
 FUSE_LOG_GAME_TIME_CHECK,游戏时间检查: {current}s / {target}s => {result},Game time check: {current}s / {target}s => {result}
 
 # Time 条件 - 时间范围
@@ -3097,7 +2962,6 @@ FUSE_CONDITION_VAR_COMPARISON_NOT_SET,变量比较 (未设置变量),Variable Co
 FUSE_CONDITION_VAR_COMPARISON_FORMAT,{var} {op} {value},{var} {op} {value}
 FUSE_CONDITION_VAR_COMPARISON_DESC_NOT_SET,变量比较 (未设置变量),Variable comparison (variable not set)
 FUSE_ERROR_VAR_NAME_EMPTY,变量名不能为空,Variable name cannot be empty
-FUSE_ERROR_UNKNOWN_COMPARISON_OPERATOR,未知的比较运算符: %d,Unknown comparison operator: %d
 FUSE_ERROR_CANNOT_COMPARE_NON_NUMERIC,无法比较非数值类型: %s 和 %s,Cannot compare non-numeric types: %s and %s
 FUSE_LOG_VARIABLE_COMPARISON,变量比较: {var} ({value}) {op} {compare} = {result},Variable comparison: {var} ({value}) {op} {compare} = {result}
 FUSE_LOG_VECTOR2_AXIS_CHECK,Vector2 轴检查: {var}.{axis} ({actual}) {op} {compare} = {result},Vector2 axis check: {var}.{axis} ({actual}) {op} {compare} = {result}
@@ -3277,10 +3141,7 @@ FUSE_ERROR_START_TIME_VAR_MUST_BE_NUMERIC,开始时间变量必须是数值类�
 FUSE_CONDITION_LOG_COUNTDOWN_CHECK,倒计时检查: 已经过 {elapsed}s / {duration}s => {status},Countdown check: Elapsed {elapsed}s / {duration}s => {status}
 FUSE_ERROR_GAME_TIME_NEGATIVE,游戏时间不能为负数,Game time cannot be negative
 FUSE_CONDITION_LOG_GAME_TIME_CHECK,游戏时间检查: {current}s / {target}s => {status},Game time check: {current}s / {target}s => {status}
-FUSE_ERROR_TIME_NEGATIVE,时间值不能为负数,Time value cannot be negative
-FUSE_ERROR_START_MUST_BE_LESS_THAN_END,开始时间必须小于结束时间,Start time must be less than end time
 FUSE_CONDITION_LOG_TIME_RANGE_CHECK,时间段检查: {current}s 在 [{start}s, {end}s] 范围内 => {result},Time range check: {current}s in [{start}s, {end}s] => {result}
-FUSE_ERROR_TIME_THRESHOLD_NEGATIVE,时间阈值不能为负数,Time threshold cannot be negative
 FUSE_CONDITION_LOG_TIME_REACHED_CHECK,时间检查: {elapsed} / {target} 秒 => {status},Time check: {elapsed} / {target}s => {status}
 FUSE_CONDITION_UNNAMED,未命名,Unnamed
 FUSE_ERROR_HEALTH_VAR_NAME_EMPTY,生命值变量名不能为空,Health variable name cannot be empty
@@ -3288,7 +3149,6 @@ FUSE_ERROR_HEALTH_VAR_NOT_FOUND,找不到生命值变量: {var},Health variable 
 FUSE_ERROR_HEALTH_VAR_MUST_BE_NUMERIC,生命值变量必须是数值类型,Health variable must be numeric
 FUSE_CONDITION_LOG_HEALTH_CHECK,生命值检查: {var} ({value}) == {target} => {result},Health check: {var} ({value}) == {target} => {result}
 FUSE_CONDITION_LOG_HEALTH_THRESHOLD_CHECK,生命值对比: {var} ({value}) {op} {threshold} => {result},Health threshold: {var} ({value}) {op} {threshold} => {result}
-FUSE_ERROR_INVALID_COMPARISON_OPERATOR,无效的比较运算符,Invalid comparison operator
 FUSE_ERROR_COMPARE_VAR_NAME_EMPTY,比较变量名称为空,Compare variable name is empty
 FUSE_ERROR_GET_COMPARE_VAR_FAILED,无法获取比较变量值,Failed to get compare variable value
 FUSE_ERROR_VAR_SCOPE_INVALID,变量作用域必须是有效的枚举值,Variable scope must be a valid enum value
@@ -3362,7 +3222,6 @@ FUSE_LOG_EXECUTION_PROGRESS_UPDATED,Execution progress updated to: {progress},Ex
 FUSE_LOG_EXECUTION_ERROR,Execution error: {message},Execution error: {message}
 FUSE_LOG_EXECUTION_CANCELLATION_REQUESTED,Execution cancellation requested,Execution cancellation requested
 FUSE_LOG_EXECUTION_STATE_RESET,Execution state reset,Execution state reset
-FUSE_LOG_EXECUTION_HISTORY_CLEARED,执行历史已清除,Execution history cleared
 FUSE_LOG_STATE_CHANGE_LISTENER_ADDED,添加状态变化监听器,Added state change listener
 FUSE_LOG_STATE_CHANGE_LISTENER_REMOVED,移除状态变化监听器,Removed state change listener
 FUSE_LOG_DEPENDENCY_CHECK_COMPLETE,批量检查依赖关系完成: 检查了 {count} 组依赖关系,Batch dependency check complete: checked {count} groups
@@ -3531,7 +3390,6 @@ FUSE_SCOPE_SOURCE_TARGET_NODE,目标节点,Target Node
 # FUSE_OPERATOR_IS_FALSE,为假,Is False
 # 作用域变量系统额外翻译
 FUSE_ERROR_SCOPE_ID_EMPTY,自定义作用域ID不能为空,Custom scope ID cannot be empty
-FUSE_ERROR_TARGET_NODE_PATH_EMPTY,目标节点路径不能为空,Target node path cannot be empty
 FUSE_WARNING_SCOPE_ID_EMPTY,自定义作用域ID为空,Custom scope ID is empty
 FUSE_WARNING_TARGET_NODE_PATH_EMPTY,目标节点路径为空,Target node path is empty
 FUSE_WARNING_NODE_NOT_FOUND,无法找到节点,Cannot find node
@@ -3702,7 +3560,6 @@ FUSE_LOG_GET_NODES_IN_GROUP_SAVED,已保存 {count} 个节点到变量 {var} [{s
 FUSE_LOG_GET_NODES_IN_GROUP_SAVE_FAILED,保存节点到变量 {var} [{scope}] 失败,Failed to save nodes to variable {var} [{scope}]
 FUSE_ERROR_GROUP_NAME_EMPTY,组名称不能为空,Group name cannot be empty
 FUSE_ERROR_RESULT_VAR_EMPTY,结果变量名不能为空,Result variable name cannot be empty
-FUSE_ERROR_SCENE_TREE_NOT_FOUND,无法获取场景树,Cannot get scene tree
 
 # GetGroupCount 指令 - Get Group Count Instruction
 FUSE_INSTRUCTION_GET_GROUP_COUNT_NAME,获取组节点数量,Get Group Count
@@ -3782,7 +3639,6 @@ FUSE_CONDITION_CHILD_COUNT_NAME,子节点数量,Child Count
 FUSE_CONDITION_CHILD_COUNT_DESC,检查指定节点的子节点数量,Check the number of children of the specified node
 FUSE_CONDITION_CHILD_COUNT_NOT_SET,子节点数量 (未设置),Child Count (Not Set)
 FUSE_CONDITION_CHILD_COUNT_DESC_NOT_SET,子节点数量检查 (未设置节点),Child count check (node not set)
-FUSE_ERROR_NODE_VARIABLE_INVALID_TYPE,节点变量 '{name}' 类型无效: {type},Node variable '{name}' has invalid type: {type}
 FUSE_LOG_CHILD_COUNT_CHECK,子节点数量检查: {node} ({mode}) count={count} {op} {expected} => {result},Child count check: {node} ({mode}) count={count} {op} {expected} => {result}
 
 # ArrayAdd 指令 - ArrayAdd Instruction
@@ -3838,20 +3694,17 @@ FUSE_INSTRUCTION_ARRAY_SET_DESC_FROM_VAR,变量 '{name}','{name}' variable
 FUSE_INSTRUCTION_ARRAY_SET_DESC_NO_VAR,<未指定变量>,<No Variable Specified>
 # Array Get
 FUSE_INSTRUCTION_ARRAY_GET_NAME,获取数组元素,Array Get
-FUSE_INSTRUCTION_ARRAY_GET_DESC,获取数组中指定索引的元素并存储到目标变量,Get element at specified index and store to target variable
 FUSE_INSTRUCTION_ARRAY_GET_NO_ARRAY,<未指定数组>,<No Array Specified>
 FUSE_INSTRUCTION_ARRAY_GET_ARRAY,数组 {name},Array {name}
 FUSE_INSTRUCTION_ARRAY_GET_NODE_CHILDREN,子节点数组,Node Children
 FUSE_INSTRUCTION_ARRAY_GET_NO_GROUP,<未指定组>,<No Group Specified>
 FUSE_INSTRUCTION_ARRAY_GET_GROUP,组 '{name}',Group '{name}'
 FUSE_INSTRUCTION_ARRAY_GET_NO_TARGET_VAR,<未指定目标变量>,<No Target Variable Specified>
-FUSE_INSTRUCTION_ARRAY_GET_TARGET_VAR,→ 变量 {name},→ Variable {name}
 FUSE_INSTRUCTION_ARRAY_GET_DESC_ARRAY,数组 '{name}','{name}' array
 FUSE_INSTRUCTION_ARRAY_GET_DESC_NO_ARRAY,<未指定数组>,<No Array Specified>
 FUSE_INSTRUCTION_ARRAY_GET_DESC_NODE_CHILDREN,节点子节点,Node children
 FUSE_INSTRUCTION_ARRAY_GET_DESC_GROUP,组 '{name}','{name}' group
 FUSE_INSTRUCTION_ARRAY_GET_DESC_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_GET_DESC_TARGET_VAR,→ 变量 '{name}',→ Variable '{name}'
 FUSE_INSTRUCTION_ARRAY_GET_DESC_NO_TARGET_VAR,<未指定目标变量>,<No Target Variable Specified>
 FUSE_ERROR_ELEMENT_VAR_EMPTY,元素变量名不能为空,Element variable name cannot be empty
 FUSE_ERROR_NODE_PATH_EMPTY,节点路径不能为空,Node path cannot be empty
@@ -3860,56 +3713,11 @@ FUSE_LOG_ARRAY_ADDED,已添加元素 {element} 到数组,Added element {element}
 FUSE_LOG_ARRAY_ADD_RESET,ArrayAdd 指令已重置,ArrayAdd instruction reset
 FUSE_CATEGORY_ARRAYS,数组操作,Array Operations
 # Array Remove
-FUSE_INSTRUCTION_ARRAY_REMOVE_NAME,移除数组元素,Array Remove
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC,从数组中移除指定索引或值的元素,Remove element at index or by value from array
-FUSE_INSTRUCTION_ARRAY_REMOVE_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_REMOVE_ARRAY,数组 {name},Array {name}
-FUSE_INSTRUCTION_ARRAY_REMOVE_NODE_CHILDREN,子节点数组,Node Children
-FUSE_INSTRUCTION_ARRAY_REMOVE_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_REMOVE_GROUP,组 '{name}',Group '{name}'
-FUSE_INSTRUCTION_ARRAY_REMOVE_NO_ELEMENT_VAR,<未指定元素变量>,<No Element Variable Specified>
-FUSE_INSTRUCTION_ARRAY_REMOVE_FROM_VAR,变量 {name},Variable {name}
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_ARRAY,数组 '{name}','{name}' array
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_NODE_CHILDREN,节点子节点,Node children
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_GROUP,组 '{name}','{name}' group
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_FROM_VAR,变量 '{name}','{name}' variable
-FUSE_INSTRUCTION_ARRAY_REMOVE_DESC_NO_VAR,<未指定变量>,<No Variable Specified>
 # Array Set
-FUSE_INSTRUCTION_ARRAY_SET_NAME,设置数组元素,Array Set
-FUSE_INSTRUCTION_ARRAY_SET_DESC,设置数组中指定索引的元素值,Set element value at specified index in array
-FUSE_INSTRUCTION_ARRAY_SET_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_SET_ARRAY,数组 {name},Array {name}
-FUSE_INSTRUCTION_ARRAY_SET_NODE_CHILDREN,子节点数组,Node Children
-FUSE_INSTRUCTION_ARRAY_SET_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_SET_GROUP,组 '{name}',Group '{name}'
-FUSE_INSTRUCTION_ARRAY_SET_NO_ELEMENT_VAR,<未指定元素变量>,<No Element Variable Specified>
-FUSE_INSTRUCTION_ARRAY_SET_FROM_VAR,变量 {name},Variable {name}
-FUSE_INSTRUCTION_ARRAY_SET_DESC_ARRAY,数组 '{name}','{name}' array
-FUSE_INSTRUCTION_ARRAY_SET_DESC_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_SET_DESC_NODE_CHILDREN,节点子节点,Node children
-FUSE_INSTRUCTION_ARRAY_SET_DESC_GROUP,组 '{name}','{name}' group
-FUSE_INSTRUCTION_ARRAY_SET_DESC_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_SET_DESC_FROM_VAR,变量 '{name}','{name}' variable
-FUSE_INSTRUCTION_ARRAY_SET_DESC_NO_VAR,<未指定变量>,<No Variable Specified>
 # Array Get
-FUSE_INSTRUCTION_ARRAY_GET_NAME,获取数组元素,Array Get
 FUSE_INSTRUCTION_ARRAY_GET_DESC,获取数组中指定索引的元素并存储到目标变量,Get element at specified index from array and store to target variable
-FUSE_INSTRUCTION_ARRAY_GET_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_GET_ARRAY,数组 {name},Array {name}
-FUSE_INSTRUCTION_ARRAY_GET_NODE_CHILDREN,子节点数组,Node Children
-FUSE_INSTRUCTION_ARRAY_GET_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_GET_GROUP,组 '{name}',Group '{name}'
-FUSE_INSTRUCTION_ARRAY_GET_NO_TARGET_VAR,<未指定目标变量>,<No Target Variable Specified>
 FUSE_INSTRUCTION_ARRAY_GET_TARGET_VAR,变量 {name},Variable {name}
-FUSE_INSTRUCTION_ARRAY_GET_DESC_ARRAY,数组 '{name}','{name}' array
-FUSE_INSTRUCTION_ARRAY_GET_DESC_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_GET_DESC_NODE_CHILDREN,节点子节点,Node children
-FUSE_INSTRUCTION_ARRAY_GET_DESC_GROUP,组 '{name}','{name}' group
-FUSE_INSTRUCTION_ARRAY_GET_DESC_NO_GROUP,<未指定组>,<No Group Specified>
 FUSE_INSTRUCTION_ARRAY_GET_DESC_TARGET_VAR,目标变量 '{name}',Target variable '{name}'
-FUSE_INSTRUCTION_ARRAY_GET_DESC_NO_TARGET_VAR,<未指定目标变量>,<No Target Variable Specified>
 # Array Clear
 FUSE_INSTRUCTION_ARRAY_CLEAR_NAME,清空数组,Array Clear
 FUSE_INSTRUCTION_ARRAY_CLEAR_DESC,清空数组中的所有元素,Clear all elements from array
@@ -3940,13 +3748,6 @@ FUSE_INSTRUCTION_ARRAY_SHUFFLE_DESC_NO_GROUP,<未指定组>,<No Group Specified>
 FUSE_LOG_ARRAY_SHUFFLED,已打乱数组 {array},Shuffled array {array}
 FUSE_LOG_ARRAY_SHUFFLE_RESET,ArrayShuffle 指令已重置,ArrayShuffle instruction reset
 # Array Size
-FUSE_INSTRUCTION_ARRAY_SIZE_NAME,获取数组大小,Array Size
-FUSE_INSTRUCTION_ARRAY_SIZE_DESC,获取数组的大小（元素数量）并存储到目标变量,Get array size (element count) and store to target variable
-FUSE_INSTRUCTION_ARRAY_SIZE_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_SIZE_ARRAY,数组 {name},Array {name}
-FUSE_INSTRUCTION_ARRAY_SIZE_NODE_CHILDREN,子节点数组,Node Children
-FUSE_INSTRUCTION_ARRAY_SIZE_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_INSTRUCTION_ARRAY_SIZE_GROUP,组 '{name}',Group '{name}'
 FUSE_INSTRUCTION_ARRAY_SIZE_NO_TARGET_VAR,<未指定目标变量>,<No Target Variable Specified>
 FUSE_INSTRUCTION_ARRAY_SIZE_TARGET_VAR,变量 {name},Variable {name}
 FUSE_INSTRUCTION_ARRAY_SIZE_DESC_ARRAY,数组 '{name}','{name}' array
@@ -4016,10 +3817,6 @@ FUSE_INSTRUCTION_ARRAY_RANDOM_DESC_NO_TARGET_VAR,<未指定目标变量>,<No Tar
 FUSE_LOG_ARRAY_RANDOM_RESULT,从数组 {array} 随机获取: {value},Random from array {array}: {value}
 FUSE_LOG_ARRAY_RANDOM_RESET,ArrayRandom 指令已重置,ArrayRandom instruction reset
 # Array Insert
-FUSE_INSTRUCTION_ARRAY_INSERT_NAME,插入数组元素,Array Insert
-FUSE_INSTRUCTION_ARRAY_INSERT_DESC,在指定位置插入元素到数组,Insert element at specified position in array
-FUSE_INSTRUCTION_ARRAY_INSERT_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_INSTRUCTION_ARRAY_INSERT_ARRAY,数组 {name},Array {name}
 FUSE_INSTRUCTION_ARRAY_INSERT_NODE_CHILDREN,子节点数组,Node Children
 FUSE_INSTRUCTION_ARRAY_INSERT_NO_GROUP,<未指定组>,<No Group Specified>
 FUSE_INSTRUCTION_ARRAY_INSERT_GROUP,组 '{name}',Group '{name}'
@@ -4046,25 +3843,12 @@ FUSE_INSTRUCTION_ARRAY_REVERSE_DESC_NO_GROUP,<未指定组>,<No Group Specified>
 FUSE_LOG_ARRAY_REVERSED,已反转数组 {array},Reversed array {array}
 FUSE_LOG_ARRAY_REVERSE_RESET,ArrayReverse 指令已重置,ArrayReverse instruction reset
 # Array Conditions
-FUSE_CONDITION_ARRAY_SIZE_NAME,检查数组大小,Check Array Size
-FUSE_CONDITION_ARRAY_SIZE_DESC,检查数组大小是否满足条件,Check if array size meets condition
-FUSE_CONDITION_ARRAY_SIZE_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_CONDITION_ARRAY_SIZE_ARRAY,数组 {name},Array {name}
-FUSE_CONDITION_ARRAY_SIZE_NODE_CHILDREN,子节点数组,Node Children
-FUSE_CONDITION_ARRAY_SIZE_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_CONDITION_ARRAY_SIZE_GROUP,组 '{name}',Group '{name}'
 FUSE_CONDITION_ARRAY_SIZE_DESC_ARRAY,数组 '{name}','{name}' array
 FUSE_CONDITION_ARRAY_SIZE_DESC_NO_ARRAY,<未指定数组>,<No Array Specified>
 FUSE_CONDITION_ARRAY_SIZE_DESC_NODE_CHILDREN,节点子节点,Node children
 FUSE_CONDITION_ARRAY_SIZE_DESC_GROUP,组 '{name}','{name}' group
 FUSE_CONDITION_ARRAY_SIZE_DESC_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_CONDITION_ARRAY_CONTAINS_NAME,检查数组包含,Check Array Contains
 FUSE_CONDITION_ARRAY_CONTAINS_DESC,检查数组是否包含指定元素,Check if array contains specified element
-FUSE_CONDITION_ARRAY_CONTAINS_NO_ARRAY,<未指定数组>,<No Array Specified>
-FUSE_CONDITION_ARRAY_CONTAINS_ARRAY,数组 {name},Array {name}
-FUSE_CONDITION_ARRAY_CONTAINS_NODE_CHILDREN,子节点数组,Node Children
-FUSE_CONDITION_ARRAY_CONTAINS_NO_GROUP,<未指定组>,<No Group Specified>
-FUSE_CONDITION_ARRAY_CONTAINS_GROUP,组 '{name}',Group '{name}'
 FUSE_CONDITION_ARRAY_CONTAINS_DESC_ARRAY,数组 '{name}','{name}' array
 FUSE_CONDITION_ARRAY_CONTAINS_DESC_NO_ARRAY,<未指定数组>,<No Array Specified>
 FUSE_CONDITION_ARRAY_CONTAINS_DESC_NODE_CHILDREN,节点子节点,Node children
@@ -4081,7 +3865,6 @@ FUSE_INSTRUCTION_ARRAY_INSERT_INDEX_VAR,索引: {name},Index: {name}
 FUSE_INSTRUCTION_ARRAY_INSERT_NO_VALUE_VAR,<未指定值>,<No Value>
 FUSE_INSTRUCTION_ARRAY_INSERT_VALUE_VAR,值: {name},Value: {name}
 FUSE_LOG_ARRAY_INSERT,数组插入: 在索引 {index} 处插入值 {value} 到 {target},Array Insert: inserted value {value} at index {index} to {target}
-FUSE_LOG_ARRAY_INSERT_RESET,ArrayInsert 指令已重置,ArrayInsert instruction reset
 
 # Array Random 指令翻译补充
 FUSE_INSTRUCTION_ARRAY_RANDOM_FROM_VAR,→ {name},→ {name}
@@ -4116,11 +3899,9 @@ FUSE_INSTRUCTION_ARRAY_SIZE_NODE_CHILDREN_PATH,节点子节点: {path},Node Chil
 FUSE_INSTRUCTION_ARRAY_SIZE_NO_GROUP,<未指定组>,<No Group>
 FUSE_INSTRUCTION_ARRAY_SIZE_GROUP,组: {name},Group: {name}
 FUSE_LOG_ARRAY_SIZE,数组 {array} 大小为 {size}，存储到 {target},Array {array} size is {size}, stored to {target}
-FUSE_LOG_ARRAY_SIZE_RESET,ArraySize 指令已重置,ArraySize instruction reset
 
 # Array Contains 条件翻译
 FUSE_CONDITION_ARRAY_CONTAINS_NAME,数组包含,Array Contains
-FUSE_CONDITION_ARRAY_CONTAINS_DESC,检查数组是否包含指定元素,Check if array contains specified element
 FUSE_CONDITION_ARRAY_CONTAINS_NO_ARRAY,<未指定数组>,<No Array>
 FUSE_CONDITION_ARRAY_CONTAINS_ARRAY,{name} [{scope}],{name} [{scope}]
 FUSE_CONDITION_ARRAY_CONTAINS_NODE_CHILDREN,节点子节点: {path},Node Children: {path}
@@ -4381,7 +4162,6 @@ FUSE_ERROR_DICT_JSON_SOURCE_NOT_FOUND,JSON 源变量未找到: {var},JSON source
 FUSE_ERROR_DICT_JSON_SOURCE_NOT_STRING,JSON 源变量不是字符串类型: {var} (类型: {type}),JSON source variable is not a string: {var} (type: {type})
 FUSE_LOG_DICT_FROM_JSON,JSON 转字典完成: {count} 个键存储到 {dict},JSON to dict completed: {count} keys stored to {dict}
 FUSE_LOG_DICT_FROM_JSON_RESET,DictFromJson 指令已重置,DictFromJson instruction reset
-FUSE_ERROR_DICT_KEY_EMPTY,键名为空,Key is empty
 # DictModifyNumber 指令
 FUSE_INSTRUCTION_DICT_MODIFY_NUMBER_NAME,修改字典数值,Modify Dict Number
 FUSE_INSTRUCTION_DICT_MODIFY_NUMBER_DESC,修改字典中数值类型键的值（加法或减法）,Modify numeric key value in dictionary (add or subtract)
@@ -4687,7 +4467,6 @@ FUSE_INSTRUCTION_ADD_VARIABLE_NAME,增加变量,Add Variable
 FUSE_INSTRUCTION_ADD_VARIABLE_DESC,对变量执行加法运算,Performs addition on a variable
 FUSE_INSTRUCTION_ADD_VARIABLE_RESOURCE_NAME,增加: [{scope}] {name} + {amount},Add: [{scope}] {name} + {amount}
 FUSE_INSTRUCTION_ADD_VARIABLE_DESCRIPTION,[{scope}] {name} + {amount} = {result},[{scope}] {name} + {amount} = {result}
-FUSE_LOG_VARIABLE_ADDED,{name} + {amount} = {result},{name} + {amount} = {result}
 # =============================================
 # ToggleVariable - 切换变量
 # =============================================
@@ -4735,7 +4514,6 @@ FUSE_ERROR_INPUT_ACTION_NOT_FOUND,输入动作 "{action}" 不在 InputMap 中,In
 # 通用翻译键
 # =============================================
 FUSE_COMMON_CURRENT_NODE,当前节点,Current Node
-FUSE_ERROR_SCENE_TREE_NOT_FOUND,无法获取场景树,Cannot get SceneTree
 FUSE_CATEGORY_CAMERA,摄像机,Camera
 # =============================================
 # TweenPause - 暂停 Tween
@@ -4877,7 +4655,6 @@ FUSE_UI_ACTION_ADD,添加,Add
 FUSE_UI_ACTION_REMOVE,移除,Remove
 FUSE_LOG_UI_CHILD_ADDED,已添加 UI 子节点 ({scene}) 到 {parent},Added UI child ({scene}) to {parent}
 FUSE_LOG_UI_CHILD_REMOVED,已从 {parent} 移除 UI 子节点 ({child}),Removed UI child ({child}) from {parent}
-FUSE_ERROR_SCENE_PATH_EMPTY,场景路径不能为空,Scene path cannot be empty
 FUSE_ERROR_SCENE_LOAD_FAILED,加载场景失败: {path},Failed to load scene: {path}
 FUSE_ERROR_CHILD_NAME_EMPTY,子节点名不能为空,Child name cannot be empty
 FUSE_ERROR_CHILD_NOT_FOUND,未找到子节点 "{child}" 在 "{parent}" 中,Child node "{child}" not found in "{parent}"
@@ -4916,7 +4693,6 @@ FUSE_CONDITION_PATH_AVAILABLE_NAME,检查路径可用,Check Path Available
 FUSE_CONDITION_PATH_AVAILABLE_DESC,检查 NavigationAgent 是否有到目标的有效路径,Checks if a NavigationAgent has a valid path to the target
 FUSE_CONDITION_PATH_AVAILABLE_FORMAT,路径可用: {agent} → {pos},Path Available: {agent} → {pos}
 FUSE_CONDITION_PATH_AVAILABLE_DESCRIPTION,{agent} 到 {pos} 路径可用,{agent} has path to {pos}
-FUSE_CATEGORY_NAVIGATION,导航,Navigation
 # =============================================
 # CheckInputMagnitude - 检查输入向量大小
 # =============================================
@@ -5027,7 +4803,6 @@ FUSE_INSTRUCTION_LOAD_RESOURCE_NAME,加载资源,Load Resource
 FUSE_INSTRUCTION_LOAD_RESOURCE_DESC,按文件路径加载 Resource 并保存到变量,Loads a Resource by file path and saves it to a variable
 FUSE_INSTRUCTION_LOAD_RESOURCE_DESC_FORMAT,"加载 {path} → {variable}","Load {path} → {variable}"
 FUSE_LOG_RESOURCE_LOADED,"资源已加载 {path} → {variable}","Resource loaded {path} → {variable}"
-FUSE_ERROR_RESOURCE_PATH_EMPTY,资源路径不能为空,Resource path cannot be empty
 FUSE_ERROR_RESOURCE_NOT_FOUND,"资源未找到: {path}","Resource not found: {path}"
 FUSE_INSTRUCTION_SCREEN_FLASH_NAME,屏幕闪烁,Screen Flash
 FUSE_INSTRUCTION_SCREEN_FLASH_DESC,全屏闪烁效果，通过 Tween 实现 alpha 脉冲,Full-screen flash effect using Tween alpha pulse
@@ -5043,10 +4818,6 @@ FUSE_CONDITION_INPUT_DIRECTION_NAME,检查输入方向,Check Input Direction
 FUSE_CONDITION_INPUT_DIRECTION_DESC,检查当前输入方向是否匹配预期方向,Checks if current input direction matches the expected direction
 FUSE_CONDITION_INPUT_DIRECTION_FORMAT,输入方向 {direction},Input direction {direction}
 FUSE_CONDITION_INPUT_DIRECTION_DESCRIPTION,检查输入方向是否为 {direction},Check if input direction is {direction}
-FUSE_DIRECTION_UP,上,Up
-FUSE_DIRECTION_DOWN,下,Down
-FUSE_DIRECTION_LEFT,左,Left
-FUSE_DIRECTION_RIGHT,右,Right
 FUSE_CONDITION_PLATFORM_NAME,检查平台,Check Platform
 FUSE_CONDITION_PLATFORM_DESC,检查当前运行平台（Windows/macOS/Linux/Android/iOS/Web）,Checks the current running platform (Windows/macOS/Linux/Android/iOS/Web)
 FUSE_CONDITION_PLATFORM_FORMAT,平台 = {platform},Platform = {platform}
@@ -5103,7 +4874,6 @@ FUSE_ERROR_SPEED_VAR_NOT_FOUND,未找到速度变量：{variable},Speed variable
 FUSE_INSTRUCTION_ENABLE_DISABLE_NODE_BOTH_MODE,处理和可见性,Processing and Visibility
 
 FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_NAME,PathFollow2D 进度比到达,PathFollow2D Progress Ratio Reached
-FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_DESC,当 PathFollow2D 的 progress_ratio 到达指定值时触发,Triggers when a PathFollow2D progress_ratio reaches the specified value
 FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_RESOURCE_NAME,"{node} 进度比 {ratio} (±{tolerance})","{node} progress ratio {ratio} (±{tolerance})"
 FUSE_EVENT_PATH_FOLLOW_2D_PROGRESS_RATIO_DESC,"监听 {node}，当 progress_ratio 接近 {ratio} (容差 {tolerance}) 时触发","Monitor {node} and trigger when progress_ratio approaches {ratio} (tolerance {tolerance})"
 FUSE_ERROR_NOT_PATH_FOLLOW_2D,"节点 {node} 必须是 PathFollow2D 类型，实际为 {actual_type}","Node {node} must be PathFollow2D got {actual_type}"
@@ -5272,3 +5042,185 @@ FUSE_EVENT_BINDING_TRIGGER_ONCE,触发一次,trigger once
 FUSE_EVENT_BINDING_RESTART_WHILE_RUNNING,运行中重启,restart while running
 FUSE_EVENT_BINDING_GLOBAL_COOLDOWN,全局冷却,global cooldown
 FUSE_EVENT_BINDING_PER_OBJECT_COOLDOWN,每物体冷却,per-object cooldown
+FUSE_ERROR_NODE_TYPE_EXPECTED,节点 {node} 类型无效（需要: {expected}）,Node {node} has invalid type (expected: {expected})
+
+# 运行时核心日志本地化收编 + 基类上级标签键控（2026-09-03 后续批次）
+FUSE_LOG_GLOBAL_VAR_NAME_OR_INSTANCE_EMPTY,变量名称或实例不能为空,Variable name or instance cannot be empty
+FUSE_LOG_GLOBAL_VAR_RESOURCE_SAVE_FAILED,资源保存失败: {path} (错误码: {error_code}),Resource save failed: {path} (error code: {error_code})
+FUSE_LOG_GLOBAL_VAR_RESOURCE_SAVED,资源保存成功: {path},Resource saved successfully: {path}
+FUSE_LOG_GLOBAL_VAR_NO_PERSISTENT_TO_SAVE,没有持久化变量需要保存,No persistent variables to save
+FUSE_LOG_GLOBAL_VAR_PERSISTENT_SAVE_FAILED,持久化变量保存失败: {path} (错误码: {error_code}),Persistent variables save failed: {path} (error code: {error_code})
+FUSE_LOG_GLOBAL_VAR_PERSISTENT_SAVED,持久化变量保存成功: {path} (保存了 {count} 个变量),Persistent variables saved: {path} ({count} variables saved)
+FUSE_LOG_GLOBAL_VAR_RESOURCE_LOAD_FAILED,无法加载资源: {path},Failed to load resource: {path}
+FUSE_LOG_GLOBAL_VAR_NO_VARIABLE_DATA,资源中没有变量数据: {path},No variable data in resource: {path}
+FUSE_LOG_GLOBAL_VAR_RESOURCE_LOADED,资源加载成功: {path} (加载了 {count} 个变量),Resource loaded: {path} ({count} variables loaded)
+FUSE_LOG_GLOBAL_VAR_NOTIFY_NOT_FOUND,变量 '{name}' 不存在，无法通知变化,Variable '{name}' does not exist; cannot notify change
+FUSE_LOG_GLOBAL_VAR_CONTENT_CHANGED,变量 '{name}' 内容已变化，发射变化信号 (persistent={persistent}),Variable '{name}' content changed; emitting change signal (persistent={persistent})
+FUSE_LOG_GLOBAL_VAR_NAME_EMPTY,变量名称不能为空,Variable name cannot be empty
+FUSE_LOG_GLOBAL_VAR_NAME_EXISTS,变量名称已存在: {name},Variable name already exists: {name}
+FUSE_LOG_GLOBAL_VAR_VARIABLE_NOT_FOUND,变量不存在: {name},Variable not found: {name}
+FUSE_LOG_GLOBAL_VAR_UPDATE_NOT_FOUND,变量不存在，无法更新: {name},Variable does not exist; cannot update: {name}
+FUSE_LOG_GLOBAL_VAR_VARIABLE_UPDATED,变量更新成功: {name},Variable updated successfully: {name}
+FUSE_LOG_GLOBAL_VAR_REMOVE_NOT_FOUND,尝试移除不存在的变量: {name},Trying to remove a non-existent variable: {name}
+FUSE_LOG_GLOBAL_VAR_ALL_CLEARED,所有变量已清空，共清除 {count} 个变量,All variables cleared; removed {count} variables
+FUSE_LOG_GLOBAL_VAR_CLEANED_INVALID,清理了 {count} 个无效变量,Cleaned up {count} invalid variables
+FUSE_LOG_GLOBAL_VAR_READY_STARTED,=== READY 通知触发 ===,=== READY notification triggered ===
+FUSE_LOG_GLOBAL_VAR_NODE_READY,节点准备完成 - name: {name}，is_inside_tree: {inside_tree}，auto_register: {auto_register},Node ready - name: {name} is_inside_tree: {inside_tree} auto_register: {auto_register}
+FUSE_LOG_GLOBAL_VAR_REGISTERING,开始注册到管理器,Registering to manager
+FUSE_LOG_GLOBAL_VAR_REGISTER_SKIPPED,跳过注册 - auto_register: {auto_register},Registration skipped - auto_register: {auto_register}
+FUSE_LOG_GLOBAL_VAR_AUTO_LOAD_FROM_PATH,自动加载资源（从路径）: {path},Auto-loading resource (from path): {path}
+FUSE_LOG_GLOBAL_VAR_AUTO_LOAD_FROM_RESOURCE,自动加载资源（从 current_resource）: {path},Auto-loading resource (from current_resource): {path}
+FUSE_LOG_GLOBAL_VAR_AUTO_LOAD_SKIPPED_NO_SOURCE,跳过自动加载 - resource_path 为空且 current_resource 未设置,Auto-load skipped - resource_path is empty and current_resource is not set
+FUSE_LOG_GLOBAL_VAR_AUTO_LOAD_SKIPPED,跳过自动加载 - auto_load_on_ready: {auto_load},Auto-load skipped - auto_load_on_ready: {auto_load}
+FUSE_LOG_GLOBAL_VAR_READY_DONE,=== READY 通知处理完成 ===,=== READY notification handled ===
+FUSE_LOG_GLOBAL_VAR_SAVE_TIMER_CREATED,自动保存计时器已创建，延迟: {delay} 秒,Auto-save timer created with delay: {delay}s
+FUSE_LOG_GLOBAL_VAR_DELAYED_SAVE_TRIGGERED,延迟保存触发，开始保存持久化变量,Delayed save triggered; saving persistent variables
+FUSE_LOG_GLOBAL_VAR_DELAYED_SAVE_REQUESTED,已请求延迟保存，将在 {delay} 秒后执行,Delayed save requested; will run in {delay}s
+FUSE_LOG_GLOBAL_VAR_REGISTERED,成功注册到全局变量管理器,Successfully registered to the global variable manager
+FUSE_LOG_GLOBAL_VAR_UNREGISTER_MANAGER_NOT_FOUND,注销时无法获取全局变量管理器实例,Cannot get global variable manager instance while unregistering
+FUSE_LOG_GLOBAL_VAR_UNREGISTERED,成功从全局变量管理器注销,Successfully unregistered from the global variable manager
+FUSE_LOG_GLOBAL_VAR_VARIABLES_CHANGED,全局变量已变化,Global variables changed
+FUSE_LOG_GLOBAL_VAR_MANAGER_VARIABLE_ADDED,管理器变量添加: {name},Manager variable added: {name}
+FUSE_LOG_GLOBAL_VAR_PERSISTENT_ADDED_DELAYED_SAVE,持久化变量 '{name}' 已添加，请求延迟保存,Persistent variable '{name}' added; requesting delayed save
+FUSE_LOG_GLOBAL_VAR_MANAGER_VARIABLE_REMOVED,管理器变量移除: {name},Manager variable removed: {name}
+FUSE_LOG_GLOBAL_VAR_MANAGER_VARIABLE_CHANGED,管理器变量变化: {name} ({old} -> {new}),Manager variable changed: {name} ({old} -> {new})
+FUSE_LOG_GLOBAL_VAR_PERSISTENT_CHANGED_DELAYED_SAVE,持久化变量 '{name}' 已变化，请求延迟保存,Persistent variable '{name}' changed; requesting delayed save
+FUSE_LOG_GLOBAL_VAR_RESOURCE_SWITCHED,资源已切换: {old} -> {new},Resource switched: {old} -> {new}
+FUSE_LOG_GLOBAL_VAR_RESOURCE_LOADED_SIMPLE,资源加载成功: {path},Resource loaded successfully: {path}
+FUSE_LOG_GLOBAL_VAR_CURRENT_RESOURCE_LOAD_STARTED,=== 开始从 current_resource 加载变量 ===,=== Loading variables from current_resource started ===
+FUSE_LOG_GLOBAL_VAR_CURRENT_RESOURCE_NOT_SET,current_resource 未设置,current_resource is not set
+FUSE_LOG_GLOBAL_VAR_CURRENT_RESOURCE_TYPE_OK,current_resource 类型验证通过: GlobalVariableResource,current_resource type check passed: GlobalVariableResource
+FUSE_LOG_GLOBAL_VAR_CURRENT_RESOURCE_WRONG_TYPE,current_resource 不是 GlobalVariableResource 类型: {class_name},current_resource is not a GlobalVariableResource: {class_name}
+FUSE_LOG_GLOBAL_VAR_CLEARING_EXISTING,清空现有变量...,Clearing existing variables...
+FUSE_LOG_GLOBAL_VAR_RESOURCE_VARIABLE_LIST,资源中的变量列表: {names} (共 {count} 个),Variables in resource: {names} ({count} total)
+FUSE_LOG_GLOBAL_VAR_LOADING_VARIABLE,加载变量 '{name}'，数据类型: {type}，数据内容: {data},Loading variable '{name}' data type: {type} data: {data}
+FUSE_LOG_GLOBAL_VAR_NEW_FORMAT,新格式: value={value}，scope={scope}，persistent={persistent},New format: value={value} scope={scope} persistent={persistent}
+FUSE_LOG_GLOBAL_VAR_LEGACY_FORMAT,旧格式: value={value},Legacy format: value={value}
+FUSE_LOG_GLOBAL_VAR_RESOURCE_PATH_UPDATED,更新 resource_path: {path},Updated resource_path: {path}
+FUSE_LOG_GLOBAL_VAR_CURRENT_RESOURCE_LOAD_DONE,=== 从 current_resource 加载完成，共 {count} 个变量 ===,=== Loading from current_resource done; {count} variables ===
+FUSE_LOG_GLOBAL_VAR_VERIFY_MANAGER_VARIABLES,验证 - GlobalVariableManager 中的变量: {names},Verify - variables in GlobalVariableManager: {names}
+FUSE_LOG_GLOBAL_VAR_AUTO_SAVING,自动保存持久化变量到: {path},Auto-saving persistent variables to: {path}
+FUSE_LOG_GLOBAL_VAR_AUTO_SAVE_SUCCESS,自动保存成功,Auto-save succeeded
+FUSE_LOG_GLOBAL_VAR_AUTO_SAVE_FAILED,自动保存失败,Auto-save failed
+FUSE_LOG_GLOBAL_VAR_AUTO_SAVE_SKIPPED,跳过自动保存 - auto_save: {auto_save}，resource_path: {path},Auto-save skipped - auto_save: {auto_save} resource_path: {path}
+FUSE_LOG_GLOBAL_VAR_CLEANUP_CONDITION_MET,条件满足，开始清理非持久化变量,Conditions met; starting non-persistent variable cleanup
+FUSE_LOG_GLOBAL_VAR_CLEANUP_CONDITION_NOT_MET,清理条件不满足 - cleanup_on_exit: {cleanup}，is_editor_hint: {editor_hint},Cleanup conditions not met - cleanup_on_exit: {cleanup} is_editor_hint: {editor_hint}
+FUSE_LOG_GLOBAL_VAR_UNREGISTERING,节点已注册，开始注销,Node is registered; unregistering
+FUSE_LOG_GLOBAL_VAR_UNREGISTER_SKIPPED,节点未注册，跳过注销,Node is not registered; skipping unregister
+FUSE_LOG_GLOBAL_VAR_RESOURCE_PATH_EMPTY_SAVE,资源路径为空，无法保存,Resource path is empty; cannot save
+FUSE_LOG_GLOBAL_VAR_MANUAL_SAVE,手动保存持久化变量到: {path},Manually saving persistent variables to: {path}
+FUSE_LOG_GLOBAL_VAR_SAVE_STARTED,=== _save_persistent_variables() 开始 ===,=== _save_persistent_variables() started ===
+FUSE_LOG_GLOBAL_VAR_SAVE_MANAGER_NOT_FOUND,无法获取全局变量管理器实例，跳过保存,Cannot get global variable manager instance; skipping save
+FUSE_LOG_GLOBAL_VAR_MANAGER_VARIABLE_COUNT,管理器中共有 {count} 个变量,{count} variables in manager
+FUSE_LOG_GLOBAL_VAR_VARIABLE_DETAIL,变量 '{name}': persistent={persistent}，value={value},Variable '{name}': persistent={persistent} value={value}
+FUSE_LOG_GLOBAL_VAR_READY_TO_SAVE,准备保存 {count} 个持久化变量到: {path},Ready to save {count} persistent variables to: {path}
+FUSE_LOG_GLOBAL_VAR_CLEANUP_STARTED,=== 开始清理非持久化变量 ===,=== Non-persistent variable cleanup started ===
+FUSE_LOG_GLOBAL_VAR_CLEANUP_MANAGER_NOT_FOUND,无法获取全局变量管理器实例，跳过清理,Cannot get global variable manager instance; skipping cleanup
+FUSE_LOG_GLOBAL_VAR_NO_VARIABLES_TO_CLEAN,没有变量需要清理,No variables to clean up
+FUSE_LOG_GLOBAL_VAR_NO_NON_PERSISTENT_TO_CLEAN,没有非持久化变量需要清理,No non-persistent variables to clean up
+FUSE_LOG_GLOBAL_VAR_CLEANUP_BEGIN,开始清理非持久化变量，共 {count} 个,Cleaning up {count} non-persistent variables
+FUSE_LOG_GLOBAL_VAR_REMOVE_FAILED,无法移除变量: {name},Cannot remove variable: {name}
+FUSE_LOG_GLOBAL_VAR_VARIABLE_CLEANED,成功清理非持久化变量: {name},Successfully cleaned up non-persistent variable: {name}
+FUSE_LOG_GLOBAL_VAR_CLEANUP_DONE,非持久化变量清理完成,Non-persistent variable cleanup completed
+FUSE_LOG_GLOBAL_VAR_CLEANUP_PARTIAL_FAILED,部分变量清理失败: {count} 个,{count} variables failed to clean up
+FUSE_LOG_GLOBAL_VAR_CLEANUP_FINISHED,=== 清理非持久化变量完成 ===,=== Non-persistent variable cleanup finished ===
+FUSE_LOG_GLOBAL_VAR_RESOURCE_CREATED,资源创建成功: {path},Resource created successfully: {path}
+FUSE_LOG_GLOBAL_VAR_ENTER_TREE_STARTED,=== ENTER_TREE 通知触发 ===,=== ENTER_TREE notification triggered ===
+FUSE_LOG_GLOBAL_VAR_NODE_ENTERED_TREE,节点进入场景树 - name: {name}，is_inside_tree: {inside_tree},Node entered scene tree - name: {name} is_inside_tree: {inside_tree}
+FUSE_LOG_GLOBAL_VAR_INSTANCE_SET_IN_ENTER_TREE,在 _enter_tree() 中设置场景节点为单例: {name},Scene node set as singleton in _enter_tree(): {name}
+FUSE_LOG_GLOBAL_VAR_ENTER_TREE_DONE,=== ENTER_TREE 通知处理完成 ===,=== ENTER_TREE notification handled ===
+FUSE_LOG_GLOBAL_VAR_EXIT_TREE_STARTED,=== EXIT_TREE 通知触发 ===,=== EXIT_TREE notification triggered ===
+FUSE_LOG_GLOBAL_VAR_NODE_EXITING_TREE,节点即将退出场景树 - cleanup_on_exit: {cleanup}，is_editor_hint: {editor_hint},Node exiting scene tree - cleanup_on_exit: {cleanup} is_editor_hint: {editor_hint}
+FUSE_LOG_GLOBAL_VAR_EXIT_TREE_STATE,当前节点状态 - name: {name}，is_inside_tree: {inside_tree}，resource_path: {path},Current node state - name: {name} is_inside_tree: {inside_tree} resource_path: {path}
+FUSE_LOG_GLOBAL_VAR_EXIT_TREE_DONE,=== EXIT_TREE 通知处理完成 ===,=== EXIT_TREE notification handled ===
+FUSE_LOG_GLOBAL_VAR_WM_CLOSE_STARTED,=== WM_CLOSE_REQUEST 通知触发 ===,=== WM_CLOSE_REQUEST notification triggered ===
+FUSE_LOG_EVENT_BUS_SUBSCRIBE_EMPTY_NAME,无法订阅空事件名称,Cannot subscribe to an empty event name
+FUSE_LOG_EVENT_BUS_SUBSCRIBED,已订阅事件 '{event}'，当前监听器数: {count},Subscribed to event '{event}' current listeners: {count}
+FUSE_LOG_EVENT_BUS_UNSUBSCRIBED,已取消订阅事件 '{event}'，剩余监听器数: {count},Unsubscribed from event '{event}' remaining listeners: {count}
+FUSE_LOG_EVENT_BUS_ALL_LISTENERS_CLEARED,已清理所有监听器,All listeners cleared
+FUSE_LOG_RUNTIME_EVENT_CREATED,RuntimeEventInstance 创建完成: {description},RuntimeEventInstance created: {description}
+FUSE_LOG_RUNTIME_EVENT_NO_DEFINITION_INIT,没有事件定义，无法初始化运行时状态,No event definition; cannot initialize runtime state
+FUSE_LOG_RUNTIME_EVENT_SELF_DECLARED_INIT,使用 Event 自声明状态模式初始化: {event_type}，状态数: {count},Initialized with event self-declared state: {event_type} state count: {count}
+FUSE_LOG_RUNTIME_EVENT_LEGACY_INIT,使用遗留 match 分支模式初始化: {event_type},Initialized with legacy match-branch mode: {event_type}
+FUSE_LOG_RUNTIME_EVENT_LEGACY_STATE_INITIALIZED,运行时状态已初始化（遗留模式），事件类型: {event_type},Runtime state initialized (legacy mode) event type: {event_type}
+FUSE_LOG_RUNTIME_EVENT_STATE_UPDATED,运行时状态已更新: {key} = {value},Runtime state updated: {key} = {value}
+FUSE_LOG_RUNTIME_EVENT_STATE_REMOVED,运行时状态已移除: {key},Runtime state removed: {key}
+FUSE_LOG_RUNTIME_EVENT_STATE_RESET,运行时状态已重置,Runtime state reset
+FUSE_LOG_RUNTIME_EVENT_TRIGGER_STATS_UPDATED,触发统计已更新,Trigger stats updated
+FUSE_LOG_RUNTIME_EVENT_CLEANUP_STARTED,开始清理 RuntimeEventInstance,Starting RuntimeEventInstance cleanup
+FUSE_LOG_RUNTIME_EVENT_NO_DEFINITION,无事件定义,No event definition
+FUSE_LOG_RUNTIME_EVENT_NO_TRIGGER,无触发器,No trigger
+FUSE_LOG_RUNTIME_EVENT_LISTENING_STARTED,事件监听已启动: {description},Event listening started: {description}
+FUSE_LOG_RUNTIME_EVENT_LISTENING_STOPPED,事件监听已停止: {description},Event listening stopped: {description}
+FUSE_TEXT_PARENT,[上级],[Parent]
+FUSE_TEXT_PARENT_LEVELS,[{count}层上级],[{count} levels up]
+
+# 补齐代码引用但 CSV 缺失的历史遗留键（2026-09-03 完整性收口）
+FUSE_ERROR_ARRAY_EMPTY,数组为空,Array is empty
+FUSE_ERROR_ARRAY_INDEX_OUT_OF_RANGE,索引 {index} 超出范围（数组大小 {size}）,Index {index} out of range (array size {size})
+FUSE_ERROR_CAMERA_LIMIT_OUT_OF_RANGE,相机边界值 {value} 超出范围（{min} ~ {max}）,Camera limit {value} out of range ({min} ~ {max})
+FUSE_ERROR_CANNOT_LOAD_SCENE,无法加载场景: {scene},Failed to load scene: {scene}
+FUSE_ERROR_CREATE_GLOBAL_VARIABLE_FAILED,创建全局变量 {name} 失败,Failed to create global variable {name}
+FUSE_ERROR_GLOBAL_VARIABLE_RETRIEVAL_FAILED,获取全局变量 {name} 失败,Failed to retrieve global variable {name}
+FUSE_ERROR_INDEX_NOT_INT,索引必须是整数（实际类型 {type}）,Index must be an int (got {type})
+FUSE_ERROR_INVALID_DELAY,延迟时间无效,Invalid delay
+FUSE_ERROR_INVALID_SMOOTH_SPEED,平滑速度必须为正数,Smooth speed must be positive
+FUSE_ERROR_NODE_NOT_RUNNER,节点 {node} 不是 Runner,Node {node} is not a Runner
+FUSE_ERROR_NOT_A_DICTIONARY,变量 {name} 不是字典,Variable {name} is not a Dictionary
+FUSE_ERROR_OPERAND_A_SCOPE_CONTAINER_NOT_FOUND,找不到操作数 A 的作用域容器,Scope container for operand A not found
+FUSE_ERROR_OPERAND_B_SCOPE_CONTAINER_NOT_FOUND,找不到操作数 B 的作用域容器,Scope container for operand B not found
+FUSE_ERROR_PARAMETER_EMPTY,参数不能为空,Parameter cannot be empty
+FUSE_ERROR_RUNTIME_INSTANCE_NULL,运行时实例为空,Runtime instance is null
+FUSE_ERROR_SCOPE_VAR_ADD_FAILED,添加作用域变量 {name} 失败,Failed to add scope variable {name}
+FUSE_ERROR_SET_GLOBAL_VARIABLE_FAILED,设置全局变量 {name} 失败,Failed to set global variable {name}
+FUSE_ERROR_SET_LOCAL_VARIABLE_FAILED,设置局部变量 {name} 失败,Failed to set local variable {name}
+FUSE_ERROR_SHAPE_RADIUS_INVALID,形状半径必须为正数,Shape radius must be positive
+FUSE_ERROR_SHAPE_SIZE_INVALID,形状大小必须为正数,Shape size must be positive
+FUSE_ERROR_TARGET_POSITION_INVALID,目标位置无效,Invalid target position
+FUSE_ERROR_THRESHOLD_INVALID,阈值无效,Invalid threshold
+FUSE_ERROR_TRIGGER_NO_ACTION_RUNNER_INSTANCE,Trigger 缺少 ActionRunner 运行时实例,Trigger has no ActionRunner runtime instance
+FUSE_ERROR_UNKNOWN_SCOPE,未知的作用域,Unknown scope
+FUSE_ERROR_VARIABLE_TYPE_MISMATCH,变量类型不匹配（需要 {expected} 实际 {got}）,Variable type mismatch (expected {expected} got {got})
+FUSE_ERROR_VECTOR_TYPE_INVALID,无效的向量类型（实际 {actual_type}）,Invalid vector type (got {actual_type})
+FUSE_EVENT_ON_INTERVAL_WITH_VARIABLE_SCOPE_CREATED,已创建按变量间隔事件（节点 {node}）,Interval-by-variable event created (node {node})
+FUSE_INSTRUCTION_IF_ELSE_WAITING_FOR_INSTRUCTION,等待指令 {instruction} 完成,Waiting for instruction {instruction}
+FUSE_LOG_ARRAY_CONTAINS,数组包含 {value}: {result},Array contains {value}: {result}
+FUSE_LOG_ARRAY_FIND,查找 {value} → 索引 {index},Find {value} → index {index}
+FUSE_LOG_ARRAY_GET,读取 [{index}] = {value},Get [{index}] = {value}
+FUSE_LOG_ARRAY_GET_RESET,状态已重置,State reset
+FUSE_LOG_ARRAY_INSERTED,已插入 {element} 到索引 {index},Inserted {element} at index {index}
+FUSE_LOG_ARRAY_RANDOM,随机选中 {value} → {target},Random pick {value} → {target}
+FUSE_LOG_ARRAY_REMOVED_INDEX,已移除索引 {index}（{element}）,Removed index {index} ({element})
+FUSE_LOG_ARRAY_REMOVED_VALUE,已移除 {value}（索引 {index}）,Removed {value} (index {index})
+FUSE_LOG_ARRAY_REMOVE_RESET,状态已重置,State reset
+FUSE_LOG_ARRAY_SET,[{index}] {old} → {new},[{index}] {old} → {new}
+FUSE_LOG_ARRAY_SET_RESET,状态已重置,State reset
+FUSE_LOG_CLEANUP_COMPLETE,{component} 清理完成,{component} cleanup complete
+FUSE_LOG_DEBUG_FOR_EACH_PAUSED,For Each 已暂停,For Each paused
+FUSE_LOG_DEBUG_FOR_EACH_RESUMED,For Each 已恢复,For Each resumed
+FUSE_LOG_DEBUG_FOR_LOOP_PAUSED,For 循环已暂停,For loop paused
+FUSE_LOG_DEBUG_FOR_LOOP_RESUMED,For 循环已恢复,For loop resumed
+FUSE_LOG_DEBUG_WHILE_LOOP_PAUSED,While 循环已暂停,While loop paused
+FUSE_LOG_DEBUG_WHILE_LOOP_RESUMED,While 循环已恢复,While loop resumed
+FUSE_LOG_DICT_TO_JSON_RESET,状态已重置,State reset
+FUSE_LOG_FIND_NODE_SAVED_TO_SCOPE,已保存到作用域变量 {var}（{scope}）,Saved to scope variable {var} ({scope})
+FUSE_LOG_FIND_NODE_SAVE_FAILED,保存作用域变量 {var} 失败（{scope}）,Failed to save scope variable {var} ({scope})
+FUSE_LOG_GLOBAL_VARIABLE_UPDATED,全局变量 {name} = {value},Global variable {name} = {value}
+FUSE_LOG_PROPERTY_SET_SUCCESS,属性 {property} = {value},Property {property} = {value}
+FUSE_LOG_RESET_COMPLETE,{component} 重置完成,{component} reset complete
+FUSE_LOG_RUNNER_CANCELED,Runner {runner} 已取消,Runner {runner} cancelled
+FUSE_LOG_RUNNER_COMPLETED,Runner {runner} 已完成,Runner {runner} completed
+FUSE_LOG_RUNNER_FAILED,Runner {runner} 执行失败,Runner {runner} failed
+FUSE_LOG_SCOPE_VAR_ADDED,已添加作用域变量 {name},Scope variable {name} added
+FUSE_LOG_SCOPE_VAR_FOUND,作用域 {scope} 变量 {variable} = {value},Scope {scope} variable {variable} = {value}
+FUSE_LOG_TRIGGER_POOL_RESET,触发器对象池已重置,Trigger pool reset
+FUSE_LOG_TWEEN_PROPERTY_AUTO_FREE,节点 {node} 动画完成后自动释放,Node {node} auto-freed after tween
+FUSE_SCOPE_SOURCE_TARGET_NODE_FORMAT,目标节点 {path},Target node {path}
+FUSE_WARNING_ARRAY_EMPTY,数组为空,Array is empty
+FUSE_WARNING_ARRAY_INDEX_OUT_OF_RANGE,索引 {index} 超出范围（数组大小 {size}）,Index {index} out of range (array size {size})
+FUSE_WARNING_ARRAY_NOT_FOUND,未找到数组变量 {name},Array variable {name} not found
+FUSE_WARNING_ARRAY_VALUE_NOT_FOUND,数组中不存在 {value},{value} not found in array
+FUSE_WARNING_DICT_NOT_FOUND,未找到字典变量 {name},Dictionary variable {name} not found
+FUSE_WARNING_GLOBAL_VAR_CONTEXT_SET_FAILED,全局变量上下文设置失败: {name},Global variable context set failed: {name}
+FUSE_WARNING_GROUP_EMPTY,分组 {name} 为空或不存在,Group {name} is empty or missing
+FUSE_WARNING_RUNNER_ALREADY_RUNNING,Runner {runner} 已在运行中,Runner {runner} is already running

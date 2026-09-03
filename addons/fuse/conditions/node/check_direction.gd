@@ -587,7 +587,7 @@ func _get_target_node_by_path(context: ExecutionContext) -> Node:
 	# 获取节点
 	var node = context.get_node(target_node)
 	if node == null:
-		var error_msg = FuseLocalization.translate("FUSE_ERROR_TARGET_NODE_NOT_FOUND") % str(target_node)
+		var error_msg = FuseLocalization.translate_format("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": str(target_node)})
 		_log_error(error_msg)
 		_create_fuse_error(error_msg, FuseError.ErrorType.RUNTIME_ERROR)
 		return null
@@ -620,7 +620,7 @@ func _get_target_node_by_variable(context: ExecutionContext) -> Node:
 	elif node_value is NodePath:
 		node = context.get_node(node_value)
 		if node == null:
-			var error_msg = FuseLocalization.translate("FUSE_ERROR_TARGET_NODE_NOT_FOUND") % str(node_value)
+			var error_msg = FuseLocalization.translate_format("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": str(node_value)})
 			_log_error(error_msg)
 			_create_fuse_error(error_msg, FuseError.ErrorType.RUNTIME_ERROR)
 			return null
@@ -628,7 +628,7 @@ func _get_target_node_by_variable(context: ExecutionContext) -> Node:
 		# 尝试作为节点路径解析
 		node = context.get_node(NodePath(node_value))
 		if node == null:
-			var error_msg = FuseLocalization.translate("FUSE_ERROR_TARGET_NODE_NOT_FOUND") % node_value
+			var error_msg = FuseLocalization.translate_format("FUSE_ERROR_TARGET_NODE_NOT_FOUND", {"node": node_value})
 			_log_error(error_msg)
 			_create_fuse_error(error_msg, FuseError.ErrorType.RUNTIME_ERROR)
 			return null
