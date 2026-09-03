@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-03
+
 ### Added
 - CharacterBody2D 移动控制系统
   - OnInputActionComposite 事件：支持多方向输入监听（上/下/左/右）
