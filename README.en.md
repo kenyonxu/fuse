@@ -1,3 +1,5 @@
+![Fuse — Visual Logic Plugin for Godot](media/cover.png)
+
 # Fuse — Godot Visual Logic Plugin: A Non-Destructive Bridge from AI Prototype to Production Code
 
 [![爱发电](https://img.shields.io/badge/Sponsor-爱发电-ff69b4?style=flat-square)](https://afdian.com/a/kai2045)

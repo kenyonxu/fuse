@@ -1,3 +1,5 @@
+![Fuse — Godot 可视化逻辑插件](media/cover.png)
+
 # Fuse — Godot 可视化逻辑插件：从 AI 原型到工程代码的非破坏性桥梁
 
 [![爱发电](https://img.shields.io/badge/赞助-爱发电-ff69b4?style=flat-square)](https://afdian.com/a/kai2045)
