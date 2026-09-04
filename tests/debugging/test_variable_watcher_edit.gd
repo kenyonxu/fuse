@@ -28,6 +28,7 @@ func _ready() -> void:
 	_test_collect_runtime_early_return_typed()
 	_test_rows_v3_groups()
 	_test_editable_v3()
+	_test_esc_closes_graph()
 	_cleanup_globals()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -111,6 +112,16 @@ func _test_editable_v3() -> void:
 	_check(_watcher._is_row_editable({"target": "", "type": "int", "is_complex": false}) == false, "无 target 不可编辑")
 	_check(_watcher._is_row_editable({"target": "global", "type": "int", "is_complex": false, "is_note": true}) == false, "笔记行不可编辑")
 	_check(_watcher._is_row_editable({"target": "global", "type": "int", "is_complex": false, "is_static": true}) == false, "静态行不可编辑")
+
+
+func _test_esc_closes_graph() -> void:
+	print("\n--- Esc 收起图区 ---")
+	_watcher._graph_panel.visible = true
+	var ev := InputEventKey.new()
+	ev.pressed = true
+	ev.keycode = KEY_ESCAPE
+	_watcher._unhandled_input(ev)
+	_check(_watcher._graph_panel.visible == false, "Esc 关闭图区")
 
 
 func _cleanup_globals() -> void:
