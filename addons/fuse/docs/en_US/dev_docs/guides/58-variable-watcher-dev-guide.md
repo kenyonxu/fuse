@@ -189,27 +189,26 @@ const COL_HEADER := Color(0.2, 0.3, 0.5)   # Section header blue
 |------|------|
 | `_make_header_row()` | Three-column header row (variable ∥ value ∥ type) |
 | `_make_section_header(title)` | Section header (Local/Scope/Global/static) |
-| `_make_row_data(var_name, data, extra)` | Build the row data Dictionary |
+| `_make_var_row(var_name, encoded, extra)` | Build the row data Dictionary |
 | `_make_data_row(data)` | Row data → HBoxContainer control |
 | `_make_value_panel(data)` | Value column (a PanelContainer supporting double-click editing) |
 | `_make_label_panel(text, color, pass_mouse)` | Plain text column |
-| `_render_section(parent, title, rows, filter, ...)` | Render an entire section (including search filtering) |
+| `_render_grouped_section(parent, title, groups, rows, filter)` | Render an entire grouped section (group headers + rows, including search filtering) |
 
 ### Row Data Structure
 
-The Dictionary produced by `_make_row_data()` is the unified data carrier for rendering and editing. Core keys:
+The Dictionary produced by `_make_var_row()` is the unified data carrier for rendering and editing. Core keys:
 
 | Key | Description |
 |----|------|
 | `name` | Variable name |
 | `value` | Displayed value (stringified) |
 | `type` | Type string (`int`/`float`/`Vector2`/...) |
-| `scope` | Scope identifier (`local`/`scope`/`global`) |
 | `target` / `id` | v3 write-back target (`container`/`unit`/`global`) and the host/container instance id |
 | `group_key` / `group_path` | Owning group (`u<id>` / `c<id>` / `global`) and its display path (group headers + filtering) |
 | `var_key` | History record key (v3 scheme): `local:<unit_path>/<name>`, `scope:<container_path>/<name>`, `global/<name>` |
 
-> **Extension note**: when adding a new section, reuse `_make_row_data()` + `_render_section()` and pass section-specific keys in `extra` (e.g. the group path, whether it is editable).
+> **Extension note**: when adding a new section, reuse `_make_var_row()` + `_render_grouped_section()` and pass section-specific keys in `extra` (e.g. the group path, whether it is editable).
 
 ---
 
@@ -361,13 +360,16 @@ func _refresh() -> void:
 	_render_my_section(_content, _filter_text)
 
 func _render_my_section(parent: VBoxContainer, filter: String) -> void:
+	var groups: Array = [{"key": "my", "path": "/My Section"}]
 	var rows: Array[Dictionary] = []
 	for item in _collect_my_data():
-		rows.append(_make_row_data(item.name, item.value, {
-			"scope": "my_scope",
-			"var_key": "my_scope/%s" % item.name,
+		rows.append(_make_var_row(item.name, item.value, {
+			"target": "global",
+			"id": 0,
+			"group_key": "my",
+			"group_path": "/My Section",
 		}))
-	_render_section(parent, "My Section", rows, filter, false)
+	_render_grouped_section(parent, "My Section", groups, rows, filter)
 ```
 
 ### Extending Row Data
@@ -466,7 +468,7 @@ Key points of variable watcher development:
 
 1. ✅ **Three data sources kept separate** — Bridge (runtime local/scope) ∥ Service (global) ∥ Analyzer (static declarations)
 2. ✅ **Dual-mode TCP bridge** — editor TCPServer / game client, JSON line protocol, 0.5s pushes
-3. ✅ **Row data Dictionary pattern** — `_make_row_data()` → `_make_data_row()`, new sections reuse `_render_section()`
+3. ✅ **Row data Dictionary pattern** — `_make_var_row()` → `_make_data_row()`, new sections reuse `_render_grouped_section()`
 4. ✅ **Edit protection** — the `_editing` flag blocks polled rebuilds; `_coerce_value` returning null aborts the write-back; editability itself is gated by `_is_row_editable` (scalar types + locatable scope)
 5. ✅ **Performance throttling** — 0.5s polling + 5s static cache + 120-frame fixed-length history
 6. ✅ **Public snapshot API** — `get_snapshot()` can be called directly by external tools

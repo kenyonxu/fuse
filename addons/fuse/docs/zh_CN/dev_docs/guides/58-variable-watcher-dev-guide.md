@@ -189,27 +189,26 @@ const COL_HEADER := Color(0.2, 0.3, 0.5)   # 分区标题蓝
 |------|------|
 | `_make_header_row()` | 三列标题行（变量 ∥ 值 ∥ 类型） |
 | `_make_section_header(title)` | 分区标题（Local/Scope/Global/静态） |
-| `_make_row_data(var_name, data, extra)` | 构造行数据 Dictionary |
+| `_make_var_row(var_name, encoded, extra)` | 构造行数据 Dictionary |
 | `_make_data_row(data)` | 行数据 → HBoxContainer 控件 |
 | `_make_value_panel(data)` | 值列（支持双击编辑的 PanelContainer） |
 | `_make_label_panel(text, color, pass_mouse)` | 普通文本列 |
-| `_render_section(parent, title, rows, filter, ...)` | 渲染整个分区（含搜索过滤） |
+| `_render_grouped_section(parent, title, groups, rows, filter)` | 渲染整个分组分区（组头 + 变量行，含搜索过滤） |
 
 ### 行数据结构
 
-`_make_row_data()` 产出的 Dictionary 是渲染与编辑的统一数据载体，核心键：
+`_make_var_row()` 产出的 Dictionary 是渲染与编辑的统一数据载体，核心键：
 
 | 键 | 说明 |
 |----|------|
 | `name` | 变量名 |
 | `value` | 显示值（字符串化） |
 | `type` | 类型字符串（`int`/`float`/`Vector2`/...） |
-| `scope` | 作用域标识（`local`/`scope`/`global`） |
 | `target` / `id` | v3 写回目标（`container`/`unit`/`global`）与宿主/容器实例 id |
 | `group_key` / `group_path` | 所属分组（`u<id>` / `c<id>` / `global`）及显示路径（组头 + 过滤） |
 | `var_key` | 历史记录键（v3 方案）：`local:<单元路径>/<名>`、`scope:<容器路径>/<名>`、`global/<名>` |
 
-> **扩展要点**: 新增分区时复用 `_make_row_data()` + `_render_section()`，在 `extra` 中传入分区特有的键（如组路径、是否可编辑）。
+> **扩展要点**: 新增分区时复用 `_make_var_row()` + `_render_grouped_section()`，在 `extra` 中传入分区特有的键（如组路径、是否可编辑）。
 
 ---
 
@@ -361,13 +360,16 @@ func _refresh() -> void:
 	_render_my_section(_content, _filter_text)
 
 func _render_my_section(parent: VBoxContainer, filter: String) -> void:
+	var groups: Array = [{"key": "my", "path": "/My Section"}]
 	var rows: Array[Dictionary] = []
 	for item in _collect_my_data():
-		rows.append(_make_row_data(item.name, item.value, {
-			"scope": "my_scope",
-			"var_key": "my_scope/%s" % item.name,
+		rows.append(_make_var_row(item.name, item.value, {
+			"target": "global",
+			"id": 0,
+			"group_key": "my",
+			"group_path": "/My Section",
 		}))
-	_render_section(parent, "My Section", rows, filter, false)
+	_render_grouped_section(parent, "My Section", groups, rows, filter)
 ```
 
 ### 扩展行数据
@@ -466,7 +468,7 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 
 1. ✅ **三数据源分离** — Bridge（运行时 local/scope）∥ Service（global）∥ Analyzer（静态声明）
 2. ✅ **TCP 双模式桥** — 编辑器 TCPServer / 游戏客户端，JSON line 协议，0.5s 推送
-3. ✅ **行数据 Dictionary 模式** — `_make_row_data()` → `_make_data_row()`，新分区复用 `_render_section()`
+3. ✅ **行数据 Dictionary 模式** — `_make_var_row()` → `_make_data_row()`，新分区复用 `_render_grouped_section()`
 4. ✅ **编辑保护** — `_editing` 标志阻止轮询重建；`_coerce_value` 返回 null 中止写回；可编辑性本身由 `_is_row_editable` 门控（标量类型 + 作用域可定位）
 5. ✅ **性能节流** — 0.5s 轮询 + 5s 静态缓存 + 120 帧定长历史
 6. ✅ **公开快照接口** — `get_snapshot()` 可供外部工具直接调用

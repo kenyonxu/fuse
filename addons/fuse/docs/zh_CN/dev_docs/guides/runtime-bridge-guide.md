@@ -77,11 +77,11 @@
     → _client_poll(delta)       每 0.5s
         → _push_snapshot()
             → _collect_units_and_containers()  root 全树单遍收集，
-                │                              逐节点三判归类
+                │                              逐节点三判归类（树遍历只产出 containers/units）
                 → BaseTrigger / Runner → units（local 取最近执行上下文，
                 │   运行后保留——非即焚）
                 → ScopeVariableContainer → containers
-                → GlobalVariableManager → global（仅标量）
+            → _collect_global_flat()           global 独立收集（与树遍历平行，仅标量）
             → JSON.stringify + put_partial_data()
 
 编辑器侧：
@@ -226,7 +226,7 @@ TCP 流 + JSON line（`\n` 分隔）。
 
 | 字段 | 含义 |
 |------|------|
-| `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` 实例 id / 显示路径（current_scene 相对，用于组头）/ scope id / 变量快照 |
+| `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` 实例 id / 显示路径（current_scene 相对，用于组头；子树外回退绝对路径，`/root/...` 开头）/ scope id / 变量快照 |
 | `units[].id` / `path` / `kind` | 宿主组件实例 id / 显示路径 / `trigger` \| `multi` \| `runner`（BaseTrigger / MultiEventTrigger / Runner） |
 | `units[].ago_ms` | 距组件最近一次执行的毫秒数；监视器对超 5s 的组头灰显 |
 | `units[].local` | 组件**最近执行上下文**的本地变量——三类宿主运行后均保留 `current_execution_context`，非即焚 |
@@ -245,7 +245,7 @@ TCP 流 + JSON line（`\n` 分隔）。
 - **`target == "container"`**：`_find_node_by_id(id)` 定位 `ScopeVariableContainer` → `set_variable`；id 失效静默忽略。
 - **`target == "unit"`**：定位 `BaseTrigger`/`Runner` → `current_execution_context` → `_variable_context` → 对 `local` 执行 `set_variable`；无有效最近上下文（尚未执行）的单元静默忽略。
 - **`target == "global"`**：变量**存在才写**（不存在不创建，静默忽略）。
-- **`_find_node_by_id` 定位**：root 全树递归扫描匹配 `get_instance_id()` 并做类型校验——不用 `instance_from_id`（失效 id 会刷引擎 ERROR）。
+- **`_find_node_by_id` 定位**：root 全树递归扫描匹配 `get_instance_id()` 并按 `expected` 做类型校验（`""` = BaseTrigger/Runner 任一；`"ScopeVariableContainer"` = 容器）——不用 `instance_from_id`（失效 id 会刷引擎 ERROR）。
 - **编辑器侧**：`send_set_var()` 无存活连接时返回 `false`；短写（部分字节发出）会警告并断开该连接，游戏侧重连自愈。
 - **降级**：`_handle_message` 按 `t` 分发（而非按键存在性）；字段缺失经 `.get` 缺省为空集，降级消息也会触达 `_update_cache` 清空缓存。
 
