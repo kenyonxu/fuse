@@ -48,7 +48,7 @@ The main file is layered by responsibility:
 
 | Layer | Responsibilities |
 |----|------|
-| Data layer (pure functions, test-covered) | Bridge reads, `_rows_from_cached`, `_make_var_row`, `_is_row_editable`, `_passes_filter`, `_history_key`, `_coerce_value`, `_finish_edit` dispatch, `_write_back_global` |
+| Data layer (pure functions, test-covered) | Bridge reads, `_rows_from_cached`, `_make_var_row`, `_is_row_editable`, `_history_key`, `_coerce_value`, `_finish_edit` dispatch, `_write_back_global` |
 | Presentation layer | `FuseVariableWatcherTree` (three-level tree), top bar (search + status summary), bottom chart area (expands on selection), empty-state overlay |
 
 ### Data Source Architecture
@@ -175,7 +175,7 @@ _timer.timeout.connect(_refresh)
 ### Tree Structure (three levels + sibling root)
 
 - **Level 1 = scene roots** (bold): hosts are grouped by node path — a `/root/<name>/...` prefix groups under the corresponding extra scene (the `scene_of()` static pure function), everything else under the current scene (name from the pushed `scene` field, missing field → unnamed group)
-- **Level 2 = hosts** (flat on one level): **containers first, components after** (order preserved in `_build_targets`). Container rows read `<path> (<scope_id>)`; component rows read `<path> [<Trigger|MultiEvent|Runner>] · <ago>`; `ago_ms > 5000` (`STALE_MS`) grays the whole row with the theme disabled color
+- **Level 2 = hosts** (flat on one level): **containers first, components after** (order preserved in `_build_targets`). Container rows read `<path> (<scope_id>)`; component rows read `<path> [<Trigger|MultiEvent|Runner>] · <ago>`; `ago_ms > 5000` (`STALE_MS`) grays the name column with the theme disabled color
 - **Level 3 = variable rows**: each host's vars/local; `__complex` rows show a dimmed value column (read-only marker)
 - **`GLOBAL` is an independent root at the same level as scenes** (internal key `"__global__"`); process-level variables hang directly beneath it
 
@@ -284,7 +284,7 @@ class HistoryGraph extends Control:
 	# 1. Take _history[_selected_key]
 	# 2. Normalize to the [0, 1] range
 	# 3. draw_line() draws the polyline (theme accent color, pale blue fallback if lookup fails)
-	# 4. With no data, shows gray placeholder text "(无数值历史)"
+	# 4. With no data, shows gray placeholder text "(no numeric history)"
 ```
 
 ---
