@@ -4996,16 +4996,9 @@ FUSE_UI_TOPOLOGY_EXPORT_NO_SCENE,(未打开场景，无法导出),(no scene open
 FUSE_UI_TOPOLOGY_EXPORT_FAILED_SEE_OUTPUT,(导出失败，见输出面板),(export failed - see Output panel)
 FUSE_UI_TOPOLOGY_TOPOLOGY_EXPORTED,拓扑已导出: {path},Topology exported: {path}
 FUSE_UI_WATCHER_REFRESH_INTERVAL,刷新:{sec}s,Refresh: {sec}s
-FUSE_UI_WATCHER_SNAPSHOT,快照,Snapshot
+FUSE_UI_WATCHER_WAIT_FOR_GAME,等待运行游戏…,Waiting for a running game…
 FUSE_UI_WATCHER_SEARCH_PLACEHOLDER,搜索变量...,Search variables...
 FUSE_UI_WATCHER_NO_HISTORY,(无数值历史),(no numeric history)
-FUSE_UI_WATCHER_STATIC_SECTION,指令引用(静态),Instruction References (static)
-FUSE_UI_WATCHER_MODE_READ_WRITE,读写,Read/Write
-FUSE_UI_WATCHER_MODE_WRITE,写,Write
-FUSE_UI_WATCHER_MODE_READ,读,Read
-FUSE_UI_WATCHER_STATIC_VALUE,(静态),(static)
-FUSE_UI_WATCHER_STATIC_TYPE,{scopes} · {mode} · {count}处,{scopes} · {mode} · {count} refs
-FUSE_UI_WATCHER_SNAPSHOT_SAVED,变量快照已保存: {path},Variable snapshot saved: {path}
 FUSE_UI_WATCHER_EDIT_NO_CONNECTION,变量监视器: 运行游戏连接已断开，写回失败,"Variable watcher: running game connection lost, write-back failed"
 FUSE_UI_WATCHER_GLOBAL_GAME_SUFFIX,（运行游戏）, (Game)
 FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED,变量监视器: 无法创建全局变量 '{name}',Variable watcher: failed to create global variable '{name}'
