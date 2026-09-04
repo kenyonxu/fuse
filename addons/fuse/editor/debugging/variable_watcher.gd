@@ -227,6 +227,14 @@ func _close_graph() -> void:
 	_selected_key = ""
 
 
+## Esc 收起图区（spec §5）：仅图区可见时拦截，避免吞掉编辑器其它 Esc 语义
+func _unhandled_input(event: InputEvent) -> void:
+	if _graph_panel.visible and event is InputEventKey \
+			and event.pressed and event.keycode == KEY_ESCAPE:
+		_close_graph()
+		get_viewport().set_input_as_handled()
+
+
 func _update_graph() -> void:
 	if _selected_key.is_empty() or not _history.has(_selected_key):
 		_graph.set_points([] as Array[float])

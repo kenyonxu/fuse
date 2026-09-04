@@ -46,6 +46,14 @@ static func scene_of(path: String, current_scene: String) -> String:
 	return current_scene
 
 
+## 场景根显示文本：GLOBAL 根无尾注；当前场景带 " · 当前"；其余（附加场景）带 " · 附加"
+## （spec §4 尾注；纯文本拼接无颜色，current_scene 取桥推送，切换时尾注随之更新）
+static func _scene_root_label(k: String, current_scene: String) -> String:
+	if k == "__global__":
+		return "GLOBAL"
+	return k + (" · 当前" if k == current_scene else " · 附加")
+
+
 ## diff 计划：旧键集/新键集 → {add, remove}
 static func diff_plan(old_keys: Array, new_keys: Array) -> Dictionary:
 	var add: Array = []
@@ -95,14 +103,14 @@ func apply_data(rows: Dictionary, current_scene: String, filter_text: String) ->
 	for k in scene_keys:
 		if not _scene_items.has(k):
 			var it := create_item(get_root())
-			var display: String = "GLOBAL" if k == "__global__" else k
-			it.set_text(COL_NAME, display)
 			var bold: Font = get_theme_font("bold", "EditorFonts")
 			if bold != null:
 				it.set_custom_font(COL_NAME, bold)
 			it.set_metadata(COL_NAME, {"collapse_key": "s:" + k})
 			it.collapsed = _is_group_collapsed("s:" + k)
 			_scene_items[k] = it
+		# 场景根文本每轮刷新——current_scene 可能切换，尾注（当前/附加）随桥推送更新
+		_scene_items[k].set_text(COL_NAME, _scene_root_label(k, current_scene))
 	_ensure_global_root()
 
 	# 二级：宿主（容器在前组件在后 → targets 内已排序）

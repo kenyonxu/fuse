@@ -33,6 +33,7 @@ func _ready() -> void:
 	add_child(_tree)
 
 	_test_scene_of()
+	_test_scene_root_label()
 	_test_diff_plan()
 	_test_apply_data_structure()
 	_test_collapse_and_filter()
@@ -56,6 +57,13 @@ func _test_scene_of() -> void:
 	_check(TreeScript.scene_of("/root/UIOverlay/X", "level01") == "UIOverlay", "/root 前缀 → 附加场景名")
 	_check(TreeScript.scene_of("/root/Solo", "level01") == "Solo", "/root 直挂根节点")
 	_check(TreeScript.scene_of("/", "level01") == "level01", "场景根本身")
+
+
+func _test_scene_root_label() -> void:
+	print("\n--- 场景根尾注 ---")
+	_check(TreeScript._scene_root_label("level01", "level01") == "level01 · 当前", "当前场景尾注")
+	_check(TreeScript._scene_root_label("ui_overlay", "level01") == "ui_overlay · 附加", "附加场景尾注")
+	_check(TreeScript._scene_root_label("__global__", "level01") == "GLOBAL", "GLOBAL 根无尾注")
 
 
 func _test_diff_plan() -> void:
@@ -115,12 +123,13 @@ func _test_selection_metadata() -> void:
 
 
 func _find_root_by_text(txt: String) -> TreeItem:
+	# 前缀匹配：场景根文本带尾注（"level01 · 当前"/"ui_overlay · 附加"），GLOBAL 精确无尾注
 	var root := _tree.get_root()
 	if root == null:
 		return null
 	var c := root.get_first_child()
 	while c:
-		if c.get_text(0) == txt:
+		if c.get_text(0).begins_with(txt):
 			return c
 		c = c.get_next()
 	return null
