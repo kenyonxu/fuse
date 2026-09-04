@@ -174,7 +174,7 @@ _timer.timeout.connect(_refresh)
 ### 树结构（三级 + 平级根）
 
 - **一级 = 场景根**（加粗）：宿主按节点路径归组——`/root/<名>/...` 前缀归对应附加场景（`scene_of()` 静态纯函数），其余归当前场景（名取推送 `scene` 字段，缺省归未命名分组）
-- **二级 = 宿主**（同层平铺）：**容器在前组件在后**（`_build_targets` 内保持原序）。容器行 `<path> (<scope_id>)`；组件行 `<path> [<Trigger|MultiEvent|Runner>] · <ago>`；`ago_ms > 5000`（`STALE_MS`）整行用主题 disabled 色灰显
+- **二级 = 宿主**（同层平铺）：**容器在前组件在后**（`_build_targets` 内保持原序）。容器行 `<path> (<scope_id>)`；组件行 `<path> [<Trigger|MultiEvent|Runner>] · <ago>`；`ago_ms > 5000`（`STALE_MS`）名称列用主题 disabled 色灰显
 - **三级 = 变量行**：宿主的 vars/local；`__complex` 行值列灰显（只读标识）
 - **`GLOBAL` 为与场景平级的独立根**（内部键 `"__global__"`），进程级变量直挂其下
 

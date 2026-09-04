@@ -73,7 +73,7 @@ Three-column layout: **Name** (wide) | **Value** (wide) | **Type** (narrow colum
 
 ### 1. Scene Roots (scene grouping)
 
-The first level consists of scene roots. Hosts are grouped by their node path: hosts under a `/root/<name>/...` prefix are grouped under the corresponding **extra scene** root, everything else goes under the **current scene** (the scene name comes from the `scene` field pushed by the running game; when the field is missing, hosts land in an unnamed group).
+The first level consists of scene roots. Hosts are grouped by their node path: hosts under a `/root/<name>/...` prefix are grouped under the corresponding **extra scene** root, everything else goes under the **current scene** (the scene name comes from the `scene` field pushed by the running game; when the field is missing, hosts land in an unnamed group). Scene root labels carry a suffix marking their group: the current scene reads `<scene name> · 当前` and extra scenes read `<scene name> · 附加` (the current scene name comes from the bridge push, so the suffix follows scene switches).
 
 ### 2. Hosts (containers first, components after)
 
@@ -171,7 +171,7 @@ Editable variable rows support value editing by double-clicking; the write-back 
 
 Click to select any numeric variable row and the bottom chart area expands automatically, drawing its value history:
 
-- Switching selection switches the curve; click **✕** in the chart title row or clear the selection to collapse the area; drag the splitter to resize it (100px by default)
+- Switching selection switches the curve; click **✕** in the chart title row, press **Esc**, or clear the selection to collapse the area; drag the splitter to resize it (100px by default)
 - **History window**: `HISTORY_MAX = 120` frames (60-second sliding window, `0.5s × 120 = 60s`)
 - **Recording scope**: only `int` and `float` variables (other types are ignored automatically)
 - **Storage key** (v3, keyed by host/container so same-named variables never collide): `local:<unit_path>/<name>`, `scope:<container_path>/<name>`, `global/<name>` (e.g. `"global/player_score"`)
