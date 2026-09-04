@@ -12,7 +12,8 @@ extends Node
 ##   序列化为 JSON line 推送
 ##
 ## 协议：TCP 流 + JSON line（\n 分隔），推送协议版本 proto=3
-##   运行游戏→编辑器: {"t":"vars","proto":3,"containers":[{"id":123,"path":"/x","scope_id":"s","vars":{...}},...],"units":[{"id":456,"path":"/x","kind":"trigger|multi|runner","ago_ms":5,"local":{...}},...],"global":{name:value,...}}
+##   运行游戏→编辑器: {"t":"vars","proto":3,"scene":"<当前场景名>",
+##     "containers":[{"id":123,"path":"/x","scope_id":"s","vars":{...}},...],"units":[{"id":456,"path":"/x","kind":"trigger|multi|runner","ago_ms":5,"local":{...}},...],"global":{name:value,...}}
 ##     每 0.5s 恒推（无单元也推 global 与空集，清编辑器缓存）；非标量值编码为
 ##     {"__complex":"str(v)≤200字符","ty":"Vector2"} 显式只读包装（编辑器据此区分真 String 与复杂值）
 ##   运行游戏←编辑器: {"t":"set_var","proto":3,"target":"container|unit|global","id":123,"name":"hp","value":1}（反向写回）
@@ -26,8 +27,8 @@ var _server: TCPServer = null
 var _connections: Array[StreamPeerTCP] = []
 var _client: StreamPeerTCP = null
 
-## 编辑器侧：运行游戏推送的变量快照缓存（v3 双键结构）
-## {"containers": [容器条目...], "units": [单元条目...]}
+## 编辑器侧：运行游戏推送的变量快照缓存（v3 三键结构）
+## {"scene": 当前场景名, "containers": [容器条目...], "units": [单元条目...]}
 var _cached: Dictionary = {}
 var _cached_global: Dictionary = {}  # 游戏侧 global 标量快照
 
@@ -207,7 +208,7 @@ func _handle_message(msg: Dictionary) -> void:
 
 
 ## 公开 API：获取缓存的运行时变量（编辑器侧）
-## v3 结构：{"containers": [容器条目...], "units": [单元条目...]}
+## v3 结构：{"scene": 当前场景名, "containers": [容器条目...], "units": [单元条目...]}
 func get_cached_vars() -> Dictionary:
 	return _cached
 
