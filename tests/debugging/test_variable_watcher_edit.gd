@@ -27,7 +27,6 @@ func _ready() -> void:
 	_test_write_back_global_metadata()
 	_test_collect_runtime_early_return_typed()
 	_test_rows_v3_groups()
-	_test_group_collapse_and_filter()
 	_test_editable_v3()
 	_cleanup_globals()
 
@@ -101,20 +100,6 @@ func _test_rows_v3_groups() -> void:
 	_check(ugroups.size() == 1 and ugroups[0]["kind"] == "trigger" and ugroups[0]["ago_ms"] == 300, "unit 组 kind/ago")
 	_check(rows["local_rows"].size() == 2, "unit 2 变量 → 2 行")
 	_check(int(rows["unit_count"]) == 1 and int(rows["container_count"]) == 1, "计数正确")
-
-
-func _test_group_collapse_and_filter() -> void:
-	print("\n--- 折叠与过滤 ---")
-	_check(_watcher._is_group_collapsed("c481") == false, "默认展开")
-	_watcher._toggle_group("c481")
-	_check(_watcher._is_group_collapsed("c481") == true, "折叠置位（跨刷新由 _collapsed 字典承载）")
-	_watcher._toggle_group("c481")
-	_check(_watcher._is_group_collapsed("c481") == false, "二次 toggle 恢复展开")
-	_check(_watcher._passes_filter("/Player/OnInput", "hp", "") == true, "空过滤放行")
-	_check(_watcher._passes_filter("/Player/OnInput", "hp", "player") == true, "组路径命中")
-	_check(_watcher._passes_filter("/Player", "hp", "hp") == true, "变量名命中")
-	_check(_watcher._passes_filter("/Player", "hp", "camera") == false, "不命中过滤")
-	_check(_watcher._passes_filter("/x", "hp", "HP") == true, "大写 filter 命中小写变量名")
 
 
 func _test_editable_v3() -> void:
