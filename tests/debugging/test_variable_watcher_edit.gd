@@ -15,6 +15,7 @@ func _ready() -> void:
 	_test_coerce_value()
 	_test_is_row_editable()
 	_test_write_back_global_metadata()
+	_test_rows_from_cached_scope_dedupe()
 	_cleanup_globals()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -66,6 +67,31 @@ func _test_write_back_global_metadata() -> void:
 	_watcher._write_back_global("silver", 2)
 	var created = mgr.get_variable("silver")
 	_check(created != null and created.value == 2, "不存在的变量创建成功")
+
+
+## 回归（2026-09-04 level01 实测）：共享 ScopeVariableContainer 的同一变量
+## 被多个 Runner 重复上报，watcher 按"名+值"去重；local 为独立存储不去重
+func _test_rows_from_cached_scope_dedupe() -> void:
+	print("\n--- _rows_from_cached scope 去重 ---")
+	var rows: Dictionary = _watcher._rows_from_cached({
+		"RunnerA": {"id": 11, "local": {"hp": 10}, "scope": {"player": "P1", "camera": "Cam"}},
+		"RunnerB": {"id": 22, "local": {"hp": 20}, "scope": {"player": "P1", "camera": "Cam"}},
+		"RunnerC": {"id": 33, "local": {}, "scope": {"player": "P2"}},
+	})
+	var scope_rows: Array = rows["scope_rows"]
+	_check(scope_rows.size() == 3, "同名同值去重（4 条上报 → 3 行，got %d）" % scope_rows.size())
+	var by_name := {}
+	for row in scope_rows:
+		by_name[row["name"] + "=" + row["value"]] = true
+	_check(by_name.has("player=P1") and by_name.has("player=P2") and by_name.has("camera=Cam"),
+		"同名不同值（P1/P2）各保留一行")
+	var local_rows: Array = rows["local_rows"]
+	_check(local_rows.size() == 2, "local 为独立存储不去重（got %d）" % local_rows.size())
+	var runner_count: int = rows["runner_count"]
+	_check(runner_count == 3, "Runner 计数不受去重影响")
+	var runners: Array = rows["runners"]
+	_check(runners.size() == 3 and runners[1]["scope"].size() == 2,
+		"快照 API（get_snapshot）保留每 Runner 全量数据")
 
 
 func _cleanup_globals() -> void:
