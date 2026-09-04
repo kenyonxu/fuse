@@ -13,11 +13,11 @@
 | Feature | Description |
 |------|------|
 | Polling interval | 0.5 seconds (Timer driven) |
-| Display layers | Local / Scope / Global |
-| Runtime data source | `FuseRuntimeBridge` (Autoload node push) |
+| Display layers | Local (grouped by host component) / Scope (grouped by container) / Global (flat) |
+| Runtime data source | `FuseRuntimeBridge` (Autoload node push, protocol v3) |
 | Global variable data source | While the game runs: live snapshot from the game process; otherwise `GlobalVariableService` |
 | History | 120 frames = 60-second sliding window (numeric types only) |
-| Search filter | Real-time filtering by variable name |
+| Search filter | Real-time filtering by group path + variable name (case-insensitive) |
 
 ---
 
@@ -27,17 +27,19 @@ The variable watcher sits in the editor's bottom dock; its layout has four areas
 
 ```
 +-----------------------------------------------------------+
-| Refresh:0.5s                      Global:5  Runner:2 [📸Snapshot] |
+| Refresh:0.5s          Global:5  Unit:2  Ctn:1 [📸Snapshot] |
 | [Search variables...______________________________________] |
 | [Variable       | Value         | Type                    ] |
 +-----------------------------------------------------------+
-| Local (Runner1)                                           |
+| ▸ /Main/Runner1 [Runner] · 0.3s                           |
 | [health         | 85             | int                    ] |
 | [target_pos     | (120, 340)     | Vector2                ] |
 |                                                           |
-| Scope                                                      |
+| ▸ /Enemies/Guard [Trigger] · 6.2s   (stale, grayed out)   |
+| [aggro         | true           | bool                   ] |
+|                                                           |
+| ▸ /World/LevelScope (level1)                              |
 | [alert_level    | 50             | int                    ] |
-| [current_state  | "patrol"       | String                 ] |
 |                                                           |
 | Global                                                     |
 | [player_score   | 2450           | int                    ] |
@@ -54,12 +56,12 @@ The variable watcher sits in the editor's bottom dock; its layout has four areas
 
 | Control | Description |
 |------|------|
-| Status label | Shows polling status and variable statistics, e.g. `Global:5  Runner:2` |
+| Status label | Shows polling status and variable statistics, e.g. `Global:5  Unit:2  Ctn:1` (global rows / unit hosts / containers) |
 | 📸Snapshot button | Click to export a snapshot of all current variables to `user://fuse_watcher_snapshot_{时间戳}.json` |
 
 ### Search Box
 
-Filters variable rows across all sections in real time, matching variable names. An empty string shows everything.
+Filters variable rows across all sections in real time, matching **group paths + variable names** (case-insensitive). A group whose rows are all filtered out hides its group header too; while a filter is active the collapsed state is ignored so matches always show. An empty string shows everything.
 
 ### Column Headers
 
@@ -75,32 +77,32 @@ Variable rows grouped by section; each row follows the column headers' format.
 
 ## Three-Layer Variable Display
 
-### 1. Local Variables
+### 1. Local Variables (grouped by host component)
 
-Shows the local (`local`) variables in each current Runner (`ActionRunner`) instance. Each row is labeled with the owning Runner's name:
+Shows the local (`local`) variables reported by each host component (BaseTrigger / MultiEventTrigger / Runner), from its **most recent execution context**. Each group header shows the component's path, kind, and freshness:
 
 ```
-Local (Runner1)
+▸ /Main/Runner1 [Runner] · 0.3s
   [health     | 85   | int]
   [target_pos | (120, 340) | Vector2]
 
-Local (Runner2)
-  [loop_count | 3    | int]
+▸ /Enemies/Guard [Trigger] · 6.2s      ← older than 5s: grayed out
+  [aggro     | true | bool]
 ```
 
-**Runtime requirement**: shown only after the scene runs. When no runtime data is detected, the hint `(场景运行后可见)` is displayed.
+Group headers are clickable and collapse/expand their group; the collapsed state survives refreshes. A component appears only after its first execution (it has no execution context before that).
 
-### 2. Scope Variables
+### 2. Scope Variables (grouped by container)
 
-Shows variables declared with `scope` scope in each Runner:
+Shows the variables of each `ScopeVariableContainer`, grouped by container:
 
 ```
-Scope
-  [alert_level  | 50       | int]
-  [current_state| "patrol" | String]
+▸ /World/LevelScope (level1)
+  [alert_level   | 50       | int]
+  [current_state | "patrol" | String]
 ```
 
-Scope variables are obtained via `FuseRuntimeBridge.get_cached_vars()` and depend on runtime push.
+Containers are collected from the whole scene tree, so even a subtree that has never been triggered shows its containers' declared (default) values. Scope variables are obtained via `FuseRuntimeBridge.get_cached_vars()` and depend on runtime push.
 
 ### 3. Global Variables
 
@@ -135,13 +137,13 @@ Each refresh (`_refresh()`) runs the following steps:
 ```
 1. Check the _editing flag (skip while editing, to avoid destroying the LineEdit)
 2. Clear the content area
-3. Collect local + scope variables via _collect_runtime_variables() (a scope variable shared through a common ScopeVariableContainer is reported by every Runner under it; rows are deduplicated by "name + value" — same name with a different value keeps its own row; locals are per-Runner storage and are not deduplicated)
+3. Collect local + scope rows via _collect_runtime_variables() from the bridge cache (v3 keys: "containers" → Scope rows grouped by container, "units" → Local rows grouped by host; missing fields degrade to empty sets)
 4. Collect global variables (live snapshot from the game while it runs, otherwise `GlobalVariableService`)
 5. Record history for each row (int/float only)
-6. Render the Local / Scope / Global sections
+6. Render the Local / Scope / Global sections (Local/Scope grouped, Global flat)
 7. Render the static declarations section (topology cache refreshed every 5 seconds)
 8. Update the bottom line chart
-9. Update the status label
+9. Update the status label (`Global:N  Unit:M  Ctn:K`)
 ```
 
 ---
@@ -154,11 +156,11 @@ Interactive rows (not notes, not static) support editing variable values by doub
 
 | Scope | Editing | Write-back target |
 |--------|----------|----------|
-| **Local** | **Available while running** (scalar types) | `bridge.send_set_var("local", runner_id, name, value)` → applied by the running game |
-| **Scope** | **Available while running** (scalar types) | `bridge.send_set_var("scope", runner_id, name, value)` → applied by the running game |
-| **Global** | Always available, split by data source | While the game runs: `send_set_var("global", ...)` → running game; not running: editor-side definition via `set_variable_value_thread_safe` (metadata preserved; created only if missing) |
+| **Local** | **Available while running** (scalar types) | `bridge.send_set_var("unit", id, name, value)` → applied by the running game (writes the host component's most recent execution context) |
+| **Scope** | **Available while running** (scalar types) | `bridge.send_set_var("container", id, name, value)` → applied by the running game (writes the container variable) |
+| **Global** | Always available, split by data source | While the game runs: `send_set_var("global", ...)` → running game (existing variables only); not running: editor-side definition via `set_variable_value_thread_safe` (metadata preserved; created only if missing) |
 
-**Editable types**: JSON scalars only (`int` / `float` / `bool` / `String`); rows of complex types such as `Vector2` are read-only and do not respond to double-clicks.
+**Editable types**: JSON scalars only (`int` / `float` / `bool` / `String`). Non-scalar values arrive wrapped as `{"__complex": ..., "ty": "Vector2"}` — those rows are read-only (the value column shows the truncated string, the type column shows the real type name) and do not respond to double-clicks.
 
 **Global data source while running**: while the game runs, the Global section title carries the "(Game)" suffix and the values come from the game process's live snapshot; once the game stops, the section falls back to the editor-side definitions.
 
@@ -179,7 +181,7 @@ Interactive rows (not notes, not static) support editing variable values by doub
 
 **Safety guards**:
 - While editing, `_editing = true` and `_refresh()` skips rebuilding, so the LineEdit is not destroyed
-- local/scope rows must come from the running game (the row is editable only when its `runner_id` can locate a Runner)
+- Local/Scope rows must come from the running game (the row is editable only when its target id can locate the host/container on the game side)
 - A failed write-back (connection lost) restores the original displayed value and warns; a failed type coercion silently restores the original value (an input problem, no warning)
 
 ### 7b — Line Chart
@@ -188,7 +190,7 @@ Clicking any variable row selects it; the bottom line chart area shows its value
 
 - **History window**: `HISTORY_MAX = 120` frames (60-second sliding window, `0.5s × 120 = 60s`)
 - **Recording scope**: only `int` and `float` variables (other types are ignored automatically)
-- **Storage key**: `"{scope}/{var_name}"` (e.g. `"global/player_score"`)
+- **Storage key** (v3, keyed by host/container so same-named variables never collide): `local:<unit_path>/<name>`, `scope:<container_path>/<name>`, `global/<name>` (e.g. `"global/player_score"`)
 
 **HistoryGraph component**:
 - Nested class `HistoryGraph extends Control`
@@ -241,17 +243,16 @@ Click the **📸Snapshot** button to export a complete snapshot of all variables
         "player_score": {"value": 2450, "type": "int"},
         "game_time": {"value": 132.5, "type": "float"}
     },
-    "runners": [
-        {
-            "runner_name": "Runner1",
-            "local": {
-                "health": {"value": 85, "type": "int"},
-                "target_pos": {"value": "(120, 340)", "type": "Vector2"}
-            },
-            "scope": {
-                "alert_level": {"value": 50, "type": "int"}
-            }
-        }
+    "containers": [
+        {"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
+         "vars": {"alert_level": {"value": 50, "type": "int"}}}
+    ],
+    "units": [
+        {"id": 123456, "path": "/Main/Runner1", "kind": "runner", "ago_ms": 5,
+         "local": {
+            "health": {"value": 85, "type": "int"},
+            "target_pos": {"value": "(120, 340)", "type": "Vector2"}
+         }}
     ]
 }
 ```
@@ -298,7 +299,7 @@ Export path: `user://fuse_watcher_snapshot_{时间戳}.json`
 └─────────────────────────────────────────────┘
 ```
 
-- **FuseRuntimeBridge**: an Autoload singleton that actively pushes local/scope variable caches while the game runs
+- **FuseRuntimeBridge**: an Autoload singleton that actively pushes variable caches while the game runs (v3: `containers` + `units` entries per host/container, plus the global scalars)
 - **GlobalVariableService**: reads the editor-side global variable definitions from `GlobalVariableManager` when the game is not running; while the game runs, the live game-side snapshot (via `FuseRuntimeBridge`) is used instead
 - **InstructionAnalyzer**: analyzes Trigger topology in the editor, providing static declaration data
 
@@ -310,7 +311,7 @@ Export path: `user://fuse_watcher_snapshot_{时间戳}.json`
 |------|------|----------|
 | Blank panel | Scene not running or no Fuse nodes | Run the scene and make sure a Trigger/ActionRunner exists |
 | Local/Scope not shown | `FuseRuntimeBridge` not registered | Check the Autoload configuration |
-| Double-click edit does nothing | A running game is required | local/scope rows appear only while the scene runs; complex types (Vector2 etc.) are read-only |
+| Double-click edit does nothing | A running game is required | Local/Scope rows appear only while the scene runs (a host reports after its first execution); complex values (Vector2 etc., shown read-only) are not editable |
 | Line chart has no data | Variable is not numeric | Only `int`/`float` variables are recorded in history |
 | Snapshot save failed | Insufficient path permissions | Check permissions of the `user://` directory |
 | Panel flickers while editing | 0.5s polling conflicts with editing | Protected by Stage 7a (the `_editing` flag blocks refresh rebuild) |

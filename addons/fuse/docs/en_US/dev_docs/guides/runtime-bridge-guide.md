@@ -60,11 +60,12 @@
 │  │  TCPServer mode    │      │  (\n sepa-    │  │  TCP Client mode   │     │
 │  │                    │      │   rated)      │  │                    │     │
 │  │  _cached: Dict     │ ◄────┼──────────────┼──┤  0.5s periodic push│     │
-│  │  (snapshot cache)  │      │              │  │  _collect_runners()│     │
+│  │  (snapshot cache)  │      │              │  │  _collect_units_+  │     │
+│  │                    │      │              │  │  _containers()     │     │
 │  └────────────────────┘      │              │  └────────────────────┘     │
 │        ↕                     │              │        ↕                    │
-│  FuseVariableWatcher         │              │  Runner nodes               │
-│  (variable watcher)          │              │  (current_execution_context)│
+│  FuseVariableWatcher         │              │  BaseTrigger/Runner units   │
+│  (variable watcher)          │              │  ScopeVariableContainers    │
 └──────────────────────────────┘              └──────────────────────────────┘
 ```
 
@@ -75,10 +76,12 @@ Game side:
   _process(delta)
     → _client_poll(delta)       every 0.5s
         → _push_snapshot()
-            → _collect_runners()   iterate the Runner nodes in the scene
-                → ec = runner.current_execution_context
-                → vc = ec._variable_context
-                → snapshot: {local_vars, scope_vars}
+            → _collect_units_and_containers()  single pass over the root tree,
+                │                              three-way classification per node
+                → BaseTrigger / Runner → units (local from the most recent
+                │   execution context, kept after the run — not fire-and-forget)
+                → ScopeVariableContainer → containers
+                → GlobalVariableManager → global (scalars only)
             → JSON.stringify + put_partial_data()
 
 Editor side:
@@ -86,19 +89,20 @@ Editor side:
     → _server_poll()            every frame
         → accept new connections
         → read buffer → _read_json_lines()
-            → _update_cache(runners)
+            → _update_cache(containers/units/global)
         → all connections disconnected → _cached.clear()
 
 Editor side (write-back):
   variable watcher edit commit
-    → send_set_var(scope, runner_id, name, value)
+    → send_set_var(target, target_id, name, value)
         → JSON.stringify + put_partial_data()   broadcast to all connections
         → no connections → return false
 
 Game side (apply write-back):
-  _client_poll → _read_json_lines → _handle_message
+  _client_poll → _read_json_lines → _handle_message (dispatched by "t")
     → t == "set_var" → _apply_set_var()
-        → narrow the value to the target's existing type → write
+        → three-way dispatch on target (container / unit / global)
+        → type narrowing + non-scalar gate (shared by all three paths) → write
 ```
 
 ---
@@ -125,8 +129,8 @@ const PUSH_INTERVAL := 0.5        # Push interval (seconds)
 ### Public Interface
 
 ```gdscript
-## Editor side: get the cached runtime variable snapshot
-## Returns: Dictionary — {runner_name: {"id": runner instance id, "local": {...}, "scope": {...}}}
+## Editor side: get the cached runtime variable snapshot (v3 two-key structure)
+## Returns: Dictionary — {"containers": [container entries], "units": [unit entries]}
 func get_cached_vars() -> Dictionary
 
 ## Editor side: game-side global scalar snapshot ({name: value})
@@ -136,8 +140,8 @@ func get_cached_global() -> Dictionary
 func is_game_connected() -> bool
 
 ## Editor side: broadcast a write-back to the running game (fire-and-forget)
-## Returns false when there is no live connection
-func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -> bool
+## target: "container" | "unit" | "global"; returns false when there is no live connection
+func send_set_var(target: String, target_id: int, name: String, value: Variant) -> bool
 
 ## Test injection: start either mode with an explicit port (default BRIDGE_PORT = 24563)
 func start_server(port: int = BRIDGE_PORT) -> void
@@ -184,13 +188,13 @@ func _process(delta: float) -> void:
 func start_server(port: int = BRIDGE_PORT) -> void # Public: start the TCPServer, listen on the port (default :24563)
 func _server_poll() -> void                        # Poll every frame: accept connections + read data
 func _read_json_lines(conn: StreamPeerTCP) -> void # Read JSON line by line from the TCP stream
-func _update_cache(runners: Array) -> void         # Update the _cached cache
+func _update_cache(payload: Dictionary) -> void    # Update _cached (containers/units via .get, missing fields degrade to empty sets)
 
 # ===== Game side - Client =====
 func start_client(port: int = BRIDGE_PORT) -> void # Public: connect to the editor
 func _client_poll(delta: float) -> void            # Poll + push every 0.5s
 func _push_snapshot() -> void                      # Push the variable snapshot
-func _collect_runners() -> Array                   # Collect variables from all Runners in the scene
+func _collect_units_and_containers() -> Dictionary # v3 collection: single pass over the root tree, three-way classification
 ```
 
 ---
@@ -201,41 +205,49 @@ func _collect_runners() -> Array                   # Collect variables from all 
 
 TCP stream + JSON line (`\n` separated).
 
-**Push (game → editor), every 0.5s, always pushed** — even with zero Runners the `global` snapshot is still pushed (empty `runners` clears the editor's runner cache):
+**Push (game → editor, protocol `proto = 3`), every 0.5s, always pushed** — even with zero units/containers the `global` snapshot is still pushed (empty `containers`/`units` clear the editor's caches):
 
 ```json
-{"t": "vars", "runners": [
-    {
-        "name": "RunnerName",
-        "id": 123456789,
-        "local": {"score": 100, "name": "player"},
-        "scope": {"health": 80, "mana": 50}
-    },
-    ...
-],
+{"t": "vars", "proto": 3,
+ "containers": [
+    {"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
+     "vars": {"alert_level": 50, "items": {"__complex": "[item1, item2]", "ty": "Array"}}}
+ ],
+ "units": [
+    {"id": 123456789, "path": "/Enemies/Slime", "kind": "trigger", "ago_ms": 320,
+     "local": {"health": 85}},
+    {"id": 123456790, "path": "/Main/Runner1", "kind": "runner", "ago_ms": 5,
+     "local": {"score": 100}}
+ ],
  "global": {"player_score": 2450, "game_time": 132.5}}
 ```
 
-**Protocol v2 fields**:
+**Protocol v3 fields**:
 
 | Field | Meaning |
 |------|------|
-| `runners[].id` | The Runner's `get_instance_id()`; the editor's set_var write-backs use it to locate the target Runner |
+| `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` instance id / display path (current-scene relative, shown in group headers) / scope id / variable snapshot |
+| `units[].id` / `path` / `kind` | Host component instance id / display path / `trigger` \| `multi` \| `runner` (BaseTrigger / MultiEventTrigger / Runner) |
+| `units[].ago_ms` | Milliseconds since the component's most recent execution; the watcher grays out group headers older than 5s |
+| `units[].local` | Local variables of the component's **most recent execution context** — all three host kinds keep `current_execution_context` after a run instead of discarding it |
 | `global` (top level) | Game-side snapshot of global variable **scalars** (`{name: value}`); complex types (Dictionary/Array/Vector etc.) do not enter the protocol |
+| `__complex` wrapper | A non-scalar value is encoded read-only as `{"__complex": "str(v) ≤200 chars", "ty": "Vector2"}` — the editor can tell a real `String` from a complex value (v2 serialized objects into bare strings, a source of "fake String" rows; eliminated at the protocol layer) |
 
 **Reverse message (editor → game)** — broadcast to **all** live connections, **fire-and-forget** (no acknowledgment; correctness is backed by the 0.5s push echo):
 
 ```json
-{"t": "set_var", "scope": "global", "runner_id": 0, "name": "player_score", "value": 3000}
+{"t": "set_var", "proto": 3, "target": "container", "id": 99001, "name": "alert_level", "value": 75}
 ```
 
-Application semantics on the game side (`_apply_set_var`):
+Application semantics on the game side (`_apply_set_var`, three-way dispatch on `target`):
 
-- **Type narrowing**: after JSON parsing every number is a `float`; it is narrowed to the target variable's existing type (an `int` target is narrowed back to `int`). If the target does not exist (auto-created variables), the value is written as-is — the float widening is a known limitation.
-- **Non-scalar slots are skipped**: the push snapshot serializes an `Object` value into a string, so the editor cannot tell it apart from a real `String` row. As the last line of defense, the game side silently ignores a write-back whose target slot currently holds a non-scalar (`Object` / `Vector2` / containers) — the row's value simply reverts on the next push.
-- **`global`**: if the variable does not exist it is **not created** (silently ignored).
-- **`local` / `scope`**: the Runner is located duck-typed via `runner_id` → `current_execution_context` → `_variable_context` → `set_variable`; a stale target is silently ignored.
+- **Shared guards (all three paths)**: **type narrowing** — after JSON parsing every number is a `float`; it is narrowed to the target variable's existing type (an `int` target is narrowed back to `int`; a missing target is written as-is — the float widening is a known limitation). **Non-scalar gate** — a write-back whose target slot currently holds a non-scalar (`Object` / `Vector2` / containers) is silently ignored; since v3 the push side already labels non-scalars with the read-only `__complex` wrapper, so the editor never issues writes on those rows and the gate remains only as the last line of defense.
+- **`target == "container"`**: `_find_node_by_id(id)` locates the `ScopeVariableContainer` → `set_variable`; a stale id is silently ignored.
+- **`target == "unit"`**: locates a `BaseTrigger`/`Runner` → `current_execution_context` → `_variable_context` → `set_variable` on `local`; a unit without a valid recent context (never executed) is silently ignored.
+- **`target == "global"`**: the variable is written only when it **already exists** (missing variables are not created, silently ignored).
+- **`_find_node_by_id` locating**: a recursive scan of the root tree matching `get_instance_id()` with a type check — not `instance_from_id`, which would spam engine ERRORs on stale ids.
 - **Editor side**: `send_set_var()` returns `false` when there is no live connection; a short write (partial bytes sent) warns and disconnects that connection, and the game side reconnects and self-heals.
+- **Degradation**: `_handle_message` dispatches on `t` (not on key presence); missing fields fall back to empty sets via `.get` defaults, so even a degraded push still reaches `_update_cache` and clears the caches.
 
 ### Test Injection
 
@@ -276,10 +288,11 @@ The `FuseVariableWatcher` editor panel calls `FuseRuntimeBridge.get_cached_vars(
 ```gdscript
 # addons/fuse/editor/debugging/variable_watcher.gd
 var vars = FuseRuntimeBridge.get_cached_vars()
-for runner_name in vars:
-    var local_data = vars[runner_name].local
-    var scope_data = vars[runner_name].scope
-    # Display in the editor panel
+for unit in vars.get("units", []):
+    var local_data = unit.get("local", {})   # group header: ▸ path [kind] · ago
+for container in vars.get("containers", []):
+    var scope_data = container.get("vars", {})   # group header: ▸ path (scope_id)
+# Display in the editor panel
 ```
 
 ### Runtime Debugging
@@ -351,18 +364,18 @@ func start_client(port: int = BRIDGE_PORT) -> void:
 
 **Solution**: split on `\n` and parse line by line; `_read_json_lines()` already handles this case.
 
-### Pitfall 4: `get_tree()` Returns null at Runtime
+### Pitfall 4: Runtime-Added Subtrees Are Missed
 
-**Problem**: `_collect_runners()` depends on `get_tree().current_scene`; if the scene is not ready it returns an empty array.
+**Problem**: the v2 collector walked `get_tree().current_scene`, so subtrees added at runtime (attached scenes) never reported.
 
-**Solution**: check `scene != null` before pushing; if null, skip this push.
+**Solution**: v3 collects in a single pass from `get_tree().root` (`_collect_units_and_containers`), which covers attached scenes; the game process's autoloads contain no Fuse components, so the scan stays equivalent to the full scene.
 
 ### Pitfall 5: Variables Not Updating
 
 **Problem**: a variable was modified but the editor shows no update.
 
 **Possible causes**:
-- `Runner.current_execution_context` is not set
+- The unit has no valid recent execution context yet (a BaseTrigger/Runner reports `local` only after its first execution)
 - `_variable_context` is empty (the historical B19 bug, now fixed)
 - The connection is gone but `_cached` was not cleared
 

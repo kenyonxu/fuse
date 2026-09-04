@@ -63,14 +63,17 @@ The watcher itself **never accesses the running game scene directly**; instead i
  FuseRuntimeBridge  GlobalVariableService  InstructionAnalyzer
  (Autoload, TCP)    (→ Manager singleton)  (editor static topology)
        │ ▲
-       │ └── set_var (editor → game write-back)
+       │ └── set_var (editor → game write-back, target = container/unit/global)
        ▼
  Running game (TCP client, pushes a JSON line every 0.5s, applies set_var)
+   ├─ BaseTrigger / Runner → "units" (local from the most recent execution context)
+   ├─ ScopeVariableContainer → "containers"
+   └─ GlobalVariableManager → "global" (scalars)
 ```
 
 | Data source | Provides | Available when |
 |--------|----------|----------|
-| `FuseRuntimeBridge` | local/scope variable snapshots of each Runner | While the scene is running |
+| `FuseRuntimeBridge` | v3 snapshots: `units` (BaseTrigger/MultiEventTrigger/Runner local vars, host-direct reporting) + `containers` (ScopeVariableContainer vars) | While the scene is running |
 | `GlobalVariableService` | Global variable names/values/types | Always available |
 | `InstructionAnalyzer` | Variable declarations in Trigger instruction chains (static) | Editor mode |
 
@@ -94,17 +97,22 @@ const BRIDGE_PORT := 24563
 const PUSH_INTERVAL := 0.5
 ```
 
-**Protocol**: TCP stream + JSON line (`\n` separated):
+**Protocol (v3, `proto = 3`)**: TCP stream + JSON line (`\n` separated):
 
 ```json
-{"t":"vars","runners":[{"name":"Runner1","id":123456,"local":{"health":85},"scope":{"alert":50}}],"global":{"score":2450}}
+{"t":"vars","proto":3,
+ "containers":[{"id":99001,"path":"/World/LevelScope","scope_id":"level1","vars":{"alert":50}}],
+ "units":[{"id":123456,"path":"/Main/Runner1","kind":"runner","ago_ms":5,"local":{"health":85}}],
+ "global":{"score":2450}}
 ```
+
+Non-scalar values are wrapped read-only as `{"__complex":"str(v) ≤200 chars","ty":"Vector2"}`. See the [Runtime Bridge Development Guide](runtime-bridge-guide.md) for the full field table and write-back semantics.
 
 **Watcher consumption interface**:
 
 ```gdscript
-## Editor side: get the cached runtime variables
-## Returns {runner_name: {"id": runner instance id, "local": {name: value}, "scope": {name: value}}}
+## Editor side: get the cached runtime variables (v3 two-key structure)
+## Returns {"containers": [container entries...], "units": [unit entries...]}
 func get_cached_vars() -> Dictionary
 ```
 
@@ -146,13 +154,16 @@ func _on_timer() -> void:
 ```
 1. if _editing: return                    ← skip everything while editing (protects the LineEdit)
 2. Clear _content (VBoxContainer)
-3. _collect_runtime_variables()           ← local + scope (from the Bridge cache)
+3. _collect_runtime_variables()           ← Local + Scope rows from the Bridge cache
+                                             (v3 keys: "units" → Local grouped by host,
+                                              "containers" → Scope grouped by container;
+                                              missing fields degrade to empty sets)
 4. GlobalVariableService collects global variables
 5. _record_history() records numeric history (int/float only)
-6. _render_section() × 3                  ← Local / Scope / Global sections
+6. _render_grouped_section() × 2 + flat render ← Local / Scope grouped, Global flat
 7. _render_static_declarations()          ← static section (cached at 5s intervals)
 8. _update_history_graph()                ← refresh the bottom line graph
-9. Update the status label (Global:N  Runner:M)
+9. Update the status label (Global:N  Unit:M  Ctn:K)
 ```
 
 > **Design note**: UI rows are **fully rebuilt** on every tick (simple and reliable), with the `_editing` flag preventing destruction of controls being edited. At row counts in the tens to hundreds this strategy performs acceptably.
@@ -194,9 +205,11 @@ The Dictionary produced by `_make_row_data()` is the unified data carrier for re
 | `value` | Displayed value (stringified) |
 | `type` | Type string (`int`/`float`/`Vector2`/...) |
 | `scope` | Scope identifier (`local`/`scope`/`global`) |
-| `var_key` | History record key: `"{scope}/{name}"` |
+| `target` / `id` | v3 write-back target (`container`/`unit`/`global`) and the host/container instance id |
+| `group_key` / `group_path` | Owning group (`u<id>` / `c<id>` / `global`) and its display path (group headers + filtering) |
+| `var_key` | History record key (v3 scheme): `local:<unit_path>/<name>`, `scope:<container_path>/<name>`, `global/<name>` |
 
-> **Extension note**: when adding a new section, reuse `_make_row_data()` + `_render_section()` and pass section-specific keys in `extra` (e.g. the Runner name, whether it is editable).
+> **Extension note**: when adding a new section, reuse `_make_row_data()` + `_render_section()` and pass section-specific keys in `extra` (e.g. the group path, whether it is editable).
 
 ---
 
@@ -215,13 +228,13 @@ _coerce_value(text, type_str)     ← type coercion (returns null on failure, ab
 Write back by scope → _restore_label()  ← restore the Label, _editing = false
 ```
 
-### Write-Back Targets (by Scope)
+### Write-Back Targets (v3, by `target`)
 
-| Scope | Write-back | Available when |
+| Target | Write-back | Available when |
 |--------|----------|----------|
-| `local` | `bridge.send_set_var("local", runner_id, name, value)` → applied by the running game | At runtime (row comes from the running game, `runner_id` locatable) |
-| `scope` | `bridge.send_set_var("scope", runner_id, name, value)` → applied by the running game | At runtime (same requirement) |
-| `global` | Game connected: `send_set_var("global", 0, name, value)`; otherwise `_write_back_global()` → `set_variable_value_thread_safe()` (metadata preserved; created only if missing) | Always available |
+| `unit` | `bridge.send_set_var("unit", id, name, value)` → applied by the running game (writes the host component's most recent execution context) | At runtime (row comes from the running game, `id` locatable) |
+| `container` | `bridge.send_set_var("container", id, name, value)` → applied by the running game (writes the container variable) | At runtime (same requirement) |
+| `global` | Game connected: `send_set_var("global", 0, name, value)` (existing variables only); otherwise `_write_back_global()` → `set_variable_value_thread_safe()` (metadata preserved; created only if missing) | Always available |
 
 ### Type Coercion (`_coerce_value`)
 
@@ -261,7 +274,7 @@ var _selected_var_key: String = ""
 Rules for `_record_history(var_key, value, type_str)`:
 
 - Only records `int` / `float` (other types are ignored)
-- Key format: `"{scope}/{var_name}"` (e.g. `"global/player_score"`)
+- Key scheme (v3, shared by `_record_history` and row selection via `_history_key`): `local:<unit_path>/<name>`, `scope:<container_path>/<name>`, `global/<name>` (e.g. `"global/player_score"`)
 - Pops the oldest frame once `HISTORY_MAX` is exceeded
 
 ### HistoryGraph Component
@@ -311,22 +324,25 @@ Topology scanning is expensive (walking every Trigger + instruction chain), so i
 ```gdscript
 ## Generate a full snapshot of all variables at the current moment
 func get_snapshot() -> Dictionary
-# → {"timestamp": ..., "global": {...}, "runners": [...]}
+# → {"timestamp": ..., "global": {...}, "containers": [...], "units": [...]}
 
 func _on_snapshot() -> void:
 	# Serialize to JSON and write to user://fuse_watcher_snapshot_{timestamp}.json
 ```
 
-Snapshot structure:
+Snapshot structure (v3: bridge cache entries pass through directly):
 
 ```json
 {
 	"timestamp": 1234.567,
 	"global": {"player_score": {"value": 2450, "type": "int"}},
-	"runners": [
-		{"runner_name": "Runner1",
-		 "local": {"health": {"value": 85, "type": "int"}},
-		 "scope": {"alert_level": {"value": 50, "type": "int"}}}
+	"containers": [
+		{"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
+		 "vars": {"alert_level": {"value": 50, "type": "int"}}}
+	],
+	"units": [
+		{"id": 123456, "path": "/Main/Runner1", "kind": "runner", "ago_ms": 5,
+		 "local": {"health": {"value": 85, "type": "int"}}}
 	]
 }
 ```
@@ -410,7 +426,7 @@ The row data Dictionary can carry custom keys, and `_make_data_row()` branches o
 
 **Problem**: Same-named variables in different scopes share one history curve, polluting each other's data.
 
-**Solution**: Keys must use the `"{scope}/{name}"` format (as already required by `_record_history`).
+**Solution**: Keys must use the v3 scheme — `local:<unit_path>/<name>`, `scope:<container_path>/<name>`, `global/<name>` (as already required by `_history_key`, shared by `_record_history` and row selection; both ends must use the same scheme or the graph silently breaks).
 
 ### Pitfall 5: Putting the Static Scan into High-Frequency Polling
 
@@ -424,6 +440,24 @@ The row data Dictionary can carry custom keys, and `_make_data_row()` branches o
 
 **Solution**: The history window semantics are `HISTORY_MAX × PUSH_INTERVAL = displayed seconds`; when changing the frequency, adjust the comments and documentation accordingly.
 
+### Pitfall 7: Fake String Rows from Object Values (v2 legacy — eliminated)
+
+**Problem**: v2 serialized `Object` values into bare strings in the push, so the editor could not tell them from real `String` rows and could offer editing on non-editable values.
+
+**Solution**: The v3 protocol wraps non-scalars read-only as `{"__complex": "str(v) ≤200 chars", "ty": "Vector2"}` — the root cause is eliminated at the protocol layer (the type column shows the real type name, rows are not editable). The game-side non-scalar gate remains as the last line of defense for hand-crafted messages.
+
+### Pitfall 8: Local Rows Disappearing Right After a Run (design note)
+
+**Problem**: In earlier designs the execution context was discarded as soon as a run finished ("fire-and-forget"), so there was nothing to report after a Trigger/Runner completed.
+
+**Solution**: v3 keeps the **most recent** execution context instead: BaseTrigger (`_create_execution_context`), MultiEventTrigger and Runner all assign `current_execution_context` / `current_execution_context_at_ms`, so units report their last-run locals and the `ago_ms` freshness field lets the panel gray out stale hosts (> 5s).
+
+### Pitfall 9: Collapsed State Lost Across Refreshes
+
+**Problem**: The 0.5s refresh rebuilds the whole UI, so a group collapsed by the user would pop open again on the next tick.
+
+**Solution**: Collapse state lives in the `_collapsed: Dictionary` member keyed by group id (`u<id>` / `c<id>`), not in the rebuilt controls; `_render_grouped_section()` queries it on every rebuild. While a search filter is active the collapsed state is ignored so matches always show.
+
 ---
 
 ## Summary
@@ -436,6 +470,7 @@ Key points of variable watcher development:
 4. ✅ **Edit protection** — the `_editing` flag blocks polled rebuilds; `_coerce_value` returning null aborts the write-back; editability itself is gated by `_is_row_editable` (scalar types + locatable scope)
 5. ✅ **Performance throttling** — 0.5s polling + 5s static cache + 120-frame fixed-length history
 6. ✅ **Public snapshot API** — `get_snapshot()` can be called directly by external tools
+7. ✅ **v3 host-direct protocol** — pushes `{containers, units, global}` (non-scalars wrapped read-only as `__complex`), write-back dispatches on `target` (container/unit/global), and the Local/Scope sections group by host/container with collapse state keyed by group id
 
 **Reference documents**:
 - [Variable Watcher User Guide](../../user_docs/guides/56-variable-watcher-guide.md)

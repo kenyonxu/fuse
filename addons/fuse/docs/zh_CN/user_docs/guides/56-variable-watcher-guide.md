@@ -13,11 +13,11 @@
 | 特性 | 说明 |
 |------|------|
 | 轮询频率 | 0.5 秒（Timer 驱动） |
-| 显示层级 | Local（本地） / Scope（作用域） / Global（全局） |
-| 运行时数据源 | `FuseRuntimeBridge`（Autoload 节点推送） |
+| 显示层级 | Local（本地，按宿主组件分组） / Scope（作用域，按容器分组） / Global（全局，平铺） |
+| 运行时数据源 | `FuseRuntimeBridge`（Autoload 节点推送，协议 v3） |
 | 全局变量数据源 | 游戏运行中：游戏侧实时快照；未运行：`GlobalVariableService` |
 | 历史记录 | 120 帧 = 60 秒滑动窗口（仅数值类型） |
-| 搜索过滤 | 按变量名实时筛选 |
+| 搜索过滤 | 按组路径 + 变量名实时筛选（不区分大小写） |
 
 ---
 
@@ -27,17 +27,19 @@
 
 ```
 +-----------------------------------------------------------+
-| 刷新:0.5s                         Global:5  Runner:2 [📸快照] |
+| 刷新:0.5s                     Global:5  Unit:2  Ctn:1 [📸快照] |
 | [搜索变量...______________________________________________] |
 | [变量           | 值             | 类型                    ] |
 +-----------------------------------------------------------+
-| Local (Runner1)                                           |
+| ▸ /Main/Runner1 [Runner] · 0.3s                           |
 | [health         | 85             | int                    ] |
 | [target_pos     | (120, 340)     | Vector2                ] |
 |                                                           |
-| Scope                                                      |
+| ▸ /Enemies/Guard [Trigger] · 6.2s   （超时，灰显）           |
+| [aggro          | true           | bool                   ] |
+|                                                           |
+| ▸ /World/LevelScope (level1)                              |
 | [alert_level    | 50             | int                    ] |
-| [current_state  | "patrol"       | String                 ] |
 |                                                           |
 | Global                                                     |
 | [player_score   | 2450           | int                    ] |
@@ -54,12 +56,12 @@
 
 | 控件 | 说明 |
 |------|------|
-| 状态标签 | 显示轮询状态和变量统计，如 `Global:5  Runner:2` |
+| 状态标签 | 显示轮询状态和变量统计，如 `Global:5  Unit:2  Ctn:1`（global 行数 / 单元宿主数 / 容器数） |
 | 📸快照按钮 | 点击导出当前所有变量快照到 `user://fuse_watcher_snapshot_{时间戳}.json` |
 
 ### 搜索框
 
-实时过滤所有分区的变量行，匹配变量名。空字符串显示全部。
+实时过滤所有分区的变量行，匹配**组路径 + 变量名**（不区分大小写）。组内行全部被过滤时组头也隐藏；过滤激活时忽略折叠状态，命中行始终显示。空字符串显示全部。
 
 ### 列标题
 
@@ -75,32 +77,32 @@
 
 ## 三层变量显示
 
-### 1. Local（本地变量）
+### 1. Local（本地变量，按宿主组件分组）
 
-显示当前各 Runner（`ActionRunner`）实例中的本地（`local`）变量。每行标注所属 Runner 名称：
+显示各宿主组件（BaseTrigger / MultiEventTrigger / Runner）从其**最近执行上下文**上报的本地（`local`）变量。组头显示组件路径、类型与新鲜度：
 
 ```
-Local (Runner1)
+▸ /Main/Runner1 [Runner] · 0.3s
   [health     | 85   | int]
   [target_pos | (120, 340) | Vector2]
 
-Local (Runner2)
-  [loop_count | 3    | int]
+▸ /Enemies/Guard [Trigger] · 6.2s      ← 超过 5s：灰显
+  [aggro     | true | bool]
 ```
 
-**运行时要求**：仅在场景运行后显示。未检测到运行时数据时显示提示 `(场景运行后可见)`。
+组头可点击折叠/展开，折叠状态跨刷新保持。组件首次执行后才会出现（此前没有执行上下文）。
 
-### 2. Scope（作用域变量）
+### 2. Scope（作用域变量，按容器分组）
 
-显示各 Runner 中声明为 `scope` 作用域的变量：
+显示各 `ScopeVariableContainer` 的变量，按容器分组：
 
 ```
-Scope
-  [alert_level  | 50       | int]
-  [current_state| "patrol" | String]
+▸ /World/LevelScope (level1)
+  [alert_level   | 50       | int]
+  [current_state | "patrol" | String]
 ```
 
-作用域变量通过 `FuseRuntimeBridge.get_cached_vars()` 获取，依赖运行时推送。
+容器从整棵场景树收集，即使某个子树从未触发过，其容器的声明值（默认值）也可见。作用域变量通过 `FuseRuntimeBridge.get_cached_vars()` 获取，依赖运行时推送。
 
 ### 3. Global（全局变量）
 
@@ -135,13 +137,13 @@ _timer.timeout.connect(_on_timer)
 ```
 1. 检查 _editing 标志（编辑中则跳过，避免销毁 LineEdit）
 2. 清空内容区
-3. 通过 _collect_runtime_variables() 收集 local + scope 变量（scope 变量经共享 ScopeVariableContainer 会被同树下多个 Runner 重复上报，按"变量名+值"去重显示；同名不同值各保留一行；local 为各 Runner 独立存储不去重）
+3. 通过 _collect_runtime_variables() 从桥缓存收集 local + scope 行（v3 键："containers" → Scope 行按容器分组，"units" → Local 行按宿主分组；字段缺失降级为空集）
 4. 收集 global 变量（游戏运行中取游戏侧实时快照，否则取 `GlobalVariableService`）
 5. 每行记录历史（仅 int/float）
-6. 渲染 Local / Scope / Global 三个分区
+6. 渲染 Local / Scope / Global 三个分区（Local/Scope 分组，Global 平铺）
 7. 渲染静态声明分区（5 秒间隔刷新拓扑缓存）
 8. 更新底部折线图
-9. 更新状态标签
+9. 更新状态标签（`Global:N  Unit:M  Ctn:K`）
 ```
 
 ---
@@ -154,11 +156,11 @@ _timer.timeout.connect(_on_timer)
 
 | 作用域 | 编辑功能 | 写回目标 |
 |--------|----------|----------|
-| **Local** | **运行中可用**（标量类型） | `bridge.send_set_var("local", runner_id, name, value)` → 运行游戏应用 |
-| **Scope** | **运行中可用**（标量类型） | `bridge.send_set_var("scope", runner_id, name, value)` → 运行游戏应用 |
-| **Global** | 恒可用，按数据源分流 | 游戏运行中：`send_set_var("global", ...)` → 运行游戏；未运行：编辑器侧定义 `set_variable_value_thread_safe`（保留元数据，不存在才新建） |
+| **Local** | **运行中可用**（标量类型） | `bridge.send_set_var("unit", id, name, value)` → 运行游戏应用（写宿主组件的最近执行上下文） |
+| **Scope** | **运行中可用**（标量类型） | `bridge.send_set_var("container", id, name, value)` → 运行游戏应用（写容器变量） |
+| **Global** | 恒可用，按数据源分流 | 游戏运行中：`send_set_var("global", ...)` → 运行游戏（仅已存在的变量）；未运行：编辑器侧定义 `set_variable_value_thread_safe`（保留元数据，不存在才新建） |
 
-**可编辑类型**：仅限 JSON 标量（`int` / `float` / `bool` / `String`）；`Vector2` 等复杂类型行只读，双击无反应。
+**可编辑类型**：仅限 JSON 标量（`int` / `float` / `bool` / `String`）。非标量值以 `{"__complex": ..., "ty": "Vector2"}` 包装到达——这类行只读（值列显示截断字符串，类型列显示真实类型名），双击无反应。
 
 **运行中 Global 数据源**：游戏运行时 Global 区标题带"（运行游戏）"后缀，值来自游戏进程的实时快照；停止运行后回落为编辑器侧定义。
 
@@ -179,7 +181,7 @@ _timer.timeout.connect(_on_timer)
 
 **安全保护**：
 - 编辑中 `_editing = true`，`_refresh()` 跳过重建避免销毁 LineEdit
-- local/scope 行需来自运行中游戏（`runner_id` 可定位到 Runner 才可编辑）
+- Local/Scope 行需来自运行中游戏（行携带的 target id 能在游戏侧定位到宿主/容器才可编辑）
 - 写回失败（连接断开）恢复原显示值并警告；类型转换失败静默恢复原值（输入问题，不警告）
 
 ### 7b — 折线图
@@ -188,7 +190,7 @@ _timer.timeout.connect(_on_timer)
 
 - **历史窗口**：`HISTORY_MAX = 120` 帧（60 秒滑动窗口，`0.5s × 120 = 60s`）
 - **记录范围**：仅 `int` 和 `float` 类型的变量（其他类型自动忽略）
-- **存储键**：`"{scope}/{var_name}"`（如 `"global/player_score"`）
+- **存储键**（v3，按宿主/容器区分，同名变量互不污染）：`local:<单元路径>/<名>`、`scope:<容器路径>/<名>`、`global/<名>`（如 `"global/player_score"`）
 
 **HistoryGraph 组件**：
 - 嵌套类 `HistoryGraph extends Control`
@@ -241,17 +243,16 @@ _timer.timeout.connect(_on_timer)
         "player_score": {"value": 2450, "type": "int"},
         "game_time": {"value": 132.5, "type": "float"}
     },
-    "runners": [
-        {
-            "runner_name": "Runner1",
-            "local": {
-                "health": {"value": 85, "type": "int"},
-                "target_pos": {"value": "(120, 340)", "type": "Vector2"}
-            },
-            "scope": {
-                "alert_level": {"value": 50, "type": "int"}
-            }
-        }
+    "containers": [
+        {"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
+         "vars": {"alert_level": {"value": 50, "type": "int"}}}
+    ],
+    "units": [
+        {"id": 123456, "path": "/Main/Runner1", "kind": "runner", "ago_ms": 5,
+         "local": {
+            "health": {"value": 85, "type": "int"},
+            "target_pos": {"value": "(120, 340)", "type": "Vector2"}
+         }}
     ]
 }
 ```
@@ -298,7 +299,7 @@ _timer.timeout.connect(_on_timer)
 └─────────────────────────────────────────────┘
 ```
 
-- **FuseRuntimeBridge**：Autoload 单例，游戏运行期间主动推送 local/scope 变量缓存
+- **FuseRuntimeBridge**：Autoload 单例，游戏运行期间主动推送变量缓存（v3：按宿主/容器的 `containers` + `units` 条目，外加 global 标量）
 - **GlobalVariableService**：未运行时从 `GlobalVariableManager` 读取编辑器侧全局变量定义；游戏运行中改读游戏侧实时快照（经 `FuseRuntimeBridge`）
 - **InstructionAnalyzer**：编辑器中分析 Trigger 拓扑，提供静态声明数据
 
@@ -310,7 +311,7 @@ _timer.timeout.connect(_on_timer)
 |------|------|----------|
 | 面板空白 | 场景未运行或无 Fuse 节点 | 运行场景并确保有 Trigger/ActionRunner |
 | Local/Scope 不显示 | `FuseRuntimeBridge` 未注册 | 检查 Autoload 配置 |
-| 双击编辑无反应 | 需要运行中游戏 | 场景运行中才出现 local/scope 行；复杂类型（Vector2 等）行只读 |
+| 双击编辑无反应 | 需要运行中游戏 | 场景运行中才出现 Local/Scope 行（宿主首次执行后上报）；复杂值（Vector2 等，只读显示）不可编辑 |
 | 折线图无数据 | 变量非数值类型 | 仅 `int`/`float` 类型记录历史 |
 | 快照保存失败 | 路径权限不足 | 检查 `user://` 目录权限 |
 | 编辑时面板闪烁 | 0.5s 轮询与编辑冲突 | Stage 7a 已保护（`_editing` 标志阻止刷新重建） |
