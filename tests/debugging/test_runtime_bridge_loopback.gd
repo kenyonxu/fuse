@@ -1,6 +1,6 @@
 extends Node
 
-## 桥环回测试：同进程 server/client 双桥，覆盖协议 v2 推送与反向 set_var 全链路
+## 桥环回测试：同进程 server/client 双桥，覆盖协议 v3 推送与反向 set_var 全链路
 ## 用独立端口 24599，避开 headless 下 autoload 桥（客户端模式连 24563）的干扰
 
 const BridgeScript = preload("res://addons/fuse/core/fuse_runtime_bridge.gd")
@@ -10,6 +10,8 @@ var _fail_count: int = 0
 var _server: Node = null
 var _client: Node = null
 var _stub_runner: Node = null
+var _container: Node = null
+var _trigger: MinimalTrigger = null
 
 
 func _ready() -> void:
@@ -32,13 +34,13 @@ func _ready() -> void:
 	_test_last_context_assignment()
 	_test_extract_json_lines()
 	_test_send_set_var_without_connection()
-	_setup_stub_runner()
+	_setup_test_tree()
 	_check(await _await_connected(), "client 已连接编辑器（超时 5s）")
 	await _test_push_payload_reaches_cache()
 	await _test_set_var_global_full_path()  # Task 3 补断言体
 	_test_apply_set_var_local_unit()        # Task 3 补断言体
 	_test_apply_set_var_non_scalar_guard()  # 回归：非标量槽位守卫
-	await _test_push_always_without_runners()  # Task 2 审查携带：无 Runner 仍恒推 global
+	await _test_push_always_without_units()  # 无单元仍恒推 global
 	_cleanup()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -84,14 +86,33 @@ func _test_send_set_var_without_connection() -> void:
 	orphan.free()
 
 
-func _setup_stub_runner() -> void:
+func _setup_test_tree() -> void:
+	# 容器：挂测试场景根，带标量与复杂值
+	_container = ScopeVariableContainer.new()
+	_container.scope_id = "test_scope"
+	_container.name = "TestContainer"
+	add_child(_container)
+	_container.set_variable("lives", 3)
+	_container.set_variable("anchor", Vector2(1, 2))
+
+	# 触发器：建立最近上下文并写 local（标量 + 复杂值）
+	_trigger = MinimalTrigger.new()
+	_trigger.name = "TestTrigger"
+	add_child(_trigger)
+	var tec = _trigger._create_execution_context(_trigger)
+	var tvc = tec.get("_variable_context")
+	tvc.set_variable("hp", 100, "local")
+	tvc.set_variable("dir", Vector2(1, 0), "local")
+
+	# Runner：沿用既有 stub 形态
 	_stub_runner = Runner.new()
 	_stub_runner.name = "StubRunner"
 	add_child(_stub_runner)
 	var ec = ExecutionContext.new()
-	var vc = ec.get("_variable_context")  # 与桥同款访问路径
+	var vc = ec.get("_variable_context")
 	vc.set_variable("hp", 100, "local")
 	_stub_runner.current_execution_context = ec
+	_stub_runner.current_execution_context_at_ms = Time.get_ticks_msec()
 
 
 func _await_connected(timeout_sec: float = 5.0) -> bool:
@@ -104,23 +125,45 @@ func _await_connected(timeout_sec: float = 5.0) -> bool:
 	return false
 
 
-## 真实 socket 全链路：stub Runner + 预置 global → 0.5s 节拍推送 → server 缓存断言
+## v3 推送：containers/units/global 三块，经真实 socket
 func _test_push_payload_reaches_cache() -> void:
-	print("\n--- 推送 v2：id + global + 恒推（全链路）---")
+	print("\n--- 推送 v3：containers/units/global（全链路）---")
 	var mgr := GlobalVariableManager.get_instance()
 	mgr.add_variable("score", BaseVariable.create("score", 7, BaseVariable.VariableScope.GLOBAL))
 
 	await get_tree().create_timer(1.3).timeout
 
 	var cached: Dictionary = _server.get_cached_vars()
-	_check(_server.is_game_connected(), "client 已连接")
-	_check(cached.has("StubRunner"), "runner 条目存在（got %s）" % str(cached.keys()))
-	if cached.has("StubRunner"):
-		var entry: Dictionary = cached["StubRunner"]
-		_check(int(entry.get("id", 0)) == _stub_runner.get_instance_id(), "id 为 runner 实例 id")
-		_check(entry.get("local", {}).get("hp", null) != null, "local 快照含 hp")
-	var cached_global: Dictionary = _server.get_cached_global()
-	_check(cached_global.get("score", null) == 7, "global 快照送达（runners 非空场景）")
+	var containers: Array = cached.get("containers", [])
+	var units: Array = cached.get("units", [])
+	_check(containers.size() == 1, "容器条目恰 1（got %d）" % containers.size())
+	if containers.size() == 1:
+		var c: Dictionary = containers[0]
+		_check(int(c.get("id", 0)) == _container.get_instance_id(), "容器 id 为实例 id")
+		_check(c.get("path", "") == "/TestContainer", "容器 path 相对场景根（/TestContainer）")
+		_check(c.get("scope_id", "") == "test_scope", "scope_id 送达")
+		var cvars: Dictionary = c.get("vars", {})
+		_check(cvars.get("lives", null) == 3, "容器标量 lives=3 送达")
+		var anchor = cvars.get("anchor", null)
+		_check(anchor is Dictionary and anchor.get("ty", "") == "Vector2" \
+			and anchor.get("__complex", "") == "(1.0, 2.0)", "容器复杂值 __complex 编码（Godot 4 str(Vector2) 带 .0）")
+	_check(units.size() == 2, "units 恰 2（Trigger + Runner，got %d）" % units.size())
+	var kinds := {}
+	for u in units:
+		kinds[u.get("kind", "")] = u
+		_check(int(u.get("ago_ms", -1)) >= 0, "ago_ms 非负")
+	if kinds.has("trigger"):
+		var tlocal: Dictionary = kinds["trigger"].get("local", {})
+		_check(tlocal.get("hp", null) == 100, "trigger local hp=100 送达")
+		var dir = tlocal.get("dir", null)
+		_check(dir is Dictionary and dir.get("ty", "") == "Vector2", "trigger local 复杂值 __complex 编码")
+		_check(kinds["trigger"].get("path", "").ends_with("TestTrigger"), "unit path 含节点名")
+	if kinds.has("runner"):
+		_check(kinds["runner"].get("local", {}).get("hp", null) == 100, "runner local 送达")
+	_check(_server.get_cached_global().get("score", null) == 7, "global 快照送达")
+	# 降级：字段缺失安全为空
+	_server._handle_message({"t": "vars", "proto": 3})
+	_check(_server.get_cached_vars().get("containers", [1]).is_empty(), "缺字段降级为空集")
 
 
 ## 全链路：server send_set_var → socket → client 收到并应用到本进程单例
@@ -188,19 +231,24 @@ func _test_apply_set_var_non_scalar_guard() -> void:
 	mgr.remove_variable("bridge_vec_test")
 
 
-## 恒推：移除 Runner 后仍推送 global（空 runners 快照不断流）
-func _test_push_always_without_runners() -> void:
-	print("\n--- 恒推空 runners：global 仍送达 ---")
+## 恒推：移除单元（Trigger/Runner）后仍推送 global（空 units 快照不断流）
+func _test_push_always_without_units() -> void:
+	print("\n--- 恒推空 units：global 仍送达 ---")
 	remove_child(_stub_runner)  # 保留引用，_cleanup 仍可 free
+	remove_child(_trigger)      # 同上（v3：Trigger 也是上报单元）
 	GlobalVariableManager.get_instance().set_variable_value_thread_safe("score", 33)
 	await get_tree().create_timer(1.3).timeout
-	_check(_server.get_cached_global().get("score") == 33, "无 Runner 仍恒推 global（score=33）")
-	_check(_server.get_cached_vars().is_empty(), "空 runners 快照清空 runner 缓存")
+	_check(_server.get_cached_global().get("score") == 33, "无活跃单元仍恒推 global（score=33）")
+	_check(_server.get_cached_vars().get("units", [1]).is_empty(), "无单元时 units 为空")
 
 
 func _cleanup() -> void:
 	if _stub_runner:
 		_stub_runner.queue_free()
+	if _trigger:
+		_trigger.queue_free()
+	if _container:
+		_container.queue_free()
 	if _client:
 		_client.queue_free()
 	if _server:

@@ -7,12 +7,14 @@ extends Node
 ##   listen 127.0.0.1:24563，接受运行游戏推送的变量快照，缓存到 _cached
 ##
 ## 运行游戏侧（TCP 客户端模式）：
-##   连接 127.0.0.1:24563，每 0.5s 收集当前场景下所有 Runner 的 local/scope
-##   变量快照，序列化为 JSON line 推送
+##   连接 127.0.0.1:24563，每 0.5s 从 root 全树收集 ScopeVariableContainer 容器
+##   与 BaseTrigger/Runner 单元（宿主直报最近执行上下文的 local）的变量快照，
+##   序列化为 JSON line 推送
 ##
-## 协议：TCP 流 + JSON line（\n 分隔）
-##   运行游戏→编辑器: {"t":"vars","runners":[{"name":"Runner1","id":123,"local":{...},"scope":{...}},...],"global":{name:value,...}}
-##     每 0.5s 恒推（无 Runner 也推 global，空 runners 清编辑器缓存）
+## 协议：TCP 流 + JSON line（\n 分隔），推送协议版本 proto=3
+##   运行游戏→编辑器: {"t":"vars","proto":3,"containers":[{"id":123,"path":"/x","scope_id":"s","vars":{...}},...],"units":[{"id":456,"path":"/x","kind":"trigger|multi|runner","ago_ms":5,"local":{...}},...],"global":{name:value,...}}
+##     每 0.5s 恒推（无单元也推 global 与空集，清编辑器缓存）；非标量值编码为
+##     {"__complex":"str(v)≤200字符","ty":"Vector2"} 显式只读包装（编辑器据此区分真 String 与复杂值）
 ##   编辑器→运行游戏: {"t":"set_var","scope":"global|local|scope","runner_id":123,"name":"hp","value":1}（反向写回）
 
 const BRIDGE_PORT := 24563
@@ -24,8 +26,8 @@ var _server: TCPServer = null
 var _connections: Array[StreamPeerTCP] = []
 var _client: StreamPeerTCP = null
 
-## 编辑器侧：运行游戏推送的变量快照缓存
-## {runner_name: {"id": runner 实例 id, "local": {var_name: value, ...}, "scope": {var_name: value, ...}}}
+## 编辑器侧：运行游戏推送的变量快照缓存（v3 双键结构）
+## {"containers": [容器条目...], "units": [单元条目...]}
 var _cached: Dictionary = {}
 var _cached_global: Dictionary = {}  # 游戏侧 global 标量快照
 
@@ -167,31 +169,44 @@ static func extract_json_lines(buffer: String) -> Dictionary:
 	return {"lines": lines, "rest": rest}
 
 
-## 消息分发（Task 2/3 扩展：vars / set_var）
+## v3 值编码：标量原样；非标量显式只读包装（编辑器据此区分真 String 与复杂值）
+static func _encode_var(v: Variant) -> Variant:
+	if typeof(v) in [TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING]:
+		return v
+	var s := str(v)
+	if s.length() > 200:
+		s = s.substr(0, 197) + "..."
+	return {"__complex": s, "ty": type_string(typeof(v))}
+
+
+## 显示用路径：current_scene 相对（场景根为 "/"），子树外回退绝对路径；不用于定位
+static func _node_path_str(n: Node) -> String:
+	var scene: Node = n.get_tree().current_scene
+	if scene != null and (n == scene or scene.is_ancestor_of(n)):
+		if n == scene:
+			return "/"
+		return "/" + str(scene.get_path_to(n))
+	return str(n.get_path())
+
+
+func _update_cache(payload: Dictionary) -> void:
+	_cached = {
+		"containers": payload.get("containers", []),
+		"units": payload.get("units", [])
+	}
+	_cached_global = payload.get("global", {}).duplicate()
+
+
+## vars 按 t 分发（而非 has 键）：字段缺失的降级消息也要触达 _update_cache 清空缓存（.get 缺省空集）
 func _handle_message(msg: Dictionary) -> void:
-	if msg.has("runners"):
-		_update_cache(msg["runners"], msg.get("global", {}))
+	if msg.get("t", "") == "vars":
+		_update_cache(msg)
 	elif msg.get("t", "") == "set_var":
 		_apply_set_var(msg)
 
 
-func _update_cache(runners: Array, global_vars: Dictionary = {}) -> void:
-	_cached.clear()
-	for r in runners:
-		if not r is Dictionary:
-			continue
-		var rname: String = r.get("name", "?")
-		var local_data: Dictionary = r.get("local", {})
-		var scope_data: Dictionary = r.get("scope", {})
-		_cached[rname] = {
-			"id": int(r.get("id", 0)),
-			"local": local_data.duplicate(),
-			"scope": scope_data.duplicate()
-		}
-	_cached_global = global_vars.duplicate()
-
-
 ## 公开 API：获取缓存的运行时变量（编辑器侧）
+## v3 结构：{"containers": [容器条目...], "units": [单元条目...]}
 func get_cached_vars() -> Dictionary:
 	return _cached
 
@@ -260,13 +275,14 @@ func _client_poll(delta: float) -> void:
 
 
 func _push_snapshot() -> void:
+	var collected := _collect_units_and_containers()
 	var msg := JSON.stringify({
 		"t": "vars",
-		"runners": _collect_runners(),
+		"proto": 3,
+		"containers": collected["containers"],
+		"units": collected["units"],
 		"global": _collect_global_flat()
 	}) + "\n"
-	# put_partial_data 非阻塞（缓冲满发部分即返回），避免 put_data 阻塞主线程
-	# 丢弃未发送部分（下个 snapshot 覆盖，变量快照实时性优先于完整性）
 	_client.put_partial_data(msg.to_utf8_buffer())
 
 
@@ -281,26 +297,63 @@ func _collect_global_flat() -> Dictionary:
 	return flat
 
 
-func _collect_runners() -> Array:
-	var result: Array = []
-	var scene = get_tree().current_scene
-	if scene == null:
-		return result
+## v3 收集：root 全树单次递归，三判归类（BaseTrigger / Runner / ScopeVariableContainer）
+## root 扫描覆盖附加场景；游戏进程 autoload 内无 Fuse 组件，等效全量
+func _collect_units_and_containers() -> Dictionary:
+	var containers: Array = []
+	var units: Array = []
+	_collect_from_node(get_tree().root, containers, units)
+	return {"containers": containers, "units": units}
 
-	for runner in scene.find_children("*", "Runner", true, false):
-		var ec = runner.get("current_execution_context")
-		if ec == null or not is_instance_valid(ec):
-			continue
-		var vc = ec.get("_variable_context")
-		if vc == null:
-			continue
-		result.append({
-			"name": runner.name,
-			"id": runner.get_instance_id(),
-			"local": vc.get_all_local_variables_snapshot(),
-			"scope": vc.get_all_scope_variables_snapshot()
-		})
-	return result
+
+func _collect_from_node(node: Node, containers: Array, units: Array) -> void:
+	for child in node.get_children():
+		if child is ScopeVariableContainer:
+			containers.append(_encode_container(child))
+		if child is BaseTrigger or child is Runner:
+			var unit := _encode_unit(child)
+			if not unit.is_empty():
+				units.append(unit)
+		_collect_from_node(child, containers, units)
+
+
+func _encode_container(c: ScopeVariableContainer) -> Dictionary:
+	var vars_enc := {}
+	for vname in c.get_variable_names():
+		vars_enc[vname] = _encode_var(c.get_variable(vname))
+	return {
+		"id": c.get_instance_id(),
+		"path": _node_path_str(c),
+		"scope_id": str(c.scope_id),
+		"vars": vars_enc
+	}
+
+
+## 无有效最近上下文的组件返回空 dict（不上报）
+func _encode_unit(unit: Node) -> Dictionary:
+	var ec = unit.get("current_execution_context")
+	if ec == null or not is_instance_valid(ec):
+		return {}
+	var vc = ec.get("_variable_context")
+	if vc == null:
+		return {}
+	var kind := "runner"
+	if unit is MultiEventTrigger:
+		kind = "multi"
+	elif unit is BaseTrigger:
+		kind = "trigger"
+	var snap: Dictionary = vc.get_all_local_variables_snapshot()
+	var local_enc := {}
+	for vname in snap:
+		local_enc[vname] = _encode_var(snap[vname])
+	return {
+		"id": unit.get_instance_id(),
+		"path": _node_path_str(unit),
+		"kind": kind,
+		# Object.get 无第二参（双参缺省是 Dictionary.get 的签名）；Task 1 后两类组件均已有该属性
+		"ago_ms": int(Time.get_ticks_msec() - int(unit.get("current_execution_context_at_ms"))),
+		"local": local_enc
+	}
 
 
 ## 游戏侧：应用编辑器写回（目标失效静默忽略——失败由推送回显兜底，spec §3.3/§3.4）
