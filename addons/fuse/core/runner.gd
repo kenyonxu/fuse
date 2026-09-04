@@ -34,6 +34,7 @@ class_name Runner extends Node
 
 ## 当前执行上下文(运行时设置,变量监视器读取)
 var current_execution_context: ExecutionContext = null
+var current_execution_context_at_ms: int = 0
 
 ## ============================================
 ## 信号
@@ -313,6 +314,7 @@ func run(context_node: Node = null) -> void:
 	var target = context_node if context_node else self
 	var execution_context = _create_execution_context(target)
 	current_execution_context = execution_context
+	current_execution_context_at_ms = Time.get_ticks_msec()
 
 	_log_debug("开始执行 ActionRunner")
 	_runtime_instance.run(execution_context)

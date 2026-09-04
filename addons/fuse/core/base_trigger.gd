@@ -42,6 +42,10 @@ signal event_stopped(reason: String, context: Dictionary)
 
 ## ==================== 内部状态 ====================
 
+## 最近一次执行上下文（变量监视器 v3 的 local 数据源；与 Runner 同名同义）
+var current_execution_context: ExecutionContext = null
+var current_execution_context_at_ms: int = 0
+
 var _fuse_error: FuseError = null
 
 ## ==================== 抽象方法 ====================
@@ -195,6 +199,8 @@ func _create_execution_context(target: Node, index: int = 0) -> ExecutionContext
 	# 同步 RuntimeEventInstance 中的事件参数
 	_sync_event_args_to_context(context, index)
 
+	current_execution_context = context
+	current_execution_context_at_ms = Time.get_ticks_msec()
 	return context
 
 ## 同步事件参数到 ExecutionContext
