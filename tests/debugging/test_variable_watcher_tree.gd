@@ -37,6 +37,7 @@ func _ready() -> void:
 	_test_diff_plan()
 	_test_apply_data_structure()
 	_test_collapse_and_filter()
+	_test_apply_global()
 	_test_selection_metadata()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -101,6 +102,7 @@ func _test_collapse_and_filter() -> void:
 	_tree._toggle_group("s:level01")
 	_check(_tree._is_group_collapsed("s:level01") == true, "折叠置位")
 	_tree._toggle_group("s:level01")
+	_check(_tree._is_group_collapsed("s:level01") == false, "二次 toggle 恢复展开")
 	_check(_tree._passes_filter("HP", "") == true, "空过滤放行")
 	_check(_tree._passes_filter("OnInput", "oninput") == true, "大小写不敏感命中")
 	_check(_tree._passes_filter("hp", "camera") == false, "不命中")
@@ -108,6 +110,31 @@ func _test_collapse_and_filter() -> void:
 	_tree.apply_data(FAKE_ROWS, "level01", "camera")
 	_check(_find_root_by_text("level01") == null, "全组不命中时场景根不建")
 	_check(_find_item_text("hp") == null, "不匹配行按过滤集重建后不在树中")
+
+
+func _test_apply_global() -> void:
+	print("\n--- apply_global 路径 ---")
+	var grows: Array = [
+		{"name": "score", "value": "2100", "type": "int", "is_complex": false,
+			"target": "global", "id": 0, "group_key": "", "group_path": ""},
+		{"name": "god", "value": "true", "type": "bool", "is_complex": false,
+			"target": "global", "id": 0, "group_key": "", "group_path": ""}]
+	_tree.apply_global(grows, "")
+	var groot := _find_root_by_text("GLOBAL")
+	_check(groot != null and _child_count(groot) == 2,
+		"GLOBAL 根挂 2 行（got %d）" % (_child_count(groot) if groot != null else -1))
+	_tree.apply_global(grows, "god")
+	_check(_child_count(_find_root_by_text("GLOBAL")) == 1, "过滤后仅 god 命中")
+	_tree.apply_global([], "")
+	_check(_child_count(_find_root_by_text("GLOBAL")) == 0, "global 清空")
+	# 失选补发：选中键失效时 variable_selected({}, false)
+	var fired := {"deselect": 0}
+	_tree.variable_selected.connect(func(_r: Dictionary, sel: bool) -> void:
+		if not sel:
+			fired["deselect"] += 1)
+	_tree._selected_key = "global:0:gone"
+	_tree.apply_global(grows, "")
+	_check(fired["deselect"] >= 1, "选中键失效补发失选事件")
 
 
 func _test_selection_metadata() -> void:

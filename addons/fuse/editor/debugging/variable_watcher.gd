@@ -179,7 +179,7 @@ func _on_variable_activated(row: Dictionary) -> void:
 	_edit_line = LineEdit.new()
 	add_child(_edit_line)
 	var rect := _tree.value_cell_screen_rect()
-	_edit_line.position = rect.position
+	_edit_line.global_position = rect.position  # 全局坐标：rect 基于 Tree 的 get_global_rect
 	_edit_line.size = rect.size
 	_edit_line.text = row.get("value", "")
 	_edit_line.select_all()

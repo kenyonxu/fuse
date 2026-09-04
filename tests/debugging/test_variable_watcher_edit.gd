@@ -29,6 +29,7 @@ func _ready() -> void:
 	_test_rows_v3_groups()
 	_test_editable_v3()
 	_test_esc_closes_graph()
+	_test_edit_overlay_global_position()
 	_cleanup_globals()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -122,6 +123,60 @@ func _test_esc_closes_graph() -> void:
 	ev.keycode = KEY_ESCAPE
 	_watcher._unhandled_input(ev)
 	_check(_watcher._graph_panel.visible == false, "Esc 关闭图区")
+
+
+## 终审 Critical 回归：编辑覆盖层用全局坐标定位（偏移容器中不再错位）
+## 断言取舍：headless 无布局帧，但面板 position=(30,200) 即其全局坐标（父为非 Control 节点），
+## 故可强断 覆盖层 global_position == value_cell_screen_rect().position——
+## 修复前（position = rect.position）全局位置会双重偏移 (+30,+200)，此断言必失败
+func _test_edit_overlay_global_position() -> void:
+	print("\n--- 编辑覆盖层全局坐标 ---")
+	var offset_panel := PanelContainer.new()
+	offset_panel.position = Vector2(30, 200)
+	add_child(offset_panel)
+	_watcher.get_parent().remove_child(_watcher)
+	offset_panel.add_child(_watcher)
+	# 建 hp 行并选中：value_cell_screen_rect 依赖 get_selected()，无选中返回 Rect2()
+	var trows := {"container_groups": [], "scope_rows": [],
+		"unit_groups": [{"key": "u1", "path": "/P", "kind": "trigger", "ago_ms": 100}],
+		"local_rows": [{"target": "unit", "id": 1, "name": "hp", "type": "int",
+			"is_complex": false, "value": "55", "group_key": "u1", "group_path": "/P"}],
+		"unit_count": 1, "container_count": 0}
+	_watcher._tree.apply_data(trows, "", "")
+	var hp := _find_tree_item(_watcher._tree, "hp")
+	_check(hp != null, "hp 行已建树")
+	if hp != null:
+		hp.select(1)  # COL_VALUE：SELECT_ROW 模式下整行选中
+	var row := {"target": "unit", "id": 1, "name": "hp", "type": "int",
+		"is_complex": false, "value": "55", "group_key": "u1", "group_path": "/P"}
+	_watcher._on_variable_activated(row)
+	if _watcher._edit_line != null:
+		var expect: Vector2 = _watcher._tree.value_cell_screen_rect().position
+		_check(_watcher._edit_line.global_position == expect,
+			"覆盖层全局位置 == 值格全局矩形位置（got %s vs %s）" % [
+				str(_watcher._edit_line.global_position), str(expect)])
+		_watcher._finish_edit("", row)
+	else:
+		_check(false, "编辑覆盖层已创建")
+	_watcher.get_parent().remove_child(_watcher)
+	add_child(_watcher)
+	offset_panel.queue_free()
+
+
+func _find_tree_item(tree: Tree, txt: String) -> TreeItem:
+	var root := tree.get_root()
+	if root == null:
+		return null
+	var stack: Array[TreeItem] = [root]
+	while stack.size() > 0:
+		var it: TreeItem = stack.pop_back()
+		if it != root and it.get_text(0) == txt:
+			return it
+		var c := it.get_first_child()
+		while c:
+			stack.append(c)
+			c = c.get_next()
+	return null
 
 
 func _cleanup_globals() -> void:
