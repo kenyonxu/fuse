@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/core/test_scope_container_object_overwrite.gd" id="1"]
+
+[node name="TestScopeContainerOverwrite" type="Node"]
+script = ExtResource("1")

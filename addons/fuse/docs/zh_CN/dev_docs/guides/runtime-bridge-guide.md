@@ -231,6 +231,7 @@ TCP 流 + JSON line（`\n` 分隔）。
 游戏侧应用语义（`_apply_set_var`）：
 
 - **类型收窄**：JSON 解析后数字一律为 `float`；按目标变量现有类型收窄（`int` 目标收窄回 `int`）。目标不存在（自动创建的变量）时原样写入——float 化为已知限制。
+- **非标量槽位跳过**：推送快照会把 `Object` 值序列化成字符串，编辑器无法与真正的 `String` 行区分。游戏侧作为最后防线，目标槽位当前持有非标量（`Object` / `Vector2` / 容器等）时静默忽略写回——行值在下次推送时自然回显原值。
 - **`global`**：变量不存在**不创建**（静默忽略）。
 - **`local` / `scope`**：经 `runner_id` 定位 Runner，按 `current_execution_context` → `_variable_context` → `set_variable` 鸭子类型逐级取用；目标失效静默忽略。
 - **编辑器侧**：`send_set_var()` 无存活连接时返回 `false`；短写（部分字节发出）会警告并断开该连接，游戏侧重连自愈。

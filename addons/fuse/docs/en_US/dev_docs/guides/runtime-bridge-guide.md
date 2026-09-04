@@ -232,6 +232,7 @@ TCP stream + JSON line (`\n` separated).
 Application semantics on the game side (`_apply_set_var`):
 
 - **Type narrowing**: after JSON parsing every number is a `float`; it is narrowed to the target variable's existing type (an `int` target is narrowed back to `int`). If the target does not exist (auto-created variables), the value is written as-is — the float widening is a known limitation.
+- **Non-scalar slots are skipped**: the push snapshot serializes an `Object` value into a string, so the editor cannot tell it apart from a real `String` row. As the last line of defense, the game side silently ignores a write-back whose target slot currently holds a non-scalar (`Object` / `Vector2` / containers) — the row's value simply reverts on the next push.
 - **`global`**: if the variable does not exist it is **not created** (silently ignored).
 - **`local` / `scope`**: the Runner is located duck-typed via `runner_id` → `current_execution_context` → `_variable_context` → `set_variable`; a stale target is silently ignored.
 - **Editor side**: `send_set_var()` returns `false` when there is no live connection; a short write (partial bytes sent) warns and disconnects that connection, and the game side reconnects and self-heals.

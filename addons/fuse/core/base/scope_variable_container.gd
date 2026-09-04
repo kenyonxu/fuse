@@ -105,7 +105,9 @@ func set_variable(name: String, value: Variant) -> bool:
 	var old_value: Variant = _variables.get(name)
 	_variables[name] = value
 
-	if old_value != value:
+	# Object 与非 Object 不能直接比较（混型写入视为已变更），避免
+	# "Invalid operands 'Object' and 'String'" 运行时错误
+	if (old_value is Object) != (value is Object) or old_value != value:
 		scope_variable_changed.emit(name, old_value, value)
 
 	# 通知编辑器属性已更改

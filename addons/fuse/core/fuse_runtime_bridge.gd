@@ -316,6 +316,9 @@ func _apply_set_var(msg: Dictionary) -> void:
 			var existing_var = mgr.get_variable(vname)
 			if existing_var == null:
 				return  # 不存在不创建
+			# 非标量槽位（Object/容器等）不可经桥覆盖：否则标量写入会静默销毁原值
+			if not _is_bridge_scalar(existing_var.value):
+				return
 			mgr.set_variable_value_thread_safe(vname, _narrow_scalar(value, existing_var.value))
 		"local", "scope":
 			var rid := int(msg.get("runner_id", 0))
@@ -331,7 +334,16 @@ func _apply_set_var(msg: Dictionary) -> void:
 			if vc == null:
 				return
 			var existing = vc.get_variable(vname, null, scope)
+			# 推送快照会把 Object 序列化成字符串，编辑器无法分辨真伪标量——
+			# 非标量槽位的写回在游戏侧拦截（写 Object 槽既无意义还会触发容器混型比较错误）
+			if existing != null and not _is_bridge_scalar(existing):
+				return
 			vc.set_variable(vname, _narrow_scalar(value, existing), scope)
+
+
+## 桥协议仅承载标量（JSON 可无损表达的类型）
+static func _is_bridge_scalar(v: Variant) -> bool:
+	return typeof(v) in [TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING]
 
 
 ## 按实例 id 在当前场景中定位 Runner（set_var 写回目标）

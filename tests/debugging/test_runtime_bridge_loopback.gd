@@ -36,6 +36,7 @@ func _ready() -> void:
 	await _test_push_payload_reaches_cache()
 	await _test_set_var_global_full_path()  # Task 3 补断言体
 	_test_apply_set_var_local_unit()        # Task 3 补断言体
+	_test_apply_set_var_non_scalar_guard()  # 回归：非标量槽位守卫
 	await _test_push_always_without_runners()  # Task 2 审查携带：无 Runner 仍恒推 global
 	_cleanup()
 
@@ -145,6 +146,33 @@ func _test_apply_set_var_local_unit() -> void:
 		"name": "no_such_var", "value": 1.0
 	})
 	_check(GlobalVariableManager.get_instance().get_variable("no_such_var") == null, "global 目标不存在不创建")
+
+
+## 回归（2026-09-04 运行时编辑实测崩溃）：推送快照会把 Object 序列化成字符串，
+## 编辑器无法分辨真伪标量——非标量槽位的写回必须在游戏侧静默跳过
+func _test_apply_set_var_non_scalar_guard() -> void:
+	print("\n--- _apply_set_var 非标量槽位守卫 ---")
+	var node_val := Node.new()
+	var vc = _stub_runner.current_execution_context.get("_variable_context")
+	vc.set_variable("target_obj", node_val, "local")
+	_client._apply_set_var({
+		"t": "set_var", "scope": "local",
+		"runner_id": _stub_runner.get_instance_id(),
+		"name": "target_obj", "value": "abc"
+	})
+	_check(vc.get_variable("target_obj", null, "local") == node_val, "local Object 槽位写回被跳过（原对象保留）")
+	node_val.free()
+
+	var mgr := GlobalVariableManager.get_instance()
+	mgr.add_variable("bridge_vec_test", BaseVariable.create(
+		"bridge_vec_test", Vector2(1, 2), BaseVariable.VariableScope.GLOBAL))
+	_client._apply_set_var({
+		"t": "set_var", "scope": "global", "runner_id": 0,
+		"name": "bridge_vec_test", "value": "5"
+	})
+	var vec_var = mgr.get_variable("bridge_vec_test")
+	_check(vec_var != null and vec_var.value == Vector2(1, 2), "global 非标量槽位写回被跳过（Vector2 保留）")
+	mgr.remove_variable("bridge_vec_test")
 
 
 ## 恒推：移除 Runner 后仍推送 global（空 runners 快照不断流）
