@@ -38,6 +38,11 @@ const STATIC_REFRESH_INTERVAL_MS := 5000
 # 7e: 运行时编辑可编辑类型（JSON 标量）
 const EDITABLE_TYPES := ["int", "float", "bool", "String", "string"]
 
+# v3: 组折叠状态（key: "c<id>"/"u<id>"，跨刷新保持）
+var _collapsed: Dictionary = {}
+const STALE_MS := 5000  # unit 组头新鲜度阈值（超时灰显）
+const KIND_LABEL := {"trigger": "Trigger", "multi": "MultiEvent", "runner": "Runner"}
+
 
 func _init() -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -112,17 +117,15 @@ func _on_timer() -> void:
 # 7a: 双击编辑变量值
 # ============================================================
 
-## 行是否可编辑：非笔记/静态、JSON 标量类型、scope 可达
-## local/scope 需 runner_id 可定位（运行行）；global 恒可（写回路径按数据源分流）
+## v3 可编辑：非 __complex、JSON 标量类型、target 有效（container/unit/global）
 func _is_row_editable(data: Dictionary) -> bool:
 	if data.get("is_note", false) or data.get("is_static", false):
 		return false
+	if data.get("is_complex", false):
+		return false
 	if not str(data.get("type", "")) in EDITABLE_TYPES:
 		return false
-	var scope: String = data.get("scope", "")
-	if scope in ["local", "scope"]:
-		return int(data.get("runner_id", 0)) > 0
-	return scope == "global"
+	return str(data.get("target", "")) in ["container", "unit", "global"]
 
 
 ## 创建可编辑的值列 PanelContainer
@@ -178,20 +181,20 @@ func _on_focus_exited(data: Dictionary, panel: PanelContainer, line: LineEdit) -
 func _finish_edit(text: String, data: Dictionary, panel: PanelContainer) -> void:
 	var type_str: String = data.get("type", "")
 	var coerced = _coerce_value(text, type_str)
-	var scope: String = data.get("scope", "")
 	var display := text
 
 	if coerced != null:
 		var bridge = _get_bridge()
 		var sent := true
-		if scope == "global":
+		var target: String = data.get("target", "")
+		if target == "global":
 			if bridge != null and bridge.has_method("is_game_connected") and bridge.is_game_connected():
 				sent = bridge.send_set_var("global", 0, data["name"], coerced)
 			else:
 				_write_back_global(data["name"], coerced)
-		elif scope in ["local", "scope"]:
+		elif target in ["container", "unit"]:
 			if bridge != null and bridge.has_method("send_set_var"):
-				sent = bridge.send_set_var(scope, int(data.get("runner_id", 0)), data["name"], coerced)
+				sent = bridge.send_set_var(target, int(data.get("id", 0)), data["name"], coerced)
 			else:
 				sent = false
 		if not sent:
@@ -344,14 +347,13 @@ func _collect_runtime_variables() -> Dictionary:
 	## 从 FuseRuntimeBridge 读运行游戏推送的变量
 	## 注意：早退路径也必须返回类型化 Array[Dictionary]——_refresh 以类型化变量接收，
 	## 无类型数组会在每次轮询刷 "Trying to assign an array of type Array" 错误
-	var local_rows: Array[Dictionary] = []
-	var scope_rows: Array[Dictionary] = []
 	var result := {
-		"local_rows": local_rows,
-		"scope_rows": scope_rows,
-		"runners": [],
-		"runner_count": 0,
-		"active_count": 0
+		"local_rows": [] as Array[Dictionary],
+		"scope_rows": [] as Array[Dictionary],
+		"unit_groups": [] as Array[Dictionary],
+		"container_groups": [] as Array[Dictionary],
+		"unit_count": 0,
+		"container_count": 0
 	}
 
 	var bridge = _get_bridge()
@@ -365,50 +367,45 @@ func _collect_runtime_variables() -> Dictionary:
 	return _rows_from_cached(cached)
 
 
-## 由桥缓存生成展示行（与桥访问解耦，便于单元测试）
-## scope 变量经共享 ScopeVariableContainer 会被同树下多个 Runner 重复上报
-## （同一存储读 N 遍），按"变量名+值"去重；同名不同值（不同容器）各保留一行。
-## local 变量为各 Runner 独立存储，不去重。
+## v3 行生成：local 按 unit 分组、scope 按 container 分组、global 由 _refresh 单独处理
 func _rows_from_cached(cached: Dictionary) -> Dictionary:
 	var local_rows: Array[Dictionary] = []
 	var scope_rows: Array[Dictionary] = []
-	var scope_seen := {}  # "name\x1fvalue" → true
+	var unit_groups: Array[Dictionary] = []
+	var container_groups: Array[Dictionary] = []
 	var result := {
 		"local_rows": local_rows,
 		"scope_rows": scope_rows,
-		"runners": [],
-		"runner_count": 0,
-		"active_count": 0
+		"unit_groups": unit_groups,
+		"container_groups": container_groups,
+		"unit_count": 0,
+		"container_count": 0
 	}
 
-	for runner_name in cached:
-		result.runner_count += 1
-		result.active_count += 1
-		var data: Dictionary = cached[runner_name]
+	for c in cached.get("containers", []):
+		var cid := int(c.get("id", 0))
+		var path := str(c.get("path", "?"))
+		container_groups.append({
+			"key": "c%d" % cid, "path": path, "scope_id": str(c.get("scope_id", ""))
+		})
+		result["container_count"] = int(result["container_count"]) + 1
+		var vars_enc: Dictionary = c.get("vars", {})
+		for vname in vars_enc:
+			scope_rows.append(_make_var_row(vname, vars_enc[vname],
+				{"target": "container", "id": cid, "group_key": "c%d" % cid, "group_path": path}))
 
-		var runner_data := {
-			"runner_name": runner_name,
-			"local": {},
-			"scope": {}
-		}
-
-		var locals: Dictionary = data.get("local", {})
-		for var_name in locals:
-			result.local_rows.append(_make_row_data(var_name, locals[var_name],
-				{"scope": "local", "runner": runner_name, "runner_id": int(data.get("id", 0))}))
-			runner_data["local"][var_name] = locals[var_name]
-
-		var scopes: Dictionary = data.get("scope", {})
-		for var_name in scopes:
-			runner_data["scope"][var_name] = scopes[var_name]
-			var dedupe_key := "%s\u001f%s" % [var_name, str(scopes[var_name])]
-			if scope_seen.has(dedupe_key):
-				continue
-			scope_seen[dedupe_key] = true
-			result.scope_rows.append(_make_row_data(var_name, scopes[var_name],
-				{"scope": "scope", "runner": runner_name, "runner_id": int(data.get("id", 0))}))
-
-		result.runners.append(runner_data)
+	for u in cached.get("units", []):
+		var uid := int(u.get("id", 0))
+		var path := str(u.get("path", "?"))
+		unit_groups.append({
+			"key": "u%d" % uid, "path": path,
+			"kind": str(u.get("kind", "?")), "ago_ms": int(u.get("ago_ms", 0))
+		})
+		result["unit_count"] = int(result["unit_count"]) + 1
+		var local_enc: Dictionary = u.get("local", {})
+		for vname in local_enc:
+			local_rows.append(_make_var_row(vname, local_enc[vname],
+				{"target": "unit", "id": uid, "group_key": "u%d" % uid, "group_path": path}))
 
 	return result
 
@@ -431,15 +428,6 @@ func _refresh() -> void:
 	var runtime := _collect_runtime_variables()
 	var local_rows: Array[Dictionary] = runtime["local_rows"]
 	var scope_rows: Array[Dictionary] = runtime["scope_rows"]
-	var runner_count: int = runtime["runner_count"]
-	var active_count: int = runtime["active_count"]
-
-	if runner_count > 0 and active_count == 0:
-		local_rows.append({
-			"name": FuseLocalizationClass.translate("FUSE_UI_WATCHER_VISIBLE_AFTER_RUN"),
-			"value": "", "type": "",
-			"is_note": true, "scope": ""
-		})
 
 	# 全局变量：桥活跃 → 游戏侧实时值；否则编辑器侧定义（编辑目标 = 数据来源）
 	var bridge = _get_bridge()
@@ -450,32 +438,33 @@ func _refresh() -> void:
 	if game_connected:
 		var cached_global: Dictionary = bridge.get_cached_global()
 		for var_name in cached_global:
-			global_rows.append(_make_row_data(var_name, cached_global[var_name],
-				{"scope": "global", "runner_id": 0}))
+			global_rows.append(_make_var_row(var_name, cached_global[var_name],
+				{"target": "global", "id": 0, "group_key": "global", "group_path": ""}))
 	else:
 		var svc := GlobalVariableService.new()
 		var globals: Dictionary = svc.get_all_global_variables_info()
 		for var_name in globals:
 			var info = globals[var_name]
-			global_rows.append(_make_row_data(var_name, {
-				"value": info.get("value"),
-				"type": info.get("type")
-			}, {"scope": "global", "runner_id": 0}))
+			global_rows.append(_make_var_row(var_name, info.get("value"),
+				{"target": "global", "id": 0, "group_key": "global", "group_path": ""}))
 
-	# 7b: 记录历史
+	# 7b: 记录历史（键 scheme 与行选中 var_key 共用 _history_key，两端必须一致）
 	for row in local_rows + scope_rows + global_rows:
 		if row.get("is_note", false) or row.get("is_static", false):
 			continue
-		var scope_str: String = row.get("scope", "local")
-		_record_history("%s/%s" % [scope_str, row["name"]], row["value"], row["type"])
+		_record_history(_history_key(row), row["value"], row["type"])
 
 	# 渲染分区
-	_render_section(_content, "Local", local_rows, filter, runner_count > 0)
-	_render_section(_content, "Scope", scope_rows, filter, false)
+	_render_grouped_section(_content, "Local", runtime["unit_groups"], local_rows, filter)
+	_render_grouped_section(_content, "Scope", runtime["container_groups"], scope_rows, filter)
+	# Global 区：沿用平铺渲染（_make_section_header + 逐行 _make_data_row，行 extra 带 target=global）
 	var global_title := "Global"
 	if game_connected:
 		global_title += FuseLocalizationClass.translate("FUSE_UI_WATCHER_GLOBAL_GAME_SUFFIX")
-	_render_section(_content, global_title, global_rows, filter, false)
+	_content.add_child(_make_section_header(global_title))
+	for row in global_rows:
+		if _passes_filter("", row["name"], filter):
+			_content.add_child(_make_data_row(row))
 
 	# 7c: 静态声明（指令链静态变量声明注入）
 	_render_static_declarations(_content, filter)
@@ -483,7 +472,19 @@ func _refresh() -> void:
 	# 7b: 更新折线图
 	_update_history_graph()
 
-	_status_label.text = "Global:%d  Runner:%d" % [global_rows.size(), runner_count]
+	_status_label.text = "Global:%d Unit:%d Ctn:%d" % [
+		global_rows.size(), runtime["unit_count"], runtime["container_count"]]
+
+
+## 历史记录键 / 行选中 var_key 共用 scheme：
+## local:<unit_path>/<名>、scope:<container_path>/<名>、global/<名>
+## 两端（_record_history 与 _make_data_row 选中）必须同键，否则折线图静默失效
+func _history_key(row: Dictionary) -> String:
+	var target: String = row.get("target", "")
+	if target == "global":
+		return "global/%s" % row["name"]
+	var prefix := "local" if target == "unit" else "scope"
+	return "%s:%s/%s" % [prefix, row.get("group_path", ""), row["name"]]
 
 
 # ============================================================
@@ -575,39 +576,93 @@ func _collect_static_var_rows(topology: Dictionary) -> Array[Dictionary]:
 # 数据行构建
 # ============================================================
 
-func _make_row_data(var_name: String, data, extra: Dictionary = {}) -> Dictionary:
-	var val = data.get("value", data) if data is Dictionary else data
+## v3 行构造：__complex 编码行只读标注；类型列复杂值显示 ty
+func _make_var_row(vname: String, encoded: Variant, extra: Dictionary) -> Dictionary:
+	var is_complex: bool = encoded is Dictionary and encoded.has("__complex")
 	var type_str := ""
-	if data is Dictionary and data.has("type"):
-		type_str = data["type"]
+	var display := ""
+	if is_complex:
+		type_str = str(encoded.get("ty", "?"))
+		display = str(encoded.get("__complex", ""))
 	else:
-		type_str = type_string(typeof(val))
+		display = str(encoded)
+		type_str = type_string(typeof(encoded))
 	return {
-		"name": var_name,
-		"value": str(val),
+		"name": vname,
+		"value": display,
 		"type": type_str,
-		"scope": extra.get("scope", ""),
-		"runner": extra.get("runner", ""),
-		"runner_id": int(extra.get("runner_id", 0))
+		"is_complex": is_complex,
+		"target": extra.get("target", ""),
+		"id": int(extra.get("id", 0)),
+		"group_key": extra.get("group_key", ""),
+		"group_path": extra.get("group_path", "")
 	}
 
 
-func _render_section(parent: VBoxContainer, title: String, rows: Array[Dictionary], filter: String, _has_runners: bool) -> void:
-	# 过滤
-	var filtered: Array[Dictionary] = []
+func _is_group_collapsed(key: String) -> bool:
+	return bool(_collapsed.get(key, false))
+
+
+func _toggle_group(key: String) -> void:
+	_collapsed[key] = not _is_group_collapsed(key)
+
+
+## 过滤命中：组路径或变量名包含串（空过滤放行；不区分大小写——
+## 简报实现的小写 filter 命中不了大写组路径 "/Player"，断言"组路径命中"要求 true）
+func _passes_filter(group_path: String, var_name: String, filter: String) -> bool:
+	if filter.is_empty():
+		return true
+	var needle := filter.to_lower()
+	return needle in group_path.to_lower() or needle in var_name.to_lower()
+
+
+## v3 分组渲染：组头行 + 变量行；过滤激活时忽略折叠（直接显示命中行）
+func _render_grouped_section(parent: VBoxContainer, title: String,
+		groups: Array, rows: Array[Dictionary], filter: String) -> void:
+	parent.add_child(_make_section_header(title))
+	var by_group := {}
 	for row in rows:
-		if filter.is_empty() or filter in row["name"]:
-			filtered.append(row)
+		var gkey: String = row["group_key"]
+		if not by_group.has(gkey):
+			by_group[gkey] = [] as Array[Dictionary]
+		by_group[gkey].append(row)
+	for group in groups:
+		var gkey: String = group["key"]
+		var gpath: String = group["path"]
+		var g_rows: Array = by_group.get(gkey, [])
+		var shown: Array = g_rows.duplicate()
+		if not filter.is_empty() and not (filter in gpath):
+			shown = []
+			for row in g_rows:
+				if _passes_filter(gpath, row["name"], filter):
+					shown.append(row)
+		if not shown.is_empty() or g_rows.is_empty():
+			parent.add_child(_make_group_header(group))
+		else:
+			continue  # 组内行全被过滤：组头也不显示
+		if _is_group_collapsed(gkey) and filter.is_empty():
+			continue
+		for row in shown:
+			parent.add_child(_make_data_row(row))
 
-	if not _has_runners or not rows.is_empty():
-		var header := _make_section_header(title)
-		parent.add_child(header)
 
-	if filtered.is_empty():
-		return
-
-	for row in filtered:
-		parent.add_child(_make_data_row(row))
+## 组头：unit 组 `▸ path [Kind] · x.xs`（超时灰显）；容器组 `▸ path (scope_id)`
+func _make_group_header(group: Dictionary) -> PanelContainer:
+	var text := "▸ " + str(group["path"])
+	if group.has("kind"):
+		text += " [%s]" % KIND_LABEL.get(str(group["kind"]), str(group["kind"]))
+		text += " · %.1fs" % (float(group.get("ago_ms", 0)) / 1000.0)
+	else:
+		text += " (%s)" % str(group.get("scope_id", ""))
+	var p := _make_label_panel(text, COL_HEADER, true)
+	if group.has("kind") and int(group.get("ago_ms", 0)) > STALE_MS:
+		p.get_child(0).add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+	var gkey: String = group["key"]
+	p.gui_input.connect(func(ev):
+		if ev is InputEventMouseButton and ev.pressed \
+				and ev.button_index == MOUSE_BUTTON_LEFT and not ev.double_click:
+			_toggle_group(gkey))
+	return p
 
 
 # --- UI 工厂方法 ---
@@ -643,7 +698,7 @@ func _make_data_row(data: Dictionary) -> HBoxContainer:
 	hbox.add_theme_constant_override("separation", 0)
 
 	var is_interactive: bool = not data.get("is_note", false) and not data.get("is_static", false)
-	var var_key := "%s/%s" % [data.get("scope", "?"), data["name"]]
+	var var_key := _history_key(data)  # 与 _record_history 同 scheme（两端同步，否则折线图静默失效）
 
 	# 7b: 行选中（仅交互行）
 	if is_interactive:
@@ -705,7 +760,8 @@ func _add_var_row(_parent, name: String, data) -> void:
 func get_snapshot() -> Dictionary:
 	var result := {
 		"timestamp": Time.get_ticks_msec() / 1000.0,
-		"runners": [],
+		"containers": [],
+		"units": [],
 		"global": {}
 	}
 
@@ -713,9 +769,12 @@ func get_snapshot() -> Dictionary:
 	var svc := GlobalVariableService.new()
 	result["global"] = svc.get_all_global_variables_info()
 
-	# 7d: runners + local/scope（复用 _collect_runtime_variables）
-	var runtime = _collect_runtime_variables()
-	result["runners"] = runtime["runners"]
+	# v3: containers + units（桥缓存原始条目直通）
+	var bridge = _get_bridge()
+	if bridge != null and bridge.has_method("get_cached_vars"):
+		var cached: Dictionary = bridge.get_cached_vars()
+		result["containers"] = cached.get("containers", [])
+		result["units"] = cached.get("units", [])
 
 	return result
 

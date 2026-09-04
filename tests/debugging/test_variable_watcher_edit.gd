@@ -1,11 +1,22 @@
 extends Node
 
-## watcher 编辑链路单元测试：_coerce_value / _is_row_editable / _write_back_global 元数据保留
+## watcher 编辑链路单元测试：_coerce_value / _write_back_global 元数据保留 / v3 分组行
 
 const WatcherScript = preload("res://addons/fuse/editor/debugging/variable_watcher.gd")
 
 var _fail_count: int = 0
 var _watcher: Control = null
+
+const FAKE_V3 := {
+	"containers": [{
+		"id": 481, "path": "/Player", "scope_id": "player",
+		"vars": {"invincible": false, "anchor": {"__complex": "(1, 2)", "ty": "Vector2"}}
+	}],
+	"units": [{
+		"id": 922, "path": "/Player/OnInput", "kind": "trigger", "ago_ms": 300,
+		"local": {"hp": 55, "dir": {"__complex": "(1, 0)", "ty": "Vector2"}}
+	}]
+}
 
 
 func _ready() -> void:
@@ -13,10 +24,11 @@ func _ready() -> void:
 	add_child(_watcher)
 
 	_test_coerce_value()
-	_test_is_row_editable()
 	_test_write_back_global_metadata()
-	_test_rows_from_cached_scope_dedupe()
 	_test_collect_runtime_early_return_typed()
+	_test_rows_v3_groups()
+	_test_group_collapse_and_filter()
+	_test_editable_v3()
 	_cleanup_globals()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -43,17 +55,6 @@ func _test_coerce_value() -> void:
 	_check(_watcher._coerce_value("(1, 2)", "Vector2") == "(1, 2)", "未知类型最佳努力原样")
 
 
-func _test_is_row_editable() -> void:
-	print("\n--- _is_row_editable 门控 ---")
-	_check(_watcher._is_row_editable({"scope": "global", "type": "int"}) == true, "global 标量行可编辑")
-	_check(_watcher._is_row_editable({"scope": "local", "type": "int", "runner_id": 123}) == true, "local 运行行（有 id）可编辑")
-	_check(_watcher._is_row_editable({"scope": "local", "type": "int", "runner_id": 0}) == false, "local 无 id 不可编辑")
-	_check(_watcher._is_row_editable({"scope": "global", "type": "Vector2"}) == false, "复杂类型不可编辑")
-	_check(_watcher._is_row_editable({"scope": "global", "type": "int", "is_note": true}) == false, "笔记行不可编辑")
-	_check(_watcher._is_row_editable({"scope": "global", "type": "int", "is_static": true}) == false, "静态行不可编辑")
-	_check(_watcher._is_row_editable({"scope": "", "type": "int"}) == false, "未知 scope 不可编辑")
-
-
 func _test_write_back_global_metadata() -> void:
 	print("\n--- _write_back_global 元数据保留 ---")
 	var mgr := GlobalVariableManager.get_instance()
@@ -70,31 +71,6 @@ func _test_write_back_global_metadata() -> void:
 	_check(created != null and created.value == 2, "不存在的变量创建成功")
 
 
-## 回归（2026-09-04 level01 实测）：共享 ScopeVariableContainer 的同一变量
-## 被多个 Runner 重复上报，watcher 按"名+值"去重；local 为独立存储不去重
-func _test_rows_from_cached_scope_dedupe() -> void:
-	print("\n--- _rows_from_cached scope 去重 ---")
-	var rows: Dictionary = _watcher._rows_from_cached({
-		"RunnerA": {"id": 11, "local": {"hp": 10}, "scope": {"player": "P1", "camera": "Cam"}},
-		"RunnerB": {"id": 22, "local": {"hp": 20}, "scope": {"player": "P1", "camera": "Cam"}},
-		"RunnerC": {"id": 33, "local": {}, "scope": {"player": "P2"}},
-	})
-	var scope_rows: Array = rows["scope_rows"]
-	_check(scope_rows.size() == 3, "同名同值去重（4 条上报 → 3 行，got %d）" % scope_rows.size())
-	var by_name := {}
-	for row in scope_rows:
-		by_name[row["name"] + "=" + row["value"]] = true
-	_check(by_name.has("player=P1") and by_name.has("player=P2") and by_name.has("camera=Cam"),
-		"同名不同值（P1/P2）各保留一行")
-	var local_rows: Array = rows["local_rows"]
-	_check(local_rows.size() == 2, "local 为独立存储不去重（got %d）" % local_rows.size())
-	var runner_count: int = rows["runner_count"]
-	_check(runner_count == 3, "Runner 计数不受去重影响")
-	var runners: Array = rows["runners"]
-	_check(runners.size() == 3 and runners[1]["scope"].size() == 2,
-		"快照 API（get_snapshot）保留每 Runner 全量数据")
-
-
 ## 回归（2026-09-04 编辑器实测刷屏）：早退路径（桥缺失/缓存空——编辑器静止常态）
 ## 必须返回类型化 Array[Dictionary]，否则 _refresh 的类型化接收每 0.5s 刷类型错误
 func _test_collect_runtime_early_return_typed() -> void:
@@ -103,10 +79,49 @@ func _test_collect_runtime_early_return_typed() -> void:
 	var runtime: Dictionary = _watcher._collect_runtime_variables()
 	_check(runtime["local_rows"].get_typed_builtin() == TYPE_DICTIONARY,
 		"早退 local_rows 为 Array[Dictionary]")
-	_check(runtime["scope_rows"].get_typed_builtin() == TYPE_DICTIONARY,
-		"早退 scope_rows 为 Array[Dictionary]")
-	var rows: Array[Dictionary] = runtime["scope_rows"]  # 与 _refresh 同款接收，不应报错
+	_check(runtime["unit_groups"] is Array and runtime["container_groups"] is Array, "早退含分组键")
+	var rows: Array[Dictionary] = runtime["scope_rows"]
 	_check(rows.is_empty(), "早退结果为空")
+
+
+func _test_rows_v3_groups() -> void:
+	print("\n--- _rows_from_cached v3 分组 ---")
+	var rows: Dictionary = _watcher._rows_from_cached(FAKE_V3)
+	var cgroups: Array = rows["container_groups"]
+	var ugroups: Array = rows["unit_groups"]
+	_check(cgroups.size() == 1 and cgroups[0]["key"] == "c481", "容器组 key=c481")
+	_check(cgroups[0]["scope_id"] == "player", "容器组 scope_id")
+	var scope_rows: Array = rows["scope_rows"]
+	_check(scope_rows.size() == 2, "容器 2 变量 → 2 行")
+	var by_name := {}
+	for row in scope_rows:
+		by_name[row["name"]] = row
+	_check(by_name["invincible"]["target"] == "container" and by_name["invincible"]["id"] == 481, "行携带 target/id")
+	_check(by_name["anchor"]["is_complex"] == true and by_name["anchor"]["type"] == "Vector2", "__complex 行只读标注")
+	_check(ugroups.size() == 1 and ugroups[0]["kind"] == "trigger" and ugroups[0]["ago_ms"] == 300, "unit 组 kind/ago")
+	_check(rows["local_rows"].size() == 2, "unit 2 变量 → 2 行")
+	_check(int(rows["unit_count"]) == 1 and int(rows["container_count"]) == 1, "计数正确")
+
+
+func _test_group_collapse_and_filter() -> void:
+	print("\n--- 折叠与过滤 ---")
+	_check(_watcher._is_group_collapsed("c481") == false, "默认展开")
+	_watcher._toggle_group("c481")
+	_check(_watcher._is_group_collapsed("c481") == true, "折叠置位（跨刷新由 _collapsed 字典承载）")
+	_watcher._toggle_group("c481")
+	_check(_watcher._passes_filter("/Player/OnInput", "hp", "") == true, "空过滤放行")
+	_check(_watcher._passes_filter("/Player/OnInput", "hp", "player") == true, "组路径命中")
+	_check(_watcher._passes_filter("/Player", "hp", "hp") == true, "变量名命中")
+	_check(_watcher._passes_filter("/Player", "hp", "camera") == false, "不命中过滤")
+
+
+func _test_editable_v3() -> void:
+	print("\n--- v3 行可编辑门控 ---")
+	_check(_watcher._is_row_editable({"target": "container", "type": "int", "is_complex": false}) == true, "容器标量行可编辑")
+	_check(_watcher._is_row_editable({"target": "unit", "type": "int", "is_complex": false}) == true, "unit 标量行可编辑")
+	_check(_watcher._is_row_editable({"target": "container", "type": "Vector2", "is_complex": true}) == false, "__complex 行不可编辑")
+	_check(_watcher._is_row_editable({"target": "global", "type": "int", "is_complex": false}) == true, "global 行可编辑")
+	_check(_watcher._is_row_editable({"target": "", "type": "int", "is_complex": false}) == false, "无 target 不可编辑")
 
 
 func _cleanup_globals() -> void:
