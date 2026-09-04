@@ -25,6 +25,7 @@ var _client: StreamPeerTCP = null
 ## 编辑器侧：运行游戏推送的变量快照缓存
 ## {runner_name: {"local": {var_name: value, ...}, "scope": {var_name: value, ...}}}
 var _cached: Dictionary = {}
+var _cached_global: Dictionary = {}  # 游戏侧 global 标量快照
 
 var _push_acc: float = 0.0
 
@@ -70,6 +71,7 @@ func _process(delta: float) -> void:
 
 ## 编辑器侧：启动 TCPServer（测试可注入端口）
 func start_server(port: int = BRIDGE_PORT) -> void:
+	_teardown_server()
 	_teardown_client()
 	_port = port
 	_server = TCPServer.new()
@@ -126,8 +128,9 @@ func _server_poll() -> void:
 		i += 1
 
 	# 所有连接断开 → 清缓存（运行游戏已退出）
-	if _connections.is_empty() and not _cached.is_empty():
+	if _connections.is_empty():
 		_cached.clear()
+		_cached_global.clear()
 
 
 func _read_json_lines(conn: StreamPeerTCP) -> void:
@@ -164,10 +167,10 @@ static func extract_json_lines(buffer: String) -> Dictionary:
 ## 消息分发（Task 2/3 扩展：vars / set_var）
 func _handle_message(msg: Dictionary) -> void:
 	if msg.has("runners"):
-		_update_cache(msg["runners"])
+		_update_cache(msg["runners"], msg.get("global", {}))
 
 
-func _update_cache(runners: Array) -> void:
+func _update_cache(runners: Array, global_vars: Dictionary = {}) -> void:
 	_cached.clear()
 	for r in runners:
 		if not r is Dictionary:
@@ -175,12 +178,22 @@ func _update_cache(runners: Array) -> void:
 		var rname: String = r.get("name", "?")
 		var local_data: Dictionary = r.get("local", {})
 		var scope_data: Dictionary = r.get("scope", {})
-		_cached[rname] = {"local": local_data.duplicate(), "scope": scope_data.duplicate()}
+		_cached[rname] = {
+			"id": int(r.get("id", 0)),
+			"local": local_data.duplicate(),
+			"scope": scope_data.duplicate()
+		}
+	_cached_global = global_vars.duplicate()
 
 
 ## 公开 API：获取缓存的运行时变量（编辑器侧）
 func get_cached_vars() -> Dictionary:
 	return _cached
+
+
+## 编辑器侧：游戏侧 global 标量快照
+func get_cached_global() -> Dictionary:
+	return _cached_global
 
 
 ## 编辑器侧：是否有运行游戏连接
@@ -227,13 +240,25 @@ func _client_poll(delta: float) -> void:
 
 
 func _push_snapshot() -> void:
-	var runners := _collect_runners()
-	if runners.is_empty():
-		return
-	var msg := JSON.stringify({"t": "vars", "runners": runners}) + "\n"
+	var msg := JSON.stringify({
+		"t": "vars",
+		"runners": _collect_runners(),
+		"global": _collect_global_flat()
+	}) + "\n"
 	# put_partial_data 非阻塞（缓冲满发部分即返回），避免 put_data 阻塞主线程
 	# 丢弃未发送部分（下个 snapshot 覆盖，变量快照实时性优先于完整性）
 	_client.put_partial_data(msg.to_utf8_buffer())
+
+
+## 游戏侧 global 标量快照（{name: value}，复杂类型不入协议）
+func _collect_global_flat() -> Dictionary:
+	var flat := {}
+	var snapshot := GlobalVariableManager.get_instance().get_all_variables_snapshot()
+	for vname in snapshot:
+		var val = snapshot[vname].get("value")
+		if typeof(val) in [TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING]:
+			flat[vname] = val
+	return flat
 
 
 func _collect_runners() -> Array:
@@ -251,6 +276,7 @@ func _collect_runners() -> Array:
 			continue
 		result.append({
 			"name": runner.name,
+			"id": runner.get_instance_id(),
 			"local": vc.get_all_local_variables_snapshot(),
 			"scope": vc.get_all_scope_variables_snapshot()
 		})

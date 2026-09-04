@@ -32,8 +32,8 @@ func _ready() -> void:
 	_test_extract_json_lines()
 	_test_send_set_var_without_connection()
 	_setup_stub_runner()
-	await _await_connected()
-	_test_push_payload_reaches_cache()      # Task 2 补断言体
+	_check(await _await_connected(), "client 已连接编辑器（超时 5s）")
+	await _test_push_payload_reaches_cache()
 	await _test_set_var_global_full_path()  # Task 3 补断言体
 	_test_apply_set_var_local_unit()        # Task 3 补断言体
 	_cleanup()
@@ -66,6 +66,7 @@ func _test_send_set_var_without_connection() -> void:
 	print("\n--- send_set_var 无连接返回 false ---")
 	var orphan := BridgeScript.new()
 	_check(orphan.send_set_var("global", 0, "x", 1) == false, "未连接的桥发送返回 false")
+	orphan.free()
 
 
 func _setup_stub_runner() -> void:
@@ -88,8 +89,23 @@ func _await_connected(timeout_sec: float = 5.0) -> bool:
 	return false
 
 
+## 真实 socket 全链路：stub Runner + 预置 global → 0.5s 节拍推送 → server 缓存断言
 func _test_push_payload_reaches_cache() -> void:
-	pass  # Task 2 填充
+	print("\n--- 推送 v2：id + global + 恒推（全链路）---")
+	var mgr := GlobalVariableManager.get_instance()
+	mgr.add_variable("score", BaseVariable.create("score", 7, BaseVariable.VariableScope.GLOBAL))
+
+	await get_tree().create_timer(1.3).timeout
+
+	var cached: Dictionary = _server.get_cached_vars()
+	_check(_server.is_game_connected(), "client 已连接")
+	_check(cached.has("StubRunner"), "runner 条目存在（got %s）" % str(cached.keys()))
+	if cached.has("StubRunner"):
+		var entry: Dictionary = cached["StubRunner"]
+		_check(int(entry.get("id", 0)) == _stub_runner.get_instance_id(), "id 为 runner 实例 id")
+		_check(entry.get("local", {}).get("hp", null) != null, "local 快照含 hp")
+	var cached_global: Dictionary = _server.get_cached_global()
+	_check(cached_global.get("score", null) == 7, "global 快照送达（runners 非空场景）")
 
 
 func _test_set_var_global_full_path() -> void:
