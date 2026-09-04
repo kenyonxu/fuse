@@ -6,7 +6,7 @@
 
 **适用对象**: Fuse 系统开发者、编辑器插件贡献者
 
-**最后更新**: 2026-07-19
+**最后更新**: 2026-09-04
 
 **配套用户文档**: [56-variable-watcher-guide.md](../../user_docs/guides/56-variable-watcher-guide.md)
 
@@ -62,9 +62,10 @@ func _exit_tree() -> void:
        ▼                ▼                ▼
  FuseRuntimeBridge  GlobalVariableService  InstructionAnalyzer
  (Autoload, TCP)    (→ Manager 单例)       (编辑器静态拓扑)
-       │
+       │ ▲
+       │ └── set_var（编辑器 → 游戏写回）
        ▼
- 运行中的游戏（TCP 客户端，0.5s 推送 JSON line）
+ 运行中的游戏（TCP 客户端，每 0.5s 推送 JSON line，并应用 set_var）
 ```
 
 | 数据源 | 提供内容 | 可用时机 |
@@ -96,14 +97,14 @@ const PUSH_INTERVAL := 0.5
 **协议**: TCP 流 + JSON line（`\n` 分隔）：
 
 ```json
-{"t":"vars","runners":[{"name":"Runner1","local":{"health":85},"scope":{"alert":50}}]}
+{"t":"vars","runners":[{"name":"Runner1","id":123456,"local":{"health":85},"scope":{"alert":50}}],"global":{"score":2450}}
 ```
 
 **监视器消费接口**：
 
 ```gdscript
 ## 编辑器侧：获取缓存的运行时变量
-## 返回 {runner_name: {"local": {name: value}, "scope": {name: value}}}
+## 返回 {runner_name: {"id": runner 实例 id, "local": {name: value}, "scope": {name: value}}}
 func get_cached_vars() -> Dictionary
 ```
 
@@ -218,9 +219,9 @@ _coerce_value(text, type_str)     ← 类型转换（失败返回 null，中止�
 
 | 作用域 | 写回方式 | 可用时机 |
 |--------|----------|----------|
-| `local` | `context.set_variable(name, value, "local")` | 运行时（需有效 context） |
-| `scope` | `context.set_variable(name, value, "scope")` | 运行时（需有效 context） |
-| `global` | `_write_back_global()` → `GlobalVariableManager.add_variable()` | 始终可用 |
+| `local` | `bridge.send_set_var("local", runner_id, name, value)` → 由运行游戏应用 | 运行时（行来自运行游戏，`runner_id` 可定位） |
+| `scope` | `bridge.send_set_var("scope", runner_id, name, value)` → 由运行游戏应用 | 运行时（同上） |
+| `global` | 游戏已连接：`send_set_var("global", 0, name, value)`；否则 `_write_back_global()` → `set_variable_value_thread_safe()`（保留元数据；仅缺失时创建） | 始终可用 |
 
 ### 类型转换（`_coerce_value`）
 
@@ -393,11 +394,11 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 
 **解决**: 已进入编辑必须置 `_editing = true`；`_refresh()` 开头检查该标志直接返回。
 
-### 陷阱 2: Local/Scope 编辑在无运行时写回
+### 陷阱 2: 编辑提交时游戏可能已退出
 
-**问题**: 编辑器空闲时双击 local 变量，无有效 `context` 导致写回失败或报错。
+**问题**: 行渲染自最近一次推送的快照，从渲染某行到提交编辑之间游戏可能已退出。无存活连接时 `send_set_var` 返回 `false`，值永远到不了游戏。
 
-**解决**: 写回前检查 context 有效性；`_coerce_value` 返回 null 时必须中止。
+**解决**: 把 `false` 返回视为写回失败——恢复原显示值并警告（`FUSE_UI_WATCHER_EDIT_NO_CONNECTION`）。`_editing` 结束后的下一次推送会自然把显示校正回游戏侧权威值。（`_coerce_value` 转换失败仍会静默中止写回——那是输入问题，不是连接问题。）
 
 ### 陷阱 3: 直接访问 GlobalVariableManager 绕过服务层
 
@@ -432,7 +433,7 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 1. ✅ **三数据源分离** — Bridge（运行时 local/scope）∥ Service（global）∥ Analyzer（静态声明）
 2. ✅ **TCP 双模式桥** — 编辑器 TCPServer / 游戏客户端，JSON line 协议，0.5s 推送
 3. ✅ **行数据 Dictionary 模式** — `_make_row_data()` → `_make_data_row()`，新分区复用 `_render_section()`
-4. ✅ **编辑保护** — `_editing` 标志阻止轮询重建；`_coerce_value` 返回 null 中止写回
+4. ✅ **编辑保护** — `_editing` 标志阻止轮询重建；`_coerce_value` 返回 null 中止写回；可编辑性本身由 `_is_row_editable` 门控（标量类型 + 作用域可定位）
 5. ✅ **性能节流** — 0.5s 轮询 + 5s 静态缓存 + 120 帧定长历史
 6. ✅ **公开快照接口** — `get_snapshot()` 可供外部工具直接调用
 
@@ -445,4 +446,4 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 ---
 
 **文档维护**: Fuse 开发团队
-**最后更新**: 2026-07-19
+**最后更新**: 2026-09-04
