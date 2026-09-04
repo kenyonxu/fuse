@@ -6,6 +6,8 @@ extends Tree
 ## 职责：三级增量构建/diff、折叠持久、过滤集重建、选中与双击激活信号
 ## 数据来源：variable_watcher._rows_from_cached 产物 + 桥缓存 scene 字段
 
+const FuseLocalizationClass = preload("res://addons/fuse/localization/fuse_localization.gd")
+
 signal variable_selected(row: Dictionary, selected: bool)
 signal variable_activated(row: Dictionary)  # 双击编辑请求（仅可编辑行）
 
@@ -46,12 +48,15 @@ static func scene_of(path: String, current_scene: String) -> String:
 	return current_scene
 
 
-## 场景根显示文本：GLOBAL 根无尾注；当前场景带 " · 当前"；其余（附加场景）带 " · 附加"
+## 场景根显示文本：GLOBAL 根无尾注；当前/附加场景带本地化尾注（随编辑器语言）
 ## （spec §4 尾注；纯文本拼接无颜色，current_scene 取桥推送，切换时尾注随之更新）
 static func _scene_root_label(k: String, current_scene: String) -> String:
 	if k == "__global__":
 		return "GLOBAL"
-	return k + (" · 当前" if k == current_scene else " · 附加")
+	var suffix_key := "FUSE_UI_WATCHER_SCENE_EXTRA_SUFFIX"
+	if k == current_scene:
+		suffix_key = "FUSE_UI_WATCHER_SCENE_CURRENT_SUFFIX"
+	return "%s · %s" % [k, FuseLocalizationClass.translate(suffix_key)]
 
 
 ## diff 计划：旧键集/新键集 → {add, remove}

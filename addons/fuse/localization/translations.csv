@@ -4994,6 +4994,9 @@ FUSE_UI_TOPOLOGY_EXPORT_NO_SCENE,(未打开场景，无法导出),(no scene open
 FUSE_UI_TOPOLOGY_EXPORT_FAILED_SEE_OUTPUT,(导出失败，见输出面板),(export failed - see Output panel)
 FUSE_UI_TOPOLOGY_TOPOLOGY_EXPORTED,拓扑已导出: {path},Topology exported: {path}
 FUSE_UI_WATCHER_WAIT_FOR_GAME,等待运行游戏…,Waiting for a running game…
+FUSE_UI_WATCHER_STATUS_SUMMARY,场景:{scenes} · 宿主:{hosts} · Global:{global},Scenes:{scenes} · Hosts:{hosts} · Global:{global}
+FUSE_UI_WATCHER_SCENE_CURRENT_SUFFIX,当前,Current
+FUSE_UI_WATCHER_SCENE_EXTRA_SUFFIX,附加,Extra
 FUSE_UI_WATCHER_SEARCH_PLACEHOLDER,搜索变量...,Search variables...
 FUSE_UI_WATCHER_NO_HISTORY,(无数值历史),(no numeric history)
 FUSE_UI_WATCHER_EDIT_NO_CONNECTION,变量监视器: 运行游戏连接已断开，写回失败,"Variable watcher: running game connection lost, write-back failed"

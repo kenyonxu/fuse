@@ -62,8 +62,11 @@ func _test_scene_of() -> void:
 
 func _test_scene_root_label() -> void:
 	print("\n--- 场景根尾注 ---")
-	_check(TreeScript._scene_root_label("level01", "level01") == "level01 · 当前", "当前场景尾注")
-	_check(TreeScript._scene_root_label("ui_overlay", "level01") == "ui_overlay · 附加", "附加场景尾注")
+	# 尾注文案走本地化（headless 未再生 .translation 时回退 key），断言只锁结构不锁文案
+	var cur: String = TreeScript._scene_root_label("level01", "level01")
+	var add: String = TreeScript._scene_root_label("ui_overlay", "level01")
+	_check(cur.begins_with("level01 · ") and cur != "level01", "当前场景带尾注（got %s）" % cur)
+	_check(add.begins_with("ui_overlay · ") and add != "ui_overlay" and add != cur, "附加场景带不同尾注（got %s）" % add)
 	_check(TreeScript._scene_root_label("__global__", "level01") == "GLOBAL", "GLOBAL 根无尾注")
 
 
