@@ -148,3 +148,6 @@ tests/preset_ai/fixtures/
 
 # Release packages (published as GitHub Release assets, not tracked in git)
 /release/
+
+# SDD worktrees (isolated implementation workspaces)
+/.worktrees/
