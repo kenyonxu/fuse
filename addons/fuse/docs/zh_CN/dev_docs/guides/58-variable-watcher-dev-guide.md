@@ -63,14 +63,17 @@ func _exit_tree() -> void:
  FuseRuntimeBridge  GlobalVariableService  InstructionAnalyzer
  (Autoload, TCP)    (→ Manager 单例)       (编辑器静态拓扑)
        │ ▲
-       │ └── set_var（编辑器 → 游戏写回）
+       │ └── set_var（编辑器 → 游戏写回，target = container/unit/global）
        ▼
  运行中的游戏（TCP 客户端，每 0.5s 推送 JSON line，并应用 set_var）
+   ├─ BaseTrigger / Runner → "units"（local 取最近执行上下文）
+   ├─ ScopeVariableContainer → "containers"
+   └─ GlobalVariableManager → "global"（仅标量）
 ```
 
 | 数据源 | 提供内容 | 可用时机 |
 |--------|----------|----------|
-| `FuseRuntimeBridge` | 各 Runner 的 local/scope 变量快照 | 场景运行中 |
+| `FuseRuntimeBridge` | v3 快照：`units`（BaseTrigger/MultiEventTrigger/Runner 的 local 变量，宿主直报）+ `containers`（ScopeVariableContainer 变量） | 场景运行中 |
 | `GlobalVariableService` | 全局变量名称/值/类型 | 始终可用 |
 | `InstructionAnalyzer` | Trigger 指令链的变量声明（静态） | 编辑器模式 |
 
@@ -94,17 +97,22 @@ const BRIDGE_PORT := 24563
 const PUSH_INTERVAL := 0.5
 ```
 
-**协议**: TCP 流 + JSON line（`\n` 分隔）：
+**协议（v3，`proto = 3`）**: TCP 流 + JSON line（`\n` 分隔）：
 
 ```json
-{"t":"vars","runners":[{"name":"Runner1","id":123456,"local":{"health":85},"scope":{"alert":50}}],"global":{"score":2450}}
+{"t":"vars","proto":3,
+ "containers":[{"id":99001,"path":"/World/LevelScope","scope_id":"level1","vars":{"alert":50}}],
+ "units":[{"id":123456,"path":"/Main/Runner1","kind":"runner","ago_ms":5,"local":{"health":85}}],
+ "global":{"score":2450}}
 ```
+
+非标量值以只读包装 `{"__complex":"str(v) ≤200字符","ty":"Vector2"}` 到达。完整字段表与写回语义见 [Runtime Bridge 开发指南](runtime-bridge-guide.md)。
 
 **监视器消费接口**：
 
 ```gdscript
-## 编辑器侧：获取缓存的运行时变量
-## 返回 {runner_name: {"id": runner 实例 id, "local": {name: value}, "scope": {name: value}}}
+## 编辑器侧：获取缓存的运行时变量（v3 双键结构）
+## 返回 {"containers": [容器条目...], "units": [单元条目...]}
 func get_cached_vars() -> Dictionary
 ```
 
@@ -146,13 +154,16 @@ func _on_timer() -> void:
 ```
 1. if _editing: return                    ← 编辑中整体跳过（保护 LineEdit）
 2. 清空 _content（VBoxContainer）
-3. _collect_runtime_variables()           ← local + scope（来自 Bridge 缓存）
+3. _collect_runtime_variables()           ← 从 Bridge 缓存收集 Local + Scope 行
+                                             （v3 键："units" → Local 按宿主分组，
+                                              "containers" → Scope 按容器分组；
+                                              字段缺失降级空集）
 4. GlobalVariableService 收集 global 变量
 5. _record_history() 记录数值历史（仅 int/float）
-6. _render_section() × 3                  ← Local / Scope / Global 分区
+6. _render_grouped_section() × 2 + 平铺渲染 ← Local / Scope 分组，Global 平铺
 7. _render_static_declarations()          ← 静态分区（5s 间隔缓存）
 8. _update_history_graph()                ← 刷新底部折线图
-9. 更新状态标签（Global:N  Runner:M）
+9. 更新状态标签（Global:N  Unit:M  Ctn:K）
 ```
 
 > **设计要点**: 每帧**全量重建** UI 行（简单可靠），依赖 `_editing` 标志避免销毁正在编辑的控件。行数量级（几十到几百）下该策略性能可接受。
@@ -194,9 +205,11 @@ const COL_HEADER := Color(0.2, 0.3, 0.5)   # 分区标题蓝
 | `value` | 显示值（字符串化） |
 | `type` | 类型字符串（`int`/`float`/`Vector2`/...） |
 | `scope` | 作用域标识（`local`/`scope`/`global`） |
-| `var_key` | 历史记录键：`"{scope}/{name}"` |
+| `target` / `id` | v3 写回目标（`container`/`unit`/`global`）与宿主/容器实例 id |
+| `group_key` / `group_path` | 所属分组（`u<id>` / `c<id>` / `global`）及显示路径（组头 + 过滤） |
+| `var_key` | 历史记录键（v3 方案）：`local:<单元路径>/<名>`、`scope:<容器路径>/<名>`、`global/<名>` |
 
-> **扩展要点**: 新增分区时复用 `_make_row_data()` + `_render_section()`，在 `extra` 中传入分区特有的键（如 Runner 名、是否可编辑）。
+> **扩展要点**: 新增分区时复用 `_make_row_data()` + `_render_section()`，在 `extra` 中传入分区特有的键（如组路径、是否可编辑）。
 
 ---
 
@@ -215,13 +228,13 @@ _coerce_value(text, type_str)     ← 类型转换（失败返回 null，中止�
 按 scope 写回 → _restore_label()  ← 恢复 Label，_editing = false
 ```
 
-### 写回目标（按作用域）
+### 写回目标（v3，按 `target`）
 
-| 作用域 | 写回方式 | 可用时机 |
+| 目标 | 写回方式 | 可用时机 |
 |--------|----------|----------|
-| `local` | `bridge.send_set_var("local", runner_id, name, value)` → 由运行游戏应用 | 运行时（行来自运行游戏，`runner_id` 可定位） |
-| `scope` | `bridge.send_set_var("scope", runner_id, name, value)` → 由运行游戏应用 | 运行时（同上） |
-| `global` | 游戏已连接：`send_set_var("global", 0, name, value)`；否则 `_write_back_global()` → `set_variable_value_thread_safe()`（保留元数据；仅缺失时创建） | 始终可用 |
+| `unit` | `bridge.send_set_var("unit", id, name, value)` → 由运行游戏应用（写宿主组件的最近执行上下文） | 运行时（行来自运行游戏，`id` 可定位） |
+| `container` | `bridge.send_set_var("container", id, name, value)` → 由运行游戏应用（写容器变量） | 运行时（同上） |
+| `global` | 游戏已连接：`send_set_var("global", 0, name, value)`（仅已存在的变量）；否则 `_write_back_global()` → `set_variable_value_thread_safe()`（保留元数据；仅缺失时创建） | 始终可用 |
 
 ### 类型转换（`_coerce_value`）
 
@@ -261,7 +274,7 @@ var _selected_var_key: String = ""
 `_record_history(var_key, value, type_str)` 规则：
 
 - 仅记录 `int` / `float`（其他类型直接忽略）
-- 键格式：`"{scope}/{var_name}"`（如 `"global/player_score"`）
+- 键方案（v3，`_record_history` 与行选中经 `_history_key` 共用）：`local:<单元路径>/<名>`、`scope:<容器路径>/<名>`、`global/<名>`（如 `"global/player_score"`）
 - 超过 `HISTORY_MAX` 时弹出最旧帧
 
 ### HistoryGraph 组件
@@ -311,22 +324,25 @@ const STATIC_REFRESH_INTERVAL_MS := 5000
 ```gdscript
 ## 生成当前时刻全量变量快照
 func get_snapshot() -> Dictionary
-# → {"timestamp": ..., "global": {...}, "runners": [...]}
+# → {"timestamp": ..., "global": {...}, "containers": [...], "units": [...]}
 
 func _on_snapshot() -> void:
 	# 序列化为 JSON 写入 user://fuse_watcher_snapshot_{时间戳}.json
 ```
 
-快照结构：
+快照结构（v3：桥缓存条目直通）：
 
 ```json
 {
 	"timestamp": 1234.567,
 	"global": {"player_score": {"value": 2450, "type": "int"}},
-	"runners": [
-		{"runner_name": "Runner1",
-		 "local": {"health": {"value": 85, "type": "int"}},
-		 "scope": {"alert_level": {"value": 50, "type": "int"}}}
+	"containers": [
+		{"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
+		 "vars": {"alert_level": {"value": 50, "type": "int"}}}
+	],
+	"units": [
+		{"id": 123456, "path": "/Main/Runner1", "kind": "runner", "ago_ms": 5,
+		 "local": {"health": {"value": 85, "type": "int"}}}
 	]
 }
 ```
@@ -410,7 +426,7 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 
 **问题**: 不同作用域同名变量共用历史曲线，数据互相污染。
 
-**解决**: 键必须是 `"{scope}/{name}"` 格式（`_record_history` 已约定）。
+**解决**: 键必须用 v3 方案——`local:<单元路径>/<名>`、`scope:<容器路径>/<名>`、`global/<名>`（`_history_key` 已约定，`_record_history` 与行选中两端同键，否则折线图静默失效）。
 
 ### 陷阱 5: 静态扫描放进高频轮询
 
@@ -424,6 +440,24 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 
 **解决**: 历史窗口语义 `HISTORY_MAX × PUSH_INTERVAL = 显示秒数`，改频率时同步调整注释与文档。
 
+### 陷阱 7: 对象值导致的"假 String"行（v2 遗留——已消除）
+
+**问题**: v2 把 `Object` 值序列化成裸字符串推送，编辑器无法与真 `String` 行区分，会对不可编辑的值提供编辑。
+
+**解决**: v3 协议将非标量以只读包装 `{"__complex": "str(v) ≤200字符", "ty": "Vector2"}` 编码——根源已在协议层消除（类型列显示真实类型名，行不可编辑）。游戏侧非标量闸门仍保留，作为手造消息的最后防线。
+
+### 陷阱 8: 运行结束后 local 行消失（设计说明）
+
+**问题**: 早期设计在执行结束即焚毁上下文（"即焚"），Trigger/Runner 跑完后无数据可报。
+
+**解决**: v3 改为保留**最近**执行上下文：BaseTrigger（`_create_execution_context`）、MultiEventTrigger 与 Runner 均赋值 `current_execution_context` / `current_execution_context_at_ms`，单元持续上报最近一次运行的 local，`ago_ms` 新鲜度字段让面板对超时宿主（> 5s）灰显。
+
+### 陷阱 9: 折叠状态跨刷新丢失
+
+**问题**: 0.5s 刷新全量重建 UI，用户折叠的组会在下一帧弹开。
+
+**解决**: 折叠状态存于成员字典 `_collapsed`，按组 id 键（`u<id>` / `c<id>`）而非重建的控件；`_render_grouped_section()` 每次重建时查询。搜索过滤激活时忽略折叠状态，命中行始终显示。
+
 ---
 
 ## 总结
@@ -436,6 +470,7 @@ func _render_my_section(parent: VBoxContainer, filter: String) -> void:
 4. ✅ **编辑保护** — `_editing` 标志阻止轮询重建；`_coerce_value` 返回 null 中止写回；可编辑性本身由 `_is_row_editable` 门控（标量类型 + 作用域可定位）
 5. ✅ **性能节流** — 0.5s 轮询 + 5s 静态缓存 + 120 帧定长历史
 6. ✅ **公开快照接口** — `get_snapshot()` 可供外部工具直接调用
+7. ✅ **v3 宿主直报协议** — 推送 `{containers, units, global}`（非标量以 `__complex` 只读包装），写回按 `target`（container/unit/global）三分发，Local/Scope 分区按宿主/容器分组、折叠状态按组 id 键保持
 
 **参考文档**:
 - [变量监视器使用指南](../../user_docs/guides/56-variable-watcher-guide.md)

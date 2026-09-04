@@ -60,11 +60,12 @@
 │  │  TCPServer 模式    │      │  (\n 分隔)    │  │  TCP Client 模式   │     │
 │  │                    │      │              │  │                    │     │
 │  │  _cached: Dict     │ ◄────┼──────────────┼──┤  0.5s 定时推送     │     │
-│  │  (变量快照缓存)     │      │              │  │  _collect_runners()│     │
+│  │  (变量快照缓存)     │      │              │  │  _collect_units_+  │     │
+│  │                    │      │              │  │  _containers()     │     │
 │  └────────────────────┘      │              │  └────────────────────┘     │
 │        ↕                     │              │        ↕                    │
-│  FuseVariableWatcher        │              │  Runner 节点                │
-│  (变量监视器)                 │              │  (current_execution_context)│
+│  FuseVariableWatcher        │              │  BaseTrigger/Runner 单元    │
+│  (变量监视器)                 │              │  ScopeVariableContainer 容器│
 └──────────────────────────────┘              └──────────────────────────────┘
 ```
 
@@ -75,10 +76,12 @@
   _process(delta)
     → _client_poll(delta)       每 0.5s
         → _push_snapshot()
-            → _collect_runners()   遍历场景中的 Runner 节点
-                → ec = runner.current_execution_context
-                → vc = ec._variable_context
-                → snapshot: {local_vars, scope_vars}
+            → _collect_units_and_containers()  root 全树单遍收集，
+                │                              逐节点三判归类
+                → BaseTrigger / Runner → units（local 取最近执行上下文，
+                │   运行后保留——非即焚）
+                → ScopeVariableContainer → containers
+                → GlobalVariableManager → global（仅标量）
             → JSON.stringify + put_partial_data()
 
 编辑器侧：
@@ -86,19 +89,20 @@
     → _server_poll()            每帧
         → 接受新连接
         → 读缓冲区 → _read_json_lines()
-            → _update_cache(runners)
+            → _update_cache(containers/units/global)
         → 所有连接断开 → _cached.clear()
 
 编辑器侧（写回）：
   变量监视器编辑提交
-    → send_set_var(scope, runner_id, name, value)
+    → send_set_var(target, target_id, name, value)
         → JSON.stringify + put_partial_data()   广播到所有连接
         → 无连接 → 返回 false
 
 运行游戏侧（应用写回）：
-  _client_poll → _read_json_lines → _handle_message
+  _client_poll → _read_json_lines → _handle_message（按 "t" 分发）
     → t == "set_var" → _apply_set_var()
-        → 按目标变量现有类型收窄 → 写入
+        → 按 target 三分发（container / unit / global）
+        → 类型收窄 + 非标量闸门（三路共用）→ 写入
 ```
 
 ---
@@ -125,8 +129,8 @@ const PUSH_INTERVAL := 0.5        # 推送间隔（秒）
 ### 公开接口
 
 ```gdscript
-## 编辑器侧：获取缓存的运行时变量快照
-## 返回: Dictionary — {runner_name: {"id": runner 实例 id, "local": {...}, "scope": {...}}}
+## 编辑器侧：获取缓存的运行时变量快照（v3 双键结构）
+## 返回: Dictionary — {"containers": [容器条目...], "units": [单元条目...]}
 func get_cached_vars() -> Dictionary
 
 ## 编辑器侧：游戏侧 global 标量快照（{name: value}）
@@ -135,8 +139,9 @@ func get_cached_global() -> Dictionary
 ## 编辑器侧：是否有运行游戏连接
 func is_game_connected() -> bool
 
-## 编辑器侧：向运行游戏广播写回（fire-and-forget；无连接返回 false）
-func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -> bool
+## 编辑器侧：向运行游戏广播写回（fire-and-forget）
+## target: "container" | "unit" | "global"；无连接返回 false
+func send_set_var(target: String, target_id: int, name: String, value: Variant) -> bool
 
 ## 测试注入：以显式端口启动对应模式（默认 BRIDGE_PORT = 24563）
 func start_server(port: int = BRIDGE_PORT) -> void
@@ -183,13 +188,13 @@ func _process(delta: float) -> void:
 func start_server(port: int = BRIDGE_PORT) -> void # 公开：启动 TCPServer，监听指定端口（默认 :24563）
 func _server_poll() -> void                        # 每帧轮询：接受连接 + 读取数据
 func _read_json_lines(conn: StreamPeerTCP) -> void # 从 TCP 流中按行读取 JSON
-func _update_cache(runners: Array) -> void         # 更新 _cached 缓存
+func _update_cache(payload: Dictionary) -> void    # 更新 _cached（containers/units 走 .get，字段缺失降级空集）
 
 # ===== 运行游戏侧 - Client =====
 func start_client(port: int = BRIDGE_PORT) -> void # 公开：连接编辑器
 func _client_poll(delta: float) -> void            # 每 0.5s 轮询 + 推送
 func _push_snapshot() -> void                      # 推送变量快照
-func _collect_runners() -> Array                   # 收集场景中所有 Runner 的变量
+func _collect_units_and_containers() -> Dictionary # v3 收集：root 全树单遍，三判归类
 ```
 
 ---
@@ -200,41 +205,49 @@ func _collect_runners() -> Array                   # 收集场景中所有 Runne
 
 TCP 流 + JSON line（`\n` 分隔）。
 
-**推送（游戏 → 编辑器），每 0.5s，恒定推送**——即使没有 Runner，`global` 快照仍会推送（空 `runners` 会清空编辑器的 runner 缓存）：
+**推送（游戏 → 编辑器，协议 `proto = 3`），每 0.5s，恒定推送**——即使没有单元/容器，`global` 快照仍会推送（空 `containers`/`units` 会清空编辑器缓存）：
 
 ```json
-{"t": "vars", "runners": [
-    {
-        "name": "RunnerName",
-        "id": 123456789,
-        "local": {"score": 100, "name": "player"},
-        "scope": {"health": 80, "mana": 50}
-    },
-    ...
-],
+{"t": "vars", "proto": 3,
+ "containers": [
+    {"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
+     "vars": {"alert_level": 50, "items": {"__complex": "[item1, item2]", "ty": "Array"}}}
+ ],
+ "units": [
+    {"id": 123456789, "path": "/Enemies/Slime", "kind": "trigger", "ago_ms": 320,
+     "local": {"health": 85}},
+    {"id": 123456790, "path": "/Main/Runner1", "kind": "runner", "ago_ms": 5,
+     "local": {"score": 100}}
+ ],
  "global": {"player_score": 2450, "game_time": 132.5}}
 ```
 
-**协议 v2 字段**：
+**协议 v3 字段**：
 
 | 字段 | 含义 |
 |------|------|
-| `runners[].id` | Runner 的 `get_instance_id()`；编辑器的 set_var 写回用它定位目标 Runner |
+| `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` 实例 id / 显示路径（current_scene 相对，用于组头）/ scope id / 变量快照 |
+| `units[].id` / `path` / `kind` | 宿主组件实例 id / 显示路径 / `trigger` \| `multi` \| `runner`（BaseTrigger / MultiEventTrigger / Runner） |
+| `units[].ago_ms` | 距组件最近一次执行的毫秒数；监视器对超 5s 的组头灰显 |
+| `units[].local` | 组件**最近执行上下文**的本地变量——三类宿主运行后均保留 `current_execution_context`，非即焚 |
 | `global`（顶层） | 游戏侧全局变量**标量**快照（`{name: value}`）；复杂类型（Dictionary/Array/Vector 等）不入协议 |
+| `__complex` 包装 | 非标量值编码为只读包装 `{"__complex": "str(v) ≤200字符", "ty": "Vector2"}`——编辑器据此区分真 `String` 与复杂值（v2 把对象序列化成裸字符串，是"假 String"行根源；已在协议层消除） |
 
 **反向消息（编辑器 → 游戏）**——广播到**所有**存活连接，**fire-and-forget**（无确认；正确性由 0.5s 推送回显兜底）：
 
 ```json
-{"t": "set_var", "scope": "global", "runner_id": 0, "name": "player_score", "value": 3000}
+{"t": "set_var", "proto": 3, "target": "container", "id": 99001, "name": "alert_level", "value": 75}
 ```
 
-游戏侧应用语义（`_apply_set_var`）：
+游戏侧应用语义（`_apply_set_var`，按 `target` 三分发）：
 
-- **类型收窄**：JSON 解析后数字一律为 `float`；按目标变量现有类型收窄（`int` 目标收窄回 `int`）。目标不存在（自动创建的变量）时原样写入——float 化为已知限制。
-- **非标量槽位跳过**：推送快照会把 `Object` 值序列化成字符串，编辑器无法与真正的 `String` 行区分。游戏侧作为最后防线，目标槽位当前持有非标量（`Object` / `Vector2` / 容器等）时静默忽略写回——行值在下次推送时自然回显原值。
-- **`global`**：变量不存在**不创建**（静默忽略）。
-- **`local` / `scope`**：经 `runner_id` 定位 Runner，按 `current_execution_context` → `_variable_context` → `set_variable` 鸭子类型逐级取用；目标失效静默忽略。
+- **三路共用闸门**：**类型收窄**——JSON 解析后数字一律为 `float`；按目标变量现有类型收窄（`int` 目标收窄回 `int`；目标不存在时原样写入——float 化为已知限制）。**非标量闸门**——目标槽位当前持有非标量（`Object` / `Vector2` / 容器等）时静默忽略写回；v3 起推送侧已用只读 `__complex` 包装显式标注非标量（编辑器不会对这类行发起写回），闸门仅作为最后防线保留。
+- **`target == "container"`**：`_find_node_by_id(id)` 定位 `ScopeVariableContainer` → `set_variable`；id 失效静默忽略。
+- **`target == "unit"`**：定位 `BaseTrigger`/`Runner` → `current_execution_context` → `_variable_context` → 对 `local` 执行 `set_variable`；无有效最近上下文（尚未执行）的单元静默忽略。
+- **`target == "global"`**：变量**存在才写**（不存在不创建，静默忽略）。
+- **`_find_node_by_id` 定位**：root 全树递归扫描匹配 `get_instance_id()` 并做类型校验——不用 `instance_from_id`（失效 id 会刷引擎 ERROR）。
 - **编辑器侧**：`send_set_var()` 无存活连接时返回 `false`；短写（部分字节发出）会警告并断开该连接，游戏侧重连自愈。
+- **降级**：`_handle_message` 按 `t` 分发（而非按键存在性）；字段缺失经 `.get` 缺省为空集，降级消息也会触达 `_update_cache` 清空缓存。
 
 ### 测试注入
 
@@ -275,10 +288,11 @@ while "\n" found:
 ```gdscript
 # addons/fuse/editor/debugging/variable_watcher.gd
 var vars = FuseRuntimeBridge.get_cached_vars()
-for runner_name in vars:
-    var local_data = vars[runner_name].local
-    var scope_data = vars[runner_name].scope
-    # 显示到编辑器面板
+for unit in vars.get("units", []):
+    var local_data = unit.get("local", {})   # 组头：▸ path [kind] · ago
+for container in vars.get("containers", []):
+    var scope_data = container.get("vars", {})   # 组头：▸ path (scope_id)
+# 显示到编辑器面板
 ```
 
 ### 运行时调试
@@ -350,18 +364,18 @@ func start_client(port: int = BRIDGE_PORT) -> void:
 
 **解决方案**: 通过 `\n` 分割逐行解析，`_read_json_lines()` 已处理此场景。
 
-### 陷阱 4：运行时 `get_tree()` 返回 null
+### 陷阱 4：运行时附加的子树收不到
 
-**问题**: `_collect_runners()` 依赖 `get_tree().current_scene`，如果场景未准备好则返回空数组。
+**问题**: v2 收集器遍历 `get_tree().current_scene`，运行时附加的子树（附加场景）永远不会上报。
 
-**解决方案**: 推送前检查 `scene != null`，空则跳过本次推送。
+**解决方案**: v3 改为从 `get_tree().root` 单遍收集（`_collect_units_and_containers`），覆盖附加场景；游戏进程的 autoload 内无 Fuse 组件，扫描量等效全场景。
 
 ### 陷阱 5：变量未更新
 
 **问题**: 修改了变量但编辑器看不到更新。
 
 **可能原因**: 
-- `Runner.current_execution_context` 未设置
+- 该单元还没有有效的最近执行上下文（BaseTrigger/Runner 首次执行后才会开始上报 `local`）
 - `_variable_context` 为空（B19 历史 bug 已修复）
 - 连接已断开但 `_cached` 未清空
 
