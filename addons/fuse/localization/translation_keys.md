@@ -221,10 +221,8 @@ static func get_metadata() -> Dictionary:
 |------|------|------|------|
 | FUSE_UI_LABEL_NAME | 名称 | Name | 名称标签 |
 | FUSE_UI_LABEL_TYPE | 类型 | Type | 类型标签 |
-| FUSE_UI_LABEL_VALUE | 值 | Value | 值标签 |
 | FUSE_UI_LABEL_CATEGORY | 分类 | Category | 分类标签 |
 | FUSE_UI_LABEL_DESCRIPTION | 描述 | Description | 描述标签 |
-| FUSE_UI_LABEL_VARIABLES | 变量 | Variables | 变量标签 |
 | FUSE_UI_LABEL_INSTRUCTIONS | 指令 | Instructions | 指令标签 |
 | FUSE_UI_LABEL_EVENTS | 事件 | Events | 事件标签 |
 | FUSE_UI_LABEL_CONDITIONS | 条件 | Conditions | 条件标签 |

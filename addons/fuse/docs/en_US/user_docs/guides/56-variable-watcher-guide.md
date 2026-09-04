@@ -53,7 +53,7 @@ When not connected to a running game and there is no data, a centered gray hint 
 | Control | Description |
 |------|------|
 | Search box | Filters tree rows in real time (see below) |
-| Status summary | A single line of gray text, e.g. `场景:2 · 宿主:3 · Global:2` (currently hardcoded labels meaning scene count / host count / global row count; the first two are post-filter counts and shrink while a filter is active) |
+| Status summary | A single line of gray text, e.g. `Scenes:2 · Hosts:3 · Global:2` (localized labels; the first two are post-filter counts and shrink while a filter is active) |
 
 ### Search Box
 
@@ -73,7 +73,7 @@ Three-column layout: **Name** (wide) | **Value** (wide) | **Type** (narrow colum
 
 ### 1. Scene Roots (scene grouping)
 
-The first level consists of scene roots. Hosts are grouped by their node path: hosts under a `/root/<name>/...` prefix are grouped under the corresponding **extra scene** root, everything else goes under the **current scene** (the scene name comes from the `scene` field pushed by the running game; when the field is missing, hosts land in an unnamed group). Scene root labels carry a suffix marking their group: the current scene reads `<scene name> · 当前` and extra scenes read `<scene name> · 附加` (the current scene name comes from the bridge push, so the suffix follows scene switches).
+The first level consists of scene roots. Hosts are grouped by their node path: hosts under a `/root/<name>/...` prefix are grouped under the corresponding **extra scene** root, everything else goes under the **current scene** (the scene name comes from the `scene` field pushed by the running game; when the field is missing, hosts land in an unnamed group). Scene root labels carry a suffix marking their group: the current scene reads `<scene name> · Current` and extra scenes read `<scene name> · Extra` (localized) (the current scene name comes from the bridge push, so the suffix follows scene switches).
 
 ### 2. Hosts (containers first, components after)
 
