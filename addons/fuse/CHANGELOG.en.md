@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Variable watcher runtime editing**: scalar local/scope/global variables can be double-click edited in the watcher and written straight into the running game (bridge reverse `set_var` channel; fire-and-forget with 0.5s push echo; JSON floats narrowed to the target type, non-scalar slot gate, short-write disconnect self-healing)
+- **Trigger/MultiEventTrigger last execution context**: BaseTrigger/Runner uniformly keep `current_execution_context(_at_ms)` — local variables of all three core component kinds are visible to the watcher (final values + freshness)
+- **Variable watcher v3 host-direct reporting** (bridge protocol v3): pushes report three blocks — `containers`/`units`/`global` — with ScopeVariableContainer direct scanning (declared defaults visible before any trigger), a single root-tree classification pass, the `scene` current-scene-name field (scene grouping), the `__complex` read-only encoding for non-scalars, and constant pushing; write-back dispatches on `target` (container/unit/global)
+- **Variable watcher UI rebuild**: native Godot Tree with a three-level hierarchy (scene → host → variable, GLOBAL as a peer root, current/extra suffixes), incremental in-place updates (no flicker/rebuild), collapse state persisted across refreshes, case-insensitive search, a draggable history graph that expands on selection (✕/Esc to close), a double-click edit overlay positioned exactly over the value cell, and full editor-theme adaptation (live light/dark switching, zero hardcoded colors)
+
+### Changed
+- Bridge push protocol v2 → v3 (the `runners[]` structure is retired; both sides run the same plugin version, no cross-version compatibility); `get_cached_vars()` returns `{scene, containers, units}`
+- `variable_watcher.gd` slimmed from 789 to ~460 lines with the display layer split into `variable_watcher_tree.gd` (data-layer pure functions and edit dispatch semantics unchanged)
+- The Global section's runtime data source switches on bridge connectivity (live game snapshot ↔ editor-side definitions); `_write_back_global` changes the value first and preserves variable metadata
+- Status bar, scene suffixes and the empty-state hint are localized (3 new keys)
+
+### Removed
+- The watcher's static-declaration section (edit-time view) and the variable snapshot dump feature
+- 12 unreferenced CSV keys retired; the scope "name+value" dedupe logic and all hand-rolled UI factory code
+
+### Fixed
+- Crash when writing back into an Object slot at runtime (game-side non-scalar gate + container type-safe comparison)
+- Shared-container variables displayed once per reporting Runner (rooted out by v3 container scanning)
+- Untyped early-return arrays spamming a type error every 0.5s
+- Double-click edit overlay coordinate mismatch (viewport coordinates assigned to a local position, dropping the input box outside the panel)
+
 ## [1.0.0] - 2026-09-03
 
 ### Added

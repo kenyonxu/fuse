@@ -210,7 +210,7 @@ TCP stream + JSON line (`\n` separated).
 **Push (game → editor, protocol `proto = 3`), every 0.5s, always pushed** — even with zero units/containers the `global` snapshot is still pushed (empty `containers`/`units` clear the editor's caches):
 
 ```json
-{"t": "vars", "proto": 3,
+{"t": "vars", "proto": 3, "scene": "fuse_demo_level_01",
  "containers": [
     {"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
      "vars": {"alert_level": 50, "items": {"__complex": "[item1, item2]", "ty": "Array"}}}
@@ -228,6 +228,7 @@ TCP stream + JSON line (`\n` separated).
 
 | Field | Meaning |
 |------|------|
+| `scene` (top level) | The game's current scene name (`current_scene.name`, empty string when no scene); the watcher groups hosts under the "current scene" root with this, while hosts with `/root/<name>` absolute paths group under their additive scene roots. A missing field degrades safely to an unnamed group |
 | `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` instance id / display path (current-scene relative, shown in group headers; falls back to an absolute path starting with `/root/...` outside the scene subtree) / scope id / variable snapshot |
 | `units[].id` / `path` / `kind` | Host component instance id / display path / `trigger` \| `multi` \| `runner` (BaseTrigger / MultiEventTrigger / Runner) |
 | `units[].ago_ms` | Milliseconds since the component's most recent execution; the watcher grays out group headers older than 5s |

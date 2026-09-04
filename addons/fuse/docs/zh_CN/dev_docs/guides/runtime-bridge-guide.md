@@ -208,7 +208,7 @@ TCP 流 + JSON line（`\n` 分隔）。
 **推送（游戏 → 编辑器，协议 `proto = 3`），每 0.5s，恒定推送**——即使没有单元/容器，`global` 快照仍会推送（空 `containers`/`units` 会清空编辑器缓存）：
 
 ```json
-{"t": "vars", "proto": 3,
+{"t": "vars", "proto": 3, "scene": "fuse_demo_level_01",
  "containers": [
     {"id": 99001, "path": "/World/LevelScope", "scope_id": "level1",
      "vars": {"alert_level": 50, "items": {"__complex": "[item1, item2]", "ty": "Array"}}}
@@ -226,6 +226,7 @@ TCP 流 + JSON line（`\n` 分隔）。
 
 | 字段 | 含义 |
 |------|------|
+| `scene`（顶层） | 游戏侧当前场景名（`current_scene.name`，无场景为空串）；监视器据此把宿主归入"当前场景"根，`/root/<名>` 绝对路径的宿主归入对应附加场景根。字段缺失安全降级为未命名分组 |
 | `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` 实例 id / 显示路径（current_scene 相对，用于组头；子树外回退绝对路径，`/root/...` 开头）/ scope id / 变量快照 |
 | `units[].id` / `path` / `kind` | 宿主组件实例 id / 显示路径 / `trigger` \| `multi` \| `runner`（BaseTrigger / MultiEventTrigger / Runner） |
 | `units[].ago_ms` | 距组件最近一次执行的毫秒数；监视器对超 5s 的组头灰显 |
