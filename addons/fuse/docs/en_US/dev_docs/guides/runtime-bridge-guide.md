@@ -142,6 +142,13 @@ func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -
 ## Test injection: start either mode with an explicit port (default BRIDGE_PORT = 24563)
 func start_server(port: int = BRIDGE_PORT) -> void
 func start_client(port: int = BRIDGE_PORT) -> void
+
+## Editor side: whether the server is up and listening
+func is_server_active() -> bool
+
+## Pure function: extract complete JSON lines from a stream buffer (sticky/partial packet handling)
+## Returns {lines: Array[Dictionary], rest: String}
+static func extract_json_lines(buffer: String) -> Dictionary
 ```
 
 These are used by editor tools (such as FuseVariableWatcher) to read the cached data and write values back to the running game.
@@ -150,10 +157,13 @@ These are used by editor tools (such as FuseVariableWatcher) to read the cached 
 
 ```gdscript
 func _ready() -> void:
+    # Injection guard: an explicitly injected mode (tests) is respected as-is — no auto-switching
+    if _server != null or _client != null:
+        return
     if Engine.is_editor_hint():
-        _start_server()
+        start_server()
     else:
-        _connect_client()
+        start_client()
 
 func _exit_tree() -> void:
     # Stop the server / disconnect the client, clean up buffers and cache
@@ -171,13 +181,13 @@ func _process(delta: float) -> void:
 
 ```gdscript
 # ===== Editor side - Server =====
-func _start_server() -> void                      # Start the TCPServer, listen on :24563
+func start_server(port: int = BRIDGE_PORT) -> void # Public: start the TCPServer, listen on the port (default :24563)
 func _server_poll() -> void                        # Poll every frame: accept connections + read data
 func _read_json_lines(conn: StreamPeerTCP) -> void # Read JSON line by line from the TCP stream
 func _update_cache(runners: Array) -> void         # Update the _cached cache
 
 # ===== Game side - Client =====
-func _connect_client() -> void                     # Connect to 127.0.0.1:24563
+func start_client(port: int = BRIDGE_PORT) -> void # Public: connect to the editor
 func _client_poll(delta: float) -> void            # Poll + push every 0.5s
 func _push_snapshot() -> void                      # Push the variable snapshot
 func _collect_runners() -> Array                   # Collect variables from all Runners in the scene
@@ -311,9 +321,9 @@ if st == StreamPeerTCP.STATUS_NONE or st == StreamPeerTCP.STATUS_ERROR:
 ### 5. Automatic Reconnect on the Game Side
 
 ```gdscript
-func _connect_client() -> void:
+func start_client(port: int = BRIDGE_PORT) -> void:
     # ...connect...
-    # On failure, _client_poll detects STATUS_ERROR and calls _connect_client() again
+    # On failure, _client_poll detects STATUS_ERROR and reconnects automatically
 ```
 
 ---

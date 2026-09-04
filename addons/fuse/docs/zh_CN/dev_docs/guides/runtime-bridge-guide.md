@@ -6,7 +6,7 @@
 
 **适用对象**: Fuse 系统开发者、贡献者
 
-**最后更新**: 2026-07-07
+**最后更新**: 2026-09-04
 
 ---
 
@@ -88,6 +88,17 @@
         → 读缓冲区 → _read_json_lines()
             → _update_cache(runners)
         → 所有连接断开 → _cached.clear()
+
+编辑器侧（写回）：
+  变量监视器编辑提交
+    → send_set_var(scope, runner_id, name, value)
+        → JSON.stringify + put_partial_data()   广播到所有连接
+        → 无连接 → 返回 false
+
+运行游戏侧（应用写回）：
+  _client_poll → _read_json_lines → _handle_message
+    → t == "set_var" → _apply_set_var()
+        → 按目标变量现有类型收窄 → 写入
 ```
 
 ---
@@ -114,21 +125,44 @@ const PUSH_INTERVAL := 0.5        # 推送间隔（秒）
 ### 公开接口
 
 ```gdscript
-## 获取缓存的运行时变量快照（编辑器侧）
-## 返回: Dictionary — {runner_name: {"local": {...}, "scope": {...}}}
+## 编辑器侧：获取缓存的运行时变量快照
+## 返回: Dictionary — {runner_name: {"id": runner 实例 id, "local": {...}, "scope": {...}}}
 func get_cached_vars() -> Dictionary
+
+## 编辑器侧：游戏侧 global 标量快照（{name: value}）
+func get_cached_global() -> Dictionary
+
+## 编辑器侧：是否有运行游戏连接
+func is_game_connected() -> bool
+
+## 编辑器侧：向运行游戏广播写回（fire-and-forget；无连接返回 false）
+func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -> bool
+
+## 测试注入：以显式端口启动对应模式（默认 BRIDGE_PORT = 24563）
+func start_server(port: int = BRIDGE_PORT) -> void
+func start_client(port: int = BRIDGE_PORT) -> void
+
+## 编辑器侧：Server 是否已启动并在监听
+func is_server_active() -> bool
+
+## 纯函数：从流缓冲提取完整 JSON 行（粘包/半包处理）
+## 返回 {lines: Array[Dictionary], rest: String}
+static func extract_json_lines(buffer: String) -> Dictionary
 ```
 
-这是唯一的公开方法，供编辑器工具（如 FuseVariableWatcher）读取缓存数据。
+编辑器工具（如 FuseVariableWatcher）用这些接口读取缓存数据，并向运行游戏写回变量值。
 
 ### 生命周期
 
 ```gdscript
 func _ready() -> void:
+    # 注入守卫：已显式注入模式（测试）则尊重现状，不自动分叉
+    if _server != null or _client != null:
+        return
     if Engine.is_editor_hint():
-        _start_server()
+        start_server()
     else:
-        _connect_client()
+        start_client()
 
 func _exit_tree() -> void:
     # 停止 Server / 断开 Client，清理缓冲和缓存
@@ -146,13 +180,13 @@ func _process(delta: float) -> void:
 
 ```gdscript
 # ===== 编辑器侧 - Server =====
-func _start_server() -> void                      # 启动 TCPServer，监听 :24563
+func start_server(port: int = BRIDGE_PORT) -> void # 公开：启动 TCPServer，监听指定端口（默认 :24563）
 func _server_poll() -> void                        # 每帧轮询：接受连接 + 读取数据
 func _read_json_lines(conn: StreamPeerTCP) -> void # 从 TCP 流中按行读取 JSON
 func _update_cache(runners: Array) -> void         # 更新 _cached 缓存
 
 # ===== 运行游戏侧 - Client =====
-func _connect_client() -> void                     # 连接 127.0.0.1:24563
+func start_client(port: int = BRIDGE_PORT) -> void # 公开：连接编辑器
 func _client_poll(delta: float) -> void            # 每 0.5s 轮询 + 推送
 func _push_snapshot() -> void                      # 推送变量快照
 func _collect_runners() -> Array                   # 收集场景中所有 Runner 的变量
@@ -164,18 +198,53 @@ func _collect_runners() -> Array                   # 收集场景中所有 Runne
 
 ### 协议格式
 
-TCP 流 + JSON line（`\n` 分隔）：
+TCP 流 + JSON line（`\n` 分隔）。
+
+**推送（游戏 → 编辑器），每 0.5s，恒定推送**——即使没有 Runner，`global` 快照仍会推送（空 `runners` 会清空编辑器的 runner 缓存）：
 
 ```json
 {"t": "vars", "runners": [
     {
         "name": "RunnerName",
+        "id": 123456789,
         "local": {"score": 100, "name": "player"},
         "scope": {"health": 80, "mana": 50}
     },
     ...
-]}
+],
+ "global": {"player_score": 2450, "game_time": 132.5}}
 ```
+
+**协议 v2 字段**：
+
+| 字段 | 含义 |
+|------|------|
+| `runners[].id` | Runner 的 `get_instance_id()`；编辑器的 set_var 写回用它定位目标 Runner |
+| `global`（顶层） | 游戏侧全局变量**标量**快照（`{name: value}`）；复杂类型（Dictionary/Array/Vector 等）不入协议 |
+
+**反向消息（编辑器 → 游戏）**——广播到**所有**存活连接，**fire-and-forget**（无确认；正确性由 0.5s 推送回显兜底）：
+
+```json
+{"t": "set_var", "scope": "global", "runner_id": 0, "name": "player_score", "value": 3000}
+```
+
+游戏侧应用语义（`_apply_set_var`）：
+
+- **类型收窄**：JSON 解析后数字一律为 `float`；按目标变量现有类型收窄（`int` 目标收窄回 `int`）。目标不存在（自动创建的变量）时原样写入——float 化为已知限制。
+- **`global`**：变量不存在**不创建**（静默忽略）。
+- **`local` / `scope`**：经 `runner_id` 定位 Runner，按 `current_execution_context` → `_variable_context` → `set_variable` 鸭子类型逐级取用；目标失效静默忽略。
+- **编辑器侧**：`send_set_var()` 无存活连接时返回 `false`；短写（部分字节发出）会警告并断开该连接，游戏侧重连自愈。
+
+### 测试注入
+
+测试可在同一进程以显式端口注入两种模式；生产路径保持默认 `BRIDGE_PORT`（24563）：
+
+```gdscript
+FuseRuntimeBridge.start_server(24599)   # 编辑器侧，监听注入端口
+FuseRuntimeBridge.start_client(24599)   # 游戏侧，连接注入端口
+```
+
+回环测试：`tests/debugging/test_runtime_bridge_loopback.tscn`（用 24599 端口，避免与 24563 上的 Autoload 桥互相干扰）。
 
 ### 端口
 
@@ -251,9 +320,9 @@ if st == StreamPeerTCP.STATUS_NONE or st == StreamPeerTCP.STATUS_ERROR:
 ### 5. 运行游戏侧自动重连
 
 ```gdscript
-func _connect_client() -> void:
+func start_client(port: int = BRIDGE_PORT) -> void:
     # ...连接...
-    # 失败时 _client_poll 中判断 STATUS_ERROR 后再次调用 _connect_client()
+    # 失败时 _client_poll 中判断 STATUS_ERROR 后自动重连
 ```
 
 ---
@@ -306,4 +375,4 @@ func _connect_client() -> void:
 
 ---
 
-**文档维护**: Fuse 开发团队 | **最后更新**: 2026-07-07 | **Godot 版本**: 4.7
+**文档维护**: Fuse 开发团队 | **最后更新**: 2026-09-04 | **Godot 版本**: 4.7
