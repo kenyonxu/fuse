@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-04
+
 ### Added
 - **Variable watcher runtime editing**: scalar local/scope/global variables can be double-click edited in the watcher and written straight into the running game (bridge reverse `set_var` channel; fire-and-forget with 0.5s push echo; JSON floats narrowed to the target type, non-scalar slot gate, short-write disconnect self-healing)
 - **Trigger/MultiEventTrigger last execution context**: BaseTrigger/Runner uniformly keep `current_execution_context(_at_ms)` — local variables of all three core component kinds are visible to the watcher (final values + freshness)

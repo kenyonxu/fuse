@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-04
+
 ### Added
 - **变量监视器运行时编辑**：运行游戏中 local/scope/global 标量变量可在监视器双击直达写回游戏进程（桥反向 `set_var` 通道；fire-and-forget + 0.5s 推送回显；JSON float 按目标类型收窄、非标量槽位闸门、短写断连自愈）
 - **Trigger/MultiEventTrigger 最近执行上下文**：BaseTrigger/Runner 统一持有 `current_execution_context(_at_ms)`，三类核心组件的 local 变量对监视器可见（终值 + 新鲜度）
