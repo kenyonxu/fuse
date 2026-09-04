@@ -270,10 +270,8 @@ FUSE_UI_BTN_CLICK_TO_ADD_INSTRUCTION_TOOLTIP,点击以添加指令...,Click to a
 # UI 文本 - 标签和提示
 FUSE_UI_LABEL_NAME,名称,Name
 FUSE_UI_LABEL_TYPE,类型,Type
-FUSE_UI_LABEL_VALUE,值,Value
 FUSE_UI_LABEL_CATEGORY,分类,Category
 FUSE_UI_LABEL_DESCRIPTION,描述,Description
-FUSE_UI_LABEL_VARIABLES,变量,Variables
 FUSE_UI_LABEL_INSTRUCTIONS,指令,Instructions
 FUSE_UI_LABEL_EVENTS,事件,Events
 FUSE_UI_LABEL_CONDITIONS,条件,Conditions
@@ -4995,12 +4993,10 @@ FUSE_UI_TOPOLOGY_EXPORT_FAILED,导出失败: {path},Export failed: {path}
 FUSE_UI_TOPOLOGY_EXPORT_NO_SCENE,(未打开场景，无法导出),(no scene open - cannot export)
 FUSE_UI_TOPOLOGY_EXPORT_FAILED_SEE_OUTPUT,(导出失败，见输出面板),(export failed - see Output panel)
 FUSE_UI_TOPOLOGY_TOPOLOGY_EXPORTED,拓扑已导出: {path},Topology exported: {path}
-FUSE_UI_WATCHER_REFRESH_INTERVAL,刷新:{sec}s,Refresh: {sec}s
 FUSE_UI_WATCHER_WAIT_FOR_GAME,等待运行游戏…,Waiting for a running game…
 FUSE_UI_WATCHER_SEARCH_PLACEHOLDER,搜索变量...,Search variables...
 FUSE_UI_WATCHER_NO_HISTORY,(无数值历史),(no numeric history)
 FUSE_UI_WATCHER_EDIT_NO_CONNECTION,变量监视器: 运行游戏连接已断开，写回失败,"Variable watcher: running game connection lost, write-back failed"
-FUSE_UI_WATCHER_GLOBAL_GAME_SUFFIX,（运行游戏）, (Game)
 FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED,变量监视器: 无法创建全局变量 '{name}',Variable watcher: failed to create global variable '{name}'
 FUSE_UI_PRESET_DIALOG_TITLE,导出为预设,Export as Preset
 FUSE_UI_PRESET_DIALOG_LABEL_LEVEL,层级:,Level:

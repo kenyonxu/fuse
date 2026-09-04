@@ -64,7 +64,7 @@ Filters tree rows in real time, matching **scene names / host paths / variable n
 Three-column layout: **Name** (wide) | **Value** (wide) | **Type** (narrow column). All visuals inherit the editor theme (light/dark adaptive, no hardcoded colors):
 
 - **Scene roots / GLOBAL root**: bold; both levels (scenes, hosts) are collapsible and the collapsed state survives refreshes
-- **Host rows**: containers first, components after; containers read `<path> (<scope_id>)`, components read `<path> [<Trigger|MultiEvent|Runner>] · <ago>`; hosts that have not reported for more than 5 seconds are grayed out
+- **Host rows**: containers first, components after; containers read `<path> (<scope_id>)`, components read `<path> [<Trigger|MultiEvent|Runner>] · <ago>`; hosts that have not reported for more than 5 seconds have their name column grayed out
 - **Variable rows**: `__complex` values (Vector2 etc.) show a dimmed value column and are read-only
 
 ---
