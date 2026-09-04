@@ -78,10 +78,12 @@ Game side:
         → _push_snapshot()
             → _collect_units_and_containers()  single pass over the root tree,
                 │                              three-way classification per node
+                │                              (the tree walk only produces containers/units)
                 → BaseTrigger / Runner → units (local from the most recent
                 │   execution context, kept after the run — not fire-and-forget)
                 → ScopeVariableContainer → containers
-                → GlobalVariableManager → global (scalars only)
+            → _collect_global_flat()           global collected independently
+                │                              (parallel to the tree walk, scalars only)
             → JSON.stringify + put_partial_data()
 
 Editor side:
@@ -226,7 +228,7 @@ TCP stream + JSON line (`\n` separated).
 
 | Field | Meaning |
 |------|------|
-| `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` instance id / display path (current-scene relative, shown in group headers) / scope id / variable snapshot |
+| `containers[].id` / `path` / `scope_id` / `vars` | `ScopeVariableContainer` instance id / display path (current-scene relative, shown in group headers; falls back to an absolute path starting with `/root/...` outside the scene subtree) / scope id / variable snapshot |
 | `units[].id` / `path` / `kind` | Host component instance id / display path / `trigger` \| `multi` \| `runner` (BaseTrigger / MultiEventTrigger / Runner) |
 | `units[].ago_ms` | Milliseconds since the component's most recent execution; the watcher grays out group headers older than 5s |
 | `units[].local` | Local variables of the component's **most recent execution context** — all three host kinds keep `current_execution_context` after a run instead of discarding it |
@@ -245,7 +247,7 @@ Application semantics on the game side (`_apply_set_var`, three-way dispatch on 
 - **`target == "container"`**: `_find_node_by_id(id)` locates the `ScopeVariableContainer` → `set_variable`; a stale id is silently ignored.
 - **`target == "unit"`**: locates a `BaseTrigger`/`Runner` → `current_execution_context` → `_variable_context` → `set_variable` on `local`; a unit without a valid recent context (never executed) is silently ignored.
 - **`target == "global"`**: the variable is written only when it **already exists** (missing variables are not created, silently ignored).
-- **`_find_node_by_id` locating**: a recursive scan of the root tree matching `get_instance_id()` with a type check — not `instance_from_id`, which would spam engine ERRORs on stale ids.
+- **`_find_node_by_id` locating**: a recursive scan of the root tree matching `get_instance_id()`, type-checked against the `expected` parameter (`""` = any BaseTrigger/Runner; `"ScopeVariableContainer"` = containers) — not `instance_from_id`, which would spam engine ERRORs on stale ids.
 - **Editor side**: `send_set_var()` returns `false` when there is no live connection; a short write (partial bytes sent) warns and disconnects that connection, and the game side reconnects and self-heals.
 - **Degradation**: `_handle_message` dispatches on `t` (not on key presence); missing fields fall back to empty sets via `.get` defaults, so even a degraded push still reaches `_update_cache` and clears the caches.
 
