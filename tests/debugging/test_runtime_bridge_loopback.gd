@@ -29,6 +29,7 @@ func _ready() -> void:
 	_client.start_client(TEST_PORT)
 	add_child(_client)
 
+	_test_last_context_assignment()
 	_test_extract_json_lines()
 	_test_send_set_var_without_connection()
 	_setup_stub_runner()
@@ -50,6 +51,18 @@ func _check(condition: bool, msg: String) -> void:
 	else:
 		_fail_count += 1
 		push_error("  FAIL: " + msg)
+
+
+## Task 1：BaseTrigger 保留最近执行上下文（v3 local 数据源）
+func _test_last_context_assignment() -> void:
+	print("\n--- BaseTrigger 最近上下文赋值 ---")
+	var mt := MinimalTrigger.new()
+	add_child(mt)
+	var ec = mt._create_execution_context(mt)
+	_check(mt.current_execution_context == ec, "current_execution_context 赋值")
+	var now := Time.get_ticks_msec()
+	_check(now - mt.current_execution_context_at_ms < 1000, "时间戳为当前时刻")
+	mt.queue_free()
 
 
 ## 粘包/半包：一次到两条 + 半条留缓冲
@@ -192,3 +205,21 @@ func _cleanup() -> void:
 		_client.queue_free()
 	if _server:
 		_server.queue_free()
+
+
+## 最小 BaseTrigger 测试子类：抽象方法空实现，仅用 _create_execution_context
+class MinimalTrigger extends BaseTrigger:
+	func get_event_count() -> int:
+		return 0
+
+	func get_event_at(_index: int) -> BaseEvent:
+		return null
+
+	func get_runtime_event_instance_at(_index: int) -> RuntimeEventInstance:
+		return null
+
+	func get_action_runner_instance_at(_index: int) -> RuntimeActionRunnerInstance:
+		return null
+
+	func _on_pool_reset() -> void:
+		pass
