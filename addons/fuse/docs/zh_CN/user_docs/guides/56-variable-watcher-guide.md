@@ -135,7 +135,7 @@ _timer.timeout.connect(_on_timer)
 ```
 1. 检查 _editing 标志（编辑中则跳过，避免销毁 LineEdit）
 2. 清空内容区
-3. 通过 _collect_runtime_variables() 收集 local + scope 变量
+3. 通过 _collect_runtime_variables() 收集 local + scope 变量（scope 变量经共享 ScopeVariableContainer 会被同树下多个 Runner 重复上报，按"变量名+值"去重显示；同名不同值各保留一行；local 为各 Runner 独立存储不去重）
 4. 收集 global 变量（游戏运行中取游戏侧实时快照，否则取 `GlobalVariableService`）
 5. 每行记录历史（仅 int/float）
 6. 渲染 Local / Scope / Global 三个分区

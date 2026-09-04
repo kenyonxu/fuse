@@ -135,7 +135,7 @@ Each refresh (`_refresh()`) runs the following steps:
 ```
 1. Check the _editing flag (skip while editing, to avoid destroying the LineEdit)
 2. Clear the content area
-3. Collect local + scope variables via _collect_runtime_variables()
+3. Collect local + scope variables via _collect_runtime_variables() (a scope variable shared through a common ScopeVariableContainer is reported by every Runner under it; rows are deduplicated by "name + value" — same name with a different value keeps its own row; locals are per-Runner storage and are not deduplicated)
 4. Collect global variables (live snapshot from the game while it runs, otherwise `GlobalVariableService`)
 5. Record history for each row (int/float only)
 6. Render the Local / Scope / Global sections

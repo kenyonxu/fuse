@@ -342,11 +342,9 @@ func _get_bridge() -> Node:
 
 func _collect_runtime_variables() -> Dictionary:
 	## 从 FuseRuntimeBridge 读运行游戏推送的变量
-	var local_rows: Array[Dictionary] = []
-	var scope_rows: Array[Dictionary] = []
 	var result := {
-		"local_rows": local_rows,
-		"scope_rows": scope_rows,
+		"local_rows": [],
+		"scope_rows": [],
 		"runners": [],
 		"runner_count": 0,
 		"active_count": 0
@@ -359,6 +357,25 @@ func _collect_runtime_variables() -> Dictionary:
 	var cached: Dictionary = bridge.get_cached_vars()
 	if cached.is_empty():
 		return result
+
+	return _rows_from_cached(cached)
+
+
+## 由桥缓存生成展示行（与桥访问解耦，便于单元测试）
+## scope 变量经共享 ScopeVariableContainer 会被同树下多个 Runner 重复上报
+## （同一存储读 N 遍），按"变量名+值"去重；同名不同值（不同容器）各保留一行。
+## local 变量为各 Runner 独立存储，不去重。
+func _rows_from_cached(cached: Dictionary) -> Dictionary:
+	var local_rows: Array[Dictionary] = []
+	var scope_rows: Array[Dictionary] = []
+	var scope_seen := {}  # "name\x1fvalue" → true
+	var result := {
+		"local_rows": local_rows,
+		"scope_rows": scope_rows,
+		"runners": [],
+		"runner_count": 0,
+		"active_count": 0
+	}
 
 	for runner_name in cached:
 		result.runner_count += 1
@@ -379,9 +396,13 @@ func _collect_runtime_variables() -> Dictionary:
 
 		var scopes: Dictionary = data.get("scope", {})
 		for var_name in scopes:
+			runner_data["scope"][var_name] = scopes[var_name]
+			var dedupe_key := "%s\u001f%s" % [var_name, str(scopes[var_name])]
+			if scope_seen.has(dedupe_key):
+				continue
+			scope_seen[dedupe_key] = true
 			result.scope_rows.append(_make_row_data(var_name, scopes[var_name],
 				{"scope": "scope", "runner": runner_name, "runner_id": int(data.get("id", 0))}))
-			runner_data["scope"][var_name] = scopes[var_name]
 
 		result.runners.append(runner_data)
 
