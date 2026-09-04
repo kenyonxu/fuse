@@ -81,7 +81,7 @@ func _init() -> void:
 	_empty_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var empty_label := Label.new()
 	empty_label.text = FuseLocalizationClass.translate("FUSE_UI_WATCHER_WAIT_FOR_GAME")
-	empty_label.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55))
+	empty_label.add_theme_color_override("font_color", get_theme_color("font_disabled_color", "Tree"))
 	_empty_overlay.add_child(empty_label)
 	add_child(_empty_overlay)
 

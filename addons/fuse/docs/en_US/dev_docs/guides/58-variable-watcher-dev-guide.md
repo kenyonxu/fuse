@@ -273,7 +273,7 @@ Rules for `_record_history(var_key, value, type_str)`:
 ### Chart Expands on Selection
 
 - Tree `variable_selected(row, true)` → the main file stores `_selected_key = _history_key(row)`, expands `_graph_panel` (VSplitContainer bottom, 100px by default, resizable), title `group_path/name`
-- Switching selection switches the curve; `variable_selected(row, false)` (including the `_check_selection_stale` re-emission) or clicking ✕ in the title row collapses the area
+- Switching selection switches the curve; `variable_selected(row, false)` (including the `_check_selection_stale` re-emission), clicking ✕ in the title row, or pressing **Esc** collapses the area
 - With no data / a non-numeric selection, `_graph.set_points([])` shows the placeholder text
 
 ### HistoryGraph Component
