@@ -342,9 +342,13 @@ func _get_bridge() -> Node:
 
 func _collect_runtime_variables() -> Dictionary:
 	## 从 FuseRuntimeBridge 读运行游戏推送的变量
+	## 注意：早退路径也必须返回类型化 Array[Dictionary]——_refresh 以类型化变量接收，
+	## 无类型数组会在每次轮询刷 "Trying to assign an array of type Array" 错误
+	var local_rows: Array[Dictionary] = []
+	var scope_rows: Array[Dictionary] = []
 	var result := {
-		"local_rows": [],
-		"scope_rows": [],
+		"local_rows": local_rows,
+		"scope_rows": scope_rows,
 		"runners": [],
 		"runner_count": 0,
 		"active_count": 0

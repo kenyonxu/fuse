@@ -16,6 +16,7 @@ func _ready() -> void:
 	_test_is_row_editable()
 	_test_write_back_global_metadata()
 	_test_rows_from_cached_scope_dedupe()
+	_test_collect_runtime_early_return_typed()
 	_cleanup_globals()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -92,6 +93,20 @@ func _test_rows_from_cached_scope_dedupe() -> void:
 	var runners: Array = rows["runners"]
 	_check(runners.size() == 3 and runners[1]["scope"].size() == 2,
 		"快照 API（get_snapshot）保留每 Runner 全量数据")
+
+
+## 回归（2026-09-04 编辑器实测刷屏）：早退路径（桥缺失/缓存空——编辑器静止常态）
+## 必须返回类型化 Array[Dictionary]，否则 _refresh 的类型化接收每 0.5s 刷类型错误
+func _test_collect_runtime_early_return_typed() -> void:
+	print("\n--- _collect_runtime_variables 早退路径类型化 ---")
+	# 本测试进程无运行游戏连接：autoload 桥为客户端模式且缓存为空 → 恰走早退分支
+	var runtime: Dictionary = _watcher._collect_runtime_variables()
+	_check(runtime["local_rows"].get_typed_builtin() == TYPE_DICTIONARY,
+		"早退 local_rows 为 Array[Dictionary]")
+	_check(runtime["scope_rows"].get_typed_builtin() == TYPE_DICTIONARY,
+		"早退 scope_rows 为 Array[Dictionary]")
+	var rows: Array[Dictionary] = runtime["scope_rows"]  # 与 _refresh 同款接收，不应报错
+	_check(rows.is_empty(), "早退结果为空")
 
 
 func _cleanup_globals() -> void:
