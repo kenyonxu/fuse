@@ -11,7 +11,9 @@ extends Node
 ##   变量快照，序列化为 JSON line 推送
 ##
 ## 协议：TCP 流 + JSON line（\n 分隔）
-##   运行游戏→编辑器: {"t":"vars","runners":[{"name":"Runner1","local":{...},"scope":{...}},...]}
+##   运行游戏→编辑器: {"t":"vars","runners":[{"name":"Runner1","id":123,"local":{...},"scope":{...}},...],"global":{name:value,...}}
+##     每 0.5s 恒推（无 Runner 也推 global，空 runners 清编辑器缓存）
+##   编辑器→运行游戏: {"t":"set_var","scope":"global|local|scope","runner_id":123,"name":"hp","value":1}（反向写回）
 
 const BRIDGE_PORT := 24563
 const PUSH_INTERVAL := 0.5
@@ -23,7 +25,7 @@ var _connections: Array[StreamPeerTCP] = []
 var _client: StreamPeerTCP = null
 
 ## 编辑器侧：运行游戏推送的变量快照缓存
-## {runner_name: {"local": {var_name: value, ...}, "scope": {var_name: value, ...}}}
+## {runner_name: {"id": runner 实例 id, "local": {var_name: value, ...}, "scope": {var_name: value, ...}}}
 var _cached: Dictionary = {}
 var _cached_global: Dictionary = {}  # 游戏侧 global 标量快照
 
@@ -168,6 +170,8 @@ static func extract_json_lines(buffer: String) -> Dictionary:
 func _handle_message(msg: Dictionary) -> void:
 	if msg.has("runners"):
 		_update_cache(msg["runners"], msg.get("global", {}))
+	elif msg.get("t", "") == "set_var":
+		_apply_set_var(msg)
 
 
 func _update_cache(runners: Array, global_vars: Dictionary = {}) -> void:
@@ -201,6 +205,30 @@ func is_game_connected() -> bool:
 	return not _connections.is_empty()
 
 
+## 编辑器侧：广播写回（fire-and-forget；无连接返回 false）
+## 拥塞丢弃由 0.5s 推送回显兜底（spec §3.4）
+func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -> bool:
+	if _connections.is_empty():
+		return false
+	var payload := (JSON.stringify({
+		"t": "set_var",
+		"scope": scope,
+		"runner_id": runner_id,
+		"name": name,
+		"value": value
+	}) + "\n").to_utf8_buffer()  # 只序列化/编码一次，size 取自同一份
+	var any_ok := false
+	for conn in _connections:
+		var result: Array = conn.put_partial_data(payload)  # [Error, 实写字节数]（Godot 4.4+）
+		var sent: int = int(result[1])
+		if result[0] != OK or sent < payload.size():
+			push_warning("FuseRuntimeBridge: set_var 短写 %d/%d 字节，断开该连接（游戏侧重连自愈）" % [sent, payload.size()])
+			conn.disconnect_from_host()
+			continue
+		any_ok = true
+	return any_ok
+
+
 # ============================================================
 # 运行游戏侧：TCP 客户端
 # ============================================================
@@ -211,16 +239,6 @@ func _connect_client() -> void:
 		_client = null
 	_client = StreamPeerTCP.new()
 	_client.connect_to_host("127.0.0.1", _port)
-
-
-## 运行游戏侧：向编辑器发送反向 set_var 请求（Task 3 全链路验证）
-## 返回 false 表示当前无已连接的通道（未连接/连接未就绪）
-func send_set_var(scope: String, runner_index: int, var_name: String, value: Variant) -> bool:
-	if _client == null or _client.get_status() != StreamPeerTCP.STATUS_CONNECTED:
-		return false
-	var msg := JSON.stringify({"t": "set_var", "scope": scope, "runner": runner_index, "name": var_name, "value": value}) + "\n"
-	_client.put_partial_data(msg.to_utf8_buffer())
-	return true
 
 
 func _client_poll(delta: float) -> void:
@@ -236,6 +254,7 @@ func _client_poll(delta: float) -> void:
 		return
 	if st != StreamPeerTCP.STATUS_CONNECTED:
 		return
+	_read_json_lines(_client)  # 反向：接收编辑器 set_var
 	_push_snapshot()
 
 
@@ -281,3 +300,39 @@ func _collect_runners() -> Array:
 			"scope": vc.get_all_scope_variables_snapshot()
 		})
 	return result
+
+
+## 游戏侧：应用编辑器写回（目标失效静默忽略——失败由推送回显兜底，spec §3.3/§3.4）
+func _apply_set_var(msg: Dictionary) -> void:
+	var scope: String = msg.get("scope", "")
+	var vname: String = msg.get("name", "")
+	var value = msg.get("value", null)
+	if vname.is_empty() or value == null:
+		return
+	match scope:
+		"global":
+			var mgr := GlobalVariableManager.get_instance()
+			var existing_var = mgr.get_variable(vname)
+			if existing_var == null:
+				return  # 不存在不创建
+			mgr.set_variable_value_thread_safe(vname, _narrow_scalar(value, existing_var.value))
+		"local", "scope":
+			var runner = instance_from_id(int(msg.get("runner_id", 0)))
+			if runner == null or not runner is Node:
+				return
+			var ec = runner.get("current_execution_context")
+			if ec == null or not is_instance_valid(ec):
+				return
+			var vc = ec.get("_variable_context")
+			if vc == null:
+				return
+			var existing = vc.get_variable(vname, null, scope)
+			vc.set_variable(vname, _narrow_scalar(value, existing), scope)
+
+
+## JSON 解析后数字一律为 float：按目标变量现有类型收窄（仅 int 需要处理）
+## 目标不存在（auto_create 新建）时原样写入——float 化为已知限制（spec §11）
+static func _narrow_scalar(value: Variant, existing: Variant) -> Variant:
+	if existing != null and typeof(existing) == TYPE_INT and typeof(value) == TYPE_FLOAT:
+		return int(value)
+	return value
