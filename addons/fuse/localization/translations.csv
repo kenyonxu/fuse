@@ -5007,7 +5007,7 @@ FUSE_UI_WATCHER_MODE_READ,读,Read
 FUSE_UI_WATCHER_STATIC_VALUE,(静态),(static)
 FUSE_UI_WATCHER_STATIC_TYPE,{scopes} · {mode} · {count}处,{scopes} · {mode} · {count} refs
 FUSE_UI_WATCHER_SNAPSHOT_SAVED,变量快照已保存: {path},Variable snapshot saved: {path}
-FUSE_UI_WATCHER_EDIT_NO_CONNECTION,变量监视器: 运行游戏连接已断开，写回失败,Variable watcher: running game connection lost, write-back failed
+FUSE_UI_WATCHER_EDIT_NO_CONNECTION,变量监视器: 运行游戏连接已断开，写回失败,"Variable watcher: running game connection lost, write-back failed"
 FUSE_UI_WATCHER_GLOBAL_GAME_SUFFIX,（运行游戏）, (Game)
 FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED,变量监视器: 无法创建全局变量 '{name}',Variable watcher: failed to create global variable '{name}'
 FUSE_UI_PRESET_DIALOG_TITLE,导出为预设,Export as Preset
