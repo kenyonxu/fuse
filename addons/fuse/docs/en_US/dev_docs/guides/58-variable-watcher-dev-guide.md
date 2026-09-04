@@ -6,7 +6,7 @@
 
 **Audience**: Fuse system developers, editor plugin contributors
 
-**Last updated**: 2026-07-19
+**Last updated**: 2026-09-04
 
 **Companion user doc**: [56-variable-watcher-guide.md](../../user_docs/guides/56-variable-watcher-guide.md)
 
@@ -62,9 +62,10 @@ The watcher itself **never accesses the running game scene directly**; instead i
        ▼                ▼                ▼
  FuseRuntimeBridge  GlobalVariableService  InstructionAnalyzer
  (Autoload, TCP)    (→ Manager singleton)  (editor static topology)
-       │
+       │ ▲
+       │ └── set_var (editor → game write-back)
        ▼
- Running game (TCP client, pushes a JSON line every 0.5s)
+ Running game (TCP client, pushes a JSON line every 0.5s, applies set_var)
 ```
 
 | Data source | Provides | Available when |
@@ -96,14 +97,14 @@ const PUSH_INTERVAL := 0.5
 **Protocol**: TCP stream + JSON line (`\n` separated):
 
 ```json
-{"t":"vars","runners":[{"name":"Runner1","local":{"health":85},"scope":{"alert":50}}]}
+{"t":"vars","runners":[{"name":"Runner1","id":123456,"local":{"health":85},"scope":{"alert":50}}],"global":{"score":2450}}
 ```
 
 **Watcher consumption interface**:
 
 ```gdscript
 ## Editor side: get the cached runtime variables
-## Returns {runner_name: {"local": {name: value}, "scope": {name: value}}}
+## Returns {runner_name: {"id": runner instance id, "local": {name: value}, "scope": {name: value}}}
 func get_cached_vars() -> Dictionary
 ```
 
@@ -218,9 +219,9 @@ Write back by scope → _restore_label()  ← restore the Label, _editing = fals
 
 | Scope | Write-back | Available when |
 |--------|----------|----------|
-| `local` | `context.set_variable(name, value, "local")` | At runtime (requires a valid context) |
-| `scope` | `context.set_variable(name, value, "scope")` | At runtime (requires a valid context) |
-| `global` | `_write_back_global()` → `GlobalVariableManager.add_variable()` | Always available |
+| `local` | `bridge.send_set_var("local", runner_id, name, value)` → applied by the running game | At runtime (row comes from the running game, `runner_id` locatable) |
+| `scope` | `bridge.send_set_var("scope", runner_id, name, value)` → applied by the running game | At runtime (same requirement) |
+| `global` | Game connected: `send_set_var("global", 0, name, value)`; otherwise `_write_back_global()` → `set_variable_value_thread_safe()` (metadata preserved; created only if missing) | Always available |
 
 ### Type Coercion (`_coerce_value`)
 
@@ -393,11 +394,11 @@ The row data Dictionary can carry custom keys, and `_make_data_row()` branches o
 
 **Solution**: `_editing` must be set to `true` once editing starts; `_refresh()` checks that flag at the top and returns immediately.
 
-### Pitfall 2: Local/Scope Edits with No Runtime to Write Back To
+### Pitfall 2: The Game May Have Exited by the Time the Edit Commits
 
-**Problem**: Double-clicking a local variable while the editor is idle means there is no valid `context`, so the write-back fails or errors out.
+**Problem**: Rows are rendered from the last pushed snapshot, so the game may exit between rendering a row and committing the edit. `send_set_var` returns `false` when there is no live connection, and the value never reaches the game.
 
-**Solution**: Check context validity before writing back; if `_coerce_value` returns null, the write-back must be aborted.
+**Solution**: Treat a `false` return as a failed write-back — restore the original displayed value and warn (`FUSE_UI_WATCHER_EDIT_NO_CONNECTION`). The next push after `_editing` ends naturally corrects the display to the authoritative game-side value. (A failed coercion in `_coerce_value` still aborts the write-back silently — that is an input problem, not a connection problem.)
 
 ### Pitfall 3: Accessing GlobalVariableManager Directly and Bypassing the Service Layer
 
@@ -432,7 +433,7 @@ Key points of variable watcher development:
 1. ✅ **Three data sources kept separate** — Bridge (runtime local/scope) ∥ Service (global) ∥ Analyzer (static declarations)
 2. ✅ **Dual-mode TCP bridge** — editor TCPServer / game client, JSON line protocol, 0.5s pushes
 3. ✅ **Row data Dictionary pattern** — `_make_row_data()` → `_make_data_row()`, new sections reuse `_render_section()`
-4. ✅ **Edit protection** — the `_editing` flag blocks polled rebuilds; `_coerce_value` returning null aborts the write-back
+4. ✅ **Edit protection** — the `_editing` flag blocks polled rebuilds; `_coerce_value` returning null aborts the write-back; editability itself is gated by `_is_row_editable` (scalar types + locatable scope)
 5. ✅ **Performance throttling** — 0.5s polling + 5s static cache + 120-frame fixed-length history
 6. ✅ **Public snapshot API** — `get_snapshot()` can be called directly by external tools
 
@@ -445,4 +446,4 @@ Key points of variable watcher development:
 ---
 
 **Document maintainer**: Fuse development team
-**Last updated**: 2026-07-19
+**Last updated**: 2026-09-04
