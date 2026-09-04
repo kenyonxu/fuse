@@ -2,7 +2,7 @@
 
 # Variable Watcher User Guide
 
-`FuseVariableWatcher` is a **real-time variable monitoring panel** docked at the bottom of the Godot editor, showing the name, value, and type of every visible Fuse runtime variable at a 0.5-second polling rate. It supports double-click editing, recorded line charts, and static declaration snapshot completion.
+`FuseVariableWatcher` is a **real-time variable monitoring panel** docked at the bottom of the Godot editor, showing the name, value, and type of every visible Fuse runtime variable at a 0.5-second polling rate. It supports double-click editing (write-back to the running game over the TCP bridge at runtime), recorded line charts, and static declaration snapshot completion.
 
 **Related file:** `addons/fuse/editor/debugging/variable_watcher.gd`
 
@@ -15,7 +15,7 @@
 | Polling interval | 0.5 seconds (Timer driven) |
 | Display layers | Local / Scope / Global |
 | Runtime data source | `FuseRuntimeBridge` (Autoload node push) |
-| Global variable data source | `GlobalVariableService` |
+| Global variable data source | While the game runs: live snapshot from the game process; otherwise `GlobalVariableService` |
 | History | 120 frames = 60-second sliding window (numeric types only) |
 | Search filter | Real-time filtering by variable name |
 
@@ -104,7 +104,10 @@ Scope variables are obtained via `FuseRuntimeBridge.get_cached_vars()` and depen
 
 ### 3. Global Variables
 
-Obtains all global variables registered in `GlobalVariableManager` via `GlobalVariableService.get_all_global_variables_info()`:
+The Global section switches its data source automatically depending on whether the game is running:
+
+- **While the game runs**: shows the live scalar snapshot pushed by the game process (via `FuseRuntimeBridge`); the section title carries the "(Game)" suffix
+- **Not running**: reads the editor-side definitions via `GlobalVariableService.get_all_global_variables_info()`
 
 ```
 Global
@@ -133,7 +136,7 @@ Each refresh (`_refresh()`) runs the following steps:
 1. Check the _editing flag (skip while editing, to avoid destroying the LineEdit)
 2. Clear the content area
 3. Collect local + scope variables via _collect_runtime_variables()
-4. Collect global variables via GlobalVariableService
+4. Collect global variables (live snapshot from the game while it runs, otherwise `GlobalVariableService`)
 5. Record history for each row (int/float only)
 6. Render the Local / Scope / Global sections
 7. Render the static declarations section (topology cache refreshed every 5 seconds)
@@ -151,9 +154,13 @@ Interactive rows (not notes, not static) support editing variable values by doub
 
 | Scope | Editing | Write-back target |
 |--------|----------|----------|
-| **Local** | Runtime only | `context.set_variable(name, coerced_value, "local")` |
-| **Scope** | Runtime only | `context.set_variable(name, coerced_value, "scope")` |
-| **Global** | Always available | `GlobalVariableManager.add_variable(name, variable)` |
+| **Local** | **Available while running** (scalar types) | `bridge.send_set_var("local", runner_id, name, value)` → applied by the running game |
+| **Scope** | **Available while running** (scalar types) | `bridge.send_set_var("scope", runner_id, name, value)` → applied by the running game |
+| **Global** | Always available, split by data source | While the game runs: `send_set_var("global", ...)` → running game; not running: editor-side definition via `set_variable_value_thread_safe` (metadata preserved; created only if missing) |
+
+**Editable types**: JSON scalars only (`int` / `float` / `bool` / `String`); rows of complex types such as `Vector2` are read-only and do not respond to double-clicks.
+
+**Global data source while running**: while the game runs, the Global section title carries the "(Game)" suffix and the values come from the game process's live snapshot; once the game stops, the section falls back to the editor-side definitions.
 
 **How to operate**:
 1. Double-click the value cell → it is replaced by a `LineEdit`
@@ -168,11 +175,12 @@ Interactive rows (not notes, not static) support editing variable values by doub
 | float | `text.is_valid_float()` → `text.to_float()` |
 | bool | matches `"true"` / `"1"` / `"是"` / `"yes"` |
 | String | returned as-is |
-| Other | best effort, returned as-is |
+| Complex types (`Vector2` etc.) | not editable (row is read-only), coercion never runs |
 
 **Safety guards**:
 - While editing, `_editing = true` and `_refresh()` skips rebuilding, so the LineEdit is not destroyed
-- Local/Scope variables need a valid `context` (editing is blocked when the runtime context is unavailable)
+- local/scope rows must come from the running game (the row is editable only when its `runner_id` can locate a Runner)
+- A failed write-back (connection lost) restores the original displayed value and warns; a failed type coercion silently restores the original value (an input problem, no warning)
 
 ### 7b — Line Chart
 
@@ -291,7 +299,7 @@ Export path: `user://fuse_watcher_snapshot_{时间戳}.json`
 ```
 
 - **FuseRuntimeBridge**: an Autoload singleton that actively pushes local/scope variable caches while the game runs
-- **GlobalVariableService**: reads global variables from `GlobalVariableManager`
+- **GlobalVariableService**: reads the editor-side global variable definitions from `GlobalVariableManager` when the game is not running; while the game runs, the live game-side snapshot (via `FuseRuntimeBridge`) is used instead
 - **InstructionAnalyzer**: analyzes Trigger topology in the editor, providing static declaration data
 
 ---
@@ -302,7 +310,7 @@ Export path: `user://fuse_watcher_snapshot_{时间戳}.json`
 |------|------|----------|
 | Blank panel | Scene not running or no Fuse nodes | Run the scene and make sure a Trigger/ActionRunner exists |
 | Local/Scope not shown | `FuseRuntimeBridge` not registered | Check the Autoload configuration |
-| Double-click edit does nothing | A runtime context is required | local/scope variables can be edited only while the scene runs |
+| Double-click edit does nothing | A running game is required | local/scope rows appear only while the scene runs; complex types (Vector2 etc.) are read-only |
 | Line chart has no data | Variable is not numeric | Only `int`/`float` variables are recorded in history |
 | Snapshot save failed | Insufficient path permissions | Check permissions of the `user://` directory |
 | Panel flickers while editing | 0.5s polling conflicts with editing | Protected by Stage 7a (the `_editing` flag blocks refresh rebuild) |

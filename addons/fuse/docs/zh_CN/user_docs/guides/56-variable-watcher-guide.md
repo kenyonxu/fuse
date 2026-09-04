@@ -2,7 +2,7 @@
 
 # 变量监视器使用指南
 
-`FuseVariableWatcher` 是嵌入在 Godot 编辑器底部 Dock 的**实时变量监视面板**，以 0.5 秒轮询频率展示 Fuse 运行时所有可见变量的名称、值与类型。支持双击编辑、录制折线图和静态声明快照补全。
+`FuseVariableWatcher` 是嵌入在 Godot 编辑器底部 Dock 的**实时变量监视面板**，以 0.5 秒轮询频率展示 Fuse 运行时所有可见变量的名称、值与类型。支持双击编辑（运行中经 TCP 桥写回游戏进程）、录制折线图和静态声明快照补全。
 
 **相关文件:** `addons/fuse/editor/debugging/variable_watcher.gd`
 
@@ -15,7 +15,7 @@
 | 轮询频率 | 0.5 秒（Timer 驱动） |
 | 显示层级 | Local（本地） / Scope（作用域） / Global（全局） |
 | 运行时数据源 | `FuseRuntimeBridge`（Autoload 节点推送） |
-| 全局变量数据源 | `GlobalVariableService` |
+| 全局变量数据源 | 游戏运行中：游戏侧实时快照；未运行：`GlobalVariableService` |
 | 历史记录 | 120 帧 = 60 秒滑动窗口（仅数值类型） |
 | 搜索过滤 | 按变量名实时筛选 |
 
@@ -104,7 +104,10 @@ Scope
 
 ### 3. Global（全局变量）
 
-通过 `GlobalVariableService.get_all_global_variables_info()` 获取所有注册在 `GlobalVariableManager` 中的全局变量：
+全局变量按游戏是否运行自动切换数据源：
+
+- **游戏运行中**：显示游戏进程推送的实时标量快照（经 `FuseRuntimeBridge`），分区标题带"（运行游戏）"后缀
+- **未运行**：通过 `GlobalVariableService.get_all_global_variables_info()` 读取编辑器侧定义
 
 ```
 Global
@@ -133,7 +136,7 @@ _timer.timeout.connect(_on_timer)
 1. 检查 _editing 标志（编辑中则跳过，避免销毁 LineEdit）
 2. 清空内容区
 3. 通过 _collect_runtime_variables() 收集 local + scope 变量
-4. 通过 GlobalVariableService 收集 global 变量
+4. 收集 global 变量（游戏运行中取游戏侧实时快照，否则取 `GlobalVariableService`）
 5. 每行记录历史（仅 int/float）
 6. 渲染 Local / Scope / Global 三个分区
 7. 渲染静态声明分区（5 秒间隔刷新拓扑缓存）
@@ -151,9 +154,13 @@ _timer.timeout.connect(_on_timer)
 
 | 作用域 | 编辑功能 | 写回目标 |
 |--------|----------|----------|
-| **Local** | 仅运行时可用 | `context.set_variable(name, coerced_value, "local")` |
-| **Scope** | 仅运行时可用 | `context.set_variable(name, coerced_value, "scope")` |
-| **Global** | 始终可用 | `GlobalVariableManager.add_variable(name, variable)` |
+| **Local** | **运行中可用**（标量类型） | `bridge.send_set_var("local", runner_id, name, value)` → 运行游戏应用 |
+| **Scope** | **运行中可用**（标量类型） | `bridge.send_set_var("scope", runner_id, name, value)` → 运行游戏应用 |
+| **Global** | 恒可用，按数据源分流 | 游戏运行中：`send_set_var("global", ...)` → 运行游戏；未运行：编辑器侧定义 `set_variable_value_thread_safe`（保留元数据，不存在才新建） |
+
+**可编辑类型**：仅限 JSON 标量（`int` / `float` / `bool` / `String`）；`Vector2` 等复杂类型行只读，双击无反应。
+
+**运行中 Global 数据源**：游戏运行时 Global 区标题带"（运行游戏）"后缀，值来自游戏进程的实时快照；停止运行后回落为编辑器侧定义。
 
 **操作方式**：
 1. 双击值列 → 替换为 `LineEdit`
@@ -168,11 +175,12 @@ _timer.timeout.connect(_on_timer)
 | float | `text.is_valid_float()` → `text.to_float()` |
 | bool | 匹配 `"true"` / `"1"` / `"是"` / `"yes"` |
 | String | 原样返回 |
-| 其他 | 最佳努力，原样返回 |
+| 复杂类型（`Vector2` 等） | 不可编辑（行只读），不会进入转换 |
 
 **安全保护**：
 - 编辑中 `_editing = true`，`_refresh()` 跳过重建避免销毁 LineEdit
-- Local/Scope 变量需要有效 `context`（运行时 context 不可用时编辑被阻止）
+- local/scope 行需来自运行中游戏（`runner_id` 可定位到 Runner 才可编辑）
+- 写回失败（连接断开）恢复原显示值并警告；类型转换失败静默恢复原值（输入问题，不警告）
 
 ### 7b — 折线图
 
@@ -291,7 +299,7 @@ _timer.timeout.connect(_on_timer)
 ```
 
 - **FuseRuntimeBridge**：Autoload 单例，游戏运行期间主动推送 local/scope 变量缓存
-- **GlobalVariableService**：从 `GlobalVariableManager` 读取全局变量
+- **GlobalVariableService**：未运行时从 `GlobalVariableManager` 读取编辑器侧全局变量定义；游戏运行中改读游戏侧实时快照（经 `FuseRuntimeBridge`）
 - **InstructionAnalyzer**：编辑器中分析 Trigger 拓扑，提供静态声明数据
 
 ---
@@ -302,7 +310,7 @@ _timer.timeout.connect(_on_timer)
 |------|------|----------|
 | 面板空白 | 场景未运行或无 Fuse 节点 | 运行场景并确保有 Trigger/ActionRunner |
 | Local/Scope 不显示 | `FuseRuntimeBridge` 未注册 | 检查 Autoload 配置 |
-| 双击编辑无反应 | 需要运行时 context | 场景运行中才能编辑 local/scope 变量 |
+| 双击编辑无反应 | 需要运行中游戏 | 场景运行中才出现 local/scope 行；复杂类型（Vector2 等）行只读 |
 | 折线图无数据 | 变量非数值类型 | 仅 `int`/`float` 类型记录历史 |
 | 快照保存失败 | 路径权限不足 | 检查 `user://` 目录权限 |
 | 编辑时面板闪烁 | 0.5s 轮询与编辑冲突 | Stage 7a 已保护（`_editing` 标志阻止刷新重建） |

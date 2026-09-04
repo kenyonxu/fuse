@@ -6,7 +6,7 @@
 
 **Audience**: Fuse system developers, contributors
 
-**Last updated**: 2026-07-07
+**Last updated**: 2026-09-04
 
 ---
 
@@ -88,6 +88,17 @@ Editor side:
         → read buffer → _read_json_lines()
             → _update_cache(runners)
         → all connections disconnected → _cached.clear()
+
+Editor side (write-back):
+  variable watcher edit commit
+    → send_set_var(scope, runner_id, name, value)
+        → JSON.stringify + put_partial_data()   broadcast to all connections
+        → no connections → return false
+
+Game side (apply write-back):
+  _client_poll → _read_json_lines → _handle_message
+    → t == "set_var" → _apply_set_var()
+        → narrow the value to the target's existing type → write
 ```
 
 ---
@@ -114,12 +125,26 @@ const PUSH_INTERVAL := 0.5        # Push interval (seconds)
 ### Public Interface
 
 ```gdscript
-## Get the cached runtime variable snapshot (editor side)
-## Returns: Dictionary — {runner_name: {"local": {...}, "scope": {...}}}
+## Editor side: get the cached runtime variable snapshot
+## Returns: Dictionary — {runner_name: {"id": runner instance id, "local": {...}, "scope": {...}}}
 func get_cached_vars() -> Dictionary
+
+## Editor side: game-side global scalar snapshot ({name: value})
+func get_cached_global() -> Dictionary
+
+## Editor side: whether a running game is connected
+func is_game_connected() -> bool
+
+## Editor side: broadcast a write-back to the running game (fire-and-forget)
+## Returns false when there is no live connection
+func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -> bool
+
+## Test injection: start either mode with an explicit port (default BRIDGE_PORT = 24563)
+func start_server(port: int = BRIDGE_PORT) -> void
+func start_client(port: int = BRIDGE_PORT) -> void
 ```
 
-This is the only public method, used by editor tools (such as FuseVariableWatcher) to read the cached data.
+These are used by editor tools (such as FuseVariableWatcher) to read the cached data and write values back to the running game.
 
 ### Lifecycle
 
@@ -164,18 +189,53 @@ func _collect_runners() -> Array                   # Collect variables from all 
 
 ### Protocol Format
 
-TCP stream + JSON line (`\n` separated):
+TCP stream + JSON line (`\n` separated).
+
+**Push (game → editor), every 0.5s, always pushed** — even with zero Runners the `global` snapshot is still pushed (empty `runners` clears the editor's runner cache):
 
 ```json
 {"t": "vars", "runners": [
     {
         "name": "RunnerName",
+        "id": 123456789,
         "local": {"score": 100, "name": "player"},
         "scope": {"health": 80, "mana": 50}
     },
     ...
-]}
+],
+ "global": {"player_score": 2450, "game_time": 132.5}}
 ```
+
+**Protocol v2 fields**:
+
+| Field | Meaning |
+|------|------|
+| `runners[].id` | The Runner's `get_instance_id()`; the editor's set_var write-backs use it to locate the target Runner |
+| `global` (top level) | Game-side snapshot of global variable **scalars** (`{name: value}`); complex types (Dictionary/Array/Vector etc.) do not enter the protocol |
+
+**Reverse message (editor → game)** — broadcast to **all** live connections, **fire-and-forget** (no acknowledgment; correctness is backed by the 0.5s push echo):
+
+```json
+{"t": "set_var", "scope": "global", "runner_id": 0, "name": "player_score", "value": 3000}
+```
+
+Application semantics on the game side (`_apply_set_var`):
+
+- **Type narrowing**: after JSON parsing every number is a `float`; it is narrowed to the target variable's existing type (an `int` target is narrowed back to `int`). If the target does not exist (auto-created variables), the value is written as-is — the float widening is a known limitation.
+- **`global`**: if the variable does not exist it is **not created** (silently ignored).
+- **`local` / `scope`**: the Runner is located duck-typed via `runner_id` → `current_execution_context` → `_variable_context` → `set_variable`; a stale target is silently ignored.
+- **Editor side**: `send_set_var()` returns `false` when there is no live connection; a short write (partial bytes sent) warns and disconnects that connection, and the game side reconnects and self-heals.
+
+### Test Injection
+
+For tests both modes can be injected in the same process with an explicit port; the production path keeps the default `BRIDGE_PORT` (24563):
+
+```gdscript
+FuseRuntimeBridge.start_server(24599)   # editor side, listening on the injected port
+FuseRuntimeBridge.start_client(24599)   # game side, connects to the injected port
+```
+
+Loopback test: `tests/debugging/test_runtime_bridge_loopback.tscn` (uses port 24599 to avoid interference with the Autoload bridge on 24563).
 
 ### Port
 
@@ -306,4 +366,4 @@ func _connect_client() -> void:
 
 ---
 
-**Document maintainer**: Fuse development team | **Last updated**: 2026-07-07 | **Godot version**: 4.7
+**Document maintainer**: Fuse development team | **Last updated**: 2026-09-04 | **Godot version**: 4.7
