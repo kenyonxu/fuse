@@ -98,6 +98,8 @@ func apply_data(rows: Dictionary, current_scene: String, filter_text: String) ->
 	summary["scenes"] = scene_keys.size()
 	var splan: Dictionary = diff_plan(_scene_items.keys(), scene_keys)
 	for k in splan["remove"]:
+		if k == "__global__":
+			continue  # GLOBAL 根不随 splan 拆建（_ensure_global_root 恒在），消除每轮 churn
 		_free_subtree(_scene_items[k])
 		_scene_items.erase(k)
 	for k in scene_keys:
@@ -154,7 +156,7 @@ func apply_data(rows: Dictionary, current_scene: String, filter_text: String) ->
 		vit.set_text(COL_NAME, row["name"])
 		vit.set_text(COL_VALUE, row["value"])
 		vit.set_text(COL_TYPE, row["type"])
-	_apply_complex_color()
+	_apply_row_colors()
 	summary["global"] = int(rows.get("global_count", 0))
 	_check_selection_stale()
 	return summary
@@ -246,6 +248,7 @@ func apply_global(global_rows: Array, filter_text: String) -> void:
 		it.set_text(COL_NAME, row["name"])
 		it.set_text(COL_VALUE, row["value"])
 		it.set_text(COL_TYPE, row["type"])
+		it.set_custom_color(COL_TYPE, get_theme_color("font_disabled_color", "Tree"))
 		it.set_metadata(COL_NAME, row)
 		var k := "%s:%d:%s" % [row["target"], row["id"], row["name"]]
 		_row_meta[k] = row
@@ -295,13 +298,16 @@ func _apply_stale_color(item: TreeItem, stale: bool) -> void:
 		item.clear_custom_color(COL_NAME)
 
 
-func _apply_complex_color() -> void:
+## 变量行统一着色：complex 值列灰显（只读语义）；类型列恒灰显（辅助信息弱化，spec §4）
+func _apply_row_colors() -> void:
+	var type_color: Color = get_theme_color("font_disabled_color", "Tree")
 	for k in _var_items:
 		var row: Dictionary = _row_meta[k]
 		if bool(row.get("is_complex", false)):
-			_var_items[k].set_custom_color(COL_VALUE, get_theme_color("font_disabled_color", "Tree"))
+			_var_items[k].set_custom_color(COL_VALUE, type_color)
 		else:
 			_var_items[k].clear_custom_color(COL_VALUE)
+		_var_items[k].set_custom_color(COL_TYPE, type_color)
 
 
 func _on_item_selected() -> void:
