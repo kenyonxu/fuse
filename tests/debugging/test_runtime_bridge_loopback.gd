@@ -36,6 +36,7 @@ func _ready() -> void:
 	await _test_push_payload_reaches_cache()
 	await _test_set_var_global_full_path()  # Task 3 补断言体
 	_test_apply_set_var_local_unit()        # Task 3 补断言体
+	await _test_push_always_without_runners()  # Task 2 审查携带：无 Runner 仍恒推 global
 	_cleanup()
 
 	print("\n=== 结果: %d 处失败 ===" % _fail_count)
@@ -108,12 +109,52 @@ func _test_push_payload_reaches_cache() -> void:
 	_check(cached_global.get("score", null) == 7, "global 快照送达（runners 非空场景）")
 
 
+## 全链路：server send_set_var → socket → client 收到并应用到本进程单例
 func _test_set_var_global_full_path() -> void:
-	pass  # Task 3 填充
+	print("\n--- set_var global 全链路（int 收窄）---")
+	var ok: bool = _server.send_set_var("global", 0, "score", 11.0)
+	_check(ok, "send_set_var 广播成功返回 true")
+	await get_tree().create_timer(1.3).timeout
+	var v = GlobalVariableManager.get_instance().get_variable("score")
+	_check(v != null and v.value == 11, "global 值已应用为 11（got %s）" % str(v.value if v else null))
+	_check(v != null and typeof(v.value) == TYPE_INT, "int 目标收窄为 int（JSON 11.0 不写坏成 float）")
 
 
+## 单元级：local 分发（真 Runner + 真 ExecutionContext）+ 容错
 func _test_apply_set_var_local_unit() -> void:
-	pass  # Task 3 填充
+	print("\n--- _apply_set_var local 单元 + 容错 ---")
+	var vc = _stub_runner.current_execution_context.get("_variable_context")
+	_client._apply_set_var({
+		"t": "set_var", "scope": "local",
+		"runner_id": _stub_runner.get_instance_id(),
+		"name": "hp", "value": 55.0
+	})
+	_check(vc.get_variable("hp", null, "local") == 55, "local hp 写入 55")
+	_check(typeof(vc.get_variable("hp", null, "local")) == TYPE_INT, "int 目标收窄为 int")
+
+	# 无效 runner_id：静默不崩
+	_client._apply_set_var({
+		"t": "set_var", "scope": "local", "runner_id": 99999999,
+		"name": "hp", "value": 1.0
+	})
+	_check(vc.get_variable("hp", null, "local") == 55, "无效 runner_id 静默忽略")
+
+	# global 不存在：不创建
+	_client._apply_set_var({
+		"t": "set_var", "scope": "global", "runner_id": 0,
+		"name": "no_such_var", "value": 1.0
+	})
+	_check(GlobalVariableManager.get_instance().get_variable("no_such_var") == null, "global 目标不存在不创建")
+
+
+## 恒推：移除 Runner 后仍推送 global（空 runners 快照不断流）
+func _test_push_always_without_runners() -> void:
+	print("\n--- 恒推空 runners：global 仍送达 ---")
+	remove_child(_stub_runner)  # 保留引用，_cleanup 仍可 free
+	GlobalVariableManager.get_instance().set_variable_value_thread_safe("score", 33)
+	await get_tree().create_timer(1.3).timeout
+	_check(_server.get_cached_global().get("score") == 33, "无 Runner 仍恒推 global（score=33）")
+	_check(_server.get_cached_vars().is_empty(), "空 runners 快照清空 runner 缓存")
 
 
 func _cleanup() -> void:
