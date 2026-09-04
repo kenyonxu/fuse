@@ -25,6 +25,7 @@ var _graph_panel: VBoxContainer
 var _graph: HistoryGraph
 var _graph_title: Label
 var _empty_overlay: CenterContainer
+var _empty_label: Label
 var _edit_line: LineEdit = null   # 编辑覆盖层
 
 var _selected_key := ""
@@ -75,14 +76,13 @@ func _init() -> void:
 	_graph.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_graph_panel.add_child(_graph)
 
-	# 空态叠层
+	# 空态叠层（颜色在 _apply_theme_colors 取主题色，随主题切换更新）
 	_empty_overlay = CenterContainer.new()
 	_empty_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_empty_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var empty_label := Label.new()
-	empty_label.text = FuseLocalizationClass.translate("FUSE_UI_WATCHER_WAIT_FOR_GAME")
-	empty_label.add_theme_color_override("font_color", get_theme_color("font_disabled_color", "Tree"))
-	_empty_overlay.add_child(empty_label)
+	_empty_label = Label.new()
+	_empty_label.text = FuseLocalizationClass.translate("FUSE_UI_WATCHER_WAIT_FOR_GAME")
+	_empty_overlay.add_child(_empty_label)
 	add_child(_empty_overlay)
 
 	# 信号接线
@@ -99,6 +99,21 @@ func _init() -> void:
 
 func _enter_tree() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+
+func _ready() -> void:
+	_apply_theme_colors()
+
+
+func _notification(what: int) -> void:
+	# 入树与主题切换时重取主题色（_init 时尚未入树，只能命 fallback 主题）
+	if what == NOTIFICATION_THEME_CHANGED:
+		_apply_theme_colors()
+
+
+func _apply_theme_colors() -> void:
+	_empty_label.add_theme_color_override("font_color",
+		get_theme_color("font_disabled_color", "Tree"))
 
 
 # ============================================================
@@ -146,8 +161,11 @@ func _refresh() -> void:
 	_tree.apply_global(global_rows, filter_text)
 
 	# 摘要 scenes/hosts 为过滤后计数（过滤激活时状态栏数字随之收缩——接受的行为）
-	_status_label.text = "场景:%d · 宿主:%d · Global:%d" % [
-		summary.get("scenes", 0), summary.get("hosts", 0), global_rows.size()]
+	_status_label.text = FuseLocalizationClass.translate_format(
+		"FUSE_UI_WATCHER_STATUS_SUMMARY", {
+			"scenes": summary.get("scenes", 0),
+			"hosts": summary.get("hosts", 0),
+			"global": global_rows.size()})
 	_empty_overlay.visible = not connected \
 			and rows["local_rows"].is_empty() and rows["scope_rows"].is_empty() and global_rows.is_empty()
 
