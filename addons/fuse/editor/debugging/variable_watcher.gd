@@ -35,6 +35,9 @@ var _cached_static_rows: Array[Dictionary] = []
 var _last_static_refresh_ms: int = 0
 const STATIC_REFRESH_INTERVAL_MS := 5000
 
+# 7e: 运行时编辑可编辑类型（JSON 标量）
+const EDITABLE_TYPES := ["int", "float", "bool", "String", "string"]
+
 
 func _init() -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -109,12 +112,24 @@ func _on_timer() -> void:
 # 7a: 双击编辑变量值
 # ============================================================
 
+## 行是否可编辑：非笔记/静态、JSON 标量类型、scope 可达
+## local/scope 需 runner_id 可定位（运行行）；global 恒可（写回路径按数据源分流）
+func _is_row_editable(data: Dictionary) -> bool:
+	if data.get("is_note", false) or data.get("is_static", false):
+		return false
+	if not str(data.get("type", "")) in EDITABLE_TYPES:
+		return false
+	var scope: String = data.get("scope", "")
+	if scope in ["local", "scope"]:
+		return int(data.get("runner_id", 0)) > 0
+	return scope == "global"
+
+
 ## 创建可编辑的值列 PanelContainer
 ## 默认 Label，双击进入 LineEdit 编辑模式
 func _make_value_panel(data: Dictionary) -> PanelContainer:
 	var p := _make_label_panel(data.get("value", ""), COL_VALUE, true)
-	# 笔记行 / 静态行不可编辑
-	if data.get("is_note", false) or data.get("is_static", false):
+	if not _is_row_editable(data):
 		return p
 	p.gui_input.connect(func(ev): _on_value_gui_input(ev, p, data))
 	return p
@@ -126,15 +141,6 @@ func _on_value_gui_input(ev: InputEvent, panel: PanelContainer, data: Dictionary
 
 
 func _enter_edit_mode(panel: PanelContainer, data: Dictionary) -> void:
-	# 检查：local/scope 需要运行时 context
-	var scope: String = data.get("scope", "")
-	var context = data.get("context", null)
-	if scope in ["local", "scope"] and (context == null or not is_instance_valid(context)):
-		push_warning(FuseLocalizationClass.translate_format(
-			"FUSE_UI_WATCHER_EDIT_NEEDS_RUNTIME",
-			{"scope": scope, "name": data.get("name", "")}))
-		return
-
 	var line := LineEdit.new()
 	line.text = data.get("value", "")
 	line.select_all()
@@ -167,23 +173,33 @@ func _on_focus_exited(data: Dictionary, panel: PanelContainer, line: LineEdit) -
 	_finish_edit(line.text, data, panel)
 
 
-## 完成编辑：写回 + 恢复 Label
+## 完成编辑：按数据来源写回 + 恢复 Label
+## 类型转换失败（coerced == null）只恢复显示、不警告——那是输入问题不是连接问题
 func _finish_edit(text: String, data: Dictionary, panel: PanelContainer) -> void:
 	var type_str: String = data.get("type", "")
 	var coerced = _coerce_value(text, type_str)
+	var scope: String = data.get("scope", "")
+	var display := text
 
 	if coerced != null:
-		var scope: String = data.get("scope", "")
+		var bridge = _get_bridge()
+		var sent := true
 		if scope == "global":
-			_write_back_global(data["name"], coerced)
+			if bridge != null and bridge.has_method("is_game_connected") and bridge.is_game_connected():
+				sent = bridge.send_set_var("global", 0, data["name"], coerced)
+			else:
+				_write_back_global(data["name"], coerced)
 		elif scope in ["local", "scope"]:
-			var context = data.get("context", null)
-			if context != null and is_instance_valid(context):
-				context.set_variable(data["name"], coerced, scope)
+			if bridge != null and bridge.has_method("send_set_var"):
+				sent = bridge.send_set_var(scope, int(data.get("runner_id", 0)), data["name"], coerced)
+			else:
+				sent = false
+		if not sent:
+			push_warning(FuseLocalizationClass.translate("FUSE_UI_WATCHER_EDIT_NO_CONNECTION"))
+			display = str(data.get("value", ""))  # 写回失败恢复原显示值
 
-	# 恢复 Label（显示更新值）
-	_restore_label(panel, text)
-	_editing = false  # 结束编辑，恢复 _refresh 轮询
+	_restore_label(panel, display)
+	_editing = false  # 结束编辑，恢复 _refresh 轮询（真实值 ≤1s 内回显校正）
 
 
 ## 恢复 Label 显示
@@ -201,13 +217,17 @@ func _restore_label(panel: PanelContainer, display_text: String) -> void:
 	panel.add_child(label)
 
 
-## 全局变量写回
+## 全局变量写回（编辑器侧定义）：改值优先保留元数据，不存在才新建
 func _write_back_global(name: String, value: Variant) -> void:
+	var mgr := GlobalVariableManager.get_instance()
+	if mgr.set_variable_value_thread_safe(name, value):
+		return
 	var var_obj = BaseVariable.create(name, value, BaseVariable.VariableScope.GLOBAL)
 	if var_obj == null:
-		push_warning(FuseLocalizationClass.translate_format("FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED", {"name": name}))
+		push_warning(FuseLocalizationClass.translate_format(
+			"FUSE_UI_WATCHER_GLOBAL_CREATE_FAILED", {"name": name}))
 		return
-	GlobalVariableManager.get_instance().add_variable(name, var_obj)
+	mgr.add_variable(name, var_obj)
 
 
 ## 类型转换：String → 目标类型
@@ -315,9 +335,13 @@ class HistoryGraph extends Control:
 # 7d: 运行时变量收集（_refresh 和 get_snapshot 复用）
 # ============================================================
 
+## Autoload 桥安全访问（未注册时返回 null）
+func _get_bridge() -> Node:
+	return get_tree().root.get_node_or_null("FuseRuntimeBridge")
+
+
 func _collect_runtime_variables() -> Dictionary:
-	## 从 FuseRuntimeBridge 读运行游戏推送的变量（替代 get_edited_scene_root 扫 Runner）
-	## V1 只读：local/scope 不传 context，暂无运行时编辑能力
+	## 从 FuseRuntimeBridge 读运行游戏推送的变量
 	var local_rows: Array[Dictionary] = []
 	var scope_rows: Array[Dictionary] = []
 	var result := {
@@ -328,11 +352,7 @@ func _collect_runtime_variables() -> Dictionary:
 		"active_count": 0
 	}
 
-	if not Engine.is_editor_hint():
-		return result
-
-	# 通过 Autoload 节点访问（避免 class_name/全局依赖，Autoload 未注册时安全降级）
-	var bridge = get_tree().root.get_node_or_null("FuseRuntimeBridge")
+	var bridge = _get_bridge()
 	if bridge == null or not bridge.has_method("get_cached_vars"):
 		return result
 
@@ -354,13 +374,13 @@ func _collect_runtime_variables() -> Dictionary:
 		var locals: Dictionary = data.get("local", {})
 		for var_name in locals:
 			result.local_rows.append(_make_row_data(var_name, locals[var_name],
-				{"context": null, "scope": "local", "runner": runner_name}))
+				{"scope": "local", "runner": runner_name, "runner_id": int(data.get("id", 0))}))
 			runner_data["local"][var_name] = locals[var_name]
 
 		var scopes: Dictionary = data.get("scope", {})
 		for var_name in scopes:
 			result.scope_rows.append(_make_row_data(var_name, scopes[var_name],
-				{"context": null, "scope": "scope", "runner": runner_name}))
+				{"scope": "scope", "runner": runner_name, "runner_id": int(data.get("id", 0))}))
 			runner_data["scope"][var_name] = scopes[var_name]
 
 		result.runners.append(runner_data)
@@ -393,20 +413,29 @@ func _refresh() -> void:
 		local_rows.append({
 			"name": FuseLocalizationClass.translate("FUSE_UI_WATCHER_VISIBLE_AFTER_RUN"),
 			"value": "", "type": "",
-			"is_note": true, "scope": "", "context": null
+			"is_note": true, "scope": ""
 		})
 
-	# 全局变量
-	var svc := GlobalVariableService.new()
-	var globals: Dictionary = svc.get_all_global_variables_info()
+	# 全局变量：桥活跃 → 游戏侧实时值；否则编辑器侧定义（编辑目标 = 数据来源）
+	var bridge = _get_bridge()
+	var game_connected: bool = bridge != null \
+			and bridge.has_method("is_game_connected") \
+			and bridge.is_game_connected()
 	var global_rows: Array[Dictionary] = []
-	for var_name in globals:
-		var info = globals[var_name]
-		var row := _make_row_data(var_name, {
-			"value": info.get("value"),
-			"type": info.get("type")
-		}, {"context": null, "scope": "global"})
-		global_rows.append(row)
+	if game_connected:
+		var cached_global: Dictionary = bridge.get_cached_global()
+		for var_name in cached_global:
+			global_rows.append(_make_row_data(var_name, cached_global[var_name],
+				{"scope": "global", "runner_id": 0}))
+	else:
+		var svc := GlobalVariableService.new()
+		var globals: Dictionary = svc.get_all_global_variables_info()
+		for var_name in globals:
+			var info = globals[var_name]
+			global_rows.append(_make_row_data(var_name, {
+				"value": info.get("value"),
+				"type": info.get("type")
+			}, {"scope": "global", "runner_id": 0}))
 
 	# 7b: 记录历史
 	for row in local_rows + scope_rows + global_rows:
@@ -418,15 +447,18 @@ func _refresh() -> void:
 	# 渲染分区
 	_render_section(_content, "Local", local_rows, filter, runner_count > 0)
 	_render_section(_content, "Scope", scope_rows, filter, false)
-	_render_section(_content, "Global", global_rows, filter, false)
+	var global_title := "Global"
+	if game_connected:
+		global_title += FuseLocalizationClass.translate("FUSE_UI_WATCHER_GLOBAL_GAME_SUFFIX")
+	_render_section(_content, global_title, global_rows, filter, false)
 
-	# 7c: 静态声明（指令链引用）
+	# 7c: 静态声明（指令链静态变量声明注入）
 	_render_static_declarations(_content, filter)
 
 	# 7b: 更新折线图
 	_update_history_graph()
 
-	_status_label.text = "Global:%d  Runner:%d" % [globals.size(), runner_count]
+	_status_label.text = "Global:%d  Runner:%d" % [global_rows.size(), runner_count]
 
 
 # ============================================================
@@ -508,8 +540,7 @@ func _collect_static_var_rows(topology: Dictionary) -> Array[Dictionary]:
 				"scopes": scopes_str, "mode": mode_str, "count": info["triggers"].size()
 			}),
 			"is_static": true,
-			"scope": "",
-			"context": null
+			"scope": ""
 		})
 
 	return rows
@@ -531,8 +562,8 @@ func _make_row_data(var_name: String, data, extra: Dictionary = {}) -> Dictionar
 		"value": str(val),
 		"type": type_str,
 		"scope": extra.get("scope", ""),
-		"context": extra.get("context", null),
-		"runner": extra.get("runner", "")
+		"runner": extra.get("runner", ""),
+		"runner_id": int(extra.get("runner_id", 0))
 	}
 
 
