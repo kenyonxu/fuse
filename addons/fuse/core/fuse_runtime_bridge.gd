@@ -223,22 +223,23 @@ func is_game_connected() -> bool:
 
 ## 编辑器侧：广播写回（fire-and-forget；无连接返回 false）
 ## 拥塞丢弃由 0.5s 推送回显兜底（spec §3.4）
-func send_set_var(scope: String, runner_id: int, name: String, value: Variant) -> bool:
+func send_set_var(target: String, target_id: int, name: String, value: Variant) -> bool:
 	if _connections.is_empty():
 		return false
 	var payload := (JSON.stringify({
 		"t": "set_var",
-		"scope": scope,
-		"runner_id": runner_id,
+		"proto": 3,
+		"target": target,
+		"id": target_id,
 		"name": name,
 		"value": value
-	}) + "\n").to_utf8_buffer()  # 只序列化/编码一次，size 取自同一份
+	}) + "\n").to_utf8_buffer()
 	var any_ok := false
 	for conn in _connections:
-		var result: Array = conn.put_partial_data(payload)  # [Error, 实写字节数]（Godot 4.4+）
-		var sent: int = int(result[1])
+		var result: Array = conn.put_partial_data(payload)
+		var sent: int = result[1] if result.size() >= 2 else 0
 		if result[0] != OK or sent < payload.size():
-			push_warning("FuseRuntimeBridge: set_var 短写 %d/%d 字节，断开该连接（游戏侧重连自愈）" % [sent, payload.size()])
+			push_warning("FuseRuntimeBridge: set_var 短写(%d/%d)，断开该连接等待重连" % [sent, payload.size()])
 			conn.disconnect_from_host()
 			continue
 		any_ok = true
@@ -283,6 +284,8 @@ func _push_snapshot() -> void:
 		"units": collected["units"],
 		"global": _collect_global_flat()
 	}) + "\n"
+	# put_partial_data 非阻塞（缓冲满发部分即返回），避免 put_data 阻塞主线程
+	# 丢弃未发送部分（下个 snapshot 覆盖，变量快照实时性优先于完整性）
 	_client.put_partial_data(msg.to_utf8_buffer())
 
 
@@ -356,42 +359,49 @@ func _encode_unit(unit: Node) -> Dictionary:
 	}
 
 
-## 游戏侧：应用编辑器写回（目标失效静默忽略——失败由推送回显兜底，spec §3.3/§3.4）
+## 游戏侧：应用编辑器写回（target 失效静默——失败由推送回显兜底）
 func _apply_set_var(msg: Dictionary) -> void:
-	var scope: String = msg.get("scope", "")
+	var target: String = msg.get("target", "")
 	var vname: String = msg.get("name", "")
 	var value = msg.get("value", null)
 	if vname.is_empty() or value == null:
 		return
-	match scope:
+	var rid := int(msg.get("id", 0))
+	match target:
 		"global":
 			var mgr := GlobalVariableManager.get_instance()
 			var existing_var = mgr.get_variable(vname)
 			if existing_var == null:
 				return  # 不存在不创建
-			# 非标量槽位（Object/容器等）不可经桥覆盖：否则标量写入会静默销毁原值
 			if not _is_bridge_scalar(existing_var.value):
 				return
 			mgr.set_variable_value_thread_safe(vname, _narrow_scalar(value, existing_var.value))
-		"local", "scope":
-			var rid := int(msg.get("runner_id", 0))
+		"container":
 			if rid == 0:
 				return
-			var runner = _find_runner_by_id(rid)
-			if runner == null:
+			var node = _find_node_by_id(rid, "ScopeVariableContainer")
+			if node == null:
 				return
-			var ec = runner.get("current_execution_context")
+			var existing = node.get_variable(vname, null)
+			if existing != null and not _is_bridge_scalar(existing):
+				return
+			node.set_variable(vname, _narrow_scalar(value, existing))
+		"unit":
+			if rid == 0:
+				return
+			var node = _find_node_by_id(rid, "")
+			if node == null:
+				return
+			var ec = node.get("current_execution_context")
 			if ec == null or not is_instance_valid(ec):
 				return
 			var vc = ec.get("_variable_context")
 			if vc == null:
 				return
-			var existing = vc.get_variable(vname, null, scope)
-			# 推送快照会把 Object 序列化成字符串，编辑器无法分辨真伪标量——
-			# 非标量槽位的写回在游戏侧拦截（写 Object 槽既无意义还会触发容器混型比较错误）
+			var existing = vc.get_variable(vname, null, "local")
 			if existing != null and not _is_bridge_scalar(existing):
 				return
-			vc.set_variable(vname, _narrow_scalar(value, existing), scope)
+			vc.set_variable(vname, _narrow_scalar(value, existing), "local")
 
 
 ## 桥协议仅承载标量（JSON 可无损表达的类型）
@@ -399,18 +409,26 @@ static func _is_bridge_scalar(v: Variant) -> bool:
 	return typeof(v) in [TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING]
 
 
-## 按实例 id 在当前场景中定位 Runner（set_var 写回目标）
-## 不走 instance_from_id / is_instance_id_valid：对伪造或已释放的 id，
-## 引擎层 Object::get_instance 的 ERR_FAIL_COND(slot >= slot_max) 会刷
-## 引擎级 ERROR 噪音（object.h:912）；场景扫描匹配天然静默（找不到即 null）。
-## 可达集与 _collect_runners() 上报 id 的来源一致（均为 current_scene 下 Runner）
-func _find_runner_by_id(rid: int) -> Node:
-	var scene = get_tree().current_scene
-	if scene == null:
+## 按实例 id 场景扫描定位（不用 instance_from_id：无效 id 会刷引擎 ERROR）
+## expected: "" = BaseTrigger/Runner 任一；"ScopeVariableContainer" = 容器
+func _find_node_by_id(rid: int, expected: String) -> Node:
+	var found: Node = _find_node_recursive(get_tree().root, rid)
+	if found == null:
 		return null
-	for runner in scene.find_children("*", "Runner", true, false):
-		if runner.get_instance_id() == rid:
-			return runner
+	if expected.is_empty():
+		return found if (found is BaseTrigger or found is Runner) else null
+	if expected == "ScopeVariableContainer":
+		return found if found is ScopeVariableContainer else null
+	return null
+
+
+func _find_node_recursive(node: Node, rid: int) -> Node:
+	if node.get_instance_id() == rid:
+		return node
+	for child in node.get_children():
+		var hit: Node = _find_node_recursive(child, rid)
+		if hit != null:
+			return hit
 	return null
 
 

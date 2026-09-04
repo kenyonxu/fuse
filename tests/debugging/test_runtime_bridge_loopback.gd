@@ -37,9 +37,8 @@ func _ready() -> void:
 	_setup_test_tree()
 	_check(await _await_connected(), "client 已连接编辑器（超时 5s）")
 	await _test_push_payload_reaches_cache()
-	await _test_set_var_global_full_path()  # Task 3 补断言体
-	_test_apply_set_var_local_unit()        # Task 3 补断言体
-	_test_apply_set_var_non_scalar_guard()  # 回归：非标量槽位守卫
+	await _test_set_var_targets_full_path()
+	_test_apply_set_var_guards()
 	await _test_push_always_without_units()  # 无单元仍恒推 global
 	_cleanup()
 
@@ -152,6 +151,7 @@ func _test_push_payload_reaches_cache() -> void:
 	for u in units:
 		kinds[u.get("kind", "")] = u
 		_check(int(u.get("ago_ms", -1)) >= 0, "ago_ms 非负")
+	_check(kinds.has("trigger") and kinds.has("runner"), "units 含 trigger 与 runner 两种 kind")
 	if kinds.has("trigger"):
 		var tlocal: Dictionary = kinds["trigger"].get("local", {})
 		_check(tlocal.get("hp", null) == 100, "trigger local hp=100 送达")
@@ -166,69 +166,53 @@ func _test_push_payload_reaches_cache() -> void:
 	_check(_server.get_cached_vars().get("containers", [1]).is_empty(), "缺字段降级为空集")
 
 
-## 全链路：server send_set_var → socket → client 收到并应用到本进程单例
-func _test_set_var_global_full_path() -> void:
-	print("\n--- set_var global 全链路（int 收窄）---")
-	var ok: bool = _server.send_set_var("global", 0, "score", 11.0)
-	_check(ok, "send_set_var 广播成功返回 true")
+## 全链路：container / unit / global 三 target（真实 socket）
+func _test_set_var_targets_full_path() -> void:
+	print("\n--- set_var 三 target 全链路（int 收窄）---")
+	# container
+	var ok_c: bool = _server.send_set_var("container", _container.get_instance_id(), "lives", 9.0)
+	# unit（trigger 的最近上下文）
+	var ok_u: bool = _server.send_set_var("unit", _trigger.get_instance_id(), "hp", 55.0)
+	# global
+	var ok_g: bool = _server.send_set_var("global", 0, "score", 11.0)
+	_check(ok_c and ok_u and ok_g, "三 target 广播均返回 true")
+
 	await get_tree().create_timer(1.3).timeout
+
+	var lives = _container.get_variable("lives", null)
+	_check(lives == 9 and typeof(lives) == TYPE_INT, "容器 lives 写入 9 且收窄为 int")
+	var tvc = _trigger.current_execution_context.get("_variable_context")
+	_check(tvc.get_variable("hp", null, "local") == 55, "unit hp 写入 55")
+	_check(typeof(tvc.get_variable("hp", null, "local")) == TYPE_INT, "unit int 收窄")
 	var v = GlobalVariableManager.get_instance().get_variable("score")
-	_check(v != null and v.value == 11, "global 值已应用为 11（got %s）" % str(v.value if v else null))
-	_check(v != null and typeof(v.value) == TYPE_INT, "int 目标收窄为 int（JSON 11.0 不写坏成 float）")
+	_check(v != null and v.value == 11 and typeof(v.value) == TYPE_INT, "global 值 11 且 int")
 
 
-## 单元级：local 分发（真 Runner + 真 ExecutionContext）+ 容错
-func _test_apply_set_var_local_unit() -> void:
-	print("\n--- _apply_set_var local 单元 + 容错 ---")
-	var vc = _stub_runner.current_execution_context.get("_variable_context")
-	_client._apply_set_var({
-		"t": "set_var", "scope": "local",
-		"runner_id": _stub_runner.get_instance_id(),
-		"name": "hp", "value": 55.0
-	})
-	_check(vc.get_variable("hp", null, "local") == 55, "local hp 写入 55")
-	_check(typeof(vc.get_variable("hp", null, "local")) == TYPE_INT, "int 目标收窄为 int")
+## 单元级：容错与非标量闸门
+func _test_apply_set_var_guards() -> void:
+	print("\n--- _apply_set_var 容错与闸门 ---")
+	# 无上下文的组件：静默
+	var cold := MinimalTrigger.new()
+	add_child(cold)
+	_client._apply_set_var({"t": "set_var", "target": "unit", "id": cold.get_instance_id(), "name": "hp", "value": 1.0})
+	_check(cold.current_execution_context == null, "未触发组件静默忽略")
+	cold.queue_free()
 
-	# 无效 runner_id：静默不崩
-	_client._apply_set_var({
-		"t": "set_var", "scope": "local", "runner_id": 99999999,
-		"name": "hp", "value": 1.0
-	})
-	_check(vc.get_variable("hp", null, "local") == 55, "无效 runner_id 静默忽略")
+	# 伪造 id：静默不崩且无副作用
+	_client._apply_set_var({"t": "set_var", "target": "container", "id": 99999999, "name": "x", "value": 1.0})
+	_check(_container.get_variable("lives", null) == 9, "伪造 id 后容器未受影响")
 
-	# global 不存在：不创建
-	_client._apply_set_var({
-		"t": "set_var", "scope": "global", "runner_id": 0,
-		"name": "no_such_var", "value": 1.0
-	})
-	_check(GlobalVariableManager.get_instance().get_variable("no_such_var") == null, "global 目标不存在不创建")
+	# 非标量槽位闸门：容器 anchor 为 Vector2，写回跳过
+	_client._apply_set_var({"t": "set_var", "target": "container", "id": _container.get_instance_id(), "name": "anchor", "value": "5"})
+	_check(_container.get_variable("anchor", null) == Vector2(1, 2), "容器非标量槽位写回跳过")
 
+	# unit local 非标量闸门
+	_client._apply_set_var({"t": "set_var", "target": "unit", "id": _trigger.get_instance_id(), "name": "dir", "value": "9"})
+	_check(_trigger.current_execution_context.get("_variable_context").get_variable("dir", null, "local") == Vector2(1, 0), "unit 非标量槽位写回跳过")
 
-## 回归（2026-09-04 运行时编辑实测崩溃）：推送快照会把 Object 序列化成字符串，
-## 编辑器无法分辨真伪标量——非标量槽位的写回必须在游戏侧静默跳过
-func _test_apply_set_var_non_scalar_guard() -> void:
-	print("\n--- _apply_set_var 非标量槽位守卫 ---")
-	var node_val := Node.new()
-	var vc = _stub_runner.current_execution_context.get("_variable_context")
-	vc.set_variable("target_obj", node_val, "local")
-	_client._apply_set_var({
-		"t": "set_var", "scope": "local",
-		"runner_id": _stub_runner.get_instance_id(),
-		"name": "target_obj", "value": "abc"
-	})
-	_check(vc.get_variable("target_obj", null, "local") == node_val, "local Object 槽位写回被跳过（原对象保留）")
-	node_val.free()
-
-	var mgr := GlobalVariableManager.get_instance()
-	mgr.add_variable("bridge_vec_test", BaseVariable.create(
-		"bridge_vec_test", Vector2(1, 2), BaseVariable.VariableScope.GLOBAL))
-	_client._apply_set_var({
-		"t": "set_var", "scope": "global", "runner_id": 0,
-		"name": "bridge_vec_test", "value": "5"
-	})
-	var vec_var = mgr.get_variable("bridge_vec_test")
-	_check(vec_var != null and vec_var.value == Vector2(1, 2), "global 非标量槽位写回被跳过（Vector2 保留）")
-	mgr.remove_variable("bridge_vec_test")
+	# global 不存在不创建
+	_client._apply_set_var({"t": "set_var", "target": "global", "id": 0, "name": "no_such_var", "value": 1.0})
+	_check(GlobalVariableManager.get_instance().get_variable("no_such_var") == null, "global 不存在不创建")
 
 
 ## 恒推：移除单元（Trigger/Runner）后仍推送 global（空 units 快照不断流）
