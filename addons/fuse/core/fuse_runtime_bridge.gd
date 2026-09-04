@@ -191,6 +191,7 @@ static func _node_path_str(n: Node) -> String:
 
 func _update_cache(payload: Dictionary) -> void:
 	_cached = {
+		"scene": str(payload.get("scene", "")),
 		"containers": payload.get("containers", []),
 		"units": payload.get("units", [])
 	}
@@ -282,6 +283,7 @@ func _push_snapshot() -> void:
 	var msg := JSON.stringify({
 		"t": "vars",
 		"proto": 3,
+		"scene": get_tree().current_scene.name if get_tree().current_scene != null else "",
 		"containers": collected["containers"],
 		"units": collected["units"],
 		"global": _collect_global_flat()
