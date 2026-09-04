@@ -4999,7 +4999,6 @@ FUSE_UI_WATCHER_REFRESH_INTERVAL,刷新:{sec}s,Refresh: {sec}s
 FUSE_UI_WATCHER_SNAPSHOT,快照,Snapshot
 FUSE_UI_WATCHER_SEARCH_PLACEHOLDER,搜索变量...,Search variables...
 FUSE_UI_WATCHER_NO_HISTORY,(无数值历史),(no numeric history)
-FUSE_UI_WATCHER_VISIBLE_AFTER_RUN,(场景运行后可见),(visible after scene runs)
 FUSE_UI_WATCHER_STATIC_SECTION,指令引用(静态),Instruction References (static)
 FUSE_UI_WATCHER_MODE_READ_WRITE,读写,Read/Write
 FUSE_UI_WATCHER_MODE_WRITE,写,Write
