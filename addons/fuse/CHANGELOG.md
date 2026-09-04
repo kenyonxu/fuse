@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **变量监视器运行时编辑**：运行游戏中 local/scope/global 标量变量可在监视器双击直达写回游戏进程（桥反向 `set_var` 通道；fire-and-forget + 0.5s 推送回显；JSON float 按目标类型收窄、非标量槽位闸门、短写断连自愈）
+- **Trigger/MultiEventTrigger 最近执行上下文**：BaseTrigger/Runner 统一持有 `current_execution_context(_at_ms)`，三类核心组件的 local 变量对监视器可见（终值 + 新鲜度）
+- **变量监视器 v3 宿主直报**（桥协议 v3）：推送按 `containers`/`units`/`global` 三块直报——ScopeVariableContainer 容器直扫（未触发子树可见声明默认值）、root 全树单遍三判收集、`scene` 当前场景名字段（场景归组）、`__complex` 非标量只读编码、恒定推送；写回按 `target` 三分发（container/unit/global）
+- **变量监视器 UI 重做**：Godot 原生 Tree 三级结构（场景 → 宿主 → 变量，GLOBAL 平级根，当前/附加尾注）、增量就地更新（不闪不重建）、折叠跨刷新持久、大小写不敏感搜索、选中变量展开可拖高折线图（✕/Esc 收起）、双击编辑覆盖层精确定位值单元格、编辑器主题自适应（亮暗切换实时更新、零硬编码色）
+
+### Changed
+- 桥推送协议 v2 → v3（`runners[]` 结构退役；同一插件两侧同版本，不做跨版本兼容）；`get_cached_vars()` 返回 `{scene, containers, units}`
+- `variable_watcher.gd` 789 → 约 460 行，展示层拆分至 `variable_watcher_tree.gd`（数据层纯函数与编辑分发语义不变）
+- 运行时 Global 区数据源按桥连接切换（游戏侧实时快照 ↔ 编辑器侧定义）；`_write_back_global` 改值优先保留变量元数据
+- 状态栏、场景尾注、空态提示接入本地化（新增 3 key）
+
+### Removed
+- 变量监视器的静态声明区（编辑期视图）与变量快照落盘功能
+- CSV 退役 12 个无引用 key；scope"名+值"去重逻辑与全部自绘 UI 工厂代码
+
+### Fixed
+- 运行时写回 Object 槽位崩溃（游戏侧非标量闸门 + 容器混型安全比较）
+- 共享容器变量被多个 Runner 重复显示（v3 容器直扫后根除）
+- 面板早退路径返回无类型数组导致每 0.5s 刷类型错误
+- 双击编辑输入框坐标系错配（viewport 坐标误赋局部位置，输入框落在面板外）
+
 ## [1.0.0] - 2026-09-03
 
 ### Added
