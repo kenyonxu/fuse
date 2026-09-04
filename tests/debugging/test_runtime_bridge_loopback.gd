@@ -214,6 +214,16 @@ func _test_apply_set_var_guards() -> void:
 	_client._apply_set_var({"t": "set_var", "target": "global", "id": 0, "name": "no_such_var", "value": 1.0})
 	_check(GlobalVariableManager.get_instance().get_variable("no_such_var") == null, "global 不存在不创建")
 
+	# global 非标量闸门：Vector2 槽位写回跳过（v2 回归补齐）
+	var mgr := GlobalVariableManager.get_instance()
+	mgr.add_variable("bridge_vec_test", BaseVariable.create(
+		"bridge_vec_test", Vector2(1, 2), BaseVariable.VariableScope.GLOBAL))
+	_client._apply_set_var({"t": "set_var", "target": "global", "id": 0,
+		"name": "bridge_vec_test", "value": "5"})
+	var vec_var = mgr.get_variable("bridge_vec_test")
+	_check(vec_var != null and vec_var.value == Vector2(1, 2), "global 非标量槽位写回跳过（Vector2 保留）")
+	mgr.remove_variable("bridge_vec_test")
+
 
 ## 恒推：移除单元（Trigger/Runner）后仍推送 global（空 units 快照不断流）
 func _test_push_always_without_units() -> void:
