@@ -161,9 +161,11 @@ func _test_push_payload_reaches_cache() -> void:
 	if kinds.has("runner"):
 		_check(kinds["runner"].get("local", {}).get("hp", null) == 100, "runner local 送达")
 	_check(_server.get_cached_global().get("score", null) == 7, "global 快照送达")
+	_check(str(cached.get("scene", "<missing>")) == "TestBridgeLoopback", "scene 字段送达（当前场景名）")
 	# 降级：字段缺失安全为空
 	_server._handle_message({"t": "vars", "proto": 3})
 	_check(_server.get_cached_vars().get("containers", [1]).is_empty(), "缺字段降级为空集")
+	_check(_server.get_cached_vars().get("scene", "<missing>") == "", "降级后 scene 键存在且为空串")
 
 
 ## 全链路：container / unit / global 三 target（真实 socket）
