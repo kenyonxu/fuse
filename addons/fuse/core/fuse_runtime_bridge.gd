@@ -15,7 +15,7 @@ extends Node
 ##   运行游戏→编辑器: {"t":"vars","proto":3,"containers":[{"id":123,"path":"/x","scope_id":"s","vars":{...}},...],"units":[{"id":456,"path":"/x","kind":"trigger|multi|runner","ago_ms":5,"local":{...}},...],"global":{name:value,...}}
 ##     每 0.5s 恒推（无单元也推 global 与空集，清编辑器缓存）；非标量值编码为
 ##     {"__complex":"str(v)≤200字符","ty":"Vector2"} 显式只读包装（编辑器据此区分真 String 与复杂值）
-##   编辑器→运行游戏: {"t":"set_var","scope":"global|local|scope","runner_id":123,"name":"hp","value":1}（反向写回）
+##   运行游戏←编辑器: {"t":"set_var","proto":3,"target":"container|unit|global","id":123,"name":"hp","value":1}（反向写回）
 
 const BRIDGE_PORT := 24563
 const PUSH_INTERVAL := 0.5
@@ -226,6 +226,7 @@ func is_game_connected() -> bool:
 func send_set_var(target: String, target_id: int, name: String, value: Variant) -> bool:
 	if _connections.is_empty():
 		return false
+	# 只序列化/编码一次，size 取自同一份
 	var payload := (JSON.stringify({
 		"t": "set_var",
 		"proto": 3,
@@ -237,6 +238,7 @@ func send_set_var(target: String, target_id: int, name: String, value: Variant) 
 	var any_ok := false
 	for conn in _connections:
 		var result: Array = conn.put_partial_data(payload)
+		# put_partial_data 返回 [Error, 实写字节数]（Godot 4.4+）
 		var sent: int = result[1] if result.size() >= 2 else 0
 		if result[0] != OK or sent < payload.size():
 			push_warning("FuseRuntimeBridge: set_var 短写(%d/%d)，断开该连接等待重连" % [sent, payload.size()])
@@ -373,6 +375,7 @@ func _apply_set_var(msg: Dictionary) -> void:
 			var existing_var = mgr.get_variable(vname)
 			if existing_var == null:
 				return  # 不存在不创建
+			# 非标量槽位不可经桥覆盖：否则标量写入会静默销毁原值
 			if not _is_bridge_scalar(existing_var.value):
 				return
 			mgr.set_variable_value_thread_safe(vname, _narrow_scalar(value, existing_var.value))
@@ -399,6 +402,7 @@ func _apply_set_var(msg: Dictionary) -> void:
 			if vc == null:
 				return
 			var existing = vc.get_variable(vname, null, "local")
+			# 协议层 __complex 编码已挡住编辑器侧误发，此闸门为手造消息的纵深防御
 			if existing != null and not _is_bridge_scalar(existing):
 				return
 			vc.set_variable(vname, _narrow_scalar(value, existing), "local")

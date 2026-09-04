@@ -109,10 +109,12 @@ func _test_group_collapse_and_filter() -> void:
 	_watcher._toggle_group("c481")
 	_check(_watcher._is_group_collapsed("c481") == true, "折叠置位（跨刷新由 _collapsed 字典承载）")
 	_watcher._toggle_group("c481")
+	_check(_watcher._is_group_collapsed("c481") == false, "二次 toggle 恢复展开")
 	_check(_watcher._passes_filter("/Player/OnInput", "hp", "") == true, "空过滤放行")
 	_check(_watcher._passes_filter("/Player/OnInput", "hp", "player") == true, "组路径命中")
 	_check(_watcher._passes_filter("/Player", "hp", "hp") == true, "变量名命中")
 	_check(_watcher._passes_filter("/Player", "hp", "camera") == false, "不命中过滤")
+	_check(_watcher._passes_filter("/x", "hp", "HP") == true, "大写 filter 命中小写变量名")
 
 
 func _test_editable_v3() -> void:
@@ -122,6 +124,8 @@ func _test_editable_v3() -> void:
 	_check(_watcher._is_row_editable({"target": "container", "type": "Vector2", "is_complex": true}) == false, "__complex 行不可编辑")
 	_check(_watcher._is_row_editable({"target": "global", "type": "int", "is_complex": false}) == true, "global 行可编辑")
 	_check(_watcher._is_row_editable({"target": "", "type": "int", "is_complex": false}) == false, "无 target 不可编辑")
+	_check(_watcher._is_row_editable({"target": "global", "type": "int", "is_complex": false, "is_note": true}) == false, "笔记行不可编辑")
+	_check(_watcher._is_row_editable({"target": "global", "type": "int", "is_complex": false, "is_static": true}) == false, "静态行不可编辑")
 
 
 func _cleanup_globals() -> void:

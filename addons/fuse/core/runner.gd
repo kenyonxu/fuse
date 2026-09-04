@@ -34,6 +34,7 @@ class_name Runner extends Node
 
 ## 当前执行上下文(运行时设置,变量监视器读取)
 var current_execution_context: ExecutionContext = null
+## 最近上下文盖戳（msec，监视器新鲜度）
 var current_execution_context_at_ms: int = 0
 
 ## ============================================
