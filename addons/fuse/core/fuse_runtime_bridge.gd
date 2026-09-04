@@ -57,6 +57,7 @@ func _exit_tree() -> void:
 	_read_buffers.clear()
 	_teardown_client()
 	_cached.clear()
+	_cached_global.clear()
 
 
 func _process(delta: float) -> void:
@@ -317,8 +318,11 @@ func _apply_set_var(msg: Dictionary) -> void:
 				return  # 不存在不创建
 			mgr.set_variable_value_thread_safe(vname, _narrow_scalar(value, existing_var.value))
 		"local", "scope":
-			var runner = instance_from_id(int(msg.get("runner_id", 0)))
-			if runner == null or not runner is Node:
+			var rid := int(msg.get("runner_id", 0))
+			if rid == 0:
+				return
+			var runner = _find_runner_by_id(rid)
+			if runner == null:
 				return
 			var ec = runner.get("current_execution_context")
 			if ec == null or not is_instance_valid(ec):
@@ -328,6 +332,21 @@ func _apply_set_var(msg: Dictionary) -> void:
 				return
 			var existing = vc.get_variable(vname, null, scope)
 			vc.set_variable(vname, _narrow_scalar(value, existing), scope)
+
+
+## 按实例 id 在当前场景中定位 Runner（set_var 写回目标）
+## 不走 instance_from_id / is_instance_id_valid：对伪造或已释放的 id，
+## 引擎层 Object::get_instance 的 ERR_FAIL_COND(slot >= slot_max) 会刷
+## 引擎级 ERROR 噪音（object.h:912）；场景扫描匹配天然静默（找不到即 null）。
+## 可达集与 _collect_runners() 上报 id 的来源一致（均为 current_scene 下 Runner）
+func _find_runner_by_id(rid: int) -> Node:
+	var scene = get_tree().current_scene
+	if scene == null:
+		return null
+	for runner in scene.find_children("*", "Runner", true, false):
+		if runner.get_instance_id() == rid:
+			return runner
+	return null
 
 
 ## JSON 解析后数字一律为 float：按目标变量现有类型收窄（仅 int 需要处理）
